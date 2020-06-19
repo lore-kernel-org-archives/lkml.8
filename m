@@ -2,185 +2,453 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18260C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DABC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6C5221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KK/eDpTd"
+	by mail.kernel.org (Postfix) with ESMTP id 94F55221F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgFSVwX (ORCPT
+        id S1728187AbgFSVxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:52:23 -0400
-Received: from mail-co1nam11on2040.outbound.protection.outlook.com ([40.107.220.40]:57312
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726220AbgFSVwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:52:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WUJ7NXxwr5ZN1V9Ka17Gkw0Gx32KdHb0rSQXM3Q5jRMGWo3C/+RbpTf2YbtwIiJR54MYzdsg/hN4wmJV/DDBFd5keXOGsHqV5vR61a24SL8FxWtCbhXjkOiembrJHeJdmqorCdNDzZWLsfiE2ooYog9RLm0cL6WF3AyBCZ0f+FU8ZwgHCol2IBE9yfoMJPXtFBPyUuh2XfFOtFkQJ4Jtfw4Fi9ZJOJPghF9Rw3cV2Tzbm3/m7aCIIx08E+TXKOlM3pUqG29tAwecgBUE9GPxTNlmgIOAgyQn2ZNXSIAbiir7kk9fEJsvP/rPWjDO6X5Fk8OhyD/HMhnx1qmMz+aYEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PQKF0OXw9zzw2Tkmw3Ce+y92nHkRAwZDUzJXpoMQ164=;
- b=OS+w941Xq6cgS7BIdHZbSFxEwA0qhF4VAKvsW2cbFwiRB1ESCFOxivUerZXV4O1bv8c9LzfvIltVmu7iMgK7lL3aDhXRRuCrs1OMrOKYOyykbPZbEd1otjVuyvo7VW24HRQycDMQOfzGipFchXEWlARmreM7ibhkoQge69Px2AQwtXXKmk4UJVlb5gapZL7ZSjW7/ot+fcai6r4cncxx3DakFZUVgkZKo2DO6FHbzA/CZoA9CnjrP0p8e0biEP6ERDhT6oYH0siKc8xTIlmhYjrNdm7LwIAg8+5Rso5ag44LRLBK+d5IxYIFLqvyV+nXy82fBxRWiRZ4AcxSkJDZEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PQKF0OXw9zzw2Tkmw3Ce+y92nHkRAwZDUzJXpoMQ164=;
- b=KK/eDpTdZ10i0+vfwBDY3nxkX6Xn5GKAWALjCHyt5HnlfD3Ke8GMxjWYR3Z9QAXxJeFnMl+OjNqlTBSvemy+rKFHePJiP4OZCIXYTsnYwzl8tVhY63dOSWJiREiQa+zEvp7B7KJLeOyYRVkhD6/Evq8/clK+XH72NDDv84h1zHc=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
- DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.21; Fri, 19 Jun 2020 21:52:19 +0000
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.3109.023; Fri, 19 Jun
- 2020 21:52:19 +0000
-Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
-To:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
-References: <20200619153925.79106-1-mgamal@redhat.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
-Date:   Fri, 19 Jun 2020 16:52:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN1PR12CA0093.namprd12.prod.outlook.com
- (2603:10b6:802:21::28) To DM5PR12MB1355.namprd12.prod.outlook.com
- (2603:10b6:3:6e::7)
+        Fri, 19 Jun 2020 17:53:51 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:54224 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgFSVxu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:53:50 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A37D380518;
+        Fri, 19 Jun 2020 23:53:43 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 23:53:41 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
+ bindings to DT schema
+Message-ID: <20200619215341.GA6857@ravnborg.org>
+References: <20200618224413.1115849-1-robh@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (67.79.209.213) by SN1PR12CA0093.namprd12.prod.outlook.com (2603:10b6:802:21::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 21:52:17 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: aec9609a-4c67-4d59-b0c7-08d8149b0992
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1163:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB116366FFDF7724C6E47E9AD7EC980@DM5PR12MB1163.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0439571D1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4ZO2cebbbkuEE5W6piGxwMGCJ+Bbgj3x1woxwwCjgcxEcMO8WHEQRyEfkwEcjfNbb7D5Ii1YCBgNTR0zkXHH1+J2H3126GjBzi0EugGc+Ej5ojOBU7QkvQk2cCE2uJb1DZjOfOKhUmUkJcknznvQ8GWDUZfoTUTd8kQFBf3+ksnvS3kTGiJUvOSTkMeQDqGBVNeKtliK9ibYck+STW4ZSn1eVIFOCSiC6WpzozzzVxiCrB+sXgqiaUeCUrA/TNOdUyILmzUpIyR0Lzhyny/Xn29UFh2xSVvKXA+oZPgLVsLfzbBBZBwNtacl70D/e+mP3bCYfcWxHF/+8XiQVKkBNfz/o1cFbEawGjHXczqoRDlBn/654NmM89iZ8w2JT+ARjHwVEDAxQ+7avKFaB819xw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(31696002)(2906002)(83380400001)(316002)(31686004)(186003)(4326008)(478600001)(16526019)(86362001)(26005)(5660300002)(52116002)(6486002)(36756003)(2616005)(66556008)(66946007)(956004)(66476007)(6512007)(53546011)(6506007)(8676002)(8936002)(60764002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: cH3UsAxBKXyCrcbrtHYTn3LD1MAVgUcG5NPyNCfg0wrNFUN9VoWK9eQ7gJd+Dad+eZ8ZUN/2Xv5CkxN5SJ18rvo61Zg0v4osFceEWdQanXJtSlF3MY1MDz95et11m/r2ekmY2V8q81lSk6mq6wmzHmj/x6j12FzquciCzCDBiB5u+GRyRaj89aQ3odW5Rf2wpZsjKuXAQgnthSPIElE4sZ2a6sj9lXI6yckSciEUCIkHep9+xS8sNzAWTIzn6CAjcAfQVFNcQp4rwCzyq5AZonfex7vsuJJiWawG1QFUmfr/Xu4I6j3hkgSu763rCQ8v1p8mx8H+4nd4j03Jb7kUTjB+VvWl8dOKlq2Exvwt/+Cnor2L/SFjf9ldKr3huW7JOp3TOGFirymBE/VMmfgZVYTd1J2BVClxaFBfmy9nAXSOibr/W9/njgJOLOhSuMO3cHvL3NVzNGZ13NQ46D9uHABJ5qYR24n/gEVDSjB71oD4Vs3nCneHS45sAvSECA65
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aec9609a-4c67-4d59-b0c7-08d8149b0992
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 21:52:18.8878
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Iuk+vmuXK4xxrmHicwnyDH3Jkp1lexWdgoNw56fAKLUkm89Hd/2vgUC7fgMCGTqZ9EeeL4XQGEqCJXNqicXg5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618224413.1115849-1-robh@kernel.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
+        a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=xaQA2OYNmvnDas3ntOUA:9
+        a=N7sUtPlMTdWnEY4o:21 a=Y38N-j4GBFhqJDI7:21 a=CjuIK1q_8ugA:10
+        a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 10:39 AM, Mohammed Gamal wrote:
-> When EPT/NPT is enabled, KVM does not really look at guest physical
-> address size. Address bits above maximum physical memory size are reserved.
-> Because KVM does not look at these guest physical addresses, it currently
-> effectively supports guest physical address sizes equal to the host.
-> 
-> This can be problem when having a mixed setup of machines with 5-level page
-> tables and machines with 4-level page tables, as live migration can change
-> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
-> 
-> In this patch series we add checks on guest physical addresses in EPT
-> violation/misconfig and NPF vmexits and if needed inject the proper
-> page faults in the guest.
-> 
-> A more subtle issue is when the host MAXPHYADDR is larger than that of the
-> guest. Page faults caused by reserved bits on the guest won't cause an EPT
-> violation/NPF and hence we also check guest MAXPHYADDR and add PFERR_RSVD_MASK
-> error code to the page fault if needed.
+Hi Rob.
 
-I'm probably missing something here, but I'm confused by this statement. 
-Is this for a case where a page has been marked not present and the guest 
-has also set what it believes are reserved bits? Then when the page is 
-accessed, the guest sees a page fault without the error code for reserved 
-bits? If so, my understanding is that is architecturally correct. P=0 is 
-considered higher priority than other page faults, at least on AMD. So if 
-you have a P=0 and other issues exist within the PTE, AMD will report the 
-P=0 fault and that's it.
+Good to have these converted. A few comments in the following. One
+comment is for the backlight people as you copied the original text.
 
-The priority of other page fault conditions when P=1 is not defined and I 
-don't think we guarantee that you would get all error codes on fault. 
-Software is always expected to address the page fault and retry, and it 
-may get another page fault when it does, with a different error code. 
-Assuming the other errors are addressed, eventually the reserved bits 
-would cause an NPF and that could be detected by the HV and handled 
-appropriately.
+	Sam
 
+On Thu, Jun 18, 2020 at 04:44:13PM -0600, Rob Herring wrote:
+> Convert the common GPIO, LED, and PWM backlight bindings to DT schema
+> format.
 > 
-> The last 3 patches (i.e. SVM bits and patch 11) are not intended for
-> immediate inclusion and probably need more discussion.
-> We've been noticing some unexpected behavior in handling NPF vmexits
-> on AMD CPUs (see individual patches for details), and thus we are
-> proposing a workaround (see last patch) that adds a capability that
-> userspace can use to decide who to deal with hosts that might have
-> issues supprting guest MAXPHYADDR < host MAXPHYADDR.
+> Given there's only 2 common properties and the descriptions are slightly
+> different, I opted to not create a common backlight schema.
+> 
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../leds/backlight/gpio-backlight.txt         | 16 ---
+>  .../leds/backlight/gpio-backlight.yaml        | 41 ++++++++
+>  .../bindings/leds/backlight/led-backlight.txt | 28 ------
+>  .../leds/backlight/led-backlight.yaml         | 58 +++++++++++
+>  .../bindings/leds/backlight/pwm-backlight.txt | 61 ------------
+>  .../leds/backlight/pwm-backlight.yaml         | 98 +++++++++++++++++++
+>  6 files changed, 197 insertions(+), 105 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+> deleted file mode 100644
+> index 321be6640533..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -gpio-backlight bindings
+> -
+> -Required properties:
+> -  - compatible: "gpio-backlight"
+> -  - gpios: describes the gpio that is used for enabling/disabling the backlight.
+> -    refer to bindings/gpio/gpio.txt for more details.
+> -
+> -Optional properties:
+> -  - default-on: enable the backlight at boot.
+> -
+> -Example:
+> -	backlight {
+> -		compatible = "gpio-backlight";
+> -		gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+> -		default-on;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+> new file mode 100644
+> index 000000000000..75cc569b9c55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/gpio-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: gpio-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-backlight
+> +
+> +  gpios:
+> +    description: The gpio that is used for enabling/disabling the backlight.
+> +    maxItems: 1
+> +
+> +  default-on:
+> +    description: enable the backlight at boot.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    backlight {
+> +        compatible = "gpio-backlight";
+> +        gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+> +        default-on;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> deleted file mode 100644
+> index 4c7dfbe7f67a..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -led-backlight bindings
+> -
+> -This binding is used to describe a basic backlight device made of LEDs.
+> -It can also be used to describe a backlight device controlled by the output of
+> -a LED driver.
+> -
+> -Required properties:
+> -  - compatible: "led-backlight"
+> -  - leds: a list of LEDs
+> -
+> -Optional properties:
+> -  - brightness-levels: Array of distinct brightness levels. The levels must be
+> -                       in the range accepted by the underlying LED devices.
+> -                       This is used to translate a backlight brightness level
+> -                       into a LED brightness level. If it is not provided, the
+> -                       identity mapping is used.
+> -
+> -  - default-brightness-level: The default brightness level.
+> -
+> -Example:
+> -
+> -	backlight {
+> -		compatible = "led-backlight";
+> -
+> -		leds = <&led1>, <&led2>;
+> -		brightness-levels = <0 4 8 16 32 64 128 255>;
+> -		default-brightness-level = <6>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> new file mode 100644
+> index 000000000000..ae50945d2798
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: led-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description:
+> +  This binding is used to describe a basic backlight device made of LEDs. It
+> +  can also be used to describe a backlight device controlled by the output of
+> +  a LED driver.
+> +
+> +properties:
+> +  compatible:
+> +    const: led-backlight
+> +
+> +  leds:
+> +    description: A list of LED nodes
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +  brightness-levels:
+> +    description: Array of distinct brightness levels. The levels must be
+> +      in the range accepted by the underlying LED devices. This is used
+> +      to translate a backlight brightness level into a LED brightness level.
+> +      If it is not provided, the identity mapping is used.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+bike-shedding. To me it is a tad easier to read when multi-line
+descriptions are on a separate line.
+So "description:" on one line, and the text on following lines.
+example-schema.yaml does both - so both are official acceptable.
 
-Also, something to consider. On AMD, when memory encryption is enabled 
-(via the SYS_CFG MSR), a guest can actually have a larger MAXPHYADDR than 
-the host. How do these patches all play into that?
+> +
+> +  default-brightness-level:
+> +    description: The default brightness level (index into the array defined
+> +      by the "brightness-levels" property).
+This description does not match my understading.
+The description says "index into", but in reality this is a value that
+matches somewhere in the range specified by brightness-levels.
+So it is not an index.
 
-Thanks,
-Tom
+Maybe I just read it wrong and the description is fine. But when I read
+index the when it says 6 I would look for brightness-levels[6] equals
+128 in the example below.
+And this is not how it is coded.
 
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +dependencies:
+> +  default-brightness-level: [brightness-levels]
+So if we have efault-brightness-level then we must have
+brightness-levels.
+Sounds right.
+
+> +
+> +required:
+> +  - compatible
+> +  - leds
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    backlight {
+> +        compatible = "led-backlight";
+> +
+> +        leds = <&led1>, <&led2>;
+> +        brightness-levels = <0 4 8 16 32 64 128 255>;
+> +        default-brightness-level = <6>;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> deleted file mode 100644
+> index 64fa2fbd98c9..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -pwm-backlight bindings
+> -
+> -Required properties:
+> -  - compatible: "pwm-backlight"
+> -  - pwms: OF device-tree PWM specification (see PWM binding[0])
+> -  - power-supply: regulator for supply voltage
+> -
+> -Optional properties:
+> -  - pwm-names: a list of names for the PWM devices specified in the
+> -               "pwms" property (see PWM binding[0])
+> -  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> -                  and disables the backlight (see GPIO binding[1])
+> -  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
+> -                          and enabling the backlight using GPIO.
+> -  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+> -                      and setting PWM value to 0.
+> -  - brightness-levels: Array of distinct brightness levels. Typically these
+> -                       are in the range from 0 to 255, but any range starting at
+> -                       0 will do. The actual brightness level (PWM duty cycle)
+> -                       will be interpolated from these values. 0 means a 0% duty
+> -                       cycle (darkest/off), while the last value in the array
+> -                       represents a 100% duty cycle (brightest).
+> -  - default-brightness-level: The default brightness level (index into the
+> -                              array defined by the "brightness-levels" property).
+> -  - num-interpolated-steps: Number of interpolated steps between each value
+> -                            of brightness-levels table. This way a high
+> -                            resolution pwm duty cycle can be used without
+> -                            having to list out every possible value in the
+> -                            brightness-level array.
+> -
+> -[0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> -[1]: Documentation/devicetree/bindings/gpio/gpio.txt
+> -
+> -Example:
+> -
+> -	backlight {
+> -		compatible = "pwm-backlight";
+> -		pwms = <&pwm 0 5000000>;
+> -
+> -		brightness-levels = <0 4 8 16 32 64 128 255>;
+> -		default-brightness-level = <6>;
+> -
+> -		power-supply = <&vdd_bl_reg>;
+> -		enable-gpios = <&gpio 58 0>;
+> -		post-pwm-on-delay-ms = <10>;
+> -		pwm-off-delay-ms = <10>;
+> -	};
+> -
+> -Example using num-interpolation-steps:
+> -
+> -	backlight {
+> -		compatible = "pwm-backlight";
+> -		pwms = <&pwm 0 5000000>;
+> -
+> -		brightness-levels = <0 2048 4096 8192 16384 65535>;
+> -		num-interpolated-steps = <2048>;
+> -		default-brightness-level = <4096>;
+> -
+> -		power-supply = <&vdd_bl_reg>;
+> -		enable-gpios = <&gpio 58 0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> new file mode 100644
+> index 000000000000..7e1f109a38a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: pwm-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: pwm-backlight
+> +
+> +  pwms:
+> +    maxItems: 1
+> +
+> +  pwm-names: true
+> +
+> +  power-supply:
+> +    description: regulator for supply voltage
+> +
+> +  enable-gpios:
+> +    description: Contains a single GPIO specifier for the GPIO which enables
+> +      and disables the backlight
+> +    maxItems: 1
+> +
+> +  post-pwm-on-delay-ms:
+> +    description: Delay in ms between setting an initial (non-zero) PWM and
+> +      enabling the backlight using GPIO.
+> +
+> +  pwm-off-delay-ms:
+> +    description: Delay in ms between disabling the backlight using GPIO
+> +      and setting PWM value to 0.
+> +
+> +  brightness-levels:
+> +    description: Array of distinct brightness levels. Typically these are
+> +      in the range from 0 to 255, but any range starting at 0 will do. The
+> +      actual brightness level (PWM duty cycle) will be interpolated from
+> +      these values. 0 means a 0% duty cycle (darkest/off), while the last
+> +      value in the array represents a 100% duty cycle (brightest).
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +  default-brightness-level:
+> +    description: The default brightness level (index into the array defined
+> +      by the "brightness-levels" property).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+Same comment as before...
+
+> +
+> +  num-interpolated-steps:
+> +    description: Number of interpolated steps between each value of brightness-levels
+> +      table. This way a high resolution pwm duty cycle can be used without
+> +      having to list out every possible value in the brightness-level array.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +dependencies:
+> +  default-brightness-level: [brightness-levels]
+> +  num-interpolated-steps: [brightness-levels]
+> +
+> +required:
+> +  - compatible
+> +  - pwms
+> +  - power-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    backlight {
+> +        compatible = "pwm-backlight";
+> +        pwms = <&pwm 0 5000000>;
+> +
+> +        brightness-levels = <0 4 8 16 32 64 128 255>;
+> +        default-brightness-level = <6>;
+> +
+> +        power-supply = <&vdd_bl_reg>;
+> +        enable-gpios = <&gpio 58 0>;
+> +        post-pwm-on-delay-ms = <10>;
+> +        pwm-off-delay-ms = <10>;
+> +    };
+> +
+> +  - |
+> +    // Example using num-interpolation-steps:
+> +    backlight {
+> +        compatible = "pwm-backlight";
+> +        pwms = <&pwm 0 5000000>;
+> +
+> +        brightness-levels = <0 2048 4096 8192 16384 65535>;
+> +        num-interpolated-steps = <2048>;
+> +        default-brightness-level = <4096>;
+> +
+> +        power-supply = <&vdd_bl_reg>;
+> +        enable-gpios = <&gpio 58 0>;
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
 > 
-> 
-> Mohammed Gamal (7):
->    KVM: x86: Add helper functions for illegal GPA checking and page fault
->      injection
->    KVM: x86: mmu: Move translate_gpa() to mmu.c
->    KVM: x86: mmu: Add guest physical address check in translate_gpa()
->    KVM: VMX: Add guest physical address check in EPT violation and
->      misconfig
->    KVM: SVM: introduce svm_need_pf_intercept
->    KVM: SVM: Add guest physical address check in NPF/PF interception
->    KVM: x86: SVM: VMX: Make GUEST_MAXPHYADDR < HOST_MAXPHYADDR support
->      configurable
-> 
-> Paolo Bonzini (4):
->    KVM: x86: rename update_bp_intercept to update_exception_bitmap
->    KVM: x86: update exception bitmap on CPUID changes
->    KVM: VMX: introduce vmx_need_pf_intercept
->    KVM: VMX: optimize #PF injection when MAXPHYADDR does not match
-> 
->   arch/x86/include/asm/kvm_host.h | 10 ++------
->   arch/x86/kvm/cpuid.c            |  2 ++
->   arch/x86/kvm/mmu.h              |  6 +++++
->   arch/x86/kvm/mmu/mmu.c          | 12 +++++++++
->   arch/x86/kvm/svm/svm.c          | 41 +++++++++++++++++++++++++++---
->   arch/x86/kvm/svm/svm.h          |  6 +++++
->   arch/x86/kvm/vmx/nested.c       | 28 ++++++++++++--------
->   arch/x86/kvm/vmx/vmx.c          | 45 +++++++++++++++++++++++++++++----
->   arch/x86/kvm/vmx/vmx.h          |  6 +++++
->   arch/x86/kvm/x86.c              | 29 ++++++++++++++++++++-
->   arch/x86/kvm/x86.h              |  1 +
->   include/uapi/linux/kvm.h        |  1 +
->   12 files changed, 158 insertions(+), 29 deletions(-)
-> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
