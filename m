@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4661C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5E421556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953E020B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580355;
-	bh=WbypKLIbtcVOwzPyhZ4KFwIQhQ7w3yZw6d1nuMf9yqk=;
+	s=default; t=1592580360;
+	bh=EPvLA69U/3lpdJqAkicuhqkJDkhVEvtI1+W5+HOOb80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WwRLBumJHL9LidBy4kuGpUX6bdLYSk/6M4x8QKzgRxmtw5ZDB5Xisy9gOqN4bW6b5
-	 wwunOunSmr6GklZLW+B2HTybX+gHNcgJ/0W7MLasjyu/uafodVIXx7DwH0XIyurjgI
-	 PtdMYTtHMf7IybcHYwJCId8G4m0FQug7OhNKElnU=
+	b=DQcb19hYMJJABs3yCIbeHW3GAQusbAe97sxPYIj4+Dy39OEx5x43Cy8u7gxOKDAgr
+	 0f/cMUkdP2uFkDF9WYknVBZ3Z0x4twwoAel3KmrJXG5FQRB8xxjZ6C+Y2PN5nruM4l
+	 DWg/U7hZpzT9yEN3/8cHvov1paIcv6/klXYI/TFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393472AbgFSPZy (ORCPT
+        id S2404234AbgFSP0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393131AbgFSPXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:11 -0400
+        id S2393163AbgFSPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C882158C;
-        Fri, 19 Jun 2020 15:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161DB217A0;
+        Fri, 19 Jun 2020 15:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580190;
-        bh=WbypKLIbtcVOwzPyhZ4KFwIQhQ7w3yZw6d1nuMf9yqk=;
+        s=default; t=1592580201;
+        bh=EPvLA69U/3lpdJqAkicuhqkJDkhVEvtI1+W5+HOOb80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6ilzuTfkf2AfTX2QFgCIHoYuEKg5y/tz6ZYWrgTERAYfE14zJgL84MLHcP6YYNDc
-         QskIWtwZV8LRn0K2WwNT03g70rjV6eiulpKXPUAgrm41J/pvphrXBvBCbADLkl1PdR
-         Xc+o/BZ3VThp8LfWwTn7hJmPclv1NozA9ad1+rQc=
+        b=OcFaY9ywzfg8N+JpxOu3Lybz/FZ+Lvd2yeeq4pl5A0m8kPfv2q6Axnl7oIWARLYwL
+         g/fikAGm7YgPCPPsTTJ4Rbe3iEi2mT7oKIpk6SDwVaHg/Dv8fAFKQD+yJvw5Cy2p9R
+         kzwBpXkvv4KVotauDeeRyVKLr6CMFNLIYcoh23o0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
-        Devulapally Shiva Krishna <shiva@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 157/376] Crypto/chcr: fix for ccm(aes) failed test
-Date:   Fri, 19 Jun 2020 16:31:15 +0200
-Message-Id: <20200619141717.754197512@linuxfoundation.org>
+Subject: [PATCH 5.7 161/376] kgdb: Fix spurious true from in_dbg_master()
+Date:   Fri, 19 Jun 2020 16:31:19 +0200
+Message-Id: <20200619141717.943538361@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,37 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devulapally Shiva Krishna <shiva@chelsio.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
+[ Upstream commit 3fec4aecb311995189217e64d725cfe84a568de3 ]
 
-The ccm(aes) test fails when req->assoclen > ~240bytes.
+Currently there is a small window where a badly timed migration could
+cause in_dbg_master() to spuriously return true. Specifically if we
+migrate to a new core after reading the processor id and the previous
+core takes a breakpoint then we will evaluate true if we read
+kgdb_active before we get the IPI to bring us to halt.
 
-The problem is the value assigned to auth_offset is wrong.
-As auth_offset is unsigned char, it can take max value as 255.
-So fix it by making it unsigned int.
+Fix this by checking irqs_disabled() first. Interrupts are always
+disabled when we are executing the kgdb trap so this is an acceptable
+prerequisite. This also allows us to replace raw_smp_processor_id()
+with smp_processor_id() since the short circuit logic will prevent
+warnings from PREEMPT_DEBUG.
 
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
+Suggested-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200506164223.2875760-1-daniel.thompson@linaro.org
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
+ include/linux/kgdb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index 446fb896ee6d..6c2cd36048ea 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2925,7 +2925,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
- 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
- 	unsigned int rx_channel_id = reqctx->rxqidx / ctx->rxq_perchan;
- 	unsigned int ccm_xtra;
--	unsigned char tag_offset = 0, auth_offset = 0;
-+	unsigned int tag_offset = 0, auth_offset = 0;
- 	unsigned int assoclen;
- 
- 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index b072aeb1fd78..4d6fe87fd38f 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -323,7 +323,7 @@ extern void gdbstub_exit(int status);
+ extern int			kgdb_single_step;
+ extern atomic_t			kgdb_active;
+ #define in_dbg_master() \
+-	(raw_smp_processor_id() == atomic_read(&kgdb_active))
++	(irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
+ extern bool dbg_is_early;
+ extern void __init dbg_late_init(void);
+ extern void kgdb_panic(const char *msg);
 -- 
 2.25.1
 
