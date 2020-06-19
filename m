@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F199A20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C306920809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581725;
-	bh=hS28z6xSWw2sPqJgW7kXj7XRamTjmuW8YLgw81pClG0=;
+	s=default; t=1592581731;
+	bh=oFIdwIPcbSh6WjyfTNz2t9h1mlmA98OxWyFA46v78Jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oh1GMqz60ggwTbOTWhHkDM5BeU3yfniFeHFnx+C+J2dUqREmrKMMZ6S3vNZ12YrKF
-	 MshFstA5D0QVVRr6MtoPFAtouh6DrwwljAbr9/UlzfUYcp1dqx/tZZ1YfodOfiTvXX
-	 ljkxTbIOynCkPdd5PD/KCo5UZJ8YFCmc5eoXX3yk=
+	b=cMREz7PiwqJ0fmJiSRIJep9zAdnLpXg8U3kkO0FhxyjTMOT9MRfqCI22tErxP2RxU
+	 Am/IBIs3FDTeD5NPDsfZlWPMUyyZw1qceKIfsIcN5Q6nMU9HGG2KmC5Koni9KeuHGW
+	 3KdutWpNT0uFSQclPxmioxbhHlEbGWQGNCnkg9/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393413AbgFSPZ0 (ORCPT
+        id S2393404AbgFSPZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393019AbgFSPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:35 -0400
+        id S2393011AbgFSPWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B312158C;
-        Fri, 19 Jun 2020 15:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD7AA21582;
+        Fri, 19 Jun 2020 15:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580154;
-        bh=hS28z6xSWw2sPqJgW7kXj7XRamTjmuW8YLgw81pClG0=;
+        s=default; t=1592580151;
+        bh=oFIdwIPcbSh6WjyfTNz2t9h1mlmA98OxWyFA46v78Jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8Ez84T3dspR9oRkAJk2itAWVxEsWj+8/hf/brGZ14Z49Vj2nEiK3ZX0l4/2PGubD
-         DX7xU/UAZvEEIoVskIcb/KOFPRaL2f9LowgtgVmC4Nu+1m8a0K2RmATvhOGOIMxohn
-         b2TBGuZGLcruEy8dPAv96JjaUbs2x+ZQM0VHrkCk=
+        b=H/spPdRv45gj7x2DuTVjIcMaoE2r5yq2cbH4CWNBk3xLzy4g1vSUojPJrZ0yR3KtV
+         xt1Ym9f+PQNhMQUWsPA4ilbPCtSp6up3SGc0nsa49V1cxufs+Z1+46ZJlVrL/+p5R+
+         ZoQw0ee5xaunD3eYGO0t9VP45Vws9JQKautZMZDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zou Wei <zou_wei@huawei.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 141/376] octeontx2-pf: Fix error return code in otx2_probe()
-Date:   Fri, 19 Jun 2020 16:30:59 +0200
-Message-Id: <20200619141717.008834749@linuxfoundation.org>
+Subject: [PATCH 5.7 114/376] net/mlx4_core: Add missing iounmap() in error path
+Date:   Fri, 19 Jun 2020 16:30:32 +0200
+Message-Id: <20200619141715.742868593@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,45 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Zou Wei <zou_wei@huawei.com>
 
-[ Upstream commit 654cad8b6a17dcb00077070b27bc65873951a568 ]
+[ Upstream commit c90af587a9eee697e2d89683113707cada70116a ]
 
-Fix to return negative error code -ENOMEM from the error handling
-case instead of 0, as done elsewhere in this function.
+This fixes the following coccicheck warning:
 
-Fixes: 5a6d7c9daef3 ("octeontx2-pf: Mailbox communication with AF")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+drivers/net/ethernet/mellanox/mlx4/crdump.c:200:2-8: ERROR: missing iounmap;
+ioremap on line 190 and execution via conditional on line 198
+
+Fixes: 7ef19d3b1d5e ("devlink: report error once U32_MAX snapshot ids have been used")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/crdump.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 411e5ea1031e..64786568af0d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -1856,13 +1856,17 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	num_vec = pci_msix_vec_count(pdev);
- 	hw->irq_name = devm_kmalloc_array(&hw->pdev->dev, num_vec, NAME_SIZE,
- 					  GFP_KERNEL);
--	if (!hw->irq_name)
-+	if (!hw->irq_name) {
-+		err = -ENOMEM;
- 		goto err_free_netdev;
-+	}
+diff --git a/drivers/net/ethernet/mellanox/mlx4/crdump.c b/drivers/net/ethernet/mellanox/mlx4/crdump.c
+index 73eae80e1cb7..ac5468b77488 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/crdump.c
++++ b/drivers/net/ethernet/mellanox/mlx4/crdump.c
+@@ -197,6 +197,7 @@ int mlx4_crdump_collect(struct mlx4_dev *dev)
+ 	err = devlink_region_snapshot_id_get(devlink, &id);
+ 	if (err) {
+ 		mlx4_err(dev, "crdump: devlink get snapshot id err %d\n", err);
++		iounmap(cr_space);
+ 		return err;
+ 	}
  
- 	hw->affinity_mask = devm_kcalloc(&hw->pdev->dev, num_vec,
- 					 sizeof(cpumask_var_t), GFP_KERNEL);
--	if (!hw->affinity_mask)
-+	if (!hw->affinity_mask) {
-+		err = -ENOMEM;
- 		goto err_free_netdev;
-+	}
- 
- 	/* Map CSRs */
- 	pf->reg_base = pcim_iomap(pdev, PCI_CFG_REG_BAR_NUM, 0);
 -- 
 2.25.1
 
