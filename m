@@ -2,102 +2,92 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20093C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7662206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gn+Wk7/5"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE74206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584866;
+	bh=NDAz8UpTLqhZ7FdLtUin13OJKUA0jb58xry7q7XzBH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dQRgMf+YB7EiZc4fdPZNgNc5yQfdKAInYerq0WtqtM2MJiYU9TIicGlyqKl0E7m8s
+	 feDIbwj5QtAjbS8j1nmweXQapUQd3T8z5gvdDlCmOCLh4t63kBDDMnR5DEGyn+WssD
+	 ItHh1smDfLkus7cvRhGG6boU1RyuvoQdkU2WE3/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395475AbgFSQlC (ORCPT
+        id S2395483AbgFSQlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395247AbgFSQk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:40:58 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 942A1C0613EE;
-        Fri, 19 Jun 2020 09:40:57 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so4634207pfa.12;
-        Fri, 19 Jun 2020 09:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tK9/l5H5I2sTPevnihsYJcZkrv1LSOpcELI/uX/XwnM=;
-        b=Gn+Wk7/5sTWAqofkCiPolMYZnBQZifwoKtcHe2UC2scyMeIXm+YWmMrqpUDBDqFPM1
-         xzDt9IcRE5lQfW84J6ulLB6TnyTbp9FHJRDgjuI6cl9W0t74Am6zQ7XTf6tzjqqi2rS8
-         ytyZs2EtA43939hhnhXKpHIwJncgqaJj6SkSStuc5ZtH9Cy53zmC9bK6RhTR/AovJwO9
-         sAS7o8M5GjlFyfCF5LKrY2qcAVEAlaDR8HJlDcNfJyiGjfTi3oBBXXup5VQEUeEpo5NW
-         wK8buIXjjdx5Bi6caSg8kIZ2oUVRRM67qJ22fS7pB+zSXXTTBzr0MV73/G3PG0k3SM5j
-         i1Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=tK9/l5H5I2sTPevnihsYJcZkrv1LSOpcELI/uX/XwnM=;
-        b=luRDzdKr2GrEx4vPKHNLJk6USn0Z505pTa3ZHUXsLzGoKS6uUIi/Gu9p7k8oP0CJCK
-         c0o83rNtqkMFKSYlE4b8P9FH5vIOCbNdxOORsugB/39n7O7TtJyrlo+kbpQgTG9cPszA
-         XdtjxeuxuHJ81EcHnYM0c6wZR7OcSFcmXDhh2RGnlfLMX8goYDyuuvMTxm20+f66BYau
-         Ce8MIuJXpMyTHPjDpe5SsqkIyTGVmaVulL5B2RFzfCAWa5Y2M8lakAHvHkDnJQYuqPyd
-         IaeDuQklqtGC5tTD4KybMUkt/OqzP7iiGYIydPnjUJU2MFmOHZdcXtwKtlKkQoZ+76ZD
-         SQkA==
-X-Gm-Message-State: AOAM5307Cgetu5WJNm0+MJlRljBBTXiBD9suXYp/sw4O0nfoTUKXJ0SB
-        IimR/GlZ+dvvi09IeKiKDfo=
-X-Google-Smtp-Source: ABdhPJySYS6ppZ6SN/Log6IuGG9g198ColUeqelRPBwAVsrus3az7JAO+uah0Pq1wfGMMLSMb0P8fw==
-X-Received: by 2002:a63:d40c:: with SMTP id a12mr3767238pgh.124.1592584857179;
-        Fri, 19 Jun 2020 09:40:57 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9sm5568325pgg.74.2020.06.19.09.40.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Jun 2020 09:40:56 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 09:40:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/101] 4.4.228-rc1 review
-Message-ID: <20200619164055.GA258515@roeck-us.net>
-References: <20200619141614.001544111@linuxfoundation.org>
+        Fri, 19 Jun 2020 12:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395473AbgFSQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:41:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF312067D;
+        Fri, 19 Jun 2020 16:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592584860;
+        bh=NDAz8UpTLqhZ7FdLtUin13OJKUA0jb58xry7q7XzBH8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fDjkDw3B5JIcZbKv6txKr3ENclkaJUCLBlRM8aNligeEUA/6Oq3IWw/vMyeoKXWs8
+         /FOZD6g2z8v+XN+vyZeirPXbB4gsTy9WlA8+IwjOF4rym9mOs8mcxaJDdiv/9ED9VO
+         wW86p+5KR7gmK0xMSlmQUyKDdHTxRLi7+rN7vX94=
+Date:   Fri, 19 Jun 2020 18:40:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Richard Hughes <hughsient@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Daniel Gutson <daniel@eclypsium.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+Message-ID: <20200619164056.GB2235992@kroah.com>
+References: <20200618220139.GH27951@zn.tnic>
+ <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
+ <20200619074053.GA32683@zn.tnic>
+ <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
+ <20200619132243.GC32683@zn.tnic>
+ <CAD2FfiEr0kRWp2ut_PVqVDEVZqwESUxv=fxM9wUgi3n=ZCzPcQ@mail.gmail.com>
+ <20200619134432.GE32683@zn.tnic>
+ <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
+ <20200619161026.GF32683@zn.tnic>
+ <CAD2FfiGN5kdHHEz-6Oy9S-fFT35bJH0ZOfqfn5SyCG_Y2LtE_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD2FfiGN5kdHHEz-6Oy9S-fFT35bJH0ZOfqfn5SyCG_Y2LtE_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:31:49PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.228 release.
-> There are 101 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jun 19, 2020 at 05:33:39PM +0100, Richard Hughes wrote:
+> On Fri, 19 Jun 2020 at 17:10, Borislav Petkov <bp@alien8.de> wrote:
+> > - do you just want to display feature support?
 > 
-> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
-> Anything received after that time might be too late.
-> 
+> Yes. I want to show the user *why* TME is not available.
 
-Building powerpc:defconfig ... failed
---------------
-Error log:
+So even if it is "available" that's fine, even if it is not being used?
 
-drivers/macintosh/windfarm_pm112.c: In function ‘create_cpu_loop’:
-drivers/macintosh/windfarm_pm112.c:148:2: error: implicit declaration of function ‘kfree’
+And how can you ever tell if a BIOS disables a CPU feature, yet the chip
+still has it?  That should be not seen from the OS as it really doesn't
+care, it just knows if the feature is able to be used or not.
 
-Affects v4.4.y.queue and v4.9.y.queue.
+thanks,
 
-Guenter
+greg k-h
