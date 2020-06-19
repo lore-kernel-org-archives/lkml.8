@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7492168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3BD2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583701;
-	bh=Sm4YAHp4XHC6EZVqJn8u3pcBxKj++XEdR2o40i8kAAo=;
+	s=default; t=1592583708;
+	bh=FR0GBdXZRS3MESMaSu9Hju37YGFee3H+3/6KHSvEvTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1gC5cxhoIHnpl2Y+pDl6ybmnhiNHCi2ZX0I0K1S9cXdr+hUDM+JKLAabSgAUvBbL
-	 E71rYCPpusA1gMGdE2wy/DVBaBPSaAGbeoIRXivD4X38G5CviHOlxQ6O8bTlTp5HPH
-	 OY/G856LzlVhZiMy80Aw6+N2h3s908J9+bU2U8h4=
+	b=C9wHdqB9KNHmR88kbb5xQj46eRfoOzZI3nOz93ZMq0YCKV/DexX2vBsMsf+oJFsOp
+	 MnYyQ1MhrxJtUfkXrLHdTYGIBkxDGiUUOSI0onGlHIxxgtsB3ROy7Egqtenv6wsPBf
+	 M3iI/xTNX8fKetX94jaJUO8BJI4EhCbp0CRuKsYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405656AbgFSQVk (ORCPT
+        id S2405607AbgFSQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57224 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389916AbgFSPAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:42 -0400
+        id S2389261AbgFSPAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7843F20776;
-        Fri, 19 Jun 2020 15:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBBB20734;
+        Fri, 19 Jun 2020 15:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578843;
-        bh=Sm4YAHp4XHC6EZVqJn8u3pcBxKj++XEdR2o40i8kAAo=;
+        s=default; t=1592578840;
+        bh=FR0GBdXZRS3MESMaSu9Hju37YGFee3H+3/6KHSvEvTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGbEibRfXroAXQho9l/quOtYpLHPcKNefQjxXtoRmYodwB7OjzWZG+1RD/mPXYs07
-         CP64nhNw1WicXyCNe4l0kvI+Gqscf77RUQ8Cg8+j/NEfv4ZKuh0FSr2lHgZp4PvLf7
-         +P+9jtTmyGZLorEmFZNPk9J9ImVzGhJKXDJzWkBM=
+        b=oruCbSepx7VGfO85K+jx2XOhZtcDMBs9txQuPRqnlP/ZuzUydKtP/iYuuVZx0AhE1
+         038d80hz8wJJCalMEZVCVXYF/A5Se+QtCNx2B2wH4gpBX16yrgYN96x5a5uNvfIPK2
+         6LqepaWFHeEG6no67fDR68MtIm3wnhRuC6f2pkmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/267] mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
-Date:   Fri, 19 Jun 2020 16:32:42 +0200
-Message-Id: <20200619141657.281096252@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 176/267] bcache: fix refcount underflow in bcache_device_free()
+Date:   Fri, 19 Jun 2020 16:32:41 +0200
+Message-Id: <20200619141657.236504914@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,37 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit d863cb03fb2aac07f017b2a1d923cdbc35021280 ]
+[ Upstream commit 86da9f736740eba602389908574dfbb0f517baa5 ]
 
-sdhci-msm can support auto cmd12.
-So enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk.
+The problematic code piece in bcache_device_free() is,
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1587363626-20413-3-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+ 785 static void bcache_device_free(struct bcache_device *d)
+ 786 {
+ 787     struct gendisk *disk = d->disk;
+ [snipped]
+ 799     if (disk) {
+ 800             if (disk->flags & GENHD_FL_UP)
+ 801                     del_gendisk(disk);
+ 802
+ 803             if (disk->queue)
+ 804                     blk_cleanup_queue(disk->queue);
+ 805
+ 806             ida_simple_remove(&bcache_device_idx,
+ 807                               first_minor_to_idx(disk->first_minor));
+ 808             put_disk(disk);
+ 809         }
+ [snipped]
+ 816 }
+
+At line 808, put_disk(disk) may encounter kobject refcount of 'disk'
+being underflow.
+
+Here is how to reproduce the issue,
+- Attche the backing device to a cache device and do random write to
+  make the cache being dirty.
+- Stop the bcache device while the cache device has dirty data of the
+  backing device.
+- Only register the backing device back, NOT register cache device.
+- The bcache device node /dev/bcache0 won't show up, because backing
+  device waits for the cache device shows up for the missing dirty
+  data.
+- Now echo 1 into /sys/fs/bcache/pendings_cleanup, to stop the pending
+  backing device.
+- After the pending backing device stopped, use 'dmesg' to check kernel
+  message, a use-after-free warning from KASA reported the refcount of
+  kobject linked to the 'disk' is underflow.
+
+The dropping refcount at line 808 in the above code piece is added by
+add_disk(d->disk) in bch_cached_dev_run(). But in the above condition
+the cache device is not registered, bch_cached_dev_run() has no chance
+to be called and the refcount is not added. The put_disk() for a non-
+added refcount of gendisk kobject triggers a underflow warning.
+
+This patch checks whether GENHD_FL_UP is set in disk->flags, if it is
+not set then the bcache device was not added, don't call put_disk()
+and the the underflow issue can be avoided.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 4cff758767cb..643fd1a1b88b 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1706,7 +1706,9 @@ static const struct sdhci_ops sdhci_msm_ops = {
- static const struct sdhci_pltfm_data sdhci_msm_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
--		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 5b5cbfadd003..68ebc2759c2e 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -775,7 +775,9 @@ static void bcache_device_free(struct bcache_device *d)
+ 		bcache_device_detach(d);
+ 
+ 	if (disk) {
+-		if (disk->flags & GENHD_FL_UP)
++		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
 +
- 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops = &sdhci_msm_ops,
- };
++		if (disk_added)
+ 			del_gendisk(disk);
+ 
+ 		if (disk->queue)
+@@ -783,7 +785,8 @@ static void bcache_device_free(struct bcache_device *d)
+ 
+ 		ida_simple_remove(&bcache_device_idx,
+ 				  first_minor_to_idx(disk->first_minor));
+-		put_disk(disk);
++		if (disk_added)
++			put_disk(disk);
+ 	}
+ 
+ 	bioset_exit(&d->bio_split);
 -- 
 2.25.1
 
