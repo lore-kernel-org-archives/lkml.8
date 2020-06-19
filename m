@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA35FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF96B21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590D02158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582255;
-	bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
+	s=default; t=1592582258;
+	bh=BXhEgUETmjzf/cE+dKbtom1gE4b2jAdKhRUnOIlhMvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXWUo0OnnviNQ4IpT6mWDiRkWX/Zt2iK/v2fg7MPpiju6HRwNLwP3UIWk/cjC920O
-	 ChhWvmHDjMKNj9jIjqSTRXZez7F7K/r0k6/8kmQfKYhECHhArNn5WCXnvsGiZmsENB
-	 t/SI7Q5NOHmPyWrDSL9ugUjXA/ZxfaJTkvL3N4yE=
+	b=xX5f/Ncj91fo94jwFAjiXaqM3GFbxBwEGHJ9r7zzagItH4X6OBl3lZmQFgPdCGnVE
+	 iIgzXl8DTqwwheheKzvvhmhATldT+A4XNA59avtPSylljQo0dJEH9GhXT7AYI3B8jq
+	 LQk9AaUGB+S8LUGyrvOmFoRtjR4vF5fYE5t4pM/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392729AbgFSP5e (ORCPT
+        id S2405461AbgFSP5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:57:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392646AbgFSPUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:03 -0400
+        id S2392664AbgFSPUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50DD42158C;
-        Fri, 19 Jun 2020 15:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 967C62158C;
+        Fri, 19 Jun 2020 15:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580003;
-        bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
+        s=default; t=1592580008;
+        bh=BXhEgUETmjzf/cE+dKbtom1gE4b2jAdKhRUnOIlhMvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFlEdOLXyhKdW+rBWaJAAzCdFPhmg/vks6HxEYyqTHhBRe7ZEIbi4qjDDbYkX+2Ps
-         JiYg/NFHwtwvqU2m2n+2iK+FM+GbORR796UdeRPsfMSjjDTBRK1awn2FhlpF+AN2em
-         pshHZqRlMrPLI1FGkHXTLbqV5g7Q+91mNH7UVP4k=
+        b=sfrddE/7EYOuEdd7vX5Ld/av7q0UVOOtpcKc0N2iYy+9JnMm9DSGCwN+cBuGEoSqz
+         Ni47kOzB2mNamCwFM+2q4o28A7bTkUSADTChfADr/w1rxwPOf75Kg+jyNkEnYdDRWF
+         GhkyqRmO0HpA7ZHajFVS+q+P0Y1HWYoRrM8tTK8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 046/376] cpuidle: psci: Fixup execution order when entering a domain idle state
-Date:   Fri, 19 Jun 2020 16:29:24 +0200
-Message-Id: <20200619141712.538262919@linuxfoundation.org>
+Subject: [PATCH 5.7 088/376] media: staging/intel-ipu3: Implement lock for stream on/off operations
+Date:   Fri, 19 Jun 2020 16:30:06 +0200
+Message-Id: <20200619141714.507450086@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,61 +64,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Bingbu Cao <bingbu.cao@intel.com>
 
-[ Upstream commit 8b7ce5e49049ca78c238f03d70569a73da049f32 ]
+[ Upstream commit 33e3c349b2bf1235be458df09fb8d237141486c4 ]
 
-Moving forward, platforms are going to need to execute specific "last-man"
-operations before a domain idle state can be entered. In one way or the
-other, these operations needs to be triggered while walking the
-hierarchical topology via runtime PM and genpd, as it's at that point the
-last-man becomes known.
+Currently concurrent stream off operations on ImgU nodes are not
+synchronized, leading to use-after-free bugs (as reported by KASAN).
 
-Moreover, executing last-man operations needs to be done after the CPU PM
-notifications are sent through cpu_pm_enter(), as otherwise it's likely
-that some notifications would fail. Therefore, let's re-order the sequence
-in psci_enter_domain_idle_state(), so cpu_pm_enter() gets called prior
-pm_runtime_put_sync().
+[  250.090724] BUG: KASAN: use-after-free in
+ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090726] Read of size 8 at addr ffff888127b29bc0 by task
+yavta/18836
+[  250.090731] Hardware name: HP Soraka/Soraka, BIOS
+Google_Soraka.10431.17.0 03/22/2018
+[  250.090732] Call Trace:
+[  250.090735]  dump_stack+0x6a/0xb1
+[  250.090739]  print_address_description+0x8e/0x279
+[  250.090743]  ? ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090746]  kasan_report+0x260/0x28a
+[  250.090750]  ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090754]  ipu3_css_pool_cleanup+0x24/0x37 [ipu3_imgu]
+[  250.090759]  ipu3_css_pipeline_cleanup+0x61/0xb9 [ipu3_imgu]
+[  250.090763]  ipu3_css_stop_streaming+0x1f2/0x321 [ipu3_imgu]
+[  250.090768]  imgu_s_stream+0x94/0x443 [ipu3_imgu]
+[  250.090772]  ? ipu3_vb2_buf_queue+0x280/0x280 [ipu3_imgu]
+[  250.090775]  ? vb2_dma_sg_unmap_dmabuf+0x16/0x6f [videobuf2_dma_sg]
+[  250.090778]  ? vb2_buffer_in_use+0x36/0x58 [videobuf2_common]
+[  250.090782]  ipu3_vb2_stop_streaming+0xf9/0x135 [ipu3_imgu]
 
-Fixes: ce85aef570df ("cpuidle: psci: Manage runtime PM in the idle path")
-Reported-by: Lina Iyer <ilina@codeaurora.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Implemented a lock to synchronize imgu stream on / off operations and
+the modification of streaming flag (in struct imgu_device), to prevent
+these issues.
+
+Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/cpuidle-psci.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/staging/media/ipu3/ipu3-v4l2.c | 10 ++++++++++
+ drivers/staging/media/ipu3/ipu3.c      |  3 +++
+ drivers/staging/media/ipu3/ipu3.h      |  4 ++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index bae9140a65a5..d0fb585073c6 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -58,6 +58,10 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	u32 state;
- 	int ret;
+diff --git a/drivers/staging/media/ipu3/ipu3-v4l2.c b/drivers/staging/media/ipu3/ipu3-v4l2.c
+index 09c8ede1457c..db8b5d13631a 100644
+--- a/drivers/staging/media/ipu3/ipu3-v4l2.c
++++ b/drivers/staging/media/ipu3/ipu3-v4l2.c
+@@ -367,8 +367,10 @@ static void imgu_vb2_buf_queue(struct vb2_buffer *vb)
  
-+	ret = cpu_pm_enter();
-+	if (ret)
-+		return -1;
+ 	vb2_set_plane_payload(vb, 0, need_bytes);
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	if (imgu->streaming)
+ 		imgu_queue_buffers(imgu, false, node->pipe);
++	mutex_unlock(&imgu->streaming_lock);
+ 
+ 	dev_dbg(&imgu->pci_dev->dev, "%s for pipe %u node %u", __func__,
+ 		node->pipe, node->id);
+@@ -468,10 +470,13 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	dev_dbg(dev, "%s node name %s pipe %u id %u", __func__,
+ 		node->name, node->pipe, node->id);
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	if (imgu->streaming) {
+ 		r = -EBUSY;
++		mutex_unlock(&imgu->streaming_lock);
+ 		goto fail_return_bufs;
+ 	}
++	mutex_unlock(&imgu->streaming_lock);
+ 
+ 	if (!node->enabled) {
+ 		dev_err(dev, "IMGU node is not enabled");
+@@ -498,9 +503,11 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	/* Start streaming of the whole pipeline now */
+ 	dev_dbg(dev, "IMGU streaming is ready to start");
++	mutex_lock(&imgu->streaming_lock);
+ 	r = imgu_s_stream(imgu, true);
+ 	if (!r)
+ 		imgu->streaming = true;
++	mutex_unlock(&imgu->streaming_lock);
+ 
+ 	return 0;
+ 
+@@ -532,6 +539,7 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
+ 		dev_err(&imgu->pci_dev->dev,
+ 			"failed to stop subdev streaming\n");
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	/* Was this the first node with streaming disabled? */
+ 	if (imgu->streaming && imgu_all_nodes_streaming(imgu, node)) {
+ 		/* Yes, really stop streaming now */
+@@ -542,6 +550,8 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
+ 	}
+ 
+ 	imgu_return_all_buffers(imgu, node, VB2_BUF_STATE_ERROR);
++	mutex_unlock(&imgu->streaming_lock);
 +
- 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
- 	pm_runtime_put_sync_suspend(pd_dev);
+ 	media_pipeline_stop(&node->vdev.entity);
+ }
  
-@@ -65,10 +69,12 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	if (!state)
- 		state = states[idx];
+diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
+index 7a1d1881483b..ee1bba6bdcac 100644
+--- a/drivers/staging/media/ipu3/ipu3.c
++++ b/drivers/staging/media/ipu3/ipu3.c
+@@ -675,6 +675,7 @@ static int imgu_pci_probe(struct pci_dev *pci_dev,
+ 		return r;
  
--	ret = psci_enter_state(idx, state);
-+	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+ 	mutex_init(&imgu->lock);
++	mutex_init(&imgu->streaming_lock);
+ 	atomic_set(&imgu->qbuf_barrier, 0);
+ 	init_waitqueue_head(&imgu->buf_drain_wq);
  
- 	pm_runtime_get_sync(pd_dev);
+@@ -738,6 +739,7 @@ out_mmu_exit:
+ out_css_powerdown:
+ 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
+ out_mutex_destroy:
++	mutex_destroy(&imgu->streaming_lock);
+ 	mutex_destroy(&imgu->lock);
  
-+	cpu_pm_exit();
+ 	return r;
+@@ -755,6 +757,7 @@ static void imgu_pci_remove(struct pci_dev *pci_dev)
+ 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
+ 	imgu_dmamap_exit(imgu);
+ 	imgu_mmu_exit(imgu->mmu);
++	mutex_destroy(&imgu->streaming_lock);
+ 	mutex_destroy(&imgu->lock);
+ }
+ 
+diff --git a/drivers/staging/media/ipu3/ipu3.h b/drivers/staging/media/ipu3/ipu3.h
+index 73b123b2b8a2..8cd6a0077d99 100644
+--- a/drivers/staging/media/ipu3/ipu3.h
++++ b/drivers/staging/media/ipu3/ipu3.h
+@@ -146,6 +146,10 @@ struct imgu_device {
+ 	 * vid_buf.list and css->queue
+ 	 */
+ 	struct mutex lock;
 +
- 	/* Clear the domain state to start fresh when back from idle. */
- 	psci_set_domain_state(0);
- 	return ret;
++	/* Lock to protect writes to streaming flag in this struct */
++	struct mutex streaming_lock;
++
+ 	/* Forbid streaming and buffer queuing during system suspend. */
+ 	atomic_t qbuf_barrier;
+ 	/* Indicate if system suspend take place while imgu is streaming. */
 -- 
 2.25.1
 
