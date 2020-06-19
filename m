@@ -2,136 +2,106 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24225C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7363DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0877F207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585452083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732859AbgFSMIC (ORCPT
+        id S1730721AbgFSMJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:08:02 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:45791 "EHLO
+        Fri, 19 Jun 2020 08:09:37 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:42165 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732846AbgFSMH4 (ORCPT
+        with ESMTP id S1727074AbgFSMJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:07:56 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M42X0-1jmFoJ0ZMW-0000dz for <linux-kernel@vger.kernel.org>; Fri, 19 Jun
- 2020 14:07:55 +0200
-Received: by mail-qk1-f182.google.com with SMTP id l6so4994837qkc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:07:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530pBj1ogtWhUJ8NvpUDVlYoy/wAG9SiK69sS/P9sPq9ibHPS60+
-        jZE6nyWoAMPD5UJ/BXAUP8fCB9ZdmXVOp+2Vhs8=
-X-Google-Smtp-Source: ABdhPJwHx2uaIMhEGlEMDgOdw7u23u0WTOydTXFPEmc56fSEQqUwklU3gb9vWno9ShiFPoxSOoPySMVl5vIdoNyR1Y8=
-X-Received: by 2002:a37:8384:: with SMTP id f126mr565913qkd.471.1592568473970;
- Fri, 19 Jun 2020 05:07:53 -0700 (PDT)
+        Fri, 19 Jun 2020 08:09:35 -0400
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M3DeV-1jjE5z29Of-003aNF for <linux-kernel@vger.kernel.org>; Fri, 19 Jun
+ 2020 14:09:34 +0200
+Received: by mail-qt1-f179.google.com with SMTP id e16so6972584qtg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:09:34 -0700 (PDT)
+X-Gm-Message-State: AOAM530o/TjpGfNnAsRSA5Cd0y1FN1Se4HlxlrF/eNOAVMvjg7IxdXg8
+        jNgNqTH/o5bKitY077myE9SO3jgmmuF4Hu27qOs=
+X-Google-Smtp-Source: ABdhPJxA0xAoTTK83uVN3FDnLwdbtZgW7ukPPu7FTx6JnhSlyVPHYpyZqYx5kttP3YZlWw/HjwTmkIUAT2zUBrSAWJU=
+X-Received: by 2002:ac8:7417:: with SMTP id p23mr3002032qtq.204.1592568573384;
+ Fri, 19 Jun 2020 05:09:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616135617.2937252-1-mpe@ellerman.id.au> <20200616135617.2937252-2-mpe@ellerman.id.au>
-In-Reply-To: <20200616135617.2937252-2-mpe@ellerman.id.au>
+References: <1592369623-10723-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB49667E1B41DC2A77B3E2FEBF809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <AM6PR0402MB3911B852B49E194E5FE84505F59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39167727A8B7CEDAC531D94EF59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a3zHBRqSg1VeuKcmyQquE7n5wrEViw5KFbDGJNaMjtZRw@mail.gmail.com>
+ <AM6PR04MB496696A8695FA85D1EEE276B80980@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916B7B5E730E2D2B93C5ECCF5980@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916B7B5E730E2D2B93C5ECCF5980@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jun 2020 14:07:38 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0+PBCg=TJXgwbuA02841M3NgQyoxfrua0XpovFz0K98A@mail.gmail.com>
-Message-ID: <CAK8P3a0+PBCg=TJXgwbuA02841M3NgQyoxfrua0XpovFz0K98A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] powerpc/syscalls: Split SPU-ness out of ABI
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@ozlabs.org, linux-arch@ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 19 Jun 2020 14:09:15 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3AnZ3LpYmeerHQUWNWE4iT6Zn=QAiuJb2Crz02Pc4kAg@mail.gmail.com>
+Message-ID: <CAK8P3a3AnZ3LpYmeerHQUWNWE4iT6Zn=QAiuJb2Crz02Pc4kAg@mail.gmail.com>
+Subject: Re: [PATCH] soc: imx-scu: Support module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dIBrSAJOVcOL94yEVVbdoWD3jDqP5SE46s19szXCxkab1rTnSWI
- KH0w3Yrfnp7t5EmZ9oT2MQKNZ74S5It0aYazarD5VqJU7sWF/GKsIJn6zOGkAqp3QU+ePSr
- +YeWHnRcOaG6J4WtinxTuxnkfeuQGV9yHQXJ2dsObRFmWOlwqVc+oBlizjgN3eMho1HCyyY
- qNIT7+tZ3cI8Ig88BF+Gw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f/KtunD0xBQ=:ZiBFEvp982Wu0recaFb2wb
- S83RgdTK30UPS0IEGsYmpJSme7ehCMeZix6rNNeRfATpR/cNjO7ETHOW3WOA+O3IVKduAQuur
- n3uZXUW+UYhZgxB+wtCzWR+HE/Ydm7T/iOB4Mk0Yf4KlROibKRYF0JK1rcZGSoSK8aPj4UaPh
- 9eN/grYTBWcZObYjdwIJTdnxSyNL+n8ECnw3RKDWXeVKksBd5yeXHtIG6Lo59YSGAEuqd9c1J
- 8Tmorf1AxVZh2TFuibf8dySjccOyBb9T9g1sphXAK92uzSJcUCmSdygTM+k/+g6W8r0O06QQJ
- kV80G53e4Zanfj1febLI578ud3U0Q/GwRUCopkXhsTtZ1Q6AElBUDxvH6L7ZHqnaybGZHkaqG
- SCPoxzOqucwHrXN11NAMVwfELE2F1+wWgPk53Gq6zEOV0MXcffUN+nY5tZxlhsnH8Cl2vxITu
- kVh/wadLbTEbumejuj111kLmnrxFIa3KnOsEJkAVFDLnYEvGmFaQd2UuTGz9m/M4bFdQYciQS
- jfXl2WrPqU1HYthaCWeO2Vfc8vjVTcgmy2wxJnrflw2aJYa3SDGXgb5oFXn1Pwu1panWl3fIS
- XytNw7iBVHEo/1GSE581Aohe9MKeZBn6Etyqt0oA+J9b+xc3A6jjSMvjHITcBFtEkoVDnEL4O
- MDiCMn73ElgnCTiqyU83Ohf/tBadII0+Y0qfw6xuAwG8/oxU/Gp49lt+4JA60v9eSOxWV6bra
- j6kSaXyfg80/vOKgVyDPdf/1oY1pWqwSdUl7Gk24QvpVWiWXC6Cwf/sw22vRatRuixtf7Kdxn
- U5OL/5zQz5xf2iXXa0YuhCKPA2qADcKxJ3UwPahkTSqVQ2P8KA=
+X-Provags-ID: V03:K1:jl/lT1XI87C/+ifYXhg/52Hr7i4i5c1nDgolYvu1U/DOCiSY1Wu
+ 56yxmljRi5Y36yryDX7kF0kD4st9wXiPUV4VedCMCs2GGI5LTPcMlNL81e3I+cAwfXKvdXK
+ WTcJoi1+mWNnAVQ3fAvDxhU/aIMGNEOgsA3NgR9L+zF25+K+PNqbLBTVyfKmsXLuvtZ9v/M
+ JcJBx+t9QxKdurVIBtI4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l5O1qcmzP18=:sP3yiUzvTWspeFuNvthZnz
+ eRPCFITOjNCUxcJvjJKeHcGjAKsVmI29xJTDn5nEKjB5FsqMKEO1OOUhQY0vhhDBbFFSYjZoD
+ r3fr80thR9CY0NqrDFDCah1UvXc1PLpgT/cRTPzZLVbtb7t/ialI5VuiS2jFlxXm9933O4fru
+ W9//+vIKYnPxOxM4kjvnhCPEwBslbuvndwoK5M8LHDNvjeGrdTvH7Di3EPbvHh4QNh7XM7kfL
+ VqZjY1nVJHxM/b+stOesWZ8fqLSbs7KNvEogIxJMgOaVLU2YoqCkMzla9HJ9PDmPDt+tlzGle
+ LK6YYUt8eoOVqfeBKN92/92+TJ1bO6vUHvITO4FU0ltTGX4djh4QLLNG5wm9Py4NSEr2F2VaY
+ A+I9SKzdUfT/6X74L1ZYgEEsSkuKE1C3eco6HL5iyP1gZiU8eZuD08Fyy1y7Ws6ALIUeDW2kT
+ Y2IJa8e673l3AJCs1MAmwDI/2iKFARY/3ZuEL8541Wo98rwCgfPmWXO30SPo8tEXUImzPKejZ
+ 1L6gfpxNvMsdL+HqUUjGog+nGFll+VG7uWs1i7Gm99PD9dfRr3nCicxG51FAetaPqjJ4Q9j15
+ JzL9X0VzHU9i32M93oeLmmv/988Lj2bG4Dl9ExzcnezrHNa8poz9o1AZMdzJpLKw+RgBB17Xc
+ zapZBM9M7I5ddJBL7uLOWbiJL/rE+JJ45le3i8fMkSEncqt+GTLKucnM+hrPETkwQpJcftcOP
+ ICYCfHAx9HgFhSF36wiQ8HB+MkAVaybSIO6mGIuvZRIR9NyRafF6bepQTJZ7/Q+k7BeHU8CeB
+ DJcmg0bscrtt9Q5prGcgP2r8HDhdivbwK1rmoGEZbu7ifGJEaU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 3:56 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+On Fri, Jun 19, 2020 at 9:40 AM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: RE: [PATCH] soc: imx-scu: Support module build
+> >
+> > > From: Arnd Bergmann <arnd@arndb.de> Sent: Thursday, June 18, 2020 3:21 PM
+> > > I see that there is indeed a driver for the device node in
+> > > drivers/firmware/imx/imx-scu.c, the only reason for this module using
+> > > device_initcall() with a manual
+> > > platform_device_register_simple() seems to be that we cannot have two
+> > > platform drivers bind to the same device node.
+> > >
+> > > I think a cleaner way to handle this would be to just move the entire
+> > > soc driver into the firmware driver and then remove the duplication.
+> > >
+> >
+> > Yes, sounds like a good idea to me.
 >
-> Using the ABI field to encode whether a syscall is usable by SPU
-> programs or not is a bit of kludge.
->
-> The ABI of the syscall doesn't change depending on the SPU-ness, but
-> in order to make the syscall generation work we have to pretend that
-> it does.
+> So the idea is to remove this driver and implement the soc id/revision/serial_number etc.
+> in drivers/firmware/imx/imx-scu.c, right?
 
-The idea of the ABI field is not to identify which ABI a syscall follows
-but which ABIs do or do not implement it. This is the same with e.g.
-the x32 ABI on x86.
+Yes, I think you can basically merge imx_scu_soc_probe() into imx_scu_probe()
+or call it from there, with only a few changes.
 
-> It also means we have more duplicated syscall lines than we need to,
-> and the SPU logic is not well contained, instead all of the syscall
-> generation targets need to know if they are spu or nospu.
->
-> So instead add a separate file which contains the information on which
-> syscalls are available for SPU programs. It's just a list of syscall
-> numbers with a single "spu" field. If the field has the value "spu"
-> then the syscall is available to SPU programs, any other value or no
-> entry entirely means the syscall is not available to SPU programs.
->
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-
-I have a patch series originally from Firoz that was never quite finished
-to unify the scripts across all architectures. I think making the format of
-the table format more powerpc specific like you do here takes it a step
-backwards and makes it harder to do that eventually.
-
->  4 files changed, 523 insertions(+), 128 deletions(-)
->  create mode 100644 arch/powerpc/kernel/syscalls/spu.tbl
->
->
-> I'm inclined to put this in next and ask Linus to pull it before rc2, that seems
-> like the least disruptive way to get this in, unless anyone objects?
-
-I still hope we can get a better solution.
-
-> diff --git a/arch/powerpc/kernel/syscalls/spu.tbl b/arch/powerpc/kernel/syscalls/spu.tbl
-> new file mode 100644
-> index 000000000000..5eac04919303
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/syscalls/spu.tbl
-> @@ -0,0 +1,430 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# The format is:
-> +# <number> <name> <spu>
-> +#
-> +# To indicate a syscall can be used by SPU programs use "spu" for the spu column.
-> +#
-> +# Syscalls that are not to be used by SPU programs can be left out of the file
-> +# entirely, or an entry with a value other than "spu" can be added.
-> +0      restart_syscall                 -
-> +1      exit                            -
-> +2      fork                            -
-> +3      read                            spu
-> +4      write                           spu
-> +5      open                            spu
-
-Having a new table format here also makes it harder for others to add
-a new system call, both because it doesn't follow the syscall*.tbl naming
-and because one has to first understand what the format is.
-
-If you absolutely want to split it out, could you at least make the format
-compatible with the existing scripts and avoid the change to
-the syscalltbl.sh file?
-
-       Arnd
+      Arnd
