@@ -2,172 +2,222 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB10C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D300C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B8D207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70770207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592545766;
+	bh=VEL8weR/xoFbJJyVOg6a+vhA+N8qD7W+yBodRl0NuLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lSu3dtW/I1nkA4zFLjkquQCrcoTruwLvPzZ+BeGWrJp3aBKlnZw7T9c5vA2rrO83K
+	 CUlZCpgSSECtOXnBWDcLPkMPNrTScb1HiCl8j6tCMROgWrRhY7KnCY3Hw2+Zxmuvbe
+	 BC+w2AhAyM6w9XF5laJ/hN+/m/+ZR/ugSdzfPAKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgFSFsP (ORCPT
+        id S1728975AbgFSFtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:48:15 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44794 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgFSFsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:48:14 -0400
-Received: by mail-io1-f72.google.com with SMTP id v14so5939501iob.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:48:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=F1iFEVTnJM7VtnU/WKTFvYYYzihsyhayjjFqm4xQ7sw=;
-        b=o3MqxKzH1zuRnqfmOUQ2Q+jMw8UW1/PDz4WxtqDP/zwT6DRt1qJXui+Cpr0IHkF1yi
-         EKsZgOG/GLOBl/Uwo1P+yQ/tpkSwbaElcNPIVvlyvxCWBrH7E4+ovoJqjtEv8AFP/AeC
-         KE2hsF/Rvcltq4fh2TEdomzs90FtBRy6E33c0W/5b1jCBO7sge4bzsVz5qDzsq3pnabw
-         AANKhQNhzVu0EGbJACjUpXXppJb+YcnYtx8v9pVfVVuRBDxz6RCTHq2vvhWBNUdMJUvl
-         KOOr6CYNf0CFYvCBm6d/Vh0Dfg+g2MvZ0X8ri/HXChnllex14DPGOYf1mtHPBz7W8+5u
-         Om2Q==
-X-Gm-Message-State: AOAM530/YZi5xnUVwc7dtXolmEd28xY8G28p7mNSaqkavjofBff3tK/B
-        0XDTMaEzsOnLqI6zxY9VctwaoRvM0beKXpRQOZRMpUB1StdK
-X-Google-Smtp-Source: ABdhPJz6LP9cAsji3gkOO9GMUnWOu94LW1rdoit8FT329hoB2ZPcfd8E050slkxRsHbotexpbnZWl24KBfJqR2rJAEwH6T+X/wV9
+        Fri, 19 Jun 2020 01:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgFSFtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 01:49:23 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90FAB2078D;
+        Fri, 19 Jun 2020 05:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592545762;
+        bh=VEL8weR/xoFbJJyVOg6a+vhA+N8qD7W+yBodRl0NuLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pbbcdnEsPN+8N+jAFsWGBYW3ekbUASzdgPYwVxI8JboHCMCJ7/PUgyep9x8JZtJVy
+         NPkkTz98grlsgQweaKYm7Ze/yymFJrUwXtkyOdM+8oFYj7wJ7rkMfLpbLA9Ln4XBUm
+         8ofNQ73ei7E+kUprnKCAxjeqjdI8N5kXMPoC7m6E=
+Date:   Thu, 18 Jun 2020 22:49:22 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
+Message-ID: <20200619054922.GC227771@google.com>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
+ <20200618235932.GA227771@google.com>
+ <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2295:: with SMTP id d21mr2616123iod.0.1592545693570;
- Thu, 18 Jun 2020 22:48:13 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 22:48:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005a991a05a86970bb@google.com>
-Subject: KASAN: use-after-free Read in dev_uevent
-From:   syzbot <syzbot+348b571beb5eeb70a582@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 06/19, Chao Yu wrote:
+> Hi Jaegeuk,
+> 
+> On 2020/6/19 7:59, Jaegeuk Kim wrote:
+> > Hi Chao,
+> > 
+> > On 06/18, Chao Yu wrote:
+> >> to make page content stable for special device like raid.
+> > 
+> > Could you elaborate the problem a bit?
+> 
+> Some devices like raid5 wants page content to be stable, because
+> it will calculate parity info based page content, if page is not
+> stable, parity info could be corrupted, result in data inconsistency
+> in stripe.
 
-syzbot found the following crash on:
+I don't get the point, since those pages are brand new pages which were not
+modified before. If it's on writeback, we should not modify them regardless
+of whatever raid configuration. For example, f2fs_new_node_page() waits for
+writeback. Am I missing something?
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=169fa049100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
-dashboard link: https://syzkaller.appspot.com/bug?extid=348b571beb5eeb70a582
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+348b571beb5eeb70a582@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in dev_uevent+0x30a/0x580 drivers/base/core.c:1486
-Read of size 8 at addr ffff888098662098 by task systemd-udevd/29958
-
-CPU: 0 PID: 29958 Comm: systemd-udevd Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- dev_uevent+0x30a/0x580 drivers/base/core.c:1486
- uevent_show+0x1b2/0x2f0 drivers/base/core.c:1557
- dev_attr_show+0x50/0xc0 drivers/base/core.c:1261
- sysfs_kf_seq_show+0x30e/0x4e0 fs/sysfs/file.c:60
- seq_read+0x41a/0xce0 fs/seq_file.c:208
- __vfs_read+0x9c/0x6d0 fs/read_write.c:426
- vfs_read+0x1c4/0x400 fs/read_write.c:462
- ksys_read+0x11b/0x220 fs/read_write.c:588
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7f28fc677910
-Code: b6 fe ff ff 48 8d 3d 0f be 08 00 48 83 ec 08 e8 06 db 01 00 66 0f 1f 44 00 00 83 3d f9 2d 2c 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 de 9b 01 00 48 89 04 24
-RSP: 002b:00007ffe3053dd18 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00005562a17eb920 RCX: 00007f28fc677910
-RDX: 0000000000001000 RSI: 00005562a17fe8c0 RDI: 0000000000000007
-RBP: 00007f28fc932440 R08: 00007f28fc9361e8 R09: 0000000000001010
-R10: 00005562a17eb920 R11: 0000000000000246 R12: 0000000000001000
-R13: 0000000000000d68 R14: 00005562a17fe8c0 R15: 00007f28fc931900
-
-Allocated by task 29904:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- dev_new drivers/usb/gadget/legacy/raw_gadget.c:182 [inline]
- raw_open+0x87/0x500 drivers/usb/gadget/legacy/raw_gadget.c:372
- misc_open+0x346/0x3c0 drivers/char/misc.c:141
- chrdev_open+0x498/0x580 fs/char_dev.c:414
- do_dentry_open+0x808/0x1020 fs/open.c:828
- do_open fs/namei.c:3229 [inline]
- path_openat+0x2790/0x38b0 fs/namei.c:3346
- do_filp_open+0x191/0x3a0 fs/namei.c:3373
- do_sys_openat2+0x463/0x770 fs/open.c:1179
- do_sys_open fs/open.c:1195 [inline]
- ksys_open include/linux/syscalls.h:1388 [inline]
- __do_sys_open fs/open.c:1201 [inline]
- __se_sys_open fs/open.c:1199 [inline]
- __x64_sys_open+0x1af/0x1e0 fs/open.c:1199
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Freed by task 29956:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- raw_release+0x130/0x1e0 drivers/usb/gadget/legacy/raw_gadget.c:411
- __fput+0x2ed/0x750 fs/file_table.c:281
- task_work_run+0x147/0x1d0 kernel/task_work.c:123
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x5ef/0x1f80 kernel/exit.c:806
- do_group_exit+0x15e/0x2c0 kernel/exit.c:904
- get_signal+0x13cf/0x1d60 kernel/signal.c:2739
- do_signal+0x33/0x610 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop arch/x86/entry/common.c:161 [inline]
- prepare_exit_to_usermode+0x32a/0x600 arch/x86/entry/common.c:196
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-The buggy address belongs to the object at ffff888098662000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 152 bytes inside of
- 4096-byte region [ffff888098662000, ffff888098663000)
-The buggy address belongs to the page:
-page:ffffea0002619880 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002619880 order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea00021d0908 ffffea0002a5a808 ffff8880aa402000
-raw: 0000000000000000 ffff888098662000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888098661f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888098662000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888098662080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff888098662100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888098662180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >>  fs/f2fs/dir.c          |  2 ++
+> >>  fs/f2fs/extent_cache.c | 18 +++++++++---------
+> >>  fs/f2fs/f2fs.h         |  2 +-
+> >>  fs/f2fs/file.c         |  1 +
+> >>  fs/f2fs/inline.c       |  2 ++
+> >>  fs/f2fs/inode.c        |  3 +--
+> >>  6 files changed, 16 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+> >> index d35976785e8c..91e86747a604 100644
+> >> --- a/fs/f2fs/dir.c
+> >> +++ b/fs/f2fs/dir.c
+> >> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
+> >>  	if (IS_ERR(dentry_page))
+> >>  		return PTR_ERR(dentry_page);
+> >>  
+> >> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
+> >> +
+> >>  	dentry_blk = page_address(dentry_page);
+> >>  
+> >>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
+> >> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+> >> index e60078460ad1..686c68b98610 100644
+> >> --- a/fs/f2fs/extent_cache.c
+> >> +++ b/fs/f2fs/extent_cache.c
+> >> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
+> >>  }
+> >>  
+> >>  /* return true, if inode page is changed */
+> >> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+> >> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+> >>  {
+> >>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> >> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
+> >>  	struct extent_tree *et;
+> >>  	struct extent_node *en;
+> >>  	struct extent_info ei;
+> >> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+> >>  	if (!f2fs_may_extent_tree(inode)) {
+> >>  		/* drop largest extent */
+> >>  		if (i_ext && i_ext->len) {
+> >> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+> >>  			i_ext->len = 0;
+> >> -			return true;
+> >> +			set_page_dirty(ipage);
+> >> +			return;
+> >>  		}
+> >> -		return false;
+> >> +		return;
+> >>  	}
+> >>  
+> >>  	et = __grab_extent_tree(inode);
+> >>  
+> >>  	if (!i_ext || !i_ext->len)
+> >> -		return false;
+> >> +		return;
+> >>  
+> >>  	get_extent_info(&ei, i_ext);
+> >>  
+> >> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+> >>  	}
+> >>  out:
+> >>  	write_unlock(&et->lock);
+> >> -	return false;
+> >>  }
+> >>  
+> >> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+> >> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+> >>  {
+> >> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
+> >> +	__f2fs_init_extent_tree(inode, ipage);
+> >>  
+> >>  	if (!F2FS_I(inode)->extent_tree)
+> >>  		set_inode_flag(inode, FI_NO_EXTENT);
+> >> -
+> >> -	return ret;
+> >>  }
+> >>  
+> >>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index b35a50f4953c..326c12fa0da5 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
+> >>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
+> >>  						struct rb_root_cached *root);
+> >>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
+> >> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
+> >> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
+> >>  void f2fs_drop_extent_tree(struct inode *inode);
+> >>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
+> >>  void f2fs_destroy_extent_tree(struct inode *inode);
+> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >> index 3268f8dd59bb..1862073b96d2 100644
+> >> --- a/fs/f2fs/file.c
+> >> +++ b/fs/f2fs/file.c
+> >> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+> >>  				f2fs_put_page(psrc, 1);
+> >>  				return PTR_ERR(pdst);
+> >>  			}
+> >> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+> >>  			f2fs_copy_page(psrc, pdst);
+> >>  			set_page_dirty(pdst);
+> >>  			f2fs_put_page(pdst, 1);
+> >> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+> >> index dbade310dc79..4bcbc486c9e2 100644
+> >> --- a/fs/f2fs/inline.c
+> >> +++ b/fs/f2fs/inline.c
+> >> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+> >>  	struct f2fs_dentry_ptr d;
+> >>  	void *inline_dentry;
+> >>  
+> >> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+> >> +
+> >>  	inline_dentry = inline_data_addr(inode, ipage);
+> >>  
+> >>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
+> >> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> >> index 44582a4db513..7c156eb26dd7 100644
+> >> --- a/fs/f2fs/inode.c
+> >> +++ b/fs/f2fs/inode.c
+> >> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
+> >>  	fi->i_pino = le32_to_cpu(ri->i_pino);
+> >>  	fi->i_dir_level = ri->i_dir_level;
+> >>  
+> >> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
+> >> -		set_page_dirty(node_page);
+> >> +	f2fs_init_extent_tree(inode, node_page);
+> >>  
+> >>  	get_inline_info(inode, ri);
+> >>  
+> >> -- 
+> >> 2.18.0.rc1
+> > .
+> > 
