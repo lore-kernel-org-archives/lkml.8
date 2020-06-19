@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16EF21531
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3E921531
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582432;
-	bh=+XUa+QkXIWQlTxrFkkvcAbe+hTh14HBih0M5FvU+b+k=;
+	s=default; t=1592582437;
+	bh=YS/1+C5Gc/aYgEcSiM1bzy5ILHrf1WyuBfOZNkmRka0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=neXTR02dG81pX8MUAN565yd0cstfP46PF3ebxbu8aduzH5fV0ti6sZ/qNrg/WHwZd
-	 12uX5bSReDEp+GTsJcPGjdkUeeTvjL5RYzHXEw8HM98iqguyEgDDUs9lOeBSnv973w
-	 f6mP6z841l+xLFcsoBkgXB6y+uvyR4EjcfO5/hDo=
+	b=LVncWZf5XOyIm88h7CDklXI3EqPqVz17AAjKarhb5l/utioa8f+6ShNwpbuE/u20w
+	 IjE/TNFhiagz5LHv2SYnIPSWQJhtKd4FGSMSL+Y2sXfT+fab7EzdYuhAhjOj8pnyge
+	 VaTgQWW0Wva35woVZxThVDfcT017sIxgkbr/J97w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403823AbgFSPO1 (ORCPT
+        id S2391602AbgFSQAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44650 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392305AbgFSPOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:07 -0400
+        id S2403987AbgFSPO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C0C21582;
-        Fri, 19 Jun 2020 15:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6B62186A;
+        Fri, 19 Jun 2020 15:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579647;
-        bh=+XUa+QkXIWQlTxrFkkvcAbe+hTh14HBih0M5FvU+b+k=;
+        s=default; t=1592579668;
+        bh=YS/1+C5Gc/aYgEcSiM1bzy5ILHrf1WyuBfOZNkmRka0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qL48scrH3TzC5cgu4mIWwiIbdd/ecgCBJfHgOQ6dyNcJZUKgkIVg3u9/jfxH9mU4r
-         faxniojekzqRrv+2lbsZL+/FAHRx4ManGKx1pzdnoloYDueWBlJp5W1iRmoqkON+vp
-         8+QVhj81CS5iUIou3Cad0MjYDhAJeYIK3VC19//A=
+        b=UiDO+F1vImqFvDHSQSW5BlF8JtyE0Xdpbzi9VelaDdfGi04rCsxT7Vw0B544nMtz1
+         b1unFmumjXbSVjbj1+LzwI1IwXaJLKoxmTyh7wbXA1KdeQEpD3NaqpeXlX5ly57eZV
+         SImQPSwqeurtSBju+1Newh7agib9BgtG2grOetvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Qiushi Wu <wu000273@umn.edu>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.4 213/261] power: supply: core: fix memory leak in HWMON error path
-Date:   Fri, 19 Jun 2020 16:33:44 +0200
-Message-Id: <20200619141700.097472191@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 191/261] serial: 8250_pci: Move Pericom IDs to pci_ids.h
+Date:   Fri, 19 Jun 2020 16:33:22 +0200
+Message-Id: <20200619141659.055686659@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,35 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 1d7a7128a2e9e1f137c99b0a44e94d70a77343e3 upstream.
+[ Upstream commit 62a7f3009a460001eb46984395280dd900bc4ef4 ]
 
-In function power_supply_add_hwmon_sysfs(), psyhw->props is
-allocated by bitmap_zalloc(). But this pointer is not deallocated
-when devm_add_action fail,  which lead to a memory leak bug. To fix
-this, we replace devm_add_action with devm_add_action_or_reset.
+Move the IDs to pci_ids.h so it can be used by next patch.
 
-Cc: stable@kernel.org
-Fixes: e67d4dfc9ff19 ("power: supply: Add HWMON compatibility layer")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200508065343.32751-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_hwmon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_pci.c | 6 ------
+ include/linux/pci_ids.h            | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -304,7 +304,7 @@ int power_supply_add_hwmon_sysfs(struct
- 		goto error;
- 	}
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index 8a01d034f9d1..7cad66eb39ff 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -1871,12 +1871,6 @@ pci_moxa_setup(struct serial_private *priv,
+ #define PCIE_DEVICE_ID_WCH_CH384_4S	0x3470
+ #define PCIE_DEVICE_ID_WCH_CH382_2S	0x3253
  
--	ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
-+	ret = devm_add_action_or_reset(dev, power_supply_hwmon_bitmap_free,
- 			      psyhw->props);
- 	if (ret)
- 		goto error;
+-#define PCI_VENDOR_ID_PERICOM			0x12D8
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
+-
+ #define PCI_VENDOR_ID_ACCESIO			0x494f
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
+ #define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1dfc4e1dcb94..9a57e6717e5c 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1832,6 +1832,12 @@
+ #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
+ #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
+ 
++#define PCI_VENDOR_ID_PERICOM			0x12D8
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
++
+ #define PCI_SUBVENDOR_ID_CHASE_PCIFAST		0x12E0
+ #define PCI_SUBDEVICE_ID_CHASE_PCIFAST4		0x0031
+ #define PCI_SUBDEVICE_ID_CHASE_PCIFAST8		0x0021
+-- 
+2.25.1
+
 
 
