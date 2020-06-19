@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29747C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36686C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40B6206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5D7206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585108;
-	bh=84hFvqnIv9RWd0djDh3w5bOVOFisJWS+WGdyjLQ/ADg=;
+	s=default; t=1592585115;
+	bh=Q1MnH9RZEWmo/MLTr/txxuhrn1OC1QQbfLP0JeFzoCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rioa8uBQofFKq2ICPpm1vk6cwCCIN3UHGk7Q2W0WNVOsOTEaQ8C3oWEWN08VOEKyN
-	 r7aKu7XrVtCmh8XtH053FpPwMfuSXt4iwgRd5xDh2Ohfy9jQ3GYBFlhfDlHPalnhP3
-	 MeCBr9Wh9Obd9VNii8SQPrBOMe4gvSsbHqi3mLlE=
+	b=ImqEqM+hi98oQsJ0HC7b+zaxQgZLsCYtzWkoL0dfHkLEjE+gm98n9gMr31DX6cU9J
+	 R/JQe/8PvH43y9lD3BL/4uBYMda0Wv8/7Ifn355ThvERscWIZp7hiQAOgxW5p/lHsm
+	 OGQW9US07gnqWkMcaKct0gcqJ8HPriTbAcMz5XOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395416AbgFSQpH (ORCPT
+        id S2395546AbgFSQpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbgFSOme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:34 -0400
+        id S2387999AbgFSOmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743E021582;
-        Fri, 19 Jun 2020 14:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85EB20CC7;
+        Fri, 19 Jun 2020 14:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577754;
-        bh=84hFvqnIv9RWd0djDh3w5bOVOFisJWS+WGdyjLQ/ADg=;
+        s=default; t=1592577738;
+        bh=Q1MnH9RZEWmo/MLTr/txxuhrn1OC1QQbfLP0JeFzoCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=unGurp6r1kRIHKOViGARdvEiZu/5l5NNlp9D9gk6Yt6tIoekyQBYWsyBUccL/Elra
-         xNO46SIeogixEbmVfLKSnCQ3GYguiN6w7HE7cYFWyO3QTBTMjPwTXGFkp22P2d2G1I
-         ViNDSRFvBM5pnS2sUDvRBlIN0a3B5zZOmwMikZfA=
+        b=2iepV8xK8hwVD23wysvBKN1IiYuKD08YOSh73LZkugCvDWSPBK5/dm6xzy/udN0wR
+         BDfrgWgsL1sf+MCDv6Z4YepLUdlvmdqm9eFAydiVB3RccHDsFX8M0aulbp11JGd+lk
+         gBZ7csGoEI7f2YBkUHWOovU/FkNScrh79zGA8at8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 075/128] exit: Move preemption fixup up, move blocking operations down
-Date:   Fri, 19 Jun 2020 16:32:49 +0200
-Message-Id: <20200619141624.152006079@linuxfoundation.org>
+Subject: [PATCH 4.9 070/128] media: dvb: return -EREMOTEIO on i2c transfer failure.
+Date:   Fri, 19 Jun 2020 16:32:44 +0200
+Message-Id: <20200619141623.912456852@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,82 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
+[ Upstream commit 96f3a9392799dd0f6472648a7366622ffd0989f3 ]
 
-With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
-non-preemptible context look untidy; after the main oops, the kernel prints
-a "sleeping function called from invalid context" report because
-exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
-can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
-fixup.
+Currently when i2c transfers fail the error return -EREMOTEIO
+is assigned to err but then later overwritten when the tuner
+attach call is made.  Fix this by returning early with the
+error return code -EREMOTEIO on i2c transfer failure errors.
 
-It looks like the same thing applies to profile_task_exit() and
-kcov_task_exit().
+If the transfer fails, an uninitialized value will be read from b2.
 
-Fix it by moving the preemption fixup up and the calls to
-profile_task_exit() and kcov_task_exit() down.
+Addresses-Coverity: ("Unused value")
 
-Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index d9394fcd0e2c..27f4168eaeb1 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -739,8 +739,12 @@ void __noreturn do_exit(long code)
- 	int group_dead;
- 	TASKS_RCU(int tasks_rcu_i);
+diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
+index a0057641cc86..c55180912c3a 100644
+--- a/drivers/media/usb/dvb-usb/dibusb-mb.c
++++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
+@@ -84,7 +84,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
  
--	profile_task_exit(tsk);
--	kcov_task_exit(tsk);
-+	/*
-+	 * We can get here from a kernel oops, sometimes with preemption off.
-+	 * Start by checking for critical errors.
-+	 * Then fix up important state like USER_DS and preemption.
-+	 * Then do everything else.
-+	 */
+ 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
+ 		err("tuner i2c write failed.");
+-		ret = -EREMOTEIO;
++		return -EREMOTEIO;
+ 	}
  
- 	WARN_ON(blk_needs_flush_plug(tsk));
- 
-@@ -758,6 +762,16 @@ void __noreturn do_exit(long code)
- 	 */
- 	set_fs(USER_DS);
- 
-+	if (unlikely(in_atomic())) {
-+		pr_info("note: %s[%d] exited with preempt_count %d\n",
-+			current->comm, task_pid_nr(current),
-+			preempt_count());
-+		preempt_count_set(PREEMPT_ENABLED);
-+	}
-+
-+	profile_task_exit(tsk);
-+	kcov_task_exit(tsk);
-+
- 	ptrace_event(PTRACE_EVENT_EXIT, code);
- 
- 	validate_creds_for_do_exit(tsk);
-@@ -794,13 +808,6 @@ void __noreturn do_exit(long code)
- 	 */
- 	raw_spin_unlock_wait(&tsk->pi_lock);
- 
--	if (unlikely(in_atomic())) {
--		pr_info("note: %s[%d] exited with preempt_count %d\n",
--			current->comm, task_pid_nr(current),
--			preempt_count());
--		preempt_count_set(PREEMPT_ENABLED);
--	}
--
- 	/* sync mm's RSS info before statistics gathering */
- 	if (tsk->mm)
- 		sync_mm_rss(tsk->mm);
+ 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
 -- 
 2.25.1
 
