@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BED5217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8870721707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584066;
-	bh=kKmDstS4uhtLNdfWS9qbd/4hR1Uhf1h9dvXeFVfsYto=;
+	s=default; t=1592584074;
+	bh=C00lb73rbG9xsFzU6HfWKhv3Y6ec1kY1TeDnLPYBR4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svOpPHk4vwaxZi1zbmIcQHjbi+GTDprnUNpgBVDVov6n0ClxXsvOUGX7XxXWAErPv
-	 H0zY2VIsuLwcuwp7tXa7NtYVuvQjZjunIwxbzW2OUfew+WWS5JKhfeV2m6X5rKmAnY
-	 es2+SMr84hTHYbmcjg5E4gtvy5dAxoJtwO+uz5Xs=
+	b=Q/Voq8AnoXExHmECE3lvDbwH2tt/3cusOsGdyrB82d878Udz8BzGPALu/GmzSnxMU
+	 +nlsBfyCfREfxvsbYBCXg7cU71NleHnggttGkQi3zTshWHZSzCpz80J1WRppMxgeAI
+	 zrTRp17nf+oF2aT4BfpFu5g5e5akhT3NvmQV0CIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390338AbgFSQ1l (ORCPT
+        id S2394911AbgFSQ1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50716 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390004AbgFSOzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:46 -0400
+        id S2389463AbgFSOzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341EE217D9;
-        Fri, 19 Jun 2020 14:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ACC721835;
+        Fri, 19 Jun 2020 14:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578546;
-        bh=kKmDstS4uhtLNdfWS9qbd/4hR1Uhf1h9dvXeFVfsYto=;
+        s=default; t=1592578531;
+        bh=C00lb73rbG9xsFzU6HfWKhv3Y6ec1kY1TeDnLPYBR4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZ0fIUalFuvWH9IY+Gmw2kkjdsdsSAO9A5twwEp4SDnM3VIUno/z+7WOD2pTTBJCB
-         rtOnTvdKz6kX4mYoTxeFr4iMKRwqMuNBXUlUmUs5+ZH/0htxttOTE0sqQSqfZAMfc7
-         XWWzCiN4zg3b6aarxwIVCfEBNiji1oziSkP8yqn0=
+        b=EDucm9fkLB/+T7m8FCW+qQPvHAAYVKfHZoH/N04xIMfRGWbDJ5g7LTBFSmC6GsyzC
+         Tp/vn1W6ZYfB11OabJLm0bmMJZV37mssRdGhksn1TI2O3l+GRkRd/Mf2xJKFEbUa8o
+         TcXLwdoz/CncJocQtCT5DSlR9M9LjX26+rWpMLrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        "Longpeng(Mike)" <longpeng2@huawei.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Su Yue <suy.fnst@cn.fujitsu.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/267] crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
-Date:   Fri, 19 Jun 2020 16:30:49 +0200
-Message-Id: <20200619141651.952477707@linuxfoundation.org>
+Subject: [PATCH 4.19 027/267] btrfs: tree-checker: Check level for leaves and nodes
+Date:   Fri, 19 Jun 2020 16:30:12 +0200
+Message-Id: <20200619141650.167676951@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -66,73 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 8c855f0720ff006d75d0a2512c7f6c4f60ff60ee ]
+[ Upstream commit f556faa46eb4e96d0d0772e74ecf66781e132f72 ]
 
-The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
-( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory
-of request structure.
+Although we have tree level check at tree read runtime, it's completely
+based on its parent level.
+We still need to do accurate level check to avoid invalid tree blocks
+sneak into kernel space.
 
-In crypto_authenc_init_tfm(), the reqsize is set to:
-  [PART 1] sizeof(authenc_request_ctx) +
-  [PART 2] ictx->reqoff +
-  [PART 3] MAX(ahash part, skcipher part)
-and the 'PART 3' is used by both ahash and skcipher in turn.
+The check itself is simple, for leaf its level should always be 0.
+For nodes its level should be in range [1, BTRFS_MAX_LEVEL - 1].
 
-When the virtio_crypto driver finish skcipher req, it'll call ->complete
-callback(in crypto_finalize_skcipher_request) and then free its
-resources whose pointers are recorded in 'skcipher parts'.
-
-However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
-it will use the 'ahash part' of the request and change its content,
-so virtio_crypto driver will get the wrong pointer after ->complete
-finish and mistakenly free some other's memory. So the system will crash
-when these memory will be used again.
-
-The resources which need to be cleaned up are not used any more. But the
-pointers of these resources may be changed in the function
-"crypto_finalize_skcipher_request". Thus release specific resources before
-calling this function.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Acked-by: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-3-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/tree-checker.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 38432721069f..9348060cc32f 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -594,10 +594,11 @@ static void virtio_crypto_ablkcipher_finalize_req(
- 		scatterwalk_map_and_copy(req->info, req->dst,
- 					 req->nbytes - AES_BLOCK_SIZE,
- 					 AES_BLOCK_SIZE, 0);
--	crypto_finalize_ablkcipher_request(vc_sym_req->base.dataq->engine,
--					   req, err);
- 	kzfree(vc_sym_req->iv);
- 	virtcrypto_clear_request(&vc_sym_req->base);
-+
-+	crypto_finalize_ablkcipher_request(vc_sym_req->base.dataq->engine,
-+					   req, err);
- }
+diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
+index 235c2970b944..d98ec885b72a 100644
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -485,6 +485,13 @@ static int check_leaf(struct btrfs_fs_info *fs_info, struct extent_buffer *leaf,
+ 	u32 nritems = btrfs_header_nritems(leaf);
+ 	int slot;
  
- static struct virtio_crypto_algo virtio_crypto_algs[] = { {
++	if (btrfs_header_level(leaf) != 0) {
++		generic_err(fs_info, leaf, 0,
++			"invalid level for leaf, have %d expect 0",
++			btrfs_header_level(leaf));
++		return -EUCLEAN;
++	}
++
+ 	/*
+ 	 * Extent buffers from a relocation tree have a owner field that
+ 	 * corresponds to the subvolume tree they are based on. So just from an
+@@ -649,9 +656,16 @@ int btrfs_check_node(struct btrfs_fs_info *fs_info, struct extent_buffer *node)
+ 	unsigned long nr = btrfs_header_nritems(node);
+ 	struct btrfs_key key, next_key;
+ 	int slot;
++	int level = btrfs_header_level(node);
+ 	u64 bytenr;
+ 	int ret = 0;
+ 
++	if (level <= 0 || level >= BTRFS_MAX_LEVEL) {
++		generic_err(fs_info, node, 0,
++			"invalid level for node, have %d expect [1, %d]",
++			level, BTRFS_MAX_LEVEL - 1);
++		return -EUCLEAN;
++	}
+ 	if (nr == 0 || nr > BTRFS_NODEPTRS_PER_BLOCK(fs_info)) {
+ 		btrfs_crit(fs_info,
+ "corrupt node: root=%llu block=%llu, nritems too %s, have %lu expect range [1,%u]",
 -- 
 2.25.1
 
