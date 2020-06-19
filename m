@@ -5,49 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B68C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A624C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A483206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FD4206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585078;
-	bh=WY31jg+QTjwpvgTyqbJoQiR6KxR7XceZbkjxg2z4T+k=;
+	s=default; t=1592585083;
+	bh=GYEJjnVY8KxcLVgy66MTRYDQJ+J6hTQrdgqTAXH7Ni0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ht2LWfgwQs2iwuuPoX8ZbNwPTYR8z3I5UqlQICOr1LPWrzWrSrrRUPRn9J+osQsXj
-	 8AGcL/EvxxonfzlHPIeMQoXBT5ijgq5xdQ4Cr45ZcCTi7E+d1rSE46Ru4d/47ByvDk
-	 C7c0yctL6ACM7R1KG0vEKYeJqD0lhpt6VIjfTBUk=
+	b=WXNMTO/YNDyz5rtq5jPNRATkKVQ6bDOsy8oJLWTretPp55w09iVC7LrwHnCxpRkrv
+	 mpoFZwdeUZMlhOtKsRiDNc4UXOWJng9P9iiuOlIwju3VZtV528mhd3sb5Ehx7BQEge
+	 +HlwMPGWnhjaNOTZTTidUp0FqqLD+txeVMDP1tXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404476AbgFSQog (ORCPT
+        id S2404575AbgFSQom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388437AbgFSOnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:05 -0400
+        id S2388431AbgFSOnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 331B321582;
-        Fri, 19 Jun 2020 14:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E960E20CC7;
+        Fri, 19 Jun 2020 14:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577785;
-        bh=WY31jg+QTjwpvgTyqbJoQiR6KxR7XceZbkjxg2z4T+k=;
+        s=default; t=1592577783;
+        bh=GYEJjnVY8KxcLVgy66MTRYDQJ+J6hTQrdgqTAXH7Ni0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dT4eticNx+oWIRpW7KzqA+KPvdQJdnJZu5upPFHols80qpQ3J+lj8gGIWWby+lDhy
-         BNCVkKcPcWh+/GozV1cAsIAz54B6wZuyeP+xj8gFgEls6bcD7+4Kkr8M3Z6BNPmK9H
-         WGAxNqfLcGrmCb0EnpGTQ3ixqp8gUrYyoHypUmH0=
+        b=j/5YlCcCjOUIZz0gRoSEvgeilLWc+hC4WEyIBAIapsGXvRpL4xgGYMddqDbZv3U68
+         /I0Icuy7AR8KmyuK/MTuKva7WTcdqI6s3QrS21J/dbyx4b4sf1nk8I+GScUCwdn91d
+         VsVyTCWTrT+VVgyMuKMLYewJbXtStNCOpPh/7NWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 059/128] Bluetooth: Add SCO fallback for invalid LMP parameters error
-Date:   Fri, 19 Jun 2020 16:32:33 +0200
-Message-Id: <20200619141623.338855634@linuxfoundation.org>
+Subject: [PATCH 4.9 086/128] mips: Add udelay lpj numbers adjustment
+Date:   Fri, 19 Jun 2020 16:33:00 +0200
+Message-Id: <20200619141624.692512845@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,111 +67,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yu Chao <hychao@chromium.org>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
+[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
 
-Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
-with invalid parameter at the first SCO request expecting AG to
-attempt another SCO request with the use of "safe settings" for
-given codec, base on section 5.7.1.2 of HFP 1.7 specification.
+Loops-per-jiffies is a special number which represents a number of
+noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+understand aside from CPU-specific implementation it depends on
+the CPU frequency. So when a platform has the CPU frequency fixed,
+we have no problem and the current udelay interface will work
+just fine. But as soon as CPU-freq driver is enabled and the cores
+frequency changes, we'll end up with distorted udelay's. In order
+to fix this we have to accordinly adjust the per-CPU udelay_val
+(the same as the global loops_per_jiffy) number. This can be done
+in the CPU-freq transition event handler. We subscribe to that event
+in the MIPS arch time-inititalization method.
 
-This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
-to the SCO fallback case. Verified with below log:
-
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 13
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x0380
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Number of Completed Packets (0x13) plen 5
-        Num handles: 1
-        Handle: 256
-        Count: 1
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
-        Handle: 0
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x00
-        Retransmission window: 0x02
-        RX packet length: 0
-        TX packet length: 0
-        Air mode: Transparent (0x03)
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 8
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x03c8
-          EV3 may be used
-          2-EV3 may not be used
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 5
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Success (0x00)
-        Handle: 257
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x06
-        Retransmission window: 0x04
-        RX packet length: 30
-        TX packet length: 30
-        Air mode: Transparent (0x03)
-
-Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 6f78489fdb13..a8aa3f29f2d6 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3775,6 +3775,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
- 	case 0x11:	/* Unsupported Feature or Parameter Value */
- 	case 0x1c:	/* SCO interval rejected */
- 	case 0x1a:	/* Unsupported Remote Feature */
-+	case 0x1e:	/* Invalid LMP Parameters */
- 	case 0x1f:	/* Unspecified error */
- 	case 0x20:	/* Unsupported LMP Parameter value */
- 		if (conn->out) {
+diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
+index a7f81261c781..b7f7e08e1ce4 100644
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -22,12 +22,82 @@
+ #include <linux/smp.h>
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
++#include <linux/cpufreq.h>
++#include <linux/delay.h>
+ 
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-type.h>
+ #include <asm/div64.h>
+ #include <asm/time.h>
+ 
++#ifdef CONFIG_CPU_FREQ
++
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
++static unsigned long glb_lpj_ref;
++static unsigned long glb_lpj_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++			    unsigned long val, void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	struct cpumask *cpus = freq->policy->cpus;
++	unsigned long lpj;
++	int cpu;
++
++	/*
++	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
++	 * the loops delay. (Is this possible?)
++	 */
++	if (freq->flags & CPUFREQ_CONST_LOOPS)
++		return NOTIFY_OK;
++
++	/* Save the initial values of the lpjes for future scaling. */
++	if (!glb_lpj_ref) {
++		glb_lpj_ref = boot_cpu_data.udelay_val;
++		glb_lpj_ref_freq = freq->old;
++
++		for_each_online_cpu(cpu) {
++			per_cpu(pcp_lpj_ref, cpu) =
++				cpu_data[cpu].udelay_val;
++			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
++		}
++	}
++
++	/*
++	 * Adjust global lpj variable and per-CPU udelay_val number in
++	 * accordance with the new CPU frequency.
++	 */
++	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
++						glb_lpj_ref_freq,
++						freq->new);
++
++		for_each_cpu(cpu, cpus) {
++			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					    per_cpu(pcp_lpj_ref_freq, cpu),
++					    freq->new);
++			cpu_data[cpu].udelay_val = (unsigned int)lpj;
++		}
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++					 CPUFREQ_TRANSITION_NOTIFIER);
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif /* CONFIG_CPU_FREQ */
++
+ /*
+  * forward reference
+  */
 -- 
 2.25.1
 
