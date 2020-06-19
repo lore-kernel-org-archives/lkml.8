@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826BA21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553EA21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580402;
-	bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
+	s=default; t=1592580415;
+	bh=11YNQfJ7vqagWuD8q52RubX+NJrVDLuos4X+rH7Zr/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOKaqWeTVDyBIH86o78ZKxV4kk9/bHeVK9CBpx6Vxx8TZxmZKKh7g5pUU6m4ltuMW
-	 Wrq7mT/X0hnbDaWSRg2oubroYhHJ/ikKh0hQLE9ss5rJYRx+d38nwQHgqPphoStY4k
-	 lfyeQeOUfS44Q9pCLUZ6QyVok6/SYQwKkER4T4TM=
+	b=I27kWaJFQ/NkhnpLTqRXGi7IQE240QYP6WbSYVrMR2c/o3NB1y0YaAuUsPRtNYM8d
+	 DLdxQgJKgHELe4m5DwdDWh7zsi+vYLt66BVW2bH87XTBN0wwEs2sSTqOcZVYMXQoVc
+	 +dMMnLiU6yq/vs1oi8HEZ6VmyZ+a33QCeXZHSRH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393503AbgFSP0l (ORCPT
+        id S2404383AbgFSP0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393288AbgFSPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:40 -0400
+        id S2393364AbgFSPZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A77217A0;
-        Fri, 19 Jun 2020 15:24:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4C4121582;
+        Fri, 19 Jun 2020 15:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580279;
-        bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
+        s=default; t=1592580303;
+        bh=11YNQfJ7vqagWuD8q52RubX+NJrVDLuos4X+rH7Zr/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNnUjEi3NmxkJ87Ws/gH9eCjx5AjQSDmwV+lmkE1g23XUgeZYmk76Gv15moZkI9Do
-         DXae9FuLwFnWPLLwRdzTYvuJ9E4kWswODm/UwzXIav9q7UMPuf1P7B39t7ddQ/egPZ
-         c5P5ud/VYmT1xm6UYem3K7/AMHkUN5UyLko4bsyo=
+        b=yqvn8piGWlkU6IDDKAm+rpAHqLLv0/shEpdSp7uGBXE6W54mXLBopgU6h1UtQVUyn
+         wSTJOXRRHZiQuM+3XxrboBFsXxGBp6WZe8psBh738QYe5oG2TV61NHjY3NnLJK7tp/
+         rVaeMVm0fTsQeQxQaZSdeDOIuoMoGm4EsXfiv0Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 190/376] veth: Adjust hard_start offset on redirect XDP frames
-Date:   Fri, 19 Jun 2020 16:31:48 +0200
-Message-Id: <20200619141719.343785866@linuxfoundation.org>
+Subject: [PATCH 5.7 198/376] kgdboc: Use a platform device to handle tty drivers showing up late
+Date:   Fri, 19 Jun 2020 16:31:56 +0200
+Message-Id: <20200619141719.717936834@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,84 +60,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
+[ Upstream commit 68e55f61c13842baf825958129698c5371db432c ]
 
-When native XDP redirect into a veth device, the frame arrives in the
-xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-which can run a new XDP bpf_prog on the packet. Doing so requires
-converting xdp_frame to xdp_buff, but the tricky part is that
-xdp_frame memory area is located in the top (data_hard_start) memory
-area that xdp_buff will point into.
+If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
+should be able to have KGDB init itself at bootup by specifying the
+"kgdboc=..." kernel command line parameter.  This has worked OK for me
+for many years, but on a new device I switched to it stopped working.
 
-The current code tried to protect the xdp_frame area, by assigning
-xdp_buff.data_hard_start past this memory. This results in 32 bytes
-less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
+The problem is that on this new device the serial driver gets its
+probe deferred.  Now when kgdb initializes it can't find the tty
+driver and when it gives up it never tries again.
 
-This protect step is actually not needed, because BPF-helper
-bpf_xdp_adjust_head() already reserve this area, and don't allow
-BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-directly at xdp_frame memory area.
+We could try to find ways to move up the initialization of the serial
+driver and such a thing might be worthwhile, but it's nice to be
+robust against serial drivers that load late.  We could move kgdb to
+init itself later but that penalizes our ability to debug early boot
+code on systems where the driver inits early.  We could roll our own
+system of detecting when new tty drivers get loaded and then use that
+to figure out when kgdb can init, but that's ugly.
 
-Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-Reported-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
+Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
+singleton instance of a "kgdboc" platform device.  If we can't find
+our tty device when the singleton "kgdboc" probes we'll return
+-EPROBE_DEFER which means that the system will call us back later to
+try again when the tty device might be there.
+
+We won't fully transition all of the kgdboc to a platform device
+because early kgdb initialization (via the "ekgdboc" kernel command
+line parameter) still runs before the platform device has been
+created.  The kgdb platform device is merely used as a convenient way
+to hook into the system's normal probe deferral mechanisms.
+
+As part of this, we'll ever-so-slightly change how the "kgdboc=..."
+kernel command line parameter works.  Previously if you booted up and
+kgdb couldn't find the tty driver then later reading
+'/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
+Now kgdb will keep track of the string that came as part of the
+command line and give it back to you.  It's expected that this should
+be an OK change.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid
+[daniel.thompson@linaro.org: Make config_mutex static]
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/veth.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/kgdboc.c | 126 +++++++++++++++++++++++++++++-------
+ 1 file changed, 101 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index aece0e5eec8c..d5691bb84448 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -564,13 +564,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 					struct veth_stats *stats)
- {
- 	void *hard_start = frame->data - frame->headroom;
--	void *head = hard_start - sizeof(struct xdp_frame);
- 	int len = frame->len, delta = 0;
- 	struct xdp_frame orig_frame;
- 	struct bpf_prog *xdp_prog;
- 	unsigned int headroom;
- 	struct sk_buff *skb;
+diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+index c9f94fa82be4..151256f70d37 100644
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -20,6 +20,7 @@
+ #include <linux/vt_kern.h>
+ #include <linux/input.h>
+ #include <linux/module.h>
++#include <linux/platform_device.h>
  
-+	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
-+	hard_start -= sizeof(struct xdp_frame);
+ #define MAX_CONFIG_LEN		40
+ 
+@@ -27,6 +28,7 @@ static struct kgdb_io		kgdboc_io_ops;
+ 
+ /* -1 = init not run yet, 0 = unconfigured, 1 = configured. */
+ static int configured		= -1;
++static DEFINE_MUTEX(config_mutex);
+ 
+ static char config[MAX_CONFIG_LEN];
+ static struct kparam_string kps = {
+@@ -38,6 +40,8 @@ static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
+ static struct tty_driver	*kgdb_tty_driver;
+ static int			kgdb_tty_line;
+ 
++static struct platform_device *kgdboc_pdev;
 +
- 	rcu_read_lock();
- 	xdp_prog = rcu_dereference(rq->xdp_prog);
- 	if (likely(xdp_prog)) {
-@@ -592,7 +594,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			break;
- 		case XDP_TX:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (unlikely(veth_xdp_tx(rq, &xdp, bq) < 0)) {
- 				trace_xdp_exception(rq->dev, xdp_prog, act);
-@@ -605,7 +606,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			goto xdp_xmit;
- 		case XDP_REDIRECT:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
- 				frame = &orig_frame;
-@@ -629,7 +629,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 	rcu_read_unlock();
+ #ifdef CONFIG_KDB_KEYBOARD
+ static int kgdboc_reset_connect(struct input_handler *handler,
+ 				struct input_dev *dev,
+@@ -133,11 +137,13 @@ static void kgdboc_unregister_kbd(void)
  
- 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
--	skb = veth_build_skb(head, headroom, len, 0);
-+	skb = veth_build_skb(hard_start, headroom, len, 0);
- 	if (!skb) {
- 		xdp_return_frame(frame);
- 		stats->rx_drops++;
+ static void cleanup_kgdboc(void)
+ {
++	if (configured != 1)
++		return;
++
+ 	if (kgdb_unregister_nmi_console())
+ 		return;
+ 	kgdboc_unregister_kbd();
+-	if (configured == 1)
+-		kgdb_unregister_io_module(&kgdboc_io_ops);
++	kgdb_unregister_io_module(&kgdboc_io_ops);
+ }
+ 
+ static int configure_kgdboc(void)
+@@ -198,20 +204,79 @@ nmi_con_failed:
+ 	kgdb_unregister_io_module(&kgdboc_io_ops);
+ noconfig:
+ 	kgdboc_unregister_kbd();
+-	config[0] = 0;
+ 	configured = 0;
+-	cleanup_kgdboc();
+ 
+ 	return err;
+ }
+ 
++static int kgdboc_probe(struct platform_device *pdev)
++{
++	int ret = 0;
++
++	mutex_lock(&config_mutex);
++	if (configured != 1) {
++		ret = configure_kgdboc();
++
++		/* Convert "no device" to "defer" so we'll keep trying */
++		if (ret == -ENODEV)
++			ret = -EPROBE_DEFER;
++	}
++	mutex_unlock(&config_mutex);
++
++	return ret;
++}
++
++static struct platform_driver kgdboc_platform_driver = {
++	.probe = kgdboc_probe,
++	.driver = {
++		.name = "kgdboc",
++		.suppress_bind_attrs = true,
++	},
++};
++
+ static int __init init_kgdboc(void)
+ {
+-	/* Already configured? */
+-	if (configured == 1)
++	int ret;
++
++	/*
++	 * kgdboc is a little bit of an odd "platform_driver".  It can be
++	 * up and running long before the platform_driver object is
++	 * created and thus doesn't actually store anything in it.  There's
++	 * only one instance of kgdb so anything is stored as global state.
++	 * The platform_driver is only created so that we can leverage the
++	 * kernel's mechanisms (like -EPROBE_DEFER) to call us when our
++	 * underlying tty is ready.  Here we init our platform driver and
++	 * then create the single kgdboc instance.
++	 */
++	ret = platform_driver_register(&kgdboc_platform_driver);
++	if (ret)
++		return ret;
++
++	kgdboc_pdev = platform_device_alloc("kgdboc", PLATFORM_DEVID_NONE);
++	if (!kgdboc_pdev) {
++		ret = -ENOMEM;
++		goto err_did_register;
++	}
++
++	ret = platform_device_add(kgdboc_pdev);
++	if (!ret)
+ 		return 0;
+ 
+-	return configure_kgdboc();
++	platform_device_put(kgdboc_pdev);
++
++err_did_register:
++	platform_driver_unregister(&kgdboc_platform_driver);
++	return ret;
++}
++
++static void exit_kgdboc(void)
++{
++	mutex_lock(&config_mutex);
++	cleanup_kgdboc();
++	mutex_unlock(&config_mutex);
++
++	platform_device_unregister(kgdboc_pdev);
++	platform_driver_unregister(&kgdboc_platform_driver);
+ }
+ 
+ static int kgdboc_get_char(void)
+@@ -234,24 +299,20 @@ static int param_set_kgdboc_var(const char *kmessage,
+ 				const struct kernel_param *kp)
+ {
+ 	size_t len = strlen(kmessage);
++	int ret = 0;
+ 
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		pr_err("config string too long\n");
+ 		return -ENOSPC;
+ 	}
+ 
+-	/* Only copy in the string if the init function has not run yet */
+-	if (configured < 0) {
+-		strcpy(config, kmessage);
+-		return 0;
+-	}
+-
+ 	if (kgdb_connected) {
+ 		pr_err("Cannot reconfigure while KGDB is connected.\n");
+-
+ 		return -EBUSY;
+ 	}
+ 
++	mutex_lock(&config_mutex);
++
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+ 	if (len && config[len - 1] == '\n')
+@@ -260,8 +321,30 @@ static int param_set_kgdboc_var(const char *kmessage,
+ 	if (configured == 1)
+ 		cleanup_kgdboc();
+ 
+-	/* Go and configure with the new params. */
+-	return configure_kgdboc();
++	/*
++	 * Configure with the new params as long as init already ran.
++	 * Note that we can get called before init if someone loads us
++	 * with "modprobe kgdboc kgdboc=..." or if they happen to use the
++	 * the odd syntax of "kgdboc.kgdboc=..." on the kernel command.
++	 */
++	if (configured >= 0)
++		ret = configure_kgdboc();
++
++	/*
++	 * If we couldn't configure then clear out the config.  Note that
++	 * specifying an invalid config on the kernel command line vs.
++	 * through sysfs have slightly different behaviors.  If we fail
++	 * to configure what was specified on the kernel command line
++	 * we'll leave it in the 'config' and return -EPROBE_DEFER from
++	 * our probe.  When specified through sysfs userspace is
++	 * responsible for loading the tty driver before setting up.
++	 */
++	if (ret)
++		config[0] = '\0';
++
++	mutex_unlock(&config_mutex);
++
++	return ret;
+ }
+ 
+ static int dbg_restore_graphics;
+@@ -324,15 +407,8 @@ __setup("kgdboc=", kgdboc_option_setup);
+ /* This is only available if kgdboc is a built in for early debugging */
+ static int __init kgdboc_early_init(char *opt)
+ {
+-	/* save the first character of the config string because the
+-	 * init routine can destroy it.
+-	 */
+-	char save_ch;
+-
+ 	kgdboc_option_setup(opt);
+-	save_ch = config[0];
+-	init_kgdboc();
+-	config[0] = save_ch;
++	configure_kgdboc();
+ 	return 0;
+ }
+ 
+@@ -340,7 +416,7 @@ early_param("ekgdboc", kgdboc_early_init);
+ #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
+ 
+ module_init(init_kgdboc);
+-module_exit(cleanup_kgdboc);
++module_exit(exit_kgdboc);
+ module_param_call(kgdboc, param_set_kgdboc_var, param_get_string, &kps, 0644);
+ MODULE_PARM_DESC(kgdboc, "<serial_device>[,baud]");
+ MODULE_DESCRIPTION("KGDB Console TTY Driver");
 -- 
 2.25.1
 
