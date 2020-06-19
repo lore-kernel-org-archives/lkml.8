@@ -4,75 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58522C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C09C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3B321D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BC421941
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579338;
-	bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
+	s=default; t=1592579344;
+	bh=GZYPLYE2TO3fT5PWQzRX0GmAaj6ck3IWKzJ3TDMR2rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvLFb0vEBZEiof8gO7R7xk+3NBZzD5xHELiE+uiQjneVD+Ijmd5DIwBj6sPdpvpEy
-	 7k01pEnshc0g66D4t0hDfgIErsHPZ5nHwHCMCxYa+7pH+7swLUbplCWwUNwdoHMxk6
-	 grX1PcksV/yZNMa+hMK8pkATyEm5NTU9gB+8lUCQ=
+	b=nii1GT6ijWTJfO7yHG7MwmqvMiCzr7xvKuMEkloPNYE+tEfKQeb0mZR9h+ek5pP5F
+	 4nKsvOHZdfQmi4kGJdFbbu6fepvT7iXnfV93aGyv1ZY+WdJdMNJMfETDCs8Sqm0ZRG
+	 Kt0+K6vrofxkm3sYQEpu5i0J31vOc0SHcBFbpeDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391828AbgFSPI4 (ORCPT
+        id S2391832AbgFSPJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391815AbgFSPIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:53 -0400
+        id S2391825AbgFSPIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D0EE21974;
-        Fri, 19 Jun 2020 15:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D473B21BE5;
+        Fri, 19 Jun 2020 15:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579332;
-        bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
+        s=default; t=1592579335;
+        bh=GZYPLYE2TO3fT5PWQzRX0GmAaj6ck3IWKzJ3TDMR2rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Yn6z9GmHltqXTzfvg964uLk+WkEiw1B8hlFcFQ7WXhv1FDdf0oFy11LTyUcjWwVo
-         QDi9ld6s+e8K4rnNtC9YNWKHDRvHtldj+CXpP/QzrwlFo2+g2UIE4pn+YPpxYvH4EY
-         S2J5H89CcbSPFkNPgovKDJoS0+7GI81/b+xixNyQ=
+        b=uQbhF20m2lNxJOhUA3fPr96Q2dYOdGG+87ilcGq2MYVIT/EI81RzkfBTSP1vSBfHN
+         4QIFEM72Ljlu34TU/k5fc2+Xk5qcpmWLTxAxzCIsx5m5O/F279gxsDTNMeXBf3lqfG
+         m85nQVNpJ6yIRNtz/3Gf7PYZUCluNKi/7jVPxrBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/261] x86: fix vmap arguments in map_irq_stack
-Date:   Fri, 19 Jun 2020 16:31:07 +0200
-Message-Id: <20200619141652.603688877@linuxfoundation.org>
+Subject: [PATCH 5.4 089/261] net: allwinner: Fix use correct return type for ndo_start_xmit()
+Date:   Fri, 19 Jun 2020 16:31:40 +0200
+Message-Id: <20200619141654.150128975@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -85,59 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit 0348801151b5aefbcf9d6e9b9e30aceb3a2a7b13 ]
+[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
 
-vmap does not take a gfp_t, the flags argument is for VM_* flags.
+The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
+the ndo function to use the correct type. And emac_start_xmit() can
+leak one skb if 'channel' == 3.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Gao Xiang <xiang@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Nitin Gupta <ngupta@vflare.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lkml.kernel.org/r/20200414131348.444715-3-hch@lst.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 12df3a4abfdd..6b32ab009c19 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -43,7 +43,7 @@ static int map_irq_stack(unsigned int cpu)
- 		pages[i] = pfn_to_page(pa >> PAGE_SHIFT);
- 	}
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 0537df06a9b5..ff318472a3ee 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -432,7 +432,7 @@ static void emac_timeout(struct net_device *dev)
+ /* Hardware start transmission.
+  * Send a packet to media from the upper layer.
+  */
+-static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct emac_board_info *db = netdev_priv(dev);
+ 	unsigned long channel;
+@@ -440,7 +440,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
  
--	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
-+	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, VM_MAP, PAGE_KERNEL);
- 	if (!va)
- 		return -ENOMEM;
+ 	channel = db->tx_fifo_stat & 3;
+ 	if (channel == 3)
+-		return 1;
++		return NETDEV_TX_BUSY;
+ 
+ 	channel = (channel == 1 ? 1 : 0);
  
 -- 
 2.25.1
