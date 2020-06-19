@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70999C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0FA2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E78020809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584581;
-	bh=pYNQcSSA8JE5e7nUhFvhxl8tYDixqAuawiEefCQhtHk=;
+	s=default; t=1592584586;
+	bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fwQFAKxh6sKFAvbzqAnZVW8U14wzm4lGMO/+E4m850ZhMLaWVV2F+toy9lq/h4avq
-	 3yfMCINwS1aIWXUBCBlGQK4joHVGG9L8NLkHnpniJhbbJOkq4C0Y5yIfWck4apCOqb
-	 LGF+9YKLtxHdHbEhXUx6FM9B0DIsgUHiNp2Cqxos=
+	b=HxFCO3H4OBcKx/euOekA6ytIIyBJ2oXnPbpiFnWl9ylwUX8Xq7CPR3WzNtXyIha96
+	 xf5XStAFqpPGsk/IbT9Kf1ZPt7hyTxnrEaJ6Yc4+KF6TD9pEyMTzgRkO1WsYQZqUOr
+	 aRTYqYpc4gwPN/ro4z83gI4gNbeFDTT0Aj3LHQRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389461AbgFSQgU (ORCPT
+        id S2395286AbgFSQgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41874 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:36:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389184AbgFSOtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:19 -0400
+        id S2389195AbgFSOtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DBBA2158C;
-        Fri, 19 Jun 2020 14:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 250352158C;
+        Fri, 19 Jun 2020 14:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578159;
-        bh=pYNQcSSA8JE5e7nUhFvhxl8tYDixqAuawiEefCQhtHk=;
+        s=default; t=1592578149;
+        bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2LWXevVaPLWvn0Gnyp20dbgiURiwdV+Evp4UOlQT5hf9TPZnyWrLRnkK9TLaqHDT
-         5qU0TO8/iKzg3NZXRWutKp5nVww9ki29ai2GgHxuGsmOThOPsksIBoLjOvVTrU/0b0
-         gyYdBvoGz2Ck+9CMVa2/AMhlfoKiDuETIBzFwITs=
+        b=BXkRcPsjjHZbg++neV+3vH/3QR0xVO7WBlE85XdZcMYCkt1AqByQmo34TshBGtPKg
+         xzxD35v4YkyxINMZJhq4/rIvH2uC1oqyfmkJtxKl/NVYKNLcrYCPFHymgdpzz76Sbd
+         nxutiVfIstmypNis4zav44xrKFhAgzkjZM7CvoQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 106/190] net: bcmgenet: set Rx mode before starting netif
-Date:   Fri, 19 Jun 2020 16:32:31 +0200
-Message-Id: <20200619141638.888122406@linuxfoundation.org>
+Subject: [PATCH 4.14 102/190] media: platform: fcp: Set appropriate DMA parameters
+Date:   Fri, 19 Jun 2020 16:32:27 +0200
+Message-Id: <20200619141638.677857052@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,49 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-[ Upstream commit 72f96347628e73dbb61b307f18dd19293cc6792a ]
+[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
 
-This commit explicitly calls the bcmgenet_set_rx_mode() function when
-the network interface is started. This function is normally called by
-ndo_set_rx_mode when the flags are changed, but apparently not when
-the driver is suspended and resumed.
+Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
+enable extra validation on DMA operations ensuring that the size
+restraints are met.
 
-This change ensures that address filtering or promiscuous mode are
-properly restored by the driver after the MAC may have been reset.
+When using the FCP in conjunction with the VSP1/DU, and display frames,
+the size of the DMA operations is larger than the default maximum
+segment size reported by the DMA core (64K). With the DMA debug enabled,
+this produces a warning such as the following:
 
-Fixes: b6e978e50444 ("net: bcmgenet: add suspend/resume callbacks")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
+claims to support [len=3145728] [max=65536]"
+
+We have no specific limitation on the segment size which isn't already
+handled by the VSP1/DU which actually handles the DMA allcoations and
+buffer management, so define a maximum segment size of up to 4GB (a 32
+bit mask).
+
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/rcar-fcp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 38391230ca86..7d3cbbd88a00 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -72,6 +72,9 @@
- #define GENET_RDMA_REG_OFF	(priv->hw_params->rdma_offset + \
- 				TOTAL_DESC * DMA_DESC_SIZE)
+diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
+index 2988031d285d..0047d144c932 100644
+--- a/drivers/media/platform/rcar-fcp.c
++++ b/drivers/media/platform/rcar-fcp.c
+@@ -12,6 +12,7 @@
+  */
  
-+/* Forward declarations */
-+static void bcmgenet_set_rx_mode(struct net_device *dev);
+ #include <linux/device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -24,6 +25,7 @@
+ struct rcar_fcp_device {
+ 	struct list_head list;
+ 	struct device *dev;
++	struct device_dma_parameters dma_parms;
+ };
+ 
+ static LIST_HEAD(fcp_devices);
+@@ -139,6 +141,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
+ 
+ 	fcp->dev = &pdev->dev;
+ 
++	fcp->dev->dma_parms = &fcp->dma_parms;
++	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
 +
- static inline void bcmgenet_writel(u32 value, void __iomem *offset)
- {
- 	/* MIPS chips strapped for BE will automagically configure the
-@@ -2858,6 +2861,7 @@ static void bcmgenet_netif_start(struct net_device *dev)
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	pm_runtime_enable(&pdev->dev);
  
- 	/* Start the network engine */
-+	bcmgenet_set_rx_mode(dev);
- 	bcmgenet_enable_rx_napi(priv);
- 	bcmgenet_enable_tx_napi(priv);
- 
+ 	mutex_lock(&fcp_lock);
 -- 
 2.25.1
 
