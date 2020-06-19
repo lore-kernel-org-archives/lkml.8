@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56652C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD242C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340F7207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F76207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582561;
-	bh=sulDz67FJjNrnX6M5vq5hVpDWr+e4I88mHC1O3LcTzc=;
+	s=default; t=1592582563;
+	bh=MDzcFnPU6/OGUZX8eSnSRt/nxMi9RAZ+guKmqLWOiNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Y2k4gejmmNmKoex0l1V4Cl32swY22cEomDn/cMU/l7iyhLjVktofmkjAgeYZ9RxR
-	 mzpF8ymoZRgdroHkusQbOGZdPypwHpyWceeFYkjFcLphWR9/RwDX8HyNs1SX3ZYEiG
-	 mz903War8nKiS0lPw1q4mgrOukjVlDMlaz0YIFuo=
+	b=VFWtCA+SaPw9UfHq7OPgT1SibSjsfengSUxY8/4BsEHUAlkcHs621RAcgQZAR/QJC
+	 4HCPz6rPnxpnpdHgvFoOnfLBBLTAzQjoXuhVWW4ylHzF42x4vJ57biBkFhPLZCc55y
+	 Ie6LcinU6fYuXcHLiGcD/s76I5jmM/QOM56xU32k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394201AbgFSQCj (ORCPT
+        id S2403895AbgFSPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:02:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403910AbgFSPMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:33 -0400
+        id S2392159AbgFSPMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A1621582;
-        Fri, 19 Jun 2020 15:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A6120776;
+        Fri, 19 Jun 2020 15:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579552;
-        bh=sulDz67FJjNrnX6M5vq5hVpDWr+e4I88mHC1O3LcTzc=;
+        s=default; t=1592579541;
+        bh=MDzcFnPU6/OGUZX8eSnSRt/nxMi9RAZ+guKmqLWOiNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhH14KSmmCfNS9VTHulcL4IMCqcNZIUTrRmJBpiM/FAmX5ruuNog0ktg1bHsrhE7T
-         lr0T4poWqsMDEipGVyUHUz5w/TmvlgGRS123yZDzzBgR2bbIFsGvzNpuwG0R9mklz9
-         kXEi67GU0dlnHOa7AWMipFKZ+NEChbWeh03zth3o=
+        b=pXnncCH0zYDrr+4HwBkKvZWE7XurVL9LqiviyE/byuO39COkmA/Zy2cBCFDxZUhyh
+         YkxJuSOOBpjI0sX8pfPW+TAq7sa7NaZmc8ypmLWIAoGEW9pjrL24zd9Ai3gDSnwWf6
+         bgg80Y8tmZohDroE1Kf7IeDdinbqaIVK7F5UQTiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        David.Laight@aculab.com (big endian system concerns),
         Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.4 178/261] ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
-Date:   Fri, 19 Jun 2020 16:33:09 +0200
-Message-Id: <20200619141658.455340010@linuxfoundation.org>
+Subject: [PATCH 5.4 174/261] ima: Fix ima digest hash table key calculation
+Date:   Fri, 19 Jun 2020 16:33:05 +0200
+Message-Id: <20200619141658.259471735@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,111 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-commit 6cc7c266e5b47d3cd2b5bb7fd3aac4e6bb2dd1d2 upstream.
+commit 1129d31b55d509f15e72dc68e4b5c3a4d7b4da8d upstream.
 
-If the template field 'd' is chosen and the digest to be added to the
-measurement entry was not calculated with SHA1 or MD5, it is
-recalculated with SHA1, by using the passed file descriptor. However, this
-cannot be done for boot_aggregate, because there is no file descriptor.
+Function hash_long() accepts unsigned long, while currently only one byte
+is passed from ima_hash_key(), which calculates a key for ima_htable.
 
-This patch adds a call to ima_calc_boot_aggregate() in
-ima_eventdigest_init(), so that the digest can be recalculated also for the
-boot_aggregate entry.
+Given that hashing the digest does not give clear benefits compared to
+using the digest itself, remove hash_long() and return the modulus
+calculated on the first two bytes of the digest with the number of slots.
+Also reduce the depth of the hash table by doubling the number of slots.
 
-Cc: stable@vger.kernel.org # 3.13.x
-Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
-Reported-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
+Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Acked-by: David.Laight@aculab.com (big endian system concerns)
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima.h              |    3 ++-
- security/integrity/ima/ima_crypto.c       |    6 +++---
- security/integrity/ima/ima_init.c         |    2 +-
- security/integrity/ima/ima_template_lib.c |   18 ++++++++++++++++++
- 4 files changed, 24 insertions(+), 5 deletions(-)
+ security/integrity/ima/ima.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 --- a/security/integrity/ima/ima.h
 +++ b/security/integrity/ima/ima.h
-@@ -52,6 +52,7 @@ extern int ima_policy_flag;
- extern int ima_hash_algo;
- extern int ima_appraise;
- extern struct tpm_chip *ima_tpm_chip;
-+extern const char boot_aggregate_name[];
+@@ -36,7 +36,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 =
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+ #define IMA_EVENT_NAME_LEN_MAX	255
  
- /* IMA event related data */
- struct ima_event_data {
-@@ -140,7 +141,7 @@ int ima_calc_buffer_hash(const void *buf
- int ima_calc_field_array_hash(struct ima_field_data *field_data,
- 			      struct ima_template_desc *desc, int num_fields,
- 			      struct ima_digest_data *hash);
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash);
- void ima_add_violation(struct file *file, const unsigned char *filename,
- 		       struct integrity_iint_cache *iint,
- 		       const char *op, const char *cause);
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -665,8 +665,8 @@ static void __init ima_pcrread(u32 idx,
-  * hash algorithm for reading the TPM PCRs as for calculating the boot
-  * aggregate digest as stored in the measurement list.
-  */
--static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
--					      struct crypto_shash *tfm)
-+static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
-+				       struct crypto_shash *tfm)
+-#define IMA_HASH_BITS 9
++#define IMA_HASH_BITS 10
+ #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
+ 
+ #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
+@@ -175,9 +175,10 @@ struct ima_h_table {
+ };
+ extern struct ima_h_table ima_htable;
+ 
+-static inline unsigned long ima_hash_key(u8 *digest)
++static inline unsigned int ima_hash_key(u8 *digest)
  {
- 	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
- 	int rc;
-@@ -694,7 +694,7 @@ static int __init ima_calc_boot_aggregat
- 	return rc;
+-	return hash_long(*digest, IMA_HASH_BITS);
++	/* there is no point in taking a hash of part of a digest */
++	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
  }
  
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash)
- {
- 	struct crypto_shash *tfm;
- 	u16 crypto_id, alg_id;
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -21,7 +21,7 @@
- #include "ima.h"
- 
- /* name for boot aggregate entry */
--static const char boot_aggregate_name[] = "boot_aggregate";
-+const char boot_aggregate_name[] = "boot_aggregate";
- struct tpm_chip *ima_tpm_chip;
- 
- /* Add the boot aggregate to the IMA measurement list and extend
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -288,6 +288,24 @@ int ima_eventdigest_init(struct ima_even
- 		goto out;
- 	}
- 
-+	if ((const char *)event_data->filename == boot_aggregate_name) {
-+		if (ima_tpm_chip) {
-+			hash.hdr.algo = HASH_ALGO_SHA1;
-+			result = ima_calc_boot_aggregate(&hash.hdr);
-+
-+			/* algo can change depending on available PCR banks */
-+			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
-+				result = -EINVAL;
-+
-+			if (result < 0)
-+				memset(&hash, 0, sizeof(hash));
-+		}
-+
-+		cur_digest = hash.hdr.digest;
-+		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
-+		goto out;
-+	}
-+
- 	if (!event_data->file)	/* missing info to re-calculate the digest */
- 		return -EINVAL;
- 
+ #define __ima_hooks(hook)		\
 
 
