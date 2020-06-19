@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24268C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A5120771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF15420771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXHxk/1G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8EWbXE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgFSFHh (ORCPT
+        id S1728597AbgFSFHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        Fri, 19 Jun 2020 01:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgFSFHg (ORCPT
+        with ESMTP id S1727869AbgFSFHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:07:36 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4A2C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:35 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n11so7889644qkn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:35 -0700 (PDT)
+        Fri, 19 Jun 2020 01:07:41 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33593C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:40 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l17so7868557qki.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=L4XvSLCXsG3KEJ31YG4hc0m/oIhqsd2EwdwB1kSl5Yo=;
-        b=XXHxk/1GGLKtf9qg8q6h7tF7TiLwEHqMaphmitAiBQWxO8+CWRfXixxgxx8IqJbukb
-         2mzbCY/tDkfsSdSwawvxWuTzS+Qn01CC2gcUh2ah/eYgo6bflvKen35Wuy/2TVT88UwJ
-         sCdzQdM3iLo8Vnd/MZAOXL1v1PQMs3D346h2myQJQlyW0V44NxvujyJ/oGjCBRkoypX4
-         zyuaSEvRbFSVdHlHaJWFE+wGGR4T9iHJQnqI9/4+DLJoIUZCtxSStGolrkQevKD20tTO
-         aLRZH1F9Fg9Cy71g1CsTYHe/eevsA0GAkBjViksLxVQAukMMdciOKSibhwVXCLz5DdV0
-         JKPQ==
+        bh=LxhuxQycNieQ16w87JkTA9DQfwrE4fTWZ8DvCETKWbk=;
+        b=N8EWbXE33GuLRhB4nF/r7qebEqLn6wGSnJRbNKKhK5CKbMgeUNWwwLSOVtNoB2MWTg
+         6hYDMpCLOhswyz5LBmFFbLVrj7SZh7DbmtJx748+o7XwX5IyztICXLe/F4R14xuUallm
+         5KXaGE4CirCMYqEmvdSQTY0uv4F0fEWNLYct/ITrZ8o90JDMR6W95hNCxaZxchQtn6HY
+         s1IYQOUgZ2gVSXnQpK23D9Nd2Gol2iys92eXiZ2xOdqeC0ibK0SgRYhFF4BA3o1wVvSI
+         iduaOHHbGnwNjSWUl4r4pfnlQxnCCbPSEJOxi6O2zxekqyp5fl6h1HQUhssB4yVP4Zx5
+         m7nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=L4XvSLCXsG3KEJ31YG4hc0m/oIhqsd2EwdwB1kSl5Yo=;
-        b=qF9uomQbLuqXUarGJUv1uWUp3Njv2uxiieSX85si7oElniWzuKu9lCjeJYhhdjr5qE
-         NLgCROjsiHxp99OoeDm/SG7xgSGmR9GeLSLLIWBh9cVgOx3GE4e5rwj8KYHpHrEc5Ky6
-         hOJnT1nPHnTfUE1eX1M5+A7F1QA4WLpjzdRp+YVX3Z73AlAKw8j5WFd5lPQIwmdcUl1q
-         uT0ZrLyZx5FtIGS2M5B7FXDFg0g+cT6M40wpu9MEQXDt2/NW/7sUJ9N2srkET2CwX00e
-         GDzGglPQepWb9OqsnAbnez/jEw9ZNYGJpimlV2iZu5Gkka/p0+w+VQKdClT8YnZY0iN0
-         HE/A==
-X-Gm-Message-State: AOAM533rAgOBH6z5wyj1LWi8Rvzb06xXxQx7PT6cDmDge04PJ0clJ4cl
-        fMGbutFn+CpQ1QWBCuUX5LU=
-X-Google-Smtp-Source: ABdhPJy/LZ/1+ZSPv6KSZiafpBMQw9OTc/8dwWFGA6ckWc4RWltAakdqfQ+qvGJvBbaHpLfeAuFF9Q==
-X-Received: by 2002:a05:620a:4fa:: with SMTP id b26mr1868937qkh.63.1592543255204;
-        Thu, 18 Jun 2020 22:07:35 -0700 (PDT)
+        bh=LxhuxQycNieQ16w87JkTA9DQfwrE4fTWZ8DvCETKWbk=;
+        b=dhbVTQHGRkBG4bHesfF4iDnxFY1JBW1GMxBHTj1JloJUOAotlUfLsCJNM9eL98/X60
+         jVXPFLlmxK8j5VzAkrJH0mmE9lbwHJqnX9IY8XkU3joWGT32/wPwuPr4HLgeaU19HsEz
+         ROZBKqbXQlBPebHIYVJgNYpU9iVn5pt1M8xkDvhUv6fvfnqph1E4OeutUpr2V9wiRyyN
+         J1ZnfmFDgQnlx0wISxY9YcYC/iRCcULxcbF+I7oLgCLHGePgWrEeRUJHmbg/sjJfu/1+
+         frEDxW13RUKYdtA8mywImRiUJFPnQH46zVHXjJM7q8sMxXYZXPpd6tPtjWQiG+BnVvvk
+         toDw==
+X-Gm-Message-State: AOAM533U0FjJiGAxNFQf3y/GCt7naOgPqAEtc/BqRwz4UPbUZbj2juv0
+        stBu8/Vg4JlliegwQXiXAtM=
+X-Google-Smtp-Source: ABdhPJypgjgeE05JPijQXMPTOnCQ0LI/Ef1IGd5HGvb7euUV2UZ7GmUd/GQ+FbWq/bF5/CQuSKn4MQ==
+X-Received: by 2002:a37:4b17:: with SMTP id y23mr1809929qka.73.1592543259489;
+        Thu, 18 Jun 2020 22:07:39 -0700 (PDT)
 Received: from LeoBras.ibmuc.com (177-131-65-187.dynamic.desktop.com.br. [177.131.65.187])
-        by smtp.gmail.com with ESMTPSA id o6sm5235503qtd.59.2020.06.18.22.07.31
+        by smtp.gmail.com with ESMTPSA id o6sm5235503qtd.59.2020.06.18.22.07.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 22:07:34 -0700 (PDT)
+        Thu, 18 Jun 2020 22:07:38 -0700 (PDT)
 From:   Leonardo Bras <leobras.c@gmail.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -69,9 +69,9 @@ To:     Michael Ellerman <mpe@ellerman.id.au>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Ram Pai <linuxram@us.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] powerpc/pseries/iommu: Move window-removing part of remove_ddw into remove_dma_window
-Date:   Fri, 19 Jun 2020 02:06:19 -0300
-Message-Id: <20200619050619.266888-4-leobras.c@gmail.com>
+Subject: [PATCH 4/4] powerpc/pseries/iommu: Remove default DMA window before creating DDW
+Date:   Fri, 19 Jun 2020 02:06:20 -0300
+Message-Id: <20200619050619.266888-5-leobras.c@gmail.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200619050619.266888-1-leobras.c@gmail.com>
 References: <20200619050619.266888-1-leobras.c@gmail.com>
@@ -82,104 +82,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the window-removing part of remove_ddw into a new function
-(remove_dma_window), so it can be used to remove other DMA windows.
+On LoPAR "DMA Window Manipulation Calls", it's recommended to remove the
+default DMA window for the device, before attempting to configure a DDW,
+in order to make the maximum resources available for the next DDW to be
+created.
 
-It's useful for removing DMA windows that don't create DIRECT64_PROPNAME
-property, like the default DMA window from the device, which uses
-"ibm,dma-window".
+This is a requirement for some devices to use DDW, given they only
+allow one DMA window.
+
+If setting up a new DDW fails anywhere after the removal of this
+default DMA window, restore it using reset_dma_window.
 
 Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 ---
- arch/powerpc/platforms/pseries/iommu.c | 53 +++++++++++++++-----------
- 1 file changed, 31 insertions(+), 22 deletions(-)
+ arch/powerpc/platforms/pseries/iommu.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 5e1fbc176a37..de633f6ae093 100644
+index de633f6ae093..68d1ea957ac7 100644
 --- a/arch/powerpc/platforms/pseries/iommu.c
 +++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -767,25 +767,14 @@ static int __init disable_ddw_setup(char *str)
- 
- early_param("disable_ddw", disable_ddw_setup);
- 
--static void remove_ddw(struct device_node *np, bool remove_prop)
-+static void remove_dma_window(struct device_node *pdn, u32 *ddw_avail,
-+			      struct property *win)
- {
- 	struct dynamic_dma_window_prop *dwp;
+@@ -1074,8 +1074,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	u64 dma_addr, max_addr;
+ 	struct device_node *dn;
+ 	u32 ddw_avail[3];
++
+ 	struct direct_window *window;
 -	struct property *win64;
--	u32 ddw_avail[3];
- 	u64 liobn;
--	int ret = 0;
--
--	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
--					 &ddw_avail[0], 3);
--
--	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
--	if (!win64)
--		return;
--
--	if (ret || win64->length < sizeof(*dwp))
--		goto delprop;
-+	int ret;
++	struct property *win64, *dfl_win;
+ 	struct dynamic_dma_window_prop *ddwprop;
+ 	struct failed_ddw_pdn *fpdn;
  
--	dwp = win64->value;
-+	dwp = win->value;
- 	liobn = (u64)be32_to_cpu(dwp->liobn);
- 
- 	/* clear the whole window, note the arg is in kernel pages */
-@@ -793,24 +782,44 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
- 		1ULL << (be32_to_cpu(dwp->window_shift) - PAGE_SHIFT), dwp);
+@@ -1110,8 +1111,19 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
  	if (ret)
- 		pr_warn("%pOF failed to clear tces in window.\n",
--			np);
-+			pdn);
- 	else
- 		pr_debug("%pOF successfully cleared tces in window.\n",
--			 np);
-+			 pdn);
+ 		goto out_failed;
  
- 	ret = rtas_call(ddw_avail[2], 1, 1, NULL, liobn);
- 	if (ret)
- 		pr_warn("%pOF: failed to remove direct window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
--			np, ret, ddw_avail[2], liobn);
-+			pdn, ret, ddw_avail[2], liobn);
- 	else
- 		pr_debug("%pOF: successfully removed direct window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
--			np, ret, ddw_avail[2], liobn);
-+			pdn, ret, ddw_avail[2], liobn);
-+}
+-       /*
+-	 * Query if there is a second window of size to map the
++	/*
++	 * First step of setting up DDW is removing the default DMA window,
++	 * if it's present. It will make all the resources available to the
++	 * new DDW window.
++	 * If anything fails after this, we need to restore it.
++	 */
 +
-+static void remove_ddw(struct device_node *np, bool remove_prop)
-+{
-+	struct property *win;
-+	u32 ddw_avail[3];
-+	int ret = 0;
++	dfl_win = of_find_property(pdn, "ibm,dma-window", NULL);
++	if (dfl_win)
++		remove_dma_window(pdn, ddw_avail, dfl_win);
 +
-+	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
-+					 &ddw_avail[0], 3);
-+	if (ret)
-+		return;
-+
-+	win = of_find_property(np, DIRECT64_PROPNAME, NULL);
-+	if (!win)
-+		return;
-+
-+	if (win->length >= sizeof(struct dynamic_dma_window_prop))
-+		remove_dma_window(np, ddw_avail, win);
-+
-+	if (!remove_prop)
-+		return;
++	/*
++	 * Query if there is a window of size to map the
+ 	 * whole partition.  Query returns number of windows, largest
+ 	 * block assigned to PE (partition endpoint), and two bitmasks
+ 	 * of page sizes: supported and supported for migrate-dma.
+@@ -1219,6 +1231,8 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	kfree(win64);
  
--delprop:
--	if (remove_prop)
--		ret = of_remove_property(np, win64);
-+	ret = of_remove_property(np, win);
- 	if (ret)
- 		pr_warn("%pOF: failed to remove direct window property: %d\n",
- 			np, ret);
+ out_failed:
++	if (dfl_win)
++		reset_dma_window(dev, pdn);
+ 
+ 	fpdn = kzalloc(sizeof(*fpdn), GFP_KERNEL);
+ 	if (!fpdn)
 -- 
 2.25.4
 
