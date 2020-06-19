@@ -6,103 +6,107 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C23AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79307C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8852080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C3620786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bAEVZWgP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aS7TxzKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgFSJkC (ORCPT
+        id S1732129AbgFSJkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:40:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43544 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732008AbgFSJkA (ORCPT
+        Fri, 19 Jun 2020 05:40:14 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34124 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732110AbgFSJkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:40:00 -0400
+        Fri, 19 Jun 2020 05:40:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592559599;
+        s=mimecast20190719; t=1592559612;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U+4pGpzA+J7PaKdgXI23WVmSsTE+DNjVpwlPS2q569Q=;
-        b=bAEVZWgP40qom++wNzBoKCYi9vhlJ+cswvXrdybM0pw9dLGkbTC3tSDjLWIsAnVsXpfUgH
-        Hvd6o17aml1ECdLNjX1+8FeRfjcpt+dciejuqHHPDezwv2LeWFlA/mdlojBvzXZJuELFUj
-        Tqmv9uekVtLzjuRRWiSFxeCPQAMaiPE=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=owa0qFAPsKpu74jXgvEbAGd5tDvX5jYwWR6WKxTC83E=;
+        b=aS7TxzKo4XpvVqOKG4a75I+wltTFPbbauE3/p/pZFSlwr4z9UYsPpHwoXZszdNB3WQx1k4
+        cDySvsaJySj01o2enO+y69+V4rYdm+aawxImncoWpd1VJqwtftp8f30zOlSRzXuuzFVdSW
+        N/kCi+uhTD0RgUIt9QFLMG1wveox2ko=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-xICsVpg_MVSG2_GCJ1rTXQ-1; Fri, 19 Jun 2020 05:39:55 -0400
-X-MC-Unique: xICsVpg_MVSG2_GCJ1rTXQ-1
+ us-mta-263-E2DQ6Q59N3WWMbSJVCOn4A-1; Fri, 19 Jun 2020 05:39:29 -0400
+X-MC-Unique: E2DQ6Q59N3WWMbSJVCOn4A-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4006107B788;
-        Fri, 19 Jun 2020 09:39:53 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5596B5D9CA;
-        Fri, 19 Jun 2020 09:39:47 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 11:39:45 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Shakeel Butt <shakeelb@google.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7B8107B265;
+        Fri, 19 Jun 2020 09:39:26 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.195.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9A15D9E8;
+        Fri, 19 Jun 2020 09:39:18 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, brouer@redhat.com,
-        Larry Woodman <lwoodman@redhat.com>
-Subject: Re: [PATCH v6 00/19] The new cgroup slab memory controller
-Message-ID: <20200619113945.15ff3b15@carbon>
-In-Reply-To: <20200619012712.GD135965@carbon.dhcp.thefacebook.com>
-References: <20200608230654.828134-1-guro@fb.com>
-        <CALvZod7ThL=yMwxzCLvrTtq=+Dr5ooUSX-iFP8AhiAGURByFBA@mail.gmail.com>
-        <20200617024147.GA10812@carbon.lan>
-        <CALvZod4vLQb4kns=ao8btL_g--9axZfcaxhMnj+CoTrCkyWoWQ@mail.gmail.com>
-        <20200617033217.GE10812@carbon.lan>
-        <e510e964-2703-d123-120c-816bbdd35743@suse.cz>
-        <20200618012928.GD24694@carbon.DHCP.thefacebook.com>
-        <20200618104344.6a96ac04@carbon>
-        <20200619012712.GD135965@carbon.dhcp.thefacebook.com>
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org
+Subject: [RFC PATCH 0/2] gfs2 readahead regression in v5.8-rc1
+Date:   Fri, 19 Jun 2020 11:39:14 +0200
+Message-Id: <20200619093916.1081129-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 18:27:12 -0700
-Roman Gushchin <guro@fb.com> wrote:
+Hello,
 
-> Theoretically speaking it should get worse (especially for non-root allocations),
-> but if the difference is not big, it still should be better, because there is
-> a big expected win from memory savings/smaller working set/less fragmentation etc.
-> 
-> The only thing I'm slightly worried is what's the effect on root allocations
-> if we're sharing slab caches between root- and non-root allocations. Because if
-> someone depends so much on the allocation speed, memcg-based accounting can be
-> ignored anyway. For most users the cost of allocation is negligible.
-> That's why the patch which merges root- and memcg slab caches is put on top
-> and can be reverted if somebody will complain.
+can the two patches in this set still be considered for v5.8?
 
-In general I like this work for saving memory, but you also have to be
-aware of the negative consequences of sharing slab caches.  At Red Hat
-we have experienced very hard to find kernel bugs, that point to memory
-corruption at a completely wrong kernel code, because other kernel code
-were corrupting the shared slab cache.  (Hint a workaround is to enable
-SLUB debugging to disable this sharing).
+Commit d4388340ae0b ("fs: convert mpage_readpages to mpage_readahead")
+which converts gfs2 and other filesystems to use the new ->readahead
+address space operation is leading to deadlocks between the inode glocks
+and page locks: ->readahead is called with the pages to readahead
+already locked.  When gfs2_readahead then tries to lock the associated
+inode glock, another process already holding the inode glock may be
+trying to lock the same pages.
 
+We could work around this in gfs by using a LM_FLAG_TRY lock in
+->readahead for now.  The real reason for this deadlock is that gfs2
+shouldn't be taking the inode glock in ->readahead in the first place
+though, so I'd prefer to fix this "properly" instead.  Unfortunately,
+this depends on a new IOCB_CACHED flag for generic_file_read_iter.
+
+A previous version was posted in November:
+
+https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/
+
+Thanks,
+Andreas
+
+Andreas Gruenbacher (2):
+  fs: Add IOCB_CACHED flag for generic_file_read_iter
+  gfs2: Rework read and page fault locking
+
+ fs/gfs2/aops.c     | 27 ++------------------
+ fs/gfs2/file.c     | 61 ++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fs.h |  1 +
+ mm/filemap.c       | 16 ++++++++++--
+ 4 files changed, 76 insertions(+), 29 deletions(-)
+
+
+base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.26.2
 
