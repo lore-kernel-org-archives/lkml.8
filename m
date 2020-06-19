@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCC52168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC58F217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583815;
-	bh=WI3HQ8lMCRznQ3o12AJnapm9JrQWYpgFcNojPlKXQAQ=;
+	s=default; t=1592583827;
+	bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBdxiHgJpKaBMD91sLRAHbQ2dqgTDuNAXHl5xo4U96Moaa/ZHisUbMZMQq7h9pZSq
-	 B90xEJMPxzKIJASyC6GIm+PHxuKVg4gJ23kTuFWA7V5KkoQSNJ3aqEV6oRQZyIg44a
-	 k5qi8b0iccG5v7Vyo44qsMj1OrY0bmSHdHgirB+M=
+	b=avyd52zzLKNBhoqvTPcyVO9IQuKPefn0GhNWAEOhsOj+R7GbTux45irVl7aemLEko
+	 kIBh2VEGmsiAVCl8AcZCnWwjmkvysX9NRGMrnjMH5EPku97+hItd7Tbx7EPfjaQTNy
+	 tZPwrE+qeazcBnxjaUg0dRMO/B7bn3DHUlqih3nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394766AbgFSQXe (ORCPT
+        id S2394768AbgFSQXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389201AbgFSO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:14 -0400
+        id S2390455AbgFSO7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD3F21919;
-        Fri, 19 Jun 2020 14:59:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C9821924;
+        Fri, 19 Jun 2020 14:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578754;
-        bh=WI3HQ8lMCRznQ3o12AJnapm9JrQWYpgFcNojPlKXQAQ=;
+        s=default; t=1592578740;
+        bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRLOxnE7HxK2xiIJMsjM6OGuN8Qc1V7YTBkb2MMjjQRzOS3RKG19TBmIDJsv+ubbl
-         xFjeyUQxTTxsdEtSfOzaChqbZdijIyD3YllfxdOfoalZJYuTbsIfpixKwgM6jnw7XL
-         GrPpGpMjC6E5hElyj15TaAXOMDtLfTIvKp52+Jk0=
+        b=In8tmNc5cnBjRog76ulYeJmZ+xvKcDcsRf21BImZBVTtIIH74sc1xlS1h2cYEnkuV
+         CUDWWELq4x9YUqEasrzBcmfcjW28I4WCY8dnl3WqXK0QEF9jcIr1hz0bHJNaUoUn6Q
+         v6fxAFDKYWQZcXTvRPcNp3dW2R3TDBeuRqiMB594=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
-        Devulapally Shiva Krishna <shiva@chelsio.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 143/267] Crypto/chcr: fix for ccm(aes) failed test
-Date:   Fri, 19 Jun 2020 16:32:08 +0200
-Message-Id: <20200619141655.687313359@linuxfoundation.org>
+Subject: [PATCH 4.19 138/267] net: lpc-enet: fix error return code in lpc_mii_init()
+Date:   Fri, 19 Jun 2020 16:32:03 +0200
+Message-Id: <20200619141655.448321027@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devulapally Shiva Krishna <shiva@chelsio.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
+[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
 
-The ccm(aes) test fails when req->assoclen > ~240bytes.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-The problem is the value assigned to auth_offset is wrong.
-As auth_offset is unsigned char, it can take max value as 255.
-So fix it by making it unsigned int.
-
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
+Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index c435f89f34e3..9b3c259f081d 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2764,7 +2764,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
- 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
- 	unsigned int c_id = a_ctx(tfm)->dev->rx_channel_id;
- 	unsigned int ccm_xtra;
--	unsigned char tag_offset = 0, auth_offset = 0;
-+	unsigned int tag_offset = 0, auth_offset = 0;
- 	unsigned int assoclen;
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 41d30f55c946..6bd6c261f2ba 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -845,7 +845,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
+ 	if (mdiobus_register(pldat->mii_bus))
+ 		goto err_out_unregister_bus;
  
- 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
+-	if (lpc_mii_probe(pldat->ndev) != 0)
++	err = lpc_mii_probe(pldat->ndev);
++	if (err)
+ 		goto err_out_unregister_bus;
+ 
+ 	return 0;
 -- 
 2.25.1
 
