@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF54C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6EBB217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB6D217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583303;
-	bh=G/fWTg7WHrl/CDZ6nOfG1nn1s44r3LN8WBZ60RNAM8Y=;
+	s=default; t=1592583309;
+	bh=rzRl3+cl8C/VdtZkd+YwxCsHIRRU7G/M7AfwGReyWug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ED5DWp8aeB/2V4kNJjYS/2FB4zpBKvTdKv93AuSTcAmVuJvpvtvfmHoTVgR6DzOt
-	 RR4ivINkC2QTz7LttiaQbTh8Ch1HZzMEpJK/Jfzd6OayTSFUwAQwc+9hAnSB/8jq2S
-	 vvfu3qA2FWocAVWBjFzZj7ArPI9/f4VCQUficVaQ=
+	b=Z2r8JG+agsT+QG8mMVg5yxuB0CgGjYg3kbK5s1pqS2iWJLkSjU3OWgfYNmT91pkSE
+	 6FZ7bNrP1Xop++ukkuk/nRIYwDSPkpcipbQiA/30qKBh2Ew7xbi6MWl4NeE7oEp6ep
+	 5FEDx0Q8XcMGBdsEMxjGCKNspWNmDELIHkGdxZPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391381AbgFSQO5 (ORCPT
+        id S2390626AbgFSQPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391062AbgFSPDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:51 -0400
+        id S2391049AbgFSPDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972B021974;
-        Fri, 19 Jun 2020 15:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F66B21941;
+        Fri, 19 Jun 2020 15:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579031;
-        bh=G/fWTg7WHrl/CDZ6nOfG1nn1s44r3LN8WBZ60RNAM8Y=;
+        s=default; t=1592579025;
+        bh=rzRl3+cl8C/VdtZkd+YwxCsHIRRU7G/M7AfwGReyWug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yVaROszHHKxidVLYKYTi2Axy+9oJ/3YpMbtF50u1JIUAmFs0D1FVplkZdr3ii/Ob
-         F3SA+LisMuPduVkzk7rv/uyg2OnkzyCO3LLSqahvCtlpVbvMwXSVhOUMW7WdhCV8G/
-         BB4ADzHpA8g1sLhwDUyXuLexNFPEbqImBe6OE6jU=
+        b=nIne6eQPvgOgV4Pcdrs6U1DpphKEPsaE2Xr+zUh+H0ZZrAaBzsID4I0OuNgGCgwIR
+         UgDLU/jfPcHDvQYi6loyUsQa/ImSNAPfbLrnL154M5JyUEidGb0lC+wOfpbbRhzlwf
+         bB6r0abFo1I8/P27pKzsUwcyenOXdPEmiXvSK8S0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 248/267] dm crypt: avoid truncating the logical block size
-Date:   Fri, 19 Jun 2020 16:33:53 +0200
-Message-Id: <20200619141700.590948854@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.19 246/267] sparc32: fix register window handling in genregs32_[gs]et()
+Date:   Fri, 19 Jun 2020 16:33:51 +0200
+Message-Id: <20200619141700.491838403@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,35 +59,290 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 64611a15ca9da91ff532982429c44686f4593b5f upstream.
+commit cf51e129b96847f969bfb8af1ee1516a01a70b39 upstream.
 
-queue_limits::logical_block_size got changed from unsigned short to
-unsigned int, but it was forgotten to update crypt_io_hints() to use the
-new type.  Fix it.
+It needs access_process_vm() if the traced process does not share
+mm with the caller.  Solution is similar to what sparc64 does.
+Note that genregs32_set() is only ever called with pos being 0
+or 32 * sizeof(u32) (the latter - as part of PTRACE_SETREGS
+handling).
 
-Fixes: ad6bf88a6c19 ("block: fix an integer overflow in logical block size")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-crypt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/kernel/ptrace_32.c |  230 ++++++++++++++++++------------------------
+ 1 file changed, 99 insertions(+), 131 deletions(-)
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -3078,7 +3078,7 @@ static void crypt_io_hints(struct dm_tar
- 	limits->max_segment_size = PAGE_SIZE;
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -46,82 +46,79 @@ enum sparc_regset {
+ 	REGSET_FP,
+ };
  
- 	limits->logical_block_size =
--		max_t(unsigned short, limits->logical_block_size, cc->sector_size);
-+		max_t(unsigned, limits->logical_block_size, cc->sector_size);
- 	limits->physical_block_size =
- 		max_t(unsigned, limits->physical_block_size, cc->sector_size);
- 	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
++static int regwindow32_get(struct task_struct *target,
++			   const struct pt_regs *regs,
++			   u32 *uregs)
++{
++	unsigned long reg_window = regs->u_regs[UREG_I6];
++	int size = 16 * sizeof(u32);
++
++	if (target == current) {
++		if (copy_from_user(uregs, (void __user *)reg_window, size))
++			return -EFAULT;
++	} else {
++		if (access_process_vm(target, reg_window, uregs, size,
++				      FOLL_FORCE) != size)
++			return -EFAULT;
++	}
++	return 0;
++}
++
++static int regwindow32_set(struct task_struct *target,
++			   const struct pt_regs *regs,
++			   u32 *uregs)
++{
++	unsigned long reg_window = regs->u_regs[UREG_I6];
++	int size = 16 * sizeof(u32);
++
++	if (target == current) {
++		if (copy_to_user((void __user *)reg_window, uregs, size))
++			return -EFAULT;
++	} else {
++		if (access_process_vm(target, reg_window, uregs, size,
++				      FOLL_FORCE | FOLL_WRITE) != size)
++			return -EFAULT;
++	}
++	return 0;
++}
++
+ static int genregs32_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+ 			 unsigned int pos, unsigned int count,
+ 			 void *kbuf, void __user *ubuf)
+ {
+ 	const struct pt_regs *regs = target->thread.kregs;
+-	unsigned long __user *reg_window;
+-	unsigned long *k = kbuf;
+-	unsigned long __user *u = ubuf;
+-	unsigned long reg;
++	u32 uregs[16];
++	int ret;
+ 
+ 	if (target == current)
+ 		flush_user_windows();
+ 
+-	pos /= sizeof(reg);
+-	count /= sizeof(reg);
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++				  regs->u_regs,
++				  0, 16 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 
+-	if (kbuf) {
+-		for (; count > 0 && pos < 16; count--)
+-			*k++ = regs->u_regs[pos++];
+-
+-		reg_window = (unsigned long __user *) regs->u_regs[UREG_I6];
+-		reg_window -= 16;
+-		for (; count > 0 && pos < 32; count--) {
+-			if (get_user(*k++, &reg_window[pos++]))
+-				return -EFAULT;
+-		}
+-	} else {
+-		for (; count > 0 && pos < 16; count--) {
+-			if (put_user(regs->u_regs[pos++], u++))
+-				return -EFAULT;
+-		}
+-
+-		reg_window = (unsigned long __user *) regs->u_regs[UREG_I6];
+-		reg_window -= 16;
+-		for (; count > 0 && pos < 32; count--) {
+-			if (get_user(reg, &reg_window[pos++]) ||
+-			    put_user(reg, u++))
+-				return -EFAULT;
+-		}
+-	}
+-	while (count > 0) {
+-		switch (pos) {
+-		case 32: /* PSR */
+-			reg = regs->psr;
+-			break;
+-		case 33: /* PC */
+-			reg = regs->pc;
+-			break;
+-		case 34: /* NPC */
+-			reg = regs->npc;
+-			break;
+-		case 35: /* Y */
+-			reg = regs->y;
+-			break;
+-		case 36: /* WIM */
+-		case 37: /* TBR */
+-			reg = 0;
+-			break;
+-		default:
+-			goto finish;
+-		}
+-
+-		if (kbuf)
+-			*k++ = reg;
+-		else if (put_user(reg, u++))
++	if (pos < 32 * sizeof(u32)) {
++		if (regwindow32_get(target, regs, uregs))
+ 			return -EFAULT;
+-		pos++;
+-		count--;
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++					  uregs,
++					  16 * sizeof(u32), 32 * sizeof(u32));
++		if (ret || !count)
++			return ret;
+ 	}
+-finish:
+-	pos *= sizeof(reg);
+-	count *= sizeof(reg);
+ 
+-	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					38 * sizeof(reg), -1);
++	uregs[0] = regs->psr;
++	uregs[1] = regs->pc;
++	uregs[2] = regs->npc;
++	uregs[3] = regs->y;
++	uregs[4] = 0;	/* WIM */
++	uregs[5] = 0;	/* TBR */
++	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++				  uregs,
++				  32 * sizeof(u32), 38 * sizeof(u32));
+ }
+ 
+ static int genregs32_set(struct task_struct *target,
+@@ -130,82 +127,53 @@ static int genregs32_set(struct task_str
+ 			 const void *kbuf, const void __user *ubuf)
+ {
+ 	struct pt_regs *regs = target->thread.kregs;
+-	unsigned long __user *reg_window;
+-	const unsigned long *k = kbuf;
+-	const unsigned long __user *u = ubuf;
+-	unsigned long reg;
++	u32 uregs[16];
++	u32 psr;
++	int ret;
+ 
+ 	if (target == current)
+ 		flush_user_windows();
+ 
+-	pos /= sizeof(reg);
+-	count /= sizeof(reg);
+-
+-	if (kbuf) {
+-		for (; count > 0 && pos < 16; count--)
+-			regs->u_regs[pos++] = *k++;
+-
+-		reg_window = (unsigned long __user *) regs->u_regs[UREG_I6];
+-		reg_window -= 16;
+-		for (; count > 0 && pos < 32; count--) {
+-			if (put_user(*k++, &reg_window[pos++]))
+-				return -EFAULT;
+-		}
+-	} else {
+-		for (; count > 0 && pos < 16; count--) {
+-			if (get_user(reg, u++))
+-				return -EFAULT;
+-			regs->u_regs[pos++] = reg;
+-		}
+-
+-		reg_window = (unsigned long __user *) regs->u_regs[UREG_I6];
+-		reg_window -= 16;
+-		for (; count > 0 && pos < 32; count--) {
+-			if (get_user(reg, u++) ||
+-			    put_user(reg, &reg_window[pos++]))
+-				return -EFAULT;
+-		}
+-	}
+-	while (count > 0) {
+-		unsigned long psr;
+-
+-		if (kbuf)
+-			reg = *k++;
+-		else if (get_user(reg, u++))
+-			return -EFAULT;
+-
+-		switch (pos) {
+-		case 32: /* PSR */
+-			psr = regs->psr;
+-			psr &= ~(PSR_ICC | PSR_SYSCALL);
+-			psr |= (reg & (PSR_ICC | PSR_SYSCALL));
+-			regs->psr = psr;
+-			break;
+-		case 33: /* PC */
+-			regs->pc = reg;
+-			break;
+-		case 34: /* NPC */
+-			regs->npc = reg;
+-			break;
+-		case 35: /* Y */
+-			regs->y = reg;
+-			break;
+-		case 36: /* WIM */
+-		case 37: /* TBR */
+-			break;
+-		default:
+-			goto finish;
+-		}
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 regs->u_regs,
++				 0, 16 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 
+-		pos++;
+-		count--;
++	if (pos < 32 * sizeof(u32)) {
++		if (regwindow32_get(target, regs, uregs))
++			return -EFAULT;
++		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++					 uregs,
++					 16 * sizeof(u32), 32 * sizeof(u32));
++		if (ret)
++			return ret;
++		if (regwindow32_set(target, regs, uregs))
++			return -EFAULT;
++		if (!count)
++			return 0;
+ 	}
+-finish:
+-	pos *= sizeof(reg);
+-	count *= sizeof(reg);
+-
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &psr,
++				 32 * sizeof(u32), 33 * sizeof(u32));
++	if (ret)
++		return ret;
++	regs->psr = (regs->psr & ~(PSR_ICC | PSR_SYSCALL)) |
++		    (psr & (PSR_ICC | PSR_SYSCALL));
++	if (!count)
++		return 0;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->pc,
++				 33 * sizeof(u32), 34 * sizeof(u32));
++	if (ret || !count)
++		return ret;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->y,
++				 34 * sizeof(u32), 35 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+-					 38 * sizeof(reg), -1);
++					 35 * sizeof(u32), 38 * sizeof(u32));
+ }
+ 
+ static int fpregs32_get(struct task_struct *target,
 
 
