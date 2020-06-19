@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A03C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA71A21974
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BECF206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578999;
-	bh=oB+AJf3d5fAPcGva4i/ZTOk916wtQtBgYYJ98zhh6Hw=;
+	s=default; t=1592579002;
+	bh=B/hvqbQYqnEJ47ahpY2o/6cP5npf/2M9FY4jezJOFdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHrJino1MGbM+QjF/sQW5rd6YUYOQhFpZaopnQPI28joi8WGVkfirYvrKdk8IDQq/
-	 uw26/Sc77q2wroNN0ITl6V59B3k5tVqbTomHfWZ8ZaBlty105TrdEALcTzaUfQus72
-	 EQVlCPPMJsSxiatun7MdITZIz3M13R4NUHOYPxPc=
+	b=Zs5WB+rNszihoEMzcx8Jh3g0n4WEBW2dcMMDjWHllHoLM0GB5lojB/1t+51NNrj3r
+	 08OED538eBgSQj94tTufcLjPyGe1baEtzG9wlDOEdcwWYxqrabjKZiZ6a+28T1aN3f
+	 ABB5zTT3aKvOsceQqeBe3CBMSgIcALZWK8YoKzf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390976AbgFSPDR (ORCPT
+        id S2390986AbgFSPDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:03:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389299AbgFSPCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:48 -0400
+        id S2390894AbgFSPCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6906F21841;
-        Fri, 19 Jun 2020 15:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56C921941;
+        Fri, 19 Jun 2020 15:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578968;
-        bh=oB+AJf3d5fAPcGva4i/ZTOk916wtQtBgYYJ98zhh6Hw=;
+        s=default; t=1592578970;
+        bh=B/hvqbQYqnEJ47ahpY2o/6cP5npf/2M9FY4jezJOFdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lz2ULMNFBV2vbRX2DF13ODBjSHlo8qdyrG60Ds87lzZ97CJRXR23CMjibpFWVWxdo
-         WiwSDxLDiifqVNoqiQnVnStAvKOhr+5oqoyKwrbVINI8AeMcMIGtheaiAzc1dKDZfd
-         /fzcEDj1dLh1/VHz2admG9fAUxT9nxbHEi09ACuo=
+        b=UKiWDYb1HGPLrTXpav5odFZX30jv4H9o4kppypu+mwh2Qh2al6boCbF84mjreqVvz
+         jaW1jzHj2Q3yTpuZdr3m0uWlca/M6GdkmZUvwykAWSRQo5k0SI8B5gPDvYL0cAn4xY
+         6lLjlRfmngBTV9vbN8w007WTFwi9yQzPlrJ3ajTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Abhishek Sahu <abhsahu@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 226/267] PCI: Unify ACS quirk desired vs provided checking
-Date:   Fri, 19 Jun 2020 16:33:31 +0200
-Message-Id: <20200619141659.538098036@linuxfoundation.org>
+Subject: [PATCH 4.19 227/267] PCI: Generalize multi-function power dependency device links
+Date:   Fri, 19 Jun 2020 16:33:32 +0200
+Message-Id: <20200619141659.587541394@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,175 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Abhishek Sahu <abhsahu@nvidia.com>
 
-[ Upstream commit 7cf2cba43f15c74bac46dc5f0326805d25ef514d ]
+[ Upstream commit a17beb1a0882a544523dcb5d0da4801272dfd43a ]
 
-Most of the ACS quirks have a similar pattern of:
+Although not allowed by the PCI specs, some multi-function devices have
+power dependencies between the functions.  For example, function 1 may not
+work unless function 0 is in the D0 power state.
 
-  acs_flags &= ~( <controls provided by this device> );
-  return acs_flags ? 0 : 1;
+The existing quirk_gpu_hda() adds a device link to express this dependency
+for GPU and HDA devices, but it really is not specific to those device
+types.
 
-Pull this out into a helper function to simplify the quirks slightly.  The
-helper function is also a convenient place for comments about what the list
-of ACS controls means.  No functional change intended.
+Generalize it and rename it to pci_create_device_link() so we can create
+dependencies between any "consumer" and "producer" functions of a
+multi-function device, where the consumer is only functional if the
+producer is in D0.  This reorganization should not affect any
+functionality.
 
+Link: https://lore.kernel.org/lkml/20190606092225.17960-2-abhsahu@nvidia.com
+Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+[bhelgaas: commit log, reword diagnostic]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 67 +++++++++++++++++++++++++++++---------------
- 1 file changed, 45 insertions(+), 22 deletions(-)
+ drivers/pci/quirks.c | 54 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ae62c0b058dd..0704025a2160 100644
+index 0704025a2160..0862cb633849 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -4263,6 +4263,24 @@ static void quirk_chelsio_T5_disable_root_port_attributes(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
- 			 quirk_chelsio_T5_disable_root_port_attributes);
- 
-+/*
-+ * pci_acs_ctrl_enabled - compare desired ACS controls with those provided
-+ *			  by a device
-+ * @acs_ctrl_req: Bitmask of desired ACS controls
-+ * @acs_ctrl_ena: Bitmask of ACS controls enabled or provided implicitly by
-+ *		  the hardware design
-+ *
-+ * Return 1 if all ACS controls in the @acs_ctrl_req bitmask are included
-+ * in @acs_ctrl_ena, i.e., the device provides all the access controls the
-+ * caller desires.  Return 0 otherwise.
-+ */
-+static int pci_acs_ctrl_enabled(u16 acs_ctrl_req, u16 acs_ctrl_ena)
-+{
-+	if ((acs_ctrl_req & acs_ctrl_ena) == acs_ctrl_req)
-+		return 1;
-+	return 0;
-+}
-+
- /*
-  * AMD has indicated that the devices below do not support peer-to-peer
-  * in any system where they are found in the southbridge with an AMD
-@@ -4306,7 +4324,7 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
- 	/* Filter out flags not applicable to multifunction */
- 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
- 
--	return acs_flags & ~(PCI_ACS_RR | PCI_ACS_CR) ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags, PCI_ACS_RR | PCI_ACS_CR);
- #else
- 	return -ENODEV;
- #endif
-@@ -4344,9 +4362,8 @@ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
- 	 * hardware implements and enables equivalent ACS functionality for
- 	 * these flags.
- 	 */
--	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
--
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
- 
- static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
-@@ -4356,9 +4373,8 @@ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
- 	 * transactions with others, allowing masking out these bits as if they
- 	 * were unimplemented in the ACS capability.
- 	 */
--	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
--
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
+@@ -5077,35 +5077,49 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
  
  /*
-@@ -4410,17 +4426,16 @@ static bool pci_quirk_intel_pch_acs_match(struct pci_dev *dev)
- 	return false;
- }
- 
--#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
--
- static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
- {
- 	if (!pci_quirk_intel_pch_acs_match(dev))
- 		return -ENOTTY;
- 
- 	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
--		acs_flags &= ~(INTEL_PCH_ACS_FLAGS);
-+		return pci_acs_ctrl_enabled(acs_flags,
-+			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- 
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags, 0);
- }
- 
- /*
-@@ -4435,9 +4450,8 @@ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+- * GPUs with integrated HDA controller for streaming audio to attached displays
+- * need a device link from the HDA controller (consumer) to the GPU (supplier)
+- * so that the GPU is powered up whenever the HDA controller is accessed.
+- * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
+- * The device link stays in place until shutdown (or removal of the PCI device
+- * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
+- * to prevent it from permanently keeping the GPU awake.
++ * Although not allowed by the spec, some multi-function devices have
++ * dependencies of one function (consumer) on another (supplier).  For the
++ * consumer to work in D0, the supplier must also be in D0.  Create a
++ * device link from the consumer to the supplier to enforce this
++ * dependency.  Runtime PM is allowed by default on the consumer to prevent
++ * it from permanently keeping the supplier awake.
   */
- static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+-static void quirk_gpu_hda(struct pci_dev *hda)
++static void pci_create_device_link(struct pci_dev *pdev, unsigned int consumer,
++				   unsigned int supplier, unsigned int class,
++				   unsigned int class_shift)
  {
--	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
--
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
+-	struct pci_dev *gpu;
++	struct pci_dev *supplier_pdev;
  
- /*
-@@ -4520,7 +4534,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_dev *dev, u16 acs_flags)
+-	if (PCI_FUNC(hda->devfn) != 1)
++	if (PCI_FUNC(pdev->devfn) != consumer)
+ 		return;
  
- 	pci_read_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, &ctrl);
+-	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
+-					  hda->bus->number,
+-					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
+-	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
+-		pci_dev_put(gpu);
++	supplier_pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
++				pdev->bus->number,
++				PCI_DEVFN(PCI_SLOT(pdev->devfn), supplier));
++	if (!supplier_pdev || (supplier_pdev->class >> class_shift) != class) {
++		pci_dev_put(supplier_pdev);
+ 		return;
+ 	}
  
--	return acs_flags & ~ctrl ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags, ctrl);
- }
+-	if (!device_link_add(&hda->dev, &gpu->dev,
+-			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
+-		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
++	if (device_link_add(&pdev->dev, &supplier_pdev->dev,
++			    DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
++		pci_info(pdev, "D0 power state depends on %s\n",
++			 pci_name(supplier_pdev));
++	else
++		pci_err(pdev, "Cannot enforce power dependency on %s\n",
++			pci_name(supplier_pdev));
++
++	pm_runtime_allow(&pdev->dev);
++	pci_dev_put(supplier_pdev);
++}
  
- static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
-@@ -4534,10 +4548,9 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
- 	 * perform peer-to-peer with other functions, allowing us to mask out
- 	 * these bits as if they were unimplemented in the ACS capability.
- 	 */
--	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
--		       PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
--
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
-+		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
- }
- 
- static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
-@@ -4562,9 +4575,8 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- 	 * Allow each Root Port to be in a separate IOMMU group by masking
- 	 * SV/RR/CR/UF bits.
- 	 */
--	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
--
--	return acs_flags ? 0 : 1;
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
- 
- static const struct pci_dev_acs_enabled {
-@@ -4663,6 +4675,17 @@ static const struct pci_dev_acs_enabled {
- 	{ 0 }
- };
- 
+-	pm_runtime_allow(&hda->dev);
+-	pci_dev_put(gpu);
 +/*
-+ * pci_dev_specific_acs_enabled - check whether device provides ACS controls
-+ * @dev:	PCI device
-+ * @acs_flags:	Bitmask of desired ACS controls
-+ *
-+ * Returns:
-+ *   -ENOTTY:	No quirk applies to this device; we can't tell whether the
-+ *		device provides the desired controls
-+ *   0:		Device does not provide all the desired controls
-+ *   >0:	Device provides all the controls in @acs_flags
++ * Create device link for GPUs with integrated HDA controller for streaming
++ * audio to attached displays.
 + */
- int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags)
- {
- 	const struct pci_dev_acs_enabled *i;
++static void quirk_gpu_hda(struct pci_dev *hda)
++{
++	pci_create_device_link(hda, 1, 0, PCI_BASE_CLASS_DISPLAY, 16);
+ }
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+ 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
 -- 
 2.25.1
 
