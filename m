@@ -2,204 +2,136 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2237620809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h3c8g9QF"
+	by mail.kernel.org (Postfix) with ESMTP id 0906F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592570606;
+	bh=yShNM0K+JKgCUomMvzFARdYyLeLf+SbVL45AMI9mrf4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=scKmBZbjxt8tSh3K3bniEf+yh2mp6fvUpsSpYSLCSo5zZVFqt7n1I+hEP4BE5GGNj
+	 gq6mh1kEgknxVsy/8R/OZlqM+h6IZbpyMV/5Z83SyHqbLPnfvl/IE8FtbAwyYj7R7D
+	 +KmX+8mr0jdqYwnxfVJcIbf2WYSQQalHzkjcGhqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgFSMnD (ORCPT
+        id S1731143AbgFSMnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:43:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32325 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729836AbgFSMnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:43:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592570580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gv76+7wPlxv1JgTAX5XGbER7AaxLFtv8PFB7E49p9nI=;
-        b=h3c8g9QFbLKARbFI20lm0CHxSfkH1reHomrvTKqySQPKbDhbpKqeBuOaj4R2bIw4WP89EV
-        bFZmoKIygR0vkX16YkkncPp99T7kB+mbmBMsxYJ3NiTiC6jLY0amh7R9BJup5/zDlHYUrJ
-        EopwuBRETwShTxEetGnV4r+iLvHF3KA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-7Wo61-9uPoqvi1tbAT48UA-1; Fri, 19 Jun 2020 08:42:56 -0400
-X-MC-Unique: 7Wo61-9uPoqvi1tbAT48UA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 19 Jun 2020 08:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729367AbgFSMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 08:43:23 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6060E1005512;
-        Fri, 19 Jun 2020 12:42:53 +0000 (UTC)
-Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8212B71671;
-        Fri, 19 Jun 2020 12:42:51 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 20:42:48 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Nitin Gupta <nigupta@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nitin Gupta <ngupta@nitingupta.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PROC SYSCTL" <linux-fsdevel@vger.kernel.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm: Use unsigned types for fragmentation score
-Message-ID: <20200619124248.GF3346@MiWiFi-R3L-srv>
-References: <20200618010319.13159-1-nigupta@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 363EC207E8;
+        Fri, 19 Jun 2020 12:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592570603;
+        bh=yShNM0K+JKgCUomMvzFARdYyLeLf+SbVL45AMI9mrf4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YBTWoDZrVnqLmMfBX4qNgSyMX0wTWJ03UHeUMb/y5/pbI8t0by3WtlngCEL8vAxXJ
+         2tOYpLeYMUcywa4Yv/rHG3piCWRTl6iDLPhDAFpTTfOMxy+e1GS/oQpezALGPZnqGu
+         +1DcN4Zog7klZO9Slkh7BaYjt84NPkFKKmeHbUYc=
+Date:   Fri, 19 Jun 2020 13:43:18 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: [GIT PULL] arm64 fixes for -rc2
+Message-ID: <20200619124318.GA6925@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618010319.13159-1-nigupta@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/17/20 at 06:03pm, Nitin Gupta wrote:
-> Proactive compaction uses per-node/zone "fragmentation score" which
-> is always in range [0, 100], so use unsigned type of these scores
-> as well as for related constants.
-> 
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
+Hi Linus,
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+Please pull these arm64 fixes for -rc2. Unfortunately, we still have a
+number of outstanding issues so there will be more fixes to come, but
+this lot are a good start.
 
-> ---
->  include/linux/compaction.h |  4 ++--
->  kernel/sysctl.c            |  2 +-
->  mm/compaction.c            | 18 +++++++++---------
->  mm/vmstat.c                |  2 +-
->  4 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-> index 7a242d46454e..25a521d299c1 100644
-> --- a/include/linux/compaction.h
-> +++ b/include/linux/compaction.h
-> @@ -85,13 +85,13 @@ static inline unsigned long compact_gap(unsigned int order)
->  
->  #ifdef CONFIG_COMPACTION
->  extern int sysctl_compact_memory;
-> -extern int sysctl_compaction_proactiveness;
-> +extern unsigned int sysctl_compaction_proactiveness;
->  extern int sysctl_compaction_handler(struct ctl_table *table, int write,
->  			void *buffer, size_t *length, loff_t *ppos);
->  extern int sysctl_extfrag_threshold;
->  extern int sysctl_compact_unevictable_allowed;
->  
-> -extern int extfrag_for_order(struct zone *zone, unsigned int order);
-> +extern unsigned int extfrag_for_order(struct zone *zone, unsigned int order);
->  extern int fragmentation_index(struct zone *zone, unsigned int order);
->  extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
->  		unsigned int order, unsigned int alloc_flags,
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 58b0a59c9769..40180cdde486 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2833,7 +2833,7 @@ static struct ctl_table vm_table[] = {
->  	{
->  		.procname	= "compaction_proactiveness",
->  		.data		= &sysctl_compaction_proactiveness,
-> -		.maxlen		= sizeof(int),
-> +		.maxlen		= sizeof(sysctl_compaction_proactiveness),
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= SYSCTL_ZERO,
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index ac2030814edb..45fd24a0ea0b 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -53,7 +53,7 @@ static inline void count_compact_events(enum vm_event_item item, long delta)
->  /*
->   * Fragmentation score check interval for proactive compaction purposes.
->   */
-> -static const int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
-> +static const unsigned int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
->  
->  /*
->   * Page order with-respect-to which proactive compaction
-> @@ -1890,7 +1890,7 @@ static bool kswapd_is_running(pg_data_t *pgdat)
->   * ZONE_DMA32. For smaller zones, the score value remains close to zero,
->   * and thus never exceeds the high threshold for proactive compaction.
->   */
-> -static int fragmentation_score_zone(struct zone *zone)
-> +static unsigned int fragmentation_score_zone(struct zone *zone)
->  {
->  	unsigned long score;
->  
-> @@ -1906,9 +1906,9 @@ static int fragmentation_score_zone(struct zone *zone)
->   * the node's score falls below the low threshold, or one of the back-off
->   * conditions is met.
->   */
-> -static int fragmentation_score_node(pg_data_t *pgdat)
-> +static unsigned int fragmentation_score_node(pg_data_t *pgdat)
->  {
-> -	unsigned long score = 0;
-> +	unsigned int score = 0;
->  	int zoneid;
->  
->  	for (zoneid = 0; zoneid < MAX_NR_ZONES; zoneid++) {
-> @@ -1921,17 +1921,17 @@ static int fragmentation_score_node(pg_data_t *pgdat)
->  	return score;
->  }
->  
-> -static int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
-> +static unsigned int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
->  {
-> -	int wmark_low;
-> +	unsigned int wmark_low;
->  
->  	/*
->  	 * Cap the low watermak to avoid excessive compaction
->  	 * activity in case a user sets the proactivess tunable
->  	 * close to 100 (maximum).
->  	 */
-> -	wmark_low = max(100 - sysctl_compaction_proactiveness, 5);
-> -	return low ? wmark_low : min(wmark_low + 10, 100);
-> +	wmark_low = max(100U - sysctl_compaction_proactiveness, 5U);
-> +	return low ? wmark_low : min(wmark_low + 10, 100U);
->  }
->  
->  static bool should_proactive_compact_node(pg_data_t *pgdat)
-> @@ -2604,7 +2604,7 @@ int sysctl_compact_memory;
->   * aggressively the kernel should compact memory in the
->   * background. It takes values in the range [0, 100].
->   */
-> -int __read_mostly sysctl_compaction_proactiveness = 20;
-> +unsigned int __read_mostly sysctl_compaction_proactiveness = 20;
->  
->  /*
->   * This is the entry point for compacting all nodes via
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 3e7ba8bce2ba..b1de695b826d 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1079,7 +1079,7 @@ static int __fragmentation_index(unsigned int order, struct contig_page_info *in
->   * It is defined as the percentage of pages found in blocks of size
->   * less than 1 << order. It returns values in range [0, 100].
->   */
-> -int extfrag_for_order(struct zone *zone, unsigned int order)
-> +unsigned int extfrag_for_order(struct zone *zone, unsigned int order)
->  {
->  	struct contig_page_info info;
->  
-> -- 
-> 2.27.0
-> 
-> 
+Summary in the tag.
+
+Cheers,
+
+Will
+
+--->8
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 24ebec25fb270100e252b19c288e21bd7d8cc7f7:
+
+  arm64: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints (2020-06-18 11:10:00 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc2
+
+- Fix handling of watchpoints triggered by uaccess routines
+
+- Fix initialisation of gigantic pages for CMA buffers
+
+- Raise minimum clang version for BTI to avoid miscompilation
+
+- Fix data race in SVE vector length configuration code
+
+- Ensure address tags are ignored in kern_addr_valid()
+
+- Dump register state on fatal BTI exception
+
+- kexec_file() cleanup to use struct_size() macro
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64: remove TEXT_OFFSET randomization
+
+Barry Song (1):
+      arm64: mm: reserve hugetlb CMA after numa_init
+
+Dave Martin (2):
+      docs/arm64: Fix typo'd #define in sve.rst
+      arm64/sve: Eliminate data races on sve_default_vl
+
+Gustavo A. R. Silva (1):
+      arm64: kexec_file: Use struct_size() in kmalloc()
+
+Shyam Thombre (1):
+      arm64: mm: reset address tag set by kasan sw tagging
+
+Will Deacon (5):
+      arm64: traps: Dump registers prior to panic() in bad_mode()
+      arm64: pgtable: Clear the GP bit for non-executable kernel pages
+      arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
+      arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support
+      arm64: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
+
+ Documentation/arm64/sve.rst            |  6 ++---
+ arch/arm64/Kconfig                     |  2 ++
+ arch/arm64/Kconfig.debug               | 15 ------------
+ arch/arm64/Makefile                    |  6 -----
+ arch/arm64/include/asm/pgtable.h       |  2 +-
+ arch/arm64/kernel/fpsimd.c             | 31 ++++++++++++++++--------
+ arch/arm64/kernel/hw_breakpoint.c      | 44 ++++++++++++++++++++--------------
+ arch/arm64/kernel/machine_kexec_file.c |  3 +--
+ arch/arm64/kernel/traps.c              |  1 +
+ arch/arm64/mm/init.c                   | 15 ++++++++----
+ arch/arm64/mm/mmu.c                    |  1 +
+ 11 files changed, 66 insertions(+), 60 deletions(-)
 
