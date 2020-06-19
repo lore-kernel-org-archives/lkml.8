@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A64C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC91CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E8721532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C5821532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXuQscfI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gbon2Nge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405560AbgFSQGz (ORCPT
+        id S2394257AbgFSQHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:06:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405541AbgFSQF5 (ORCPT
+        Fri, 19 Jun 2020 12:07:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25773 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405534AbgFSQFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:05:57 -0400
+        Fri, 19 Jun 2020 12:05:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592582756;
+        s=mimecast20190719; t=1592582751;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SagB2x6xDXMHuNfH0nszNoiVH7/+fXWLgMfhv8WOo7E=;
-        b=SXuQscfIp84Jam/3SNag7zZHTrGwnKri/xm+9Yk4bv7VuxQWefJbFQq4NZY2De8nCxOs6R
-        1mXbMC6ZG3ckJuBNrVEiNUYsea5P6aOF4kG2MDm8bfcnqAku/gO6u2oh3RECEVxm3CVA9s
-        FER3YW8QvV85Uw3gyq4cDyy2Z8+IJp4=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-L5VbXHp8OdONKxz-kSAJKw-1; Fri, 19 Jun 2020 12:05:54 -0400
-X-MC-Unique: L5VbXHp8OdONKxz-kSAJKw-1
-Received: by mail-qt1-f200.google.com with SMTP id s30so4383023qts.18
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:54 -0700 (PDT)
+        bh=oYNDwtlfjBw7SDjKSzeBn7nLzHhEdZ/Papn4VLBZIoQ=;
+        b=Gbon2NgeJHFxisp58KQlO29Oek+1Pj3M50c4T/dg4awaeXrwle+TI0q4BvSQxd+gSTSXTj
+        pFOjJREZmFFDp7JZYag1RPKdWkUc8LM+AD/dS0NmDubKnhQPClqXzGy7066Y4YXq4hyKCG
+        Wose3JcplJnc5Trk+G7lVvhB1Pw5T3A=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-cjcit86PMOOAkAXe43enqg-1; Fri, 19 Jun 2020 12:05:48 -0400
+X-MC-Unique: cjcit86PMOOAkAXe43enqg-1
+Received: by mail-qk1-f199.google.com with SMTP id o63so1036156qkc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SagB2x6xDXMHuNfH0nszNoiVH7/+fXWLgMfhv8WOo7E=;
-        b=WLqx8JJZ4kzzL4eANzlbEtO3idM9E16BaPgo1xbbk1bqrUPkgcQGL/Io4JW/Mw7ws4
-         gMGlj4Gmvn783vgcjqFEtBjk5bbhMGnFqRxuhG6Uj6QNmnsqwaA12JAg0Ftkgf1Ciy0l
-         7NRCsHc5/yqnG8bfOK0UyeqiBhhdJj3euIFs729KpjB2qNbzJLz/aQ2iTr1z/vIOVhUy
-         cqjjx4FceFUadEI8z959m3lCxikMiht+/bvNGhtN66pE/cv9XqUfvTcf0h7760tqtgpw
-         bMKnxYdUz6mlcB8f/c4XrZafrsJlMtXHp10HSRGUGWKFsW0N5QHIUFGnvUD3e4igiWEg
-         PBYg==
-X-Gm-Message-State: AOAM53320tsGzUMLyWgYI7YsNjEXr/6uajy4maGOBD/g4+8q+y0X/lKO
-        +aeY5icJLz2vVleTBth4xF3rNcnJ5m4j0UX+z99qh/aSkStWF4Xfe/BkVU/UWI0IbfG353GXXTZ
-        vUfY4q/6TXyWpyEO9am+v545C
-X-Received: by 2002:a37:9e52:: with SMTP id h79mr3975297qke.467.1592582753531;
-        Fri, 19 Jun 2020 09:05:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzd2Ml6f1U4IsoXVUG+sGmbZtZswjvwyuO+DQ4aozpetfpM522QVCnolfKkgB3x792Y2yKCcA==
-X-Received: by 2002:a37:9e52:: with SMTP id h79mr3975266qke.467.1592582753231;
-        Fri, 19 Jun 2020 09:05:53 -0700 (PDT)
+        bh=oYNDwtlfjBw7SDjKSzeBn7nLzHhEdZ/Papn4VLBZIoQ=;
+        b=nLc/sNwUuhuEiKYYBJ3gntBMFuVtPpfPCVV4L2xiJqlMsuhNkzvwwKMLX+pAaOte8/
+         nI9mhTFVDUVcKgUI9FkcOhiE6Q1SgYHi5ZoGXOqL0tYMIgZuPqRUkgbZi2z64fDKqd6F
+         7Dg76aMN3UlLKJ9Cs8jOvNBXSG+d4StphZ8Gn3zXaTb+rysShnGFjcr0xdCe1Qs/sI6V
+         sjhBAWMfl6Km8DkKfxMFu0mf4hMB0svFpDfq7xCweTQBoF/4ddI2/ApGvKCzTEheJyj2
+         /uPB6c+C2+86HzXPdvgzDHTszOWo92MT98ulF/a81JEW75BDuBLVw25sLYkGWBKKVVQg
+         JJNg==
+X-Gm-Message-State: AOAM5336kA+3+kWtm+/KjnPSenk5zYjgQdZItM+oDkPNt8YCHyzdwbvh
+        QdP8BNZ1C3JsmaiRoXfNqtXg+aQ3lYoPUJGM1rV4VbuNx8kmV+BtRwZ76NCdG31mE5NLy0koc5j
+        LFeSUNgCJDMnlaRfN66J5PSAb
+X-Received: by 2002:aed:21c8:: with SMTP id m8mr4187958qtc.224.1592582747571;
+        Fri, 19 Jun 2020 09:05:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxzQfwrOgEHeZ4fmlf+FrgeIhkxqk3pvz1Rd9/fj39BAorh/CRlZ+KkHZPVWnZcxaKSEJpm8Q==
+X-Received: by 2002:aed:21c8:: with SMTP id m8mr4187936qtc.224.1592582747304;
+        Fri, 19 Jun 2020 09:05:47 -0700 (PDT)
 Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id g11sm6412604qkk.123.2020.06.19.09.05.51
+        by smtp.gmail.com with ESMTPSA id g11sm6412604qkk.123.2020.06.19.09.05.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:05:52 -0700 (PDT)
+        Fri, 19 Jun 2020 09:05:46 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, peterx@redhat.com,
@@ -70,11 +70,11 @@ Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, peterx@redhat.com,
         Will Deacon <will@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org
-Subject: [PATCH 07/26] mm/hexagon: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:05:19 -0400
-Message-Id: <20200619160538.8641-8-peterx@redhat.com>
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 04/26] mm/arm: Use general page fault accounting
+Date:   Fri, 19 Jun 2020 12:05:16 -0400
+Message-Id: <20200619160538.8641-5-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
 References: <20200619160538.8641-1-peterx@redhat.com>
@@ -87,59 +87,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use the general page fault accounting by passing regs into handle_mm_fault().
 It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+retry happened.  To do this, we need to pass the pt_regs pointer into
+__do_page_fault().
 
-Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
-perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+Fix PERF_COUNT_SW_PAGE_FAULTS perf event manually for page fault retries, by
+moving it before taking mmap_sem.
 
-CC: Brian Cain <bcain@codeaurora.org>
-CC: linux-hexagon@vger.kernel.org
+CC: Russell King <linux@armlinux.org.uk>
+CC: Will Deacon <will@kernel.org>
+CC: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/hexagon/mm/vm_fault.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/arm/mm/fault.c | 25 ++++++-------------------
+ 1 file changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/arch/hexagon/mm/vm_fault.c b/arch/hexagon/mm/vm_fault.c
-index f04cd0a6d905..1b1802f30862 100644
---- a/arch/hexagon/mm/vm_fault.c
-+++ b/arch/hexagon/mm/vm_fault.c
-@@ -19,6 +19,7 @@
- #include <linux/signal.h>
- #include <linux/extable.h>
- #include <linux/hardirq.h>
-+#include <linux/perf_event.h>
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 0d6be0f4f27c..8530befee012 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -201,7 +201,8 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
  
- /*
-  * Decode of hardware exception sends us to one of several
-@@ -54,6 +55,8 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
- 
- 	if (user_mode(regs))
- 		flags |= FAULT_FLAG_USER;
-+
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
- retry:
- 	down_read(&mm->mmap_sem);
- 	vma = find_vma(mm, address);
-@@ -89,7 +92,7 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
- 		break;
+ static vm_fault_t __kprobes
+ __do_page_fault(struct mm_struct *mm, unsigned long addr, unsigned int fsr,
+-		unsigned int flags, struct task_struct *tsk)
++		unsigned int flags, struct task_struct *tsk,
++		struct pt_regs *regs)
+ {
+ 	struct vm_area_struct *vma;
+ 	vm_fault_t fault;
+@@ -223,7 +224,7 @@ __do_page_fault(struct mm_struct *mm, unsigned long addr, unsigned int fsr,
+ 		goto out;
  	}
  
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
+-	return handle_mm_fault(vma, addr & PAGE_MASK, flags, NULL);
++	return handle_mm_fault(vma, addr & PAGE_MASK, flags, regs);
  
- 	if (fault_signal_pending(fault, regs))
- 		return;
-@@ -97,10 +100,6 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
- 	/* The most common case -- we are done. */
- 	if (likely(!(fault & VM_FAULT_ERROR))) {
- 		if (flags & FAULT_FLAG_ALLOW_RETRY) {
--			if (fault & VM_FAULT_MAJOR)
--				current->maj_flt++;
--			else
--				current->min_flt++;
- 			if (fault & VM_FAULT_RETRY) {
- 				flags |= FAULT_FLAG_TRIED;
- 				goto retry;
+ check_stack:
+ 	/* Don't allow expansion below FIRST_USER_ADDRESS */
+@@ -265,6 +266,8 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
+ 
++	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
++
+ 	/*
+ 	 * As per x86, we may deadlock here.  However, since the kernel only
+ 	 * validly references user space from well defined areas of the code,
+@@ -289,7 +292,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ #endif
+ 	}
+ 
+-	fault = __do_page_fault(mm, addr, fsr, flags, tsk);
++	fault = __do_page_fault(mm, addr, fsr, flags, tsk, regs);
+ 
+ 	/* If we need to retry but a fatal signal is pending, handle the
+ 	 * signal first. We do not need to release the mmap_sem because
+@@ -301,23 +304,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 		return 0;
+ 	}
+ 
+-	/*
+-	 * Major/minor page fault accounting is only done on the
+-	 * initial attempt. If we go through a retry, it is extremely
+-	 * likely that the page will be found in page cache at that point.
+-	 */
+-
+-	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+ 	if (!(fault & VM_FAULT_ERROR) && flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			tsk->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+-					regs, addr);
+-		} else {
+-			tsk->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+-					regs, addr);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			flags |= FAULT_FLAG_TRIED;
+ 			goto retry;
 -- 
 2.26.2
 
