@@ -2,199 +2,128 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1945CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEBD20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hidq+qn7"
+	by mail.kernel.org (Postfix) with ESMTP id EA72420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733073AbgFSOS3 (ORCPT
+        id S1733101AbgFSOSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732679AbgFSOS2 (ORCPT
+        Fri, 19 Jun 2020 10:18:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgFSOSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:18:28 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BDAC0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:18:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id h185so4499573pfg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9or/nd2d0kK7Srn2OMQLnMS4JaBmTgv5NtC1m4CDz3Y=;
-        b=hidq+qn73oekrZJeQMWvr4WMZb+WfQeaHhkjy+TnzASODcN9o/1ZBvqpqAtEUZxR4U
-         gyg+xm4oXC2LDoBZRsJE1HxWJCN+07pFM5nlU5K9jY+UEq8tHgEE61Zk6Mk89kK8lwAb
-         sDrZdLakvgdwHEsFJaLYxjIadPi+VCV+rIlEENKVvRrAsADkM4n5F8WsRnCWZAGIM73i
-         9Ql+al+T/hFRQDcZyKztART3ffyxrCy96sT83D94Dk453GQx24udsnLi0orp5BJlodSx
-         sYOUQVm6qBpfacFyXlsS5apBeHo30Y6P3118Od1ODxlyhY26fwlpwHgJN8oC1w5T9JFL
-         f+CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9or/nd2d0kK7Srn2OMQLnMS4JaBmTgv5NtC1m4CDz3Y=;
-        b=KltHo0Joc4OtocRfkyUjPkaFtc2IKETyennAbOCF7OoShEp38ftnyhnK9T4B6tvKKA
-         uPtoSEtk5otw4eK3666RETOc9k6cljMWkqf2C+AlDWgO4WRqpv00Mym6FfMDYdX2vqa4
-         IrcvXuOWDqQxF/lMo7bYJnTEpsBs0v2MO2g5p9nYmnAoqxPD0Amv+GY2DaCyQ+WtiVxW
-         TcL4JaSImdM+d4e/RDMBOsKf2J4XJVHsUvDJM1+fzG7FWLuNtdE6dLfrLQV+Qf07dATQ
-         MXhXsk0T6GuYHYkqu7GntU4X5pjEsjq6W31Vi74PywYY0AwGNjO0L+1SUVgC7rIIVa66
-         BvPQ==
-X-Gm-Message-State: AOAM5325/ugArCtRmLW4VeTVvTB9rXc5eIrRwVtiIRA6sKT5qA2n0g3n
-        Z1tL67bJ5vLI1gEWnTK6lK99qg==
-X-Google-Smtp-Source: ABdhPJyq/7BnpxKFYtTRDKR2zWyWUKbYgkCdtzqo4m2gOrQzccrbLP76ZiUIJDnBffhkSs+UaKQkyg==
-X-Received: by 2002:a63:d958:: with SMTP id e24mr3366189pgj.348.1592576306944;
-        Fri, 19 Jun 2020 07:18:26 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id m15sm5347046pgv.45.2020.06.19.07.18.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 07:18:25 -0700 (PDT)
-Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
-To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        "javier.gonz@samsung.com" <javier@javigon.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
-        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
-References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
- <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
- <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
- <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200618091113.eu2xdp6zmdooy5d2@mpHalley.local>
- <20200619094149.uaorbger326s6yzz@mpHalley.local>
- <2ba2079c-9a5d-698a-a8f0-cbd6fdb9a9f0@lightnvm.io>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ca513fd1-4ca2-c16e-8b99-73cbd7fe6290@kernel.dk>
-Date:   Fri, 19 Jun 2020 08:18:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 10:18:34 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JE2FrA079813;
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rthf0j9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JE3tnP094985;
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rthf0j8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 10:17:25 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JEFwJr010398;
+        Fri, 19 Jun 2020 14:17:23 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 31r18v1342-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 14:17:23 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JEG2fY63635908
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 14:16:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CA3DA4054;
+        Fri, 19 Jun 2020 14:17:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE8B2A4062;
+        Fri, 19 Jun 2020 14:17:18 +0000 (GMT)
+Received: from osiris (unknown [9.171.84.209])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 19 Jun 2020 14:17:18 +0000 (GMT)
+Date:   Fri, 19 Jun 2020 16:17:17 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, arnd@arndb.de,
+        borntraeger@de.ibm.com, catalin.marinas@arm.com,
+        christian@brauner.io, cyphar@cyphar.com, dhowells@redhat.com,
+        ebiederm@xmission.com, fenghua.yu@intel.com, geert@linux-m68k.org,
+        gor@linux.ibm.com, ink@jurassic.park.msu.ru, jolsa@redhat.com,
+        linux@armlinux.org.uk, lkp@intel.com, mark.rutland@arm.com,
+        mattst88@gmail.com, minchan@kernel.org, mingo@redhat.com,
+        monstr@monstr.eu, namhyung@kernel.org, peterz@infradead.org,
+        rth@twiddle.net, sargun@sargun.me, sfr@canb.auug.org.au,
+        tony.luck@intel.com, will@kernel.org, akpm@linux-foundation.org,
+        alex.huangjianhui@huawei.com, zhongjubin@huawei.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        clang-built-linux@googlegroups.com, kbuild-all@lists.01.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v2] s390: fix build error for sys_call_table_emu
+Message-ID: <20200619141717.GB9971@osiris>
+References: <20200618141426.16884-1-nixiaoming@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <2ba2079c-9a5d-698a-a8f0-cbd6fdb9a9f0@lightnvm.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618141426.16884-1-nixiaoming@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_11:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 cotscore=-2147483648 bulkscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=771 suspectscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006190101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 5:15 AM, Matias Bjørling wrote:
-> On 19/06/2020 11.41, javier.gonz@samsung.com wrote:
->> Jens,
->>
->> Would you have time to answer a question below in this thread?
->>
->> On 18.06.2020 11:11, javier.gonz@samsung.com wrote:
->>> On 18.06.2020 08:47, Damien Le Moal wrote:
->>>> On 2020/06/18 17:35, javier.gonz@samsung.com wrote:
->>>>> On 18.06.2020 07:39, Damien Le Moal wrote:
->>>>>> On 2020/06/18 2:27, Kanchan Joshi wrote:
->>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
->>>>>>>
->>>>>>> Introduce three new opcodes for zone-append -
->>>>>>>
->>>>>>>   IORING_OP_ZONE_APPEND     : non-vectord, similiar to 
->>>>>>> IORING_OP_WRITE
->>>>>>>   IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
->>>>>>>   IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
->>>>>>>
->>>>>>> Repurpose cqe->flags to return zone-relative offset.
->>>>>>>
->>>>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
->>>>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
->>>>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
->>>>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
->>>>>>> ---
->>>>>>> fs/io_uring.c                 | 72 
->>>>>>> +++++++++++++++++++++++++++++++++++++++++--
->>>>>>> include/uapi/linux/io_uring.h |  8 ++++-
->>>>>>> 2 files changed, 77 insertions(+), 3 deletions(-)
->>>>>>>
->>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
->>>>>>> index 155f3d8..c14c873 100644
->>>>>>> --- a/fs/io_uring.c
->>>>>>> +++ b/fs/io_uring.c
->>>>>>> @@ -649,6 +649,10 @@ struct io_kiocb {
->>>>>>>     unsigned long        fsize;
->>>>>>>     u64            user_data;
->>>>>>>     u32            result;
->>>>>>> +#ifdef CONFIG_BLK_DEV_ZONED
->>>>>>> +    /* zone-relative offset for append, in bytes */
->>>>>>> +    u32            append_offset;
->>>>>>
->>>>>> this can overflow. u64 is needed.
->>>>>
->>>>> We chose to do it this way to start with because struct io_uring_cqe
->>>>> only has space for u32 when we reuse the flags.
->>>>>
->>>>> We can of course create a new cqe structure, but that will come with
->>>>> larger changes to io_uring for supporting append.
->>>>>
->>>>> Do you believe this is a better approach?
->>>>
->>>> The problem is that zone size are 32 bits in the kernel, as a number 
->>>> of sectors.
->>>> So any device that has a zone size smaller or equal to 2^31 512B 
->>>> sectors can be
->>>> accepted. Using a zone relative offset in bytes for returning zone 
->>>> append result
->>>> is OK-ish, but to match the kernel supported range of possible zone 
->>>> size, you
->>>> need 31+9 bits... 32 does not cut it.
->>>
->>> Agree. Our initial assumption was that u32 would cover current zone size
->>> requirements, but if this is a no-go, we will take the longer path.
->>
->> Converting to u64 will require a new version of io_uring_cqe, where we
->> extend at least 32 bits. I believe this will need a whole new allocation
->> and probably ioctl().
->>
->> Is this an acceptable change for you? We will of course add support for
->> liburing when we agree on the right way to do this.
+On Thu, Jun 18, 2020 at 10:14:26PM +0800, Xiaoming Ni wrote:
+> Build error on s390:
+> 	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
+> 	>> (.rodata+0x1288): undefined reference to `__s390_'
 > 
-> I took a quick look at the code. No expert, but why not use the existing 
-> userdata variable? use the lowest bits (40 bits) for the Zone Starting 
-> LBA, and use the highest (24 bits) as index into the completion data 
-> structure?
+> In commit ("All arch: remove system call sys_sysctl")
+>  148  common	fdatasync		sys_fdatasync			sys_fdatasync
+> -149  common	_sysctl			sys_sysctl			compat_sys_sysctl
+> +149  common	_sysctl			sys_ni_syscall
+>  150  common	mlock			sys_mlock			sys_mlock
 > 
-> If you want to pass the memory address (same as what fio does) for the 
-> data structure used for completion, one may also play some tricks by 
-> using a relative memory address to the data structure. For example, the 
-> x86_64 architecture uses 48 address bits for its memory addresses. With 
-> 24 bit, one can allocate the completion entries in a 32MB memory range, 
-> and then use base_address + index to get back to the completion data 
-> structure specified in the sqe.
+> After the patch is integrated, there is a format error in the generated
+> arch/s390/include/generated/asm/syscall_table.h:
+> 	SYSCALL(sys_fdatasync, sys_fdatasync)
+> 	SYSCALL(sys_ni_syscall,) /* cause build error */
+> 	SYSCALL(sys_mlock,sys_mlock)
+> 
+> According to the guidance of Heiko Carstens, use "-" to fill the empty system call
+>  Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
+> 
+> Fixes: ("All arch: remove system call sys_sysctl")
+> Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> 
+> changes in v2:
+> 	use "-" to fill the empty system call
+> 
+> v1: https://lore.kernel.org/lkml/20200618110320.104013-1-nixiaoming@huawei.com/
+> ---
+>  arch/s390/kernel/syscalls/syscall.tbl           | 2 +-
+>  tools/perf/arch/s390/entry/syscalls/syscall.tbl | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-For any current request, sqe->user_data is just provided back as
-cqe->user_data. This would make these requests behave differently
-from everything else in that sense, which seems very confusing to me
-if I was an application writer.
-
-But generally I do agree with you, there are lots of ways to make
-< 64-bit work as a tag without losing anything or having to jump
-through hoops to do so. The lack of consistency introduced by having
-zone append work differently is ugly, though.
-
--- 
-Jens Axboe
-
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
