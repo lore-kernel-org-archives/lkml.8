@@ -7,48 +7,72 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC24DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E67021D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C9F21974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579264;
-	bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
+	s=default; t=1592579266;
+	bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZrOpeTrdUeouXfl4ZMsgl6GC/13JfXJKhzpf6ossg4kQTZT/33SVkUdaUSWPXBEOz
-	 WVw5YriDba327aNtCfqJPCYdk09DTjN6E3cgzjbjQOV+32BMpBSMAvtHkZQGazgjp4
-	 CKLbXy4nztFly9BR9jX7Xr/FxWwQRguUqm+CKbqw=
+	b=Wj0ody3MDZzJuK+RnyLRWzIdxFG9mGxfJDOyE5Xc4uLC57FGftlCjVWHZFWyeY66E
+	 2wVQPDDTIRCCL5d8JIfu97Z7/K9VXRbdZdQZty4nNuw4BN15auMXTDelNO9llHmAGC
+	 6j0FwS/gh9k+A1/U413ZKnPkNZKJ5PUT9eea4Zow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391180AbgFSPHm (ORCPT
+        id S2391629AbgFSPHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:07:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391575AbgFSPHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:25 -0400
+        id S2391583AbgFSPHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738EB21852;
-        Fri, 19 Jun 2020 15:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD70D21D80;
+        Fri, 19 Jun 2020 15:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579245;
-        bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
+        s=default; t=1592579250;
+        bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LnpDFzY3aT+wH8PuSvv9jj2FaCn+usjjgFEvFyy4WZWVfGV751Iazf1oyTZHxkRap
-         wnFt/OQd0jUoOBwcrsLKwwnTE/+xfvDOjBGuXIEp5geN5bXb2rzW6kAGth/Puigj6t
-         acXHn9g4P+ZG23LjUkeXzey1GKYhiKCt79L8+Vp4=
+        b=vi4L8Jjd0EawUsWdff92pGXZzvszAoV7RhTwECWQfPVewB3HGg2tUhOYs6nfkxBkI
+         E5wYKRKp93b5zFmhqkNn5WZ0/TFVIMECIJMdMSZxQFllN/mHVUMYnys1/zD8qrNS82
+         uDeHCwkFMdEvZwad7+Q8YktT6AkoSBd8r8uI9wug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/261] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
-Date:   Fri, 19 Jun 2020 16:30:43 +0200
-Message-Id: <20200619141651.445535142@linuxfoundation.org>
+Subject: [PATCH 5.4 057/261] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Fri, 19 Jun 2020 16:31:08 +0200
+Message-Id: <20200619141652.652564491@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,46 +85,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
+[ Upstream commit 5bf9917452112694b2c774465ee4dbe441c84b77 ]
 
-The ixgbe driver have another memory model when compiled on archs with
-PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
-two halves, but instead increment rx_buffer->page_offset by truesize of
-packet (which include headroom and tailroom for skb_shared_info).
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
-which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
-to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
-veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
-
-Maintainers notice: This fix have been queued to Jeff.
-
-Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200414131348.444715-4-hch@lst.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index a26f9fb95ac0..edaa0bffa5c3 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2254,7 +2254,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
- 	rx_buffer->page_offset ^= truesize;
- #else
- 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
--				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-+				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
-+				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
- 				SKB_DATA_ALIGN(size);
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 473b465724f1..0755b11348ed 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
  
- 	rx_buffer->page_offset += truesize;
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP, pgprot);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
