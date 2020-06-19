@@ -2,213 +2,173 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89334221FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38164221FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XAj5t1/U"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="znXBd2T4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFSVzM (ORCPT
+        id S1728294AbgFSV5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:55:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:15340 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbgFSVzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:55:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592603710; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=wam1wyE1W3Of+tegUUPP3NeNpIntvTygPj4lrZBjm+o=;
- b=XAj5t1/UQoJLpFnDkFXAoo7AH07nSxat+B5SYe3/YnXo1dFO08M+fC3vf0Ue2v4y4hK7Gyb2
- DWbXXj6oZ5k0Lxmi5z7qsuXdYJk7ew0TcRrGCLts/7fD51WphsKrN2/++P3fOclWxnNZBxxS
- Ieh9I7vcwlRfFNtFl0KsDxDDLRc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5eed343d6bebe35deb2df771 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 21:55:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5208EC43387; Fri, 19 Jun 2020 21:55:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C819C433CA;
-        Fri, 19 Jun 2020 21:55:08 +0000 (UTC)
+        Fri, 19 Jun 2020 17:57:09 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55400 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgFSV5G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:57:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JLlxg9037623;
+        Fri, 19 Jun 2020 21:57:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Fh1TauyG94rhfUBSdHsqI+sTrR/HW9QksqHgZMTrwBE=;
+ b=znXBd2T4mtleYKCi6c7EstsMXMARd5a6vKJLbs2GOEqSryoCxLKYTjLyJBpt5nw5bvTY
+ dmSI1HoX0wSTYGBs25Lrxr0RCBiflgP0MnVlBilJSX4JjUmkHCCPFjCtLL9N2n0e3fJO
+ uhsXSH8rR6gtXb0n/S9aOBmW9Ch2N2ve6+CiwLpIz1SOj50CC727B4tQ2czdkouCoSpZ
+ HHa6wh8D2V5Inv6zfMl5n9JNIFR7sagELED6qkC7Qt1m/hYKrxbaqwXpcoqqSM/oyssx
+ Y5RltoRP9EzPnHoOdWOPN+U9xGZC2pYQeZrEtxzlRJFe8d7rG+6R7Angrvvkin5enBc8 fQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31q6608w70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jun 2020 21:57:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JLnIeI076693;
+        Fri, 19 Jun 2020 21:57:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31q66s28td-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 21:57:01 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05JLv0D3002185;
+        Fri, 19 Jun 2020 21:57:00 GMT
+Received: from dhcp-10-159-240-10.vpn.oracle.com (/10.159.240.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jun 2020 14:57:00 -0700
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
+ dentries
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>,
+        Wengang Wang <wen.gang.wang@oracle.com>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+ <20200618233958.GV8681@bombadil.infradead.org>
+ <877dw3apn8.fsf@x220.int.ebiederm.org>
+ <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+ <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+ <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
+ <87k1036k9y.fsf@x220.int.ebiederm.org>
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+Message-ID: <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
+Date:   Fri, 19 Jun 2020 14:56:58 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 19 Jun 2020 14:55:08 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, robdclark@gmail.com, dianders@chromium.org,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        bjorn.andersson@linaro.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add Display Port dt node
-In-Reply-To: <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
-References: <20200618232113.22687-1-tanmay@codeaurora.org>
- <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
-Message-ID: <c110cd89a3144a20b21ec392f50eee68@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <87k1036k9y.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=926 suspectscore=11
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006190152
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 clxscore=1015 mlxlogscore=945 suspectscore=11 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006190152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Stephen for reviews.
-I will post new change addressing your all comments.
+On 6/19/20 10:24 AM, ebiederm@xmission.com wrote:
 
-On 2020-06-18 18:12, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-06-18 16:21:13)
->> Enable DP driver for sc7180.
-> 
-> Add DP device node on sc7180? This isn't a driver.
-> 
-Done.
->> 
->> This change depends-on following series:
->> https://patchwork.freedesktop.org/series/78583/
->> and https://patchwork.freedesktop.org/patch/351990/
->> 
->> Changes in v2:
->> 
->> - Add assigned-clocks and assigned-clock-parents
->> - Remove cell-index and pixel_rcg
->> - Change compatible to qcom,sc7180-dp
->> 
->> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 
->> ++++++++++++++++++++++++++--
->>  1 file changed, 53 insertions(+), 4 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 916401f7e87c..26fe623e3b0f 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -2216,10 +2216,19 @@ ports {
->>                                         #address-cells = <1>;
->>                                         #size-cells = <0>;
->> 
->> +                                       port@1 {
->> +                                               reg = <1>;
->> +                                               dpu_intf1_out: 
->> endpoint {
->> +                                                       
->> remote-endpoint =
->> +                                                                
->> <&dsi0_in>;
->> +                                               };
->> +                                       };
->> +
->>                                         port@0 {
->>                                                 reg = <0>;
->> -                                               dpu_intf1_out: 
->> endpoint {
->> -                                                       
->> remote-endpoint = <&dsi0_in>;
->> +                                               dpu_intf0_out: 
->> endpoint {
->> +                                                       
->> remote-endpoint =
->> +                                                                
->> <&dp_in>;
->>                                                 };
->>                                         };
->>                                 };
-> 
-> I thought this wasn't supposed to change? At least according to the
-> binding it shouldn't be needed.
-> 
-Thanks. Yes it should be port@2 as per new dpu-sc7180.yaml bindings in 
-below patch.
-https://patchwork.freedesktop.org/patch/371087/?series=78583&rev=1
+> Junxiao Bi <junxiao.bi@oracle.com> writes:
+>
+>> Hi Eric,
+>>
+>> The patch didn't improve lock contention.
+> Which raises the question where is the lock contention coming from.
+>
+> Especially with my first variant.  Only the last thread to be reaped
+> would free up anything in the cache.
+>
+> Can you comment out the call to proc_flush_pid entirely?
 
->> @@ -2293,6 +2302,46 @@ dsi_phy: dsi-phy@ae94400 {
->>                         };
->>                 };
->> 
->> +               msm_dp: displayport-controller@ae90000{
->> +                       status = "ok";
-> 
-> Please use status = "disabled";
-> 
-Ok got it. Board's DT will enable it.
+Still high lock contention. Collect the following hot path.
 
->> +                       compatible = "qcom,sc7180-dp";
->> +
->> +                       reg = <0 0xae90000 0 0x1400>;
->> +                       reg-names = "dp_controller";
->> +
->> +                       interrupt-parent = <&mdss>;
-> 
-> Any reason why this isn't under the mdss node like the other display
-> device nodes?
-> 
-Done. Moved msm_dp node under mdss.
->> +                       interrupts = <12 0>;
->> +
->> +                       clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
->> +                                <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
->> +                                <&dispcc 
->> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> +                                <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
->> +                       clock-names = "core_aux", "ctrl_link",
->> +                                     "ctrl_link_iface", 
->> "stream_pixel";
->> +                       #clock-cells = <1>;
->> +                       assigned-clocks = <&dispcc 
->> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> +                       assigned-clock-parents = <&msm_dp 1>;
->> +
->> +                       data-lanes = <0 1>;
-> 
-> This can and should be left to the board files. At the SoC level my
-> understanding is that there are four lanes possible, so no need to
-> artificially limit it here.
-> 
-Removed from here. Driver changes I will be posting accordingly.
->> +
->> +                       ports {
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               port@0 {
->> +                                       reg = <0>;
->> +                                       dp_in: endpoint {
->> +                                               remote-endpoint =
->> +                                                        
->> <&dpu_intf0_out>;
-> 
-> I'd prefer these were on one line, regardless of the 80 character line
-> limit/suggestion.
-> 
-ok done.
->> +                                       };
->> +                               };
->> +
->> +                               port@1 {
->> +                                       reg = <1>;
->> +                                       dp_out: endpoint { };
->> +                               };
->> +                       };
->> +               };
->> +
->>                 dispcc: clock-controller@af00000 {
->>                         compatible = "qcom,sc7180-dispcc";
->>                         reg = <0 0x0af00000 0 0x200000>;
+     74.90%     0.01%  proc_race 
+[kernel.kallsyms]                               [k] 
+entry_SYSCALL_64_after_hwframe
+             |
+              --74.89%--entry_SYSCALL_64_after_hwframe
+                        |
+                         --74.88%--do_syscall_64
+                                   |
+                                   |--69.70%--exit_to_usermode_loop
+                                   |          |
+                                   |           --69.70%--do_signal
+                                   |                     |
+                                   | --69.69%--get_signal
+                                   | |
+                                   | |--56.30%--do_group_exit
+                                   | |          |
+                                   | |           --56.30%--do_exit
+                                   | |                     |
+                                   | |                     
+|--27.50%--_raw_write_lock_irq
+                                   | |                     |          |
+                                   | |                     | 
+--27.47%--queued_write_lock_slowpath
+                                   | |                     
+|                     |
+                                   | |                     | 
+--27.18%--native_queued_spin_lock_slowpath
+                                   | |                     |
+                                   | |                     
+|--26.10%--release_task.part.20
+                                   | |                     |          |
+                                   | |                     |           
+--25.60%--_raw_write_lock_irq
+                                   | |                     
+|                     |
+                                   | |                     | 
+--25.56%--queued_write_lock_slowpath
+                                   | |                     
+|                                |
+                                   | |                     | 
+--25.23%--native_queued_spin_lock_slowpath
+                                   | |                     |
+                                   | |                      --0.56%--mmput
+                                   | |                                |
+                                   | |                                 
+--0.55%--exit_mmap
+                                   | |
+|                                 --13.31%--_raw_spin_lock_irq
+|                                           |
+| --13.28%--native_queued_spin_lock_slowpath
+                                   |
+
+Thanks,
+
+Junxiao.
+
+>
+> That will rule out the proc_flush_pid in d_invalidate entirely.
+>
+> The only candidate I can think of d_invalidate aka (proc_flush_pid) vs ps.
+>
+> Eric
