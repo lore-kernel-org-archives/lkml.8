@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168E121556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B712184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578504;
-	bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
+	s=default; t=1592578508;
+	bh=5dr3/E5uEsN9OBtHtX5x2lJSF9gcAv4pYuxes95uq4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BzMttXXwvbBWsCN43tBrdOCF9+LsEAUAbXGfQeglRkN84jqB+QKLm1hDJFTJRE6wF
-	 DJOZgpZuBQWhcPfjRngzyk0v7gFXECFqYjGEhziXXFUqgH1FOKPCVG7D2SKdjXf2Rh
-	 sJus9Zj07TzCWIUz3sjTGvpMVtRyNCuff+ZAcjNI=
+	b=ReiKnm/zdX+SCbAR8phDIjhnx9KcuydExHWDksMCPZlBpKhTLijLt3EcPB1ia4qVm
+	 MjSCmkf450kWCjQP+Psg/7gi0fFGhx1vTyfIe0ab8O4FyEyR5grEY7qzWC1GnTWMiU
+	 To091AuC4lJnDCS7ZVvWDwpuq7BOvypnm1kxpXEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389918AbgFSOzB (ORCPT
+        id S2389927AbgFSOzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389906AbgFSOy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:57 -0400
+        id S2389920AbgFSOzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E78218AC;
-        Fri, 19 Jun 2020 14:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F1421556;
+        Fri, 19 Jun 2020 14:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578496;
-        bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
+        s=default; t=1592578502;
+        bh=5dr3/E5uEsN9OBtHtX5x2lJSF9gcAv4pYuxes95uq4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9HGUIbeXVn+UpzVFUCfEWIFYmjARxa3kcdXnweuY1FY5+r02eurn0DoHTiTrtm1J
-         XB0ihP0PYzYIc+EvU5I4/qUivG7dgnKiKpHn/1UGn0jP++F93ovkYYorL+TS/w5kmN
-         l/aEgXUZpPJyP+gtINHRjaESQD5pd2UF+K6LD4S8=
+        b=biYEthR+hklg1dM8BdMcMcntZCQAoC5xDOlCvEzjYxE6HigIiEc1f+fz0zRqP26ig
+         quTFWf4IdYUbev5gIKe9Zm8jBEQ72RoqfzFCfX8wRyGCFxFvPCYGaBdoAP+fmlBOls
+         viOT08jgRSJqwLFIg7WC9yfeNLu/DVR9v4xbhuQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 044/267] spi: bcm2835aux: Fix controller unregister order
-Date:   Fri, 19 Jun 2020 16:30:29 +0200
-Message-Id: <20200619141651.012339490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 046/267] PM: runtime: clk: Fix clk_pm_runtime_get() error path
+Date:   Fri, 19 Jun 2020 16:30:31 +0200
+Message-Id: <20200619141651.105716983@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,62 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit b9dd3f6d417258ad0beeb292a1bc74200149f15d upstream.
+commit 64c7d7ea22d86cacb65d0c097cc447bc0e6d8abd upstream.
 
-The BCM2835aux SPI driver uses devm_spi_register_master() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-bcm2835aux_spi_remove() before unregistering the SPI controller via
-devres_release_all().
+clk_pm_runtime_get() assumes that the PM-runtime usage counter will
+be dropped by pm_runtime_get_sync() on errors, which is not the case,
+so PM-runtime references to devices acquired by the former are leaked
+on errors returned by the latter.
 
-This order is incorrect:  bcm2835aux_spi_remove() turns off the SPI
-controller, including its interrupts and clock.  The SPI controller
-is thus no longer usable.
+Fix this by modifying clk_pm_runtime_get() to drop the reference if
+pm_runtime_get_sync() returns an error.
 
-When the SPI controller is subsequently unregistered, it unbinds all
-its slave devices.  If their drivers need to access the SPI bus,
-e.g. to quiesce their interrupts, unbinding will fail.
-
-As a rule, devm_spi_register_master() must not be used if the
-->remove() hook performs teardown steps which shall be performed
-after unbinding of slaves.
-
-Fix by using the non-devm variant spi_register_master().  Note that the
-struct spi_master as well as the driver-private data are not freed until
-after bcm2835aux_spi_remove() has finished, so accessing them is safe.
-
-Fixes: 1ea29b39f4c8 ("spi: bcm2835aux: add bcm2835 auxiliary spi device driver")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.4+
-Cc: Martin Sperl <kernel@martin.sperl.org>
-Link: https://lore.kernel.org/r/32f27f4d8242e4d75f9a53f7e8f1f77483b08669.1589557526.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9a34b45397e5 clk: Add support for runtime PM
+Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-bcm2835aux.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -485,7 +485,7 @@ static int bcm2835aux_spi_probe(struct p
- 		goto out_clk_disable;
- 	}
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -101,7 +101,11 @@ static int clk_pm_runtime_get(struct clk
+ 		return 0;
  
--	err = devm_spi_register_master(&pdev->dev, master);
-+	err = spi_register_master(master);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
- 		goto out_clk_disable;
-@@ -505,6 +505,8 @@ static int bcm2835aux_spi_remove(struct
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
+ 	ret = pm_runtime_get_sync(core->dev);
+-	return ret < 0 ? ret : 0;
++	if (ret < 0) {
++		pm_runtime_put_noidle(core->dev);
++		return ret;
++	}
++	return 0;
+ }
  
-+	spi_unregister_master(master);
-+
- 	bcm2835aux_spi_reset_hw(bs);
- 
- 	/* disable the HW block by releasing the clock */
+ static void clk_pm_runtime_put(struct clk_core *core)
 
 
