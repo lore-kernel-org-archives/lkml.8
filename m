@@ -2,108 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09316C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7FAC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEB020776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2532B20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCQEDB2I"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zQg1S8qR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732378AbgFSM5m (ORCPT
+        id S1732606AbgFSM6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgFSM5k (ORCPT
+        Fri, 19 Jun 2020 08:58:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54210 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732048AbgFSM63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:57:40 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08624C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:57:40 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x6so9564617wrm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RwAV9yH6vfR+prDFBL6WEfKTnzoBXbYA0ML8+0Kfwxo=;
-        b=mCQEDB2IfnkbKVH0+/0A4vvTAfYGtg3TLlJQsESccOQnZvtEa7x/hX3wGcphkAYN6Q
-         zopXMKm2Ouzqup+z9XuziRnVf3Iy9cvvVFMDeK+NHu7CW0N1/KHyZE/ctaVhJDcpsMGZ
-         sgxkJNzMJJnpr4lxrks81cUUKjhdV7m5lLzDjVMSb40XCnBv82cIG3LKEIuTRMxqxQ9L
-         uOrxHq6O1W2tGFNz0Hjoi4/rJ6HOk9y/Cn3BSjhXhuBEyK9MpiUZ2VRanr6SJ80j7dA1
-         iTeLAIlSyvpYzctO7Ji6GP/VcIBZxSC/05SbVdWTL2I/JFOo8vU//l0/MPQjwh/VrzPp
-         0doQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RwAV9yH6vfR+prDFBL6WEfKTnzoBXbYA0ML8+0Kfwxo=;
-        b=b7PFvUePyAH2dJ6w+8zSiic4hF6sjRtKVnBkOES4Lp391zCMtA+dKOAF31NwuI2AEI
-         Kz74vEihD/7U/NTfGOfJKd4cB5/w4773XWozibeDqkqXA58GkQ0BEBOGBHEkVV7x/zHv
-         fzej7ovDYsdfPiojyFh5nYegqKy8CKNZ/SBuLx3mFreeSD2d2fq/uyqOSf6+Fa4LyLK2
-         quiKgdj/UVXnHi1E28iKeZky4Qy72g2ighYusGIiPF6yLGA5atwntUxc8E1iqUbN0PfJ
-         Y7A+3Kw5mPq1lgmtLcNKG528zLu0U61T0j9/xMHLhXH3VjdqolxSRuoEDfhsCnqmiq3e
-         +Q7A==
-X-Gm-Message-State: AOAM531j9fT0sPqaZ6y7fUkdpBKo6OiieDfZcEnfi+NSrDkDATjW8SBq
-        +AYpZUExpPTQyk0gUdYDgAk=
-X-Google-Smtp-Source: ABdhPJwrozszNgMUjyjq9RSdtfWWZDNZDL0Ceo5VosIuCyo5G5BdQSMRobL8/6HEGn8+RHxKniLk8g==
-X-Received: by 2002:adf:e4cc:: with SMTP id v12mr3798409wrm.183.1592571458728;
-        Fri, 19 Jun 2020 05:57:38 -0700 (PDT)
-Received: from localhost.localdomain ([46.114.105.49])
-        by smtp.gmail.com with ESMTPSA id 63sm8008328wra.86.2020.06.19.05.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 05:57:38 -0700 (PDT)
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH] kcsan: Improve small stylistic detail in compiler-clang.h
-Date:   Fri, 19 Jun 2020 14:57:21 +0200
-Message-Id: <20200619125721.15946-1-sedat.dilek@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 19 Jun 2020 08:58:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JCw7df021167;
+        Fri, 19 Jun 2020 07:58:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592571487;
+        bh=627WHwGqg1ZFjaV1G7jF2Zn5SB1SAYdN7x254Mzb8dg=;
+        h=From:To:CC:Subject:Date;
+        b=zQg1S8qRaYA0R9d5rlvOyzr4N1JM7LPGBuivht4YIfUY3CcKOw3/IJVsUrjZu5syS
+         2//i38fVpIExO8tLY0/1rx4+DDZzNYLwvsM0sNU1dDF2Y5iQBmo0nwX7drvit0KLtT
+         aDptFDxQTogVilKCyQABNV526HrHtaa7A9vNGhRk=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JCw70r080908
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jun 2020 07:58:07 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
+ Jun 2020 07:58:06 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 19 Jun 2020 07:58:06 -0500
+Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JCw2Hk015675;
+        Fri, 19 Jun 2020 07:58:03 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <adrian.hunter@intel.com>,
+        <will@kernel.org>, <catalin.marinas@arm.com>, <robh+dt@kernel.org>,
+        <ulf.hansson@linaro.org>
+CC:     <faiz_abbas@ti.com>
+Subject: [PATCH 0/7] Add support for SD card in AM654x-evm
+Date:   Fri, 19 Jun 2020 18:27:54 +0530
+Message-ID: <20200619125801.9530-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5cbaefe9743bf14c9d3106db0cc19f8cb0a3ca22
-("kcsan: Improve various small stylistic details")
+The following patches add driver support for SD card on the
+am654x-evm. It only enables high speed mode with UHS mode
+support coming in a future series.
 
-...forgot to improve a stylistic detail that was already done at
-another place in compiler-clang.h file.
+DTS support will be added in another series as well.
 
-Fixes: 5cbaefe9743b ("kcsan: Improve various small stylistic details")
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
----
- include/linux/compiler-clang.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Faiz Abbas (7):
+  dt-bindings: mmc: sdhci-am654: Add ti,clkbuf-sel binding
+  mmc: sdhci_am654: Add flag for PHY calibration
+  mmc: sdhci_am654: Add Support for SR2.0
+  mmc: sdhci_am654: Fix conditions for enabling dll
+  mmc: sdhci_am654: Update delay chain configuration
+  mmc: sdhci_am654: Add support for clkbuf_sel property
+  arm64: defconfig: Enable AM654x SDHCI controller
 
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index ee37256ec8bd..c47141b185fe 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -25,7 +25,7 @@
- #endif
- 
- #if __has_feature(thread_sanitizer)
--/* emulate gcc's __SANITIZE_THREAD__ flag */
-+/* Emulate GCC's __SANITIZE_THREAD__ flag */
- #define __SANITIZE_THREAD__
- #define __no_sanitize_thread \
- 		__attribute__((no_sanitize("thread")))
+ .../devicetree/bindings/mmc/sdhci-am654.txt   |  1 +
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/mmc/host/sdhci_am654.c                | 86 ++++++++++++++-----
+ 3 files changed, 65 insertions(+), 23 deletions(-)
+
 -- 
-2.27.0
+2.17.1
 
