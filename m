@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E12C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451E920DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E587320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577541;
-	bh=gJlsR8yRYETQOfZQO8KmSrkz4LwmFRrtMEpPM12jZiE=;
+	s=default; t=1592577546;
+	bh=neF5ynw7oyTavB4BKWFTZ8DyOVDrsrw7CPwaIwvA9D0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQ8gIfbWkJcUkN5I6UR2/H/tg3SJRcFWLTAlq/4JviLFK6CrCNzV7BSR6ubA5GcbW
-	 Si76AEWGt3PRpG3E3jQCIGzQetfvkLzAynSmEGUuYx6k5wFBJomGiEuZbV1L8UrtHP
-	 1ZlnZ2+Q9Z7QFcWpfW7KAHx9sA+8JOGmYi83XhP8=
+	b=IGtlBidM2g5+llJT3wQQjALbRWQkXYb5BIea9YrYmxACyPtN/NoIaHHOh5EXbLiEV
+	 HN8nBQurTb24fsasPTbJ4sgrSYQIaOPFvQTC9mfZLuQ63kBa2Q4kuvJEqchY2+114z
+	 vzJQHqu/gt46glGCCySmufPaFh0nNxOpcWPYNWn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgFSOi7 (ORCPT
+        id S2387527AbgFSOjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56102 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733152AbgFSOix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:53 -0400
+        id S2387951AbgFSOjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E052070A;
-        Fri, 19 Jun 2020 14:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6142070A;
+        Fri, 19 Jun 2020 14:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577533;
-        bh=gJlsR8yRYETQOfZQO8KmSrkz4LwmFRrtMEpPM12jZiE=;
+        s=default; t=1592577540;
+        bh=neF5ynw7oyTavB4BKWFTZ8DyOVDrsrw7CPwaIwvA9D0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNpVTPeg0oPggwt0lAPqEde1bhd0y//T3b9PiLUbwvXaZMhm2S5+Io/FxsDDYjMAt
-         IKJFPwiSt9yOrVXTfaFpWm4N/llk4kKmJg33Wc5fdJBUioI49HhlRa8FXsHI1oBnm3
-         sD2QgBy9oARDsbuWYUsbhaYAyFgpLMNxoXL9jbTI=
+        b=ymBLFG9vpL/qxX7vaJKd24m36LbsvQv0lWmBO0gTju4rbWUKDFxOKcQGXm0/iAnwA
+         g9yEMtdfSWBfRHUmyH9no+65hclUB9rpxKBMFfxA3ge/FQjPI1z3pKC0IuWYXvwVnb
+         v5JibNEzGeKsdlIqKq10ZPvrtMN45cqrHBrN0GJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 088/101] b43_legacy: Fix connection problem with WPA3
-Date:   Fri, 19 Jun 2020 16:33:17 +0200
-Message-Id: <20200619141618.574553824@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.4 091/101] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
+Date:   Fri, 19 Jun 2020 16:33:20 +0200
+Message-Id: <20200619141618.733443261@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -59,42 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-commit 6a29d134c04a8acebb7a95251acea7ad7abba106 upstream.
+commit f354157a7d184db430c1a564c506434e33b1bec5 upstream.
 
-Since the driver was first introduced into the kernel, it has only
-handled the ciphers associated with WEP, WPA, and WPA2. It fails with
-WPA3 even though mac80211 can handle those additional ciphers in software,
-b43legacy did not report that it could handle them. By setting MFP_CAPABLE using
-ieee80211_set_hw(), the problem is fixed.
+Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
+are saved and restored over a suspend/resume cycle.  However, the
+EINT_MASK registers are not.
 
-With this change, b43legacy will handle the ciphers it knows in hardware,
-and let mac80211 handle the others in software. It is not necessary to
-use the module parameter NOHWCRYPT to turn hardware encryption off.
-Although this change essentially eliminates that module parameter,
-I am choosing to keep it for cases where the hardware is broken,
-and software encryption is required for all ciphers.
+On S5PV210 at the very least, these registers are not retained over
+suspend, leading to the interrupts remaining masked upon resume and
+therefore no interrupts being triggered for the device.  There should
+be no effect on any SoCs that do retain these registers as theoretically
+we would just be re-writing what was already there.
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526155909.5807-3-Larry.Finger@lwfinger.net
+Fixes: 7ccbc60cd9c2 ("pinctrl: exynos: Handle suspend/resume of GPIO EINT registers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/b43legacy/main.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/samsung/pinctrl-exynos.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/wireless/b43legacy/main.c
-+++ b/drivers/net/wireless/b43legacy/main.c
-@@ -3835,6 +3835,7 @@ static int b43legacy_wireless_init(struc
- 	/* fill hw info */
- 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(hw, SIGNAL_DBM);
-+	ieee80211_hw_set(hw, MFP_CAPABLE); /* Allow WPA3 in software */
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -288,6 +288,7 @@ struct exynos_eint_gpio_save {
+ 	u32 eint_con;
+ 	u32 eint_fltcon0;
+ 	u32 eint_fltcon1;
++	u32 eint_mask;
+ };
  
- 	hw->wiphy->interface_modes =
- 		BIT(NL80211_IFTYPE_AP) |
+ /*
+@@ -588,10 +589,13 @@ static void exynos_pinctrl_suspend_bank(
+ 						+ 2 * bank->eint_offset);
+ 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ 
+ 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
+ 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
+ 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
++	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
+ }
+ 
+ static void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+@@ -620,6 +624,9 @@ static void exynos_pinctrl_resume_bank(
+ 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
+ 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
++	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
++			readl(regs + bank->irq_chip->eint_mask
++			+ bank->eint_offset), save->eint_mask);
+ 
+ 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
+ 						+ bank->eint_offset);
+@@ -627,6 +634,8 @@ static void exynos_pinctrl_resume_bank(
+ 						+ 2 * bank->eint_offset);
+ 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ }
+ 
+ static void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
 
 
