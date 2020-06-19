@@ -2,119 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA262C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2244C20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584604;
-	bh=CKdKwvcY/fb4n4u7xICRN+j5znN2zpd/bFyAEIqpr28=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XR2CO2ryVa4dGN8K4w8FQjfVhszA3HCQkQfCsTqzqUlsw7nKSwghJwrHyf6RfYflK
-	 k6RqMtNbiOZIs2fssGMbj+uhujk9uaYiUnJ9nfGchpW/F4blzwkrufBTsWQKmFJ8Ca
-	 /mRyAAsJX0Uf5XHOvIn+xvF6mmewZLCw9EjCOuM4=
+	by mail.kernel.org (Postfix) with ESMTP id B7A1620809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHBdCnX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395293AbgFSQgl (ORCPT
+        id S2395299AbgFSQgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389167AbgFSOtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A50FC20DD4;
-        Fri, 19 Jun 2020 14:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578144;
-        bh=CKdKwvcY/fb4n4u7xICRN+j5znN2zpd/bFyAEIqpr28=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmjBChimo0IepVIDJ4Cw8GtpdvMj6ZoG2211uqPxJwGgbObK5lK0K8eXC4hEbRWWj
-         u8l7zvGRdtPbT0USkuzAEJPe/d/hG0DUmavobW7yY1pDi2Sta6G1VW6+UwzmKS2wPt
-         wLTSiRfDPkuDSjrnG8UBn0DUgP/RRX+vL/ZMHszk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/190] spi: dw: Fix Rx-only DMA transfers
-Date:   Fri, 19 Jun 2020 16:32:17 +0200
-Message-Id: <20200619141638.192320638@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389163AbgFSOtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:03 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117D4C06174E;
+        Fri, 19 Jun 2020 07:49:04 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id b5so4577665pgm.8;
+        Fri, 19 Jun 2020 07:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ctscLOlaKZHuHAvTFyT78hwNlRcZSz4aJaHfOiGs+e0=;
+        b=ZHBdCnX7+qH7Kxr7PP2Ge6MSsRgRj0s/ihGp4bPB13nAk+lg2mZ9GPpFQHv5SE351v
+         bM5jgHNdHfrUEaaLrMrXiCuqIYiwQEqSrs829H2hVv+qrNrXPAIra7ygBRVJb1mhIt/N
+         1uXJzpSK2VT48LrvhU5HdW+QJTwStqm3A26IHPJ9X0mwkp68M1TF85ET6Ul4g606Lnjh
+         mTZ9oGfAXFD5HTO+GmCIIMB4dHVTl8BFajZxa2Kk9QbceYPQuGQq5O3WZkk06dO0oIwq
+         XOemreiCAGbB5Yr07/Q0AtBCWzBJoqZExVDVf0M3Htqv+XndSHiJh7ib/ft/GHuKHdPn
+         WQIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ctscLOlaKZHuHAvTFyT78hwNlRcZSz4aJaHfOiGs+e0=;
+        b=a5kV3SF6z/NLZ/yFn9rR7ZWCQ+oVnslzXVFzuUbOVd+hbF13JCMRp635+bc9563NXe
+         Q6Ke8ehFu1h6E6YujUIyBPrQbU7F291cKey79rRcHQ7iywhqgZkIKY/dprGrYYCWAcrZ
+         A2Zd5QKtZkqSIJQBvYjuCT5xJaK2e33EoI8sQscJkhhbdBldY9PtFOm/D2/vChHV52G2
+         y5Dv7z+G1ppaPgVbWCw2cfb/dCYr7HFJAHCy6PB8emDekkMLBwTTmqXv9leK9Ng1HKyH
+         xVxWUYwzGBIIqG2EteLAfMSbccpUrW/GPOBOZOMTlc7FR8r6/Rcf+8lsIgBAgjp8DijZ
+         XggQ==
+X-Gm-Message-State: AOAM533L7IjnIaUFsnhEKMOzla6tWRZT0cVUjmwcSud0bt7kXo4qcAj1
+        hURz/kdc7yXhojE60H20/fY=
+X-Google-Smtp-Source: ABdhPJxerp4UqGlBqo7ylxGcCO9oCGFDfiOp3F5MBCTgeGs6IAVexj7p0hvG8EQQNbo8S8SNGMozPQ==
+X-Received: by 2002:a63:1406:: with SMTP id u6mr3318908pgl.108.1592578142495;
+        Fri, 19 Jun 2020 07:49:02 -0700 (PDT)
+Received: from cnn ([2402:3a80:455:d3c:b10e:bd87:9e7c:d04])
+        by smtp.gmail.com with ESMTPSA id n19sm5975012pfu.194.2020.06.19.07.48.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:49:01 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 20:18:53 +0530
+From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+Message-ID: <20200619144853.GA18271@cnn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+The adm1278 temp attribute need it for openbmc platform .
+This feature not enabled by default, so PMON_CONFIG needs to enable it.
 
-[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
-
-Tx-only DMA transfers are working perfectly fine since in this case
-the code just ignores the Rx FIFO overflow interrupts. But it turns
-out the SPI Rx-only transfers are broken since nothing pushing any
-data to the shift registers, so the Rx FIFO is left empty and the
-SPI core subsystems just returns a timeout error. Since DW DMAC
-driver doesn't support something like cyclic write operations of
-a single byte to a device register, the only way to support the
-Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-This is what we intend to fix in this commit by setting the
-SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+v4:
 ---
- drivers/spi/spi-dw.c | 1 +
- 1 file changed, 1 insertion(+)
+Reported-by: kernel test robot <lkp@intel.com>
+v3:
+----
+fix invalid signed-off.
+removed checkpath warnings.
+write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
+v2:
+----
+add Signed-off-by.
+removed ADM1278_TEMP1_EN check.
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index b11d0cd3fd20..9fcee7273a79 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -531,6 +531,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 			dws->dma_inited = 0;
- 		} else {
- 			master->can_dma = dws->dma_ops->can_dma;
-+			master->flags |= SPI_CONTROLLER_MUST_TX;
- 		}
- 	}
+Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+---
+ drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index 5caa37fb..d4e1925 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
+ 		tindex = 3;
  
+ 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+-			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
++			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
++			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+ 
+-		/* Enable VOUT if not enabled (it is disabled by default) */
+-		if (!(config & ADM1278_VOUT_EN)) {
+-			config |= ADM1278_VOUT_EN;
++		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
++		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
++			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
+ 			ret = i2c_smbus_write_byte_data(client,
+ 							ADM1275_PMON_CONFIG,
+ 							config);
+@@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
+ 			}
+ 		}
+ 
+-		if (config & ADM1278_TEMP1_EN)
+-			info->func[0] |=
+-				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+ 		if (config & ADM1278_VIN_EN)
+ 			info->func[0] |= PMBUS_HAVE_VIN;
+ 		break;
 -- 
-2.25.1
-
-
+2.7.4
 
