@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44720C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A512BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108EA207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7802420757
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582699;
-	bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+	s=default; t=1592582702;
+	bh=EPvLA69U/3lpdJqAkicuhqkJDkhVEvtI1+W5+HOOb80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmNfnuwJ9lSGejHgBzLCd2Vp2wZYV6Nv4jZPy8GWXYQBs6oxgHSWVt7/epaYHTJXj
-	 l3G0S6EcRGl7OQ39/+5s0Ilmx6gLLd615/AMAGYVMW05FStMSkaSBW4jjkTdvMH2HY
-	 KIvG9AuBBeUTjWw/mz2BDiq5tqapMfKDhdKYIVYQ=
+	b=gujkeNdSBecWAHgxB4EyMu42xbzdQbwzhnpD1dDiG4LHVpcSmB3PhrT96m6yExssf
+	 bxHOa36sUdCqYmJ7TIJGlly/fQJCtp/o/wP005cAvAO5Ho8FHZfMko41NWyOtxQnkH
+	 Y9ZwS6qEaY5aoVucqsyF0amZpISJ78ZxIaERxSEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393016AbgFSQE4 (ORCPT
+        id S2391260AbgFSPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389823AbgFSPKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:25 -0400
+        id S2391093AbgFSPKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD8D206FA;
-        Fri, 19 Jun 2020 15:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5882C21974;
+        Fri, 19 Jun 2020 15:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579425;
-        bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+        s=default; t=1592579411;
+        bh=EPvLA69U/3lpdJqAkicuhqkJDkhVEvtI1+W5+HOOb80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXMJGMtM9CYuvx7sCXkKC4XaDKBGhhMk53kpKq1x0edOnKPWV4Zsb9hO5xpEeekIF
-         TTfiu/LlsiNIJG8lrBq0g0bmc3bfHXumoipVlEGKvQ7eT+q/OddlLX02nUf8CfMOq5
-         DNZlRsVLr3FsFErGGE1DX9bCxdSH/BIQvNoOVeko=
+        b=Wru+oIi3JJ7QxkNFpbADM4ZRl0YZKJbffP7H5tgK1bv7W+g803FOnPFvJ+k5ne5xG
+         R84M3WXQLeFJclnAr88hVU2omDw3SKCObdxqx4EqXPuWMRVk8EqqE1sT7Siu+j1FZ8
+         xc/2z3Zbo3daPZD9/h7V+/9vl8zdb7dRsXAQF3gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaige Li <likaige@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 131/261] MIPS: tools: Fix resource leak in elf-entry.c
-Date:   Fri, 19 Jun 2020 16:32:22 +0200
-Message-Id: <20200619141656.140823802@linuxfoundation.org>
+Subject: [PATCH 5.4 096/261] kgdb: Fix spurious true from in_dbg_master()
+Date:   Fri, 19 Jun 2020 16:31:47 +0200
+Message-Id: <20200619141654.478652833@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,66 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaige Li <likaige@loongson.cn>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit f33a0b941017b9cb5a4e975af198b855b2f2b455 ]
+[ Upstream commit 3fec4aecb311995189217e64d725cfe84a568de3 ]
 
-There is a file descriptor resource leak in elf-entry.c, fix this
-by adding fclose() before return and die.
+Currently there is a small window where a badly timed migration could
+cause in_dbg_master() to spuriously return true. Specifically if we
+migrate to a new core after reading the processor id and the previous
+core takes a breakpoint then we will evaluate true if we read
+kgdb_active before we get the IPI to bring us to halt.
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fix this by checking irqs_disabled() first. Interrupts are always
+disabled when we are executing the kgdb trap so this is an acceptable
+prerequisite. This also allows us to replace raw_smp_processor_id()
+with smp_processor_id() since the short circuit logic will prevent
+warnings from PREEMPT_DEBUG.
+
+Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
+Suggested-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200506164223.2875760-1-daniel.thompson@linaro.org
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/tools/elf-entry.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ include/linux/kgdb.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/tools/elf-entry.c b/arch/mips/tools/elf-entry.c
-index adde79ce7fc0..dbd14ff05b4c 100644
---- a/arch/mips/tools/elf-entry.c
-+++ b/arch/mips/tools/elf-entry.c
-@@ -51,11 +51,14 @@ int main(int argc, const char *argv[])
- 	nread = fread(&hdr, 1, sizeof(hdr), file);
- 	if (nread != sizeof(hdr)) {
- 		perror("Unable to read input file");
-+		fclose(file);
- 		return EXIT_FAILURE;
- 	}
- 
--	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG))
-+	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG)) {
-+		fclose(file);
- 		die("Input is not an ELF\n");
-+	}
- 
- 	switch (hdr.ehdr32.e_ident[EI_CLASS]) {
- 	case ELFCLASS32:
-@@ -67,6 +70,7 @@ int main(int argc, const char *argv[])
- 			entry = be32toh(hdr.ehdr32.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 
-@@ -83,14 +87,17 @@ int main(int argc, const char *argv[])
- 			entry = be64toh(hdr.ehdr64.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 		break;
- 
- 	default:
-+		fclose(file);
- 		die("Invalid ELF class\n");
- 	}
- 
- 	printf("0x%016" PRIx64 "\n", entry);
-+	fclose(file);
- 	return EXIT_SUCCESS;
- }
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index b072aeb1fd78..4d6fe87fd38f 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -323,7 +323,7 @@ extern void gdbstub_exit(int status);
+ extern int			kgdb_single_step;
+ extern atomic_t			kgdb_active;
+ #define in_dbg_master() \
+-	(raw_smp_processor_id() == atomic_read(&kgdb_active))
++	(irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
+ extern bool dbg_is_early;
+ extern void __init dbg_late_init(void);
+ extern void kgdb_panic(const char *msg);
 -- 
 2.25.1
 
