@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E69C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6545820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C85921532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581634;
-	bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
+	s=default; t=1592581640;
+	bh=NmONvKJ0gOKK07cv1ukhga0XXabhbQVXjH/GnFicpKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MihziDbxQoxPNhhX/GHApaDCMeRgnZMfpvzEwG9JD1ipH9L55LAdRF85aRqGmAjQi
-	 NatELRFYtqAoN0tzs509Gy2D2dT+J1DCuz6IT+0Fz/rDJHi5Ak7dB4zCg31tnrtLFc
-	 Dwd5hjXPe/s2IDLfgIhrbcQmkQDCrOOVPrHGpz5M=
+	b=NMxwuNYyMdyAgAr6FelRndHtrukWdF/KxXKPSkznxhr9H1uSaxEa3L6cVCGFuWIGn
+	 vl7zFBHOiHgypyl898LtWiFPsv3aLLGLRcgG/pp53WKA1ogg3HHMw96OfsTdnqCdr6
+	 usRHA95hrvepWSkkb0fG+P7Ni646gRY7NeeOJaLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404284AbgFSP0H (ORCPT
+        id S2405224AbgFSPrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403913AbgFSPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:36 -0400
+        id S2404289AbgFSP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A31A121841;
-        Fri, 19 Jun 2020 15:23:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B75F321556;
+        Fri, 19 Jun 2020 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580215;
-        bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
+        s=default; t=1592580370;
+        bh=NmONvKJ0gOKK07cv1ukhga0XXabhbQVXjH/GnFicpKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8gNXJ5a/39GmqGp/MRWOR5YXLpVc3m5hkH/20Bo2jFOvX5e3EfunbzNC+FDfPtVj
-         Q8Zi/kxsLqdNc5FtnXaBSMh81MHWvnJk2RA4vErdhCXkF12L7MKB5djYk8pyDK+g0u
-         s0eoWtOCLRZ6XwuIjiCeCYwf3YiWNvUl7W+qtUoo=
+        b=oxhQ8rOltAQ5ZgcTMmtibDoFTZQ5eJU4kECAzRJnCII3rBkbcDzlY7fU9XV+8i56Q
+         mLF5Irtt2H09NCaF+pVESihpPP7tDcjBylogKr9NUyhk7ILXO4y/iaPAC1gmWgY9AE
+         bipwlW46LykpisyRVoHEoVTkdivta2A9uvELkzow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 165/376] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
-Date:   Fri, 19 Jun 2020 16:31:23 +0200
-Message-Id: <20200619141718.134551345@linuxfoundation.org>
+Subject: [PATCH 5.7 224/376] macvlan: Skip loopback packets in RX handler
+Date:   Fri, 19 Jun 2020 16:32:22 +0200
+Message-Id: <20200619141720.920266557@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,82 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
+[ Upstream commit 81f3dc9349ce0bf7b8447f147f45e70f0a5b36a6 ]
 
-Split the sparse keymap into 2 separate keymaps, a buttons and a switches
-keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
+Ignore loopback-originatig packets soon enough and don't try to process L2
+header where it doesn't exist. The very similar br_handle_frame() in bridge
+code performs exactly the same check.
 
-This is a preparation patch for not telling userspace that we have switches
-when we do not have them (and for doing the same for the buttons).
+This is an example of such ICMPv6 packet:
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+skb len=96 headroom=40 headlen=96 tailroom=56
+mac=(40,0) net=(40,40) trans=80
+shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
+csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
+hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
+dev name=etha01.212 feat=0x0x0000000040005000
+skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
+skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
+skb headroom: 00000020: 02 40 43 80 00 00 86 dd
+skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
+skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
+skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
+skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
+skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
+skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
+skb tailroom: 00000000: ...
+skb tailroom: 00000010: ...
+skb tailroom: 00000020: ...
+skb tailroom: 00000030: ...
+
+Call Trace, how it happens exactly:
+ ...
+ macvlan_handle_frame+0x321/0x425 [macvlan]
+ ? macvlan_forward_source+0x110/0x110 [macvlan]
+ __netif_receive_skb_core+0x545/0xda0
+ ? enqueue_task_fair+0xe5/0x8e0
+ ? __netif_receive_skb_one_core+0x36/0x70
+ __netif_receive_skb_one_core+0x36/0x70
+ process_backlog+0x97/0x140
+ net_rx_action+0x1eb/0x350
+ ? __hrtimer_run_queues+0x136/0x2e0
+ __do_softirq+0xe3/0x383
+ do_softirq_own_stack+0x2a/0x40
+ </IRQ>
+ do_softirq.part.4+0x4e/0x50
+ netif_rx_ni+0x60/0xd0
+ dev_loopback_xmit+0x83/0xf0
+ ip6_finish_output2+0x575/0x590 [ipv6]
+ ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
+ ? __ip6_make_skb+0x38d/0x680 [ipv6]
+ ? ip6_output+0x6c/0x140 [ipv6]
+ ip6_output+0x6c/0x140 [ipv6]
+ ip6_send_skb+0x1e/0x60 [ipv6]
+ rawv6_sendmsg+0xc4b/0xe10 [ipv6]
+ ? proc_put_long+0xd0/0xd0
+ ? rw_copy_check_uvector+0x4e/0x110
+ ? sock_sendmsg+0x36/0x40
+ sock_sendmsg+0x36/0x40
+ ___sys_sendmsg+0x2b6/0x2d0
+ ? proc_dointvec+0x23/0x30
+ ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
+ ? dev_forward_change+0x130/0x130 [ipv6]
+ ? _raw_spin_unlock+0x12/0x30
+ ? proc_sys_call_handler.isra.14+0x9f/0x110
+ ? __call_rcu+0x213/0x510
+ ? get_max_files+0x10/0x10
+ ? trace_hardirqs_on+0x2c/0xe0
+ ? __sys_sendmsg+0x63/0xa0
+ __sys_sendmsg+0x63/0xa0
+ do_syscall_64+0x6c/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/net/macvlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 191894d648bb..634096cef21a 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -40,14 +40,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
- 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
- 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
-+};
-+
-+static const struct key_entry intel_vbtn_switchmap[] = {
- 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
- 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
- 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
- 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
--	{ KE_END },
- };
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 0482adc9916b..e900ebb94499 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -447,6 +447,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
+ 	int ret;
+ 	rx_handler_result_t handle_res;
  
-+#define KEYMAP_LEN \
-+	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
++	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
++		return RX_HANDLER_PASS;
 +
- struct intel_vbtn_priv {
-+	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
- 	bool wakeup_mode;
- };
-@@ -55,13 +61,29 @@ struct intel_vbtn_priv {
- static int intel_vbtn_input_setup(struct platform_device *device)
- {
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
--	int ret;
-+	int ret, keymap_len = 0;
-+
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
-+		       ARRAY_SIZE(intel_vbtn_keymap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
-+	}
-+
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
-+		       ARRAY_SIZE(intel_vbtn_switchmap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
-+	}
-+
-+	priv->keymap[keymap_len].type = KE_END;
- 
- 	priv->input_dev = devm_input_allocate_device(&device->dev);
- 	if (!priv->input_dev)
- 		return -ENOMEM;
- 
--	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
- 	if (ret)
- 		return ret;
- 
+ 	port = macvlan_port_get_rcu(skb->dev);
+ 	if (is_multicast_ether_addr(eth->h_dest)) {
+ 		unsigned int hash;
 -- 
 2.25.1
 
