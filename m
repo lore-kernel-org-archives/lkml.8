@@ -7,120 +7,102 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3707C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA058207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25A2207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJzpqNQL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YJ+//8r1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgFSMt4 (ORCPT
+        id S1732560AbgFSMuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:49:56 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51916 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732278AbgFSMtq (ORCPT
+        Fri, 19 Jun 2020 08:50:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41983 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732377AbgFSMtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:49:46 -0400
+        Fri, 19 Jun 2020 08:49:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592570984;
+        s=mimecast20190719; t=1592570986;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=/g/+YnCzud6gIE/myiatywuh+bgiNOQQZfOvz+r2RZM=;
-        b=DJzpqNQL3Ct78b71K3She8S6lrhS3usL8RrHve8/Fe6OvbZlg6mL0+tQcu46JUkXre2a7j
-        wCJeM5i67zqeqXPsz5Xb5HA/z0ezPbvt16HNIJ2y+2qfvWOaQ++M8/Hn63ImspXHOc9tbP
-        HV9MlLeH/yVCwJNU1bYE/DUE4N0GBAs=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-oZMYJzKHPZWIBTOOOU2agQ-1; Fri, 19 Jun 2020 08:49:42 -0400
-X-MC-Unique: oZMYJzKHPZWIBTOOOU2agQ-1
-Received: by mail-lf1-f71.google.com with SMTP id r10so3400791lfc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:49:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/g/+YnCzud6gIE/myiatywuh+bgiNOQQZfOvz+r2RZM=;
-        b=T+KnlY9rBH5IDnIRMd2fUf3+h8g9njtB3ykPZjzOimaMleirDF66cPgV0RNoIDfw8c
-         +ZqAy9paUyqU6+Ck6j+aFd2Be96iJlpHVyBFBR18H/cCc1jnddY0NZLBsYmG+YWS/JjV
-         uoenfM0vL9i9CBqP3FI/zxC6mE978sJsznaz2zZv8NcAGRrj7ArfK3E1pYQRq91f53Ay
-         1FCkmVNTk8zODabuzHKgwZ9pKtYps3wEhz9WrOmrK/7lWM/M+1pWKbMij58aafnP9trg
-         10BSoHYzY/gs+AnUi9zFM6KMw9t2/wVlqz/1UN9CTTV/GV1kObrzolKF6wzE/BelJfE1
-         BgCQ==
-X-Gm-Message-State: AOAM530eQzQYUu1mNIgS3NYp+3WA/MduBF06eJQQCDQYQgCpRRphNyK2
-        y9j41dD+rgw6EeLLam68g/Vl/CJv+l+FKs/0+NN57T6E1XocRFG+DoxWfYyQxoZDMl6ZDPpQqEP
-        oXDlXBi0K4lf5u333mKs8JvwhN6Vdn9nCqo8zzlb0
-X-Received: by 2002:ac2:5604:: with SMTP id v4mr1946248lfd.124.1592570981118;
-        Fri, 19 Jun 2020 05:49:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwXiPt6NoxSwMoZyeQFCP8RfJAk3JTg7gTtWYjd2TAO4zxGdEHaGSVd0jZZyRVkg26M9VYhdLJvCgnHGSnzbYY=
-X-Received: by 2002:ac2:5604:: with SMTP id v4mr1946227lfd.124.1592570980848;
- Fri, 19 Jun 2020 05:49:40 -0700 (PDT)
+        bh=IGO+CJBEnWQc9Ot84SOMePVBK9U6K5jZVae2LE+FwxE=;
+        b=YJ+//8r1ByNIxXo57rEj6qzoUoriJHUGlUaJSGcyAGlhPvOXWHRFLVk3GrmygMjDQ2wlXA
+        S9gMdpC/L0szhWYmjJtbum6D0JQtjxXfKQ06fKy2E1VuTJ/WxR5B5HqQ3A6DXQzWdQjXwB
+        IcD+QdXjDSNWIkw4QygV2pqwrJPaSPY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-qs7lwy3qMVevVZcbLW21uQ-1; Fri, 19 Jun 2020 08:49:44 -0400
+X-MC-Unique: qs7lwy3qMVevVZcbLW21uQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 579BD801A03;
+        Fri, 19 Jun 2020 12:49:43 +0000 (UTC)
+Received: from localhost (ovpn-113-212.ams2.redhat.com [10.36.113.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93F345C1D0;
+        Fri, 19 Jun 2020 12:49:39 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 13:49:38 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Wang Qing <wangqing@vivo.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers\block: Use kobj_to_dev() API
+Message-ID: <20200619124938.GA2424182@stefanha-x1.localdomain>
+References: <1591945856-14749-1-git-send-email-wangqing@vivo.com>
 MIME-Version: 1.0
-References: <20200520125616.193765-1-kpsingh@chromium.org>
-In-Reply-To: <20200520125616.193765-1-kpsingh@chromium.org>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Fri, 19 Jun 2020 14:49:29 +0200
-Message-ID: <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
-Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1591945856-14749-1-git-send-email-wangqing@vivo.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=stefanha@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 2:56 PM KP Singh <kpsingh@chromium.org> wrote:
-> From: KP Singh <kpsingh@google.com>
->
-> secid_to_secctx is not stackable, and since the BPF LSM registers this
-> hook by default, the call_int_hook logic is not suitable which
-> "bails-on-fail" and casues issues when other LSMs register this hook and
-> eventually breaks Audit.
->
-> In order to fix this, directly iterate over the security hooks instead
-> of using call_int_hook as suggested in:
->
-> https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
->
-> Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-> Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
-> Reported-by: Alexei Starovoitov <ast@kernel.org>
-> Signed-off-by: KP Singh <kpsingh@google.com>
-[...]
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for being late to the party, but doesn't this (and the
-associated default return value patch) just paper over a bigger
-problem? What if I have only the BPF LSM enabled and I attach a BPF
-program to this hook that just returns 0? Doesn't that allow anything
-privileged enough to do this to force the kernel to try and send
-memory from uninitialized pointers to userspace and/or copy such
-memory around and/or free uninitialized pointers?
+On Fri, Jun 12, 2020 at 03:10:56PM +0800, Wang Qing wrote:
+> Use kobj_to_dev() API instead of container_of().
+>=20
+> Signed-off-by: Wang Qing <wangqing@vivo.com>
+> ---
+>  drivers/block/virtio_blk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  mode change 100644 =3D> 100755 drivers/block/virtio_blk.c
 
-Why on earth does the BPF LSM directly expose *all* of the hooks, even
-those that are not being used for any security decisions (and are
-"useful" in this context only for borking the kernel...)? Feel free to
-prove me wrong, but this lazy approach of "let's just take all the
-hooks as they are and stick BPF programs to them" doesn't seem like a
-good choice... IMHO you should either limit the set of hooks that can
-be attached to only those that aren't used to return back values via
-pointers, or (if you really really need to do some state
-updates/logging in those hooks) use wrapper functions that will call
-the BPF progs via a simplified interface so that they cannot cause
-unsafe behavior.
+Please fix the '\' -> '/' in the commit message. Looks good otherwise:
 
---
-Ondrej Mosnacek
-Software Engineer, Platform Security - SELinux kernel
-Red Hat, Inc.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7stGIACgkQnKSrs4Gr
+c8iKlgf/f+yvjTB2iqqDHAxkMDvnIu83CmaNspZ6bGF/0hEaFtWKGCIiJ+uyD2ow
+HeS/6wRfIYMFpEcrwpEPWssIh/+US/957FmjIVeUU8b7jIER7VHH1BcAZq8DDKe3
+yIxlUtJPOFRUz8GyddfoWDycsSL5SCGjP8eRTJkIy93yBlw308K8h/Y0keIN3ToJ
+QYnuq143Mm0XmVk7RgkIMIM6iiDgxrU+qU5wIRg4f5UVzGWFAHIugGHEN+BMEUfv
+hXpS0Akw5CkVFSTkOewu15i52Hp4TDRyQn+A0DldsPdjnjebGaygbRH5In8NzqX/
+AACpzHtUyBhoDiAf2Ml3OAh86QIIEA==
+=eGvO
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
 
