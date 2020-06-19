@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1528C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFA621941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5B62158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579142;
-	bh=nDJ5aA8yDvrtA35YXgEoanLshtxLTVoWR9hrb1QTiLY=;
+	s=default; t=1592579149;
+	bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXnHByMWwngHcaexbuZXBkIw85AMmGH0/axRhYqO/znjA7JlRo4P67/vxIwVzwB6R
-	 rZ6gEK9lJLhtJ5Oa0d8rZecQin/vCcQo6/JyKvEFBD15sPaGXHDb5PbmlwCNOSrXO2
-	 6O8LfLcMsWTLnWxK1ypxlE0XSNTq5VLTiJxuniig=
+	b=lZ/fGikzO690wTHR3VxA1g/GLUu4pKb7wshQDlIBgyNDPNngSg3i+zVUfuBJNHgp8
+	 VVEy9c4JQ6upuE9CeOTJRRH4C2Q9FtNF/rlIXAk9dTGD3xJlGj6o2EXjuCUEg9IuiQ
+	 rXoZbaMyOrsb8AX3tyOlG3E8FiN8ZxdzxGh6NsOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391334AbgFSPFk (ORCPT
+        id S2391341AbgFSPFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391315AbgFSPFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:33 -0400
+        id S2391331AbgFSPFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D83052158C;
-        Fri, 19 Jun 2020 15:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E412158C;
+        Fri, 19 Jun 2020 15:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579132;
-        bh=nDJ5aA8yDvrtA35YXgEoanLshtxLTVoWR9hrb1QTiLY=;
+        s=default; t=1592579140;
+        bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d8WYNlBjbgJ1PerB7gyG3LjZdKkejGuEROk7RjVK3GVLiLqmEl8R+4xroKWsSH606
-         Gjeah5QZRDFTZOD5RLMTY3yZNJRL8FxYfGTdMw8ESnqUbZGcjGvxlx9seeeXeK9lFW
-         l2nALr0nSw8JxjLNQZvGmL3tJX/161SLOT4gBbL4=
+        b=nzOiDE924EOoSB++dhIKtoxaTUsFNVvQZBm2KEvni9Rh4nyoGfVBh8YlWfFtKvFaw
+         MfnGptHuzZT5h1QnjI7CDZ+Fr4pZnKHkaJyia2BhfPAUJycxDO+64pgJ63rnCKt0nO
+         1PLNzt72FNR/5wViCHYJm8EpcFFnjcrmMHbsGgtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/261] drm/amdgpu: fix and cleanup amdgpu_gem_object_close v4
-Date:   Fri, 19 Jun 2020 16:30:13 +0200
-Message-Id: <20200619141650.001566495@linuxfoundation.org>
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 022/261] arm64: cacheflush: Fix KGDB trap detection
+Date:   Fri, 19 Jun 2020 16:30:33 +0200
+Message-Id: <20200619141650.972111586@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,103 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 82c416b13cb7d22b96ec0888b296a48dff8a09eb ]
+[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
 
-The problem is that we can't add the clear fence to the BO
-when there is an exclusive fence on it since we can't
-guarantee the the clear fence will complete after the
-exclusive one.
+flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
+trap handler is running because issuing IPIs is unsafe (and not needed)
+in this execution context. However the current test, based on
+kgdb_connected is flawed: it both over-matches and under-matches.
 
-To fix this refactor the function and also add the exclusive
-fence as shared to the resv object.
+The over match occurs because kgdb_connected is set when gdb attaches
+to the stub and remains set during normal running. This is relatively
+harmelss because in almost all cases irq_disabled() will be false.
 
-v2: fix warning
-v3: add excl fence as shared instead
-v4: squash in fix for fence handling in amdgpu_gem_object_close
+The under match is more serious. When kdb is used instead of kgdb to access
+the debugger then kgdb_connected is not set in all the places that the
+debug core updates sw breakpoints (and hence flushes the icache). This
+can lead to deadlock.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: xinhui pan <xinhui.pan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix by replacing the ad-hoc check with the proper kgdb macro. This also
+allows us to drop the #ifdef wrapper.
+
+Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 43 ++++++++++++++-----------
- 1 file changed, 25 insertions(+), 18 deletions(-)
+ arch/arm64/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 8ceb44925947..5fa5158d18ee 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -161,16 +161,17 @@ void amdgpu_gem_object_close(struct drm_gem_object *obj,
- 
- 	struct amdgpu_bo_list_entry vm_pd;
- 	struct list_head list, duplicates;
-+	struct dma_fence *fence = NULL;
- 	struct ttm_validate_buffer tv;
- 	struct ww_acquire_ctx ticket;
- 	struct amdgpu_bo_va *bo_va;
--	int r;
-+	long r;
- 
- 	INIT_LIST_HEAD(&list);
- 	INIT_LIST_HEAD(&duplicates);
- 
- 	tv.bo = &bo->tbo;
--	tv.num_shared = 1;
-+	tv.num_shared = 2;
- 	list_add(&tv.head, &list);
- 
- 	amdgpu_vm_get_pd_bo(vm, &list, &vm_pd);
-@@ -178,28 +179,34 @@ void amdgpu_gem_object_close(struct drm_gem_object *obj,
- 	r = ttm_eu_reserve_buffers(&ticket, &list, false, &duplicates, false);
- 	if (r) {
- 		dev_err(adev->dev, "leaking bo va because "
--			"we fail to reserve bo (%d)\n", r);
-+			"we fail to reserve bo (%ld)\n", r);
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index 665c78e0665a..3e7dda6f1ab1 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * IPI all online CPUs so that they undergo a context synchronization
+ 	 * event and are forced to refetch the new instructions.
+ 	 */
+-#ifdef CONFIG_KGDB
++
+ 	/*
+ 	 * KGDB performs cache maintenance with interrupts disabled, so we
+ 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
+@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * the patching operation, so we don't need extra IPIs here anyway.
+ 	 * In which case, add a KGDB-specific bodge and return early.
+ 	 */
+-	if (kgdb_connected && irqs_disabled())
++	if (in_dbg_master())
  		return;
- 	}
- 	bo_va = amdgpu_vm_bo_find(vm, bo);
--	if (bo_va && --bo_va->ref_count == 0) {
--		amdgpu_vm_bo_rmv(adev, bo_va);
--
--		if (amdgpu_vm_ready(vm)) {
--			struct dma_fence *fence = NULL;
-+	if (!bo_va || --bo_va->ref_count)
-+		goto out_unlock;
- 
--			r = amdgpu_vm_clear_freed(adev, vm, &fence);
--			if (unlikely(r)) {
--				dev_err(adev->dev, "failed to clear page "
--					"tables on GEM object close (%d)\n", r);
--			}
-+	amdgpu_vm_bo_rmv(adev, bo_va);
-+	if (!amdgpu_vm_ready(vm))
-+		goto out_unlock;
- 
--			if (fence) {
--				amdgpu_bo_fence(bo, fence, true);
--				dma_fence_put(fence);
--			}
--		}
-+	fence = dma_resv_get_excl(bo->tbo.base.resv);
-+	if (fence) {
-+		amdgpu_bo_fence(bo, fence, true);
-+		fence = NULL;
- 	}
+-#endif
 +
-+	r = amdgpu_vm_clear_freed(adev, vm, &fence);
-+	if (r || !fence)
-+		goto out_unlock;
-+
-+	amdgpu_bo_fence(bo, fence, true);
-+	dma_fence_put(fence);
-+
-+out_unlock:
-+	if (unlikely(r < 0))
-+		dev_err(adev->dev, "failed to clear page "
-+			"tables on GEM object close (%ld)\n", r);
- 	ttm_eu_backoff_reservation(&ticket, &list);
+ 	kick_all_cpus_sync();
  }
  
 -- 
