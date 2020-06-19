@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73559C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0328C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9BB207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D2C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582549;
-	bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
+	s=default; t=1592582551;
+	bh=X3PS0/wxR6yCVnl4QRI7pF8veBWqdjftrrWWgoB0L+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtnFeB8vfYcKZvMCeWw4uc3+IDEgIr5VVih49FqEh9Kpx7IHyppAltxUg/qMVuzMw
-	 lzkzmsL1Rl8L0QXZdR4mZiACkjCnV0E8XHSen24FKnpKkO+kMqi7bWY4RSHZZ3h7hi
-	 1BLQGbArpEFVu52vDiLlXB0Cjaoqd0SOM11qovD0=
+	b=o+i4pU4Shuqq/0AVjzP4gzwKDJBDsYW8JIxjAaCD789ZI2XklSqmxAtWu5739MraT
+	 +Fi/wZGJ8blB3recBmE6/sFGHSYcf/17IcwShYFDT+jt1EkKLDev4yADkpRj9szNl4
+	 Lr0FBPjUIVogwmyMgycFxhEuC6pK4ob7XspzTjgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403928AbgFSPMp (ORCPT
+        id S2394195AbgFSQCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403915AbgFSPMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:36 -0400
+        id S2403893AbgFSPMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA4DA206FA;
-        Fri, 19 Jun 2020 15:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0678206FA;
+        Fri, 19 Jun 2020 15:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579555;
-        bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
+        s=default; t=1592579563;
+        bh=X3PS0/wxR6yCVnl4QRI7pF8veBWqdjftrrWWgoB0L+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u7sP31Dc/HqxE3VYuEZI7aOeLrxSUlPYgIPTLDwYfVgvIER6u/kFb5NoKYGOSXNRA
-         S1Uvjsk/pNdECnJ3Be8m5sRYBhR2N/A6RzJbCnkYhjp+Z5EZQne1nKSn8yk0Zwzjq/
-         6F6lq7/a3ScuzxKI/aEoUYa8l9L7r7HJ7fqrF85g=
+        b=dMN+WL83I75bTUNnftWgFr/MwN8LX3a9mCUne0Xp0PaQK5sz7L/wbR+3n0bEwcKDI
+         WGp6vSnYG/dXgPHu0f60u1tVR9PZyP7gGU+a7qlaDll+iWHyU14kYvz61jTQ3gDZR1
+         pamrgwtKNyDgkSNc2T92R6Y6/cMfsLV16ZjHgJic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH 5.4 179/261] ima: Remove __init annotation from ima_pcrread()
-Date:   Fri, 19 Jun 2020 16:33:10 +0200
-Message-Id: <20200619141658.504030609@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.4 182/261] ext4: fix error pointer dereference
+Date:   Fri, 19 Jun 2020 16:33:13 +0200
+Message-Id: <20200619141658.643736204@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,41 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-commit 8b8c704d913b0fe490af370631a4200e26334ec0 upstream.
+commit 8418897f1bf87da0cb6936489d57a4320c32c0af upstream.
 
-Commit 6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in
-ima_eventdigest_init()") added a call to ima_calc_boot_aggregate() so that
-the digest can be recalculated for the boot_aggregate measurement entry if
-the 'd' template field has been requested. For the 'd' field, only SHA1 and
-MD5 digests are accepted.
+Don't pass error pointers to brelse().
 
-Given that ima_eventdigest_init() does not have the __init annotation, all
-functions called should not have it. This patch removes __init from
-ima_pcrread().
+commit 7159a986b420 ("ext4: fix some error pointer dereferences") has fixed
+some cases, fix the remaining one case.
 
-Cc: stable@vger.kernel.org
-Fixes:  6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Once ext4_xattr_block_find()->ext4_sb_bread() failed, error pointer is
+stored in @bs->bh, which will be passed to brelse() in the cleanup
+routine of ext4_xattr_set_handle(). This will then cause a NULL panic
+crash in __brelse().
+
+BUG: unable to handle kernel NULL pointer dereference at 000000000000005b
+RIP: 0010:__brelse+0x1b/0x50
+Call Trace:
+ ext4_xattr_set_handle+0x163/0x5d0
+ ext4_xattr_set+0x95/0x110
+ __vfs_setxattr+0x6b/0x80
+ __vfs_setxattr_noperm+0x68/0x1b0
+ vfs_setxattr+0xa0/0xb0
+ setxattr+0x12c/0x1a0
+ path_setxattr+0x8d/0xc0
+ __x64_sys_setxattr+0x27/0x30
+ do_syscall_64+0x60/0x250
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+In this case, @bs->bh stores '-EIO' actually.
+
+Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: stable@kernel.org # 2.6.19
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/1587628004-95123-1-git-send-email-jefflexu@linux.alibaba.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_crypto.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/xattr.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -645,7 +645,7 @@ int ima_calc_buffer_hash(const void *buf
- 	return calc_buffer_shash(buf, len, hash);
- }
- 
--static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
-+static void ima_pcrread(u32 idx, struct tpm_digest *d)
- {
- 	if (!ima_tpm_chip)
- 		return;
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -1820,8 +1820,11 @@ ext4_xattr_block_find(struct inode *inod
+ 	if (EXT4_I(inode)->i_file_acl) {
+ 		/* The inode already has an extended attribute block. */
+ 		bs->bh = ext4_sb_bread(sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
+-		if (IS_ERR(bs->bh))
+-			return PTR_ERR(bs->bh);
++		if (IS_ERR(bs->bh)) {
++			error = PTR_ERR(bs->bh);
++			bs->bh = NULL;
++			return error;
++		}
+ 		ea_bdebug(bs->bh, "b_count=%d, refcount=%d",
+ 			atomic_read(&(bs->bh->b_count)),
+ 			le32_to_cpu(BHDR(bs->bh)->h_refcount));
 
 
