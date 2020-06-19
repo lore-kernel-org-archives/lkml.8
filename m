@@ -2,410 +2,130 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74674C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D2122211
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8373C22210
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="mRiPlpOu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mU9KnbzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgFSV5o (ORCPT
+        id S1728532AbgFSV6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728256AbgFSV5Y (ORCPT
+        Fri, 19 Jun 2020 17:58:01 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8527 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbgFSV5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:57:24 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9075AC0613F0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:57:24 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so8392973qtg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=rdhxkZX4GmXKSSpsPwGF4bgioI4q0DW5JlXRU/AUlkk=;
-        b=mRiPlpOuXbePKoXKYhDFTZ4Jtt6zf1Okl1KJwxQLCsOk74sMT88rOgCfDBrGrWz6F7
-         +DE0O4fOnwgtlG3IN91gYWFphtijC32KzwEXJhu5w29ejvAp+98RKifWyXchiMYMCX92
-         mZH9Id5OWqXgM6ymZE+c7sazt/Mhu8ki3ndIAKoousXZuQiGULxgVSwjKiStbU6TpPul
-         4ZvjVI1CdsQeLJ698wirI9deBBVy6eXjlqeVxlcyHvXwVMgG+fY46jatAGSNLBElK0A8
-         JAdrCGSKtCeblFPMe/mEHvTiHEh/fLjYm32V0ZaiAJ6G84FkXrGHfv1xwNLoYb6cggDe
-         hacA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rdhxkZX4GmXKSSpsPwGF4bgioI4q0DW5JlXRU/AUlkk=;
-        b=D8AH6uVEZA03XoOh6ai9Jl6Z28z+MHJU1i7WPqqqT0bIkkHKMEpgKmZw1mfSqrGmM1
-         THzSDFP7MTi+kNwuZYjQ6yLGtj31DXD53cK4ZZHgoIdNv5pFpEmaOA7IajXAsFfJ/KjB
-         k2g/Hs1h/oMnwZkkkIHHZU1dzpgv1XFZExlJMlRc7fCMbL60Y40BJ8SuH4lgsMmNYR4Y
-         KRbCuMfU+LP0F5T8lJuG5KON2igoJzTSb5xu+F8mv3QJNlCXBhKcEENocrhsz8fQfI2p
-         MjucqCwFQEi/E2VZAF4af9nXFExrFspROH5W4oT6rMWN7Zech5B7cdLoj1EAopDz1lDY
-         EKOQ==
-X-Gm-Message-State: AOAM530J33L6mMTlgX9B/Uw78q3OaAlo03kHTUcLfbvcphcr7iiy/gAP
-        0kf3gZk3+FY0NEmzKzpyOfBq/Q==
-X-Google-Smtp-Source: ABdhPJzDEbhH9/2WoXmmZH2RrRnKaQv0db5TBB7Xaag8scxB9vAIb4QCZdoLN4qlc8YWSIKcq0cqcA==
-X-Received: by 2002:ac8:688a:: with SMTP id m10mr2810282qtq.254.1592603843298;
-        Fri, 19 Jun 2020 14:57:23 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id g140sm7437850qke.98.2020.06.19.14.57.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 14:57:22 -0700 (PDT)
-Message-ID: <2251a43aa773dbd4a417dca20ba12ee0559f9031.camel@massaru.org>
-Subject: Re: [RESEND, PATCH v2] lib: overflow-test: add KUnit test of
- check_*_overflow functions
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux@rasmusvillemoes.dk, davidgow@google.com
-Date:   Fri, 19 Jun 2020 18:57:19 -0300
-In-Reply-To: <202006181949.6402C456@keescook>
-References: <20200618140814.135948-1-vitor@massaru.org>
-         <202006181949.6402C456@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Fri, 19 Jun 2020 17:57:11 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eed344e0001>; Fri, 19 Jun 2020 14:55:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 19 Jun 2020 14:57:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 19 Jun 2020 14:57:07 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
+ 2020 21:56:59 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 19 Jun 2020 21:56:59 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5eed34ab0002>; Fri, 19 Jun 2020 14:56:59 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH 03/16] nouveau: fix mixed normal and device private page migration
+Date:   Fri, 19 Jun 2020 14:56:36 -0700
+Message-ID: <20200619215649.32297-4-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592603726; bh=ZfcMxwlEjaJ9jud4ZrslX8wzG6hxoVtsjt+UlX695yk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=mU9KnbzYIJxSfATGWHX9y6ZjjtDaywPixJ52o6MZeR6UGLlSiA1jlzu0XdSndhmPX
+         iLpZb5OIKOq2tiNtGx2SA7+0C6IXXZAD9shfBEEKghxsY2VL2xNOEJ0jqCewxzd/9X
+         BCEh4wzqf0r0kmc30QRvHFpcqe5YieRlMbBU1FpfSHDcf4CPVruyHz5ekH/aWtYHjS
+         D/qYlmwKed8ltDQ+TmlI6p5lpb94ZcowbE7lH9kwSfM6QNDrxbl2lT9YB+2ea0oUMj
+         nb1L/Bp2dHaJvaVln1/zPWYM1OSW5yuZj8HHjh3QHpnBLEgFzBA9f4B8q0OfmY9P5f
+         T2eg4bo3r5Umg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 20:05 -0700, Kees Cook wrote:
-> On Thu, Jun 18, 2020 at 11:08:14AM -0300, Vitor Massaru Iha wrote:
-> > This adds the conversion of the runtime tests of check_*_overflow
-> > functions,
-> > from `lib/test_overflow.c`to KUnit tests.
-> > 
-> > The log similar to the one seen in dmesg running test_overflow.c
-> > can be
-> > seen in `test.log`.
-> > 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Tested-by: David Gow <davidgow@google.com>
-> > ---
-> > v2:
-> >   * moved lib/test_overflow.c to lib/overflow-test.c; 
+The OpenCL function clEnqueueSVMMigrateMem(), without any flags, will
+migrate memory in the given address range to device private memory. The
+source pages might already have been migrated to device private memory.
+In that case, the source struct page is not checked to see if it is
+a device private page and incorrectly computes the GPU's physical
+address of local memory leading to data corruption.
+Fix this by checking the source struct page and computing the correct
+physical address.
 
-Sure.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> I still don't want a dash in the filename, as this creates a
-> difference
-> between the source name and the module name. While I still prefer
-> overflow_kunit.c, I can get over it and accept overflow_test.c :)
-> 
-> >     * back to original license;
-> >     * fixed style code;
-> >     * keeps __initconst and added _refdata on overflow_test_cases
-> > variable;
-> >     * keeps macros intact making asserts with the variable err;
-> >     * removed duplicate test_s8_overflow();
-> >   * fixed typos on commit message;
-> > ---
-> >  lib/Kconfig.debug                        | 20 +++++++--
-> >  lib/Makefile                             |  2 +-
-> >  lib/{test_overflow.c => overflow-test.c} | 54 +++++++++-----------
-> > ----
-> >  3 files changed, 38 insertions(+), 38 deletions(-)
-> >  rename lib/{test_overflow.c => overflow-test.c} (96%)
-> > 
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index d74ac0fd6b2d..fb8a3955e969 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2000,9 +2000,6 @@ config TEST_UUID
-> >  config TEST_XARRAY
-> >  	tristate "Test the XArray code at runtime"
-> >  
-> > -config TEST_OVERFLOW
-> > -	tristate "Test check_*_overflow() functions at runtime"
-> > -
-> >  config TEST_RHASHTABLE
-> >  	tristate "Perform selftest on resizable hash table"
-> >  	help
-> > @@ -2155,6 +2152,23 @@ config SYSCTL_KUNIT_TEST
-> >  
-> >  	  If unsure, say N.
-> >  
-> > +config OVERFLOW_KUNIT_TEST
-> > +	tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
-> > +	depends on KUNIT
-> > +	default KUNIT_ALL_TESTS
-> > +	help
-> > +	  This builds the overflow KUnit tests.
-> > +
-> > +	  KUnit tests run during boot and output the results to the
-> > debug log
-> > +	  in TAP format (http://testanything.org/). Only useful for
-> > kernel devs
-> > +	  running KUnit test harness and are not for inclusion into a
-> > production
-> > +	  build.
-> > +
-> > +	  For more information on KUnit and unit tests in general
-> > please refer
-> > +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > +
-> > +	  If unsure, say N.
-> > +
-> >  config LIST_KUNIT_TEST
-> >  	tristate "KUnit Test for Kernel Linked-list structures" if
-> > !KUNIT_ALL_TESTS
-> >  	depends on KUNIT
-> > diff --git a/lib/Makefile b/lib/Makefile
-> > index b1c42c10073b..3b725c9f92d4 100644
-> > --- a/lib/Makefile
-> > +++ b/lib/Makefile
-> > @@ -75,7 +75,6 @@ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
-> >  obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
-> >  obj-$(CONFIG_TEST_LKM) += test_module.o
-> >  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
-> > -obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
-> >  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
-> >  obj-$(CONFIG_TEST_SORT) += test_sort.o
-> >  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
-> > @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
-> >  # KUnit tests
-> >  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-> >  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> > +obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow-test.o
-> > diff --git a/lib/test_overflow.c b/lib/overflow-test.c
-> > similarity index 96%
-> > rename from lib/test_overflow.c
-> > rename to lib/overflow-test.c
-> > index 7a4b6f6c5473..d40ef06b1ade 100644
-> > --- a/lib/test_overflow.c
-> > +++ b/lib/overflow-test.c
-> > @@ -4,14 +4,11 @@
-> >   */
-> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >  
-> > +#include <kunit/test.h>
-> >  #include <linux/device.h>
-> >  #include <linux/init.h>
-> > -#include <linux/kernel.h>
-> >  #include <linux/mm.h>
-> > -#include <linux/module.h>
-> >  #include <linux/overflow.h>
-> > -#include <linux/slab.h>
-> > -#include <linux/types.h>
-> >  #include <linux/vmalloc.h>
-> >  
-> >  #define DEFINE_TEST_ARRAY(t)			\
-> > @@ -270,7 +267,7 @@ DEFINE_TEST_FUNC(u64, "%llu");
-> >  DEFINE_TEST_FUNC(s64, "%lld");
-> >  #endif
-> >  
-> > -static int __init test_overflow_calculation(void)
-> > +static void __init overflow_calculation_test(struct kunit *test)
-> >  {
-> >  	int err = 0;
-> >  
-> > @@ -285,10 +282,10 @@ static int __init
-> > test_overflow_calculation(void)
-> >  	err |= test_s64_overflow();
-> >  #endif
-> >  
-> > -	return err;
-> > +	KUNIT_EXPECT_FALSE(test, err);
-> >  }
-> 
-> Ah! Well, yes, I guess that is one way to do it. :) I'm just curious:
-> why the change away from doing EXPECTs on individual tests?
-
-When returning the err variables, I was not sure if it was to make the
-asserts individually, I can do that.
-
-> >  
-> > -static int __init test_overflow_shift(void)
-> > +static void __init overflow_shift_test(struct kunit *test)
-> >  {
-> >  	int err = 0;
-> >  
-> > @@ -479,7 +476,7 @@ static int __init test_overflow_shift(void)
-> >  	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
-> >  	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
-> >  
-> > -	return err;
-> > +	KUNIT_EXPECT_FALSE(test, err);
-> >  }
-> >  
-> >  /*
-> > @@ -555,7 +552,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0,
-> > 1, 1);
-> >  DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
-> >  DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
-> >  
-> > -static int __init test_overflow_allocation(void)
-> > +static void __init overflow_allocation_test(struct kunit *test)
-> >  {
-> >  	const char device_name[] = "overflow-test";
-> >  	struct device *dev;
-> > @@ -563,10 +560,8 @@ static int __init
-> > test_overflow_allocation(void)
-> >  
-> >  	/* Create dummy device for devm_kmalloc()-family tests. */
-> >  	dev = root_device_register(device_name);
-> > -	if (IS_ERR(dev)) {
-> > -		pr_warn("Cannot register test device\n");
-> > -		return 1;
-> > -	}
-> > +	if (IS_ERR(dev))
-> > +		kunit_warn(test, "Cannot register test device\n");
-> >  
-> >  	err |= test_kmalloc(NULL);
-> >  	err |= test_kmalloc_node(NULL);
-> > @@ -585,30 +580,21 @@ static int __init
-> > test_overflow_allocation(void)
-> >  
-> >  	device_unregister(dev);
-> >  
-> > -	return err;
-> > +	KUNIT_EXPECT_FALSE(test, err);
-> >  }
-> >  
-> > -static int __init test_module_init(void)
-> > -{
-> > -	int err = 0;
-> > -
-> > -	err |= test_overflow_calculation();
-> > -	err |= test_overflow_shift();
-> > -	err |= test_overflow_allocation();
-> > -
-> > -	if (err) {
-> > -		pr_warn("FAIL!\n");
-> > -		err = -EINVAL;
-> > -	} else {
-> > -		pr_info("all tests passed\n");
-> > -	}
-> > +static struct kunit_case __refdata overflow_test_cases[] = {
-> 
-> Erm, __refdata? This seems like it should be __initdata.
-
-I tried to use __initdata, but the build still gave warnings.
-
-> 
-> > +	KUNIT_CASE(overflow_calculation_test),
-> > +	KUNIT_CASE(overflow_shift_test),
-> > +	KUNIT_CASE(overflow_allocation_test),
-> > +	{}
-> > +};
-> >  
-> > -	return err;
-> > -}
-> > +static struct kunit_suite overflow_test_suite = {
-> 
-> And this.
-> 
-> > +	.name = "overflow",
-> > +	.test_cases = overflow_test_cases,
-> > +};
-> >  
-> > -static void __exit test_module_exit(void)
-> > -{ }
-> > +kunit_test_suites(&overflow_test_suite);
-> 
-> I suspect the problem causing the need for __refdata there is the
-> lack
-> of __init markings on the functions in kunit_test_suites()?
-
-From the kunit_test_suites() documentation I saw that I need to write
-the test as a module to solve this problem. I'll fix this.
-
-> 
-> (Or maybe this is explained somewhere else I've missed it.)
-> 
-> For example, would this work? (I haven't tested it all.)
-
-Oops. It doesn't work, I'm sorry.
-
-
-> 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 59f3144f009a..aad746d59d2f 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -233,9 +233,9 @@ size_t kunit_suite_num_test_cases(struct
-> kunit_suite *suite);
->  unsigned int kunit_test_case_num(struct kunit_suite *suite,
->  				 struct kunit_case *test_case);
->  
-> -int __kunit_test_suites_init(struct kunit_suite **suites);
-> +int __init __kunit_test_suites_init(struct kunit_suite **suites);
->  
-> -void __kunit_test_suites_exit(struct kunit_suite **suites);
-> +void __exit __kunit_test_suites_exit(struct kunit_suite **suites);
->  
->  /**
->   * kunit_test_suites() - used to register one or more &struct
-> kunit_suite
-> @@ -263,8 +263,9 @@ void __kunit_test_suites_exit(struct kunit_suite
-> **suites);
->   * everything else is definitely initialized.
->   */
->  #define kunit_test_suites(suites_list...)				
-> \
-> -	static struct kunit_suite *suites[] = {suites_list, NULL};	
-> \
-> -	static int kunit_test_suites_init(void)				
-> \
-> +	static struct kunit_suite *suites[] __initdata =		\
-> +		{suites_list, NULL};					
-> \
-> +	static int __init kunit_test_suites_init(void)			
-> \
->  	{								\
->  		return __kunit_test_suites_init(suites);		\
->  	}								\
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index c36037200310..bfb0f563721b 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -381,7 +381,7 @@ static void kunit_init_suite(struct kunit_suite
-> *suite)
->  	kunit_debugfs_create_suite(suite);
->  }
->  
-> -int __kunit_test_suites_init(struct kunit_suite **suites)
-> +int __init __kunit_test_suites_init(struct kunit_suite **suites)
->  {
->  	unsigned int i;
->  
-> @@ -393,7 +393,7 @@ int __kunit_test_suites_init(struct kunit_suite
-> **suites)
->  }
->  EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
->  
-> -static void kunit_exit_suite(struct kunit_suite *suite)
-> +static void __exit kunit_exit_suite(struct kunit_suite *suite)
->  {
->  	kunit_debugfs_destroy_suite(suite);
->  }
-> 
-> >  
-> > -module_init(test_module_init);
-> > -module_exit(test_module_exit);
-> >  MODULE_LICENSE("Dual MIT/GPL");
-> > 
-> > base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
-> > prerequisite-patch-id: e827b6b22f950b9f69620805a04e4a264cf4cc6a
-> > -- 
-> > 2.26.2
-> > 
-> 
-> Thanks again for the conversion!
-
-
-Thanks for the review.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
+au/nouveau_dmem.c
+index cc9993837508..f6a806ba3caa 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -540,6 +540,12 @@ static unsigned long nouveau_dmem_migrate_copy_one(str=
+uct nouveau_drm *drm,
+ 	if (!(src & MIGRATE_PFN_MIGRATE))
+ 		goto out;
+=20
++	if (spage && is_device_private_page(spage)) {
++		paddr =3D nouveau_dmem_page_addr(spage);
++		*dma_addr =3D DMA_MAPPING_ERROR;
++		goto done;
++	}
++
+ 	dpage =3D nouveau_dmem_page_alloc_locked(drm);
+ 	if (!dpage)
+ 		goto out;
+@@ -560,6 +566,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(stru=
+ct nouveau_drm *drm,
+ 			goto out_free_page;
+ 	}
+=20
++done:
+ 	*pfn =3D NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
+ 		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
+ 	if (src & MIGRATE_PFN_WRITE)
+@@ -615,6 +622,7 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	struct migrate_vma args =3D {
+ 		.vma		=3D vma,
+ 		.start		=3D start,
++		.src_owner	=3D drm->dev,
+ 	};
+ 	unsigned long i;
+ 	u64 *pfns;
+--=20
+2.20.1
 
