@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD67C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF20DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F71208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808C82080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZTIEmzsM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BGwddHoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733252AbgFSOcf (ORCPT
+        id S1733267AbgFSOcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:32:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58381 "EHLO
+        Fri, 19 Jun 2020 10:32:50 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32050 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733230AbgFSOca (ORCPT
+        by vger.kernel.org with ESMTP id S1726065AbgFSOc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:32:30 -0400
+        Fri, 19 Jun 2020 10:32:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592577149;
+        s=mimecast20190719; t=1592577145;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mZRjN4QhW5X6YfR7Z2yjjbULaODEXfUST0bMuVtU8r4=;
-        b=ZTIEmzsMICzOLsBifUmq+B47Og54x9mLUZO3yhtnR/hJC6CHqNsgjgupjQXOcGhndQvIJA
-        ehGgezAWrcnHs6sPs8uJ66Owl5BCk/WWZOiZcZZjumoK8aVjbzPEYDxctcZMZu6764Fchs
-        33S99oVFiGHjXUQJjeDFNfvrAqhRc9w=
+        bh=MfJ802Kpb9Yh8JoL2eNOANQFkrezjDOdO4+KEzduhNU=;
+        b=BGwddHoWTVVuwxNYylQkSZ99FAnMh6miQMYvTyopSY7VWM7flHZS6LE7hzAFUHHbwzj4V5
+        jn2aHhw3iN0lrrSKaPZrxAwKhr8xy/6ug0A2dBhOu2YA+ZZ6AYqbs9UD0r/mLThtvabAhj
+        qsDpr42E0roddIDPKKcaSp+/nKegh0w=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-514-87YmsNg-PGaQebLN2eIXmw-1; Fri, 19 Jun 2020 10:32:16 -0400
-X-MC-Unique: 87YmsNg-PGaQebLN2eIXmw-1
+ us-mta-442-1A88qpeoM6CtUaAQ_IXtdA-1; Fri, 19 Jun 2020 10:32:24 -0400
+X-MC-Unique: 1A88qpeoM6CtUaAQ_IXtdA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4076D18FF660;
-        Fri, 19 Jun 2020 14:32:14 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67D991005513;
+        Fri, 19 Jun 2020 14:32:22 +0000 (UTC)
 Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B35AB7CABA;
-        Fri, 19 Jun 2020 14:32:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCD1D707C6;
+        Fri, 19 Jun 2020 14:32:20 +0000 (UTC)
 From:   Jarod Wilson <jarod@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jarod Wilson <jarod@redhat.com>,
@@ -57,9 +57,9 @@ Cc:     Jarod Wilson <jarod@redhat.com>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: [PATCH net-next v3 1/4] xfrm: bail early on slave pass over skb
-Date:   Fri, 19 Jun 2020 10:31:52 -0400
-Message-Id: <20200619143155.20726-2-jarod@redhat.com>
+Subject: [PATCH net-next v3 4/4] bonding: support hardware encryption offload to slaves
+Date:   Fri, 19 Jun 2020 10:31:55 -0400
+Message-Id: <20200619143155.20726-5-jarod@redhat.com>
 In-Reply-To: <20200619143155.20726-1-jarod@redhat.com>
 References: <20200619143155.20726-1-jarod@redhat.com>
 MIME-Version: 1.0
@@ -70,10 +70,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is prep work for initial support of bonding hardware encryption
-pass-through support. The bonding driver will fill in the slave_dev
-pointer, and we use that to know not to skb_push() again on a given
-skb that was already processed on the bond device.
+Currently, this support is limited to active-backup mode, as I'm not sure
+about the feasilibity of mapping an xfrm_state's offload handle to
+multiple hardware devices simultaneously, and we rely on being able to
+pass some hints to both the xfrm and NIC driver about whether or not
+they're operating on a slave device.
+
+I've tested this atop an Intel x520 device (ixgbe) using libreswan in
+transport mode, succesfully achieving ~4.3Gbps throughput with netperf
+(more or less identical to throughput on a bare NIC in this system),
+as well as successful failover and recovery mid-netperf.
+
+v2: just use CONFIG_XFRM_OFFLOAD for wrapping, isolate more code with it
 
 CC: Jay Vosburgh <j.vosburgh@gmail.com>
 CC: Veaceslav Falico <vfalico@gmail.com>
@@ -87,83 +95,248 @@ CC: netdev@vger.kernel.org
 CC: intel-wired-lan@lists.osuosl.org
 Signed-off-by: Jarod Wilson <jarod@redhat.com>
 ---
- include/net/xfrm.h     |  1 +
- net/xfrm/xfrm_device.c | 34 +++++++++++++++++-----------------
- 2 files changed, 18 insertions(+), 17 deletions(-)
+ drivers/net/bonding/bond_main.c | 127 +++++++++++++++++++++++++++++++-
+ include/net/bonding.h           |   3 +
+ 2 files changed, 128 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index 094fe682f5d7..e20b2b27ec48 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -127,6 +127,7 @@ struct xfrm_state_walk {
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 004919aea5fb..90939ccf2a94 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -79,6 +79,7 @@
+ #include <net/pkt_sched.h>
+ #include <linux/rculist.h>
+ #include <net/flow_dissector.h>
++#include <net/xfrm.h>
+ #include <net/bonding.h>
+ #include <net/bond_3ad.h>
+ #include <net/bond_alb.h>
+@@ -278,8 +279,6 @@ const char *bond_mode_name(int mode)
+ 	return names[mode];
+ }
  
- struct xfrm_state_offload {
- 	struct net_device	*dev;
-+	struct net_device	*slave_dev;
- 	unsigned long		offload_handle;
- 	unsigned int		num_exthdrs;
- 	u8			flags;
-diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
-index f50d1f97cf8e..b8918fc5248b 100644
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -106,6 +106,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 	struct sk_buff *skb2, *nskb, *pskb = NULL;
- 	netdev_features_t esp_features = features;
- 	struct xfrm_offload *xo = xfrm_offload(skb);
-+	struct net_device *dev = skb->dev;
- 	struct sec_path *sp;
- 
- 	if (!xo)
-@@ -119,6 +120,10 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 	if (xo->flags & XFRM_GRO || x->xso.flags & XFRM_OFFLOAD_INBOUND)
- 		return skb;
- 
-+	/* This skb was already validated on the master dev */
-+	if ((x->xso.dev != dev) && (x->xso.slave_dev == dev))
-+		return skb;
-+
- 	local_irq_save(flags);
- 	sd = this_cpu_ptr(&softnet_data);
- 	err = !skb_queue_empty(&sd->xfrm_backlog);
-@@ -129,25 +134,20 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 		return skb;
- 	}
- 
--	if (skb_is_gso(skb)) {
--		struct net_device *dev = skb->dev;
+-/*---------------------------------- VLAN -----------------------------------*/
 -
--		if (unlikely(x->xso.dev != dev)) {
--			struct sk_buff *segs;
-+	if (skb_is_gso(skb) && unlikely(x->xso.dev != dev)) {
-+		struct sk_buff *segs;
+ /**
+  * bond_dev_queue_xmit - Prepare skb for xmit.
+  *
+@@ -302,6 +301,8 @@ netdev_tx_t bond_dev_queue_xmit(struct bonding *bond, struct sk_buff *skb,
+ 	return dev_queue_xmit(skb);
+ }
  
--			/* Packet got rerouted, fixup features and segment it. */
--			esp_features = esp_features & ~(NETIF_F_HW_ESP
--							| NETIF_F_GSO_ESP);
-+		/* Packet got rerouted, fixup features and segment it. */
-+		esp_features = esp_features & ~(NETIF_F_HW_ESP | NETIF_F_GSO_ESP);
++/*---------------------------------- VLAN -----------------------------------*/
++
+ /* In the following 2 functions, bond_vlan_rx_add_vid and bond_vlan_rx_kill_vid,
+  * We don't protect the slave list iteration with a lock because:
+  * a. This operation is performed in IOCTL context,
+@@ -372,6 +373,84 @@ static int bond_vlan_rx_kill_vid(struct net_device *bond_dev,
+ 	return 0;
+ }
  
--			segs = skb_gso_segment(skb, esp_features);
--			if (IS_ERR(segs)) {
--				kfree_skb(skb);
--				atomic_long_inc(&dev->tx_dropped);
--				return NULL;
--			} else {
--				consume_skb(skb);
--				skb = segs;
--			}
-+		segs = skb_gso_segment(skb, esp_features);
-+		if (IS_ERR(segs)) {
-+			kfree_skb(skb);
-+			atomic_long_inc(&dev->tx_dropped);
-+			return NULL;
-+		} else {
-+			consume_skb(skb);
-+			skb = segs;
- 		}
++/*---------------------------------- XFRM -----------------------------------*/
++
++#ifdef CONFIG_XFRM_OFFLOAD
++/**
++ * bond_ipsec_add_sa - program device with a security association
++ * @xs: pointer to transformer state struct
++ **/
++static int bond_ipsec_add_sa(struct xfrm_state *xs)
++{
++	struct net_device *bond_dev = xs->xso.dev;
++	struct bonding *bond = netdev_priv(bond_dev);
++	struct slave *slave = rtnl_dereference(bond->curr_active_slave);
++
++	xs->xso.slave_dev = slave->dev;
++	bond->xs = xs;
++
++	if (!(slave->dev->xfrmdev_ops
++	      && slave->dev->xfrmdev_ops->xdo_dev_state_add)) {
++		slave_warn(bond_dev, slave->dev, "Slave does not support ipsec offload\n");
++		return -EINVAL;
++	}
++
++	return slave->dev->xfrmdev_ops->xdo_dev_state_add(xs);
++}
++
++/**
++ * bond_ipsec_del_sa - clear out this specific SA
++ * @xs: pointer to transformer state struct
++ **/
++static void bond_ipsec_del_sa(struct xfrm_state *xs)
++{
++	struct net_device *bond_dev = xs->xso.dev;
++	struct bonding *bond = netdev_priv(bond_dev);
++	struct slave *slave = rtnl_dereference(bond->curr_active_slave);
++
++	if (!slave)
++		return;
++
++	xs->xso.slave_dev = slave->dev;
++
++	if (!(slave->dev->xfrmdev_ops
++	      && slave->dev->xfrmdev_ops->xdo_dev_state_delete)) {
++		slave_warn(bond_dev, slave->dev, "%s: no slave xdo_dev_state_delete\n", __func__);
++		return;
++	}
++
++	slave->dev->xfrmdev_ops->xdo_dev_state_delete(xs);
++}
++
++/**
++ * bond_ipsec_offload_ok - can this packet use the xfrm hw offload
++ * @skb: current data packet
++ * @xs: pointer to transformer state struct
++ **/
++static bool bond_ipsec_offload_ok(struct sk_buff *skb, struct xfrm_state *xs)
++{
++	struct net_device *bond_dev = xs->xso.dev;
++	struct bonding *bond = netdev_priv(bond_dev);
++	struct slave *curr_active = rtnl_dereference(bond->curr_active_slave);
++	struct net_device *slave_dev = curr_active->dev;
++
++	if (!(slave_dev->xfrmdev_ops
++	      && slave_dev->xfrmdev_ops->xdo_dev_offload_ok)) {
++		slave_warn(bond_dev, slave_dev, "%s: no slave xdo_dev_offload_ok\n", __func__);
++		return false;
++	}
++
++	xs->xso.slave_dev = slave_dev;
++	return slave_dev->xfrmdev_ops->xdo_dev_offload_ok(skb, xs);
++}
++
++static const struct xfrmdev_ops bond_xfrmdev_ops = {
++	.xdo_dev_state_add = bond_ipsec_add_sa,
++	.xdo_dev_state_delete = bond_ipsec_del_sa,
++	.xdo_dev_offload_ok = bond_ipsec_offload_ok,
++};
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ /*------------------------------- Link status -------------------------------*/
+ 
+ /* Set the carrier state for the master according to the state of its
+@@ -879,6 +958,11 @@ void bond_change_active_slave(struct bonding *bond, struct slave *new_active)
+ 		return;
+ 
+ 	if (new_active) {
++#ifdef CONFIG_XFRM_OFFLOAD
++		if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP) && bond->xs)
++			bond_ipsec_del_sa(bond->xs);
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ 		new_active->last_link_up = jiffies;
+ 
+ 		if (new_active->link == BOND_LINK_BACK) {
+@@ -941,6 +1025,13 @@ void bond_change_active_slave(struct bonding *bond, struct slave *new_active)
+ 					bond_should_notify_peers(bond);
+ 			}
+ 
++#ifdef CONFIG_XFRM_OFFLOAD
++			if (old_active && bond->xs) {
++				xfrm_dev_state_flush(dev_net(bond->dev), bond->dev, true);
++				bond_ipsec_add_sa(bond->xs);
++			}
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ 			call_netdevice_notifiers(NETDEV_BONDING_FAILOVER, bond->dev);
+ 			if (should_notify_peers) {
+ 				bond->send_peer_notif--;
+@@ -1127,15 +1218,24 @@ static netdev_features_t bond_fix_features(struct net_device *dev,
+ #define BOND_ENC_FEATURES	(NETIF_F_HW_CSUM | NETIF_F_SG | \
+ 				 NETIF_F_RXCSUM | NETIF_F_ALL_TSO)
+ 
++#ifdef CONFIG_XFRM_OFFLOAD
++#define BOND_XFRM_FEATURES	(NETIF_F_HW_ESP | NETIF_F_HW_ESP_TX_CSUM | \
++				 NETIF_F_GSO_ESP)
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ #define BOND_MPLS_FEATURES	(NETIF_F_HW_CSUM | NETIF_F_SG | \
+ 				 NETIF_F_ALL_TSO)
+ 
++
+ static void bond_compute_features(struct bonding *bond)
+ {
+ 	unsigned int dst_release_flag = IFF_XMIT_DST_RELEASE |
+ 					IFF_XMIT_DST_RELEASE_PERM;
+ 	netdev_features_t vlan_features = BOND_VLAN_FEATURES;
+ 	netdev_features_t enc_features  = BOND_ENC_FEATURES;
++#ifdef CONFIG_XFRM_OFFLOAD
++	netdev_features_t xfrm_features  = BOND_XFRM_FEATURES;
++#endif /* CONFIG_XFRM_OFFLOAD */
+ 	netdev_features_t mpls_features  = BOND_MPLS_FEATURES;
+ 	struct net_device *bond_dev = bond->dev;
+ 	struct list_head *iter;
+@@ -1157,6 +1257,12 @@ static void bond_compute_features(struct bonding *bond)
+ 							 slave->dev->hw_enc_features,
+ 							 BOND_ENC_FEATURES);
+ 
++#ifdef CONFIG_XFRM_OFFLOAD
++		xfrm_features = netdev_increment_features(xfrm_features,
++							  slave->dev->hw_enc_features,
++							  BOND_XFRM_FEATURES);
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ 		mpls_features = netdev_increment_features(mpls_features,
+ 							  slave->dev->mpls_features,
+ 							  BOND_MPLS_FEATURES);
+@@ -1176,6 +1282,9 @@ static void bond_compute_features(struct bonding *bond)
+ 				    NETIF_F_HW_VLAN_CTAG_TX |
+ 				    NETIF_F_HW_VLAN_STAG_TX |
+ 				    NETIF_F_GSO_UDP_L4;
++#ifdef CONFIG_XFRM_OFFLOAD
++	bond_dev->hw_enc_features |= xfrm_features;
++#endif /* CONFIG_XFRM_OFFLOAD */
+ 	bond_dev->mpls_features = mpls_features;
+ 	bond_dev->gso_max_segs = gso_max_segs;
+ 	netif_set_gso_max_size(bond_dev, gso_max_size);
+@@ -1464,6 +1573,9 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 		slave_dbg(bond_dev, slave_dev, "is !NETIF_F_VLAN_CHALLENGED\n");
  	}
  
++	if (slave_dev->features & NETIF_F_HW_ESP)
++		slave_dbg(bond_dev, slave_dev, "is esp-hw-offload capable\n");
++
+ 	/* Old ifenslave binaries are no longer supported.  These can
+ 	 * be identified with moderate accuracy by the state of the slave:
+ 	 * the current ifenslave will set the interface down prior to
+@@ -4540,6 +4652,13 @@ void bond_setup(struct net_device *bond_dev)
+ 	bond_dev->priv_flags |= IFF_BONDING | IFF_UNICAST_FLT | IFF_NO_QUEUE;
+ 	bond_dev->priv_flags &= ~(IFF_XMIT_DST_RELEASE | IFF_TX_SKB_SHARING);
+ 
++#ifdef CONFIG_XFRM_OFFLOAD
++	/* set up xfrm device ops (only supported in active-backup right now) */
++	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
++		bond_dev->xfrmdev_ops = &bond_xfrmdev_ops;
++	bond->xs = NULL;
++#endif /* CONFIG_XFRM_OFFLOAD */
++
+ 	/* don't acquire bond device's netif_tx_lock when transmitting */
+ 	bond_dev->features |= NETIF_F_LLTX;
+ 
+@@ -4558,6 +4677,10 @@ void bond_setup(struct net_device *bond_dev)
+ 				NETIF_F_HW_VLAN_CTAG_FILTER;
+ 
+ 	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
++#ifdef CONFIG_XFRM_OFFLOAD
++	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
++		bond_dev->hw_features |= BOND_XFRM_FEATURES;
++#endif /* CONFIG_XFRM_OFFLOAD */
+ 	bond_dev->features |= bond_dev->hw_features;
+ 	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
+ }
+diff --git a/include/net/bonding.h b/include/net/bonding.h
+index aa854a9c01e2..a00e1764e9b1 100644
+--- a/include/net/bonding.h
++++ b/include/net/bonding.h
+@@ -238,6 +238,9 @@ struct bonding {
+ 	struct	 dentry *debug_dir;
+ #endif /* CONFIG_DEBUG_FS */
+ 	struct rtnl_link_stats64 bond_stats;
++#ifdef CONFIG_XFRM_OFFLOAD
++	struct xfrm_state *xs;
++#endif /* CONFIG_XFRM_OFFLOAD */
+ };
+ 
+ #define bond_slave_get_rcu(dev) \
 -- 
 2.20.1
 
