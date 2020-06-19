@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16483C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2448C2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E6D2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578430;
-	bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+	s=default; t=1592578437;
+	bh=EX0j6+M/+UdwY/4QdsFpQQKwXC4s7i5x/rj9KTC31EI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gCYL41aFbWxbJjYbJPpmZwtriYnSHPAu4PVNn7QlcPEZwexHylT4dPHGWr/IHh/1S
-	 /C1ACn4e856752USxqaNPjsMZIvK7JHy64WNacz+RcLS8VdeaxkaUzBJbCL4OMbz1L
-	 wjt/E9NKpzi5oWK5nUdxnVVnl7R8+L24jyg28xbE=
+	b=T35shMn5VGnEmxfj5b7TolZXd5XKfmMbVEPgl7ihrpjv1VdkifHr+QWpITPoW8hUg
+	 hNOjD3u2GSR5dvrNTVlEkLoQrs9GAUZc0wBeETLxyLdxCNcrKIOt5jVzPpio3iCEQ7
+	 PEFmGJ8ydkUVP8pcDmi4VHm+LB2qYor6RvJw5Hrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389760AbgFSOxs (ORCPT
+        id S2389784AbgFSOx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388056AbgFSOxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:39 -0400
+        id S2389751AbgFSOxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E4FE2184D;
-        Fri, 19 Jun 2020 14:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B301F21556;
+        Fri, 19 Jun 2020 14:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578419;
-        bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+        s=default; t=1592578424;
+        bh=EX0j6+M/+UdwY/4QdsFpQQKwXC4s7i5x/rj9KTC31EI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRmQ3t659e6zXAk0TUYNfrV2O0gdLr1cbZ0glZCaC8pwcjEuy8ogxX1GoOGGXtyP5
-         rJ7yq1fJCOawT5pkwZCrLQRX54dWC8FHZW5QWGr4k3WMqOqqLtKI6lWpD4+k6Ba4TN
-         4hvIGOmdUBRv4tQZzDVbkCW8OyC1Bcv5rvlXvv2g=
+        b=DoDxa1rxC1VwXpToKxME5XTbpfjUk8dYElaYkkePqTuTWk6LWFXSn12lYuQ5r9Xtb
+         hTeCHh6OJEtbAyPKXRGWh7hmZ87ascUqhg6zGv2C0nx35RzFZl6HKWQCe8olgzq28E
+         aKukLswyY/zv2NUgg02+LxGnYmG3B2hCegFTbaHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/267] Input: mms114 - fix handling of mms345l
-Date:   Fri, 19 Jun 2020 16:30:00 +0200
-Message-Id: <20200619141649.589413506@linuxfoundation.org>
+Subject: [PATCH 4.19 017/267] sched/fair: Dont NUMA balance for kthreads
+Date:   Fri, 19 Jun 2020 16:30:02 +0200
+Message-Id: <20200619141649.697544229@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,68 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 3f8f770575d911c989043d8f0fb8dec96360c41c ]
+[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
 
-MMS345L is another first generation touch screen from Melfas,
-which uses the same registers as MMS152.
+Stefano reported a crash with using SQPOLL with io_uring:
 
-However, using I2C_M_NOSTART for it causes errors when reading:
+  BUG: kernel NULL pointer dereference, address: 00000000000003b0
+  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+  RIP: 0010:task_numa_work+0x4f/0x2c0
+  Call Trace:
+   task_work_run+0x68/0xa0
+   io_sq_thread+0x252/0x3d0
+   kthread+0xf9/0x130
+   ret_from_fork+0x35/0x40
 
-	i2c i2c-0: sendbytes: NAK bailout.
-	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
+which is task_numa_work() oopsing on current->mm being NULL.
 
-The driver works fine as soon as I2C_M_NOSTART is removed.
+The task work is queued by task_tick_numa(), which checks if current->mm is
+NULL at the time of the call. But this state isn't necessarily persistent,
+if the kthread is using use_mm() to temporarily adopt the mm of a task.
 
-Reviewed-by: Andi Shyti <andi@etezian.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200405170904.61512-1-stephan@gerhold.net
-[dtor: removed separate mms345l handling, made everyone use standard
-transfer mode, propagated the 10bit addressing flag to the read part of the
-transfer as well.]
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Change the task_tick_numa() check to exclude kernel threads in general,
+as it doesn't make sense to attempt ot balance for kthreads anyway.
+
+Reported-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/mms114.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index a5ab774da4cc..fca908ba4841 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -91,15 +91,15 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
- 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
- 		BUG();
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 86ccaaf0c1bf..92b1e71f13c8 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2697,7 +2697,7 @@ void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
  
--	/* Write register: use repeated start */
-+	/* Write register */
- 	xfer[0].addr = client->addr;
--	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	xfer[0].flags = client->flags & I2C_M_TEN;
- 	xfer[0].len = 1;
- 	xfer[0].buf = &buf;
- 
- 	/* Read data */
- 	xfer[1].addr = client->addr;
--	xfer[1].flags = I2C_M_RD;
-+	xfer[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
- 	xfer[1].len = len;
- 	xfer[1].buf = val;
- 
-@@ -428,10 +428,8 @@ static int mms114_probe(struct i2c_client *client,
- 	const void *match_data;
- 	int error;
- 
--	if (!i2c_check_functionality(client->adapter,
--				I2C_FUNC_PROTOCOL_MANGLING)) {
--		dev_err(&client->dev,
--			"Need i2c bus that supports protocol mangling\n");
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-+		dev_err(&client->dev, "Not supported I2C adapter\n");
- 		return -ENODEV;
- 	}
- 
+ 	/*
 -- 
 2.25.1
 
