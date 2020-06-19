@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF1720B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D47020B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580061;
-	bh=1Bo6mQ3UXemvfcY+3K6du4CSfs7iEjEpfOdhQeNvJW0=;
+	s=default; t=1592580074;
+	bh=h6qgXN4fgHCA3UiZlx2CBU9FEsMck4TG+MvMhPBdHmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBtLGh8CqSa26oQ89JNZams3t55jbDeVFeqcKOeIVTr1/1QR9VFx6P2q1DvoY8sNT
-	 /qv6JN0bgmVRK4a9VJP0lz98vzyA5uuxQYoYZ9f8nU6ulwW4aPq0R6bhIeRDkULFY1
-	 HrVu8exgalpl10GPRJ49IeS0yZD13W55IPb069Nk=
+	b=A90uK2DHaQowK3jjpryStX9VMXkc+odYVheTUXXhucNCkGUbpMuZW8cfcHvNyZkEt
+	 LkrmKseDrkXXGZL0J32vh6VTW6kzzchFmNinum436cuf0KAsfhTUg5aFxFGQfnbH1c
+	 4xxLOQByC3zvPWj42XdnXDGdnoofAFFOby7WiuY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392789AbgFSPVA (ORCPT
+        id S2392541AbgFSPVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392589AbgFSPSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:32 -0400
+        id S2392591AbgFSPSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83BEC2158C;
-        Fri, 19 Jun 2020 15:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE9221582;
+        Fri, 19 Jun 2020 15:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579911;
-        bh=1Bo6mQ3UXemvfcY+3K6du4CSfs7iEjEpfOdhQeNvJW0=;
+        s=default; t=1592579916;
+        bh=h6qgXN4fgHCA3UiZlx2CBU9FEsMck4TG+MvMhPBdHmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZL6DtM2Nx0xJsp4P+zXncy/HYREyNbHrZUkSs6KZbNS1JV20LMXjjM1c+vQdsINRZ
-         /W/GwpT1tlhZQPEpPsME6chAALBvf+dd9dOjPUiaAq2iSqhlCYGpxBvxN5YdtoOSEf
-         PNrkmps4LfhpGoph62dkJ/grSurNx9A5lz896Y5k=
+        b=W619LnvFfdAahcwPOUmFplfsbisuEJLAftB10ETVivdyeTd9S4iF4xAOYcJ+COT6R
+         uIC6W2CjGo/lRUDRfft6AiEtqR/1o8pkkYmqm0brTvDQsynGWlASL23RzKEiwPxWAm
+         PwnOAVeJKCPJA3FCGz2ViszE+sxtKR7U151+o6DM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 020/376] arm64/kernel: Fix range on invalidating dcache for boot page tables
-Date:   Fri, 19 Jun 2020 16:28:58 +0200
-Message-Id: <20200619141711.318447609@linuxfoundation.org>
+        stable@vger.kernel.org, Alston Tang <alston64@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 022/376] libbpf: Fix memory leak and possible double-free in hashmap__clear
+Date:   Fri, 19 Jun 2020 16:29:00 +0200
+Message-Id: <20200619141711.409839515@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,93 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 9d2d75ede59bc1edd8561f2ee9d4702a5ea0ae30 ]
+[ Upstream commit 229bf8bf4d910510bc1a2fd0b89bd467cd71050d ]
 
-Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
-rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
-and init_pg_dir were contiguous at the end of the kernel image. The
-maintenance at the end of __create_page_tables assumed these were
-contiguous, and affected everything from the start of idmap_pg_dir
-to the end of init_pg_dir.
+Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
+of the remaining entries. Also NULL-out bucket list to prevent possible
+double-free between hashmap__clear() and hashmap__free().
 
-That commit moved all but init_pg_dir into the .rodata section, with
-other data placed between idmap_pg_dir and init_pg_dir, but did not
-update the maintenance. Hence the maintenance is performed on much
-more data than necessary (but as the bootloader previously made this
-clean to the PoC there is no functional problem).
+Running test_progs-asan flavor clearly showed this problem.
 
-As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
-maintenance for these. As the other dirs are in .rodata, the bootloader
-will have initialised them as expected and cleaned them to the PoC. The
-kernel will initialize them as necessary after enabling the MMU.
-
-This patch reworks the maintenance to only cover the idmap_pg_dir and
-init_pg_dir to avoid this unnecessary work.
-
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/20200427235700.112220-1-gshan@redhat.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Alston Tang <alston64@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h |  1 +
- arch/arm64/kernel/head.S         | 12 +++++++++---
- arch/arm64/kernel/vmlinux.lds.S  |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ tools/lib/bpf/hashmap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 538c85e62f86..25f56df7ed9a 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -457,6 +457,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
- extern pgd_t init_pg_end[];
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
- extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
-+extern pgd_t idmap_pg_end[];
- extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
+diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
+index 54c30c802070..cffb96202e0d 100644
+--- a/tools/lib/bpf/hashmap.c
++++ b/tools/lib/bpf/hashmap.c
+@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
  
- extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 57a91032b4c2..32f5ecbec0ea 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -394,13 +394,19 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
- 
- 	/*
- 	 * Since the page tables have been populated with non-cacheable
--	 * accesses (MMU disabled), invalidate the idmap and swapper page
--	 * tables again to remove any speculatively loaded cache lines.
-+	 * accesses (MMU disabled), invalidate those tables again to
-+	 * remove any speculatively loaded cache lines.
- 	 */
-+	dmb	sy
+ void hashmap__clear(struct hashmap *map)
+ {
++	struct hashmap_entry *cur, *tmp;
++	int bkt;
 +
- 	adrp	x0, idmap_pg_dir
-+	adrp	x1, idmap_pg_end
-+	sub	x1, x1, x0
-+	bl	__inval_dcache_area
-+
-+	adrp	x0, init_pg_dir
- 	adrp	x1, init_pg_end
- 	sub	x1, x1, x0
--	dmb	sy
- 	bl	__inval_dcache_area
++	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
++		free(cur);
++	}
+ 	free(map->buckets);
++	map->buckets = NULL;
+ 	map->cap = map->cap_bits = map->sz = 0;
+ }
  
- 	ret	x28
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 497f9675071d..94402aaf5f5c 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -139,6 +139,7 @@ SECTIONS
- 
- 	idmap_pg_dir = .;
- 	. += IDMAP_DIR_SIZE;
-+	idmap_pg_end = .;
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- 	tramp_pg_dir = .;
 -- 
 2.25.1
 
