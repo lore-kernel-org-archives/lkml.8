@@ -2,57 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C30C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2C82168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F7D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583131;
-	bh=4pE8+PNcvK4GnzoSUksYHGxNU3R67AZ0H5Q/i/iqWuo=;
+	s=default; t=1592583147;
+	bh=jUNuI7oofciDkljzmgWPdaKM/dhmw9LNWH+gdQ6fsyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IxjMCkioMISVBMuZNYTlyL4oQ5TXX0Y5AY6UKkNsESSMon12woexWVvy8F1wZelF9
-	 iZinLQPiNjyUbzzSthaBMuS1TqPmh1RcQMRo9JVbt/YTDZfJGHO7ktP2ZwzULeLLLn
-	 XGpocNjkUUgiH3nNpw4R4+rFXl6gS2o8wKpwMJ+s=
+	b=zzpbbAHLTswH5lFnzEBNvMhSKZ0OE0375+8djpamIOadhvA0TbhIytzP0B8a0c70m
+	 8usS3EzwXiLr7iYZb2mGqkzF+rfNO7sAsO0Jv0BgZQinB0Fjn2DHwx9ubjmGaBKC9J
+	 2l0gz7e3lLcEd96Qj4MqhzsSY+msr1yIamIRf9/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392783AbgFSQMK (ORCPT
+        id S2391220AbgFSPE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34190 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391279AbgFSPFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:19 -0400
+        id S2389407AbgFSPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67DFA2158C;
-        Fri, 19 Jun 2020 15:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEA7E2193E;
+        Fri, 19 Jun 2020 15:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579118;
-        bh=4pE8+PNcvK4GnzoSUksYHGxNU3R67AZ0H5Q/i/iqWuo=;
+        s=default; t=1592579095;
+        bh=jUNuI7oofciDkljzmgWPdaKM/dhmw9LNWH+gdQ6fsyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oz+i+z2oXmgWKjfOI94d7qic74H1eTdFTCYjSkhuePQDzL65y3EV65p+w3scmsqUo
-         ejCwh6T+LlyrPYnWxAyTbmgAyskbQI0cQhnq11+9oNcTNa80kr4X4MYzE+dg9nxhcE
-         Iz0J3mZerjbx6OQxlzuqCfx9BU7EjeT67cX1R1Js=
+        b=hpDOn22Vjx5UuAk/vkpSccJRZoGOMVbCM+34NyVyo2u2hj9RRNjk/9tcDO8SaEVY6
+         gsRs7DHidLCrlstd7zwk+YyAZuVVpi5VZdI26cD40bROhS6e9fpNoR4HiKJ4EUoUN0
+         ZdlV3oIKcAQZTvdBQN6lIULAvLVDpLDKttBM9NIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Shobhit Srivastava <shobhit.srivastava@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/261] spi: pxa2xx: Apply CS clk quirk to BXT
-Date:   Fri, 19 Jun 2020 16:30:26 +0200
-Message-Id: <20200619141650.601878825@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 257/267] powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
+Date:   Fri, 19 Jun 2020 16:34:02 +0200
+Message-Id: <20200619141700.993357582@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,44 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 6eefaee4f2d366a389da0eb95e524ba82bf358c4 ]
+commit 912c0a7f2b5daa3cbb2bc10f303981e493de73bd upstream.
 
-With a couple allies at Intel, and much badgering, I got confirmation
-from Intel that at least BXT suffers from the same SPI chip-select
-issue as Cannonlake (and beyond). The issue being that after going
-through runtime suspend/resume, toggling the chip-select line without
-also sending data does nothing.
+At boot the FSCR is initialised via one of two paths. On most systems
+it's set to a hard coded value in __init_FSCR().
 
-Add the quirk to BXT to briefly toggle dynamic clock gating off and
-on, forcing the fabric to wake up enough to notice the CS register
-change.
+On newer skiboot systems we use the device tree CPU features binding,
+where firmware can tell Linux what bits to set in FSCR (and HFSCR).
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In both cases the value that's configured at boot is not propagated
+into the init_task.thread.fscr value prior to the initial fork of init
+(pid 1), which means the value is not used by any processes other than
+swapper (the idle task).
+
+For the __init_FSCR() case this is OK, because the value in
+init_task.thread.fscr is initialised to something sensible. However it
+does mean that the value set in __init_FSCR() is not used other than
+for swapper, which is odd and confusing.
+
+The bigger problem is for the device tree CPU features case it
+prevents firmware from setting (or clearing) FSCR bits for use by user
+space. This means all existing kernels can not have features
+enabled/disabled by firmware if those features require
+setting/clearing FSCR bits.
+
+We can handle both cases by saving the FSCR value into
+init_task.thread.fscr after we have initialised it at boot. This fixes
+the bug for device tree CPU features, and will allow us to simplify
+the initialisation for the __init_FSCR() case in a future patch.
+
+Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200527145843.2761782-3-mpe@ellerman.id.au
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-pxa2xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/prom.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index d0d6f1bda1b6..7f4285e2ae68 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -148,6 +148,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 48,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- 	{	/* LPSS_CNL_SSP */
- 		.offset = 0x200,
--- 
-2.25.1
-
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -685,6 +685,23 @@ static void __init tm_init(void)
+ static void tm_init(void) { }
+ #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+ 
++#ifdef CONFIG_PPC64
++static void __init save_fscr_to_task(void)
++{
++	/*
++	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
++	 * have configured via the device tree features or via __init_FSCR().
++	 * That value will then be propagated to pid 1 (init) and all future
++	 * processes.
++	 */
++	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
++		init_task.thread.fscr = mfspr(SPRN_FSCR);
++}
++#else
++static inline void save_fscr_to_task(void) {};
++#endif
++
++
+ void __init early_init_devtree(void *params)
+ {
+ 	phys_addr_t limit;
+@@ -770,6 +787,8 @@ void __init early_init_devtree(void *par
+ 		BUG();
+ 	}
+ 
++	save_fscr_to_task();
++
+ #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
+ 	/* We'll later wait for secondaries to check in; there are
+ 	 * NCPUS-1 non-boot CPUs  :-)
 
 
