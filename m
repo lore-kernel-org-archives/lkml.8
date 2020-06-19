@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2887DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1869620734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09EE2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580897;
-	bh=V+dpzJpQdFtCn61dM87yeG3LCISiFxWlMAmggbXWKWA=;
+	s=default; t=1592580901;
+	bh=L6uAw5u2g44VN+ZMX5Ve2cEJ80HOp3drfSC9s8OfhG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SImMd5jAHre5MA+eLgCh1sjqWGy+27KNkOhg+jem5xmdl6ATMK/H+xkqDqsJ/hqmW
-	 jY3FdswVBz6nO5ROEHtJjfJcytBDKKrGzgRiK4P4JZzPRgBo90kaSGLvVOPUyJs5lm
-	 tB5Hc0U2JnmVc8XdslfDcfTHzbwhr4w+fQ5xYkQM=
+	b=19gMcv4GPeRy+avzLEkVjIOGBPBmouRA3Rl0LcE2U7vUXmbG3zXDb9SU65o9CoR73
+	 UiJ4UWKcmVHUxuDmn8Bna6ksZaXdpydKlBf0i7MVDRoSyb0507x2qPmbzF0uk8U2XV
+	 jxSZsk4M2i83wFX0sSFRLleYKjti1+hqe99cqjsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404951AbgFSPdI (ORCPT
+        id S2404986AbgFSPfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393893AbgFSPce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:34 -0400
+        id S2393862AbgFSPcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:32:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB6220734;
-        Fri, 19 Jun 2020 15:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 920B220734;
+        Fri, 19 Jun 2020 15:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580752;
-        bh=V+dpzJpQdFtCn61dM87yeG3LCISiFxWlMAmggbXWKWA=;
+        s=default; t=1592580724;
+        bh=L6uAw5u2g44VN+ZMX5Ve2cEJ80HOp3drfSC9s8OfhG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sy5GFuwUhjRaEmA5RH/Wr6XMTLg/jXX2t6RjFOwJauAf9xMbmkmHHuj6tW5204f2P
-         q4LmYlhYYWAnNIAKFHq+MuNaLaZks3Ng3ZdGRHzR49qQCh2TdoyuRWFYRWIu9PyP9e
-         XaQGWciN5+zQlenP5y0zfq43Ztmn8YhKa5C0hQ78=
+        b=K/8agMGTJdB/TdMjibp6/6gnCftg3IpjDgubfspjPYu0PYYa7IXNzNF9a57yNxQuR
+         L+KjY1begHx3UEkv8DhHXdUXVfXwryPQ94fvXtmc2DiTLKv/nq35wTjRmN9j5ElTD7
+         OESyKDnb4+QKGWAdFiDjgVv+GPVlvhijVlhj4/Sw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 5.7 369/376] w1: omap-hdq: fix interrupt handling which did show spurious timeouts
-Date:   Fri, 19 Jun 2020 16:34:47 +0200
-Message-Id: <20200619141727.764516987@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 359/376] mtd: rawnand: orion: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:37 +0200
+Message-Id: <20200619141727.310370531@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -58,334 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 13db4c40fe0b20b80c7d1c91a9da8411e26b5c27 upstream.
+commit be238fbf78e4c7c586dac235ab967d3e565a4d1a upstream.
 
-Since
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-commit 27d13da8782a ("w1: omap-hdq: Simplify driver with PM runtime autosuspend")
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-was applied,
-
-I did see timeouts and wrong values when reading a bq27000 connected
-to hdq of the omap3. This occurred mainly after boot but remained and
-only sometimes settled down after several reads.
-
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=bq27000-battery
-POWER_SUPPLY_STATUS=Discharging
-POWER_SUPPLY_PRESENT=1
-POWER_SUPPLY_VOLTAGE_NOW=0
-POWER_SUPPLY_CURRENT_NOW=0
-POWER_SUPPLY_CAPACITY=0
-POWER_SUPPLY_CAPACITY_LEVEL=Normal
-POWER_SUPPLY_TEMP=-2731
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=0
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=0
-POWER_SUPPLY_TIME_TO_FULL_NOW=0
-POWER_SUPPLY_TECHNOLOGY=Li-ion
-POWER_SUPPLY_CHARGE_FULL=0
-POWER_SUPPLY_CHARGE_NOW=0
-POWER_SUPPLY_CHARGE_FULL_DESIGN=0
-POWER_SUPPLY_CYCLE_COUNT=0
-POWER_SUPPLY_ENERGY_NOW=0
-POWER_SUPPLY_POWER_AVG=0
-POWER_SUPPLY_HEALTH=Good
-POWER_SUPPLY_MANUFACTURER=Texas Instruments
-
-real    0m15.761s
-user    0m0.001s
-sys     0m0.025s
-root@letux:~#
-
-Sometimes the effect did disappear after accessing
-the device multiple times, speed went up and results
-became correct.
-
-All this indicates that some interrupts from the hdq
-controller are lost by the driver.
-
-Enabling debugging revealed that there were spurious tx
-and rx timeouts, i.e. the driver does not always recognise
-interrupts. The main problem is that rx and tx interrupts
-share a single variable which was sometimes reset to
-0 wiping out other interrupts. And it was overwritten
-by a second interrupt, independent of whether the
-previous interrupt was already processed or not.
-
-This patch improves interrupt handling to avoid such
-races and loss of interrupt flags.
-
-The ideas are:
-* only the hdq_isr() sets bits in hdq_status
-* it does not reset any bits
-* it does wake_up() if any interrupt is pending
-* bits are only reset by the read/write/break functions
-  if they were waited for
-* this makes sure that no interrupts can be lost
-* rx/tx/timeout bits are completely decoupled from each
-  other (and not reset all after waiting for any of them)
-* which bits to reset is now specified by a new parameter
-  to hdq_reset_irqstatus()
-* hdq_reset_irqstatus() also returns the state before
-  resetting so that we can encapsulate the spinlock
-* this should now handle the case that the write and read
-  are both already finished quickly before the hdq_write_byte()
-  ends.
-* Or that two interrupts occur in succession before
-  they are processed by the driver.
-  Old code may have reset all status bits making the next
-  hdq_read_byte() timeout.
-* the spinlock now always protects changing of bits in function
-  hdq_reset_irqstatus() which could become a read-write-modify
-  problem if the interrupt handler tries to read-modify-write
-  exactly at the same moment
-* we add mutex protection also for hdq_write_byte() just to
-  be safe to not to disturb a hdq_read_byte() triggered by
-  some other thread/process.
-
-This patch was tested on a GTA04 and results in no
-boot problems any more. And first read after boot is now ok:
-
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=bq27000-battery
-POWER_SUPPLY_STATUS=Discharging
-POWER_SUPPLY_PRESENT=1
-POWER_SUPPLY_VOLTAGE_NOW=3970000
-POWER_SUPPLY_CURRENT_NOW=354144
-POWER_SUPPLY_CAPACITY=82
-POWER_SUPPLY_CAPACITY_LEVEL=Normal
-POWER_SUPPLY_TEMP=266
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=7680
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=7380
-POWER_SUPPLY_TECHNOLOGY=Li-ion
-POWER_SUPPLY_CHARGE_FULL=934856
-POWER_SUPPLY_CHARGE_NOW=763976
-POWER_SUPPLY_CHARGE_FULL_DESIGN=1233792
-POWER_SUPPLY_CYCLE_COUNT=82
-POWER_SUPPLY_ENERGY_NOW=2852840
-POWER_SUPPLY_POWER_AVG=1392840
-POWER_SUPPLY_HEALTH=Good
-POWER_SUPPLY_MANUFACTURER=Texas Instruments
-
-real    0m0.233s
-user    0m0.000s
-sys     0m0.025s
-root@letux:~#
-
-It was also tested with dev_dbg enabled and more
-printk that all activities behave correctly, especially
-hdq_write_byte(), hdq_read_byte(), omap_hdq_break().
-
-Not tested is omap_w1_triplet().
-
-Fixes: 27d13da8782a ("w1: omap-hdq: Simplify driver with PM runtime autosuspend")
-Cc: stable@vger.kernel.org # v5.6+
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Link: https://lore.kernel.org/r/68fc8623ae741878beef049273696d2377526165.1590255176.git.hns@goldelico.com
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-34-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/w1/masters/omap_hdq.c |   62 ++++++++++++++++++++++++++++--------------
- 1 file changed, 42 insertions(+), 20 deletions(-)
+ drivers/mtd/nand/raw/orion_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -54,10 +54,10 @@ MODULE_PARM_DESC(w1_id, "1-wire id for t
- struct hdq_data {
- 	struct device		*dev;
- 	void __iomem		*hdq_base;
--	/* lock status update */
-+	/* lock read/write/break operations */
- 	struct  mutex		hdq_mutex;
-+	/* interrupt status and a lock for it */
- 	u8			hdq_irqstatus;
--	/* device lock */
- 	spinlock_t		hdq_spinlock;
- 	/* mode: 0-HDQ 1-W1 */
- 	int                     mode;
-@@ -120,13 +120,18 @@ static int hdq_wait_for_flag(struct hdq_
- }
- 
- /* Clear saved irqstatus after using an interrupt */
--static void hdq_reset_irqstatus(struct hdq_data *hdq_data)
-+static u8 hdq_reset_irqstatus(struct hdq_data *hdq_data, u8 bits)
- {
- 	unsigned long irqflags;
-+	u8 status;
- 
- 	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
--	hdq_data->hdq_irqstatus = 0;
-+	status = hdq_data->hdq_irqstatus;
-+	/* this is a read-modify-write */
-+	hdq_data->hdq_irqstatus &= ~bits;
- 	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
-+
-+	return status;
- }
- 
- /* write out a byte and fill *status with HDQ_INT_STATUS */
-@@ -135,6 +140,12 @@ static int hdq_write_byte(struct hdq_dat
- 	int ret;
- 	u8 tmp_status;
- 
-+	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
-+	if (ret < 0) {
-+		ret = -EINTR;
-+		goto rtn;
-+	}
-+
- 	*status = 0;
- 
- 	hdq_reg_out(hdq_data, OMAP_HDQ_TX_DATA, val);
-@@ -144,14 +155,15 @@ static int hdq_write_byte(struct hdq_dat
- 		OMAP_HDQ_CTRL_STATUS_DIR | OMAP_HDQ_CTRL_STATUS_GO);
- 	/* wait for the TXCOMPLETE bit */
- 	ret = wait_event_timeout(hdq_wait_queue,
--		hdq_data->hdq_irqstatus, OMAP_HDQ_TIMEOUT);
-+		(hdq_data->hdq_irqstatus & OMAP_HDQ_INT_STATUS_TXCOMPLETE),
-+		OMAP_HDQ_TIMEOUT);
-+	*status = hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_TXCOMPLETE);
- 	if (ret == 0) {
- 		dev_dbg(hdq_data->dev, "TX wait elapsed\n");
- 		ret = -ETIMEDOUT;
- 		goto out;
+--- a/drivers/mtd/nand/raw/orion_nand.c
++++ b/drivers/mtd/nand/raw/orion_nand.c
+@@ -180,7 +180,7 @@ static int __init orion_nand_probe(struc
+ 	mtd->name = "orion_nand";
+ 	ret = mtd_device_register(mtd, board->parts, board->nr_parts);
+ 	if (ret) {
+-		nand_release(nc);
++		nand_cleanup(nc);
+ 		goto no_dev;
  	}
  
--	*status = hdq_data->hdq_irqstatus;
- 	/* check irqstatus */
- 	if (!(*status & OMAP_HDQ_INT_STATUS_TXCOMPLETE)) {
- 		dev_dbg(hdq_data->dev, "timeout waiting for"
-@@ -170,7 +182,8 @@ static int hdq_write_byte(struct hdq_dat
- 	}
- 
- out:
--	hdq_reset_irqstatus(hdq_data);
-+	mutex_unlock(&hdq_data->hdq_mutex);
-+rtn:
- 	return ret;
- }
- 
-@@ -181,7 +194,7 @@ static irqreturn_t hdq_isr(int irq, void
- 	unsigned long irqflags;
- 
- 	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
--	hdq_data->hdq_irqstatus = hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
-+	hdq_data->hdq_irqstatus |= hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
- 	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
- 	dev_dbg(hdq_data->dev, "hdq_isr: %x\n", hdq_data->hdq_irqstatus);
- 
-@@ -238,18 +251,19 @@ static int omap_hdq_break(struct hdq_dat
- 
- 	/* wait for the TIMEOUT bit */
- 	ret = wait_event_timeout(hdq_wait_queue,
--		hdq_data->hdq_irqstatus, OMAP_HDQ_TIMEOUT);
-+		(hdq_data->hdq_irqstatus & OMAP_HDQ_INT_STATUS_TIMEOUT),
-+		OMAP_HDQ_TIMEOUT);
-+	tmp_status = hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_TIMEOUT);
- 	if (ret == 0) {
- 		dev_dbg(hdq_data->dev, "break wait elapsed\n");
- 		ret = -EINTR;
- 		goto out;
- 	}
- 
--	tmp_status = hdq_data->hdq_irqstatus;
- 	/* check irqstatus */
- 	if (!(tmp_status & OMAP_HDQ_INT_STATUS_TIMEOUT)) {
- 		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x\n",
--				tmp_status);
-+			tmp_status);
- 		ret = -ETIMEDOUT;
- 		goto out;
- 	}
-@@ -278,7 +292,6 @@ static int omap_hdq_break(struct hdq_dat
- 			" return to zero, %x\n", tmp_status);
- 
- out:
--	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	return ret;
-@@ -309,12 +322,15 @@ static int hdq_read_byte(struct hdq_data
- 		 */
- 		wait_event_timeout(hdq_wait_queue,
- 				   (hdq_data->hdq_irqstatus
--				    & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
-+				    & (OMAP_HDQ_INT_STATUS_RXCOMPLETE |
-+				       OMAP_HDQ_INT_STATUS_TIMEOUT)),
- 				   OMAP_HDQ_TIMEOUT);
--
-+		status = hdq_reset_irqstatus(hdq_data,
-+					     OMAP_HDQ_INT_STATUS_RXCOMPLETE |
-+					     OMAP_HDQ_INT_STATUS_TIMEOUT);
- 		hdq_reg_merge(hdq_data, OMAP_HDQ_CTRL_STATUS, 0,
- 			OMAP_HDQ_CTRL_STATUS_DIR);
--		status = hdq_data->hdq_irqstatus;
-+
- 		/* check irqstatus */
- 		if (!(status & OMAP_HDQ_INT_STATUS_RXCOMPLETE)) {
- 			dev_dbg(hdq_data->dev, "timeout waiting for"
-@@ -322,11 +338,12 @@ static int hdq_read_byte(struct hdq_data
- 			ret = -ETIMEDOUT;
- 			goto out;
- 		}
-+	} else { /* interrupt had occurred before hdq_read_byte was called */
-+		hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_RXCOMPLETE);
- 	}
- 	/* the data is ready. Read it in! */
- 	*val = hdq_reg_in(hdq_data, OMAP_HDQ_RX_DATA);
- out:
--	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	return ret;
-@@ -367,15 +384,15 @@ static u8 omap_w1_triplet(void *_hdq, u8
- 				 (hdq_data->hdq_irqstatus
- 				  & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
- 				 OMAP_HDQ_TIMEOUT);
-+	/* Must clear irqstatus for another RXCOMPLETE interrupt */
-+	hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_RXCOMPLETE);
-+
- 	if (err == 0) {
- 		dev_dbg(hdq_data->dev, "RX wait elapsed\n");
- 		goto out;
- 	}
- 	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
- 
--	/* Must clear irqstatus for another RXCOMPLETE interrupt */
--	hdq_reset_irqstatus(hdq_data);
--
- 	/* read comp_bit */
- 	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
- 		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
-@@ -383,6 +400,9 @@ static u8 omap_w1_triplet(void *_hdq, u8
- 				 (hdq_data->hdq_irqstatus
- 				  & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
- 				 OMAP_HDQ_TIMEOUT);
-+	/* Must clear irqstatus for another RXCOMPLETE interrupt */
-+	hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_RXCOMPLETE);
-+
- 	if (err == 0) {
- 		dev_dbg(hdq_data->dev, "RX wait elapsed\n");
- 		goto out;
-@@ -409,6 +429,9 @@ static u8 omap_w1_triplet(void *_hdq, u8
- 				 (hdq_data->hdq_irqstatus
- 				  & OMAP_HDQ_INT_STATUS_TXCOMPLETE),
- 				 OMAP_HDQ_TIMEOUT);
-+	/* Must clear irqstatus for another TXCOMPLETE interrupt */
-+	hdq_reset_irqstatus(hdq_data, OMAP_HDQ_INT_STATUS_TXCOMPLETE);
-+
- 	if (err == 0) {
- 		dev_dbg(hdq_data->dev, "TX wait elapsed\n");
- 		goto out;
-@@ -418,7 +441,6 @@ static u8 omap_w1_triplet(void *_hdq, u8
- 		      OMAP_HDQ_CTRL_STATUS_SINGLE);
- 
- out:
--	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	pm_runtime_mark_last_busy(hdq_data->dev);
 
 
