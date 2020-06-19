@@ -2,159 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D05BE206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581414;
-	bh=6Y2Sf4KfwSJ0PZY+hF3AuAGRTWsd6ebeXMRKaNta7O8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXH9Eh2/I/mY70h4zq+heZ/NXTn9rzoccS1BuOFuhZiR90A/e5ja3QG6deSYAnZb3
-	 Dkl6AaMcmoaWUk+00YIzITl12KTwcLB4llya63mpdzQuoPlgIRKT7p7N0swioDHaOU
-	 hsiCcrzbuZU4bkUPflgeQEIiohuCQMJ6Zby9ioMA=
+	by mail.kernel.org (Postfix) with ESMTP id 8A035206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jCNDSe9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394069AbgFSPnb (ORCPT
+        id S2394074AbgFSPng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 19 Jun 2020 11:43:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27149 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2394066AbgFSPnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393625AbgFSP2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B01232186A;
-        Fri, 19 Jun 2020 15:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580496;
-        bh=6Y2Sf4KfwSJ0PZY+hF3AuAGRTWsd6ebeXMRKaNta7O8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dS7MEq4x/w0vrvxbi1nhaMuX5kxC4y9mmN+2N2HBaDK0vGtGmtyYUuFmRMsKgspiF
-         2AR73WwZ58trV5jmAXMpvGVJ2d61uzBZGy7XAb6opWALogEvBpL/NZsvIz/JdWeyHW
-         PFqrZ+sw2HsYfk/HEs/iPAmq2wk90F8d9cULOmP4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>, Yiqian Wei <yiwei@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 271/376] mm/pagealloc.c: call touch_nmi_watchdog() on max order boundaries in deferred init
-Date:   Fri, 19 Jun 2020 16:33:09 +0200
-Message-Id: <20200619141723.156969519@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592581411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BJ4olDP4sE92e0G3XhQT7E9mJ/AvOujEs+OICxyS890=;
+        b=jCNDSe9jRMlCelk3ZCSiOiJziid9M+2dpP8Zkf+kIxg4lSBasa0ZaHzfLkVeXhmm6qKhr6
+        O6uHSeEgc6yjExR11IorxCGKkiTxE+UAynR1i8QM2iA/NzVAZXwU9m5lV4RWnozpxUZU5T
+        su9fqm4FCnM9sG/WCk6n+9FmwukhQ9M=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-JBVPsHXrP0aiexvNg3WbYw-1; Fri, 19 Jun 2020 11:43:29 -0400
+X-MC-Unique: JBVPsHXrP0aiexvNg3WbYw-1
+Received: by mail-wr1-f71.google.com with SMTP id j5so2037422wro.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:43:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BJ4olDP4sE92e0G3XhQT7E9mJ/AvOujEs+OICxyS890=;
+        b=nsOzxFiGlyU9SDZW8THosEyzMmOgrdB3y1r+6K54AzbrAK6s9CxeBqKY9timjee6Xg
+         Fz0X9lbguK7Y/7BVW2ISbeoYdOEQhNvkdt3E/7sZJ1fuMH1fx7RLGHKSYR7Uu+dL5B4x
+         vDezxFLc1b0EHmnK6k6fhh28tatujbIhnQ7qts3EEED5Dtw/yRlJj0kIqcrtv6QfFl0J
+         3Uin6ozPT9nTt7Pg96cYtgogr4MmDRnq3MBbSWxOrinIFgFNZTXA537qr0W+tQQqqA8d
+         e60G6llOjPVE33R0k69BZQXGK9SenpORFCc7rmvTropAKg38+GouKj82XiConhu5nMk6
+         HNmQ==
+X-Gm-Message-State: AOAM533uycX6p/nnkJUUVri5tVWiPRUJK4Fa6lwX9uw4nZqbQZOiFqh/
+        RLq9aJ0+AAuPOTqNITAH8CNvTKK2CBQ8ntEyKOGInzBy7v4fW9g9OIUtlkEQ0tegYW0nUEEDobP
+        ugceiG0TFXkfaUjwWZSKqE9Oz
+X-Received: by 2002:a1c:ab04:: with SMTP id u4mr4641085wme.52.1592581407893;
+        Fri, 19 Jun 2020 08:43:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzM2p8s4uLxagQNK//PxpJ+oT8+9b3lN2UK1YhhNUn9fFNMbEk3eFggdKAd4PlTflL32CmW3Q==
+X-Received: by 2002:a1c:ab04:: with SMTP id u4mr4641071wme.52.1592581407700;
+        Fri, 19 Jun 2020 08:43:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e1d2:138e:4eff:42cb? ([2001:b07:6468:f312:e1d2:138e:4eff:42cb])
+        by smtp.gmail.com with ESMTPSA id d63sm7719649wmc.22.2020.06.19.08.43.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 08:43:27 -0700 (PDT)
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
+        babu.moger@amd.com
+References: <20200619153925.79106-1-mgamal@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <87312ebb-e842-3b21-e216-916d54557319@redhat.com>
+Date:   Fri, 19 Jun 2020 17:43:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+On 19/06/20 17:39, Mohammed Gamal wrote:
+> The last 3 patches (i.e. SVM bits and patch 11) are not intended for
+> immediate inclusion and probably need more discussion.
+> We've been noticing some unexpected behavior in handling NPF vmexits
+> on AMD CPUs (see individual patches for details), and thus we are
+> proposing a workaround (see last patch) that adds a capability that
+> userspace can use to decide who to deal with hosts that might have
+> issues supprting guest MAXPHYADDR < host MAXPHYADDR.
 
-commit 117003c32771df617acf66e140fbdbdeb0ac71f5 upstream.
+I think patch 11 can be committed (more or less).  You would actually
+move it to the beginning of the series and have
+"allow_smaller_maxphyaddr = !enable_ept;" for VMX.  It is then changed
+to "allow_smaller_maxphyaddr = true;" in "KVM: VMX: Add guest physical
+address check in EPT violation and misconfig".
 
-Patch series "initialize deferred pages with interrupts enabled", v4.
+In fact, it would be a no-brainer to commit patch 11 in that form, so
+feel free to submit it separately.
 
-Keep interrupts enabled during deferred page initialization in order to
-make code more modular and allow jiffies to update.
+Thanks,
 
-Original approach, and discussion can be found here:
- http://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-
-This patch (of 3):
-
-deferred_init_memmap() disables interrupts the entire time, so it calls
-touch_nmi_watchdog() periodically to avoid soft lockup splats.  Soon it
-will run with interrupts enabled, at which point cond_resched() should be
-used instead.
-
-deferred_grow_zone() makes the same watchdog calls through code shared
-with deferred init but will continue to run with interrupts disabled, so
-it can't call cond_resched().
-
-Pull the watchdog calls up to these two places to allow the first to be
-changed later, independently of the second.  The frequency reduces from
-twice per pageblock (init and free) to once per max order block.
-
-Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Yiqian Wei <yiwei@redhat.com>
-Cc: <stable@vger.kernel.org>	[4.17+]
-Link: http://lkml.kernel.org/r/20200403140952.17177-2-pasha.tatashin@soleen.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/page_alloc.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1692,7 +1692,6 @@ static void __init deferred_free_pages(u
- 		} else if (!(pfn & nr_pgmask)) {
- 			deferred_free_range(pfn - nr_free, nr_free);
- 			nr_free = 1;
--			touch_nmi_watchdog();
- 		} else {
- 			nr_free++;
- 		}
-@@ -1722,7 +1721,6 @@ static unsigned long  __init deferred_in
- 			continue;
- 		} else if (!page || !(pfn & nr_pgmask)) {
- 			page = pfn_to_page(pfn);
--			touch_nmi_watchdog();
- 		} else {
- 			page++;
- 		}
-@@ -1869,8 +1867,10 @@ static int __init deferred_init_memmap(v
- 	 * that we can avoid introducing any issues with the buddy
- 	 * allocator.
- 	 */
--	while (spfn < epfn)
-+	while (spfn < epfn) {
- 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-+		touch_nmi_watchdog();
-+	}
- zone_empty:
- 	/* Sanity check that the next zone really is unpopulated */
- 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
-@@ -1941,6 +1941,7 @@ deferred_grow_zone(struct zone *zone, un
- 		first_deferred_pfn = spfn;
- 
- 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-+		touch_nmi_watchdog();
- 
- 		/* We should only stop along section boundaries */
- 		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
-
+Paolo
 
