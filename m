@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9470EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715792158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6BE21548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580187;
-	bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
+	s=default; t=1592580191;
+	bh=YTANZPruMdfvSrcCUEMGloogkU0s++47yJ9qS7/zSro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLUJZ915Fud4Q7IE2/JpfbEbpDa7Y8mVlogpvg1EpA6DHGbXrT/v5YCc6WEXnZ63D
-	 iKAud5+6R3wLBr+BMfl7zj2b0ke42MYKayHCKnsqsVzn/tZYNcFlHM6nhFYpl9khrz
-	 ASlnbYctezi9HpK5wjLUlfZYeU6aBu9jTBud3ntI=
+	b=IUKFJXC41igq9MnM0IYpzP6fJZTMX7/5/bYRItVhN1AK8lUuX/guNr2OnFej9KwS0
+	 FXKfcExxnAOdaGeMbh1dVcrgyydAIYK1JyZ+28h+xB1J5pdAKrKqe9EKG4RukejON+
+	 6ZHLye6jBBaZaSZ5qW6x81u+g6vvQDgtCC4PUA+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393119AbgFSPXG (ORCPT
+        id S1726667AbgFSPXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49462 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389683AbgFSPTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:05 -0400
+        id S2392010AbgFSPTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C8BE218AC;
-        Fri, 19 Jun 2020 15:19:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964C721582;
+        Fri, 19 Jun 2020 15:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579944;
-        bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
+        s=default; t=1592579974;
+        bh=YTANZPruMdfvSrcCUEMGloogkU0s++47yJ9qS7/zSro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZDxD//+b+VQW/H2E5MQcf4g5IlK7sNA6JwuzyrC8tiN03A0UwEBDBMZui00ToiTz
-         9r5wLwrQY4J4jcHW5fE77hOLtJKIN9Wyanmv8KSB1S8OHBszXV9F/z04zR7VeDP+Kh
-         v2ijLQ09jsj4G0dUOfHTsuznj9XY+IrzZAG5Izoc=
+        b=xMDv7s4Bsg54NkkWQeDmx8Eoh9Yk76teKiVI/teoJ49+gaGTjl4YNixlGZmRZLMn3
+         dz2BHefqRDkvhb4/LbmAM1+atSFiF2htTjbuekB48UFBAwlKVIwYnV8UVNgHTPJKVF
+         bXYqX0QcknPa2fxFeDzUrTgSBPNzvibqBKpIU4Bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Zijun Hu <zijuhu@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 064/376] spi: mux: repair mux usage
-Date:   Fri, 19 Jun 2020 16:29:42 +0200
-Message-Id: <20200619141713.384191146@linuxfoundation.org>
+Subject: [PATCH 5.7 074/376] Bluetooth: hci_qca: Fix suspend/resume functionality failure
+Date:   Fri, 19 Jun 2020 16:29:52 +0200
+Message-Id: <20200619141713.856607857@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,56 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Zijun Hu <zijuhu@codeaurora.org>
 
-[ Upstream commit a2b02e4623fb127fa65a13e4ac5aa56e4ae16291 ]
+[ Upstream commit feac90d756c03b03b83fabe83571bd88ecc96b78 ]
 
-It is not valid to cache/short out selection of the mux.
+@dev parameter of qca_suspend()/qca_resume() represents
+serdev_device, but it is mistook for hci_dev and causes
+succedent unexpected memory access.
 
-mux_control_select() only locks the mux until mux_control_deselect()
-is called. mux_control_deselect() may put the mux in some low power
-state or some other user of the mux might select it for other purposes.
-These things are probably not happening in the original setting where
-this driver was developed, but it is said to be a generic SPI mux.
+Fix by taking @dev as serdev_device.
 
-Also, the mux framework will short out the actual low level muxing
-operation when/if that is possible.
-
-Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Link: https://lore.kernel.org/r/20200525104352.26807-1-peda@axentia.se
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mux.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/bluetooth/hci_qca.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-index 4f94c9127fc1..cc9ef371db14 100644
---- a/drivers/spi/spi-mux.c
-+++ b/drivers/spi/spi-mux.c
-@@ -51,6 +51,10 @@ static int spi_mux_select(struct spi_device *spi)
- 	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
- 	int ret;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 439392b1c043..0b1036e5e963 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1953,8 +1953,9 @@ static void qca_serdev_remove(struct serdev_device *serdev)
  
-+	ret = mux_control_select(priv->mux, spi->chip_select);
-+	if (ret)
-+		return ret;
-+
- 	if (priv->current_cs == spi->chip_select)
- 		return 0;
+ static int __maybe_unused qca_suspend(struct device *dev)
+ {
+-	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+-	struct hci_uart *hu = hci_get_drvdata(hdev);
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
++	struct hci_uart *hu = &qcadev->serdev_hu;
+ 	struct qca_data *qca = hu->priv;
+ 	unsigned long flags;
+ 	int ret = 0;
+@@ -2033,8 +2034,9 @@ error:
  
-@@ -62,10 +66,6 @@ static int spi_mux_select(struct spi_device *spi)
- 	priv->spi->mode = spi->mode;
- 	priv->spi->bits_per_word = spi->bits_per_word;
+ static int __maybe_unused qca_resume(struct device *dev)
+ {
+-	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+-	struct hci_uart *hu = hci_get_drvdata(hdev);
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
++	struct hci_uart *hu = &qcadev->serdev_hu;
+ 	struct qca_data *qca = hu->priv;
  
--	ret = mux_control_select(priv->mux, spi->chip_select);
--	if (ret)
--		return ret;
--
- 	priv->current_cs = spi->chip_select;
- 
- 	return 0;
+ 	clear_bit(QCA_SUSPENDING, &qca->flags);
 -- 
 2.25.1
 
