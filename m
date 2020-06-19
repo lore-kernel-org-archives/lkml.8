@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8638CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 510FA20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6350821532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582236;
-	bh=fsEGIbz/4fPJrX1KDAkRizHiHWLMOJDJ+GaVZBcdVZg=;
+	s=default; t=1592582239;
+	bh=74wKcSC/1/uY7MLx3rVRs5Efvh1k7Obe/4c2cXj8RbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0bD+E5I2T88LxlWO0nJdKdPUKAeyOQQmqyoTbUXekdfSUpZKGk1hZ4FPbJn3Ty+9d
-	 pK4iRLkKPf59HcN24RXbixD4xHmQAdcHrFtp6Wvnf3mm7+T6TEwo0aeg2nBsN5zY66
-	 5S/fAbDugB5Bxe7tK8QdhmXB+nB6P7JTbl1gfRQI=
+	b=BVHV0puUUGXRefgMGIB9QXLeDuPPq40fPJrc/jl/esaPiqszSW2TBhXII0Gdue0SN
+	 5DUgqBo+3j1y+8nZunMlLxaiyxx8ic4RQMXx3YvxCqBu2pC7w0Zez5ccy6CPB6gieJ
+	 z934FOn7DtqGdwCtb6D2XT7oBEz6iGBKGfS6vIqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392690AbgFSPU3 (ORCPT
+        id S2405450AbgFSP5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48848 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392585AbgFSPSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:21 -0400
+        id S2390560AbgFSPUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0983F206DB;
-        Fri, 19 Jun 2020 15:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A135820771;
+        Fri, 19 Jun 2020 15:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579900;
-        bh=fsEGIbz/4fPJrX1KDAkRizHiHWLMOJDJ+GaVZBcdVZg=;
+        s=default; t=1592580024;
+        bh=74wKcSC/1/uY7MLx3rVRs5Efvh1k7Obe/4c2cXj8RbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMMgoLNbxjhrYSh267L2qJd59ctCRoZ6W7P9DSUTePZ1FKtliVimUyTiw/+fueLfI
-         aOorYpo7yVloZS4f5SL1mbTAbgLgYYskXWlwIAE4soxkL7ABhdkBFqZxx9rbSxvV5d
-         WE5gK6NkrSyfeRLiLc7vWZ0UD2Z8SsH766rrsTpo=
+        b=SVSS48iR8o5gteYU+s/04b+nXJasyYT61zb5RomzVMz0sETCX2UMPDoO0QG5YQmOa
+         t5phOCq2S7wMHlsHtwvAHCcmCVO5a53vviDvGxOGP0g0x74DpFEE9zKbKnXGDNYP7w
+         FNGt/6chFcnr5nuEp6+SkHDriFDhQ3kv8dROKT8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Koba Ko <koba.ko@canonical.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 045/376] platform/x86: dell-laptop: dont register micmute LED if there is no token
-Date:   Fri, 19 Jun 2020 16:29:23 +0200
-Message-Id: <20200619141712.491164789@linuxfoundation.org>
+Subject: [PATCH 5.7 094/376] e1000: Distribute switch variables for initialization
+Date:   Fri, 19 Jun 2020 16:30:12 +0200
+Message-Id: <20200619141714.789670361@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,52 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koba Ko <koba.ko@canonical.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
+[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
 
-On Dell G3-3590, error message is issued during boot up,
-"platform::micmute: Setting an LED's brightness failed (-19)",
-but there's no micmute led on the machine.
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-If one of two tokens doesn't exist,
-don't call led_classdev_register() for platform::micmute.
-After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-and the error message wouldn't see in dmesg.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
+drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
+ 3143 |     unsigned int pull_size;
+      |                  ^~~~~~~~~
+
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index f8d3e3bd1bb5..5e9c2296931c 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
- 
- 	dell_laptop_register_notifier(&dell_laptop_notifier);
- 
--	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
--	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
--	if (ret < 0)
--		goto fail_led;
-+	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-+	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-+		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-+		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-+		if (ret < 0)
-+			goto fail_led;
-+	}
- 
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		return 0;
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 0d51cbc88028..05bc6e216bca 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -3136,8 +3136,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+ 		if (skb->data_len && hdr_len == len) {
+ 			switch (hw->mac_type) {
++			case e1000_82544: {
+ 				unsigned int pull_size;
+-			case e1000_82544:
++
+ 				/* Make sure we have room to chop off 4 bytes,
+ 				 * and that the end alignment will work out to
+ 				 * this hardware's requirements
+@@ -3158,6 +3159,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 				}
+ 				len = skb_headlen(skb);
+ 				break;
++			}
+ 			default:
+ 				/* do nothing */
+ 				break;
 -- 
 2.25.1
 
