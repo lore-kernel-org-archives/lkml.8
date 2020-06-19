@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C28C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE15206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213DA206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580953;
-	bh=fesb+m6/8ZgvadMLW5u59Am+eMgAkVHAPFHdsmUzjg8=;
+	s=default; t=1592580955;
+	bh=Cj3n0XTwhCg+EkvrE/zsdb1K+4DKdGGpbmvgDDCCccU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DO7D+nqFqNbCHapGGzhhq/7ti52mbZSfgEjuw0AtfS91EyZB+XwpCC7rze4IFO4V9
-	 AzNObFnv4I4yuoCjmNaSTLDkALaq700UFojVBvoE1TXat9p7EplMoC01nNjb+iDuk7
-	 7q1+sv4SMrL7upPkm155WQzf/fRTIK+mEIqEXNIU=
+	b=eG8JUx7J7ABXdrOEgcvZowoLGvPFBGfDef+BbfbHSvGXWJVgvtBlFoDmx4gAacakI
+	 YF+11L2SRIuH+Ti+rmmaeVT+yJliIKSAiVCSgzh4db+/T9m3aJFkSL2ANdpuR/ppu7
+	 8bSQUBGLls/9zyQ8cHldPoBTnJXhc7O3MwEwcGCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404836AbgFSPbZ (ORCPT
+        id S2393821AbgFSPbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35202 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393797AbgFSPbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:12 -0400
+        id S2393783AbgFSPbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4963620757;
-        Fri, 19 Jun 2020 15:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 963E720734;
+        Fri, 19 Jun 2020 15:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580671;
-        bh=fesb+m6/8ZgvadMLW5u59Am+eMgAkVHAPFHdsmUzjg8=;
+        s=default; t=1592580669;
+        bh=Cj3n0XTwhCg+EkvrE/zsdb1K+4DKdGGpbmvgDDCCccU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGXkW/n3uL0b18uwA7Mh9LSkxZ4ehOFBiwtZthPWXhqjvzE1apX/v7v5eul0SRJoW
-         wKfJsWmYW4BIeNwDFPdav+kgSOFZmljbggHg/zqb42d9gS33b1hEGhiV8k1FuSgaxr
-         GNZ6vD1zsO8yMmA/JlKNUHomuAf/Wyl8kkx9c9tQ=
+        b=0Kno/ZUqUMj8cq5M5PAowHEBT1IJX0KqlUL2TvaAt6/TJG72i0Gf8j4/AHOvjcpA9
+         +ruZraO7lmS90Oobw1b5yvdvFzUJcoSzoLMYaIWeC2+tAob5yqmuGUZ7+4FaEDMYS0
+         sOgxlftVHpfreJp1XBm4uFAJglDeAy/sptIYxBoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 338/376] powerpc/32s: Fix another build failure with CONFIG_PPC_KUAP_DEBUG
-Date:   Fri, 19 Jun 2020 16:34:16 +0200
-Message-Id: <20200619141726.333670293@linuxfoundation.org>
+Subject: [PATCH 5.7 337/376] drivers/macintosh: Fix memleak in windfarm_pm112 driver
+Date:   Fri, 19 Jun 2020 16:34:15 +0200
+Message-Id: <20200619141726.285539729@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,44 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 74016701fe5f873ae23bf02835407227138d874d upstream.
+commit 93900337b9ac2f4eca427eff6d187be2dc3b5551 upstream.
 
-'thread' doesn't exist in kuap_check() macro.
+create_cpu_loop() calls smu_sat_get_sdb_partition() which does
+kmalloc() and returns the allocated buffer. In fact it's called twice,
+and neither buffer is freed.
 
-Use 'current' instead.
+This results in a memory leak as reported by Erhard:
+  unreferenced object 0xc00000047081f840 (size 32):
+    comm "kwindfarm", pid 203, jiffies 4294880630 (age 5552.877s)
+    hex dump (first 32 bytes):
+      c8 06 02 7f ff 02 ff 01 fb bf 00 41 00 20 00 00  ...........A. ..
+      00 07 89 37 00 a0 00 00 00 00 00 00 00 00 00 00  ...7............
+    backtrace:
+      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
+      [<000000003010fcb7>] .pm112_wf_notify+0x104c/0x13bc [windfarm_pm112]
+      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
+      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
+      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
+      [<000000000d54838d>] .kthread+0x13c/0x190
+      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
+  unreferenced object 0xc0000004737089f0 (size 16):
+    comm "kwindfarm", pid 203, jiffies 4294880879 (age 5552.050s)
+    hex dump (first 16 bytes):
+      c4 04 01 7f 22 11 e0 e6 ff 55 7b 12 ec 11 00 00  ...."....U{.....
+    backtrace:
+      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
+      [<00000000b94ef7e1>] .pm112_wf_notify+0x1294/0x13bc [windfarm_pm112]
+      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
+      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
+      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
+      [<000000000d54838d>] .kthread+0x13c/0x190
+      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
 
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Fix it by rearranging the logic so we deal with each buffer
+separately, which then makes it easy to free the buffer once we're
+done with it.
+
+Fixes: ac171c46667c ("[PATCH] powerpc: Thermal control for dual core G5s")
+Cc: stable@vger.kernel.org # v2.6.16+
+Reported-by: Erhard F. <erhard_f@mailbox.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/b459e1600b969047a74e34251a84a3d6fdf1f312.1590858925.git.christophe.leroy@csgroup.eu
+Tested-by: Erhard F. <erhard_f@mailbox.org>
+Link: https://lore.kernel.org/r/20200423060038.3308530-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/book3s/32/kup.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/macintosh/windfarm_pm112.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_POWERPC_BOOK3S_32_KUP_H
- #define _ASM_POWERPC_BOOK3S_32_KUP_H
+--- a/drivers/macintosh/windfarm_pm112.c
++++ b/drivers/macintosh/windfarm_pm112.c
+@@ -132,14 +132,6 @@ static int create_cpu_loop(int cpu)
+ 	s32 tmax;
+ 	int fmin;
  
-+#include <asm/bug.h>
- #include <asm/book3s/32/mmu-hash.h>
+-	/* Get PID params from the appropriate SAT */
+-	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
+-	if (hdr == NULL) {
+-		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
+-		return -EINVAL;
+-	}
+-	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
+-
+ 	/* Get FVT params to get Tmax; if not found, assume default */
+ 	hdr = smu_sat_get_sdb_partition(chip, 0xC4 + core, NULL);
+ 	if (hdr) {
+@@ -152,6 +144,16 @@ static int create_cpu_loop(int cpu)
+ 	if (tmax < cpu_all_tmax)
+ 		cpu_all_tmax = tmax;
  
- #ifdef __ASSEMBLY__
-@@ -75,7 +76,7 @@
++	kfree(hdr);
++
++	/* Get PID params from the appropriate SAT */
++	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
++	if (hdr == NULL) {
++		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
++		return -EINVAL;
++	}
++	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
++
+ 	/*
+ 	 * Darwin has a minimum fan speed of 1000 rpm for the 4-way and
+ 	 * 515 for the 2-way.  That appears to be overkill, so for now,
+@@ -174,6 +176,9 @@ static int create_cpu_loop(int cpu)
+ 		pid.min = fmin;
  
- .macro kuap_check	current, gpr
- #ifdef CONFIG_PPC_KUAP_DEBUG
--	lwz	\gpr, KUAP(thread)
-+	lwz	\gpr, THREAD + KUAP(\current)
- 999:	twnei	\gpr, 0
- 	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
- #endif
+ 	wf_cpu_pid_init(&cpu_pid[cpu], &pid);
++
++	kfree(hdr);
++
+ 	return 0;
+ }
+ 
 
 
