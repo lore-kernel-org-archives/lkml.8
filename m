@@ -2,170 +2,421 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B01FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A532CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28BF22400
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PXXxR/Wn";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jKGOjoZO"
+	by mail.kernel.org (Postfix) with ESMTP id 77AC321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgFSW5J (ORCPT
+        id S1729946AbgFSW4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:57:09 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44146 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730018AbgFSW5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:57:00 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JMi1Al009982;
-        Fri, 19 Jun 2020 15:52:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=MXEQfSNu0oOIHQdNYOlGMqFfLG5osBvasPMi0pITXmY=;
- b=PXXxR/WnXTEHkqXxZZ6nW+y+ayi5fJptldqhoAFQvlOyuhFGpUVix/BnF6lJsm8c4YKt
- s/AsQ7PcAf80n7vD6LYYq+Ueov6UA1wY562iJCVVj0/+zzgXG4aCjNujVbbSSd6B0aWt
- A3JVNe3BUlvm0VlU2Oz/zA4oUErjgGLtNrA= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31s2rcs60q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 19 Jun 2020 15:52:50 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 19 Jun 2020 15:52:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hpY42+eU+wRAb7amWRzru/RsyfXpBgUqT/wwann+BT/rd25rS4ukSVi4CI03CPe+BNN515Oepv7YDecUM8t7DdtW4RL0pOASERHLLmzHURLQl2rLZtnvjVincxhliVMpCeYpkfpYZfawWnlCIO0FSJr83rSNEec3uUnRih8/t6vvZy3RvLm45Hzq8OmQ+RjjshGzYRe/ef985blSvVaGlCF09Jx3M2qQy7dnuehg8crSuP2IKl3URHtve++gWwZQErlF+fkP02qZJxjBLCn0a0vmcNevN9t6WhGKsompB7zAhy0E16+YVbXXWiEJxax9ur71X9VjUqdTNkzX0SiKmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MXEQfSNu0oOIHQdNYOlGMqFfLG5osBvasPMi0pITXmY=;
- b=WqBHrBcEzlMQ31ni5UQQdOmRA9o7nkN+erBkjdAlq60vZtPRnjZZNdhuOWDpqK55Jok3dnuzLuC22hEpwnPgmncYixQXJwDCQKEadlPxQYfewbXAYwYKTKHkhopVSyX3ERGQ7HuGNslVR/HeBnyOJ3LfdFiHGvSmZDGAIiaKDMeWUeqFbM5LEFfixCB22WhCVF07BiohaNLKtOhntLWfbW1aQN82RcFc7jdO1gXxVbIz8NlTrJjXduYpJBbPTZAFdgecAnQusiVz98FmpCmXbAXcKAnf2mCBV+iXVIPTRVIn7as+wLiQ5HMm8ymqabJlHOSLmZkpr27ys6jHl7Vj9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MXEQfSNu0oOIHQdNYOlGMqFfLG5osBvasPMi0pITXmY=;
- b=jKGOjoZOOCwpm+mk5BIpFMJqh9eHS6iOdBlr+GK61wowyp+U+MdBVZcO3PSi7TuStUeKgaQRASLtC9p5tpkICY4ZXMum67uPnmZ/d05btKjqKrtumthJExU1V1p9eOVrK33hICXYjJMfPusN93qzeKJZ4SXc0X4bRzRI9a0htDE=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3144.namprd15.prod.outlook.com (2603:10b6:a03:fe::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
- 2020 22:52:46 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
- 22:52:46 +0000
-Date:   Fri, 19 Jun 2020 15:52:43 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 06/19] mm: memcg/slab: obj_cgroup API
-Message-ID: <20200619225243.GB237539@carbon.dhcp.thefacebook.com>
-References: <20200608230654.828134-1-guro@fb.com>
- <20200608230654.828134-7-guro@fb.com>
- <CALvZod4hq5moKcb6f5L6VAS+v5+jKf8Hyd0gLotD7bMK7FsKgg@mail.gmail.com>
- <20200619213810.GA237539@carbon.dhcp.thefacebook.com>
- <CALvZod4-hsXx6GcrftsXtMA08w9gJ3Sk_Lv0CxzDF20xsyf9JQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod4-hsXx6GcrftsXtMA08w9gJ3Sk_Lv0CxzDF20xsyf9JQ@mail.gmail.com>
-X-ClientProxiedBy: BY3PR10CA0008.namprd10.prod.outlook.com
- (2603:10b6:a03:255::13) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Fri, 19 Jun 2020 18:56:49 -0400
+Received: from smtp.uniroma2.it ([160.80.6.16]:33336 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729888AbgFSW4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 18:56:46 -0400
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05JMuRJC014086
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 20 Jun 2020 00:56:28 +0200
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Donald Sharp <sharpd@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Dinesh Dutt <didutt@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stefano Salsano <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
+        Ahmed Abdelsalam <ahabdels@gmail.com>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [net-next,v1,2/5] vrf: track associations between VRF devices and tables
+Date:   Sat, 20 Jun 2020 00:54:44 +0200
+Message-Id: <20200619225447.1445-3-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
+References: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:a2a9) by BY3PR10CA0008.namprd10.prod.outlook.com (2603:10b6:a03:255::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Fri, 19 Jun 2020 22:52:46 +0000
-X-Originating-IP: [2620:10d:c090:400::5:a2a9]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b77858f9-0cfa-4169-cb0e-08d814a37be8
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3144:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB314421BE3F689D528CA0CB01BE980@BYAPR15MB3144.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0439571D1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2k0rrDcXlUByyXdb+yX1GeXudEUVx1rK70BUxS3fUjCdPLeRvTrKL2cDQLI0PY9Hhx5BQNaBZZOwFn3HQOT4DqNYijqu3WaC7E749UpIUV19Ije+Z0t33iaXghgOZZ8bPFAKY7v+O7pAKSNyS9Glu1TUCmhW0bv43VVRjf8uLj0+hLRCusI5yQlJ3HjlrT2Pff9peFrD1Aws5C2eH2yxFzyyHXjl4Jgp1Fe8JlMRS3LP7y8agtZs2rWlVO41Blsk67x8okdeOmVJISNtGmG7Ta2gvG7yk4y7A6+PQxAfUvWGTjVDJZF2MWxR6+adEE8mY9lAZlPtihFwmZIJ69aLuw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(366004)(39860400002)(396003)(2906002)(86362001)(66946007)(1076003)(66476007)(66556008)(16526019)(478600001)(186003)(54906003)(316002)(9686003)(8936002)(55016002)(7696005)(52116002)(8676002)(6916009)(33656002)(6666004)(53546011)(4326008)(5660300002)(83380400001)(6506007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: JIXC9i0ze9PYZ0buFoC+P6npuyiIWDKWl16a44MEjFbxC5IrUTv1DV5LfrwMHHoKHPt3iWke659QmkJLTMc6Dmjpv3JEmQjxjo6+J7Acs3C/4CWd4hiX6v1u+uOdUAawGdjCJkeOM32gWWmirBEKyboVGUXwYqp1AV/sXJk/1AgDraWI5AhihT1oXo7EoxcPzIv/ZQFLtdWSSRNE3lCfPE9Hr7Q1Y3AX2Kn9iqQUoDsjuO+VPa8HLM/qxj+OcPLVw0CjWl4JUxrHMiosbFqdRkv/RvbWUWW8LHCx6YM5XVQ8Xfg5B0ly7htlBtNM9savd2fXBT1+okH28B59+fdWQQGZQ3XfM0BppP2wX9e+bnbzXuIY29+NItHVLTREedcb2hKvgRMvIhppKAmsOlVKm/V4cD6KTib0beDw8bER8/ijQks32cimgZK6XW6TLOqO4BdWPGvlDYBJ9IGUYonVwEXf1/QCmLZs9DJPXfKlFzxyetyTGhoEMAIN/vSGzwf7j35UuDN5a54JP+6TyLtBrA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b77858f9-0cfa-4169-cb0e-08d814a37be8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 22:52:46.5036
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wL7ShV2FRWOCjmtcvSmgQ2yOKjimfiV9ihX+eTwcqypfmTZllDhS+TsJHSisoIF5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3144
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_22:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
- bulkscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 priorityscore=1501 clxscore=1015 adultscore=0
- spamscore=0 mlxlogscore=999 impostorscore=0 phishscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006190159
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 03:16:44PM -0700, Shakeel Butt wrote:
-> On Fri, Jun 19, 2020 at 2:38 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> [snip]
-> > > > memcg->objcg is rcu protected.
-> > > > objcg->memcg is a raw pointer, which is always pointing at a memory
-> > > > cgroup, but can be atomically swapped to the parent memory cgroup. So
-> > > > the caller
-> > >
-> > > What type of caller? The allocator?
-> >
-> > Basically whoever uses the pointer. Is it better to s/caller/user?
-> >
-> 
-> Yes 'user' feels better.
-> 
-> > >
-> [...]
-> > >
-> > > The normal stock can go to 32*nr_cpus*PAGE_SIZE. I am wondering if
-> > > just PAGE_SIZE is too less for obj stock.
-> >
-> > It works on top of the current stock of 32 pages, so it can grab these
-> > 32 pages without any atomic operations. And it should be easy to increase
-> > this limit if we'll see any benefits.
-> >
-> > Thank you for looking into the patchset!
-> >
-> > Andrew, can you, please, squash the following fix based on Shakeel's suggestions?
-> > Thanks!
-> >
-> > --
-> 
-> For the following squashed into the original patch:
-> 
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Add the data structures and the processing logic to keep track of the
+associations between VRF devices and routing tables.
+When a VRF is instantiated, it needs to refer to a given routing table.
+For each table, we explicitly keep track of the existing VRFs that refer to
+the table.
 
-Thank you!
+Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+---
+ drivers/net/vrf.c | 273 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 268 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index 43928a1c2f2a..098fdabaa4c5 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -21,6 +21,7 @@
+ #include <net/rtnetlink.h>
+ #include <linux/u64_stats_sync.h>
+ #include <linux/hashtable.h>
++#include <linux/spinlock_types.h>
+ 
+ #include <linux/inetdevice.h>
+ #include <net/arp.h>
+@@ -35,12 +36,75 @@
+ #include <net/netns/generic.h>
+ 
+ #define DRV_NAME	"vrf"
+-#define DRV_VERSION	"1.0"
++#define DRV_VERSION	"1.1"
+ 
+ #define FIB_RULE_PREF  1000       /* default preference for FIB rules */
+ 
++#define HT_MAP_BITS	4
++#define HASH_INITVAL	((u32)0xcafef00d)
++
++struct  vrf_map {
++	DECLARE_HASHTABLE(ht, HT_MAP_BITS);
++	spinlock_t vmap_lock;
++
++	/* shared_tables:
++	 * count how many distinct tables do not comply with the strict mode
++	 * requirement.
++	 * shared_tables value must be 0 in order to enable the strict mode.
++	 *
++	 * example of the evolution of shared_tables:
++	 *                                                        | time
++	 * add  vrf0 --> table 100        shared_tables = 0       | t0
++	 * add  vrf1 --> table 101        shared_tables = 0       | t1
++	 * add  vrf2 --> table 100        shared_tables = 1       | t2
++	 * add  vrf3 --> table 100        shared_tables = 1       | t3
++	 * add  vrf4 --> table 101        shared_tables = 2       v t4
++	 *
++	 * shared_tables is a "step function" (or "staircase function")
++	 * and it is increased by one when the second vrf is associated to a
++	 * table.
++	 *
++	 * at t2, vrf0 and vrf2 are bound to table 100: shared_tables = 1.
++	 *
++	 * at t3, another dev (vrf3) is bound to the same table 100 but the
++	 * value of shared_tables is still 1.
++	 * This means that no matter how many new vrfs will register on the
++	 * table 100, the shared_tables will not increase (considering only
++	 * table 100).
++	 *
++	 * at t4, vrf4 is bound to table 101, and shared_tables = 2.
++	 *
++	 * Looking at the value of shared_tables we can immediately know if
++	 * the strict_mode can or cannot be enforced. Indeed, strict_mode
++	 * can be enforced iff shared_tables = 0.
++	 *
++	 * Conversely, shared_tables is decreased when a vrf is de-associated
++	 * from a table with exactly two associated vrfs.
++	 */
++	u32 shared_tables;
++
++	bool strict_mode;
++};
++
++struct vrf_map_elem {
++	struct hlist_node hnode;
++	struct list_head vrf_list;  /* VRFs registered to this table */
++
++	u32 table_id;
++	int users;
++	int ifindex;
++};
++
+ static unsigned int vrf_net_id;
+ 
++/* per netns vrf data */
++struct netns_vrf {
++	/* protected by rtnl lock */
++	bool add_fib_rules;
++
++	struct vrf_map vmap;
++};
++
+ struct net_vrf {
+ 	struct rtable __rcu	*rth;
+ 	struct rt6_info	__rcu	*rt6;
+@@ -48,6 +112,9 @@ struct net_vrf {
+ 	struct fib6_table	*fib6_table;
+ #endif
+ 	u32                     tb_id;
++
++	struct list_head	me_list;   /* entry in vrf_map_elem */
++	int			ifindex;
+ };
+ 
+ struct pcpu_dstats {
+@@ -103,6 +170,173 @@ static void vrf_get_stats64(struct net_device *dev,
+ 	}
+ }
+ 
++static struct vrf_map *netns_vrf_map(struct net *net)
++{
++	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
++
++	return &nn_vrf->vmap;
++}
++
++static struct vrf_map *netns_vrf_map_by_dev(struct net_device *dev)
++{
++	return netns_vrf_map(dev_net(dev));
++}
++
++static struct vrf_map_elem *vrf_map_elem_alloc(gfp_t flags)
++{
++	struct vrf_map_elem *me;
++
++	me = kmalloc(sizeof(*me), flags);
++	if (!me)
++		return NULL;
++
++	return me;
++}
++
++static void vrf_map_elem_free(struct vrf_map_elem *me)
++{
++	kfree(me);
++}
++
++static void vrf_map_elem_init(struct vrf_map_elem *me, int table_id,
++			      int ifindex, int users)
++{
++	me->table_id = table_id;
++	me->ifindex = ifindex;
++	me->users = users;
++	INIT_LIST_HEAD(&me->vrf_list);
++}
++
++static struct vrf_map_elem *vrf_map_lookup_elem(struct vrf_map *vmap,
++						u32 table_id)
++{
++	struct vrf_map_elem *me;
++	u32 key;
++
++	key = jhash_1word(table_id, HASH_INITVAL);
++	hash_for_each_possible(vmap->ht, me, hnode, key) {
++		if (me->table_id == table_id)
++			return me;
++	}
++
++	return NULL;
++}
++
++static void vrf_map_add_elem(struct vrf_map *vmap, struct vrf_map_elem *me)
++{
++	u32 table_id = me->table_id;
++	u32 key;
++
++	key = jhash_1word(table_id, HASH_INITVAL);
++	hash_add(vmap->ht, &me->hnode, key);
++}
++
++static void vrf_map_del_elem(struct vrf_map_elem *me)
++{
++	hash_del(&me->hnode);
++}
++
++static void vrf_map_lock(struct vrf_map *vmap) __acquires(&vmap->vmap_lock)
++{
++	spin_lock(&vmap->vmap_lock);
++}
++
++static void vrf_map_unlock(struct vrf_map *vmap) __releases(&vmap->vmap_lock)
++{
++	spin_unlock(&vmap->vmap_lock);
++}
++
++/* called with rtnl lock held */
++static int
++vrf_map_register_dev(struct net_device *dev, struct netlink_ext_ack *extack)
++{
++	struct vrf_map *vmap = netns_vrf_map_by_dev(dev);
++	struct net_vrf *vrf = netdev_priv(dev);
++	struct vrf_map_elem *new_me, *me;
++	u32 table_id = vrf->tb_id;
++	bool free_new_me = false;
++	int users;
++	int res;
++
++	/* we pre-allocate elements used in the spin-locked section (so that we
++	 * keep the spinlock as short as possibile).
++	 */
++	new_me = vrf_map_elem_alloc(GFP_KERNEL);
++	if (!new_me)
++		return -ENOMEM;
++
++	vrf_map_elem_init(new_me, table_id, dev->ifindex, 0);
++
++	vrf_map_lock(vmap);
++
++	me = vrf_map_lookup_elem(vmap, table_id);
++	if (!me) {
++		me = new_me;
++		vrf_map_add_elem(vmap, me);
++		goto link_vrf;
++	}
++
++	/* we already have an entry in the vrf_map, so it means there is (at
++	 * least) a vrf registered on the specific table.
++	 */
++	free_new_me = true;
++	if (vmap->strict_mode) {
++		/* vrfs cannot share the same table */
++		NL_SET_ERR_MSG(extack, "Table is used by another VRF");
++		res = -EBUSY;
++		goto unlock;
++	}
++
++link_vrf:
++	users = ++me->users;
++	if (users == 2)
++		++vmap->shared_tables;
++
++	list_add(&vrf->me_list, &me->vrf_list);
++
++	res = 0;
++
++unlock:
++	vrf_map_unlock(vmap);
++
++	/* clean-up, if needed */
++	if (free_new_me)
++		vrf_map_elem_free(new_me);
++
++	return res;
++}
++
++/* called with rtnl lock held */
++static void vrf_map_unregister_dev(struct net_device *dev)
++{
++	struct vrf_map *vmap = netns_vrf_map_by_dev(dev);
++	struct net_vrf *vrf = netdev_priv(dev);
++	u32 table_id = vrf->tb_id;
++	struct vrf_map_elem *me;
++	int users;
++
++	vrf_map_lock(vmap);
++
++	me = vrf_map_lookup_elem(vmap, table_id);
++	if (!me)
++		goto unlock;
++
++	list_del(&vrf->me_list);
++
++	users = --me->users;
++	if (users == 1) {
++		--vmap->shared_tables;
++	} else if (users == 0) {
++		vrf_map_del_elem(me);
++
++		/* no one will refer to this element anymore */
++		vrf_map_elem_free(me);
++	}
++
++unlock:
++	vrf_map_unlock(vmap);
++}
++
+ /* by default VRF devices do not have a qdisc and are expected
+  * to be created with only a single queue.
+  */
+@@ -1319,6 +1553,8 @@ static void vrf_dellink(struct net_device *dev, struct list_head *head)
+ 	netdev_for_each_lower_dev(dev, port_dev, iter)
+ 		vrf_del_slave(dev, port_dev);
+ 
++	vrf_map_unregister_dev(dev);
++
+ 	unregister_netdevice_queue(dev, head);
+ }
+ 
+@@ -1327,6 +1563,7 @@ static int vrf_newlink(struct net *src_net, struct net_device *dev,
+ 		       struct netlink_ext_ack *extack)
+ {
+ 	struct net_vrf *vrf = netdev_priv(dev);
++	struct netns_vrf *nn_vrf;
+ 	bool *add_fib_rules;
+ 	struct net *net;
+ 	int err;
+@@ -1349,11 +1586,26 @@ static int vrf_newlink(struct net *src_net, struct net_device *dev,
+ 	if (err)
+ 		goto out;
+ 
++	/* mapping between table_id and vrf;
++	 * note: such binding could not be done in the dev init function
++	 * because dev->ifindex id is not available yet.
++	 */
++	vrf->ifindex = dev->ifindex;
++
++	err = vrf_map_register_dev(dev, extack);
++	if (err) {
++		unregister_netdevice(dev);
++		goto out;
++	}
++
+ 	net = dev_net(dev);
+-	add_fib_rules = net_generic(net, vrf_net_id);
++	nn_vrf = net_generic(net, vrf_net_id);
++
++	add_fib_rules = &nn_vrf->add_fib_rules;
+ 	if (*add_fib_rules) {
+ 		err = vrf_add_fib_rules(dev);
+ 		if (err) {
++			vrf_map_unregister_dev(dev);
+ 			unregister_netdevice(dev);
+ 			goto out;
+ 		}
+@@ -1440,12 +1692,23 @@ static struct notifier_block vrf_notifier_block __read_mostly = {
+ 	.notifier_call = vrf_device_event,
+ };
+ 
++static int vrf_map_init(struct vrf_map *vmap)
++{
++	spin_lock_init(&vmap->vmap_lock);
++	hash_init(vmap->ht);
++
++	vmap->strict_mode = false;
++
++	return 0;
++}
++
+ /* Initialize per network namespace state */
+ static int __net_init vrf_netns_init(struct net *net)
+ {
+-	bool *add_fib_rules = net_generic(net, vrf_net_id);
++	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
+ 
+-	*add_fib_rules = true;
++	nn_vrf->add_fib_rules = true;
++	vrf_map_init(&nn_vrf->vmap);
+ 
+ 	return 0;
+ }
+@@ -1453,7 +1716,7 @@ static int __net_init vrf_netns_init(struct net *net)
+ static struct pernet_operations vrf_net_ops __net_initdata = {
+ 	.init = vrf_netns_init,
+ 	.id   = &vrf_net_id,
+-	.size = sizeof(bool),
++	.size = sizeof(struct netns_vrf),
+ };
+ 
+ static int __init vrf_init_module(void)
+-- 
+2.20.1
+
