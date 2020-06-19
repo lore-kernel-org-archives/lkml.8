@@ -2,173 +2,169 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10220C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0EA920885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5115720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="asHKwznp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oeJ1FTSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbgFSIaD (ORCPT
+        id S1731381AbgFSIac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51950 "EHLO
+        Fri, 19 Jun 2020 04:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731022AbgFSIaB (ORCPT
+        with ESMTP id S1730651AbgFSIa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:30:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B43EC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:30:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id m2so4010440pjv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=bal/f6C5W3hI/7eEDoJMPCvhC5IDLMyLNXSt4/S+Z6w=;
-        b=asHKwznp8EZNJTx5F+A/9eKKgUGgsWkbC1twAT3301DPYW41sseSJwhpPeYQW2YpvB
-         IjWQD8A0wDX/58ArkSviJh+wTiDlUhI4RX5exrXQ2fB89EmRq9QC+2EeGsn5/8xCNHcT
-         dLdt/XKSjGAfV2aXSpQB0gjVamY2HLSon89Dg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=bal/f6C5W3hI/7eEDoJMPCvhC5IDLMyLNXSt4/S+Z6w=;
-        b=lrwMP4l06XCEiegq9aUrPVWadkYuZwTBmnKFJ2MtkNraMUZSiZcSRazy5JnSHurger
-         7yVb9UG2MOWxSDi4wD78/ACsefIqdmePiINynjMIWc0QvvMKCVPJtbWSNzNntkyzF9Q2
-         iwPL/hkPvID3Gl/r0TQvBGZSQnxWXxuS1UuFnBLank0grEvnTyMWOpUGyIRdGQW7CGlb
-         QBN4x28+PTkxLVAjxzLa03Z8520Rno+sfllvxuw+gR1Hh/bEA46e7GpASYeHx3plQYM0
-         QmB/s6NXmOBozw0xHzcS6Yjz602EXy3/8MhUsfNmLZU9rGcjSxJiuT2dm0xHaEqrvdM5
-         7m4Q==
-X-Gm-Message-State: AOAM532GCY4mAU++WSgNe9XAKU5f/w6WeDJi+zALlEQcmysKOl26flb0
-        oin2Q+7sKwKPcJVdEYAw1hGgCw==
-X-Google-Smtp-Source: ABdhPJzSNN0Qpr5cQYl53gfznBN1okIAMcFX4yLnK/9HsM4RGMZCO2BfOQ/cjG1bNmm74yfvZUvcTw==
-X-Received: by 2002:a17:90a:284b:: with SMTP id p11mr2480021pjf.22.1592555400970;
-        Fri, 19 Jun 2020 01:30:00 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id hi19sm4687515pjb.49.2020.06.19.01.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 01:30:00 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 19 Jun 2020 04:30:29 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB63C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MNa77Uka+uPnWc2u/Leq2Ulhe8baLYyiuRmc3agmOt0=; b=oeJ1FTStEQBysI1B1Hq5UE1IdN
+        8ElI9XqQz6k9cGSfGCzFJBxRnRuATG34FvbvuUPNasgdmnpg9SyPUCJmSqPSPo95ZKOqbWPrCyhpf
+        WbhoIZeu6QMKfHm299rhCaDGBiMSHW/nW3tXm/yxWUbxJ+ws6roeqSrXM2d6/JLkDVNSSD/rDERMk
+        spsxSU2Ua0f2DmQR4Rvg4PAH9Ocvd3InwpmQ+ioSw+8LrJvm5aUhstLc3Tzu5P6rR8dQ5RRHwSTQq
+        V0K5XQDw06XyLkiN+f6Wmv5b3zI+eJOtoPq3oJ0Z1AB/JLbwmo734BUjZ+judVqJrWqtmOGnTDHGJ
+        JMxg1SUQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmCPp-00059Q-Hu; Fri, 19 Jun 2020 08:30:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D136630604B;
+        Fri, 19 Jun 2020 10:30:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C27DD2038B22F; Fri, 19 Jun 2020 10:30:23 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 10:30:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Axel Rasmussen <axelrasmussen@google.com>
+Cc:     Michel Lespinasse <walken@google.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Jonathan Adams <jwadams@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Ying Han <yinghan@google.com>
+Subject: Re: [RFC PATCH v3 1/1] mmap_lock: add tracepoints around mmap_lock
+ acquisition
+Message-ID: <20200619083023.GS576905@hirez.programming.kicks-ass.net>
+References: <20200618222225.102337-1-axelrasmussen@google.com>
+ <20200618222225.102337-2-axelrasmussen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <bc265120-0d48-bcab-a58e-3b94f8c540ce@arm.com>
-References: <20200617113851.607706-1-alexandru.elisei@arm.com> <20200617113851.607706-4-alexandru.elisei@arm.com> <159242503203.62212.1690942414916053920@swboyd.mtv.corp.google.com> <bc265120-0d48-bcab-a58e-3b94f8c540ce@arm.com>
-Subject: Re: [PATCH v5 3/7] arm64: perf: Remove PMU locking
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mark.rutland@arm.com, will@kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jun 2020 01:29:59 -0700
-Message-ID: <159255539947.62212.6059916295459835174@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618222225.102337-2-axelrasmussen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Alexandru Elisei (2020-06-18 03:51:31)
-> Hi,
->=20
-> On 6/17/20 9:17 PM, Stephen Boyd wrote:
-> > Quoting Alexandru Elisei (2020-06-17 04:38:47)
-> >> From: Julien Thierry <julien.thierry@arm.com>
-> >>
-> >> The PMU is disabled and enabled, and the counters are programmed from
-> >> contexts where interrupts or preemption is disabled.
-> >>
-> >> The functions to toggle the PMU and to program the PMU counters access=
- the
-> >> registers directly and don't access data modified by the interrupt han=
-dler.
-> >> That, and the fact that they're always called from non-preemptible
-> >> contexts, means that we don't need to disable interrupts or use a spin=
-lock.
-> > Maybe we should add a lockdep assertion that the code isn't preemptible?
-> > I.e. add a cant_sleep() call? Or is it more that we don't need locking
-> > because we're just doing register accesses and don't need to protect
-> > those accesses from each other?
->=20
-> It's both. The spinlocks were there to protect the functions from being p=
-reempted
-> and possibly migrated to another CPU, and from being interrupted by the P=
-MU irq
-> handler.
->=20
-> There was no data race with the interrupt handler, but before the previou=
-s patch
-> ("arm64: perf: Avoid PMXEV* indirection"), in order to read/write/program=
- a
-> counter, one had to write the counter number to a counter selection regis=
-ter, and
-> then write/read the desired value from another register. This was done fr=
-om both
-> the armv8pmu_{enable,disable}_event() functions and the irq handler, and =
-the
-> spinlock was necessary. Now that we can access a counter using a single r=
-egister
-> access, there's no need to protect the functions from being interrupted b=
-y the IRQ
-> handler. As for armv8pmu_{start,stop}(), they consist of one register wri=
-te, so
-> it's also safe for the irq handler to interrupt them.
->=20
-> For the preemption part of the locking. The armv8pmu_{enable,disable}_eve=
-nt(),
-> when called by the perf core code via the pmu->{start,stop,add,del} callb=
-acks, are
-> guaranteed to be called with IRQs and preemption disabled, as per the com=
-ment in
-> include/linux/perf_event.h. They are also called from the arm_pmu driver =
-by the
-> CPU PM notifiers, which should also be executed with interrupts disabled.=
- Should
-> we check here that the top level code respects these guarantees?
->=20
-> The armv8pmu_{start,stop}() functions are called from the irq handler, so=
- we're
-> safe from preemption in this case. They are also called via
-> pmu->pmu_{enable,disable} callbacks, and I didn't find an explicit contra=
-ct
-> regarding preemption in include/linux/perf_event.h. I've checked the othe=
-r call
-> sites, and I didn't find any instances where they are called with preempt=
-ion
-> enabled, which makes sense as we don't want to disable the PMU on a anoth=
-er CPU by
-> accident.
+On Thu, Jun 18, 2020 at 03:22:25PM -0700, Axel Rasmussen wrote:
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index f11b9bd3431d..6aabea1cbc5d 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -1495,6 +1495,20 @@ void __sched down_read(struct rw_semaphore *sem)
+>  }
+>  EXPORT_SYMBOL(down_read);
+> 
+> +/*
+> + * lock for reading
+> + */
+> +void __sched down_read_contended_hook(struct rw_semaphore *sem,
+> +				      void (*pre)(void *),
+> +				      void (*post)(void *), void *arg)
+> +{
+> +	might_sleep();
+> +	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> +	LOCK_CONTENDED_HOOK(sem, __down_read_trylock, __down_read, pre, post,
+> +			    arg);
+> +}
+> +EXPORT_SYMBOL(down_read_contended_hook);
+> +
+>  int __sched down_read_killable(struct rw_semaphore *sem)
+>  {
+>  	might_sleep();
+> @@ -1509,6 +1523,24 @@ int __sched down_read_killable(struct rw_semaphore *sem)
+>  }
+>  EXPORT_SYMBOL(down_read_killable);
+> 
+> +int __sched down_read_killable_contended_hook(struct rw_semaphore *sem,
+> +					      void (*pre)(void *),
+> +					      void (*post)(void *, int),
+> +					      void *arg)
+> +{
+> +	might_sleep();
+> +	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> +
+> +	if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_read_trylock,
+> +				       __down_read_killable, pre, post, arg)) {
+> +		rwsem_release(&sem->dep_map, _RET_IP_);
+> +		return -EINTR;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(down_read_killable_contended_hook);
+> +
+>  /*
+>   * trylock for reading -- returns 1 if successful, 0 if contention
+>   */
+> @@ -1533,6 +1565,20 @@ void __sched down_write(struct rw_semaphore *sem)
+>  }
+>  EXPORT_SYMBOL(down_write);
+> 
+> +/*
+> + * lock for writing
+> + */
+> +void __sched down_write_contended_hook(struct rw_semaphore *sem,
+> +				       void (*pre)(void *),
+> +				       void (*post)(void *), void *arg)
+> +{
+> +	might_sleep();
+> +	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
+> +	LOCK_CONTENDED_HOOK(sem, __down_write_trylock, __down_write, pre, post,
+> +			    arg);
+> +}
+> +EXPORT_SYMBOL(down_write_contended_hook);
+> +
+>  /*
+>   * lock for writing
+>   */
+> @@ -1551,6 +1597,24 @@ int __sched down_write_killable(struct rw_semaphore *sem)
+>  }
+>  EXPORT_SYMBOL(down_write_killable);
+> 
+> +int __sched down_write_killable_contended_hook(struct rw_semaphore *sem,
+> +					       void (*pre)(void *),
+> +					       void (*post)(void *, int),
+> +					       void *arg)
+> +{
+> +	might_sleep();
+> +	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> +
+> +	if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_write_trylock,
+> +				       __down_write_killable, pre, post, arg)) {
+> +		rwsem_release(&sem->dep_map, _RET_IP_);
+> +		return -EINTR;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(down_write_killable_contended_hook);
+> +
+>  /*
+>   * trylock for writing -- returns 1 if successful, 0 if contention
+>   */
 
-If they're all callbacks then it's overkill to add this. Presumably it
-is better to enforce this wherever the callbacks are called from so as
-to not litter the callee with random cant_sleep() calls. Probably best
-to ignore my suggestion.
-
->=20
-> I would be inclined to add cant_sleep() calls to armv8pmu_{start,stop}().=
- In the
-> previous iteration, there were WARN_ONs in these functions, and Will said=
- [1] they
-> can be removed because they are per-CPU operations. Will, what do you thi=
-nk about
-> adding the lockdep assertions?
->=20
-> [1] https://www.spinics.net/lists/arm-kernel/msg745161.html
->=20
-
-If I read it correctly Will is saying the same thing in that thread.
+NAK, absolutely not going to happen. This is an atrocious API to expose,
+worse you're exporting.
