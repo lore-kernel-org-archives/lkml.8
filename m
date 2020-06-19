@@ -2,52 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00542C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05CCF21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C065621532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582965;
-	bh=0zVJ/Ihx2f+pOTg2iHIGJB0ULCfxHT62X11wq5VVDKI=;
+	s=default; t=1592582974;
+	bh=liv92CA1wv+KMzl3ebp8kxsuQiCx/MmzeQG6u0qcm6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3ngbs6BYuPqjba61PNEnS+Iy6qVRRE2ICWzPzYATGnU53v2XzpMS+FkoUOjUTKOJ
-	 uGySzCoekADXvgK1nwD9B2Px+9hwvDZ76Otkw5np9JU168gAp3yhL8goCdASz1bjy+
-	 DRk2VWHz+Cm7IgYkswfxBQafqWjcluL14o0HXu3c=
+	b=GUH6If+vhyoV2DFH43HCHNRUVTA3ozmZ+c8G+T6BmCbmq9mkEyZBM7OJl6RNWMSy8
+	 I7EJZIdkDTlgGmyuYbNyc6mgHC65W2I9H6/WlVhaWGEKzzcc3bU++3/8n4oXj7MSAp
+	 8UJRE9IjzBB3UcbgAE4b6gFI4CSeB68iMULoTbDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391651AbgFSQJX (ORCPT
+        id S2394275AbgFSQJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391541AbgFSPHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:10 -0400
+        id S2391527AbgFSPHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E8E21852;
-        Fri, 19 Jun 2020 15:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD0D21852;
+        Fri, 19 Jun 2020 15:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579229;
-        bh=0zVJ/Ihx2f+pOTg2iHIGJB0ULCfxHT62X11wq5VVDKI=;
+        s=default; t=1592579221;
+        bh=liv92CA1wv+KMzl3ebp8kxsuQiCx/MmzeQG6u0qcm6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OMkQZ9z84Z9/jj8djo2BbVuVjCDk3vJxr9gfB2ZRevC2DzIOPxliDmiNjXPCnJjaG
-         K9lQuRkP/vrC9t0reeWR6YJ+hENRqRIErWIymK8E+L72H38ZSIXbnkW0nEN+nugjpY
-         esaDRJJBaF7ZJalWMjikeSL8eDcmTI10f5U43IVk=
+        b=VXuLJEY00eWZE8ORkz9woBqf0sP2ZajevEOJvKOWsU9pRLSqwYeErBcLFWfP2neVY
+         D+gfNzK/o/lVdIBj7tcDF+aOv7RPvHUJjJGFnfTMcl7C6hf5UN2idVUnZxVO/kQRrj
+         QRSr8UFwkFWpwbgJHfYcG42ipBz8E5v/YNiYece4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kurt Kennett <kurt_kennett@hotmail.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/261] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
-Date:   Fri, 19 Jun 2020 16:31:06 +0200
-Message-Id: <20200619141652.565489821@linuxfoundation.org>
+Subject: [PATCH 5.4 026/261] ACPICA: Dispatcher: add status checks
+Date:   Fri, 19 Jun 2020 16:30:37 +0200
+Message-Id: <20200619141651.174028872@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,38 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
+[ Upstream commit 6bfe5344b2956d0bee116f1c640aef05e5cddd76 ]
 
-The value adapter->rss_conf is stored in DMA memory, and it is assigned
-to rssConf, so rssConf->indTableSize can be modified at anytime by
-malicious hardware. Because rssConf->indTableSize is assigned to n,
-buffer overflow may occur when the code "rssConf->indTable[n]" is
-executed.
+ACPICA commit 3244c1eeba9f9fb9ccedb875f7923a3d85e0c6aa
 
-To fix this possible bug, n is checked after being used.
+The status chekcs are used to to avoid NULL pointer dereference on
+field objects
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://github.com/acpica/acpica/commit/3244c1ee
+Reported-by: Kurt Kennett <kurt_kennett@hotmail.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/acpica/dsfield.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 0a38c76688ab..5e2571d23ab9 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -702,6 +702,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
- 		*hfunc = ETH_RSS_HASH_TOP;
- 	if (!p)
- 		return 0;
-+	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
-+		return 0;
- 	while (n--)
- 		p[n] = rssConf->indTable[n];
- 	return 0;
+diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
+index 8438e33aa447..fd9028a6bc20 100644
+--- a/drivers/acpi/acpica/dsfield.c
++++ b/drivers/acpi/acpica/dsfield.c
+@@ -518,13 +518,20 @@ acpi_ds_create_field(union acpi_parse_object *op,
+ 	info.region_node = region_node;
+ 
+ 	status = acpi_ds_get_field_names(&info, walk_state, arg->common.next);
++	if (ACPI_FAILURE(status)) {
++		return_ACPI_STATUS(status);
++	}
++
+ 	if (info.region_node->object->region.space_id ==
+-	    ACPI_ADR_SPACE_PLATFORM_COMM
+-	    && !(region_node->object->field.internal_pcc_buffer =
+-		 ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
+-				      length))) {
+-		return_ACPI_STATUS(AE_NO_MEMORY);
++	    ACPI_ADR_SPACE_PLATFORM_COMM) {
++		region_node->object->field.internal_pcc_buffer =
++		    ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
++					 length);
++		if (!region_node->object->field.internal_pcc_buffer) {
++			return_ACPI_STATUS(AE_NO_MEMORY);
++		}
+ 	}
++
+ 	return_ACPI_STATUS(status);
+ }
+ 
 -- 
 2.25.1
 
