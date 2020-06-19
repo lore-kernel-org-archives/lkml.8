@@ -2,138 +2,100 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD0B20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581095;
-	bh=3dLH1nX01tG3gmSVlMfqsxHFYVmrOcIDUvaY0z3wNSA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbPdKXQXU5YvwQgY6RedLm5FN/VA3xphAiUCMoMG9jiOYHPyZgqiR6pNyhnYzwKwI
-	 8cblZD8i217+r5wD2EY/T6F2cSKKTaCTec7xmAtaPwdWxtLUqzUQRaYHS6KXiGUZII
-	 2kyqtl03RjpbP/qfE8B8L7tFm3bq4c0IrpB8aByE=
+	by mail.kernel.org (Postfix) with ESMTP id A68DA20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404650AbgFSP32 (ORCPT
+        id S2404882AbgFSPiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393670AbgFSP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A85720734;
-        Fri, 19 Jun 2020 15:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580539;
-        bh=3dLH1nX01tG3gmSVlMfqsxHFYVmrOcIDUvaY0z3wNSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpdLHoAvtTu7vYM3qn03hVgyfuQRJ1sze8BILch0tdk9XcuTmslEDltosYHFgCk5H
-         s4vygdcyPoxWhV0i41s1r2yEWwen3SLrnrrPkAmh5NAIlUkaSeDhapkYUOSS0r1+Lh
-         Bl892eh14Eubjuzv+quSgBKLmll4CM41vn0pjH8g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
-        Borislav Petkov <bp@suse.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 289/376] x86/amd_nb: Add AMD family 17h model 60h PCI IDs
-Date:   Fri, 19 Jun 2020 16:33:27 +0200
-Message-Id: <20200619141724.017305764@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:38:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39940 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389044AbgFSPiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:38:20 -0400
+Received: from ip-109-41-0-196.web.vodafone.de ([109.41.0.196] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jmJ5r-0000km-CT; Fri, 19 Jun 2020 15:38:15 +0000
+Date:   Fri, 19 Jun 2020 17:38:12 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 2/6] arm64/vdso: Zap vvar pages when switching to a time
+ namespace
+Message-ID: <20200619153812.2d6anaynb4p37qv2@wittgenstein>
+References: <20200616075545.312684-1-avagin@gmail.com>
+ <20200616075545.312684-3-avagin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200616075545.312684-3-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+On Tue, Jun 16, 2020 at 12:55:41AM -0700, Andrei Vagin wrote:
+> The VVAR page layout depends on whether a task belongs to the root or
+> non-root time namespace. Whenever a task changes its namespace, the VVAR
+> page tables are cleared and then they will be re-faulted with a
+> corresponding layout.
+> 
+> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Dmitry Safonov <dima@arista.com>
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> ---
+>  arch/arm64/kernel/vdso.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index b0aec4e8c9b4..df4bb736d28a 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -125,6 +125,38 @@ static int __vdso_init(enum vdso_abi abi)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_TIME_NS
+> +/*
+> + * The vvar page layout depends on whether a task belongs to the root or
+> + * non-root time namespace. Whenever a task changes its namespace, the VVAR
+> + * page tables are cleared and then they will re-faulted with a
+> + * corresponding layout.
+> + * See also the comment near timens_setup_vdso_data() for details.
+> + */
+> +int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+> +{
+> +	struct mm_struct *mm = task->mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	if (mmap_write_lock_killable(mm))
+> +		return -EINTR;
 
-[ Upstream commit a4e91825d7e1252f7cba005f1451e5464b23c15d ]
+Hey,
 
-Add PCI IDs for AMD Renoir (4000-series Ryzen CPUs). This is necessary
-to enable support for temperature sensors via the k10temp module.
+Just a heads-up I'm about to plumb CLONE_NEWTIME support into setns()
+which would mean that vdso_join_timens() ould not be allowed to fail
+anymore to make it easy to switch to multiple namespaces atomically. So
+this would probably need to be changed to mmap_write_lock() which I've
+already brought up upstream:
+https://lore.kernel.org/lkml/20200611110221.pgd3r5qkjrjmfqa2@wittgenstein/
+(Assuming that people agree. I just sent the series and most people here
+are Cced.)
 
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20200510204842.2603-2-amonakov@ispras.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/amd_nb.c | 5 +++++
- include/linux/pci_ids.h  | 1 +
- 2 files changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index b6b3297851f3..18f6b7c4bd79 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -18,9 +18,11 @@
- #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
- #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
- #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
-+#define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630
- #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
- #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
- 
-@@ -33,6 +35,7 @@ static const struct pci_device_id amd_root_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_ROOT) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
- 	{}
- };
- 
-@@ -50,6 +53,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
-@@ -65,6 +69,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 9a57e6717e5c..0ad57693f392 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -550,6 +550,7 @@
- #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
- #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
- #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
--- 
-2.25.1
-
-
-
+Thanks!
+Christian
