@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF722C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5956CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E80220734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325F920734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585617;
-	bh=jO+4RKRFphwJ8mj1TxeR463AOCv3BepGqPDiGnVL8PI=;
+	s=default; t=1592585622;
+	bh=IWwugB8J0T2HwlfDvqTqvYRdo+b31C/P+vvrxhblFWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AuvcM6TMgnmH+uV2qZOB58B+ZqRoYWjETxtM0uez1v9Yzd0IGt2g+zGp+2oc7AEo3
-	 PVCY/6+R7roqLHF3rEqGAuri7UDAJyASiol80cfUJ8qSit2qqdssrCUM18FNUamvZC
-	 pUVuOSDfJMu+ZZUpL5P7cb2GaajhUtfzcumIjM6s=
+	b=svvsdWB5XvIHNp2IWHjsnCTIsQiDZ8jQRpzP10VPQW8dcoioA8KrY3IIP1oZiHW5m
+	 +WOy3scVPCKO/CWeyRSYhRyKFZ3M6RvA+7XaY3u5YGnaIN/ehJ4hzoKR/K/Uvp36ta
+	 rw3wCZhYcXTnI3Zol2hS5YsnisVsz6dpfQ9YcfEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436523AbgFSQxf (ORCPT
+        id S2388468AbgFSQxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387683AbgFSOhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:18 -0400
+        id S2387623AbgFSOhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:37:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962BE208B8;
-        Fri, 19 Jun 2020 14:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32F021582;
+        Fri, 19 Jun 2020 14:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577438;
-        bh=jO+4RKRFphwJ8mj1TxeR463AOCv3BepGqPDiGnVL8PI=;
+        s=default; t=1592577422;
+        bh=IWwugB8J0T2HwlfDvqTqvYRdo+b31C/P+vvrxhblFWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hS9Fyij756myYpkVPbK8l08NWggw/fn5uQeNJLtGeYXiPJpjPDk+l5dpdlySHLcTf
-         SZ2lmpiya1nF4vUSx0wrxuVOKtTJHEqYPP0RNAstF6vY7JSCFL8tlrAvaNA4wF38W8
-         rc230/QtWMyBUKCQE82ej/3DmiccWQ/n8b4/Tvq0=
+        b=fU4DzqB0vLuabe/Qz8mZb5nG3pfXSfkH7p1sT5QpB1mxBSfM8Dq+L7Rky5ZPprnmN
+         etQJ8ypvIkDg8ReVYRRtWsXZidCiSdStMMMHMnHc0x4AZUe5uZKgWkJMd37nPZSzF4
+         InnnjYVP5aQibMq91B4c3hGRNtyrAW+3CpsuJYr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.4 033/101] proc: Use new_inode not new_inode_pseudo
-Date:   Fri, 19 Jun 2020 16:32:22 +0200
-Message-Id: <20200619141615.833129577@linuxfoundation.org>
+        Xiaolong Huang <butterflyhuangxx@gmail.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 045/101] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
+Date:   Fri, 19 Jun 2020 16:32:34 +0200
+Message-Id: <20200619141616.459095266@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -60,83 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Xiaolong Huang <butterflyhuangxx@gmail.com>
 
-commit ef1548adada51a2f32ed7faef50aa465e1b4c5da upstream.
+commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
 
-Recently syzbot reported that unmounting proc when there is an ongoing
-inotify watch on the root directory of proc could result in a use
-after free when the watch is removed after the unmount of proc
-when the watcher exits.
+Uninitialized Kernel memory can leak to USB devices.
 
-Commit 69879c01a0c3 ("proc: Remove the now unnecessary internal mount
-of proc") made it easier to unmount proc and allowed syzbot to see the
-problem, but looking at the code it has been around for a long time.
+Fix this by using kzalloc() instead of kmalloc().
 
-Looking at the code the fsnotify watch should have been removed by
-fsnotify_sb_delete in generic_shutdown_super.  Unfortunately the inode
-was allocated with new_inode_pseudo instead of new_inode so the inode
-was not on the sb->s_inodes list.  Which prevented
-fsnotify_unmount_inodes from finding the inode and removing the watch
-as well as made it so the "VFS: Busy inodes after unmount" warning
-could not find the inodes to warn about them.
-
-Make all of the inodes in proc visible to generic_shutdown_super,
-and fsnotify_sb_delete by using new_inode instead of new_inode_pseudo.
-The only functional difference is that new_inode places the inodes
-on the sb->s_inodes list.
-
-I wrote a small test program and I can verify that without changes it
-can trigger this issue, and by replacing new_inode_pseudo with
-new_inode the issues goes away.
-
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/000000000000d788c905a7dfa3f4@google.com
-Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
-Fixes: 0097875bd415 ("proc: Implement /proc/thread-self to point at the directory of the current thread")
-Fixes: 021ada7dff22 ("procfs: switch /proc/self away from proc_dir_entry")
-Fixes: 51f0885e5415 ("vfs,proc: guarantee unique inodes in /proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
+Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
+Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[bwh: Backported to 4.9: adjust filename, context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/inode.c       |    2 +-
- fs/proc/self.c        |    2 +-
- fs/proc/thread_self.c |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/can/usb/kvaser_usb.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -415,7 +415,7 @@ const struct inode_operations proc_link_
+--- a/drivers/net/can/usb/kvaser_usb.c
++++ b/drivers/net/can/usb/kvaser_usb.c
+@@ -787,7 +787,7 @@ static int kvaser_usb_simple_msg_async(s
+ 		return -ENOMEM;
+ 	}
  
- struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
- {
--	struct inode *inode = new_inode_pseudo(sb);
-+	struct inode *inode = new_inode(sb);
+-	buf = kmalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
++	buf = kzalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
+ 	if (!buf) {
+ 		usb_free_urb(urb);
+ 		return -ENOMEM;
+@@ -1457,7 +1457,7 @@ static int kvaser_usb_set_opt_mode(const
+ 	struct kvaser_msg *msg;
+ 	int rc;
  
- 	if (inode) {
- 		inode->i_ino = de->low_ino;
---- a/fs/proc/self.c
-+++ b/fs/proc/self.c
-@@ -51,7 +51,7 @@ int proc_setup_self(struct super_block *
- 	mutex_lock(&root_inode->i_mutex);
- 	self = d_alloc_name(s->s_root, "self");
- 	if (self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = CURRENT_TIME;
---- a/fs/proc/thread_self.c
-+++ b/fs/proc/thread_self.c
-@@ -52,7 +52,7 @@ int proc_setup_thread_self(struct super_
- 	mutex_lock(&root_inode->i_mutex);
- 	thread_self = d_alloc_name(s->s_root, "thread-self");
- 	if (thread_self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = thread_self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = CURRENT_TIME;
+-	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
++	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+@@ -1590,7 +1590,7 @@ static int kvaser_usb_flush_queue(struct
+ 	struct kvaser_msg *msg;
+ 	int rc;
+ 
+-	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
++	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
 
 
