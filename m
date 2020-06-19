@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F23F21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA2021852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579393;
-	bh=tHem92zshHOrndbxX8cm28aAXY0RKpx+8lmYqeiiAsM=;
+	s=default; t=1592579400;
+	bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOEjXhGWn9m5xHwgwjNAIvf7yskSAuSpCuFeOrItOXD5bLP9LM0ukjhcGzInJ3wC/
-	 c33M0+cGddLjQOrTf6f5nZsFzaK3MLorKcCysBEeFgJMj870v8blR4to32imbqUPpg
-	 j7na0bJNN1xjOucyrG4x189/lr6jp7pGSkW1u0JY=
+	b=Ke1WKllJ663UeN3ASmCAHaiMTH8kpfkYjrldQOeoFc+g58LMwF2/3F06LO4JRc8nP
+	 ugNmV7pXg/s3vKtTcPQ7PVdOEvP+1oc1qTTITsCy16KHqleFA74hOaIlKXYiqIiigB
+	 FFv5xNSZKTIa4AnDS2CxwWtetyKdvb5zX9mXsxDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391974AbgFSPJv (ORCPT
+        id S2391991AbgFSPJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39604 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391964AbgFSPJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:48 -0400
+        id S2391973AbgFSPJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:09:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8A620776;
-        Fri, 19 Jun 2020 15:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEC8D21941;
+        Fri, 19 Jun 2020 15:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579387;
-        bh=tHem92zshHOrndbxX8cm28aAXY0RKpx+8lmYqeiiAsM=;
+        s=default; t=1592579390;
+        bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EzACoZBJrS8G5Lm5+lUgBtg6zghPwnUsDojuZyOMKXIgeYTKwY8TYFsuKEivDlUb5
-         l5vpnbwzoG1h6Z1zWOMt4Malcwvk0UQfFSgMgUn7GVa4SErXDc3JuWNLia4TOpZB/P
-         bmLkyAyaqjDgEfsYNSpzqps4lkeJOW73VUBiCCp4=
+        b=NibE0LNvBhdulqksjjuITGrNtcTiBgJ2jEPOP1+c6GYHyuc8FHxiX94sZh2dP8hTH
+         GA5mttl5ddSSvZj9I6hXWIh0Qzu0YefXmiG4nq/IGw8JIU0ePT71XM535SOavwc0eB
+         xi1sywGDUJ8dj+zz3XHfdwnWQM1kgsDcrweNtSlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erez Shitrit <erezsh@mellanox.com>,
-        Alex Vesker <valex@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 116/261] net/mlx5e: IPoIB, Drop multicast packets that this interface sent
-Date:   Fri, 19 Jun 2020 16:32:07 +0200
-Message-Id: <20200619141655.438157866@linuxfoundation.org>
+Subject: [PATCH 5.4 117/261] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
+Date:   Fri, 19 Jun 2020 16:32:08 +0200
+Message-Id: <20200619141655.480886333@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,71 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Shitrit <erezsh@mellanox.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8b46d424a743ddfef8056d5167f13ee7ebd1dcad ]
+[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
 
-After enabled loopback packets for IPoIB, we need to drop these packets
-that this HCA has replicated and came back to the same interface that
-sent them.
+Seven years ago we tried to fix a leak but actually introduced a double
+free instead.  It was an understandable mistake because the code was a
+bit confusing and the free was done in the wrong place.  The "skb"
+pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
+The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
+and I've cleaned the code up a bit to hopefully make it more clear.
 
-Fixes: 4c6c615e3f30 ("net/mlx5e: IPoIB, Add PKEY child interface nic profile")
-Signed-off-by: Erez Shitrit <erezsh@mellanox.com>
-Reviewed-by: Alex Vesker <valex@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-index c4eed5bbcd45..066bada4ccd1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -1428,6 +1428,7 @@ out:
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 348b0072cdd6..c66c6dc00378 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -881,10 +881,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
  
- #ifdef CONFIG_MLX5_CORE_IPOIB
+ 	WARN_ON(NULL == skb);
+ 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
+-	if (!_urb) {
+-		kfree_skb(skb);
++	if (!_urb)
+ 		return NULL;
+-	}
+ 	_rtl_install_trx_info(rtlusb, skb, ep_num);
+ 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
+ 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
+@@ -898,7 +896,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
+ 	u32 ep_num;
+ 	struct urb *_urb = NULL;
+-	struct sk_buff *_skb = NULL;
  
-+#define MLX5_IB_GRH_SGID_OFFSET 8
- #define MLX5_IB_GRH_DGID_OFFSET 24
- #define MLX5_GID_SIZE           16
- 
-@@ -1441,6 +1442,7 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	struct net_device *netdev;
- 	struct mlx5e_priv *priv;
- 	char *pseudo_header;
-+	u32 flags_rqpn;
- 	u32 qpn;
- 	u8 *dgid;
- 	u8 g;
-@@ -1462,7 +1464,8 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	tstamp = &priv->tstamp;
- 	stats = &priv->channel_stats[rq->ix].rq;
- 
--	g = (be32_to_cpu(cqe->flags_rqpn) >> 28) & 3;
-+	flags_rqpn = be32_to_cpu(cqe->flags_rqpn);
-+	g = (flags_rqpn >> 28) & 3;
- 	dgid = skb->data + MLX5_IB_GRH_DGID_OFFSET;
- 	if ((!g) || dgid[0] != 0xff)
- 		skb->pkt_type = PACKET_HOST;
-@@ -1471,9 +1474,15 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	else
- 		skb->pkt_type = PACKET_MULTICAST;
- 
--	/* TODO: IB/ipoib: Allow mcast packets from other VFs
--	 * 68996a6e760e5c74654723eeb57bf65628ae87f4
-+	/* Drop packets that this interface sent, ie multicast packets
-+	 * that the HCA has replicated.
- 	 */
-+	if (g && (qpn == (flags_rqpn & 0xffffff)) &&
-+	    (memcmp(netdev->dev_addr + 4, skb->data + MLX5_IB_GRH_SGID_OFFSET,
-+		    MLX5_GID_SIZE) == 0)) {
-+		skb->dev = NULL;
-+		return;
-+	}
- 
- 	skb_pull(skb, MLX5_IB_GRH_BYTES);
- 
+ 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
+ 	if (unlikely(IS_USB_STOP(rtlusb))) {
+@@ -907,8 +904,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		return;
+ 	}
+ 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
+-	_skb = skb;
+-	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
++	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
+ 	if (unlikely(!_urb)) {
+ 		pr_err("Can't allocate urb. Drop skb!\n");
+ 		kfree_skb(skb);
 -- 
 2.25.1
 
