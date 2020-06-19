@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B743EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973092166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA892166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582843;
-	bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
+	s=default; t=1592582848;
+	bh=yWzuLIfLozYcOoBM8fQyerjEmRLb21DzZp64pt8yd9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTkYdwbA5z23FjjaVmCq7uyOP7AwVk8sygtGhpSl6/sDHomfP70qfYtCZ7C0n8xI/
-	 woyxf0SZMdqtzmmVXtPirfY0Z8IviYfewnbRSQWIdcf+X9OWOBbN4JOXuz+38PCKGD
-	 TGE013Q7JcSWSVPtWyCYLFHaPRUIofAukIiGHhpw=
+	b=RVpR+VAWDkpZGvQOuTxlHHDqy5lEMK/PHYe64rDv4o2cWuNaYm1XIdfjV2VlNgmYI
+	 DZLBd/iwOOr1ByDDVNnxo5LwOCOwZ6c9w4UWz8hH3TJjstmrsyxwqdLFWSoVH7O1Jf
+	 qKLIVCAAwEEr8AqmO3wH7R9ydjwIf27sEKfWuoPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391812AbgFSPIw (ORCPT
+        id S2391788AbgFSPIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:08:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38330 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391802AbgFSPIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:48 -0400
+        id S2390914AbgFSPIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1989921852;
-        Fri, 19 Jun 2020 15:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5174421974;
+        Fri, 19 Jun 2020 15:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579327;
-        bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
+        s=default; t=1592579317;
+        bh=yWzuLIfLozYcOoBM8fQyerjEmRLb21DzZp64pt8yd9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBmp6UienM90+iG6Inu51GO6bYL+MiUeaP+/2GyUCNbp4WjJIzeaqtnF2gSeDcbN3
-         BQoz9jkGR7swFw/IYMM40v2e90lib8n8EkOACPMTFYehkGTDMpDsfwgWcHp4JIaDh7
-         9PmsYxC+DcAX6cwhNjoM2Rtj4ZQoZPYzNTgmUpEY=
+        b=H1baSBv52JrcrV/LiugS+yuS4Q08/x/mGCvmiSCJDjbgvSZ5F3j7iVx3Yb8r51MvS
+         DwBbZgtNd1AKw9ioU0Ac0Fh8oMPEwvJ/hYWzysyUbe8BmiwlJe2CfSMwmylrkLlUfh
+         bP8EXNhBErUdAa7SBWEU+7AjzSIgxP6b/yl12oOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/261] e1000: Distribute switch variables for initialization
-Date:   Fri, 19 Jun 2020 16:31:15 +0200
-Message-Id: <20200619141652.979383204@linuxfoundation.org>
+Subject: [PATCH 5.4 060/261] spi: Respect DataBitLength field of SpiSerialBusV2() ACPI resource
+Date:   Fri, 19 Jun 2020 16:31:11 +0200
+Message-Id: <20200619141652.795737704@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,62 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit 0dadde344d965566589cd82797893d5aa06557a3 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+By unknown reason the commit 64bee4d28c9e
+  ("spi / ACPI: add ACPI enumeration support")
+missed the DataBitLength property to encounter when parse SPI slave
+device data from ACPI.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
+Fill the gap here.
 
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 64bee4d28c9e ("spi / ACPI: add ACPI enumeration support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200413180406.1826-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 86493fea56e4..f93ed70709c6 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3140,8 +3140,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
-+
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3162,6 +3163,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 6bfbf0cfcf63..c6242f0a307f 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1950,6 +1950,7 @@ static int acpi_spi_add_resource(struct acpi_resource *ares, void *data)
+ 			}
+ 
+ 			lookup->max_speed_hz = sb->connection_speed;
++			lookup->bits_per_word = sb->data_bit_length;
+ 
+ 			if (sb->clock_phase == ACPI_SPI_SECOND_PHASE)
+ 				lookup->mode |= SPI_CPHA;
 -- 
 2.25.1
 
