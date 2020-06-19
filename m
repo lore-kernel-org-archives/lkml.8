@@ -6,25 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C54B206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC690206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733058AbgFSMZ6 (ORCPT
+        id S1733060AbgFSM1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:25:58 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57231 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733008AbgFSMZS (ORCPT
+        Fri, 19 Jun 2020 08:27:02 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50583 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733039AbgFSMZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:25:18 -0400
-X-Originating-IP: 90.76.143.236
+        Fri, 19 Jun 2020 08:25:25 -0400
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 10BF740017;
-        Fri, 19 Jun 2020 12:25:01 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7514720000E;
+        Fri, 19 Jun 2020 12:25:23 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,9 +31,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v3 1/8] net: phy: add support for a common probe between shared PHYs
-Date:   Fri, 19 Jun 2020 14:22:53 +0200
-Message-Id: <20200619122300.2510533-2-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v3 3/8] net: phy: mscc: remove the TR CLK disable magic value
+Date:   Fri, 19 Jun 2020 14:22:55 +0200
+Message-Id: <20200619122300.2510533-4-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
 References: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
@@ -45,60 +44,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared PHYs (PHYs in the same hardware package) may have shared
-registers and their drivers would usually need to share information.
-There is currently a way to have a shared (part of the) init, by using
-phy_package_init_once(). This patch extends the logic to share parts of
-the probe to allow sharing the initialization of locks or resources
-retrieval.
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
+This patch adds a define for the 0x8000 magic value used to perform
+enable/disable actions on the "token ring clock". The patch is only
+cosmetic.
+
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- include/linux/phy.h | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/phy/mscc/mscc.h      |  1 +
+ drivers/net/phy/mscc/mscc_main.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..058219b6441f 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -244,7 +244,8 @@ struct phy_package_shared {
- };
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index fbcee5fce7b2..756ec418f4f8 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -252,6 +252,7 @@ enum rgmii_clock_delay {
+ /* Test page Registers */
+ #define MSCC_PHY_TEST_PAGE_5		  5
+ #define MSCC_PHY_TEST_PAGE_8		  8
++#define TR_CLK_DISABLE			  0x8000
+ #define MSCC_PHY_TEST_PAGE_9		  9
+ #define MSCC_PHY_TEST_PAGE_20		  20
+ #define MSCC_PHY_TEST_PAGE_24		  24
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 5ddc44f87eaf..052a0def6e83 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -629,7 +629,7 @@ static int vsc8531_pre_init_seq_set(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 	rc = phy_modify_paged(phydev, MSCC_PHY_PAGE_TEST,
+-			      MSCC_PHY_TEST_PAGE_8, 0x8000, 0x8000);
++			      MSCC_PHY_TEST_PAGE_8, TR_CLK_DISABLE, TR_CLK_DISABLE);
+ 	if (rc < 0)
+ 		return rc;
  
- /* used as bit number in atomic bitops */
--#define PHY_SHARED_F_INIT_DONE 0
-+#define PHY_SHARED_F_INIT_DONE  0
-+#define PHY_SHARED_F_PROBE_DONE 1
+@@ -1026,7 +1026,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1b20);
  
- /*
-  * The Bus class for PHYs.  Devices which provide access to
-@@ -1554,14 +1555,25 @@ static inline int __phy_package_write(struct phy_device *phydev,
- 	return __mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
- }
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg |= 0x8000;
++	reg |= TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
  
--static inline bool phy_package_init_once(struct phy_device *phydev)
-+static inline bool __phy_package_set_once(struct phy_device *phydev,
-+					  unsigned int b)
- {
- 	struct phy_package_shared *shared = phydev->shared;
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
+@@ -1046,7 +1046,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
  
- 	if (!shared)
- 		return false;
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg &= ~0x8000;
++	reg &= ~TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
  
--	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
-+	return !test_and_set_bit(b, &shared->flags);
-+}
-+
-+static inline bool phy_package_init_once(struct phy_device *phydev)
-+{
-+	return __phy_package_set_once(phydev, PHY_SHARED_F_INIT_DONE);
-+}
-+
-+static inline bool phy_package_probe_once(struct phy_device *phydev)
-+{
-+	return __phy_package_set_once(phydev, PHY_SHARED_F_PROBE_DONE);
- }
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
+@@ -1196,7 +1196,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1f20);
  
- extern struct bus_type mdio_bus_type;
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg |= 0x8000;
++	reg |= TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
+@@ -1225,7 +1225,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
+ 
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg &= ~0x8000;
++	reg &= ~TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
 -- 
 2.26.2
 
