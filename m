@@ -2,88 +2,110 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783C3207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592573342;
-	bh=lu3A8dgfddBJOdAh48Om/2tmW8Fdzk+zN7yT4K1Hta0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=opA7AKLVsvIrnSVNBVyMo0QIcxfI9dyv1mXwv9wMiCO4x1oV2CqIdH+kd3qmEePeL
-	 G8HLqYKvZwk4sT1K+8bz7AZbKHOSeBdRoR8JZPwRAlzuS/aU7meBXM6UjossRl2uLL
-	 Rb8eO54B2gONOljZqimA7nRQ9lE6rZ/oqmOQLWzo=
+	by mail.kernel.org (Postfix) with ESMTP id 8C307207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:31:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Uc7SmMk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbgFSN27 (ORCPT
+        id S1732664AbgFSNbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgFSN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:27:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26668207FC;
-        Fri, 19 Jun 2020 13:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592573262;
-        bh=lu3A8dgfddBJOdAh48Om/2tmW8Fdzk+zN7yT4K1Hta0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=mAoOQ5S2dI0eG+mUTj3k4LYTRCwGkCXuZ0Ed8a8oUVDhRLNiRi1OnOcQhLIEW1R14
-         sdRWoDgPRRmdNx43+xX9LgOEzxcHGhUWB0f+rxdQakxaejVm1eGPFQ6fwtnP9yXLyG
-         jKCk8ZQjC/AqhcH0w6Hje01KzFQyEuxeWfAvcjZQ=
-Date:   Fri, 19 Jun 2020 14:27:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
-        festevam@gmail.com, Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com,
-        alsa-devel@alsa-project.org, perex@perex.cz, tiwai@suse.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <579c0d71e976f34f23f40daa9f1aa06c4baca2f1.1592552389.git.shengjiu.wang@nxp.com>
-References: <579c0d71e976f34f23f40daa9f1aa06c4baca2f1.1592552389.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v2] ASoC: fsl_spdif: Add pm runtime function
-Message-Id: <159257325526.5735.7482602069730796749.b4-ty@kernel.org>
+        Fri, 19 Jun 2020 09:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728851AbgFSNa6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:30:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85353C06174E;
+        Fri, 19 Jun 2020 06:30:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=azXx+i4S6hGMFy3RKW3uS2B0gRoR0Q1Z9mL5C3k3bY0=; b=Uc7SmMk5/u0wACt4N71eioHY8
+        RjMnWJC2yICgwohM9JvfHLNjWjh0qB10LKq8KjSqsLn/sw/kX/rD2+WTwy8z0p+drXmr60KVn7OQv
+        yPHpXeqGVRhakbNEs1i4PZPGu3zfRwyhRwJWXqmK7J3lJiUPPjZB1rKMYpocq9mXMFVfode+0L7zd
+        sYzU4Oo/VxX/Q9a7jJo98OGRiPSLE4SVUZlzvNJ8FtSX34aIqF2hnTWuYSsbeLlWQWjK+J5jPu14V
+        bGDujoYbyNmjFyXu0TDoKEfYQV5cQZY6kLwFK4tntgcZmi+sIPlTqU8zzc5kdB3SDwpao1qKI8OI0
+        1BDlZFTlA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58832)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jmH6R-0006V0-1q; Fri, 19 Jun 2020 14:30:43 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jmH6O-0005gb-H4; Fri, 19 Jun 2020 14:30:40 +0100
+Date:   Fri, 19 Jun 2020 14:30:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Dajun Jin <adajunjin@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH net 2/2] net: phy: Check harder for errors in get_phy_id()
+Message-ID: <20200619133040.GO1551@shell.armlinux.org.uk>
+References: <20200619044759.11387-1-f.fainelli@gmail.com>
+ <20200619044759.11387-3-f.fainelli@gmail.com>
+ <20200619132659.GB304147@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619132659.GB304147@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 15:54:33 +0800, Shengjiu Wang wrote:
-> Add pm runtime support and move clock handling there.
-> Close the clocks at suspend to reduce the power consumption.
+On Fri, Jun 19, 2020 at 03:26:59PM +0200, Andrew Lunn wrote:
+> On Thu, Jun 18, 2020 at 09:47:59PM -0700, Florian Fainelli wrote:
+> > Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
+> > phys") added a special condition to return -ENODEV in case -ENODEV or
+> > -EIO was returned from the first read of the MII_PHYSID1 register.
+> > 
+> > In case the MDIO bus data line pull-up is not strong enough, the MDIO
+> > bus controller will not flag this as a read error. This can happen when
+> > a pluggable daughter card is not connected and weak internal pull-ups
+> > are used (since that is the only option, otherwise the pins are
+> > floating).
+> > 
+> > The second read of MII_PHYSID2 will be correctly flagged an error
+> > though, but now we will return -EIO which will be treated as a hard
+> > error, thus preventing MDIO bus scanning loops to continue succesfully.
+> > 
+> > Apply the same logic to both register reads, thus allowing the scanning
+> > logic to proceed.
 > 
-> fsl_spdif_suspend is replaced by pm_runtime_force_suspend.
-> fsl_spdif_resume is replaced by pm_runtime_force_resume.
+> Hi Florian
+> 
+> Maybe extend the kerneldoc for this function to document the return
+> values and there special meanings?
 
-Applied to
+You mean like the patch I sent yesterday?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> BTW: Did you look at get_phy_c45_ids()? Is it using the correct return
+> value? Given the current work being done to extend scanning to C45,
+> maybe it needs reviewing for issues like this.
 
-Thanks!
+And the updates I sent for this yesterday? ;)
 
-[1/1] ASoC: fsl_spdif: Add pm runtime function
-      commit: 9cb2b3796e083169b368a7add19faec1750ad998
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
