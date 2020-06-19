@@ -2,53 +2,61 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8734CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8272158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BDB21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580132;
-	bh=7RDSSuE0x1CRJMtpeeSsfflH94SQLQHmYsHUUAk+q2E=;
+	s=default; t=1592580135;
+	bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p++5GkRS7f0bOikpe3dzZJoKF+IM6/HUIu/CPFrDNqtujenDm0TXJpWqUBFzM+DYh
-	 +zjjNQ6zn3y5G7/A1PSIF3wWBaCQHwHlZmpoqGEvP6n5JWjM7d6SmEImM0DxJtdSpQ
-	 ZzGJhIlbxctJI4A5Hhm1Y3+3gzmEAufHd9fhQG6g=
+	b=KZ/m8jvn6aeOZPM2MqUxwB/jMqnAmR5Ge2lGBlv9nTjSIuABuzyQ3XnUNUa12kiaF
+	 uO3gu1XPH5eE820XQeg4tjpmE5fc6CabFiEbqXslrq/5NWCwQPT/L3gukKXDglg0sY
+	 l31NXi2QFTP44pXUIov38c2xqJz/Gi5++f0Ct1R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392959AbgFSPWL (ORCPT
+        id S2392967AbgFSPWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391873AbgFSPPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:51 -0400
+        id S2392595AbgFSPSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A936B2080C;
-        Fri, 19 Jun 2020 15:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 356BA2158C;
+        Fri, 19 Jun 2020 15:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579751;
-        bh=7RDSSuE0x1CRJMtpeeSsfflH94SQLQHmYsHUUAk+q2E=;
+        s=default; t=1592579926;
+        bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LTmTKpJ0FXoJ9UWuifw+/guZJWq8SSxeTl2rI6/rNzhax+PsgB62ymPKPGLXqwYzS
-         6Lkb6/MUZ4wg317nHkW3oSxkil7i8HSCrSeYpTKmnNHM0fHAFQRLdve+R89RBUXWpg
-         1EIKGT6UAC2WlZOABvkCUf4sKIJ/GXFFX5zvnvEE=
+        b=Zc1X2vCgxJAVmzRiwnE/xp9s3bPO6p/TbbI2VO4WHwOE1BzDCXq59pJ1ZD5jzIjrF
+         KlT3i5ja1Z/twtSKciotvLzZeNLO9dZKmgsTKL/TKM4iUCXYlqq1JWslm+FbNbvnuD
+         Hh+8SlE97CnkPljU5YOhYXnfy8Jg9HlKW4hwQACo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 251/261] mtd: rawnand: plat_nand: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:34:22 +0200
-Message-Id: <20200619141701.913106920@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 057/376] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
+Date:   Fri, 19 Jun 2020 16:29:35 +0200
+Message-Id: <20200619141713.039466217@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,40 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-commit 5284024b4dac5e94f7f374ca905c7580dbc455e9 upstream.
+[ Upstream commit a2ac81c6ef4018ea49c034ce165bb9ea1cf99f3e ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
+allows") updated the cpu_has_mips* macro to be replaced with a constant
+expression where it's possible. By mistake it wasn't done correctly
+for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
+be replaced with conditional expression __isa_range_or_flag(), which
+means either ISA revision being within the range or the corresponding
+CPU options flag was set at the probe stage or both being true at the
+same time. But the ISA level value doesn't indicate whether the ISA is
+MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
+architectures the __isa_range() macro will activate the
+cpu_has_mips64rX flags, which is incorrect. In order to fix the
+problem we make sure the 64bits CPU support is enabled by means of
+checking the flag cpu_has_64bits aside with proper ISA range and specific
+Revision flag being set.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible, hence pointing it as the commit to
-fix for backporting purposes, even if this commit is not introducing
-any bug.
-
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-43-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/plat_nand.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/cpu-features.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/nand/raw/plat_nand.c
-+++ b/drivers/mtd/nand/raw/plat_nand.c
-@@ -92,7 +92,7 @@ static int plat_nand_probe(struct platfo
- 	if (!err)
- 		return err;
- 
--	nand_release(&data->chip);
-+	nand_cleanup(&data->chip);
- out:
- 	if (pdata->ctrl.remove)
- 		pdata->ctrl.remove(pdev);
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index de44c92b1c1f..d4e120464d41 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -288,10 +288,12 @@
+ # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
+ #endif
+ #ifndef cpu_has_mips64r1
+-# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
++# define cpu_has_mips64r1	(cpu_has_64bits && \
++				 __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
+ #endif
+ #ifndef cpu_has_mips64r2
+-# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
++# define cpu_has_mips64r2	(cpu_has_64bits && \
++				 __isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2))
+ #endif
+ #ifndef cpu_has_mips64r6
+ # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
+-- 
+2.25.1
+
 
 
