@@ -3,124 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33570C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA122100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3411D2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390838AbgFSUlS (ORCPT
+        id S2390896AbgFSUl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390600AbgFSUlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:41:17 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855192100A;
-        Fri, 19 Jun 2020 20:41:16 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 16:41:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/22] docs: trace: ring-buffer-design.txt: convert to
- ReST format
-Message-ID: <20200619164114.00379740@oasis.local.home>
-In-Reply-To: <20200619141329.3867e57e@lwn.net>
-References: <cover.1592203650.git.mchehab+huawei@kernel.org>
-        <c11ee0be2bf63626887d7cd38e7572b31e2a2ce2.1592203650.git.mchehab+huawei@kernel.org>
-        <20200619141329.3867e57e@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 19 Jun 2020 16:41:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388929AbgFSUl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 16:41:57 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JKVqrN159665;
+        Fri, 19 Jun 2020 16:41:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31rthajuyn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 16:41:43 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JKVsWf159881;
+        Fri, 19 Jun 2020 16:41:43 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31rthajuyd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 16:41:43 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JKdf0o025533;
+        Fri, 19 Jun 2020 20:41:42 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 31rdtfga8a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 20:41:42 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JKfgle14287410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 20:41:42 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15134124052;
+        Fri, 19 Jun 2020 20:41:42 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FA7E124058;
+        Fri, 19 Jun 2020 20:41:40 +0000 (GMT)
+Received: from [9.163.11.155] (unknown [9.163.11.155])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Jun 2020 20:41:40 +0000 (GMT)
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+To:     Tejun Heo <tj@kernel.org>, Ian Kent <raven@themaw.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Message-ID: <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+Date:   Fri, 19 Jun 2020 13:41:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200619153833.GA5749@mtj.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_21:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 adultscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=893 spamscore=0 impostorscore=0 suspectscore=0
+ bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006190141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 14:13:29 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
+On 6/19/20 8:38 AM, Tejun Heo wrote:
 
-> On Mon, 15 Jun 2020 08:50:23 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> 
-> [CC += Steve]
+> I don't have strong objections to the series but the rationales don't seem
+> particularly strong. It's solving a suspected problem but only half way. It
+> isn't clear whether this can be the long term solution for the problem
+> machine and whether it will benefit anyone else in a meaningful way either.
 
-Thanks.
+I don't understand your statement about solving the problem halfway.  Could you elaborate?
 
-> 
-> > - Just like some media documents, this file is dual licensed
-> >   with GPL and GFDL. As right now the GFDL SPDX definition is
-> >   bogus (as it doesn't tell anything about invariant parts),
-> >   let's not use SPDX here. Let's use, instead, the same test
-> >   as we have on media.  
-> 
-> The dual-licensing really can't be expressed with an SPDX tag?  Because...
+> I think Greg already asked this but how are the 100,000+ memory objects
+> used? Is that justified in the first place?
 
-A SPDX dual license should be possible, as it's used for GPL and BSD in
-several locations.
+They are used for hotplugging and partitioning memory.  The size of the segments (and thus the number of them) is dictated by the underlying hardware.
 
-> 
-> [...]
-> 
-> > +.. This file is dual-licensed: you can use it either under the terms
-> > +.. of the GPL 2.0 or the GFDL 1.2+ license, at your option. Note that this
-
-And I never said GFDL 1.2+
-
- Copyright 2009 Red Hat Inc.                                                                                                                                                                  
--   Author:   Steven Rostedt <srostedt@redhat.com>                                                                                                                                            
--  License:   The GNU Free Documentation License, Version 1.2                                                                                                                                 
--               (dual licensed under the GPL v2)                                                                                                                                              
--Reviewers:   Mathieu Desnoyers, Huang Ying, Hidetoshi Seto,
-
-There is no "+" sign here.
-
-
-> > +.. dual licensing only applies to this file, and not this project as a
-> > +.. whole.
-> > +..
-> > +.. a) This file is free software; you can redistribute it and/or
-> > +..    modify it under the terms of the GNU General Public License as
-> > +..    published by the Free Software Foundation version 2 of
-> > +..    the License.
-> > +..
-> > +..    This file is distributed in the hope that it will be useful,
-> > +..    but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > +..    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > +..    GNU General Public License for more details.
-> > +..
-> > +.. Or, alternatively,
-> > +..
-> > +.. b) Permission is granted to copy, distribute and/or modify this
-> > +..    document under the terms of the GNU Free Documentation License,
-> > +..    Version 1.1 or any later version published by the Free Software
-> > +..    Foundation, with no Invariant Sections, no Front-Cover Texts
-> > +..    and no Back-Cover Texts. A copy of the license is available at
-> > +..    https://www.gnu.org/licenses/old-licenses/fdl-1.2.html
-> > +..
-> > +.. TODO: replace it to GPL-2.0 OR GFDL-1.2-or-later WITH no-invariant-sections  
-
-  "GPL-2.0 OR GFDL-1.2"
-
--- Steve
-
-> 
-> ...adding all that boilerplate is kind of a bummer.
-> 
-> At a minimum I'd want an ack from Steve (who wasn't copied) before
-> applying this, but it would be better to add a bit more SPDX
-> infrastructure to express this if possible.
-> 
-> Thanks,
-> 
-> jon
+Rick
 
