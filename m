@@ -2,167 +2,146 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74334C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 137F4207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EjVb3LY4"
+	by mail.kernel.org (Postfix) with ESMTP id 52C0C207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgFSJN2 (ORCPT
+        id S1730648AbgFSJOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbgFSJN1 (ORCPT
+        Fri, 19 Jun 2020 05:14:02 -0400
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:55361 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728058AbgFSJOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:13:27 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B05C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:13:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x6so8909361wrm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VIcO7Vu1hhhJkIDur8b5xWQbNX1N/JcmyVzMFWh9MWY=;
-        b=EjVb3LY4k8M1L6gxe0H793lwu/EpD5t2rcogA1bWHCGVi6Ar1IUEdP1XHUSNR0wxWb
-         ZaMAvUtyEp5hprgxFIHusZNuRecNuFJtaGTj5oV/Vyds13ybvKDTnJBbOz5irV2mzonW
-         3G+yqdvnxqYNpwZT4mPv+sJf4E6P69ps2IY2I7OAKr/r+hRVu3DXIrSaUqQ0fALRC9Fr
-         Kc0sDBrnl6//yggVqVmQtnspnXbZQhN4fBacTxbeSjMMr3iXMzgWSGFlY9jZvfooc1FR
-         cmPdSj0JvOmyuNgt5p3TdkM/lLJzCb9HvT24MNkAhFMtyRPihI4dK1l3huLQnS2X5418
-         xXdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VIcO7Vu1hhhJkIDur8b5xWQbNX1N/JcmyVzMFWh9MWY=;
-        b=P2wJxgwo3wde6KySX9ymPW33F7qDI7IP2nwZ60dXBHgg/9mY0MIIaCMZoHahsjUxTC
-         6JB50IP44BZTvh+ofuq75KoPc6Ye4NkvhomTfFlhtlthXcebyv3+k5tTBayxOwP0tlS7
-         unzlGgBRO5gbVap8HAym6/pqug0LWYpaTeEKh/bEFa9t2gGq11fKD35x6bzqKZ47s78z
-         bNk8wZuSNMNiuhV8gw4Am1TymdvqWcCXBqPWUnJqHB6uDpBxQghv/O7lDgibFNh97CCH
-         +c3efqDjeavMazwyfxnermKcZIPPIPYGzdu6Mt7vGbDIShcU7Tf7q4C3QKjxwtJ+DHuj
-         My1A==
-X-Gm-Message-State: AOAM533tPw86v3S4iAGNXr5g1/s38nZWaa8Rtf6vzDk7OqaRlSbqzS6N
-        JLrePWZgeJcQl8w7kzwguBlgRfR5Wnk=
-X-Google-Smtp-Source: ABdhPJwH5E0HbSyiE3hGibWdLtan8edy/4DSaUVUVwEvBiRWAtDZSPcOH0BFQA9z/NRFA5cLl+GhUQ==
-X-Received: by 2002:adf:fc0c:: with SMTP id i12mr2966289wrr.365.1592558004100;
-        Fri, 19 Jun 2020 02:13:24 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f185sm6445708wmf.43.2020.06.19.02.13.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 02:13:23 -0700 (PDT)
-Subject: Re: [PATCH 3/3] ALSA: compress: fix partial_drain completion state
-To:     Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200619045449.3966868-1-vkoul@kernel.org>
- <20200619045449.3966868-4-vkoul@kernel.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <0a0fcd4c-40dd-621e-b0ad-51296178aa9e@linaro.org>
-Date:   Fri, 19 Jun 2020 10:13:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jun 2020 05:14:01 -0400
+X-Greylist: delayed 763 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Jun 2020 05:14:00 EDT
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 05J9Dcfx045854
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 19 Jun 2020 17:13:39 +0800 (CST)
+        (envelope-from hongyu.jin@unisoc.com)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX01.spreadtrum.com
+ (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 19 Jun 2020
+ 17:13:21 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.0847.030; Fri, 19 Jun 2020 17:13:08 +0800
+From:   =?gb2312?B?vfC67NPuIChIb25neXUgSmluKQ==?= <hongyu.jin@unisoc.com>
+To:     Gao Xiang <hsiangkao@aol.com>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <yuchao0@huawei.com>
+CC:     Chao Yu <chao@kernel.org>, Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Thread-Topic: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Thread-Index: AQHWRcphTFCNsOawuk2LQqgGLvVLoajfp6hw
+Date:   Fri, 19 Jun 2020 09:13:08 +0000
+Message-ID: <206e5c58a4df4136b488eb4bd2958cab@BJMBX01.spreadtrum.com>
+References: <20200618111936.19845-1-hsiangkao@aol.com>
+ <20200618234349.22553-1-hsiangkao@aol.com>
+In-Reply-To: <20200618234349.22553-1-hsiangkao@aol.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.126.169]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200619045449.3966868-4-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MAIL: SHSQR01.spreadtrum.com 05J9Dcfx045854
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/06/2020 05:54, Vinod Koul wrote:
-> On partial_drain completion we should be in SNDRV_PCM_STATE_RUNNING
-> state, so set that for partially draining streams in
-> snd_compr_drain_notify() and use a flag for partially draining streams
-> 
-> While at it, add locks for stream state change in
-> snd_compr_drain_notify() as well.
-> 
-> Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
-> Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-
->   include/sound/compress_driver.h | 12 +++++++++++-
->   sound/core/compress_offload.c   |  4 ++++
->   2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-> index 3df8d8c90191..93a5897201ea 100644
-> --- a/include/sound/compress_driver.h
-> +++ b/include/sound/compress_driver.h
-> @@ -66,6 +66,7 @@ struct snd_compr_runtime {
->    * @direction: stream direction, playback/recording
->    * @metadata_set: metadata set flag, true when set
->    * @next_track: has userspace signal next track transition, true when set
-> + * @partial_drain: undergoing partial_drain for stream, true when set
->    * @private_data: pointer to DSP private data
->    * @dma_buffer: allocated buffer if any
->    */
-> @@ -78,6 +79,7 @@ struct snd_compr_stream {
->   	enum snd_compr_direction direction;
->   	bool metadata_set;
->   	bool next_track;
-> +	bool partial_drain;
->   	void *private_data;
->   	struct snd_dma_buffer dma_buffer;
->   };
-> @@ -187,7 +189,15 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
->   	if (snd_BUG_ON(!stream))
->   		return;
->   
-> -	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-> +	mutex_lock(&stream->device->lock);
-> +	/* for partial_drain case we are back to running state on success */
-> +	if (stream->partial_drain) {
-> +		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
-> +		stream->partial_drain = false; /* clear this flag as well */
-> +	} else {
-> +		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-> +	}
-> +	mutex_unlock(&stream->device->lock);
->   
->   	wake_up(&stream->runtime->sleep);
->   }
-> diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-> index e618580feac4..1c4b2cf450a0 100644
-> --- a/sound/core/compress_offload.c
-> +++ b/sound/core/compress_offload.c
-> @@ -803,6 +803,9 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
->   
->   	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
->   	if (!retval) {
-> +		/* clear flags and stop any drain wait */
-> +		stream->partial_drain = false;
-> +		stream->metadata_set = false;
->   		snd_compr_drain_notify(stream);
->   		stream->runtime->total_bytes_available = 0;
->   		stream->runtime->total_bytes_transferred = 0;
-> @@ -960,6 +963,7 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
->   	if (stream->next_track == false)
->   		return -EPERM;
->   
-> +	stream->partial_drain = true;
->   	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_PARTIAL_DRAIN);
->   	if (retval) {
->   		pr_debug("Partial drain returned failure\n");
-> 
+SGkgeGlhbmc6DQoNCkhvbmd5dSByZXBvcnRlZCAiaWQgIT0gaW5kZXgiIGluIHpfZXJvZnNfb25s
+aW5lcGFnZV9maXh1cCgpIHdpdGggc3BlY2lmaWMgYWFyY2g2NCBlbnZpcm9ubWVudCBlYXNpbHks
+IHdoaWNoIHdhc24ndCBzaG93biBiZWZvcmUuDQoNCkFmdGVyIGRpZ2dpbmcgaW50byB0aGF0LCBJ
+IGZvdW5kIHRoYXQgaGlnaCAzMiBiaXRzIG9mIHBhZ2UtPnByaXZhdGUgd2FzIHNldCB0byAweGFh
+YWFhYWFhIHJhdGhlciB0aGFuIDAgKGR1ZSB0byB6X2Vyb2ZzX29ubGluZXBhZ2VfaW5pdCBiZWhh
+dmlvciB3aXRoIHNwZWNpZmljIGNvbXBpbGVyIG9wdGlvbnMpLiBBY3R1YWxseSB3ZSBvbmx5IHVz
+ZSBsb3cNCjMyIGJpdHMgdG8ga2VlcCB0aGUgcGFnZSBpbmZvcm1hdGlvbiBzaW5jZSBwYWdlLT5w
+cml2YXRlIGlzIG9ubHkgNCBieXRlcyBvbiBtb3N0IDMyLWJpdCBwbGF0Zm9ybXMuIEhvd2V2ZXIg
+el9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwKCkgdXNlcyB0aGUgdXBwZXIgMzIgYml0cyBieSBtaXN0
+YWtlLg0KDQpUZXN0ZWQtYnk6IGhvbmd5dS5qaW5AdW5pc29jLmNvbQ0KDQpJdCdzIG9rLg0KDQot
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogR2FvIFhpYW5nIFttYWlsdG86aHNpYW5n
+a2FvQGFvbC5jb21dDQpTZW50OiBGcmlkYXksIEp1bmUgMTksIDIwMjAgNzo0NCBBTQ0KVG86IGxp
+bnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc7IENoYW8gWXUgPHl1Y2hhbzBAaHVhd2VpLmNvbT4N
+CkNjOiBDaGFvIFl1IDxjaGFvQGtlcm5lbC5vcmc+OyBMaSBHdWlmdSA8Ymx1Y2UubGlndWlmdUBo
+dWF3ZWkuY29tPjsgRmFuZyBXZWkgPGZhbmd3ZWkxQGh1YXdlaS5jb20+OyBMS01MIDxsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgR2FvIFhpYW5nIDxoc2lhbmdrYW9AcmVkaGF0LmNvbT47
+IL3wuuzT7iAoSG9uZ3l1IEppbikgPGhvbmd5dS5qaW5AdW5pc29jLmNvbT47IHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmcNClN1YmplY3Q6IFtQQVRDSCB2Ml0gZXJvZnM6IGZpeCBwYXJ0aWFsbHkgdW5p
+bml0aWFsaXplZCBtaXN1c2UgaW4gel9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwDQoNCkZyb206IEdh
+byBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+DQoNCkhvbmd5dSByZXBvcnRlZCAiaWQgIT0g
+aW5kZXgiIGluIHpfZXJvZnNfb25saW5lcGFnZV9maXh1cCgpIHdpdGggc3BlY2lmaWMgYWFyY2g2
+NCBlbnZpcm9ubWVudCBlYXNpbHksIHdoaWNoIHdhc24ndCBzaG93biBiZWZvcmUuDQoNCkFmdGVy
+IGRpZ2dpbmcgaW50byB0aGF0LCBJIGZvdW5kIHRoYXQgaGlnaCAzMiBiaXRzIG9mIHBhZ2UtPnBy
+aXZhdGUgd2FzIHNldCB0byAweGFhYWFhYWFhIHJhdGhlciB0aGFuIDAgKGR1ZSB0byB6X2Vyb2Zz
+X29ubGluZXBhZ2VfaW5pdCBiZWhhdmlvciB3aXRoIHNwZWNpZmljIGNvbXBpbGVyIG9wdGlvbnMp
+LiBBY3R1YWxseSB3ZSBvbmx5IHVzZSBsb3cNCjMyIGJpdHMgdG8ga2VlcCB0aGUgcGFnZSBpbmZv
+cm1hdGlvbiBzaW5jZSBwYWdlLT5wcml2YXRlIGlzIG9ubHkgNCBieXRlcyBvbiBtb3N0IDMyLWJp
+dCBwbGF0Zm9ybXMuIEhvd2V2ZXIgel9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwKCkgdXNlcyB0aGUg
+dXBwZXIgMzIgYml0cyBieSBtaXN0YWtlLg0KDQpMZXQncyBmaXggaXQgbm93Lg0KDQpSZXBvcnRl
+ZC1ieTogSG9uZ3l1IEppbiA8aG9uZ3l1LmppbkB1bmlzb2MuY29tPg0KRml4ZXM6IDM4ODNhNzlh
+YmQwMiAoInN0YWdpbmc6IGVyb2ZzOiBpbnRyb2R1Y2UgVkxFIGRlY29tcHJlc3Npb24gc3VwcG9y
+dCIpDQpDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNC4xOSsNClNpZ25lZC1vZmYtYnk6
+IEdhbyBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+DQotLS0NCmNoYW5nZSBzaW5jZSB2MToN
+CiBtb3ZlIC52IGFzc2lnbm1lbnQgb3V0IHNpbmNlIGl0IGRvZXNuJ3QgbmVlZCBmb3IgZXZlcnkg
+bG9vcDsNCg0KIGZzL2Vyb2ZzL3pkYXRhLmggfCAyMCArKysrKysrKysrLS0tLS0tLS0tLQ0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL2ZzL2Vyb2ZzL3pkYXRhLmggYi9mcy9lcm9mcy96ZGF0YS5oIGluZGV4IDc4MjRmNTU2
+M2E1NS4uOWI2NmMyOGIzYWU5IDEwMDY0NA0KLS0tIGEvZnMvZXJvZnMvemRhdGEuaA0KKysrIGIv
+ZnMvZXJvZnMvemRhdGEuaA0KQEAgLTE0NCwyMiArMTQ0LDIyIEBAIHN0YXRpYyBpbmxpbmUgdm9p
+ZCB6X2Vyb2ZzX29ubGluZXBhZ2VfaW5pdChzdHJ1Y3QgcGFnZSAqcGFnZSkgIHN0YXRpYyBpbmxp
+bmUgdm9pZCB6X2Vyb2ZzX29ubGluZXBhZ2VfZml4dXAoc3RydWN0IHBhZ2UgKnBhZ2UsDQogdWlu
+dHB0cl90IGluZGV4LCBib29sIGRvd24pDQogew0KLXVuc2lnbmVkIGxvbmcgKnAsIG8sIHYsIGlk
+Ow0KLXJlcGVhdDoNCi1wID0gJnBhZ2VfcHJpdmF0ZShwYWdlKTsNCi1vID0gUkVBRF9PTkNFKCpw
+KTsNCit1bmlvbiB6X2Vyb2ZzX29ubGluZXBhZ2VfY29udmVydGVyIHUgPSB7IC52ID0gJnBhZ2Vf
+cHJpdmF0ZShwYWdlKSB9Ow0KK2ludCBvcmlnLCBvcmlnX2luZGV4LCB2YWw7DQoNCi1pZCA9IG8g
+Pj4gWl9FUk9GU19PTkxJTkVQQUdFX0lOREVYX1NISUZUOw0KLWlmIChpZCkgew0KK3JlcGVhdDoN
+CitvcmlnID0gYXRvbWljX3JlYWQodS5vKTsNCitvcmlnX2luZGV4ID0gb3JpZyA+PiBaX0VST0ZT
+X09OTElORVBBR0VfSU5ERVhfU0hJRlQ7DQoraWYgKG9yaWdfaW5kZXgpIHsNCiBpZiAoIWluZGV4
+KQ0KIHJldHVybjsNCg0KLURCR19CVUdPTihpZCAhPSBpbmRleCk7DQorREJHX0JVR09OKG9yaWdf
+aW5kZXggIT0gaW5kZXgpOw0KIH0NCg0KLXYgPSAoaW5kZXggPDwgWl9FUk9GU19PTkxJTkVQQUdF
+X0lOREVYX1NISUZUKSB8DQotKChvICYgWl9FUk9GU19PTkxJTkVQQUdFX0NPVU5UX01BU0spICsg
+KHVuc2lnbmVkIGludClkb3duKTsNCi1pZiAoY21weGNoZyhwLCBvLCB2KSAhPSBvKQ0KK3ZhbCA9
+IChpbmRleCA8PCBaX0VST0ZTX09OTElORVBBR0VfSU5ERVhfU0hJRlQpIHwNCisoKG9yaWcgJiBa
+X0VST0ZTX09OTElORVBBR0VfQ09VTlRfTUFTSykgKyAodW5zaWduZWQgaW50KWRvd24pOw0KK2lm
+IChhdG9taWNfY21weGNoZyh1Lm8sIG9yaWcsIHZhbCkgIT0gb3JpZykNCiBnb3RvIHJlcGVhdDsN
+CiB9DQoNCi0tDQoyLjI0LjANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCiBU
+aGlzIGVtYWlsIChpbmNsdWRpbmcgaXRzIGF0dGFjaG1lbnRzKSBpcyBpbnRlbmRlZCBvbmx5IGZv
+ciB0aGUgcGVyc29uIG9yIGVudGl0eSB0byB3aGljaCBpdCBpcyBhZGRyZXNzZWQgYW5kIG1heSBj
+b250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMgcHJpdmlsZWdlZCwgY29uZmlkZW50aWFsIG9yIG90
+aGVyd2lzZSBwcm90ZWN0ZWQgZnJvbSBkaXNjbG9zdXJlLiBVbmF1dGhvcml6ZWQgdXNlLCBkaXNz
+ZW1pbmF0aW9uLCBkaXN0cmlidXRpb24gb3IgY29weWluZyBvZiB0aGlzIGVtYWlsIG9yIHRoZSBp
+bmZvcm1hdGlvbiBoZXJlaW4gb3IgdGFraW5nIGFueSBhY3Rpb24gaW4gcmVsaWFuY2Ugb24gdGhl
+IGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgb3IgdGhlIGluZm9ybWF0aW9uIGhlcmVpbiwgYnkgYW55
+b25lIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lwaWVudCwgb3IgYW4gZW1wbG95ZWUgb3Ig
+YWdlbnQgcmVzcG9uc2libGUgZm9yIGRlbGl2ZXJpbmcgdGhlIG1lc3NhZ2UgdG8gdGhlIGludGVu
+ZGVkIHJlY2lwaWVudCwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhl
+IGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIGRvIG5vdCByZWFkLCBjb3B5LCB1c2Ugb3IgZGlz
+Y2xvc2UgYW55IHBhcnQgb2YgdGhpcyBlLW1haWwgdG8gb3RoZXJzLiBQbGVhc2Ugbm90aWZ5IHRo
+ZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIHBlcm1hbmVudGx5IGRlbGV0ZSB0aGlzIGUtbWFpbCBh
+bmQgYW55IGF0dGFjaG1lbnRzIGlmIHlvdSByZWNlaXZlZCBpdCBpbiBlcnJvci4gSW50ZXJuZXQg
+Y29tbXVuaWNhdGlvbnMgY2Fubm90IGJlIGd1YXJhbnRlZWQgdG8gYmUgdGltZWx5LCBzZWN1cmUs
+IGVycm9yLWZyZWUgb3IgdmlydXMtZnJlZS4gVGhlIHNlbmRlciBkb2VzIG5vdCBhY2NlcHQgbGlh
+YmlsaXR5IGZvciBhbnkgZXJyb3JzIG9yIG9taXNzaW9ucy4NCrG+08q8/rywxuS4vbz+vt/T0LGj
+w9zQ1NbKo6zK3Leowsmxo7uksru1w9C5wrajrL32t6LLzbj4sb7Tyrz+y/nWuMzYtqjK1bz+yMuh
+o9HPvfu3x76tytrIqMq508OhotD7tKuhoreisry78ri01saxvtPKvP678sbkxNrI3aGjyPS3x7jD
+zNi2qMrVvP7Iy6Osx+vO8NTEtsGhori01sahoiDKudPDu/LF+8K2sb7Tyrz+tcTIzrrOxNrI3aGj
+yPTO88rVsb7Tyrz+o6zH67TTz7XNs9bQ08C+w9DUyb6z/bG+08q8/rywy/nT0Li9vP6jrLKi0tS7
+2Li008q8/rXEt73Kvby0v8y45taqt6K8/sjLoaPO3reosaPWpLulwarN+M2o0MW8sMqxoaKwssir
+oaLO3s7zu/K3wLa+oaO3orz+yMu21MjOus607cKpvvmyu7PQtaPU8MjOoaMNCg==
