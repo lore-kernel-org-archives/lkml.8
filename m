@@ -2,130 +2,161 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C128C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1084BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED2720DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EFE20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h0aJNXfO"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="AcBrdfPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388329AbgFSSjy (ORCPT
+        id S2389116AbgFSSkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:39:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731358AbgFSSjy (ORCPT
+        Fri, 19 Jun 2020 14:40:11 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:20262 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731358AbgFSSkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:39:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592591992;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rcl3Tsq20b25qpxfIY8/T/emiAI5DcC+fOswqOgue0s=;
-        b=h0aJNXfOZ4rGi+/X4FmM9ej1WVju3jVh1h8Xe2HdX9BoyOB4q9N4wgRNT9BrUDaMs/rjWn
-        wyCGjN8PoN7bMFHbhFDeUKLkDiOgRA5i8DaU3X5LnQMSMZd/8a5AiLcyupTdOjuo9i+tv0
-        h99brFhPPG6B/oPq1FKOzkAISEsZxbI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-zYiwwnGWMAi2INwzf2hTCQ-1; Fri, 19 Jun 2020 14:39:48 -0400
-X-MC-Unique: zYiwwnGWMAi2INwzf2hTCQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC7FF107ACCA;
-        Fri, 19 Jun 2020 18:39:46 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5718619D7B;
-        Fri, 19 Jun 2020 18:39:41 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05JIde6C026822;
-        Fri, 19 Jun 2020 14:39:40 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05JIddo9026818;
-        Fri, 19 Jun 2020 14:39:39 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Fri, 19 Jun 2020 14:39:39 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Ignat Korchagin <ignat@cloudflare.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-cc:     Mike Snitzer <snitzer@redhat.com>, agk@redhat.com,
-        dm-devel@redhat.com, dm-crypt@saout.de,
-        linux-kernel@vger.kernel.org, kernel-team@cloudflare.com
-Subject: Re: [RFC PATCH 0/1] dm-crypt excessive overhead
-In-Reply-To: <20200619165548.GA24779@redhat.com>
-Message-ID: <alpine.LRH.2.02.2006191429060.23991@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20200619164132.1648-1-ignat@cloudflare.com> <20200619165548.GA24779@redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Fri, 19 Jun 2020 14:40:09 -0400
+Date:   Fri, 19 Jun 2020 18:39:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1592592006; bh=g0HP1Oqtt2tWvdPrfD8uRVaU3hxTt+LfGRRANNn2PNI=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=AcBrdfPZ9GQwVEnKR58YVZ4hFuZ8vjuZFKRZ/+ZkdANyi82kClVnFfTpWvS2ianMZ
+         wCVfzJ8+m5FNwFhd9mlwpZ8x05UO1zqbrJQ1KuTb6IyIE5CfiFpDJxJbH3yIHs/w7f
+         unJFKkjv4XPMRxk7aFXNsbtLSbiAd36TKB+hS7JFvLidvSdRTrxhltIF59PnPrvBCF
+         fqmkDu/AExjpvH+AxGN2Q3acyRQuQO3hLoZFWcb85yBCStBJ3sm7pshWYzuvuCC+20
+         G2gJNImIIJMZR53lP2PasWaho63TNassymIA3pexwDoRrPGBTYjHQAOifcZnUSknTa
+         ywWk9h56Ew5sQ==
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Tom Herbert <therbert@google.com>,
+        Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH net 3/3] net: ethtool: sync netdev_features_strings order with enum netdev_features
+Message-ID: <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
+In-Reply-To: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
+References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The ordering of netdev_features_strings[] makes no sense when it comes
+to user interaction, as list of features in `ethtool -k` input is sorted
+according to the corresponding bit's position.
+Instead, it *does* make sense when it comes to adding new netdev_features
+or modifying existing ones. We have at least 2 occasions of forgetting to
+add the strings for newly introduced features, and one of them existed
+since 3.1x times till now.
 
+Let's keep this stringtable sorted according to bit's position in enum
+netdev_features, as this simplifies both reading and modification of the
+source code and can help not to miss or forget anything.
 
-On Fri, 19 Jun 2020, Mike Snitzer wrote:
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+---
+ net/ethtool/common.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-> On Fri, Jun 19 2020 at 12:41pm -0400,
-> Ignat Korchagin <ignat@cloudflare.com> wrote:
-> 
-> > This is a follow up from the long-forgotten [1], but with some more convincing
-> > evidence. Consider the following script:
-> > 
-> > [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
-> > [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
-> > 
-> > Ignat Korchagin (1):
-> >   Add DM_CRYPT_FORCE_INLINE flag to dm-crypt target
-> > 
-> >  drivers/md/dm-crypt.c | 55 +++++++++++++++++++++++++++++++++----------
-> >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > 
-> > -- 
-> > 2.20.1
-> > 
-> 
-> Hi,
-> 
-> I saw [2] and have been expecting something from cloudflare ever since.
-> Nice to see this submission.
-> 
-> There is useful context in your 0th patch header.  I'll likely merge
-> parts of this patch header with the more terse 1/1 header (reality is
-> there only needed to be a single patch submission).
-> 
-> Will review and stage accordingly if all looks fine to me.  Mikulas,
-> please have a look too.
-> 
-> Thanks,
-> Mike
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index c8e3fce6e48d..24f35d47832d 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -8,25 +8,25 @@
+ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] =
+=3D {
+ =09[NETIF_F_SG_BIT]=09=09=09=3D "tx-scatter-gather",
+ =09[NETIF_F_IP_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv4",
++
++=09/* __UNUSED_NETIF_F_1 - deprecated */
++
+ =09[NETIF_F_HW_CSUM_BIT]=09=09=09=3D "tx-checksum-ip-generic",
+ =09[NETIF_F_IPV6_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv6",
+ =09[NETIF_F_HIGHDMA_BIT]=09=09=09=3D "highdma",
+ =09[NETIF_F_FRAGLIST_BIT]=09=09=09=3D "tx-scatter-gather-fraglist",
+ =09[NETIF_F_HW_VLAN_CTAG_TX_BIT]=09=09=3D "tx-vlan-hw-insert",
+-
+ =09[NETIF_F_HW_VLAN_CTAG_RX_BIT]=09=09=3D "rx-vlan-hw-parse",
+ =09[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]=09=3D "rx-vlan-filter",
+-=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
+-=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
+-=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
+ =09[NETIF_F_VLAN_CHALLENGED_BIT]=09=09=3D "vlan-challenged",
+ =09[NETIF_F_GSO_BIT]=09=09=09=3D "tx-generic-segmentation",
+ =09[NETIF_F_LLTX_BIT]=09=09=09=3D "tx-lockless",
+ =09[NETIF_F_NETNS_LOCAL_BIT]=09=09=3D "netns-local",
+ =09[NETIF_F_GRO_BIT]=09=09=09=3D "rx-gro",
+-=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
+ =09[NETIF_F_LRO_BIT]=09=09=09=3D "rx-lro",
+=20
++=09/* NETIF_F_GSO_SHIFT =3D NETIF_F_TSO_BIT */
++
+ =09[NETIF_F_TSO_BIT]=09=09=09=3D "tx-tcp-segmentation",
+ =09[NETIF_F_GSO_ROBUST_BIT]=09=09=3D "tx-gso-robust",
+ =09[NETIF_F_TSO_ECN_BIT]=09=09=09=3D "tx-tcp-ecn-segmentation",
+@@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT]=
+[ETH_GSTRING_LEN] =3D {
+ =09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]=09=3D "tx-tunnel-remcsum-segmentation"=
+,
+ =09[NETIF_F_GSO_SCTP_BIT]=09=09=09=3D "tx-sctp-segmentation",
+ =09[NETIF_F_GSO_ESP_BIT]=09=09=09=3D "tx-esp-segmentation",
++
++=09/* NETIF_F_GSO_UDP_BIT - deprecated */
++
+ =09[NETIF_F_GSO_UDP_L4_BIT]=09=09=3D "tx-udp-segmentation",
+ =09[NETIF_F_GSO_FRAGLIST_BIT]=09=09=3D "tx-gso-list",
+=20
++=09/* NETIF_F_GSO_LAST =3D NETIF_F_GSO_FRAGLIST_BIT */
++
+ =09[NETIF_F_FCOE_CRC_BIT]=09=09=09=3D "tx-checksum-fcoe-crc",
+ =09[NETIF_F_SCTP_CRC_BIT]=09=09=09=3D "tx-checksum-sctp",
+ =09[NETIF_F_FCOE_MTU_BIT]=09=09=09=3D "fcoe-mtu",
+@@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
+][ETH_GSTRING_LEN] =3D {
+ =09[NETIF_F_LOOPBACK_BIT]=09=09=09=3D "loopback",
+ =09[NETIF_F_RXFCS_BIT]=09=09=09=3D "rx-fcs",
+ =09[NETIF_F_RXALL_BIT]=09=09=09=3D "rx-all",
++=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
++=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
++=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
+ =09[NETIF_F_HW_L2FW_DOFFLOAD_BIT]=09=09=3D "l2-fwd-offload",
++
+ =09[NETIF_F_HW_TC_BIT]=09=09=09=3D "hw-tc-offload",
+ =09[NETIF_F_HW_ESP_BIT]=09=09=09=3D "esp-hw-offload",
+ =09[NETIF_F_HW_ESP_TX_CSUM_BIT]=09=09=3D "esp-tx-csum-hw-offload",
+ =09[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]=09=3D "rx-udp_tunnel-port-offload",
+-=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
+ =09[NETIF_F_HW_TLS_TX_BIT]=09=09=09=3D "tls-hw-tx-offload",
+ =09[NETIF_F_HW_TLS_RX_BIT]=09=09=09=3D "tls-hw-rx-offload",
++
++=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
++=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
+ =09[NETIF_F_GRO_FRAGLIST_BIT]=09=09=3D "rx-gro-list",
++
+ =09[NETIF_F_HW_MACSEC_BIT]=09=09=09=3D "macsec-hw-offload",
++
++=09/* NETDEV_FEATURE_COUNT */
+ };
+=20
+ const char
+--=20
+2.27.0
 
-+       if (test_bit(DM_CRYPT_FORCE_INLINE, &cc->flags)) {
-+               if (in_irq()) {
-+                       /* Crypto API will fail hard in hard IRQ context */
-+                       tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
-+                       tasklet_schedule(&io->tasklet);
-+               } else
-+                       kcryptd_crypt(&io->work);
-+       } else {
-+               INIT_WORK(&io->work, kcryptd_crypt);
-+               queue_work(cc->crypt_queue, &io->work);
-+       }
-
-I'm looking at this and I'd like to know why does the crypto API fail in 
-hard-irq context and why does it work in tasklet context. What's the exact 
-reason behind this?
-
-Mikulas
 
