@@ -2,110 +2,93 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F194AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D03AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09962080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC6C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgFSIH5 (ORCPT
+        id S1731047AbgFSIK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:07:57 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37232 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbgFSIHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:07:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a3so7741090oid.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:07:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A9QLwr/gThP6fd0GJQ39gaT5PlOnHllX1baIFXtwLyU=;
-        b=ARwyL1u8b2INHIDkSNiyNO7IL7f668sXq1o1B8yL/9hVYPTljgkE9/Mc3btaOqD2VY
-         zLSCrfXcxNWuUEnaUMWFkRmqmAplsGr1Twq1pMlvTeGh5o9NyzrbKYU048Jx/IiBeBv4
-         hi76s81dJkTT/2GsyP7zK5Pu3vvZ/NWm+eypdwUu344C66eyEtcY8/KVZo/2m/MmkhZ6
-         ruwBm2/fF7QY8taUHSuxmWwfxdOgaAoEUjGQLbFAXuYRSrYlfaI9kDA74QIS5Y36dT7P
-         iHGz9zAtEvGQkKzAbOZLaQ1IUa+W7+gGJaJcoVRzw/5cvvP93DNH2K582ElR3EBo3fT1
-         oHJQ==
-X-Gm-Message-State: AOAM532EUbUnYhY8inZCNFwE5pWWOF8ig4wdSqcP0iuSIvLu88SDm5r1
-        T4G6HiAZAbIeUfbZJfqSgJsQAHqHuB5xe6oWDE0=
-X-Google-Smtp-Source: ABdhPJzaFc9C3fifQNKploQvy0a6vVQ8Cye3kfwreRTY9aJnXhpvwaZOcSzS1B5qS9ZnLZSGGASKTTFMUnJieriQexQ=
-X-Received: by 2002:a54:4006:: with SMTP id x6mr2087593oie.148.1592554065970;
- Fri, 19 Jun 2020 01:07:45 -0700 (PDT)
+        Fri, 19 Jun 2020 04:10:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40702 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730872AbgFSIK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:10:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 85ABBACCF;
+        Fri, 19 Jun 2020 08:10:26 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 10:10:24 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     jim.cromie@gmail.com
+Cc:     Jason Baron <jbaron@akamai.com>,
+        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Orson Zhai <orson.zhai@unisoc.com>,
+        Linux Documentation List <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 20/21] dyndbg: add user-flag, negating-flags, and
+ filtering on flags
+Message-ID: <20200619081024.GG3617@alley>
+References: <20200617162536.611386-1-jim.cromie@gmail.com>
+ <20200617162536.611386-23-jim.cromie@gmail.com>
+ <20200618161912.GD3617@alley>
+ <20200618174058.GE3617@alley>
+ <746984fb-00ee-9079-efac-50167f3c3e40@akamai.com>
+ <CAJfuBxwLKDSx6RA_ZOk=eEHw0P3FeAcT=PCr-aHjUFKDS2p8cQ@mail.gmail.com>
+ <20200619074555.GF3617@alley>
 MIME-Version: 1.0
-References: <20200617220226.88948-1-luc.vanoostenryck@gmail.com>
- <CANiq72nNQ+11ch7sRjLLc33s_OkftuOqgGkCDggq88tbJtdPNQ@mail.gmail.com> <20200618050249.lqwznznltm3lcykr@ltop.local>
-In-Reply-To: <20200618050249.lqwznznltm3lcykr@ltop.local>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 19 Jun 2020 10:07:34 +0200
-Message-ID: <CAMuHMdWQsirja-h3wBcZezk+H2Q_HShhAks8Hc8ps5fTAp=ObQ@mail.gmail.com>
-Subject: Re: [PATCH] sparse: use identifiers to define address spaces
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619074555.GF3617@alley>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luc,
+On Fri 2020-06-19 09:45:55, Petr Mladek wrote:
+> On Thu 2020-06-18 13:11:05, jim.cromie@gmail.com wrote:
+> > On Thu, Jun 18, 2020 at 12:17 PM Jason Baron <jbaron@akamai.com> wrote:
+> > > Yes, I'm wondering as well if people are really going to use the
+> > > new flags and filter flags - I mentioned that here:
+> > > https://lkml.org/lkml/2020/6/12/732
+> > 
+> > yes, I saw, and replied there.
+> 
+> No, the repply only explains how the interface might be used. There is
+> no prove that people would actually use it.
+> 
+> > but since that was v1, and we're on v3, we should refresh.
+> > 
+> > the central use-case is above, 1-liner version summarized here:
+> > 
+> > 1- enable sites as you chase a problem with +up
+> > 2- examine them with grep =pu
+> > 3- change the set to suit, either by adding or subtracting callsites.
+> > 4- continue debugging, and changing callsites to suit
+> > 5- grep =pu control > ~/debugging-session-task1-callsites
+> > 6- echo up-p >control   # disable for now, leave u-set for later
+> > 7- do other stuff
+> > 8 echo uP+p >control # reactivate useful debug-state and resume
+> 
+> In short, this feature allows repeatedly enable/disable some
+> slowly growing maze of debug messages. Who need this, please? !!!
+> 
+> If I am debugging then I add/remove debug messages. But I never
+> enable/disable all of them repeatedly.
 
-On Thu, Jun 18, 2020 at 7:05 AM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
-> On Thu, Jun 18, 2020 at 03:22:15AM +0200, Miguel Ojeda wrote:
-> > On Thu, Jun 18, 2020 at 12:02 AM Luc Van Oostenryck
-> > <luc.vanoostenryck@gmail.com> wrote:
-> > >
-> > > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> > > index 21aed0981edf..e368384445b6 100644
-> > > --- a/include/linux/compiler_types.h
-> > > +++ b/include/linux/compiler_types.h
-> > > @@ -5,20 +5,20 @@
-> > >  #ifndef __ASSEMBLY__
-> > >
-> > >  #ifdef __CHECKER__
-> > > -# define __user                __attribute__((noderef, address_space(1)))
-> > >  # define __kernel      __attribute__((address_space(0)))
-> > > +# define __user                __attribute__((noderef, address_space(__user)))
-> >
-> > I guess `__kernel` moves to the first place since it uses the first
-> > address space?
->
-> No, there is no really an order between address spaces. Even before
-> this patch, the number were only used as an ID to distinguish them
-> from each other.
->
-> I just moved __kernel above because it is quite different from
-> the others because it's the default one, and so:
-> * it's never displayed
-> * it's normally not needed, nor in type annotations, nor in cast
->   between address spaces. The only time it's needed is when it's
->   combined with a typeof to express "the same type as this one but
->   without the address space"
-> * it can't be defined with a name, '0' must be used.
->
-> So, it seemed strange to me to have it in the middle of the other ones.
+Not to say that I usually need to reboot when I reproduce the problem
+and before I could try it again. So all dyndbg flags gets lost
+between two tests anyway.
 
-Indeed. It looks like this whole list is completely unsorted, and was created
-by appending new definitions at the bottom.
-So perhaps all the address_space ones should be grouped together?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best Regards,
+Petr
