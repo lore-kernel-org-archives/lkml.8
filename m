@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9556720776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DB121941
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579292;
-	bh=mJrXbTTQE/TU8fIHQr6LBtPOS7pr8EpfcxM26Vd55II=;
+	s=default; t=1592579297;
+	bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZguFiAFN/noqK7ZAZbxQ2dJHA+jawUUdCVyf8AZtI3z4tA4E8aGKBN4pwq8usOZK
-	 sVpIrMkBH7N0wRk+0rSD2wym9utWqL8GbFe79+Ix5/rrRrt7khweexNMCl3Ugs7Fi3
-	 lfJ7W6ky1+geZysekVG1SdKbFiI8kzWGNYD3zpyM=
+	b=tvG+zQ89096Hy98Qv7rL/wu6WJpattB2wu525WeNkFCbOKxAnVI0PONMw2jc5Vemp
+	 5ifngDpfijYacndobbklbiraAuxVGLoxS3FF0mFz2Y6ri68djXlpFoPeNT+nQ7Ecdc
+	 Xz2Sq7YD0cWL/h4MMUua4bF7d8/lTId3F7cfYyd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391706AbgFSPIL (ORCPT
+        id S2391712AbgFSPIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391662AbgFSPIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:05 -0400
+        id S2391695AbgFSPIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2BBB21941;
-        Fri, 19 Jun 2020 15:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A34F21852;
+        Fri, 19 Jun 2020 15:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579285;
-        bh=mJrXbTTQE/TU8fIHQr6LBtPOS7pr8EpfcxM26Vd55II=;
+        s=default; t=1592579279;
+        bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUVNTWj8FU2M7qYieCpsy66PwL8CCynLjaIBK5nG/8ULcGU0vFQXDSBGeAzeJI8MN
-         cBsHElMByQTLtOIc7yIx7hfGH5+AbKLqIVXXsfiVMfvbwcadHaU6vh9HvECq8Lj7SH
-         ZiEQAgjIRFPb1nR3K5KsUAPh6eLKSYcevG+D4EVo=
+        b=OJONf3yT84FHHRsYXU0a1YLsgAZNREpXpB/0q7c0cXWsqhRxa9gHfq322O/R3cuIt
+         K3hMbZ/i2DbnO/3iuVNappMEgfDehl6ot1mLtQbKcbQGWWmFGVDRnPH9vnK6j0Fe/n
+         pi1W24RvWesJ8ZkSjIzBGmFzTXlh5A4kghwgH/J4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org,
+        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/261] selftests/bpf: Fix memory leak in extract_build_id()
-Date:   Fri, 19 Jun 2020 16:31:28 +0200
-Message-Id: <20200619141653.581584693@linuxfoundation.org>
+Subject: [PATCH 5.4 058/261] ath10k: fix kernel null pointer dereference
+Date:   Fri, 19 Jun 2020 16:31:09 +0200
+Message-Id: <20200619141652.698186921@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,34 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Venkateswara Naralasetty <vnaralas@codeaurora.org>
 
-[ Upstream commit 9f56bb531a809ecaa7f0ddca61d2cf3adc1cb81a ]
+[ Upstream commit acb31476adc9ff271140cdd4d3c707ff0c97f5a4 ]
 
-getline() allocates string, which has to be freed.
+Currently sta airtime is updated without any lock in case of
+host based airtime calculation. Which may result in accessing the
+invalid sta pointer in case of continuous station connect/disconnect.
 
-Fixes: 81f77fd0deeb ("bpf: add selftest for stackmap with BPF_F_STACK_BUILD_ID")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-7-andriin@fb.com
+This patch fix the kernel null pointer dereference by updating the
+station airtime with proper RCU lock in case of host based airtime
+calculation.
+
+Proceeding with the analysis of "ARM Kernel Panic".
+The APSS crash happened due to OOPS on CPU 0.
+Crash Signature : Unable to handle kernel NULL pointer dereference
+at virtual address 00000300
+During the crash,
+PC points to "ieee80211_sta_register_airtime+0x1c/0x448 [mac80211]"
+LR points to "ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core]".
+The Backtrace obtained is as follows:
+[<bf880238>] (ieee80211_sta_register_airtime [mac80211]) from
+[<bf945a38>] (ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core])
+[<bf945a38>] (ath10k_txrx_tx_unref [ath10k_core]) from
+[<bf9428e4>] (ath10k_htt_txrx_compl_task+0xa50/0xfc0 [ath10k_core])
+[<bf9428e4>] (ath10k_htt_txrx_compl_task [ath10k_core]) from
+[<bf9b9bc8>] (ath10k_pci_napi_poll+0x50/0xf8 [ath10k_pci])
+[<bf9b9bc8>] (ath10k_pci_napi_poll [ath10k_pci]) from
+[<c059e3b0>] (net_rx_action+0xac/0x160)
+[<c059e3b0>] (net_rx_action) from [<c02329a4>] (__do_softirq+0x104/0x294)
+[<c02329a4>] (__do_softirq) from [<c0232b64>] (run_ksoftirqd+0x30/0x90)
+[<c0232b64>] (run_ksoftirqd) from [<c024e358>] (smpboot_thread_fn+0x25c/0x274)
+[<c024e358>] (smpboot_thread_fn) from [<c02482fc>] (kthread+0xd8/0xec)
+
+Tested HW: QCA9888
+Tested FW: 10.4-3.10-00047
+
+Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585736290-17661-1-git-send-email-vnaralas@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 3bf18364c67c..8cb3469dd11f 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -293,6 +293,7 @@ int extract_build_id(char *build_id, size_t size)
- 		len = size;
- 	memcpy(build_id, line, len);
- 	build_id[len] = '\0';
-+	free(line);
- 	return 0;
- err:
- 	fclose(fp);
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index 39abf8b12903..f46b9083bbf1 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -84,9 +84,11 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+ 		wake_up(&htt->empty_tx_wq);
+ 	spin_unlock_bh(&htt->tx_lock);
+ 
++	rcu_read_lock();
+ 	if (txq && txq->sta && skb_cb->airtime_est)
+ 		ieee80211_sta_register_airtime(txq->sta, txq->tid,
+ 					       skb_cb->airtime_est, 0);
++	rcu_read_unlock();
+ 
+ 	if (ar->bus_param.dev_type != ATH10K_DEV_TYPE_HL)
+ 		dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
 -- 
 2.25.1
 
