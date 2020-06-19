@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A513EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A00E20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B5B20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581679;
-	bh=56mqz//yRO8dwLkzCXAUJh+8sRp/R6L45fiWOsiVU5A=;
+	s=default; t=1592581688;
+	bh=wwX3oMSrctskPbGkvudSONYgRfHBUkGW7Urvxsugfos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYhdHh4Y+6VtBlqr3yTRt6DtHa9zNpQR6hcoQJS4ZfV4nIPo6a9m1g3xbouLKxtIG
-	 PSFsMCom0wKCCJReSZuQxi4ujZMadLhJR3orxmTpstmDV9QtcWg6uogrIN7D1SAtLc
-	 WCgqEoGHySDd/ALVS1e8j66/DAEBqeNYVcdiQtRM=
+	b=DebqmmWVXWEvsKs/CwZHVPwXBBdM3wrz8omYHoPlXyVDIrHhBAoeeQRUhVUFYLAHB
+	 JCAOAt6lL+oILjz1y9Ynrw4Xo11FFo9/v1VgT8Qp1aYoatmGdS/X0hIsK5ksdR2FVI
+	 zbntgUHxSWb4IvL6JiBc06lC3jKK0CbeRqPCaHH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393446AbgFSPZk (ORCPT
+        id S2405325AbgFSPsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54368 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393080AbgFSPWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:53 -0400
+        id S2393021AbgFSPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0A6B21582;
-        Fri, 19 Jun 2020 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4BD421556;
+        Fri, 19 Jun 2020 15:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580172;
-        bh=56mqz//yRO8dwLkzCXAUJh+8sRp/R6L45fiWOsiVU5A=;
+        s=default; t=1592580338;
+        bh=wwX3oMSrctskPbGkvudSONYgRfHBUkGW7Urvxsugfos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbXxg+07iGEUP+1aA0fTQK221ko6RKYC5E3GzITulcavkBxazNgUIfAxRbBOcvsSo
-         al7t6i653kzLO//iH650nRhYOHMDSeLO0bKQ1b+nLkXyJ7d8MSs6lM+4HUzPnkwb4R
-         9w8mzvDG+HeYiVda29DKThBAW7u/Xd6gU2qbT4Y4=
+        b=aoG9yocvOvvo7CPu3XhYvXCmfFZO4v5fCxo9OkPL7n2Rx1wHr/74w6Zz9/jrzLDMx
+         ZeT/DY6sUuwthHWBn2O+MhOFRTgCGUdbfhZS5HzAPIZ7+vXYsisco8dgPokMX38+j2
+         AzLri3GkbA0rohM/kix4gc2fGXpnTBYdVyj58WbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sung Lee <sung.lee@amd.com>,
-        Yongqiang Sun <yongqiang.sun@amd.com>,
-        Aurabindo Pillai <aurabindo.pillai@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        Soul Huang <soul.huang@mediatek.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 119/376] drm/amd/display: Do not disable pipe split if mode is not supported
-Date:   Fri, 19 Jun 2020 16:30:37 +0200
-Message-Id: <20200619141715.978900903@linuxfoundation.org>
+Subject: [PATCH 5.7 181/376] mt76: mt7663: fix DMA unmap length
+Date:   Fri, 19 Jun 2020 16:31:39 +0200
+Message-Id: <20200619141718.919294293@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,60 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sung Lee <sung.lee@amd.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 1dfedb39d38f813357885e19badd1971c17f79a7 ]
+[ Upstream commit 89829c9e65ab680f7e5a1658cb74bc6316ab036e ]
 
-[WHY]
-If mode is not supported, pipe split should not be disabled.
-This may cause more modes to fail.
+Fix DMA unmap length for mt7663e devices in mt7615_txp_skb_unmap_hw
 
-[HOW]
-Check for mode support before disabling pipe split.
-
-This commit was previously reverted as it was thought to
-have problems, but those issues have been resolved.
-
-Signed-off-by: Sung Lee <sung.lee@amd.com>
-Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
+Co-developed-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Co-developed-by: Soul Huang <soul.huang@mediatek.com>
+Signed-off-by: Soul Huang <soul.huang@mediatek.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../net/wireless/mediatek/mt76/mt7615/mac.c   | 20 +++++++++++++------
+ .../net/wireless/mediatek/mt76/mt7615/mac.h   |  2 ++
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index e4348e3b6389..2719cdecc1cb 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -2597,19 +2597,24 @@ int dcn20_validate_apply_pipe_split_flags(
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index b5249d08564c..f66b76ff2978 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -666,15 +666,18 @@ mt7615_txp_skb_unmap_fw(struct mt76_dev *dev, struct mt7615_fw_txp *txp)
+ static void
+ mt7615_txp_skb_unmap_hw(struct mt76_dev *dev, struct mt7615_hw_txp *txp)
+ {
++	u32 last_mask;
+ 	int i;
  
- 	/* Avoid split loop looks for lowest voltage level that allows most unsplit pipes possible */
- 	if (avoid_split) {
-+		int max_mpc_comb = context->bw_ctx.dml.vba.maxMpcComb;
++	last_mask = is_mt7663(dev) ? MT_TXD_LEN_LAST : MT_TXD_LEN_MSDU_LAST;
 +
- 		for (i = 0, pipe_idx = 0; i < dc->res_pool->pipe_count; i++) {
- 			if (!context->res_ctx.pipe_ctx[i].stream)
- 				continue;
+ 	for (i = 0; i < ARRAY_SIZE(txp->ptr); i++) {
+ 		struct mt7615_txp_ptr *ptr = &txp->ptr[i];
+ 		bool last;
+ 		u16 len;
  
- 			for (vlevel_split = vlevel; vlevel <= context->bw_ctx.dml.soc.num_states; vlevel++)
--				if (context->bw_ctx.dml.vba.NoOfDPP[vlevel][0][pipe_idx] == 1)
-+				if (context->bw_ctx.dml.vba.NoOfDPP[vlevel][0][pipe_idx] == 1 &&
-+						context->bw_ctx.dml.vba.ModeSupport[vlevel][0])
- 					break;
- 			/* Impossible to not split this pipe */
- 			if (vlevel > context->bw_ctx.dml.soc.num_states)
- 				vlevel = vlevel_split;
-+			else
-+				max_mpc_comb = 0;
- 			pipe_idx++;
- 		}
--		context->bw_ctx.dml.vba.maxMpcComb = 0;
-+		context->bw_ctx.dml.vba.maxMpcComb = max_mpc_comb;
- 	}
+ 		len = le16_to_cpu(ptr->len0);
+-		last = len & MT_TXD_LEN_MSDU_LAST;
++		last = len & last_mask;
+ 		len &= MT_TXD_LEN_MASK;
+ 		dma_unmap_single(dev->dev, le32_to_cpu(ptr->buf0), len,
+ 				 DMA_TO_DEVICE);
+@@ -682,7 +685,7 @@ mt7615_txp_skb_unmap_hw(struct mt76_dev *dev, struct mt7615_hw_txp *txp)
+ 			break;
  
- 	/* Split loop sets which pipe should be split based on dml outputs and dc flags */
+ 		len = le16_to_cpu(ptr->len1);
+-		last = len & MT_TXD_LEN_MSDU_LAST;
++		last = len & last_mask;
+ 		len &= MT_TXD_LEN_MASK;
+ 		dma_unmap_single(dev->dev, le32_to_cpu(ptr->buf1), len,
+ 				 DMA_TO_DEVICE);
+@@ -1098,21 +1101,26 @@ mt7615_write_hw_txp(struct mt7615_dev *dev, struct mt76_tx_info *tx_info,
+ {
+ 	struct mt7615_hw_txp *txp = txp_ptr;
+ 	struct mt7615_txp_ptr *ptr = &txp->ptr[0];
+-	int nbuf = tx_info->nbuf - 1;
+-	int i;
++	int i, nbuf = tx_info->nbuf - 1;
++	u32 last_mask;
+ 
+ 	tx_info->buf[0].len = MT_TXD_SIZE + sizeof(*txp);
+ 	tx_info->nbuf = 1;
+ 
+ 	txp->msdu_id[0] = cpu_to_le16(id | MT_MSDU_ID_VALID);
+ 
++	if (is_mt7663(&dev->mt76))
++		last_mask = MT_TXD_LEN_LAST;
++	else
++		last_mask = MT_TXD_LEN_AMSDU_LAST |
++			    MT_TXD_LEN_MSDU_LAST;
++
+ 	for (i = 0; i < nbuf; i++) {
+ 		u16 len = tx_info->buf[i + 1].len & MT_TXD_LEN_MASK;
+ 		u32 addr = tx_info->buf[i + 1].addr;
+ 
+ 		if (i == nbuf - 1)
+-			len |= MT_TXD_LEN_MSDU_LAST |
+-			       MT_TXD_LEN_AMSDU_LAST;
++			len |= last_mask;
+ 
+ 		if (i & 1) {
+ 			ptr->buf1 = cpu_to_le32(addr);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+index 53ac184ab2d6..d3da40df7f32 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+@@ -255,6 +255,8 @@ enum tx_phy_bandwidth {
+ #define MT_TXD_LEN_MASK			GENMASK(11, 0)
+ #define MT_TXD_LEN_MSDU_LAST		BIT(14)
+ #define MT_TXD_LEN_AMSDU_LAST		BIT(15)
++/* mt7663 */
++#define MT_TXD_LEN_LAST			BIT(15)
+ 
+ struct mt7615_txp_ptr {
+ 	__le32 buf0;
 -- 
 2.25.1
 
