@@ -2,55 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E07C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2852F20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD15D20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585682;
-	bh=dALp7G7shgyUB24rZx0WuQCo/bX2/oiiwiY0sh1cs0A=;
+	s=default; t=1592585686;
+	bh=bSRmDGhM4dZBYCO1zM4PBGWuGwbULiqHak2p8noiIKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3HXKjfLZT+CbopK/MERZfbmXOyIZbaXiYAPJyNOFZfHzIlrfOO8RPyJ00aj3LYQZ
-	 YROLKlmz4Zw2EozLhsQMBxbSmKSqbKTmi1R8lep3pw8hW1BzONyJIAWpBH4DrVAYtN
-	 X+wm7RZb7g5w8kO3s70ebAJympA+Xntcq73U46mU=
+	b=gf1FDpHZAuVhgXYRNgP2+Js9VeWKpi0Sh5Oww6WROiUgd8HBJIiqJXXqOoeg8lvmr
+	 bbgtzI9U7XEyTNCYhEaBwT0/+CmBq6tW/yYGU2J06gexS/cGPph+u5ogan0EJsUMQb
+	 G/rv2UThNt/O+gN/ZEdYYHTrQX6m98JGuJEvMprw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406000AbgFSQyl (ORCPT
+        id S2436593AbgFSQyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbgFSOg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:36:29 -0400
+        id S2387501AbgFSOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:36:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791A02070A;
-        Fri, 19 Jun 2020 14:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052FE21548;
+        Fri, 19 Jun 2020 14:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577388;
-        bh=dALp7G7shgyUB24rZx0WuQCo/bX2/oiiwiY0sh1cs0A=;
+        s=default; t=1592577380;
+        bh=bSRmDGhM4dZBYCO1zM4PBGWuGwbULiqHak2p8noiIKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzHbbD7mvrjOJOVYdKx6UBImLWDcLkSS+3fGqXINCw4AQz7VJx/QKrgW9euPPsh/b
-         O01gh7Zyvo2ALrjvmfhWeNDrVnm+9CTMZjteYevRtcOREaTzCuuVZTizD3Jhs7g5Kt
-         CKII2m3tOnh3U6qz1/LVXNyrEzr3jrzGIp/AkqC4=
+        b=E/El0ifLcBrz1zFjVsBc7NbiQ2hkG1MbIXHSldWq9ULnJv8yGnP5hNr+abYVJnqEd
+         IsXLbrqFPgQhNFpcbPBr5ldL26Vjc93Wt+ZGBbkcbJd1zY4GtrvUooiPxjuJUwUrAo
+         teaAPqw0+eSN6v5RE9msrkpIeBM2tyy3eX7g+oNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bart.vanassche@sandisk.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 003/101] scsi: return correct blkprep status code in case scsi_init_io() fails.
-Date:   Fri, 19 Jun 2020 16:31:52 +0200
-Message-Id: <20200619141614.191595911@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 027/101] spi: dw: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:32:16 +0200
+Message-Id: <20200619141615.502676171@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -63,51 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <jthumshirn@suse.de>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit e7661a8e5ce10b5321882d0bbaf3f81070903319 upstream.
+[ Upstream commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 ]
 
-When instrumenting the SCSI layer to run into the
-!blk_rq_nr_phys_segments(rq) case the following warning emitted from the
-block layer:
+The Designware SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+dw_spi_remove_host() before unregistering the SPI controller via
+devres_release_all().
 
-blk_peek_request: bad return=-22
+This order is incorrect:  dw_spi_remove_host() shuts down the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
 
-This happens because since commit fd3fc0b4d730 ("scsi: don't BUG_ON()
-empty DMA transfers") we return the wrong error value from
-scsi_prep_fn() back to the block layer.
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
 
-[mkp: silenced checkpatch]
+Fix by reverting to the non-devm variant of spi_register_controller().
 
-Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: fd3fc0b4d730 scsi: don't BUG_ON() empty DMA transfers
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Bart Van Assche <bart.vanassche@sandisk.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[iwamatsu: - backport for 4.4.y and 4.9.y
-    - Use rq->nr_phys_segments instead of blk_rq_nr_phys_segments]
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+An alternative approach would be to use device-managed functions for all
+steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
+
+Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v3.14+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_lib.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-dw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1118,10 +1118,10 @@ int scsi_init_io(struct scsi_cmnd *cmd)
- 	struct scsi_device *sdev = cmd->device;
- 	struct request *rq = cmd->request;
- 	bool is_mq = (rq->mq_ctx != NULL);
--	int error;
-+	int error = BLKPREP_KILL;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 61a951549eba..295249843e7c 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -534,7 +534,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 		}
+ 	}
  
- 	if (WARN_ON_ONCE(!rq->nr_phys_segments))
--		return -EINVAL;
-+		goto err_exit;
+-	ret = devm_spi_register_master(dev, master);
++	ret = spi_register_master(master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
+ 		goto err_dma_exit;
+@@ -558,6 +558,8 @@ void dw_spi_remove_host(struct dw_spi *dws)
+ {
+ 	dw_spi_debugfs_remove(dws);
  
- 	error = scsi_init_sgtable(rq, &cmd->sdb);
- 	if (error)
++	spi_unregister_master(dws->master);
++
+ 	if (dws->dma_ops && dws->dma_ops->dma_exit)
+ 		dws->dma_ops->dma_exit(dws);
+ 
+-- 
+2.25.1
+
 
 
