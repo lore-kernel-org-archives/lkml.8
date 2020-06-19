@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA72C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E26121532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7064D21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582834;
-	bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+	s=default; t=1592582841;
+	bh=FnRMOEIPw0Jmq2vCdbN2xV/1mRpWx72lg9XT0VL3xVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tsiT2mB14cYzCiGKUi5YZMgGaupanI69CaakqTqesk2XRMIPzTtOYFb69uc7j1vPL
-	 3a3VScQXg3RHXVHSi4d+1BKqxc3/aBT/Vo89RnT9uSy3LxBP5qXJVSD0flGyzn4XTh
-	 kOH4WoGnfOvixiEMwkZne6g4n2CGIP2mxEBJshxk=
+	b=OkAr3nEOXyYzygF4mDoICT3MDtjY1psxke6GXkSfDrkEUFAX/UnyAIQnpsKB+N7Tg
+	 weA74uotE1pFB0QqyJ9g9T+vLuKzVqygDQeetEX4aTGPignU5d0z8/jrj9racC+QnB
+	 hmhFSvysOqKIH87eYuzfe5VGBpslzE/LrybJoz7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405566AbgFSQHM (ORCPT
+        id S2391844AbgFSQHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391844AbgFSPJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:03 -0400
+        id S2391831AbgFSPI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A423D21974;
-        Fri, 19 Jun 2020 15:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6362520776;
+        Fri, 19 Jun 2020 15:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579343;
-        bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+        s=default; t=1592579338;
+        bh=FnRMOEIPw0Jmq2vCdbN2xV/1mRpWx72lg9XT0VL3xVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtNBeinP5TvCeDsB56h9zH+RHsp5IjXkgzxFahSsgWoiFwjUS+sgk5u7EhqNGm1FC
-         iHG7Wj0sQJkDwvkPENln2NCk05ygfr8deJJ5ubdYYdesluSbm/POdBuV+b6GKDvPmZ
-         UtKRbe7/JNp0gKBJXGF3hEyyP5kv0vFmM5ocYyb4=
+        b=lPStGUyAiPkN11UrSzWvUAnzTTRTROTrRuVRcPakjw8ZRkWsfLzRPhsU8M4tC0aXd
+         obHCHR89wD6enCq4dxWFfUrkehHw/4lpWn003L0UT4V+5zY42bTvrGIlcfYhSwFz/6
+         trP+gZFQ8mdRPBVakR48lkZwpjzRSZ9+TK0N/bwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/261] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
-Date:   Fri, 19 Jun 2020 16:31:51 +0200
-Message-Id: <20200619141654.652759246@linuxfoundation.org>
+Subject: [PATCH 5.4 098/261] xfs: fix duplicate verification from xfs_qm_dqflush()
+Date:   Fri, 19 Jun 2020 16:31:49 +0200
+Message-Id: <20200619141654.567282822@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,82 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
+[ Upstream commit 629dcb38dc351947ed6a26a997d4b587f3bd5c7e ]
 
-Split the sparse keymap into 2 separate keymaps, a buttons and a switches
-keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
+The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
+read verifier by checking the dquot in the on-disk buffer. Instead,
+verify the in-core variant before it is flushed to the buffer.
 
-This is a preparation patch for not telling userspace that we have switches
-when we do not have them (and for doing the same for the buttons).
-
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 7224fa482a6d ("xfs: add full xfs_dqblk verifier")
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_dquot.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 3b3789bb8ec5..2ab3dbd26b5e 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -39,14 +39,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
- 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
- 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
-+};
-+
-+static const struct key_entry intel_vbtn_switchmap[] = {
- 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
- 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
- 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
- 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
--	{ KE_END },
- };
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index aeb95e7391c1..3cbf248af51f 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -1116,13 +1116,12 @@ xfs_qm_dqflush(
+ 	dqb = bp->b_addr + dqp->q_bufoffset;
+ 	ddqp = &dqb->dd_diskdq;
  
-+#define KEYMAP_LEN \
-+	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
-+
- struct intel_vbtn_priv {
-+	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
- 	bool wakeup_mode;
- };
-@@ -54,13 +60,29 @@ struct intel_vbtn_priv {
- static int intel_vbtn_input_setup(struct platform_device *device)
- {
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
--	int ret;
-+	int ret, keymap_len = 0;
-+
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
-+		       ARRAY_SIZE(intel_vbtn_keymap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
-+	}
-+
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
-+		       ARRAY_SIZE(intel_vbtn_switchmap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
-+	}
-+
-+	priv->keymap[keymap_len].type = KE_END;
- 
- 	priv->input_dev = devm_input_allocate_device(&device->dev);
- 	if (!priv->input_dev)
- 		return -ENOMEM;
- 
--	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
- 	if (ret)
- 		return ret;
- 
+-	/*
+-	 * A simple sanity check in case we got a corrupted dquot.
+-	 */
+-	fa = xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
++	/* sanity check the in-core structure before we flush */
++	fa = xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id),
++			      0);
+ 	if (fa) {
+ 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
+-				be32_to_cpu(ddqp->d_id), fa);
++				be32_to_cpu(dqp->q_core.d_id), fa);
+ 		xfs_buf_relse(bp);
+ 		xfs_dqfunlock(dqp);
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
 -- 
 2.25.1
 
