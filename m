@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE02C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E3720773
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA57220A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577615;
-	bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
+	s=default; t=1592577617;
+	bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=foBVqAmeY0cj0WnNkwep+2WM32SZ0abnCTR+/t+msb4xKBHVJkPSamjJ8h53dlRCw
-	 buztbNkes/71DnBju3K2WPC73UUrnLOPBCYgsAd8VCDRs7hj+qy7f6sGyhsx+Afwhu
-	 WQWj6IYxG6zZv/2SBmxOKcT6UxYUR3ADunUrEdLg=
+	b=wWYSOLoEDJITM2zPPmXwHUgvf1c+qaBdWKtjHnzoi7aT0Qox1vueUD8JOBU1fNB7A
+	 ltC2EXisl7kaRXFxyPh5LOwgFhOpObWVpNDGm1Dzoi4FVlw7Tep+0IGu9M/3FVZbVv
+	 HZujsTPcQjMcAKlgKjhbibJULjGkKQwrpmUWnuWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbgFSOkL (ORCPT
+        id S2388124AbgFSOkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388090AbgFSOj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:58 -0400
+        id S2388099AbgFSOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D86208B8;
-        Fri, 19 Jun 2020 14:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CBE5208B8;
+        Fri, 19 Jun 2020 14:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577598;
-        bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
+        s=default; t=1592577600;
+        bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcui03UiAYGa5n3Q9CaA8kGDI1kipWj2rMOZfRRPxRsPPvgfZ0MUT5tivfBdD7cbB
-         oDVyVS2VL7I97OyaA/npXENwPiwLqPD6dKjWZj09R5SvRXu3bkOPQvwFf5bHupvVTB
-         pm29EK3v1G5Et2n6XeIZ5IPMq1gdOMWuza1krXWA=
+        b=JvkdqSAkXJFUG6slp7rbZwWwAoiv8unQzCe/GoPcnxoiPHrFm1D+2HuHCkJef0SZE
+         gdGff6iqwyKeOjAMCSK2DDl1u8N+0nQ/CFR9Vrfhdy7CMqU8LazqCl4yGhg3T0nt+7
+         nPgOnrUrXm9mAkN1MTbyPUf3Do6RTb4IPwyEcHbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.9 013/128] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-Date:   Fri, 19 Jun 2020 16:31:47 +0200
-Message-Id: <20200619141620.841961202@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 014/128] ALSA: es1688: Add the missed snd_card_free()
+Date:   Fri, 19 Jun 2020 16:31:48 +0200
+Message-Id: <20200619141620.902615153@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,36 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
+commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
 
-The documentation provided by kobject_init_and_add() clearly spells out
-the need to call kobject_put() on the kobject if an error is returned.
-Add this missing call to the error path.
+snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
+Add the missed function call to fix it.
 
+Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Cc: <stable@vger.kernel.org>
-Reported-by: 亿一 <teroincn@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efivars.c |    4 +++-
+ sound/isa/es1688/es1688.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -586,8 +586,10 @@ efivar_create_sysfs_entry(struct efivar_
- 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
- 				   NULL, "%s", short_name);
- 	kfree(short_name);
--	if (ret)
-+	if (ret) {
-+		kobject_put(&new_var->kobj);
- 		return ret;
+--- a/sound/isa/es1688/es1688.c
++++ b/sound/isa/es1688/es1688.c
+@@ -284,8 +284,10 @@ static int snd_es968_pnp_detect(struct p
+ 		return error;
+ 	}
+ 	error = snd_es1688_probe(card, dev);
+-	if (error < 0)
++	if (error < 0) {
++		snd_card_free(card);
+ 		return error;
 +	}
- 
- 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
- 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+ 	pnp_set_card_drvdata(pcard, card);
+ 	snd_es968_pnp_is_probed = 1;
+ 	return 0;
 
 
