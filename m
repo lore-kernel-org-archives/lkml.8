@@ -2,50 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A757C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D49C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450752100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47E421527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584280;
-	bh=yQxQpjtkHjofVTksYCvmMXdlPiITVMnCbSS367MJYxI=;
+	s=default; t=1592584282;
+	bh=0V3FvdG4nQLOOIOgNGR1n3/vSMQfS1its0pK4X/69+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdSYmPVmB1SnP5T9kzGFjBwsEQn7jHl3dwlbghCY2+lrw40EnDLCCcojw7t28Nq8L
-	 XRhuVzYTfrcTJ92Kne5ymThc5RsjQtRM2ZiBCtJb/8+o7lF2iL4SBa9hImbQq49hqL
-	 pwSxJn2HAbFCsO2vUYjqyYM4Ps7oq43azoptdBTI=
+	b=ks95mWY9xLCAGXQ7ed+R5EcSnOHspq0hSGHiJl/ArGNQwWSz6sXs4OMKtViOYd7A1
+	 CaDgF/250yQ+HlfxP7nQE8/toQAlrc1P5E5PAzxXdtTrQ4WXdA7mcHtselhyk05fhQ
+	 eZQnSzBuJGqGQeDpkI0k3GR6dIUyYiTm2UzPy6fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388353AbgFSOw6 (ORCPT
+        id S2395028AbgFSQbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388738AbgFSOwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:38 -0400
+        id S2389652AbgFSOw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 394D821556;
-        Fri, 19 Jun 2020 14:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B358C21556;
+        Fri, 19 Jun 2020 14:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578358;
-        bh=yQxQpjtkHjofVTksYCvmMXdlPiITVMnCbSS367MJYxI=;
+        s=default; t=1592578379;
+        bh=0V3FvdG4nQLOOIOgNGR1n3/vSMQfS1its0pK4X/69+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAzaOs842SGnqUrQClSyy5TdTcTsaxFk0xnipd8M+b2iivnVnNWYRVbU4cwodBff8
-         sYRFkTBnx6JCUr5+EwHMEMRT3DMMNNMEoZ8dArqFuRqUFDwufyaR+FWy6s0TFwhFl3
-         JPNEjVF9G5zwm+BOXpG/B+1o2GGqS1c9M1zezMGk=
+        b=JvcRZZX1Vafq4P0YunLn7xruq6cblM6+Ux6ZyseFW8o1Tg/yWXFc7R9sNuKs7+apc
+         uq5QppIdO167Z8J74lblSiFeN/iixWL0uzP61kAocCAV+m1uXR1vYrr/kRsNmCG3gq
+         D0RgKpuosFaUCqjTD1ThWbtlQ/uABIiHAWtthVBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 4.14 182/190] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
-Date:   Fri, 19 Jun 2020 16:33:47 +0200
-Message-Id: <20200619141642.949498508@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 4.14 189/190] perf probe: Fix to check blacklist address correctly
+Date:   Fri, 19 Jun 2020 16:33:54 +0200
+Message-Id: <20200619141643.302307142@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -58,57 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 4b50c8c4eaf06a825d1c005c0b1b4a8307087b83 upstream.
+commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
 
-This code does not work as stated in the comment.
+Fix to check kprobe blacklist address correctly with relocated address
+by adjusting debuginfo address.
 
-$(CONFIG_MODVERSIONS) is always empty because it is expanded before
-include/config/auto.conf is included. Hence, 'make modules' with
-CONFIG_MODVERSION=y cannot record the version CRCs.
+Since the address in the debuginfo is same as objdump, it is different
+from relocated kernel address with KASLR.  Thus, 'perf probe' always
+misses to catch the blacklisted addresses.
 
-This has been broken since 2003, commit ("kbuild: Enable modules to be
-build using the "make dir/" syntax"). [1]
+Without this patch, 'perf probe' can not detect the blacklist addresses
+on a KASLR enabled kernel.
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
-Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+  # perf probe kprobe_dispatcher
+  Failed to write event: Invalid argument
+    Error: Failed to add events.
+  #
+
+With this patch, it correctly shows the error message.
+
+  # perf probe kprobe_dispatcher
+  kprobe_dispatcher is blacklisted function, skip it.
+  Probe point 'kprobe_dispatcher' not found.
+    Error: Failed to add events.
+  #
+
+Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ tools/perf/util/probe-event.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -542,12 +542,8 @@ KBUILD_MODULES :=
- KBUILD_BUILTIN := 1
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -122,7 +122,7 @@ static struct symbol *__find_kernel_func
+ 	return machine__find_kernel_function(host_machine, addr, mapp);
+ }
  
- # If we have only "make modules", don't compile built-in objects.
--# When we're building modules with modversions, we need to consider
--# the built-in objects during the descend as well, in order to
--# make sure the checksums are up to date before we record them.
--
- ifeq ($(MAKECMDGOALS),modules)
--  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
-+  KBUILD_BUILTIN :=
- endif
- 
- # If we have "make <whatever> modules", compile modules
-@@ -1249,6 +1245,13 @@ ifdef CONFIG_MODULES
- 
- all: modules
- 
-+# When we're building modules with modversions, we need to consider
-+# the built-in objects during the descend as well, in order to
-+# make sure the checksums are up to date before we record them.
-+ifdef CONFIG_MODVERSIONS
-+  KBUILD_BUILTIN := 1
-+endif
+-static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
++static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
+ {
+ 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
+ 	struct kmap *kmap;
+@@ -134,6 +134,10 @@ static struct ref_reloc_sym *kernel_get_
+ 	kmap = map__kmap(map);
+ 	if (!kmap)
+ 		return NULL;
 +
- # Build modules
- #
- # A module can be listed more than once in obj-m resulting in
++	if (pmap)
++		*pmap = map;
++
+ 	return kmap->ref_reloc_sym;
+ }
+ 
+@@ -145,7 +149,7 @@ static int kernel_get_symbol_address_by_
+ 	struct map *map;
+ 
+ 	/* ref_reloc_sym is just a label. Need a special fix*/
+-	reloc_sym = kernel_get_ref_reloc_sym();
++	reloc_sym = kernel_get_ref_reloc_sym(NULL);
+ 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
+ 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
+ 	else {
+@@ -764,6 +768,7 @@ post_process_kernel_probe_trace_events(s
+ 				       int ntevs)
+ {
+ 	struct ref_reloc_sym *reloc_sym;
++	struct map *map;
+ 	char *tmp;
+ 	int i, skipped = 0;
+ 
+@@ -772,7 +777,7 @@ post_process_kernel_probe_trace_events(s
+ 		return post_process_offline_probe_trace_events(tevs, ntevs,
+ 						symbol_conf.vmlinux_name);
+ 
+-	reloc_sym = kernel_get_ref_reloc_sym();
++	reloc_sym = kernel_get_ref_reloc_sym(&map);
+ 	if (!reloc_sym) {
+ 		pr_warning("Relocated base symbol is not found!\n");
+ 		return -EINVAL;
+@@ -783,9 +788,13 @@ post_process_kernel_probe_trace_events(s
+ 			continue;
+ 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
+ 			continue;
+-		/* If we found a wrong one, mark it by NULL symbol */
++		/*
++		 * If we found a wrong one, mark it by NULL symbol.
++		 * Since addresses in debuginfo is same as objdump, we need
++		 * to convert it to addresses on memory.
++		 */
+ 		if (kprobe_warn_out_range(tevs[i].point.symbol,
+-					  tevs[i].point.address)) {
++			map__objdump_2mem(map, tevs[i].point.address))) {
+ 			tmp = NULL;
+ 			skipped++;
+ 		} else {
+@@ -2887,7 +2896,7 @@ static int find_probe_trace_events_from_
+ 	/* Note that the symbols in the kmodule are not relocated */
+ 	if (!pev->uprobes && !pev->target &&
+ 			(!pp->retprobe || kretprobe_offset_is_supported())) {
+-		reloc_sym = kernel_get_ref_reloc_sym();
++		reloc_sym = kernel_get_ref_reloc_sym(NULL);
+ 		if (!reloc_sym) {
+ 			pr_warning("Relocated base symbol is not found!\n");
+ 			ret = -EINVAL;
 
 
