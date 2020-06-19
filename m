@@ -7,26 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A64C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6C02080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDC32080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbgFSK2i (ORCPT
+        id S1732423AbgFSK2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:28:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732349AbgFSK2H (ORCPT
+        Fri, 19 Jun 2020 06:28:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57246 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732345AbgFSK2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:28:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41163C0613F0;
-        Fri, 19 Jun 2020 03:28:07 -0700 (PDT)
+        Fri, 19 Jun 2020 06:28:08 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 5DCD92A51FB
+        with ESMTPSA id 631072A522B
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
@@ -34,9 +31,9 @@ Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH 2/7] arm64: dts: mt6358: Add the compatible for the regulators
-Date:   Fri, 19 Jun 2020 12:27:52 +0200
-Message-Id: <20200619102757.1358675-3-enric.balletbo@collabora.com>
+Subject: [PATCH 3/7] arm64: dts: mt8183: Add MediaTek's peripheral configuration controller
+Date:   Fri, 19 Jun 2020 12:27:53 +0200
+Message-Id: <20200619102757.1358675-4-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619102757.1358675-1-enric.balletbo@collabora.com>
 References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
@@ -47,29 +44,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regulators are expected to be instantiated with matching the
-device-tree compatible, so add the proper compatible name under the
-regulators node.
+The MediaTek's peripheral configuration controller is present on the
+MT8183 SoC. Add the node for that controller.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- arch/arm64/boot/dts/mediatek/mt6358.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-index 9361ada0c497e..fa159b20379e4 100644
---- a/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-@@ -16,6 +16,8 @@ mt6358codec: mt6358codec {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 1e03c849dc5d6..00137ec61164d 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -285,6 +285,12 @@ infracfg: syscon@10001000 {
+ 			#reset-cells = <1>;
  		};
  
- 		mt6358regulator: mt6358regulator {
-+			compatible = "mediatek,mt6358-regulator";
++		pericfg: syscon@10003000 {
++			compatible = "mediatek,mt8183-pericfg", "syscon";
++			reg = <0 0x10003000 0 0x1000>;
++			#clock-cells = <1>;
++		};
 +
- 			mt6358_vdram1_reg: buck_vdram1 {
- 				regulator-name = "vdram1";
- 				regulator-min-microvolt = <500000>;
+ 		pio: pinctrl@10005000 {
+ 			compatible = "mediatek,mt8183-pinctrl";
+ 			reg = <0 0x10005000 0 0x1000>,
 -- 
 2.27.0
 
