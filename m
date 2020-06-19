@@ -2,82 +2,88 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03836C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD22208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CD7208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fsiqp5Bf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392601AbgFSR3D (ORCPT
+        id S2391478AbgFSRbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:29:03 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:48044 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729255AbgFSR3D (ORCPT
+        Fri, 19 Jun 2020 13:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732343AbgFSRbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:29:03 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jmKp2-0001N7-BM; Fri, 19 Jun 2020 11:29:00 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jmKp1-0004bC-7P; Fri, 19 Jun 2020 11:29:00 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin\@oracle.com" <joe.jin@oracle.com>,
-        Wengang Wang <wen.gang.wang@oracle.com>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
-        <20200618233958.GV8681@bombadil.infradead.org>
-        <877dw3apn8.fsf@x220.int.ebiederm.org>
-        <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
-        <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
-        <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
-Date:   Fri, 19 Jun 2020 12:24:41 -0500
-In-Reply-To: <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com> (Junxiao Bi's
-        message of "Fri, 19 Jun 2020 08:56:21 -0700")
-Message-ID: <87k1036k9y.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 19 Jun 2020 13:31:37 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3AFC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UGQYAy353h8usQVvoM8ZQptssTrkQAxhrWa3SGPOXCg=; b=fsiqp5BfJvmIshAQeSR6UH4L1M
+        R+O+x1YUSNeVrjNEAszs+DmO1vQICJ+VHQBSNfga4LH1s8W+yzm8nquE3G+PhLGuJrQJkjuQ1s4tz
+        D7kXk1GfOkjmUgupg/Wkc/GDRmYoKiLs+6OF0rEda59MCMbJNB2Ae5Yr2dF+n43ztn0X0dpRcCe1K
+        52wJbR2fJE7EYrRYVcp3z726n7i67i93HQz6LoryyqxfNiPwjMll5igno6C2fccVn5zr9Xy58avYJ
+        tHTkG642Sl/j1g9xQolnxBvJHTMddV/N3t1M5YQ+WoxGbeQPGguh/Kn1OraQnsnNiQ6ru4k6AmMp3
+        SW+EDHVw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmKqw-0003Ny-SX; Fri, 19 Jun 2020 17:30:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9C55E3079CB;
+        Fri, 19 Jun 2020 19:30:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 68F0321390E42; Fri, 19 Jun 2020 19:30:55 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 19:30:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Fix initialization of strut uclamp_rq
+Message-ID: <20200619173055.GA576888@hirez.programming.kicks-ass.net>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-2-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jmKp1-0004bC-7P;;;mid=<87k1036k9y.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18t/kZAHYChf4fQBy2tfa9zm0fEa/HZ2QQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc dentries
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618195525.7889-2-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Junxiao Bi <junxiao.bi@oracle.com> writes:
+On Thu, Jun 18, 2020 at 08:55:24PM +0100, Qais Yousef wrote:
 
-> Hi Eric,
->
-> The patch didn't improve lock contention.
+> +	for_each_clamp_id(clamp_id) {
+> +		memset(uc_rq[clamp_id].bucket,
+> +		       0,
+> +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
+> +
+> +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
 
-Which raises the question where is the lock contention coming from.
+I think you can replace all that with:
 
-Especially with my first variant.  Only the last thread to be reaped
-would free up anything in the cache.
+		*uc_rq = (struct uclamp_rq){
+			.value = uclamp_none(clamp_id),
+		};
 
-Can you comment out the call to proc_flush_pid entirely?
+it's shorter and is free or weird line-breaks :-)
 
-That will rule out the proc_flush_pid in d_invalidate entirely.
-
-The only candidate I can think of d_invalidate aka (proc_flush_pid) vs ps.
-
-Eric
+> +	}
