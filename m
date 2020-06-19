@@ -2,50 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A903C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B542100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411912100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584265;
-	bh=e3qeNO8EVoBm8gd2F3PpJi1vypzKZd7lY8KvJ41wVTA=;
+	s=default; t=1592584268;
+	bh=krZvaaKbZupcbCVuMdkXCRkKX12CC/ankJb4E+BbGlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAfM6vQYtI/YIwjLJ+MjE8QmjxlYZYztro0y/O4p9lYB2pMr7xar8mYpUPIB1p5z5
-	 K6986VAY8RAubHsHg357lOBgPUSl8T7n4S4MgDnpGTV/X0FB7TI2rlOvNSL6Ice+d0
-	 XXHuGOHvTFiM1fn5OJGjJoQggsaK8aTpgXZFxX+Q=
+	b=TkRAC1QOiNgeybqCmFN6UIh2lHn7Q8IsWlrS4nkEF8fq5vkOP72lTFNcfNd9wY10i
+	 YqmHLF6gZIRETUrWV3+A/JuzKOfaVueelisUOAFEFI1x/gDX7rYmpnb4hYN4ao41/F
+	 T0bPaksv4VK2nKKt2/2CfjpuQsm6RKmy+Viu/FEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389664AbgFSOxE (ORCPT
+        id S2389669AbgFSQbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389616AbgFSOws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:48 -0400
+        id S2389666AbgFSOxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C91221556;
-        Fri, 19 Jun 2020 14:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCF4217D8;
+        Fri, 19 Jun 2020 14:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578368;
-        bh=e3qeNO8EVoBm8gd2F3PpJi1vypzKZd7lY8KvJ41wVTA=;
+        s=default; t=1592578384;
+        bh=krZvaaKbZupcbCVuMdkXCRkKX12CC/ankJb4E+BbGlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4vqhjk89LMKMD95U06dXJMjwwlLxVU9YfqW3wavHnQtRUZrX9Iu4utw7WMZvH88b
-         0zA2Bai97UjS6g7UQpaqruqM0rR1qwuyyTHRpOpAVZVRJPCusvKDgl7qmzG8YnMv65
-         rEMqBWoXcowe6tU8wqRkQYJ8LyHzRx8yus7ANpCc=
+        b=HrSTWEmf1Ke8kGY2HGhFONcH1K879xvT/RPoBgKRobR10+rDKjm7HvkikVhxB3g5f
+         gTV6uzu2l1o/0m/+mLaNCuXEOxWH7A/DWsVbBXKuiX/FA6eacezDW3JAsxwKl1gz3r
+         6eVfamk2r8rZT1E2FUd2OwUcbb/6DT2iUj/ry+gE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.14 186/190] mtd: rawnand: pasemi: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:33:51 +0200
-Message-Id: <20200619141643.150186475@linuxfoundation.org>
+        stable@vger.kernel.org, Giuliano Procida <gprocida@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 161/190] blk-mq: move _blk_mq_update_nr_hw_queues synchronize_rcu call
+Date:   Fri, 19 Jun 2020 16:33:26 +0200
+Message-Id: <20200619141641.804697508@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -58,49 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Giuliano Procida <gprocida@google.com>
 
-commit f51466901c07e6930435d30b02a21f0841174f61 upstream.
+This fixes the
+4.14 backport commit 574eb136ec7f315c3ef2ca68fa9b3e16c56baa24
+which was
+upstream commit f5bbbbe4d63577026f908a809f22f5fd5a90ea1f.
 
-nand_cleanup() is supposed to be called on error after a successful
-call to nand_scan() to free all NAND resources.
+The upstream commit added a call to synchronize_rcu to
+_blk_mq_update_nr_hw_queues, just after freezing queues.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible, hence pointing it as the commit to
-fix for backporting purposes, even if this commit is not introducing
-any bug.
+In the backport this landed just after unfreezeing queues.
 
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-41-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This commit moves the call to its intended place.
 
+Fixes: 574eb136ec7f ("blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter")
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/pasemi_nand.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ block/blk-mq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/mtd/nand/pasemi_nand.c
-+++ b/drivers/mtd/nand/pasemi_nand.c
-@@ -163,7 +163,7 @@ static int pasemi_nand_probe(struct plat
- 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
- 		dev_err(dev, "Unable to register MTD device\n");
- 		err = -ENODEV;
--		goto out_lpc;
-+		goto out_cleanup_nand;
- 	}
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 9d53f476c517..cf56bdad2e06 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2738,6 +2738,10 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
  
- 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
-@@ -171,6 +171,8 @@ static int pasemi_nand_probe(struct plat
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_freeze_queue(q);
++	/*
++	 * Sync with blk_mq_queue_tag_busy_iter.
++	 */
++	synchronize_rcu();
  
- 	return 0;
+ 	set->nr_hw_queues = nr_hw_queues;
+ 	blk_mq_update_queue_map(set);
+@@ -2748,10 +2752,6 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
  
-+ out_cleanup_nand:
-+	nand_cleanup(chip);
-  out_lpc:
- 	release_region(lpcctl, 4);
-  out_ior:
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_unfreeze_queue(q);
+-	/*
+-	 * Sync with blk_mq_queue_tag_busy_iter.
+-	 */
+-	synchronize_rcu();
+ }
+ 
+ void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues)
+-- 
+2.25.1
+
 
 
