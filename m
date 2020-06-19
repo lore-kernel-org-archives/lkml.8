@@ -5,59 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F025C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9949621927
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AE221927
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580237;
-	bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
+	s=default; t=1592580241;
+	bh=LGucAxx+x52tVKnfbNkMjULMnphu0SKvwqOkseuLR7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n66LJD9xxu3pLVYaxRV3UVs+yDstx4q8FBmDKTsr/0A9VreqA+LAgrc9mPZw20D6Y
-	 /b7/9l+dTdUg0Rj3DKDYBvL8/Aqbn5v2BugFBl86q1lVOY9xY0tN9tw6oAgPr8zq54
-	 Bo/IckkMffdIMlcnVSiV3WQssf9bIg8wCXgA/gwU=
+	b=tP4uDaKa5BogbABV5XFdqoivgLw13AD0QmqDKXJ5SA7Vr9xJauDCsDyOHsN52YJx1
+	 vlpQ4LHC6sJXjNi0GZ4iTQ8/Idov4szmRyLy/WW2ot/CGsz3gcyxx/vFv9vxzmvyaY
+	 01YwEBDI+sD7WK8hs+wiU1yzcAFcTc0JH44SGU3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392666AbgFSPXz (ORCPT
+        id S2393234AbgFSPYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51466 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392683AbgFSPUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:22 -0400
+        id S2392482AbgFSPU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEC020706;
-        Fri, 19 Jun 2020 15:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B2B2158C;
+        Fri, 19 Jun 2020 15:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580021;
-        bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
+        s=default; t=1592580026;
+        bh=LGucAxx+x52tVKnfbNkMjULMnphu0SKvwqOkseuLR7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JvLLsgm+qL7+eWPx+jvCQwrMaSpFW6ARGiThRNYS43Gg/x3iT9mJi1Tdy88iaZcLY
-         +eJDiPMKOBEFZm5KviQ6/IRYgb3KbkGkoBMKyHF+8hps4MHfGpifRwOPFBlVLisE76
-         yfwxhu4dSWrTQy/FLGUvLH3J+Sju9CE7g0Y4ePsQ=
+        b=vVr0NsFTFo8UQW6jm6c1IiKRNq/wcksxOKknt829u3EiSfinim98uQTUCMYVBUn6Q
+         aGQhn4WekAdIbQW6wy8q8ks5vUMetkUC6IYehUBdcj5yuPjbgVS5J1vmX7sLuY0SE9
+         PImfItKo/XzyMJgv41GCD5+vLr1toYVrbACSTSXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 093/376] tools api fs: Make xxx__mountpoint() more scalable
-Date:   Fri, 19 Jun 2020 16:30:11 +0200
-Message-Id: <20200619141714.743511406@linuxfoundation.org>
+Subject: [PATCH 5.7 095/376] net: mscc: ocelot: deal with problematic MAC_ETYPE VCAP IS2 rules
+Date:   Fri, 19 Jun 2020 16:30:13 +0200
+Message-Id: <20200619141714.841234975@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -70,180 +60,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit c6fddb28bad26e5472cb7acf7b04cd5126f1a4ab ]
+[ Upstream commit 89f9ffd3eb670bad1260bc579f5e13b8f2d5b3e0 ]
 
-The xxx_mountpoint() interface provided by fs.c finds mount points for
-common pseudo filesystems. The first time xxx_mountpoint() is invoked,
-it scans the mount table (/proc/mounts) looking for a match. If found,
-it is cached. The price to scan /proc/mounts is paid once if the mount
-is found.
+By default, the VCAP IS2 will produce a single match for each frame, on
+the most specific classification.
 
-When the mount point is not found, subsequent calls to xxx_mountpoint()
-scan /proc/mounts over and over again.  There is no caching.
+Example: a ping packet (ICMP over IPv4 over Ethernet) sent from an IP
+address of 10.0.0.1 and a MAC address of 96:18:82:00:04:01 will match
+this rule:
 
-This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-The function is called for each process found in
-synthesize__mmap_events().  If the machine has thousands of processes
-and if the /proc/mounts has many entries this could cause major overhead
-in perf record. We have observed multi-second slowdowns on some
-configurations.
+tc filter add dev swp0 ingress protocol ipv4 \
+	flower skip_sw src_ip 10.0.0.1 action drop
 
-As an example on a laptop:
+but not this one:
 
-Before:
+tc filter add dev swp0 ingress \
+	flower skip_sw src_mac 96:18:82:00:04:01 action drop
 
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  285
+Currently the driver does not really warn the user in any way about
+this, and the behavior is rather strange anyway.
 
-After:
+The current patch is a workaround to force matches on MAC_ETYPE keys
+(DMAC and SMAC) for all packets irrespective of higher layer protocol.
+The setting is made at the port level.
 
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  1
+Of course this breaks all other non-src_mac and non-dst_mac matches, so
+rule exclusivity checks have been added to the driver, in order to never
+have rules of both types on any ingress port.
 
-One could argue that the non-caching in case the moint point is not
-found is intentional. That way subsequent calls may discover a moint
-point if the sysadmin mounts the filesystem. But the same argument could
-be made against caching the mount point. It could be unmounted causing
-errors.  It all depends on the intent of the interface. This patch
-assumes it is expected to scan /proc/mounts once. The patch documents
-the caching behavior in the fs.h header file.
+The bits that discard higher-level protocol information are set only
+once a MAC_ETYPE rule is added to a filter block, and only for the ports
+that are bound to that filter block. Then all further non-MAC_ETYPE
+rules added to that filter block should be denied by the ports bound to
+it.
 
-An alternative would be to just fix perf record. But it would solve the
-problem with hugetlbs__mountpoint() but there could be similar issues
-(possibly down the line) with other xxx_mountpoint() calls in perf or
-other tools.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 17 +++++++++++++++++
- tools/lib/api/fs/fs.h | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/net/ethernet/mscc/ocelot_ace.c    | 103 +++++++++++++++++++++-
+ drivers/net/ethernet/mscc/ocelot_ace.h    |   5 +-
+ drivers/net/ethernet/mscc/ocelot_flower.c |   2 +-
+ 3 files changed, 106 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 027b18f7ed8c..82f53d81a7a7 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -90,6 +90,7 @@ struct fs {
- 	const char * const	*mounts;
- 	char			 path[PATH_MAX];
- 	bool			 found;
-+	bool			 checked;
- 	long			 magic;
+diff --git a/drivers/net/ethernet/mscc/ocelot_ace.c b/drivers/net/ethernet/mscc/ocelot_ace.c
+index 3bd286044480..8a2f7d13ef6d 100644
+--- a/drivers/net/ethernet/mscc/ocelot_ace.c
++++ b/drivers/net/ethernet/mscc/ocelot_ace.c
+@@ -706,13 +706,114 @@ ocelot_ace_rule_get_rule_index(struct ocelot_acl_block *block, int index)
+ 	return NULL;
+ }
+ 
++/* If @on=false, then SNAP, ARP, IP and OAM frames will not match on keys based
++ * on destination and source MAC addresses, but only on higher-level protocol
++ * information. The only frame types to match on keys containing MAC addresses
++ * in this case are non-SNAP, non-ARP, non-IP and non-OAM frames.
++ *
++ * If @on=true, then the above frame types (SNAP, ARP, IP and OAM) will match
++ * on MAC_ETYPE keys such as destination and source MAC on this ingress port.
++ * However the setting has the side effect of making these frames not matching
++ * on any _other_ keys than MAC_ETYPE ones.
++ */
++static void ocelot_match_all_as_mac_etype(struct ocelot *ocelot, int port,
++					  bool on)
++{
++	u32 val = 0;
++
++	if (on)
++		val = ANA_PORT_VCAP_S2_CFG_S2_SNAP_DIS(3) |
++		      ANA_PORT_VCAP_S2_CFG_S2_ARP_DIS(3) |
++		      ANA_PORT_VCAP_S2_CFG_S2_IP_TCPUDP_DIS(3) |
++		      ANA_PORT_VCAP_S2_CFG_S2_IP_OTHER_DIS(3) |
++		      ANA_PORT_VCAP_S2_CFG_S2_OAM_DIS(3);
++
++	ocelot_rmw_gix(ocelot, val,
++		       ANA_PORT_VCAP_S2_CFG_S2_SNAP_DIS_M |
++		       ANA_PORT_VCAP_S2_CFG_S2_ARP_DIS_M |
++		       ANA_PORT_VCAP_S2_CFG_S2_IP_TCPUDP_DIS_M |
++		       ANA_PORT_VCAP_S2_CFG_S2_IP_OTHER_DIS_M |
++		       ANA_PORT_VCAP_S2_CFG_S2_OAM_DIS_M,
++		       ANA_PORT_VCAP_S2_CFG, port);
++}
++
++static bool ocelot_ace_is_problematic_mac_etype(struct ocelot_ace_rule *ace)
++{
++	if (ace->type != OCELOT_ACE_TYPE_ETYPE)
++		return false;
++	if (ether_addr_to_u64(ace->frame.etype.dmac.value) &
++	    ether_addr_to_u64(ace->frame.etype.dmac.mask))
++		return true;
++	if (ether_addr_to_u64(ace->frame.etype.smac.value) &
++	    ether_addr_to_u64(ace->frame.etype.smac.mask))
++		return true;
++	return false;
++}
++
++static bool ocelot_ace_is_problematic_non_mac_etype(struct ocelot_ace_rule *ace)
++{
++	if (ace->type == OCELOT_ACE_TYPE_SNAP)
++		return true;
++	if (ace->type == OCELOT_ACE_TYPE_ARP)
++		return true;
++	if (ace->type == OCELOT_ACE_TYPE_IPV4)
++		return true;
++	if (ace->type == OCELOT_ACE_TYPE_IPV6)
++		return true;
++	return false;
++}
++
++static bool ocelot_exclusive_mac_etype_ace_rules(struct ocelot *ocelot,
++						 struct ocelot_ace_rule *ace)
++{
++	struct ocelot_acl_block *block = &ocelot->acl_block;
++	struct ocelot_ace_rule *tmp;
++	unsigned long port;
++	int i;
++
++	if (ocelot_ace_is_problematic_mac_etype(ace)) {
++		/* Search for any non-MAC_ETYPE rules on the port */
++		for (i = 0; i < block->count; i++) {
++			tmp = ocelot_ace_rule_get_rule_index(block, i);
++			if (tmp->ingress_port_mask & ace->ingress_port_mask &&
++			    ocelot_ace_is_problematic_non_mac_etype(tmp))
++				return false;
++		}
++
++		for_each_set_bit(port, &ace->ingress_port_mask,
++				 ocelot->num_phys_ports)
++			ocelot_match_all_as_mac_etype(ocelot, port, true);
++	} else if (ocelot_ace_is_problematic_non_mac_etype(ace)) {
++		/* Search for any MAC_ETYPE rules on the port */
++		for (i = 0; i < block->count; i++) {
++			tmp = ocelot_ace_rule_get_rule_index(block, i);
++			if (tmp->ingress_port_mask & ace->ingress_port_mask &&
++			    ocelot_ace_is_problematic_mac_etype(tmp))
++				return false;
++		}
++
++		for_each_set_bit(port, &ace->ingress_port_mask,
++				 ocelot->num_phys_ports)
++			ocelot_match_all_as_mac_etype(ocelot, port, false);
++	}
++
++	return true;
++}
++
+ int ocelot_ace_rule_offload_add(struct ocelot *ocelot,
+-				struct ocelot_ace_rule *rule)
++				struct ocelot_ace_rule *rule,
++				struct netlink_ext_ack *extack)
+ {
+ 	struct ocelot_acl_block *block = &ocelot->acl_block;
+ 	struct ocelot_ace_rule *ace;
+ 	int i, index;
+ 
++	if (!ocelot_exclusive_mac_etype_ace_rules(ocelot, rule)) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "Cannot mix MAC_ETYPE with non-MAC_ETYPE rules");
++		return -EBUSY;
++	}
++
+ 	/* Add rule to the linked list */
+ 	ocelot_ace_rule_add(ocelot, block, rule);
+ 
+diff --git a/drivers/net/ethernet/mscc/ocelot_ace.h b/drivers/net/ethernet/mscc/ocelot_ace.h
+index 29d22c566786..099e177f2617 100644
+--- a/drivers/net/ethernet/mscc/ocelot_ace.h
++++ b/drivers/net/ethernet/mscc/ocelot_ace.h
+@@ -194,7 +194,7 @@ struct ocelot_ace_rule {
+ 
+ 	enum ocelot_ace_action action;
+ 	struct ocelot_ace_stats stats;
+-	u16 ingress_port_mask;
++	unsigned long ingress_port_mask;
+ 
+ 	enum ocelot_vcap_bit dmac_mc;
+ 	enum ocelot_vcap_bit dmac_bc;
+@@ -215,7 +215,8 @@ struct ocelot_ace_rule {
  };
  
-@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
- 		.name	= "sysfs",
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
-+		.checked = false,
- 	},
- };
- 
-@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+ int ocelot_ace_rule_offload_add(struct ocelot *ocelot,
+-				struct ocelot_ace_rule *rule);
++				struct ocelot_ace_rule *rule,
++				struct netlink_ext_ack *extack);
+ int ocelot_ace_rule_offload_del(struct ocelot *ocelot,
+ 				struct ocelot_ace_rule *rule);
+ int ocelot_ace_rule_stats_update(struct ocelot *ocelot,
+diff --git a/drivers/net/ethernet/mscc/ocelot_flower.c b/drivers/net/ethernet/mscc/ocelot_flower.c
+index 341923311fec..954cb67eeaa2 100644
+--- a/drivers/net/ethernet/mscc/ocelot_flower.c
++++ b/drivers/net/ethernet/mscc/ocelot_flower.c
+@@ -205,7 +205,7 @@ int ocelot_cls_flower_replace(struct ocelot *ocelot, int port,
+ 		return ret;
  	}
  
- 	fclose(fp);
-+	fs->checked = true;
- 	return fs->found = found;
+-	return ocelot_ace_rule_offload_add(ocelot, ace);
++	return ocelot_ace_rule_offload_add(ocelot, ace, f->common.extack);
  }
+ EXPORT_SYMBOL_GPL(ocelot_cls_flower_replace);
  
-@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
-+	fs->checked = true;
- 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
- 	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
-@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
- 	if (fs->found)
- 		return (const char *)fs->path;
- 
-+	/* the mount point was already checked for the mount point
-+	 * but and did not exist, so return NULL to avoid scanning again.
-+	 * This makes the found and not found paths cost equivalent
-+	 * in case of multiple calls.
-+	 */
-+	if (fs->checked)
-+		return NULL;
-+
- 	return fs__get_mountpoint(fs);
- }
- 
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 936edb95e1f3..aa222ca30311 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -18,6 +18,18 @@
- 	const char *name##__mount(void);	\
- 	bool name##__configured(void);		\
- 
-+/*
-+ * The xxxx__mountpoint() entry points find the first match mount point for each
-+ * filesystems listed below, where xxxx is the filesystem type.
-+ *
-+ * The interface is as follows:
-+ *
-+ * - If a mount point is found on first call, it is cached and used for all
-+ *   subsequent calls.
-+ *
-+ * - If a mount point is not found, NULL is returned on first call and all
-+ *   subsequent calls.
-+ */
- FS(sysfs)
- FS(procfs)
- FS(debugfs)
 -- 
 2.25.1
 
