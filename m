@@ -4,51 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F63C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CB520809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD5720809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581567;
-	bh=6fIE5Hz8OMymYYjrHzCdvXBjcqLLwBhH7L5RJjvcvQE=;
+	s=default; t=1592581571;
+	bh=NjjgdfTI8epGLDhxfZaV50WlP5QCNJkpod8cGDMmtPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCjO9vB1X0H6Vsx5gEg3DM75qlvhG6p/ijOhnQpQ4gsTxYeMykJA9ObKKZgMV04YD
-	 NeugG0CyIg+7/Pkqe/OB3kERtymdlVr1v7LrjVf0v1n4i6iziD7UdwVlX8pas67iTT
-	 E/+VQH/gCnqpCxONE8qeVDXlqq8VFVZ9zTAZ3D/Y=
+	b=Dew4FXn4jNKcO/Ko0dMv3oX0R+JBn1lri5W0ARwB9Gdwpp4GBYOxkWwwViuxTMCC4
+	 OK6ao25w2Z9czD5V/4t+szdC0oM4GPcBFPvqk+/G3AXeBKvX67dCfOZfpyRVKohyE8
+	 KSEsxLvPD/5kmTJv7RSvUv1qLaVyI51M+Z1qPMF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405262AbgFSPqE (ORCPT
+        id S2405268AbgFSPqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393323AbgFSP04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:56 -0400
+        id S2404372AbgFSP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BB3820734;
-        Fri, 19 Jun 2020 15:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82EAF21582;
+        Fri, 19 Jun 2020 15:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580416;
-        bh=6fIE5Hz8OMymYYjrHzCdvXBjcqLLwBhH7L5RJjvcvQE=;
+        s=default; t=1592580410;
+        bh=NjjgdfTI8epGLDhxfZaV50WlP5QCNJkpod8cGDMmtPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFZPE4k92v0YPHCeH1W0i1itz2VXMYRAsR939ksWTgqWubmkK13rte1ulMruKoCpe
-         bu3RHbhjF1/UM4rfJQ8uN4PgM0i4PluuS7brbojFadinYzWDryMAK5NSa7lYGohVvQ
-         apdtXH1CyIHr4aJ0T4muimOy+ZcQ0ow8vqZ0lH3k=
+        b=bbOpunvRub0c0EmIF9z+AAzqPIwI/VdQaQo+t2DAYgBeQk5J2jwBVzj0XCW/mlid2
+         5X1mckSBTfPC5I5U8wI6iHPe7lrAaJXzYyFqfuUhLliUid6IZtrlQ9jBBGEWJaghkr
+         yTWB4qMysV+z0W9Dx0lDpsUSmbFV5DeGx0AUYMg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 213/376] ice: Fix Tx timeout when link is toggled on a VFs interface
-Date:   Fri, 19 Jun 2020 16:32:11 +0200
-Message-Id: <20200619141720.418674750@linuxfoundation.org>
+Subject: [PATCH 5.7 238/376] spi: dw: Return any value retrieved from the dma_transfer callback
+Date:   Fri, 19 Jun 2020 16:32:36 +0200
+Message-Id: <20200619141721.591998003@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,108 +69,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 4dc926d3a59e73b8c4adf51b261f1a1bbd48a989 ]
+[ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
 
-Currently if the iavf is loaded and a VF link transitions from up to
-down to up again a Tx timeout will be triggered. This happens because
-Tx/Rx queue interrupts are only enabled when receiving the
-VIRTCHNL_OP_CONFIG_MAP_IRQ message, which happens on reset or initial
-iavf driver load, but not when bringing link up. This is problematic
-because they are disabled on the VIRTCHNL_OP_DISABLE_QUEUES message,
-which is part of bringing a VF's link down. However, they are not
-enabled on the VIRTCHNL_OP_ENABLE_QUEUES message, which is part of
-bringing a VF's link up.
+DW APB SSI DMA-part of the driver may need to perform the requested
+SPI-transfer synchronously. In that case the dma_transfer() callback
+will return 0 as a marker of the SPI transfer being finished so the
+SPI core doesn't need to wait and may proceed with the SPI message
+trasnfers pumping procedure. This will be needed to fix the problem
+when DMA transactions are finished, but there is still data left in
+the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
+to return 1 as the normal dw_spi_transfer_one() method.
 
-Fix this by re-enabling the VF's Rx and Tx queue interrupts when they
-were previously configured. This is done by first checking to make
-sure the previous value in QINT_[R|T]QCTL.MSIX_INDX is not 0, which
-is used to represent the OICR in the VF's interrupt space. If the
-MSIX_INDX is non-zero then enable the interrupt by setting the
-QINT_[R|T]CTL.CAUSE_ENA bit to 1.
-
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/ice/ice_virtchnl_pf.c  | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/spi/spi-dw-mid.c | 2 +-
+ drivers/spi/spi-dw.c     | 7 ++-----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-index c9c281167873..f1fdb4d4c826 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-@@ -2118,6 +2118,52 @@ static bool ice_vc_validate_vqs_bitmaps(struct virtchnl_queue_select *vqs)
- 	return true;
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index e6c045ecffba..23cebdeb67e2 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -266,7 +266,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 		dma_async_issue_pending(dws->txchan);
+ 	}
+ 
+-	return 0;
++	return 1;
  }
  
-+/**
-+ * ice_vf_ena_txq_interrupt - enable Tx queue interrupt via QINT_TQCTL
-+ * @vsi: VSI of the VF to configure
-+ * @q_idx: VF queue index used to determine the queue in the PF's space
-+ */
-+static void ice_vf_ena_txq_interrupt(struct ice_vsi *vsi, u32 q_idx)
-+{
-+	struct ice_hw *hw = &vsi->back->hw;
-+	u32 pfq = vsi->txq_map[q_idx];
-+	u32 reg;
-+
-+	reg = rd32(hw, QINT_TQCTL(pfq));
-+
-+	/* MSI-X index 0 in the VF's space is always for the OICR, which means
-+	 * this is most likely a poll mode VF driver, so don't enable an
-+	 * interrupt that was never configured via VIRTCHNL_OP_CONFIG_IRQ_MAP
-+	 */
-+	if (!(reg & QINT_TQCTL_MSIX_INDX_M))
-+		return;
-+
-+	wr32(hw, QINT_TQCTL(pfq), reg | QINT_TQCTL_CAUSE_ENA_M);
-+}
-+
-+/**
-+ * ice_vf_ena_rxq_interrupt - enable Tx queue interrupt via QINT_RQCTL
-+ * @vsi: VSI of the VF to configure
-+ * @q_idx: VF queue index used to determine the queue in the PF's space
-+ */
-+static void ice_vf_ena_rxq_interrupt(struct ice_vsi *vsi, u32 q_idx)
-+{
-+	struct ice_hw *hw = &vsi->back->hw;
-+	u32 pfq = vsi->rxq_map[q_idx];
-+	u32 reg;
-+
-+	reg = rd32(hw, QINT_RQCTL(pfq));
-+
-+	/* MSI-X index 0 in the VF's space is always for the OICR, which means
-+	 * this is most likely a poll mode VF driver, so don't enable an
-+	 * interrupt that was never configured via VIRTCHNL_OP_CONFIG_IRQ_MAP
-+	 */
-+	if (!(reg & QINT_RQCTL_MSIX_INDX_M))
-+		return;
-+
-+	wr32(hw, QINT_RQCTL(pfq), reg | QINT_RQCTL_CAUSE_ENA_M);
-+}
-+
- /**
-  * ice_vc_ena_qs_msg
-  * @vf: pointer to the VF info
-@@ -2178,6 +2224,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 			goto error_param;
- 		}
+ static void mid_spi_dma_stop(struct dw_spi *dws)
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 5725c37544f2..c86c4bbb102e 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -381,11 +381,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
  
-+		ice_vf_ena_rxq_interrupt(vsi, vf_q_id);
- 		set_bit(vf_q_id, vf->rxq_ena);
- 	}
+ 	spi_enable_chip(dws, 1);
  
-@@ -2193,6 +2240,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 		if (test_bit(vf_q_id, vf->txq_ena))
- 			continue;
+-	if (dws->dma_mapped) {
+-		ret = dws->dma_ops->dma_transfer(dws, transfer);
+-		if (ret < 0)
+-			return ret;
+-	}
++	if (dws->dma_mapped)
++		return dws->dma_ops->dma_transfer(dws, transfer);
  
-+		ice_vf_ena_txq_interrupt(vsi, vf_q_id);
- 		set_bit(vf_q_id, vf->txq_ena);
- 	}
- 
+ 	if (chip->poll_mode)
+ 		return poll_transfer(dws);
 -- 
 2.25.1
 
