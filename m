@@ -2,62 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63954C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E91C206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1BB21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584993;
-	bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+	s=default; t=1592584998;
+	bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zu3RmSOUKELBVz11CDfyPK1kyDe8jNbJ+aDRDHTdSygyoffTcoxMRSo3Rau+uP6h1
-	 RYNtOb4KHPZyRYxQO2PqI+XLCSGx21SJlRfZGVtNYCJXvUpZERxPGN3otfCAzm16fL
-	 gENBi/Q1zvdVWsa+vgb03noAY8WcOjqugYU7kGno=
+	b=rxVSeTcF3GStXFXPJjqka9AEw9OLO5a9eD3KhAfR1aeKLbSMuI+XHzC/p3/1yKvt3
+	 +6GzvEDtp2Kx8t7MEdGdHAtzeRao01HBs/lrov0UaC6X4+uTaQr/J6zTnUqgzmhW7t
+	 ijeKB+5Aoaz5AuqCAC3Ox8i8bY4NfYriCNxz5FNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388490AbgFSOnj (ORCPT
+        id S2395541AbgFSQnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbgFSOnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:10 -0400
+        id S2387924AbgFSOnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA70C20A8B;
-        Fri, 19 Jun 2020 14:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB1082168B;
+        Fri, 19 Jun 2020 14:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577790;
-        bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+        s=default; t=1592577817;
+        bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvRdasyP/IPi4I2FMJ+t+JUYuZstl/7pleBQauce0FKKOXEs7hIYJ6M+wYpDm8vUt
-         rCAT3U3ipNzXWceCZpbCkZhEhHhCBgYQAygdzNI8rFJAWse9K/4LsEfvMN3stz+K3Q
-         r+NQCaunjpBSQPTsWviz4hV3Y96UdIrLpKkxG7mA=
+        b=Ie1f9veYeQUGgL/ewulAhH8Cf5OJjXqdovrX116zlExP02Gug7zjJfhjN6F+RuYdv
+         ZEtSBo6RFccfDqZHxw5YNNoMSd/L9SqhUmOmvZt45XK1Q0wXx/+qe4Dn0PNSKy8fqg
+         ixXMLcUtE84f2bz8KZCC+x/FljoJNWvIpuf70u1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/128] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Fri, 19 Jun 2020 16:32:35 +0200
-Message-Id: <20200619141623.446644845@linuxfoundation.org>
+        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.9 102/128] ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
+Date:   Fri, 19 Jun 2020 16:33:16 +0200
+Message-Id: <20200619141625.517958714@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -70,70 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
 
-[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+commit c36a71b4e35ab35340facdd6964a00956b9fef0a upstream.
 
-It's pointless to track the Tx overrun interrupts if Rx-only SPI
-transfer is issued. Similarly there is no need in handling the Rx
-overrun/underrun interrupts if Tx-only SPI transfer is executed.
-So lets unmask the interrupts only if corresponding SPI
-transactions are implied.
+If eh->eh_max is 0, EXT_MAX_EXTENT/INDEX would evaluate to unsigned
+(-1) resulting in illegal memory accesses. Although there is no
+consistent repro, we see that generic/019 sometimes crashes because of
+this bug.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Ran gce-xfstests smoke and verified that there were no regressions.
+
+Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+Link: https://lore.kernel.org/r/20200421023959.20879-2-harshadshirwadkar@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-dw-mid.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ fs/ext4/ext4_extents.h |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index f77d03b658ab..fe0ca3848d35 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+--- a/fs/ext4/ext4_extents.h
++++ b/fs/ext4/ext4_extents.h
+@@ -169,10 +169,13 @@ struct ext4_ext_path {
+ 	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
+ #define EXT_LAST_INDEX(__hdr__) \
+ 	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
+-#define EXT_MAX_EXTENT(__hdr__) \
+-	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
++#define EXT_MAX_EXTENT(__hdr__)	\
++	((le16_to_cpu((__hdr__)->eh_max)) ? \
++	((EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) \
++					: 0)
+ #define EXT_MAX_INDEX(__hdr__) \
+-	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
++	((le16_to_cpu((__hdr__)->eh_max)) ? \
++	((EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) : 0)
  
- static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ static inline struct ext4_extent_header *ext_inode_hdr(struct inode *inode)
  {
--	u16 dma_ctrl = 0;
-+	u16 imr = 0, dma_ctrl = 0;
- 
- 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
- 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
- 
--	if (xfer->tx_buf)
-+	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
--	if (xfer->rx_buf)
-+		imr |= SPI_INT_TXOI;
-+	}
-+	if (xfer->rx_buf) {
- 		dma_ctrl |= SPI_DMA_RDMAE;
-+		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
-+	}
- 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
- 
- 	/* Set the interrupt mask */
--	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-+	spi_umask_intr(dws, imr);
- 
- 	dws->transfer_handler = dma_transfer;
- 
--- 
-2.25.1
-
 
 
