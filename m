@@ -2,109 +2,87 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC62C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4200C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0332C21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579222;
-	bh=9lHRliieVBRuhWpIfnInKTM3rDQgHHFvUgGFx4dSJ7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCCrwEFZMVZWlcfGemiLISGMzfRFVh6jMSbyiOWhqEZqZi3BiGvGgsrxeL0qSCROW
-	 wdNYp483aRNI8NoF23+eEjX+uDye8Exzycs9JVkFVxo4CYK0BlBvtWqlglWOqLGG53
-	 53YQW27tWgPlBjGPa0rChGR/1grC/7sE2h7fkpPI=
+	by mail.kernel.org (Postfix) with ESMTP id B423D21D7A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391522AbgFSPHA (ORCPT
+        id S2391069AbgFSPHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:07:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35897 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390501AbgFSPGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6888421835;
-        Fri, 19 Jun 2020 15:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579211;
-        bh=9lHRliieVBRuhWpIfnInKTM3rDQgHHFvUgGFx4dSJ7U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CheFuMdrqWVHC8PaJ0Nkkmh7rcziAirBrWKcq8ccet2/IWQTXpopcnUEQXxqCTMlt
-         lA2HlSAst/CgwseipXwd17w4Tok8aRZe3nBwKuqRYqUMDyIKeQkp/hpDIOqg71R2yb
-         Exvd14R4qtPlhKKuJ3G4C6d1Kbdgnf/br0CxHqZo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Boob <surabhi.boob@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/261] ice: Fix memory leak
-Date:   Fri, 19 Jun 2020 16:31:00 +0200
-Message-Id: <20200619141652.284664398@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2390694AbgFSPGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49pMbF4KHNz9v09k;
+        Fri, 19 Jun 2020 17:06:49 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id MKUyKzZbmliB; Fri, 19 Jun 2020 17:06:49 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbF3KBSz9v09j;
+        Fri, 19 Jun 2020 17:06:49 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 803898B879;
+        Fri, 19 Jun 2020 17:06:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id txvLaR4ia8Ej; Fri, 19 Jun 2020 17:06:51 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E4088B868;
+        Fri, 19 Jun 2020 17:06:51 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 11F0B65AF4; Fri, 19 Jun 2020 15:06:50 +0000 (UTC)
+Message-Id: <cover.1592578278.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v1 0/8] powerpc/32s: Allocate modules outside of vmalloc space for STRICT_KERNEL_RWX
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 19 Jun 2020 15:06:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Boob <surabhi.boob@intel.com>
+On book3s32 (hash), exec protection is set per 256Mb segments with NX bit.
+Instead of clearing NX bit on vmalloc space when CONFIG_MODULES is selected,
+allocate modules in a dedicated segment (0xb0000000-0xbfffffff by default).
+This allows to keep exec protection on vmalloc space while allowing exec
+on modules.
 
-[ Upstream commit 1aaef2bc4e0a5ce9e4dd86359e6a0bf52c6aa64f ]
+Christophe Leroy (8):
+  powerpc/ptdump: Refactor update of st->last_pa
+  powerpc/ptdump: Refactor update of pg_state
+  powerpc: Set user/kernel boundary at TASK_SIZE instead of PAGE_OFFSET
+  powerpc/lib: Prepare code-patching for modules allocated outside
+    vmalloc space
+  powerpc: Use MODULES_VADDR if defined
+  powerpc/32s: Only leave NX unset on segments used for modules
+  powerpc/32s: Kernel space starts at TASK_SIZE
+  powerpc/32s: Use dedicated segment for modules with STRICT_KERNEL_RWX
 
-Handle memory leak on filter management initialization failure.
+ arch/powerpc/Kconfig                         |  1 +
+ arch/powerpc/include/asm/book3s/32/pgtable.h | 15 ++----
+ arch/powerpc/include/asm/page.h              |  2 +-
+ arch/powerpc/kernel/head_32.S                | 12 ++---
+ arch/powerpc/kernel/module.c                 | 11 ++++
+ arch/powerpc/lib/code-patching.c             |  2 +-
+ arch/powerpc/mm/book3s32/hash_low.S          |  2 +-
+ arch/powerpc/mm/book3s32/mmu.c               | 17 +++++--
+ arch/powerpc/mm/kasan/kasan_init_32.c        |  6 +++
+ arch/powerpc/mm/ptdump/ptdump.c              | 53 ++++++++++++--------
+ 10 files changed, 78 insertions(+), 43 deletions(-)
 
-Signed-off-by: Surabhi Boob <surabhi.boob@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ice/ice_common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 171f0b625407..d68b8aa31b19 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -436,6 +436,7 @@ static void ice_init_flex_flds(struct ice_hw *hw, enum ice_rxdid prof_id)
- static enum ice_status ice_init_fltr_mgmt_struct(struct ice_hw *hw)
- {
- 	struct ice_switch_info *sw;
-+	enum ice_status status;
- 
- 	hw->switch_info = devm_kzalloc(ice_hw_to_dev(hw),
- 				       sizeof(*hw->switch_info), GFP_KERNEL);
-@@ -446,7 +447,12 @@ static enum ice_status ice_init_fltr_mgmt_struct(struct ice_hw *hw)
- 
- 	INIT_LIST_HEAD(&sw->vsi_list_map_head);
- 
--	return ice_init_def_sw_recp(hw);
-+	status = ice_init_def_sw_recp(hw);
-+	if (status) {
-+		devm_kfree(ice_hw_to_dev(hw), hw->switch_info);
-+		return status;
-+	}
-+	return 0;
- }
- 
- /**
 -- 
-2.25.1
-
-
+2.25.0
 
