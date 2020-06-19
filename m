@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7097CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC35C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B28521532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4749021532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582338;
-	bh=UU+t5y8oTVdF+z77GeSaTzCe09apZz25Ub8meUb50aI=;
+	s=default; t=1592582341;
+	bh=m4xrXkotUS3ZKETk0RvSF7L9HwTMlQwabdrk1sTDb3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uy7GakVdPrg9X85Nab2JjraPEKPvuMQaUXPeNhEz4gdyuzAsV3Gvl4mZZqw1U+Wtz
-	 PjaaWXGZWpIguJBDwPuMSpIsqhxyYd6qfRJ9FeV6vWzM43zi1mfuNU/9d7zS9a0G8o
-	 zv12hwHVTvCmw6cbWlJq+cSkh4PqnuZpFyaqKE/I=
+	b=UQ3wEeQxlO+nkMy7jTfTc9v7PiWWMmzp3Z8pzDZKICo0U8OseFjVcyA7isWj6rmKB
+	 m+sBxJN0USYuiaVQKerFNHfkq04i1ZOcPxIQG91QDcX/Q5n12qBA0BW7ZR7PBccpx4
+	 avVijpeRHS94mPZYiiDWdyLWxX3PIh+/ozybAD54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392640AbgFSP64 (ORCPT
+        id S2390451AbgFSPTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392608AbgFSPTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:19:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392577AbgFSPR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41FA021974;
-        Fri, 19 Jun 2020 15:19:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDF22158C;
+        Fri, 19 Jun 2020 15:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579960;
-        bh=UU+t5y8oTVdF+z77GeSaTzCe09apZz25Ub8meUb50aI=;
+        s=default; t=1592579879;
+        bh=m4xrXkotUS3ZKETk0RvSF7L9HwTMlQwabdrk1sTDb3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFvkjU1ZT0XLd596vxtSrywNeqT1fQko0n2ttcyM3ommSyWT4DwX9uD9mL681d83P
-         kZOoBTVVcbfNg3MUXXDQPS1Jw6ClRbL8N068OZYRjnDPCu2D9rSyM+Yk9OIvYy+Kd/
-         ldRZIMIFlHgstmzd75xP1tPRiVo4Uv46GH86Y/mc=
+        b=Jzp7puPsJHsjtDdq8V2vNZ5xzH2k+GTzC/ogg6yVTOSYcSQ7ST0JajUbCmE84hK13
+         pZm7PAhef++j0hAYVLoEmv6lXZSx8pJjfdeA8NtjrlIwpQiXCke9mCifcz7X2doBFD
+         uMHBsgIWqiJFoOA+jGEaQR3RrdHRKgZP9l8gWD78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Boob <surabhi.boob@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/376] ice: Fix for memory leaks and modify ICE_FREE_CQ_BUFS
-Date:   Fri, 19 Jun 2020 16:29:47 +0200
-Message-Id: <20200619141713.620580737@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 038/376] arm64: insn: Fix two bugs in encoding 32-bit logical immediates
+Date:   Fri, 19 Jun 2020 16:29:16 +0200
+Message-Id: <20200619141712.158603528@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,119 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Boob <surabhi.boob@intel.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit 68d270783742783f96e89ef92ac24ab3c7fb1d31 ]
+[ Upstream commit 579d1b3faa3735e781ff74aac0afd598515dbc63 ]
 
-Handle memory leaks during control queue initialization and
-buffer allocation failures. The macro ICE_FREE_CQ_BUFS is modified to
-re-use for this fix.
+This patch fixes two issues present in the current function for encoding
+arm64 logical immediates when using the 32-bit variants of instructions.
 
-Signed-off-by: Surabhi Boob <surabhi.boob@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+First, the code does not correctly reject an all-ones 32-bit immediate,
+and returns an undefined instruction encoding.
+
+Second, the code incorrectly rejects some 32-bit immediates that are
+actually encodable as logical immediates. The root cause is that the code
+uses a default mask of 64-bit all-ones, even for 32-bit immediates.
+This causes an issue later on when the default mask is used to fill the
+top bits of the immediate with ones, shown here:
+
+  /*
+   * Pattern: 0..01..10..01..1
+   *
+   * Fill the unused top bits with ones, and check if
+   * the result is a valid immediate (all ones with a
+   * contiguous ranges of zeroes).
+   */
+  imm |= ~mask;
+  if (!range_of_ones(~imm))
+          return AARCH64_BREAK_FAULT;
+
+To see the problem, consider an immediate of the form 0..01..10..01..1,
+where the upper 32 bits are zero, such as 0x80000001. The code checks
+if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
+1..10..01..10..0, which fails the check; the correct mask yields
+0..01..10..0, which succeeds.
+
+The fix for both issues is to generate a correct mask based on the
+instruction immediate size, and use the mask to check for all-ones,
+all-zeroes, and values wider than the mask.
+
+Currently, arch/arm64/kvm/va_layout.c is the only user of this function,
+which uses 64-bit immediates and therefore won't trigger these bugs.
+
+We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+logical immediates and all 5,334 encodable 64-bit logical immediates.
+
+Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
+Suggested-by: Will Deacon <will@kernel.org>
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200508181547.24783-2-luke.r.nels@gmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_controlq.c | 49 +++++++++++--------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ arch/arm64/kernel/insn.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.c b/drivers/net/ethernet/intel/ice/ice_controlq.c
-index dd946866d7b8..cc29a16f41f7 100644
---- a/drivers/net/ethernet/intel/ice/ice_controlq.c
-+++ b/drivers/net/ethernet/intel/ice/ice_controlq.c
-@@ -199,7 +199,9 @@ unwind_alloc_rq_bufs:
- 		cq->rq.r.rq_bi[i].pa = 0;
- 		cq->rq.r.rq_bi[i].size = 0;
- 	}
-+	cq->rq.r.rq_bi = NULL;
- 	devm_kfree(ice_hw_to_dev(hw), cq->rq.dma_head);
-+	cq->rq.dma_head = NULL;
- 
- 	return ICE_ERR_NO_MEMORY;
- }
-@@ -245,7 +247,9 @@ unwind_alloc_sq_bufs:
- 		cq->sq.r.sq_bi[i].pa = 0;
- 		cq->sq.r.sq_bi[i].size = 0;
- 	}
-+	cq->sq.r.sq_bi = NULL;
- 	devm_kfree(ice_hw_to_dev(hw), cq->sq.dma_head);
-+	cq->sq.dma_head = NULL;
- 
- 	return ICE_ERR_NO_MEMORY;
- }
-@@ -304,6 +308,28 @@ ice_cfg_rq_regs(struct ice_hw *hw, struct ice_ctl_q_info *cq)
- 	return 0;
- }
- 
-+#define ICE_FREE_CQ_BUFS(hw, qi, ring)					\
-+do {									\
-+	int i;								\
-+	/* free descriptors */						\
-+	if ((qi)->ring.r.ring##_bi)					\
-+		for (i = 0; i < (qi)->num_##ring##_entries; i++)	\
-+			if ((qi)->ring.r.ring##_bi[i].pa) {		\
-+				dmam_free_coherent(ice_hw_to_dev(hw),	\
-+					(qi)->ring.r.ring##_bi[i].size,	\
-+					(qi)->ring.r.ring##_bi[i].va,	\
-+					(qi)->ring.r.ring##_bi[i].pa);	\
-+					(qi)->ring.r.ring##_bi[i].va = NULL;\
-+					(qi)->ring.r.ring##_bi[i].pa = 0;\
-+					(qi)->ring.r.ring##_bi[i].size = 0;\
-+		}							\
-+	/* free the buffer info list */					\
-+	if ((qi)->ring.cmd_buf)						\
-+		devm_kfree(ice_hw_to_dev(hw), (qi)->ring.cmd_buf);	\
-+	/* free DMA head */						\
-+	devm_kfree(ice_hw_to_dev(hw), (qi)->ring.dma_head);		\
-+} while (0)
-+
- /**
-  * ice_init_sq - main initialization routine for Control ATQ
-  * @hw: pointer to the hardware structure
-@@ -357,6 +383,7 @@ static enum ice_status ice_init_sq(struct ice_hw *hw, struct ice_ctl_q_info *cq)
- 	goto init_ctrlq_exit;
- 
- init_ctrlq_free_rings:
-+	ICE_FREE_CQ_BUFS(hw, cq, sq);
- 	ice_free_cq_ring(hw, &cq->sq);
- 
- init_ctrlq_exit:
-@@ -416,33 +443,13 @@ static enum ice_status ice_init_rq(struct ice_hw *hw, struct ice_ctl_q_info *cq)
- 	goto init_ctrlq_exit;
- 
- init_ctrlq_free_rings:
-+	ICE_FREE_CQ_BUFS(hw, cq, rq);
- 	ice_free_cq_ring(hw, &cq->rq);
- 
- init_ctrlq_exit:
- 	return ret_code;
- }
- 
--#define ICE_FREE_CQ_BUFS(hw, qi, ring)					\
--do {									\
--	int i;								\
--	/* free descriptors */						\
--	for (i = 0; i < (qi)->num_##ring##_entries; i++)		\
--		if ((qi)->ring.r.ring##_bi[i].pa) {			\
--			dmam_free_coherent(ice_hw_to_dev(hw),		\
--					   (qi)->ring.r.ring##_bi[i].size,\
--					   (qi)->ring.r.ring##_bi[i].va,\
--					   (qi)->ring.r.ring##_bi[i].pa);\
--			(qi)->ring.r.ring##_bi[i].va = NULL;		\
--			(qi)->ring.r.ring##_bi[i].pa = 0;		\
--			(qi)->ring.r.ring##_bi[i].size = 0;		\
--		}							\
--	/* free the buffer info list */					\
--	if ((qi)->ring.cmd_buf)						\
--		devm_kfree(ice_hw_to_dev(hw), (qi)->ring.cmd_buf);	\
--	/* free DMA head */						\
--	devm_kfree(ice_hw_to_dev(hw), (qi)->ring.dma_head);		\
--} while (0)
+diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+index 4a9e773a177f..cc2f3d901c91 100644
+--- a/arch/arm64/kernel/insn.c
++++ b/arch/arm64/kernel/insn.c
+@@ -1535,16 +1535,10 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 				    u32 insn)
+ {
+ 	unsigned int immr, imms, n, ones, ror, esz, tmp;
+-	u64 mask = ~0UL;
 -
- /**
-  * ice_shutdown_sq - shutdown the Control ATQ
-  * @hw: pointer to the hardware structure
+-	/* Can't encode full zeroes or full ones */
+-	if (!imm || !~imm)
+-		return AARCH64_BREAK_FAULT;
++	u64 mask;
+ 
+ 	switch (variant) {
+ 	case AARCH64_INSN_VARIANT_32BIT:
+-		if (upper_32_bits(imm))
+-			return AARCH64_BREAK_FAULT;
+ 		esz = 32;
+ 		break;
+ 	case AARCH64_INSN_VARIANT_64BIT:
+@@ -1556,6 +1550,12 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 		return AARCH64_BREAK_FAULT;
+ 	}
+ 
++	mask = GENMASK(esz - 1, 0);
++
++	/* Can't encode full zeroes, full ones, or value wider than the mask */
++	if (!imm || imm == mask || imm & ~mask)
++		return AARCH64_BREAK_FAULT;
++
+ 	/*
+ 	 * Inverse of Replicate(). Try to spot a repeating pattern
+ 	 * with a pow2 stride.
 -- 
 2.25.1
 
