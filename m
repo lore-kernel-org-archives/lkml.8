@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E882720B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7ED20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581651;
-	bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
+	s=default; t=1592581656;
+	bh=WalAKmd2wJyO633C/RRtz+BX1RofonbPiTJF5TW5uS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/RG6DXwMT0fnO4WNsYMMRc/P781ElZr+xfkZs7AWqQzOLgkEdTl6jkoUcIN6fsEk
-	 jIYpZAhQyWewpxP8wEUimwg8XNUM+kr1tjMwKeWTJJLJcUFOhYpg9qmMzjXGefKwjC
-	 mTqLB5v2EfvOlc8vI/JLmAKEepBVflKCHwizi0wc=
+	b=m1KoXc0LbQzG/GbinEuI75bLFtmoLt/1JKuxg/3PdQc6QvI6upCNXo8gtomQIfuzU
+	 a8FZU7aRSmkAWx7hh4pT5cppdkfB8KuZOquENtAzae3ow1PNUBu5EGNZQcMopepNK7
+	 7RZyT13xECkjyLLiY7S8kLXRLwU7olQvB7dyOuR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404271AbgFSP0E (ORCPT
+        id S2405299AbgFSPre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403879AbgFSPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:32 -0400
+        id S2404243AbgFSP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9CA2158C;
-        Fri, 19 Jun 2020 15:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5658C217A0;
+        Fri, 19 Jun 2020 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580212;
-        bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
+        s=default; t=1592580359;
+        bh=WalAKmd2wJyO633C/RRtz+BX1RofonbPiTJF5TW5uS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FFive4eLfqb7atEFvQftwgYx5JkHsL+M0QOfN86jU8kmuWuhSWmaGi9AB61M0ZLtg
-         OPWGi97AsAi/rI2Aa44PDFeppJp7SXRcXrMBygMrCBXT8qeLgZxYQ1q7lFuC94WOTJ
-         I9NFLigwQDFjsXFcVtWvnGzhPWxJkAaK2LW+BXdY=
+        b=ERrqVbBnAaG116s2pJ5psJJfXgwajYepBP2ORRg7973TUwfLDnxu9cb4r9nm3h2w5
+         FiGYXdQH9+5tHKMz+/ydB2ehC2htCE1g2yvX1HUt4Hyyp/wlt3gS9Rus16SvxG4IbI
+         nPYsabfwEh9wpE6sIH3uyuYrSG2dnGgykHjcqcg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 164/376] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
-Date:   Fri, 19 Jun 2020 16:31:22 +0200
-Message-Id: <20200619141718.086514839@linuxfoundation.org>
+Subject: [PATCH 5.7 220/376] ACPI: video: Use native backlight on Acer TravelMate 5735Z
+Date:   Fri, 19 Jun 2020 16:32:18 +0200
+Message-Id: <20200619141720.740932103@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,62 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
 
-[ Upstream commit 18937875a231d831c309716d6d8fc358f8381881 ]
+[ Upstream commit c41c36e900a337b4132b12ccabc97f5578248b44 ]
 
-Use acpi_evaluate_integer() instead of open-coding it.
+Currently, changing the brightness of the internal display of the Acer
+TravelMate 5735Z does not work. Pressing the function keys or changing the
+slider, GNOME Shell 3.36.2 displays the OSD (five steps), but the
+brightness does not change.
 
-This is a preparation patch for adding a intel_vbtn_has_switches()
-helper function.
+The Acer TravelMate 5735Z shipped with Windows 7 and as such does not
+trigger our "win8 ready" heuristic for preferring the native backlight
+interface.
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Still ACPI backlight control doesn't work on this model, where as the
+native (intel_video) backlight interface does work by adding
+`acpi_backlight=native` or `acpi_backlight=none` to Linux’ command line.
+
+So, add a quirk to force using native backlight control on this model.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207835
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/acpi/video_detect.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index b5880936d785..191894d648bb 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_device *device)
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
--	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
-+	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index b4994e50608d..2499d7e3c710 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -361,6 +361,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
+ 		},
+ 	},
++	{
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
++	 .callback = video_detect_force_native,
++	 .ident = "Acer TravelMate 5735Z",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5735Z"),
++		DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
++		},
++	},
  
- 	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		goto out;
-+		return;
- 
--	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
--		goto out;
--
--	obj = vgbs_output.pointer;
--	if (!(obj && obj->type == ACPI_TYPE_INTEGER))
--		goto out;
-+		return;
- 
--	m = !(obj->integer.value & TABLET_MODE_FLAG);
-+	m = !(vgbs & TABLET_MODE_FLAG);
- 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
--	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
-+	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
--out:
--	kfree(vgbs_output.pointer);
- }
- 
- static int intel_vbtn_probe(struct platform_device *device)
+ 	/*
+ 	 * Desktops which falsely report a backlight and which our heuristics
 -- 
 2.25.1
 
