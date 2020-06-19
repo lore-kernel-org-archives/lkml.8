@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B94520720
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3A0206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585444;
-	bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+	s=default; t=1592585460;
+	bh=AAB+M9tVHX380aWr2S4D8oUdJ+oJ0bCEfUBC9AQ18U4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKEBtTv3hENU4FmHJIf6LnpI5SO2AVAr01Bw+w+mRGt0Mt+3xGjWOJUrrEducrQ87
-	 fK1MTm5Ipy0Th7gqQ+SihUbFp0e9jKcr1f3EaBrhGGjHN7iVpU7AB2mqi79GR6gAUf
-	 ae5lsG6ZQr3ASY7ZIv8/l9g+Dgnia0iq0qnJrlAQ=
+	b=rYhz32Urz5LtyzZvArbsdVambc7yGYGwkFgbRDbXnQzPnyzT52cwy2oL3kX1NdnhO
+	 cgMjkw9ujJB62vJdyAWimO9uEHrUzR+My9ZBrekf6I+UalqUNQPZ7YD1I5CNsoR5cY
+	 D4494VKviSRYJ0T21BLvjhLfZR1xogHoVU7bXRQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405836AbgFSQuf (ORCPT
+        id S2405872AbgFSQu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55864 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387440AbgFSOin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:43 -0400
+        id S2387877AbgFSOi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0365B208B8;
-        Fri, 19 Jun 2020 14:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BF720CC7;
+        Fri, 19 Jun 2020 14:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577523;
-        bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+        s=default; t=1592577508;
+        bh=AAB+M9tVHX380aWr2S4D8oUdJ+oJ0bCEfUBC9AQ18U4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVEn99V/IIvlBKYBPGT72nXkxpPC9YtLUPfWcVtg9cw6PHHw0KZYXTKIykHWIGAn7
-         hhz9xjWvbiQBKmXSfdo4MdeobmP8x3vCrgaJRxy2I/9Q6/Yhs/npdwK+i7zld1hN4v
-         7JKIazquVDCeviHO0+1OqZ6Q760jC3XbXDUh4E0I=
+        b=DwIBeiAU9o4qffcfmpb3n03t40265izg6Oy7Zi0vRFcEvDK9BWxsQ+M6Uy9M4jIIT
+         Bbk0DoKNfN719Cqyl82Jr1fOXFHCRZAm1K7EUD7Xi4e/c8QRjMTh3Fy2ufb42V+shM
+         5Zvq4kAVJJsV1DmCzdO9a0wbT2rDyFFMWV1ruk2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 084/101] carl9170: remove P2P_GO support
-Date:   Fri, 19 Jun 2020 16:33:13 +0200
-Message-Id: <20200619141618.373767359@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 079/101] btrfs: send: emit file capabilities after chown
+Date:   Fri, 19 Jun 2020 16:33:08 +0200
+Message-Id: <20200619141618.124888309@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -61,77 +61,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
+[ Upstream commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 ]
 
-This patch follows up on a bug-report by Frank Schäfer that
-discovered P2P GO wasn't working with wpa_supplicant.
-This patch removes part of the broken P2P GO support but
-keeps the vif switchover code in place.
+Whenever a chown is executed, all capabilities of the file being touched
+are lost.  When doing incremental send with a file with capabilities,
+there is a situation where the capability can be lost on the receiving
+side. The sequence of actions bellow shows the problem:
 
-Cc: <stable@vger.kernel.org>
-Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
-Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ mount /dev/sda fs1
+  $ mount /dev/sdb fs2
 
+  $ touch fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
+  $ btrfs send fs1/snap_init | btrfs receive fs2
+
+  $ chgrp adm fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+
+  $ btrfs send fs1/snap_complete | btrfs receive fs2
+  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+
+At this point, only a chown was emitted by "btrfs send" since only the
+group was changed. This makes the cap_sys_nice capability to be dropped
+from fs2/snap_incremental/foo.bar
+
+To fix that, only emit capabilities after chown is emitted. The current
+code first checks for xattrs that are new/changed, emits them, and later
+emit the chown. Now, __process_new_xattr skips capabilities, letting
+only finish_inode_if_needed to emit them, if they exist, for the inode
+being processed.
+
+This behavior was being worked around in "btrfs receive" side by caching
+the capability and only applying it after chown. Now, xattrs are only
+emmited _after_ chown, making that workaround not needed anymore.
+
+Link: https://github.com/kdave/btrfs-progs/issues/202
+CC: stable@vger.kernel.org # 4.4+
+Suggested-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
- drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
- 2 files changed, 5 insertions(+), 20 deletions(-)
+ fs/btrfs/send.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -351,9 +351,7 @@ static int carl9170_fw(struct ar9170 *ar
- 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
+diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
+index f35884a431c1..de0ebb3b3cd3 100644
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -34,6 +34,7 @@
+ #include "disk-io.h"
+ #include "btrfs_inode.h"
+ #include "transaction.h"
++#include "xattr.h"
  
- 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
--			if_comb_types |=
--				BIT(NL80211_IFTYPE_AP) |
--				BIT(NL80211_IFTYPE_P2P_GO);
-+			if_comb_types |= BIT(NL80211_IFTYPE_AP);
+ static int g_verbose = 0;
  
- #ifdef CONFIG_MAC80211_MESH
- 			if_comb_types |=
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
- 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
- 	    (vif->type != NL80211_IFTYPE_AP));
+@@ -4194,6 +4195,10 @@ static int __process_new_xattr(int num, struct btrfs_key *di_key,
+ 	struct fs_path *p;
+ 	posix_acl_xattr_header dummy_acl;
  
--	/* While the driver supports HW offload in a single
--	 * P2P client configuration, it doesn't support HW
--	 * offload in the favourit, concurrent P2P GO+CLIENT
--	 * configuration. Hence, HW offload will always be
--	 * disabled for P2P.
-+	/* The driver used to have P2P GO+CLIENT support,
-+	 * but since this was dropped and we don't know if
-+	 * there are any gremlins lurking in the shadows,
-+	 * so best we keep HW offload disabled for P2P.
- 	 */
- 	ar->disable_offload |= vif->p2p;
++	/* Capabilities are emitted by finish_inode_if_needed */
++	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
++		return 0;
++
+ 	p = fs_path_alloc();
+ 	if (!p)
+ 		return -ENOMEM;
+@@ -4733,6 +4738,64 @@ static int send_extent_data(struct send_ctx *sctx,
+ 	return 0;
+ }
  
-@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
- 			if (vif->type == NL80211_IFTYPE_STATION)
- 				break;
++/*
++ * Search for a capability xattr related to sctx->cur_ino. If the capability is
++ * found, call send_set_xattr function to emit it.
++ *
++ * Return 0 if there isn't a capability, or when the capability was emitted
++ * successfully, or < 0 if an error occurred.
++ */
++static int send_capabilities(struct send_ctx *sctx)
++{
++	struct fs_path *fspath = NULL;
++	struct btrfs_path *path;
++	struct btrfs_dir_item *di;
++	struct extent_buffer *leaf;
++	unsigned long data_ptr;
++	char *buf = NULL;
++	int buf_len;
++	int ret = 0;
++
++	path = alloc_path_for_send();
++	if (!path)
++		return -ENOMEM;
++
++	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
++				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
++	if (!di) {
++		/* There is no xattr for this inode */
++		goto out;
++	} else if (IS_ERR(di)) {
++		ret = PTR_ERR(di);
++		goto out;
++	}
++
++	leaf = path->nodes[0];
++	buf_len = btrfs_dir_data_len(leaf, di);
++
++	fspath = fs_path_alloc();
++	buf = kmalloc(buf_len, GFP_KERNEL);
++	if (!fspath || !buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
++	if (ret < 0)
++		goto out;
++
++	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
++	read_extent_buffer(leaf, buf, data_ptr, buf_len);
++
++	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
++			strlen(XATTR_NAME_CAPS), buf, buf_len);
++out:
++	kfree(buf);
++	fs_path_free(fspath);
++	btrfs_free_path(path);
++	return ret;
++}
++
+ static int clone_range(struct send_ctx *sctx,
+ 		       struct clone_root *clone_root,
+ 		       const u64 disk_byte,
+@@ -5444,6 +5507,10 @@ static int finish_inode_if_needed(struct send_ctx *sctx, int at_end)
+ 			goto out;
+ 	}
  
--			/* P2P GO [master] use-case
--			 * Because the P2P GO station is selected dynamically
--			 * by all participating peers of a WIFI Direct network,
--			 * the driver has be able to change the main interface
--			 * operating mode on the fly.
--			 */
--			if (main_vif->p2p && vif->p2p &&
--			    vif->type == NL80211_IFTYPE_AP) {
--				old_main = main_vif;
--				break;
--			}
--
- 			err = -EBUSY;
- 			rcu_read_unlock();
- 
++	ret = send_capabilities(sctx);
++	if (ret < 0)
++		goto out;
++
+ 	/*
+ 	 * If other directory inodes depended on our current directory
+ 	 * inode's move/rename, now do their move/rename operations.
+-- 
+2.25.1
+
 
 
