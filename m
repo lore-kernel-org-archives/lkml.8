@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00A221841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC9B206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579021;
-	bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+	s=default; t=1592579027;
+	bh=W2jMoETnaFmFGYNSvufQG5lSA4sk7X15UaQ2Ol1DU6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3OSTeTslBGUNRrPWFNCGl7kfnoZ9XxIqc1A80MjoMHOpXW1xmvhRL3A20r8sWaCz
-	 j07DyKwnPd8CIfrHTMB56YnQCDtc2SO6rlZZOvsViuKoHwPK7KoA9PFa4IhSeQORj1
-	 6WZOMw56kl83p4xukJLp5JaMJ0HD/O7rOC3o6bic=
+	b=vvGeHRbmiZI/aCiWrlvjbZAztqVZSmUGQrfsYQLvuRQkVGLLTvCKC4OPsZnMg7ywa
+	 VQswrCvziY7mn/Re0NCBCghlbYvNbaP671oi8MvFsRzql75coCVisImJwXrxvm7/1w
+	 GdUSvhMbCvx5W9OcQWQi4H42RW+11KlVouseVyRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391034AbgFSPDj (ORCPT
+        id S2391042AbgFSPDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390931AbgFSPDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:08 -0400
+        id S2390968AbgFSPDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C711D217BA;
-        Fri, 19 Jun 2020 15:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 004E6206DB;
+        Fri, 19 Jun 2020 15:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578988;
-        bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+        s=default; t=1592578996;
+        bh=W2jMoETnaFmFGYNSvufQG5lSA4sk7X15UaQ2Ol1DU6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIBrN1cscrpnYEwJT4IfCECYB1RWaTVEhqF3je64+kki9hE6t4X8Ynr1P/qs+6cC9
-         +E1PWDsNJaWBwfuVBkqy3grbZ/3RhElzTtuQwiz2VYfF05Rren/p/I3oJ7elSIz0oB
-         z4G/JKA1gPO/8l3GO54spp0jqmz9WHErVnd9/P7I=
+        b=TNJ8kHQm7C2OayoawZ01m7xprgjqZ0Opbk426ncY3BMlUwFKCbfB8fhvrHaVj02Ny
+         FxpOsJMJY6RZ6vtOmaln4clMphWp5EWycz22PGv8Sa97iUqymcMEny27vfYX/+upy3
+         qvZMmGP/TWl+zaZN5vLpqPWd3Qk3vOZ9W2fqChbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 234/267] carl9170: remove P2P_GO support
-Date:   Fri, 19 Jun 2020 16:33:39 +0200
-Message-Id: <20200619141659.935917205@linuxfoundation.org>
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.19 236/267] Bluetooth: hci_bcm: fix freeing not-requested IRQ
+Date:   Fri, 19 Jun 2020 16:33:41 +0200
+Message-Id: <20200619141700.028285625@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,77 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
+commit 81bd5d0c62437c02caac6b3f942fcda874063cb0 upstream.
 
-This patch follows up on a bug-report by Frank Schäfer that
-discovered P2P GO wasn't working with wpa_supplicant.
-This patch removes part of the broken P2P GO support but
-keeps the vif switchover code in place.
+When BT module can't be initialized, but it has an IRQ, unloading
+the driver WARNs when trying to free not-yet-requested IRQ. Fix it by
+noting whether the IRQ was requested.
 
-Cc: <stable@vger.kernel.org>
-Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
-Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
+WARNING: CPU: 2 PID: 214 at kernel/irq/devres.c:144 devm_free_irq+0x49/0x4ca
+[...]
+WARNING: CPU: 2 PID: 214 at kernel/irq/manage.c:1746 __free_irq+0x8b/0x27c
+Trying to free already-free IRQ 264
+Modules linked in: hci_uart(-) btbcm bluetooth ecdh_generic ecc libaes
+CPU: 2 PID: 214 Comm: rmmod Tainted: G        W         5.6.1mq-00044-ga5f9ea098318-dirty #928
+[...]
+[<b016aefb>] (devm_free_irq) from [<af8ba1ff>] (bcm_close+0x97/0x118 [hci_uart])
+[<af8ba1ff>] (bcm_close [hci_uart]) from [<af8b736f>] (hci_uart_unregister_device+0x33/0x3c [hci_uart])
+[<af8b736f>] (hci_uart_unregister_device [hci_uart]) from [<b035930b>] (serdev_drv_remove+0x13/0x20)
+[<b035930b>] (serdev_drv_remove) from [<b037093b>] (device_release_driver_internal+0x97/0x118)
+[<b037093b>] (device_release_driver_internal) from [<b0370a0b>] (driver_detach+0x2f/0x58)
+[<b0370a0b>] (driver_detach) from [<b036f855>] (bus_remove_driver+0x41/0x94)
+[<b036f855>] (bus_remove_driver) from [<af8ba8db>] (bcm_deinit+0x1b/0x740 [hci_uart])
+[<af8ba8db>] (bcm_deinit [hci_uart]) from [<af8ba86f>] (hci_uart_exit+0x13/0x30 [hci_uart])
+[<af8ba86f>] (hci_uart_exit [hci_uart]) from [<b01900bd>] (sys_delete_module+0x109/0x1d0)
+[<b01900bd>] (sys_delete_module) from [<b0101001>] (ret_fast_syscall+0x1/0x5a)
+[...]
+
+Cc: stable@vger.kernel.org
+Fixes: 6cc4396c8829 ("Bluetooth: hci_bcm: Add wake-up capability")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
- drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
- 2 files changed, 5 insertions(+), 20 deletions(-)
+ drivers/bluetooth/hci_bcm.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -351,9 +351,7 @@ static int carl9170_fw(struct ar9170 *ar
- 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -115,6 +115,7 @@ struct bcm_device {
+ 	u32			oper_speed;
+ 	int			irq;
+ 	bool			irq_active_low;
++	bool			irq_acquired;
  
- 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
--			if_comb_types |=
--				BIT(NL80211_IFTYPE_AP) |
--				BIT(NL80211_IFTYPE_P2P_GO);
-+			if_comb_types |= BIT(NL80211_IFTYPE_AP);
+ #ifdef CONFIG_PM
+ 	struct hci_uart		*hu;
+@@ -288,6 +289,8 @@ static int bcm_request_irq(struct bcm_da
+ 		goto unlock;
+ 	}
  
- #ifdef CONFIG_MAC80211_MESH
- 			if_comb_types |=
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
- 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
- 	    (vif->type != NL80211_IFTYPE_AP));
++	bdev->irq_acquired = true;
++
+ 	device_init_wakeup(bdev->dev, true);
  
--	/* While the driver supports HW offload in a single
--	 * P2P client configuration, it doesn't support HW
--	 * offload in the favourit, concurrent P2P GO+CLIENT
--	 * configuration. Hence, HW offload will always be
--	 * disabled for P2P.
-+	/* The driver used to have P2P GO+CLIENT support,
-+	 * but since this was dropped and we don't know if
-+	 * there are any gremlins lurking in the shadows,
-+	 * so best we keep HW offload disabled for P2P.
- 	 */
- 	ar->disable_offload |= vif->p2p;
+ 	pm_runtime_set_autosuspend_delay(bdev->dev,
+@@ -456,7 +459,7 @@ static int bcm_close(struct hci_uart *hu
+ 	}
  
-@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
- 			if (vif->type == NL80211_IFTYPE_STATION)
- 				break;
- 
--			/* P2P GO [master] use-case
--			 * Because the P2P GO station is selected dynamically
--			 * by all participating peers of a WIFI Direct network,
--			 * the driver has be able to change the main interface
--			 * operating mode on the fly.
--			 */
--			if (main_vif->p2p && vif->p2p &&
--			    vif->type == NL80211_IFTYPE_AP) {
--				old_main = main_vif;
--				break;
--			}
--
- 			err = -EBUSY;
- 			rcu_read_unlock();
- 
+ 	if (bdev) {
+-		if (IS_ENABLED(CONFIG_PM) && bdev->irq > 0) {
++		if (IS_ENABLED(CONFIG_PM) && bdev->irq_acquired) {
+ 			devm_free_irq(bdev->dev, bdev->irq, bdev);
+ 			device_init_wakeup(bdev->dev, false);
+ 			pm_runtime_disable(bdev->dev);
 
 
