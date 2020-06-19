@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF36DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8FC2100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B542100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584263;
-	bh=8Z0208WZvPIH3GwC9gjC99LzsTJ2x3cE3S37kIwIkMY=;
+	s=default; t=1592584265;
+	bh=e3qeNO8EVoBm8gd2F3PpJi1vypzKZd7lY8KvJ41wVTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZ8vTQToxLJhB9CKu9hUK26GsS2NGMWsI8R/C8JibWGC9C03XA/XdVRV15j5rGs1D
-	 TRiQIxrnw/IKWqgz7ZEKCLxFvvGBcxRqcPvL9OTjAZd2H/ySGD8OxlkV4Uo7KQLeFq
-	 p/jJ84NUafBs2lGbHrAoAA6FNh9f9vvRgfUV+w60=
+	b=AAfM6vQYtI/YIwjLJ+MjE8QmjxlYZYztro0y/O4p9lYB2pMr7xar8mYpUPIB1p5z5
+	 K6986VAY8RAubHsHg357lOBgPUSl8T7n4S4MgDnpGTV/X0FB7TI2rlOvNSL6Ice+d0
+	 XXHuGOHvTFiM1fn5OJGjJoQggsaK8aTpgXZFxX+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390088AbgFSQbC (ORCPT
+        id S2389664AbgFSOxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47448 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389690AbgFSOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:14 -0400
+        id S2389616AbgFSOws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AC1E217D8;
-        Fri, 19 Jun 2020 14:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C91221556;
+        Fri, 19 Jun 2020 14:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578392;
-        bh=8Z0208WZvPIH3GwC9gjC99LzsTJ2x3cE3S37kIwIkMY=;
+        s=default; t=1592578368;
+        bh=e3qeNO8EVoBm8gd2F3PpJi1vypzKZd7lY8KvJ41wVTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4YPzg4CxIDMKZRJIDyjZMAXNSzgsf6wER9YGJneDoYCIv2yWIyZwfpfx7r0n8VP/
-         D5BVNOteRtp0I6ykQ6OWxQRXGzjHhdnDcZllWAszQkmJrAAbMIKn7MFKOKXrczlU5C
-         NM2QH5EXDiLc5AA6gHRIv4rrX9MVtPx87Gw58yYg=
+        b=M4vqhjk89LMKMD95U06dXJMjwwlLxVU9YfqW3wavHnQtRUZrX9Iu4utw7WMZvH88b
+         0zA2Bai97UjS6g7UQpaqruqM0rR1qwuyyTHRpOpAVZVRJPCusvKDgl7qmzG8YnMv65
+         rEMqBWoXcowe6tU8wqRkQYJ8LyHzRx8yus7ANpCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.14 164/190] e1000e: Relax condition to trigger reset for ME workaround
-Date:   Fri, 19 Jun 2020 16:33:29 +0200
-Message-Id: <20200619141641.958494789@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.14 186/190] mtd: rawnand: pasemi: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:33:51 +0200
+Message-Id: <20200619141643.150186475@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -62,89 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
+commit f51466901c07e6930435d30b02a21f0841174f61 upstream.
 
-It's an error if the value of the RX/TX tail descriptor does not match
-what was written. The error condition is true regardless the duration
-of the interference from ME. But the driver only performs the reset if
-E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
-transpired. The extra condition can lead to inconsistency between the
-state of hardware as expected by the driver.
+nand_cleanup() is supposed to be called on error after a successful
+call to nand_scan() to free all NAND resources.
 
-Fix this by dropping the check for number of delay iterations.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible, hence pointing it as the commit to
+fix for backporting purposes, even if this commit is not introducing
+any bug.
 
-While at it, also make __ew32_prepare() static as it's not used
-anywhere else.
-
-CC: stable <stable@vger.kernel.org>
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-41-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
- drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/mtd/nand/pasemi_nand.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -596,7 +596,6 @@ static inline u32 __er32(struct e1000_hw
+--- a/drivers/mtd/nand/pasemi_nand.c
++++ b/drivers/mtd/nand/pasemi_nand.c
+@@ -163,7 +163,7 @@ static int pasemi_nand_probe(struct plat
+ 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
+ 		dev_err(dev, "Unable to register MTD device\n");
+ 		err = -ENODEV;
+-		goto out_lpc;
++		goto out_cleanup_nand;
+ 	}
  
- #define er32(reg)	__er32(hw, E1000_##reg)
+ 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
+@@ -171,6 +171,8 @@ static int pasemi_nand_probe(struct plat
  
--s32 __ew32_prepare(struct e1000_hw *hw);
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
+ 	return 0;
  
- #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -137,14 +137,12 @@ static const struct e1000_reg_info e1000
-  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
-  * and try again a number of times.
-  **/
--s32 __ew32_prepare(struct e1000_hw *hw)
-+static void __ew32_prepare(struct e1000_hw *hw)
- {
- 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
- 
- 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
- 		udelay(50);
--
--	return i;
- }
- 
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
-@@ -625,11 +623,11 @@ static void e1000e_update_rdt_wa(struct
- {
- 	struct e1000_adapter *adapter = rx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, rx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
-+	if (unlikely(i != readl(rx_ring->tail))) {
- 		u32 rctl = er32(RCTL);
- 
- 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
-@@ -642,11 +640,11 @@ static void e1000e_update_tdt_wa(struct
- {
- 	struct e1000_adapter *adapter = tx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, tx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
-+	if (unlikely(i != readl(tx_ring->tail))) {
- 		u32 tctl = er32(TCTL);
- 
- 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
++ out_cleanup_nand:
++	nand_cleanup(chip);
+  out_lpc:
+ 	release_region(lpcctl, 4);
+  out_ior:
 
 
