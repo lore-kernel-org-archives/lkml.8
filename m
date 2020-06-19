@@ -2,180 +2,124 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4986C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA775217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC77D217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584122;
+	bh=BHAzJPK3Q3Kd77zzxl86Y03CTOml047K0CEml83WVO0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pEUXIAgEEOpJHPpPaV2aTNSLtffHUxfQt8+R/mVdARfVLFF0I1jbzpruI9I3blGDK
+	 4R+aa3SOm2UKhwp8Ozqi3X/zhKUaQevzGrKrpeodq8wZvhXom6fWwuZ2ROTk3kni3y
+	 5WF2W56THiLpUhT0hcIheG/6K/9dp44imobUCAbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394933AbgFSQ2k (ORCPT
+        id S2394928AbgFSQ2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394951AbgFSQ2Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:28:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E64C06174E;
-        Fri, 19 Jun 2020 09:28:25 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 542132A54CA
-Received: by earth.universe (Postfix, from userid 1000)
-        id CAF173C08CD; Fri, 19 Jun 2020 18:28:20 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 18:28:20 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Emil Velikov <emil.velikov@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 3/6] power: supply: gpio-charger: add
- charge-current-limit feature
-Message-ID: <20200619162820.hhv5rftp4xkhwtix@earth.universe>
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
- <20200605224403.181015-4-sebastian.reichel@collabora.com>
- <20200615175844.GA2032047@bogus>
+        Fri, 19 Jun 2020 12:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389896AbgFSOyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98300217D8;
+        Fri, 19 Jun 2020 14:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578494;
+        bh=BHAzJPK3Q3Kd77zzxl86Y03CTOml047K0CEml83WVO0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VBi9YVmirwpGIfBk6hALAMY7oY/deAjlLCVXTR7Dj3mBKzOiEvHSPaC7rNATyrCop
+         2x/UrfwSixLjCv5ZhiTVgitwSEDJmg+DXl+z38tX0v2qOPuJ06rniNDOd2L8Vrk81i
+         bPVuSuG2P4JvCh/1bRfgdBULY/cZyluXCqHxZa0o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 043/267] spi: dw: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:30:28 +0200
+Message-Id: <20200619141650.949886846@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yyzsddwp6z7jengx"
-Content-Disposition: inline
-In-Reply-To: <20200615175844.GA2032047@bogus>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Lukas Wunner <lukas@wunner.de>
 
---yyzsddwp6z7jengx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 upstream.
 
-Hi,
+The Designware SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+dw_spi_remove_host() before unregistering the SPI controller via
+devres_release_all().
 
-On Mon, Jun 15, 2020 at 11:58:44AM -0600, Rob Herring wrote:
-> On Sat, Jun 06, 2020 at 12:44:00AM +0200, Sebastian Reichel wrote:
-> > Add new charge-current-limit feature to gpio-charger.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  .../bindings/power/supply/gpio-charger.yaml   |  31 ++++
-> >  drivers/power/supply/gpio-charger.c           | 140 ++++++++++++++++++
-> >  2 files changed, 171 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charge=
-r.yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> > index 30eabbb14ef3..e11cfdc68a51 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> > +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> > @@ -39,6 +39,25 @@ properties:
-> >      maxItems: 1
-> >      description: GPIO indicating the charging status
-> > =20
-> > +  charge-current-limit-gpios:
-> > +    minItems: 1
-> > +    maxItems: 32
-> > +    description: GPIOs used for current limiting
-> > +
-> > +  charge-current-limit-mapping:
-> > +    description: List of touples with current in uA and a GPIO bitmap =
-(in
->=20
-> s/touples/tuples/
->=20
-> > +      this order). The touples must be provided in descending order of=
- the
->=20
-> and here.
+This order is incorrect:  dw_spi_remove_host() shuts down the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
 
-Ack.
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
 
-> > +      current limit.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > +    items:
-> > +      items:
-> > +        - description:
-> > +            Current limit in uA
-> > +        - description:
-> > +            Encoded GPIO setting. Bit 0 represents last GPIO from the
-> > +            charge-current-limit-gpios property. Bit 1 second to last
-> > +            GPIO and so on.
->=20
-> Seems a bit odd that bit N doesn't represent index N of the gpios.
+Fix by reverting to the non-devm variant of spi_register_controller().
 
-I was looking at it from a graphical POV (i.e. "last" bit represents
-last element):
+An alternative approach would be to use device-managed functions for all
+steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
 
-list =3D <element3, element2, element1, element0>;
-bits =3D 0b1011; // element3, 1 and 0
+Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v3.14+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Basically when writing it the order is the same at the cost of list
-index being reverse of bit index. But I do not really mind the order.
-If people think its better the other way around I can swap it.
+---
+ drivers/spi/spi-dw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
--- Sebastian
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -536,7 +536,7 @@ int dw_spi_add_host(struct device *dev,
+ 		}
+ 	}
+ 
+-	ret = devm_spi_register_controller(dev, master);
++	ret = spi_register_controller(master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
+ 		goto err_dma_exit;
+@@ -560,6 +560,8 @@ void dw_spi_remove_host(struct dw_spi *d
+ {
+ 	dw_spi_debugfs_remove(dws);
+ 
++	spi_unregister_controller(dws->master);
++
+ 	if (dws->dma_ops && dws->dma_ops->dma_exit)
+ 		dws->dma_ops->dma_exit(dws);
+ 
 
-> > +
-> >  required:
-> >    - compatible
-> > =20
-> > @@ -47,6 +66,12 @@ anyOf:
-> >      - gpios
-> >    - required:
-> >      - charge-status-gpios
-> > +  - required:
-> > +    - charge-current-limit-gpios
-> > +
-> > +dependencies:
-> > +  charge-current-limit-gpios: [ charge-current-limit-mapping ]
-> > +  charge-current-limit-mapping: [ charge-current-limit-gpios ]
-> > =20
-> >  additionalProperties: false
-> > =20
-> > @@ -60,4 +85,10 @@ examples:
-> > =20
-> >        gpios =3D <&gpd 28 GPIO_ACTIVE_LOW>;
-> >        charge-status-gpios =3D <&gpc 27 GPIO_ACTIVE_LOW>;
-> > +
-> > +      charge-current-limit-gpios =3D <&gpioA 11 GPIO_ACTIVE_HIGH>,
-> > +                                   <&gpioA 12 GPIO_ACTIVE_HIGH>;
-> > +      charge-current-limit-mapping =3D <2500000 0x00>, // 2.5 A =3D> b=
-oth GPIOs low
-> > +                                     <700000 0x01>, // 700 mA =3D> GPI=
-O A.12 high
-> > +                                     <0 0x02>; // 0 mA =3D> GPIO A.11 =
-high
-> >      };
 
---yyzsddwp6z7jengx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s55sACgkQ2O7X88g7
-+posXxAAimYGCMZqPCMGM572BWT84enhMCGLDZmbHF2T+nErP9bjg6Kl/7chCfr6
-YtyFPcX5kAhq4yCwymzAEWjsnmo4Vn01XcXCvXZkUy9TZYyxTpqLN5IQupFoe1h6
-QbP54+FosPdTsf2Yvm7QVyDxlbYMpuPPpU95jZRBtl4zsP5VGeZMwe0Ohf5x//aT
-qBL/nY/l06OVq/pKV1OjfvAu6P4G1OkKnNw+AJ+itTZWZi+0I5xfsWZJ6Q9qHCXq
-Gew48sWBTKQS4jLECNZuA7GcdYxNdjh8yl8t2jNCAw4WL7uSHL1wBBkzUmYjGB2h
-qF5Q8w48iI3Dl2VwEvUp52Ca/AGu98e5gJp0QBqYUUxojZ15m4jbYk4elu05vb+v
-kVdFvtpVWAhRChbiw7+PmOR+4WBC8d3CxpTgbGcFgort3mNPer8b1eS5YmA1eko9
-d5Lb4xsw72+PrdSOdVFOqLW0jduAhlJuZfpnaStzfBO+YZWPJrkkmr78GZ/oIRrg
-Tv78EKJ0ppyDv7wSev+4FbhsrneE16fJ6EoXrMwHzQt310wXam/bZu9ffzALPCsw
-eNZFiCNV+0AXyziGJ9OLJQCVchgt5KgwkwDv0eVhDPZ6qUl7aG7lmCcVuFZrvFnB
-v5BSRmZ3xE10iEmifEEhYlA4LYc/zFjdtWexbmc6Fj230KbY3zQ=
-=3lsp
------END PGP SIGNATURE-----
-
---yyzsddwp6z7jengx--
