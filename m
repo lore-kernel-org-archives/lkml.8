@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDFF20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79B620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579497;
-	bh=gswEMTj0QRf98GeeTYMxIjqSnB5PKKOYuz4dzsRh3k4=;
+	s=default; t=1592579501;
+	bh=Yt4ktiABSZjT7Qsxewvm7RIKat6MF4nc+GNMq05JEII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCUdIGEgoMYdeLnrmHhT8UplW2c6vu5aX2XFsBJpGC1MU9F8afO5HKd6eYQbRLGs2
-	 SDZQejJanX3t9jJjLKBZhfUu2sDy6vpDcxIaFk3mfM65B7mXcJbS0jDgFmUGdTtoyj
-	 rPEqWf161d8YGpsGbdJK+Q+0payW67AIN3PBYyAc=
+	b=Yz8KAVyvsQo1Pp0HUPjxbBkri+Qppu6kXE76UpCvlQEdBELCUEcXCbBtOnpDfbhM6
+	 YcP1Aw6o2Vp7blB1arP6DUQx1G9H6iCL7QvkQkd85/SoW+Am/OgKCd6kuyljQSlrtf
+	 TurT7sFZ3zX9UwsCSB4mpAEM5Oh8rJik2UMAm08c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbgFSPLf (ORCPT
+        id S2392133AbgFSPLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389466AbgFSPLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:22 -0400
+        id S2392109AbgFSPLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D403D20776;
-        Fri, 19 Jun 2020 15:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9774206FA;
+        Fri, 19 Jun 2020 15:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579481;
-        bh=gswEMTj0QRf98GeeTYMxIjqSnB5PKKOYuz4dzsRh3k4=;
+        s=default; t=1592579489;
+        bh=Yt4ktiABSZjT7Qsxewvm7RIKat6MF4nc+GNMq05JEII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXB1ikoLBJ9RU7w6Wyqbeim+g94tfx375ZtdJ9uhwS8T20e6aGLRFwDrLlSyL7zVl
-         JbRvo1h+rNGgjToCnCH3H0Txp9BmsMFNSNuiLWuDP5skrFonmpkns6sP2hM/21Tmwe
-         2V1cwNmFmQYZZnajoQDpaJpQv8dBkWS4a3mI1pqY=
+        b=L/zF6w5yKKnCsY9MP99E0AJbQ9zIkuzRD3bu/7SSRAb/bBlPDKg6O4MQIjaa8lXS4
+         nGVzSZIKtKo5DSHFoDw/nbvemgHRiFDyZyO5FLWZJUE8JZ6mmsZDXOSyRMLyAEPQs7
+         3JJHfqZRR9Ex9KDRfEJ3rEUlY6LcHven3NZWEbc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nickolai Kozachenko <daemongloom@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nicolas Toromanoff <nicolas.toromanoff@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 150/261] platform/x86: intel-hid: Add a quirk to support HP Spectre X2 (2015)
-Date:   Fri, 19 Jun 2020 16:32:41 +0200
-Message-Id: <20200619141657.060438904@linuxfoundation.org>
+Subject: [PATCH 5.4 124/261] crypto: stm32/crc32 - fix ext4 chksum BUG_ON()
+Date:   Fri, 19 Jun 2020 16:32:15 +0200
+Message-Id: <20200619141655.802068326@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,39 +61,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nickolai Kozachenko <daemongloom@gmail.com>
+From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
 
-[ Upstream commit 8fe63eb757ac6e661a384cc760792080bdc738dc ]
+[ Upstream commit 49c2c082e00e0bc4f5cbb7c21c7f0f873b35ab09 ]
 
-HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
-does not have this control method (the same was for Wacom MobileStudio Pro).
-Expand previous DMI quirk by Alex Hung to also enable 5 button array
-for this system.
+Allow use of crc_update without prior call to crc_init.
+And change (and fix) driver to use CRC device even on unaligned buffers.
 
-Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+
+Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/crypto/stm32/stm32-crc32.c | 98 +++++++++++++++---------------
+ 1 file changed, 48 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index ef6d4bd77b1a..7a506c1d0113 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -77,6 +77,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
- 		},
- 	},
-+	{
-+		.ident = "HP Spectre x2 (2015)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
-+		},
-+	},
- 	{ }
+diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
+index 9e11c3480353..17b371eacd57 100644
+--- a/drivers/crypto/stm32/stm32-crc32.c
++++ b/drivers/crypto/stm32/stm32-crc32.c
+@@ -28,8 +28,10 @@
+ 
+ /* Registers values */
+ #define CRC_CR_RESET            BIT(0)
+-#define CRC_CR_REVERSE          (BIT(7) | BIT(6) | BIT(5))
+ #define CRC_INIT_DEFAULT        0xFFFFFFFF
++#define CRC_CR_REV_IN_WORD      (BIT(6) | BIT(5))
++#define CRC_CR_REV_IN_BYTE      BIT(5)
++#define CRC_CR_REV_OUT          BIT(7)
+ 
+ #define CRC_AUTOSUSPEND_DELAY	50
+ 
+@@ -38,8 +40,6 @@ struct stm32_crc {
+ 	struct device    *dev;
+ 	void __iomem     *regs;
+ 	struct clk       *clk;
+-	u8               pending_data[sizeof(u32)];
+-	size_t           nb_pending_bytes;
  };
+ 
+ struct stm32_crc_list {
+@@ -59,7 +59,6 @@ struct stm32_crc_ctx {
+ 
+ struct stm32_crc_desc_ctx {
+ 	u32    partial; /* crc32c: partial in first 4 bytes of that struct */
+-	struct stm32_crc *crc;
+ };
+ 
+ static int stm32_crc32_cra_init(struct crypto_tfm *tfm)
+@@ -101,25 +100,22 @@ static int stm32_crc_init(struct shash_desc *desc)
+ 	struct stm32_crc *crc;
+ 
+ 	spin_lock_bh(&crc_list.lock);
+-	list_for_each_entry(crc, &crc_list.dev_list, list) {
+-		ctx->crc = crc;
+-		break;
+-	}
++	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
+ 	spin_unlock_bh(&crc_list.lock);
+ 
+-	pm_runtime_get_sync(ctx->crc->dev);
++	pm_runtime_get_sync(crc->dev);
+ 
+ 	/* Reset, set key, poly and configure in bit reverse mode */
+-	writel_relaxed(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
+-	writel_relaxed(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
+-	writel_relaxed(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
++	writel_relaxed(bitrev32(mctx->key), crc->regs + CRC_INIT);
++	writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
++	writel_relaxed(CRC_CR_RESET | CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
++		       crc->regs + CRC_CR);
+ 
+ 	/* Store partial result */
+-	ctx->partial = readl_relaxed(ctx->crc->regs + CRC_DR);
+-	ctx->crc->nb_pending_bytes = 0;
++	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+ 
+-	pm_runtime_mark_last_busy(ctx->crc->dev);
+-	pm_runtime_put_autosuspend(ctx->crc->dev);
++	pm_runtime_mark_last_busy(crc->dev);
++	pm_runtime_put_autosuspend(crc->dev);
+ 
+ 	return 0;
+ }
+@@ -128,31 +124,49 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 			    unsigned int length)
+ {
+ 	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+-	struct stm32_crc *crc = ctx->crc;
+-	u32 *d32;
+-	unsigned int i;
++	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
++	struct stm32_crc *crc;
++
++	spin_lock_bh(&crc_list.lock);
++	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
++	spin_unlock_bh(&crc_list.lock);
+ 
+ 	pm_runtime_get_sync(crc->dev);
+ 
+-	if (unlikely(crc->nb_pending_bytes)) {
+-		while (crc->nb_pending_bytes != sizeof(u32) && length) {
+-			/* Fill in pending data */
+-			crc->pending_data[crc->nb_pending_bytes++] = *(d8++);
++	/*
++	 * Restore previously calculated CRC for this context as init value
++	 * Restore polynomial configuration
++	 * Configure in register for word input data,
++	 * Configure out register in reversed bit mode data.
++	 */
++	writel_relaxed(bitrev32(ctx->partial), crc->regs + CRC_INIT);
++	writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
++	writel_relaxed(CRC_CR_RESET | CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
++		       crc->regs + CRC_CR);
++
++	if (d8 != PTR_ALIGN(d8, sizeof(u32))) {
++		/* Configure for byte data */
++		writel_relaxed(CRC_CR_REV_IN_BYTE | CRC_CR_REV_OUT,
++			       crc->regs + CRC_CR);
++		while (d8 != PTR_ALIGN(d8, sizeof(u32)) && length) {
++			writeb_relaxed(*d8++, crc->regs + CRC_DR);
+ 			length--;
+ 		}
+-
+-		if (crc->nb_pending_bytes == sizeof(u32)) {
+-			/* Process completed pending data */
+-			writel_relaxed(*(u32 *)crc->pending_data,
+-				       crc->regs + CRC_DR);
+-			crc->nb_pending_bytes = 0;
+-		}
++		/* Configure for word data */
++		writel_relaxed(CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
++			       crc->regs + CRC_CR);
+ 	}
+ 
+-	d32 = (u32 *)d8;
+-	for (i = 0; i < length >> 2; i++)
+-		/* Process 32 bits data */
+-		writel_relaxed(*(d32++), crc->regs + CRC_DR);
++	for (; length >= sizeof(u32); d8 += sizeof(u32), length -= sizeof(u32))
++		writel_relaxed(*((u32 *)d8), crc->regs + CRC_DR);
++
++	if (length) {
++		/* Configure for byte data */
++		writel_relaxed(CRC_CR_REV_IN_BYTE | CRC_CR_REV_OUT,
++			       crc->regs + CRC_CR);
++		while (length--)
++			writeb_relaxed(*d8++, crc->regs + CRC_DR);
++	}
+ 
+ 	/* Store partial result */
+ 	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+@@ -160,22 +174,6 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 	pm_runtime_mark_last_busy(crc->dev);
+ 	pm_runtime_put_autosuspend(crc->dev);
+ 
+-	/* Check for pending data (non 32 bits) */
+-	length &= 3;
+-	if (likely(!length))
+-		return 0;
+-
+-	if ((crc->nb_pending_bytes + length) >= sizeof(u32)) {
+-		/* Shall not happen */
+-		dev_err(crc->dev, "Pending data overflow\n");
+-		return -EINVAL;
+-	}
+-
+-	d8 = (const u8 *)d32;
+-	for (i = 0; i < length; i++)
+-		/* Store pending data */
+-		crc->pending_data[crc->nb_pending_bytes++] = *(d8++);
+-
+ 	return 0;
+ }
  
 -- 
 2.25.1
