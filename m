@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652E0204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D80204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585356;
-	bh=HJP2e/nn2YZnz09sd3zdBF6V+XvMe2EwKmmBhRJ+ga0=;
+	s=default; t=1592585366;
+	bh=fYGT94RVlSqFBbVkuu6cX5onsmJbI1TJLFggoNOI1GU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pXyqpQOa1PDARyVfyc2vjwTB7KPMwJsuVc4ruoH6/gDi1nJ9x4tJlZUFNaBfhn66j
-	 26RxhxqbxAsFJXTuAQTfaAQmtkAWiwjb3GEdmy4eTk0icyeU4n1uYPea1VEkQafwxJ
-	 b6nX1frYPxAlGJQ03uoAikTnI7GSIvCBC8pzkLWw=
+	b=jlEEqqaAXnJ2tB21DZpdRQ+XnzhK5PAG5yiLNJY+KPYz7jDoRVC5Wf6loxjYcuHi8
+	 ctm23AQTN9UzJkw0xP/pmioKieBArg4ijDEEk7/aAwiBEnOuSBQqC2ov2kyyHRwqs+
+	 jl8wqGkwLm1Iub22Dru2tY1vqEe5bSNgsXmiV8BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405798AbgFSQtO (ORCPT
+        id S2405316AbgFSQtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:49:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388073AbgFSOjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:44 -0400
+        id S2388063AbgFSOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFD121548;
-        Fri, 19 Jun 2020 14:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 966E320CC7;
+        Fri, 19 Jun 2020 14:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577583;
-        bh=HJP2e/nn2YZnz09sd3zdBF6V+XvMe2EwKmmBhRJ+ga0=;
+        s=default; t=1592577581;
+        bh=fYGT94RVlSqFBbVkuu6cX5onsmJbI1TJLFggoNOI1GU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4vTBoycK29kTdYhMwH+JZzcURj1SrVbyQIVc0vE8Ac8qT6W0z3PI77KPDXjDyk3o
-         Qp++mz7qq2wU3T3CgBQiSE9tYm1FPabc3uhg6BoD6w4Xzy4582j8Qyv203jB4+ECWX
-         9naxXxboJRxbHAQeBuAdGnw241C//7a8gv1yiNzA=
+        b=GsFLEkBcsR5mTFIZTg+c9Ccn4gStJRL/VTN5CsNOGRkqQ7lzoTP48U1CY8YHlyx5A
+         mJEmYdfUPW6bwJ/MnXWMvCGIy4joMKzItiYj1i1GFpaFx9TduCzK5xlQwVA0uJn99K
+         Fdsx3NNxXoMjhUhA68mu/VdjK+2rN8G38LTB4gHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Travis Downs <travis.downs@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 101/101] perf symbols: Fix debuginfo search for Ubuntu
-Date:   Fri, 19 Jun 2020 16:33:30 +0200
-Message-Id: <20200619141619.267759140@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 4.4 100/101] perf probe: Do not show the skipped events
+Date:   Fri, 19 Jun 2020 16:33:29 +0200
+Message-Id: <20200619141619.219558899@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -61,123 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 85afd35575a3c1a3a905722dde5ee70b49282e70 upstream.
+commit f41ebe9defacddeae96a872a33f0f22ced0bfcef upstream.
 
-Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
-debug symbol files, putting files expected to be in
-/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
-another dso_binary_type.
+When a probe point is expanded to several places (like inlined) and if
+some of them are skipped because of blacklisted or __init function,
+those trace_events has no event name. It must be skipped while showing
+results.
 
-Example on Ubuntu 20.04
+Without this fix, you can see "(null):(null)" on the list,
 
-  Before:
+  # ./perf probe request_resource
+  reserve_setup is out of .text, skip it.
+  Added new events:
+    (null):(null)        (on request_resource)
+    probe:request_resource (on request_resource)
 
-    $ perf record -e intel_pt//u uname
-    Linux
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.030 MB perf.data ]
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
+  You can now use it in all perf tools, such as:
 
-  After:
+  	perf record -e probe:request_resource -aR sleep 1
 
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+  #
 
-Reported-by: Travis Downs <travis.downs@gmail.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+With this fix, it is ignored:
+
+  # ./perf probe request_resource
+  reserve_setup is out of .text, skip it.
+  Added new events:
+    probe:request_resource (on request_resource)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:request_resource -aR sleep 1
+
+  #
+
+Fixes: 5a51fcd1f30c ("perf probe: Skip kernel symbols which is out of .text")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200526155207.9172-1-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/158763968263.30755.12800484151476026340.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/dso.c          |   16 ++++++++++++++++
- tools/perf/util/dso.h          |    1 +
- tools/perf/util/probe-finder.c |    1 +
- tools/perf/util/symbol.c       |    2 ++
- 4 files changed, 20 insertions(+)
+ tools/perf/builtin-probe.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -18,6 +18,7 @@ char dso__symtab_origin(const struct dso
- 		[DSO_BINARY_TYPE__BUILD_ID_CACHE]		= 'B',
- 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
- 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
-+		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
- 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
- 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
- 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
-@@ -73,6 +74,21 @@ int dso__read_binary_type_filename(const
- 		snprintf(filename + len, size - len, "%s", dso->long_name);
- 		break;
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -336,6 +336,9 @@ static int perf_add_probe_events(struct
  
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+		/*
-+		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
-+		 * /usr/lib/debug/lib when it is expected to be in
-+		 * /usr/lib/debug/usr/lib
-+		 */
-+		if (strlen(dso->long_name) < 9 ||
-+		    strncmp(dso->long_name, "/usr/lib/", 9)) {
-+			ret = -1;
-+			break;
-+		}
-+		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
-+		break;
-+
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 	{
- 		const char *last_slash;
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -21,6 +21,7 @@ enum dso_binary_type {
- 	DSO_BINARY_TYPE__BUILD_ID_CACHE,
- 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
- 	DSO_BINARY_TYPE__GUEST_KMODULE,
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -110,6 +110,7 @@ enum dso_binary_type distro_dwarf_types[
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
+ 		for (k = 0; k < pev->ntevs; k++) {
+ 			struct probe_trace_event *tev = &pev->tevs[k];
++			/* Skipped events have no event name */
++			if (!tev->event)
++				continue;
  
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -56,6 +56,7 @@ static enum dso_binary_type binary_type_
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
- 
-@@ -1363,6 +1364,7 @@ static bool dso__is_compatible_symtab_ty
- 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
- 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
- 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
- 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 		return !kmod && dso->kernel == DSO_TYPE_USER;
+ 			/* We use tev's name for showing new events */
+ 			show_perf_probe_event(tev->group, tev->event, pev,
 
 
