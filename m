@@ -2,119 +2,78 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA71C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E0421532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYDrt5Dr"
+	by mail.kernel.org (Postfix) with ESMTP id 1630D20C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389725AbgFSTiz (ORCPT
+        id S2389611AbgFSTj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
+        Fri, 19 Jun 2020 15:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389188AbgFSTiy (ORCPT
+        with ESMTP id S2389188AbgFSTj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:38:54 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24919C06174E;
-        Fri, 19 Jun 2020 12:38:54 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id cy7so1971984edb.5;
-        Fri, 19 Jun 2020 12:38:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=frpyFy5QhoXErzx9/nthK4q+e/lcRU4mJpRY09aN6PA=;
-        b=mYDrt5DrKzmDCQwm9gPQbDVuVr529D863mAn7FNUpRyR1nWf69L967Ke/w51sdoDMA
-         hnYfl5nJISwIEdd8VA1WqZer+gFJ5rL8acldeRBfiN0G1d72e4AGWfXpPE5Ku9jva0Hb
-         4kwHVxetDRnKvRkgc4lk6og73xQKqdwjomP2wdLkpvcWlopJU9OA/lpWWW86wMuSduMu
-         ikdZjv2iGNZHqYXWXOxRjgzyp1PnvfA9WWJAJxtDLzqV3Mfa8PnnT6r2mjQ/PWO5tYlD
-         hrmUzIJ8LWrSW3Rap/fzHR0e31fuEnPL2KaJtbLsgW1fXp9VphJqZK3W1CeK+UxWQrHW
-         8l4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=frpyFy5QhoXErzx9/nthK4q+e/lcRU4mJpRY09aN6PA=;
-        b=fo6Mo+G2a+KI6j7uc5vJWmuPqrg3nSVm1zRY9z6xpoHXk5Rm5e6RAiHwdkGdW8KUC5
-         bubeewqalyZ81ZG9u80ZzpEwjQ2/8DKoBJdgGMTOH3ud2cGSboGPRR2mcMxBwsL261IM
-         54fDFOMR8y6MRqxM1z1YLoWYEshLjajRflPGODWN3Y2mPbu1dUqldr6ghfm1QAttoLht
-         iJnZaFRoho9aSiSE8cJLBGSFwWpG08aveLQ+bNG+dZMHBWKMr3IAzCBikwG3IynBp9O/
-         mPwUyeT1PdysPgLlqAj8L9rPQDKFCrSykoOz3afy0ao4YkwOEmXI++4QGexYGP7aFL3d
-         uZzg==
-X-Gm-Message-State: AOAM530Ru0luJOpeestEMeURvGfWGWbJqcMw9af0zYfbFc1gNuKMehDj
-        +3/muqSr+5rDyAeYTvaOQMLWnwVPs8Xl1WzcuB1wEA==
-X-Google-Smtp-Source: ABdhPJzV33vZ0/jK36xk96KlbpobiwtmnsYkMISH5S+FKGnGUONvBgrNbgeMkwbM6+OMOGz2GB7d8uU0v45ksH5cwhM=
-X-Received: by 2002:aa7:dc50:: with SMTP id g16mr5135478edu.318.1592595532859;
- Fri, 19 Jun 2020 12:38:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619181007.GA32353@embeddedor>
-In-Reply-To: <20200619181007.GA32353@embeddedor>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 19 Jun 2020 22:38:41 +0300
-Message-ID: <CA+h21hoQiRnpiAsLR6ZttbmFMQHb6UNAojaDTH=Y-RPrwwpR0w@mail.gmail.com>
-Subject: Re: [PATCH][next] net: dsa: sja1105: Use struct_size() in kzalloc()
+        Fri, 19 Jun 2020 15:39:29 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D72C06174E;
+        Fri, 19 Jun 2020 12:39:29 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 047FF23B;
+        Fri, 19 Jun 2020 19:39:28 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 13:39:27 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3] docs: deprecated.rst: Add zero-length and
+ one-element arrays
+Message-ID: <20200619133927.654ab7d2@lwn.net>
+In-Reply-To: <20200608213711.GA22271@embeddedor>
+References: <20200608213711.GA22271@embeddedor>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+On Mon, 8 Jun 2020 16:37:11 -0500
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-On Fri, 19 Jun 2020 at 21:04, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
->
-> This code was detected with the help of Coccinelle and, audited and
-> fixed manually.
->
-> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Add zero-length and one-element arrays to the list.
+> 
+> While I continue replacing zero-length and one-element arrays with
+> flexible-array members, I need a reference to point people to, so
+> they don't introduce more instances of such arrays. And while here,
+> add a note to the "open-coded arithmetic in allocator arguments"
+> section, on the use of struct_size() and the arrays-to-deprecate
+> mentioned here.
+> 
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/net/dsa/sja1105/sja1105_tas.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105_tas.c b/drivers/net/dsa/sja1105/sja1105_tas.c
-> index 3aa1a8b5f766..31d8acff1f01 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_tas.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_tas.c
-> @@ -475,8 +475,7 @@ bool sja1105_gating_check_conflicts(struct sja1105_private *priv, int port,
->         if (list_empty(&gating_cfg->entries))
->                 return false;
->
-> -       dummy = kzalloc(sizeof(struct tc_taprio_sched_entry) * num_entries +
-> -                       sizeof(struct tc_taprio_qopt_offload), GFP_KERNEL);
-> +       dummy = kzalloc(struct_size(dummy, entries, num_entries), GFP_KERNEL);
+> Changes in v3:
+>  - Add changes written by Kees.
+>  - Add Co-developed-by tag to include Kees in the changelog text.
+> 
+> Changes in v2:
+>  - Adjust some markup links for readability.
+> 
+>  Documentation/process/deprecated.rst | 118 +++++++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
 
-Before, I could read this line and I knew what it did. Now, I have to
-look it up.
-But if it's in the interest of kernel coding style, what can I say.
+Applied, thanks.
 
-Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-
->         if (!dummy) {
->                 NL_SET_ERR_MSG_MOD(extack, "Failed to allocate memory");
->                 return true;
-> --
-> 2.27.0
->
+jon
