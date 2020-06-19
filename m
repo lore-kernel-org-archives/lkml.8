@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF00AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F827C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8672421707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF24821556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577858;
-	bh=L3YK4HhwSLCxtVLyXo4PKwaZSioEb4283EpfEjbdwFs=;
+	s=default; t=1592577865;
+	bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgH8h+qcBruO+3qrIHQZ1xSlQOIVmNa5v3aTJVqNpWKwlfWZ5DF0KZi8Vbid9eOfu
-	 s/h3d8QKGONNxGJy2ZPKd+nmQpJU7KhZbeIvgALP6Ivf37MH4kkcgmd6BCKLaqoBjr
-	 erFp24qbzlbjIyeeRRZ0H0bXVPvwvOtfIG7uet1w=
+	b=HfUb4hrJB9ffwwGYq6nDbcHr/cPXLHMaJv074nIDdtQHhkjD/zZN/FhmXex7XnX71
+	 LiQexVkhOZ1VEqBtVzVuWg74tKDus5gLTcUjR6IZYvxOlUdtFl5WYH2aWH3F/XewR0
+	 YW13SFOez17CKzQXd66ql9IL1pA3TtnKshC6lCvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbgFSOoQ (ORCPT
+        id S2388559AbgFSOoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388511AbgFSOnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:53 -0400
+        id S2388531AbgFSOoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2493221556;
-        Fri, 19 Jun 2020 14:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F6F2168B;
+        Fri, 19 Jun 2020 14:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577832;
-        bh=L3YK4HhwSLCxtVLyXo4PKwaZSioEb4283EpfEjbdwFs=;
+        s=default; t=1592577840;
+        bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBoAoHQkc125SPDodIpYOd/OOJu0WbAECjoH4OuXgH2cQy/2OIrUkIsVUCwusg+RJ
-         0lL021LT+0mj7j14dJPmcbyCn/dzoNSkNb0kaTyFNdKTUKKHOTFBaSYfDP4M0zi5GB
-         40C9oAIiWaT3VcBZ1CZJTcVFq4g4a2DENN7hENh0=
+        b=UNzGcQ2AP1NE7N7RyIog4lBTl3ylQBrK3TjOLanHgiwTT0GeZUK34GRBzOGfikn+7
+         lt/gxOdD19JvmeNWI6yR9kX4WXFveUhsgsY3sKo1kG3ZZHI5Fopc3O1hjaDbu4UaBU
+         KJtxuIei7zUXZGyP98q8CHiEFtlGlvGVpti9KPU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.9 107/128] e1000e: Relax condition to trigger reset for ME workaround
-Date:   Fri, 19 Jun 2020 16:33:21 +0200
-Message-Id: <20200619141625.801951252@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 110/128] b43legacy: Fix case where channel status is corrupted
+Date:   Fri, 19 Jun 2020 16:33:24 +0200
+Message-Id: <20200619141625.965539385@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,89 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
+commit ec4d3e3a054578de34cd0b587ab8a1ac36f629d9 upstream.
 
-It's an error if the value of the RX/TX tail descriptor does not match
-what was written. The error condition is true regardless the duration
-of the interference from ME. But the driver only performs the reset if
-E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
-transpired. The extra condition can lead to inconsistency between the
-state of hardware as expected by the driver.
+This patch fixes commit 75388acd0cd8 ("add mac80211-based driver for
+legacy BCM43xx devices")
 
-Fix this by dropping the check for number of delay iterations.
+In https://bugzilla.kernel.org/show_bug.cgi?id=207093, a defect in
+b43legacy is reported. Upon testing, thus problem exists on PPC and
+X86 platforms, is present in the oldest kernel tested (3.2), and
+has been present in the driver since it was first added to the kernel.
 
-While at it, also make __ew32_prepare() static as it's not used
-anywhere else.
+The problem is a corrupted channel status received from the device.
+Both the internal card in a PowerBook G4 and the PCMCIA version
+(Broadcom BCM4306 with PCI ID 14e4:4320) have the problem. Only Rev, 2
+(revision 4 of the 802.11 core) of the chip has been tested. No other
+devices using b43legacy are available for testing.
 
-CC: stable <stable@vger.kernel.org>
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Various sources of the problem were considered. Buffer overrun and
+other sources of corruption within the driver were rejected because
+the faulty channel status is always the same, not a random value.
+It was concluded that the faulty data is coming from the device, probably
+due to a firmware bug. As that source is not available, the driver
+must take appropriate action to recover.
+
+At present, the driver reports the error, and them continues to process
+the bad packet. This is believed that to be a mistake, and the correct
+action is to drop the correpted packet.
+
+Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx devices")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reported-and-tested by: F. Erhard <erhard_f@mailbox.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200407190043.1686-1-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
- drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/net/wireless/broadcom/b43legacy/xmit.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -589,7 +589,6 @@ static inline u32 __er32(struct e1000_hw
+--- a/drivers/net/wireless/broadcom/b43legacy/xmit.c
++++ b/drivers/net/wireless/broadcom/b43legacy/xmit.c
+@@ -571,6 +571,7 @@ void b43legacy_rx(struct b43legacy_wldev
+ 	default:
+ 		b43legacywarn(dev->wl, "Unexpected value for chanstat (0x%X)\n",
+ 		       chanstat);
++		goto drop;
+ 	}
  
- #define er32(reg)	__er32(hw, E1000_##reg)
- 
--s32 __ew32_prepare(struct e1000_hw *hw);
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
- 
- #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -136,14 +136,12 @@ static const struct e1000_reg_info e1000
-  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
-  * and try again a number of times.
-  **/
--s32 __ew32_prepare(struct e1000_hw *hw)
-+static void __ew32_prepare(struct e1000_hw *hw)
- {
- 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
- 
- 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
- 		udelay(50);
--
--	return i;
- }
- 
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
-@@ -624,11 +622,11 @@ static void e1000e_update_rdt_wa(struct
- {
- 	struct e1000_adapter *adapter = rx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, rx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
-+	if (unlikely(i != readl(rx_ring->tail))) {
- 		u32 rctl = er32(RCTL);
- 
- 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
-@@ -641,11 +639,11 @@ static void e1000e_update_tdt_wa(struct
- {
- 	struct e1000_adapter *adapter = tx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, tx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
-+	if (unlikely(i != readl(tx_ring->tail))) {
- 		u32 tctl = er32(TCTL);
- 
- 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
+ 	memcpy(IEEE80211_SKB_RXCB(skb), &status, sizeof(status));
 
 
