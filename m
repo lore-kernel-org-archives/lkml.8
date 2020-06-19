@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169732067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608CD2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584541;
-	bh=joHfT7bcauPIx7wZQqsTyIJ76SF7kDA5AvCTJjZoit0=;
+	s=default; t=1592584545;
+	bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qjFrjl1j+Q//yJORvJNJjSrEx+ACRYZhc2j2E2zjzFbg1cTZ7AlnXV5V4/xK17eau
-	 iEol0QK7/8xNlcnhE7IMqXZV4FtjxDx93jl7KmbWBoUu0dMMtc2eooZj11d1q3CESu
-	 mNtkeWdY/W0DtPs5QuBfOkfjMZhQFkGJaMa+grkg=
+	b=1al0E0SH2lHgcuQCHIQvvUu2slfLDeE/XZo0qVEeZAzgulXtxl2GyCtx52J1dMDJ8
+	 2bRnUc75LCQt9m8OfjPI0E4aWOfu4IWfNbnM+awHLZQ5DzLKDEoguHCaf+mEvjIsVK
+	 fCPwD8eYz5xSVm8AhGahxcMZE0L5S0opgjSrc/UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395225AbgFSQfj (ORCPT
+        id S2395234AbgFSQfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42192 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388860AbgFSOte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:34 -0400
+        id S2389231AbgFSOtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B105B217BA;
-        Fri, 19 Jun 2020 14:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217DB2184D;
+        Fri, 19 Jun 2020 14:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578174;
-        bh=joHfT7bcauPIx7wZQqsTyIJ76SF7kDA5AvCTJjZoit0=;
+        s=default; t=1592578179;
+        bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXnWm2Pu2pQjmMPTq/UMz+J0041qWdKsrBZz95Q8e0I674bsYHYZVpVNYlNPxCpgF
-         D1JCmSBkmOrtAEO1xPy5Ba4E4PAmY603OSNfp0BgO3nIIbYsk7RuhBpzLHNOKT/bT6
-         PH0bgAdjEM54W/VHWLkGBlRKL1LB0SDgsVu/Khyg=
+        b=WcKmbxXNMVbMBF99P2b6Pnc/dwDvnKVfGDpDKG+AozO6VnNELm8oPEcYjS3paMRP4
+         2yDxlQVkYlwF4A7bKRVLECSzeO3aC41FMkBoiFz0JknMifB32KLxAfLJaXWQ93wMPy
+         XFjW2nLNYKvBlOxOuSY+7Jy8WJTIof0JOgCqLqI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        Devulapally Shiva Krishna <shiva@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/190] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Fri, 19 Jun 2020 16:32:36 +0200
-Message-Id: <20200619141639.145660636@linuxfoundation.org>
+Subject: [PATCH 4.14 113/190] Crypto/chcr: fix for ccm(aes) failed test
+Date:   Fri, 19 Jun 2020 16:32:38 +0200
+Message-Id: <20200619141639.278166992@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,43 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Devulapally Shiva Krishna <shiva@chelsio.com>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+The ccm(aes) test fails when req->assoclen > ~240bytes.
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+The problem is the value assigned to auth_offset is wrong.
+As auth_offset is unsigned char, it can take max value as 255.
+So fix it by making it unsigned int.
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/chelsio/chcr_algo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 3143de45baaa..c458b81ba63a 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -433,7 +433,7 @@ static void emac_timeout(struct net_device *dev)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -441,7 +441,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 8d39f3a07bf8..99c3827855c7 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2201,7 +2201,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
+ 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
+ 	unsigned int c_id = chcrctx->dev->rx_channel_id;
+ 	unsigned int ccm_xtra;
+-	unsigned char tag_offset = 0, auth_offset = 0;
++	unsigned int tag_offset = 0, auth_offset = 0;
+ 	unsigned int assoclen;
  
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
- 
- 	channel = (channel == 1 ? 1 : 0);
- 
+ 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
 -- 
 2.25.1
 
