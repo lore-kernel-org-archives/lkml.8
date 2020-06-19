@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94854C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63354C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D137206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F06206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581183;
-	bh=TVQme5uwrhy0pdFQ+Q9CP9CqmE7FJy1dtheGvgty/Qs=;
+	s=default; t=1592581184;
+	bh=MDzcFnPU6/OGUZX8eSnSRt/nxMi9RAZ+guKmqLWOiNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTZLc2iGLZiDrChLDU4Yi48Pnu0+2gtHoLe1LZ2JgdgNm38lccB+v0GJt9TSRxcPx
-	 Wp+F4gcfhcsNvV+C5ZYPSdAgH7q+fbrWQqqLIKl7ErM3aa5NCpLNcvuRApJGKb6ofP
-	 V4kQtNn/FTS23BoQjDUYu5ms0tZ5Hjsr3BmFuPrg=
+	b=ULp/0AijdZqV1HPqkJEq0zxdET7ybMO006oRvKPoTcaAxee8i2Z/HHatYgVpNCnHo
+	 JNcPJp3wZ5Yfkv+osGhDhE5VHl+ZywfTJwwJszUp7y3fLHunaY3XrwXKGZ/9HpOhlc
+	 VFSfCHfTQPiiSEblwFQuxLAIcD/ThgiJEFwTSlGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393669AbgFSP3A (ORCPT
+        id S2393661AbgFSP25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404578AbgFSP22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:28 -0400
+        id S2404550AbgFSP2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D9B21927;
-        Fri, 19 Jun 2020 15:28:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B38F921924;
+        Fri, 19 Jun 2020 15:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580508;
-        bh=TVQme5uwrhy0pdFQ+Q9CP9CqmE7FJy1dtheGvgty/Qs=;
+        s=default; t=1592580503;
+        bh=MDzcFnPU6/OGUZX8eSnSRt/nxMi9RAZ+guKmqLWOiNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sE4TarEfY57r/mY1M0nsS/N2uXvF4f6/kOSoOZZGNLTaaL0oUjAThtbk7GDluIF9R
-         bxv7xIbsBH7Bzq3IeF1YgyEbjOwBYWFpsQ1irZwcH63PFqcCrhVK6ihh4+KTvOuGkz
-         szwsFpyBGNqmujYgH0gZvCYYloGVs9p/Fy0EyJBY=
+        b=G4bO7GQL6mL7lItICSeDqfyJYlnbcHqLn+Qy98P8bb7bOjB68GlvKx5HaUtgvpt+k
+         Daql7FzxJZwOn9NR9w6kyTXmAa37Jn1VOK+YjHlsNeTEiDnGNojuVgVriUvxVMGNWz
+         IrrX0XAQ9nHj99FG8in5O6F86NVW56p1/EAHw6fE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        James Morris <jamorris@linux.microsoft.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        David.Laight@aculab.com (big endian system concerns),
         Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.7 275/376] ima: Evaluate error in init_ima()
-Date:   Fri, 19 Jun 2020 16:33:13 +0200
-Message-Id: <20200619141723.351041873@linuxfoundation.org>
+Subject: [PATCH 5.7 273/376] ima: Fix ima digest hash table key calculation
+Date:   Fri, 19 Jun 2020 16:33:11 +0200
+Message-Id: <20200619141723.254045965@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,35 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-commit e144d6b265415ddbdc54b3f17f4f95133effa5a8 upstream.
+commit 1129d31b55d509f15e72dc68e4b5c3a4d7b4da8d upstream.
 
-Evaluate error in init_ima() before register_blocking_lsm_notifier() and
-return if not zero.
+Function hash_long() accepts unsigned long, while currently only one byte
+is passed from ima_hash_key(), which calculates a key for ima_htable.
 
-Cc: stable@vger.kernel.org # 5.3.x
-Fixes: b16942455193 ("ima: use the lsm policy update notifier")
+Given that hashing the digest does not give clear benefits compared to
+using the digest itself, remove hash_long() and return the modulus
+calculated on the first two bytes of the digest with the number of slots.
+Also reduce the depth of the hash table by doubling the number of slots.
+
+Cc: stable@vger.kernel.org
+Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
+Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Acked-by: David.Laight@aculab.com (big endian system concerns)
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ security/integrity/ima/ima.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -792,6 +792,9 @@ static int __init init_ima(void)
- 		error = ima_init();
- 	}
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -36,7 +36,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 =
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+ #define IMA_EVENT_NAME_LEN_MAX	255
  
-+	if (error)
-+		return error;
-+
- 	error = register_blocking_lsm_notifier(&ima_lsm_policy_notifier);
- 	if (error)
- 		pr_warn("Couldn't register LSM notifier, error %d\n", error);
+-#define IMA_HASH_BITS 9
++#define IMA_HASH_BITS 10
+ #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
+ 
+ #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
+@@ -175,9 +175,10 @@ struct ima_h_table {
+ };
+ extern struct ima_h_table ima_htable;
+ 
+-static inline unsigned long ima_hash_key(u8 *digest)
++static inline unsigned int ima_hash_key(u8 *digest)
+ {
+-	return hash_long(*digest, IMA_HASH_BITS);
++	/* there is no point in taking a hash of part of a digest */
++	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
+ }
+ 
+ #define __ima_hooks(hook)		\
 
 
