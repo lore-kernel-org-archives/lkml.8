@@ -2,131 +2,125 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBA7217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA058207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxydhMLc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJzpqNQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbgFSMtM (ORCPT
+        id S1732513AbgFSMt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:49:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60346 "EHLO
+        Fri, 19 Jun 2020 08:49:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51916 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731131AbgFSMtM (ORCPT
+        by vger.kernel.org with ESMTP id S1732278AbgFSMtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:49:12 -0400
+        Fri, 19 Jun 2020 08:49:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592570950;
+        s=mimecast20190719; t=1592570984;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ttqcnZS6LIpSDY05g3rWgu299bv3ZouNWsthZvAW8xQ=;
-        b=QxydhMLcdHi9/bB2VrrkmJKgnS9EyuVI+Id0GD5FLX3RldGHc5bCRR6cPYuI22BZGblhPZ
-        UiS74TCwbEQ1NIJbnV3RnuJ4+Nky2HUJZbdHf8Pmpm3GwZxdZSKyaWefCWoTEKzGp9BJXH
-        dDATgCgGQr2PJ2Z57D5ViVEPrB24YBQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-IzzxL71NOB6xAdz4_gnB_Q-1; Fri, 19 Jun 2020 08:49:05 -0400
-X-MC-Unique: IzzxL71NOB6xAdz4_gnB_Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8A5B184D141;
-        Fri, 19 Jun 2020 12:49:03 +0000 (UTC)
-Received: from [10.36.113.137] (ovpn-113-137.ams2.redhat.com [10.36.113.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A260260BF4;
-        Fri, 19 Jun 2020 12:49:01 +0000 (UTC)
-Subject: Re: [PATCH RFC 1/2] s390/zcore: traverse resources instead of
- memblocks
-To:     Philipp Rudo <prudo@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Alexander Egorenkov <egorenar@linux.vnet.ibm.com>
-References: <20200417150151.17239-1-david@redhat.com>
- <20200417150151.17239-2-david@redhat.com> <20200610114523.GA5943@osiris>
- <20200619144723.01fc99e8@laptop2-ibm.local>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <8f37e793-dd55-0614-92b8-f33379a7fe63@redhat.com>
-Date:   Fri, 19 Jun 2020 14:49:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+         in-reply-to:in-reply-to:references:references;
+        bh=/g/+YnCzud6gIE/myiatywuh+bgiNOQQZfOvz+r2RZM=;
+        b=DJzpqNQL3Ct78b71K3She8S6lrhS3usL8RrHve8/Fe6OvbZlg6mL0+tQcu46JUkXre2a7j
+        wCJeM5i67zqeqXPsz5Xb5HA/z0ezPbvt16HNIJ2y+2qfvWOaQ++M8/Hn63ImspXHOc9tbP
+        HV9MlLeH/yVCwJNU1bYE/DUE4N0GBAs=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-oZMYJzKHPZWIBTOOOU2agQ-1; Fri, 19 Jun 2020 08:49:42 -0400
+X-MC-Unique: oZMYJzKHPZWIBTOOOU2agQ-1
+Received: by mail-lf1-f71.google.com with SMTP id r10so3400791lfc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:49:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/g/+YnCzud6gIE/myiatywuh+bgiNOQQZfOvz+r2RZM=;
+        b=T+KnlY9rBH5IDnIRMd2fUf3+h8g9njtB3ykPZjzOimaMleirDF66cPgV0RNoIDfw8c
+         +ZqAy9paUyqU6+Ck6j+aFd2Be96iJlpHVyBFBR18H/cCc1jnddY0NZLBsYmG+YWS/JjV
+         uoenfM0vL9i9CBqP3FI/zxC6mE978sJsznaz2zZv8NcAGRrj7ArfK3E1pYQRq91f53Ay
+         1FCkmVNTk8zODabuzHKgwZ9pKtYps3wEhz9WrOmrK/7lWM/M+1pWKbMij58aafnP9trg
+         10BSoHYzY/gs+AnUi9zFM6KMw9t2/wVlqz/1UN9CTTV/GV1kObrzolKF6wzE/BelJfE1
+         BgCQ==
+X-Gm-Message-State: AOAM530eQzQYUu1mNIgS3NYp+3WA/MduBF06eJQQCDQYQgCpRRphNyK2
+        y9j41dD+rgw6EeLLam68g/Vl/CJv+l+FKs/0+NN57T6E1XocRFG+DoxWfYyQxoZDMl6ZDPpQqEP
+        oXDlXBi0K4lf5u333mKs8JvwhN6Vdn9nCqo8zzlb0
+X-Received: by 2002:ac2:5604:: with SMTP id v4mr1946248lfd.124.1592570981118;
+        Fri, 19 Jun 2020 05:49:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwXiPt6NoxSwMoZyeQFCP8RfJAk3JTg7gTtWYjd2TAO4zxGdEHaGSVd0jZZyRVkg26M9VYhdLJvCgnHGSnzbYY=
+X-Received: by 2002:ac2:5604:: with SMTP id v4mr1946227lfd.124.1592570980848;
+ Fri, 19 Jun 2020 05:49:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200619144723.01fc99e8@laptop2-ibm.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200520125616.193765-1-kpsingh@chromium.org>
+In-Reply-To: <20200520125616.193765-1-kpsingh@chromium.org>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Fri, 19 Jun 2020 14:49:29 +0200
+Message-ID: <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.06.20 14:47, Philipp Rudo wrote:
-> Hi David,
-> 
-> zcore/memmap is no longer needed and Alexander is preparing a patch to remove
-> it. You can drop this patch.
+On Wed, May 20, 2020 at 2:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> From: KP Singh <kpsingh@google.com>
+>
+> secid_to_secctx is not stackable, and since the BPF LSM registers this
+> hook by default, the call_int_hook logic is not suitable which
+> "bails-on-fail" and casues issues when other LSMs register this hook and
+> eventually breaks Audit.
+>
+> In order to fix this, directly iterate over the security hooks instead
+> of using call_int_hook as suggested in:
+>
+> https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
+>
+> Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
+> Reported-by: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+[...]
 
-Awesome, once that's done, can you consider patch #2? Thanks!
+Sorry for being late to the party, but doesn't this (and the
+associated default return value patch) just paper over a bigger
+problem? What if I have only the BPF LSM enabled and I attach a BPF
+program to this hook that just returns 0? Doesn't that allow anything
+privileged enough to do this to force the kernel to try and send
+memory from uninitialized pointers to userspace and/or copy such
+memory around and/or free uninitialized pointers?
 
--- 
-Thanks,
+Why on earth does the BPF LSM directly expose *all* of the hooks, even
+those that are not being used for any security decisions (and are
+"useful" in this context only for borking the kernel...)? Feel free to
+prove me wrong, but this lazy approach of "let's just take all the
+hooks as they are and stick BPF programs to them" doesn't seem like a
+good choice... IMHO you should either limit the set of hooks that can
+be attached to only those that aren't used to return back values via
+pointers, or (if you really really need to do some state
+updates/logging in those hooks) use wrapper functions that will call
+the BPF progs via a simplified interface so that they cannot cause
+unsafe behavior.
 
-David / dhildenb
+--
+Ondrej Mosnacek
+Software Engineer, Platform Security - SELinux kernel
+Red Hat, Inc.
 
