@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC51C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D41020771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCA421548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582031;
-	bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
+	s=default; t=1592582036;
+	bh=GyawCehqGpm2VcAuaYavesS82XTSN3Zi4tiNLnMQVpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKqBH3RhyFVOK0DrMEmUa9+w7f1xchgWtBhik/hu9AsnKvn0usbg8x29FI8NfNtj0
-	 h1jzFXfY4UuNxyCO78hpN8qx7WnUUXxq/iIAhuPeDk5TLEpzuimF6odEZpcfrNeWCg
-	 wupJU8Ssb1HiLVAiZmQXN7GleSbtux/Sr5p9Y1kk=
+	b=we9d3LuJvB40y8abIGYEmRAlY7tXfk2WpRYVKi/B08qtnuIiiBoyylwdukvMavdmF
+	 m+YnL+9/CIa4YVH9L1LsiLdH/OpAMWUE5yPrTXb1JuVKPqkJj2BMFPmW9i0m7Dsq/Y
+	 VlO9jdFMxPt6PRyQTjoWMjmnMP3O26IX7r/4Qh+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405413AbgFSPxt (ORCPT
+        id S2405423AbgFSPxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392544AbgFSPWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:16 -0400
+        id S2392963AbgFSPWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBD221548;
-        Fri, 19 Jun 2020 15:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D922158C;
+        Fri, 19 Jun 2020 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580135;
-        bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
+        s=default; t=1592580133;
+        bh=GyawCehqGpm2VcAuaYavesS82XTSN3Zi4tiNLnMQVpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ix0ZVMlcZbILK9unuNf+Gk69olYkxYfcP1ox7EEYgr2PvWSurhZwPV3i3p/iOV3Qa
-         VCJxQYHSQ7+c/Bd7G0W0IXpXItAmbjxvQkSZkHbhlHxsmlDZy171QV1WvuClNtBjY/
-         kmIIhS0+HbIYk6j96y3KI+RMwGjpUvqLSeTRg094=
+        b=LcsjT9JZO6TEvOZLEMxnQLBJF/aA+8F+OzPmVdo4QN3cfxt7bEEiYq/eqsITjg/xb
+         0ESB8dnlcSRU2lobcxPoBk5YwCrO0S10A1JQL8yWNw+5qEq8kgyO9nSBgOrV4a4KHz
+         oYPWYaWdpBshJIuiC7drFzxsA6buBbjI1+bACxzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 135/376] exit: Move preemption fixup up, move blocking operations down
-Date:   Fri, 19 Jun 2020 16:30:53 +0200
-Message-Id: <20200619141716.727303755@linuxfoundation.org>
+Subject: [PATCH 5.7 134/376] net/mlx5e: CT: Avoid false warning about rule may be used uninitialized
+Date:   Fri, 19 Jun 2020 16:30:52 +0200
+Message-Id: <20200619141716.679086744@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,82 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
+[ Upstream commit 70a5698a5683cd504b03c6030ee622b1bec3f702 ]
 
-With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
-non-preemptible context look untidy; after the main oops, the kernel prints
-a "sleeping function called from invalid context" report because
-exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
-can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
-fixup.
+Avoid gcc warning by preset rule to invalid ptr.
 
-It looks like the same thing applies to profile_task_exit() and
-kcov_task_exit().
-
-Fix it by moving the preemption fixup up and the calls to
-profile_task_exit() and kcov_task_exit() down.
-
-Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+Fixes: 4c3844d9e97e ("net/mlx5e: CT: Introduce connection tracking")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index ce2a75bc0ade..d56fe51bdf07 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -708,8 +708,12 @@ void __noreturn do_exit(long code)
- 	struct task_struct *tsk = current;
- 	int group_dead;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+index 153d6eb19d3c..470282daed19 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+@@ -1132,7 +1132,7 @@ mlx5_tc_ct_flow_offload(struct mlx5e_priv *priv,
+ {
+ 	bool clear_action = attr->ct_attr.ct_action & TCA_CT_ACT_CLEAR;
+ 	struct mlx5_tc_ct_priv *ct_priv = mlx5_tc_ct_get_ct_priv(priv);
+-	struct mlx5_flow_handle *rule;
++	struct mlx5_flow_handle *rule = ERR_PTR(-EINVAL);
+ 	int err;
  
--	profile_task_exit(tsk);
--	kcov_task_exit(tsk);
-+	/*
-+	 * We can get here from a kernel oops, sometimes with preemption off.
-+	 * Start by checking for critical errors.
-+	 * Then fix up important state like USER_DS and preemption.
-+	 * Then do everything else.
-+	 */
- 
- 	WARN_ON(blk_needs_flush_plug(tsk));
- 
-@@ -727,6 +731,16 @@ void __noreturn do_exit(long code)
- 	 */
- 	set_fs(USER_DS);
- 
-+	if (unlikely(in_atomic())) {
-+		pr_info("note: %s[%d] exited with preempt_count %d\n",
-+			current->comm, task_pid_nr(current),
-+			preempt_count());
-+		preempt_count_set(PREEMPT_ENABLED);
-+	}
-+
-+	profile_task_exit(tsk);
-+	kcov_task_exit(tsk);
-+
- 	ptrace_event(PTRACE_EVENT_EXIT, code);
- 
- 	validate_creds_for_do_exit(tsk);
-@@ -744,13 +758,6 @@ void __noreturn do_exit(long code)
- 
- 	exit_signals(tsk);  /* sets PF_EXITING */
- 
--	if (unlikely(in_atomic())) {
--		pr_info("note: %s[%d] exited with preempt_count %d\n",
--			current->comm, task_pid_nr(current),
--			preempt_count());
--		preempt_count_set(PREEMPT_ENABLED);
--	}
--
- 	/* sync mm's RSS info before statistics gathering */
- 	if (tsk->mm)
- 		sync_mm_rss(tsk->mm);
+ 	if (!ct_priv)
 -- 
 2.25.1
 
