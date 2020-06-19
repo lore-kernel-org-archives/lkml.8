@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D64C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC84C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322A020771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837E120771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581811;
-	bh=/WXHUUPc1w97z44Y0YVUkz4p30wFHJ30MGCDQ+SgazA=;
+	s=default; t=1592581819;
+	bh=f+n3YMgXkXs0rG8/627tgOrkqDoU7zLPOV3wFV3zpm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qpdnez6rttq0TL2TAbGt/YpE85vWTLWCB9ttVxvZUKES4/GE4NO8KmqhfQ1B/QhBK
-	 xAFGYJuSUM2g+pIVAUL78ilRfz3aS0kiZXrJwhSemZogY7Fb2/3ZzNxFa0K20WbUIK
-	 vASQ32Hcv+Egm2axOfeiEoOxWXbQWefc3Ne7gKEA=
+	b=kpUSQYico6sltjCpQWC2AhFxgp6w2diAVxAmuppfa1ROjrmYold1bhAIopLLij4zM
+	 YoZJ+brMN0D/LTvcrKYCMisY3eNIbRrsCgDStJs1fFUGbjBLBrA1Wjb7HS+t0fKNYw
+	 Gqu7EqszY3l8CnRQAYYPRoFahI53Yxs9072qxEwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394092AbgFSPuE (ORCPT
+        id S2394105AbgFSPuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:50:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393340AbgFSPYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:54 -0400
+        id S2393310AbgFSPYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB9321548;
-        Fri, 19 Jun 2020 15:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA55721582;
+        Fri, 19 Jun 2020 15:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580293;
-        bh=/WXHUUPc1w97z44Y0YVUkz4p30wFHJ30MGCDQ+SgazA=;
+        s=default; t=1592580285;
+        bh=f+n3YMgXkXs0rG8/627tgOrkqDoU7zLPOV3wFV3zpm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tgRsmqGNTMjf2AqcNSpj8wyyIGaBecbYyDDmvxYtkVDTpKAfP/PzbtAVFBGZbY+4h
-         vy524RPNrtQS3SzEPWxvancgoGNclrT+Ky/Qk3LCB3wJmGWeadhXqKAXxiNqGNIJ6R
-         Yz3MlM0kV1Bun7pfRoMbf4QSoSF7ntUmh8+r75M4=
+        b=cmQQpvAch0FhDg6oc9HHlLVu9h4A3q1RI8Ab8Zb13KO8MRoq37CHZ27EhwuR5wdpy
+         Wlal//VI/uY3Gh0t5cIjSktgE8IENasbIITA4bTUn7mN9fAWicvSSSeM5IaOS0A09e
+         72GYz+OuKZNz4gy5/+w85Gu9JUesFJiKoZBlg4Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 195/376] net: ipa: do not clear interrupt in gsi_channel_start()
-Date:   Fri, 19 Jun 2020 16:31:53 +0200
-Message-Id: <20200619141719.575985108@linuxfoundation.org>
+Subject: [PATCH 5.7 192/376] io_uring: allow POLL_ADD with double poll_wait() users
+Date:   Fri, 19 Jun 2020 16:31:50 +0200
+Message-Id: <20200619141719.442278514@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,82 +59,310 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 195ef57f870070cb02f2f3b99a63d69e8e8f798e ]
+[ Upstream commit 18bceab101adde8f38de76016bc77f3f25cf22f4 ]
 
-In gsi_channel_start() there is harmless-looking comment "Clear the
-channel's event ring interrupt in case it's pending".  The intent
-was to avoid getting spurious interrupts when first bringing up a
-channel.
+Some file descriptors use separate waitqueues for their f_ops->poll()
+handler, most commonly one for read and one for write. The io_uring
+poll implementation doesn't work with that, as the 2nd poll_wait()
+call will cause the io_uring poll request to -EINVAL.
 
-However we now use channel stop/start to implement suspend and
-resume, and an interrupt pending at the time we resume is actually
-something we don't want to ignore.
+This affects (at least) tty devices and /dev/random as well. This is a
+big problem for event loops where some file descriptors work, and others
+don't.
 
-The very first time we bring up the channel we do not expect an
-interrupt to be pending, and even if it were, the effect would
-simply be to schedule NAPI on that channel, which would find nothing
-to do, which is not a problem.
+With this fix, io_uring handles multiple waitqueues.
 
-Stop clearing any pending IEOB interrupt in gsi_channel_start().
-That leaves one caller of the trivial function gsi_isr_ieob_clear().
-Get rid of that function and just open-code it in gsi_isr_ieob()
-instead.
-
-This fixes a problem where suspend/resume IPA v4.2 would get stuck
-when resuming after a suspend.
-
-Signed-off-by: Alex Elder <elder@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipa/gsi.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ fs/io_uring.c | 218 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 146 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
-index 8d9ca1c335e8..043a675e1be1 100644
---- a/drivers/net/ipa/gsi.c
-+++ b/drivers/net/ipa/gsi.c
-@@ -238,11 +238,6 @@ static void gsi_irq_ieob_enable(struct gsi *gsi, u32 evt_ring_id)
- 	iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
- }
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 07d9414268f1..2d5f81a1bf9c 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4106,27 +4106,6 @@ struct io_poll_table {
+ 	int error;
+ };
  
--static void gsi_isr_ieob_clear(struct gsi *gsi, u32 mask)
+-static void __io_queue_proc(struct io_poll_iocb *poll, struct io_poll_table *pt,
+-			    struct wait_queue_head *head)
 -{
--	iowrite32(mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
+-	if (unlikely(poll->head)) {
+-		pt->error = -EINVAL;
+-		return;
+-	}
+-
+-	pt->error = 0;
+-	poll->head = head;
+-	add_wait_queue(head, &poll->wait);
 -}
 -
- static void gsi_irq_ieob_disable(struct gsi *gsi, u32 evt_ring_id)
- {
- 	u32 val;
-@@ -756,7 +751,6 @@ static void gsi_channel_deprogram(struct gsi_channel *channel)
- int gsi_channel_start(struct gsi *gsi, u32 channel_id)
- {
- 	struct gsi_channel *channel = &gsi->channel[channel_id];
--	u32 evt_ring_id = channel->evt_ring_id;
- 	int ret;
- 
- 	mutex_lock(&gsi->mutex);
-@@ -765,9 +759,6 @@ int gsi_channel_start(struct gsi *gsi, u32 channel_id)
- 
- 	mutex_unlock(&gsi->mutex);
- 
--	/* Clear the channel's event ring interrupt in case it's pending */
--	gsi_isr_ieob_clear(gsi, BIT(evt_ring_id));
+-static void io_async_queue_proc(struct file *file, struct wait_queue_head *head,
+-			       struct poll_table_struct *p)
+-{
+-	struct io_poll_table *pt = container_of(p, struct io_poll_table, pt);
 -
- 	gsi_channel_thaw(channel);
+-	__io_queue_proc(&pt->req->apoll->poll, pt, head);
+-}
+-
+ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
+ 			   __poll_t mask, task_work_func_t func)
+ {
+@@ -4180,6 +4159,144 @@ static bool io_poll_rewait(struct io_kiocb *req, struct io_poll_iocb *poll)
+ 	return false;
+ }
  
- 	return ret;
-@@ -1071,7 +1062,7 @@ static void gsi_isr_ieob(struct gsi *gsi)
- 	u32 event_mask;
++static void io_poll_remove_double(struct io_kiocb *req)
++{
++	struct io_poll_iocb *poll = (struct io_poll_iocb *) req->io;
++
++	lockdep_assert_held(&req->ctx->completion_lock);
++
++	if (poll && poll->head) {
++		struct wait_queue_head *head = poll->head;
++
++		spin_lock(&head->lock);
++		list_del_init(&poll->wait.entry);
++		if (poll->wait.private)
++			refcount_dec(&req->refs);
++		poll->head = NULL;
++		spin_unlock(&head->lock);
++	}
++}
++
++static void io_poll_complete(struct io_kiocb *req, __poll_t mask, int error)
++{
++	struct io_ring_ctx *ctx = req->ctx;
++
++	io_poll_remove_double(req);
++	req->poll.done = true;
++	io_cqring_fill_event(req, error ? error : mangle_poll(mask));
++	io_commit_cqring(ctx);
++}
++
++static void io_poll_task_handler(struct io_kiocb *req, struct io_kiocb **nxt)
++{
++	struct io_ring_ctx *ctx = req->ctx;
++
++	if (io_poll_rewait(req, &req->poll)) {
++		spin_unlock_irq(&ctx->completion_lock);
++		return;
++	}
++
++	hash_del(&req->hash_node);
++	io_poll_complete(req, req->result, 0);
++	req->flags |= REQ_F_COMP_LOCKED;
++	io_put_req_find_next(req, nxt);
++	spin_unlock_irq(&ctx->completion_lock);
++
++	io_cqring_ev_posted(ctx);
++}
++
++static void io_poll_task_func(struct callback_head *cb)
++{
++	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
++	struct io_kiocb *nxt = NULL;
++
++	io_poll_task_handler(req, &nxt);
++	if (nxt) {
++		struct io_ring_ctx *ctx = nxt->ctx;
++
++		mutex_lock(&ctx->uring_lock);
++		__io_queue_sqe(nxt, NULL);
++		mutex_unlock(&ctx->uring_lock);
++	}
++}
++
++static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
++			       int sync, void *key)
++{
++	struct io_kiocb *req = wait->private;
++	struct io_poll_iocb *poll = (struct io_poll_iocb *) req->io;
++	__poll_t mask = key_to_poll(key);
++
++	/* for instances that support it check for an event match first: */
++	if (mask && !(mask & poll->events))
++		return 0;
++
++	if (req->poll.head) {
++		bool done;
++
++		spin_lock(&req->poll.head->lock);
++		done = list_empty(&req->poll.wait.entry);
++		if (!done)
++			list_del_init(&req->poll.wait.entry);
++		spin_unlock(&req->poll.head->lock);
++		if (!done)
++			__io_async_wake(req, poll, mask, io_poll_task_func);
++	}
++	refcount_dec(&req->refs);
++	return 1;
++}
++
++static void io_init_poll_iocb(struct io_poll_iocb *poll, __poll_t events,
++			      wait_queue_func_t wake_func)
++{
++	poll->head = NULL;
++	poll->done = false;
++	poll->canceled = false;
++	poll->events = events;
++	INIT_LIST_HEAD(&poll->wait.entry);
++	init_waitqueue_func_entry(&poll->wait, wake_func);
++}
++
++static void __io_queue_proc(struct io_poll_iocb *poll, struct io_poll_table *pt,
++			    struct wait_queue_head *head)
++{
++	struct io_kiocb *req = pt->req;
++
++	/*
++	 * If poll->head is already set, it's because the file being polled
++	 * uses multiple waitqueues for poll handling (eg one for read, one
++	 * for write). Setup a separate io_poll_iocb if this happens.
++	 */
++	if (unlikely(poll->head)) {
++		/* already have a 2nd entry, fail a third attempt */
++		if (req->io) {
++			pt->error = -EINVAL;
++			return;
++		}
++		poll = kmalloc(sizeof(*poll), GFP_ATOMIC);
++		if (!poll) {
++			pt->error = -ENOMEM;
++			return;
++		}
++		io_init_poll_iocb(poll, req->poll.events, io_poll_double_wake);
++		refcount_inc(&req->refs);
++		poll->wait.private = req;
++		req->io = (void *) poll;
++	}
++
++	pt->error = 0;
++	poll->head = head;
++	add_wait_queue(head, &poll->wait);
++}
++
++static void io_async_queue_proc(struct file *file, struct wait_queue_head *head,
++			       struct poll_table_struct *p)
++{
++	struct io_poll_table *pt = container_of(p, struct io_poll_table, pt);
++
++	__io_queue_proc(&pt->req->apoll->poll, pt, head);
++}
++
+ static void io_async_task_func(struct callback_head *cb)
+ {
+ 	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+@@ -4255,18 +4372,13 @@ static __poll_t __io_arm_poll_handler(struct io_kiocb *req,
+ 	bool cancel = false;
  
- 	event_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
--	gsi_isr_ieob_clear(gsi, event_mask);
-+	iowrite32(event_mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
+ 	poll->file = req->file;
+-	poll->head = NULL;
+-	poll->done = poll->canceled = false;
+-	poll->events = mask;
++	io_init_poll_iocb(poll, mask, wake_func);
++	poll->wait.private = req;
  
- 	while (event_mask) {
- 		u32 evt_ring_id = __ffs(event_mask);
+ 	ipt->pt._key = mask;
+ 	ipt->req = req;
+ 	ipt->error = -EINVAL;
+ 
+-	INIT_LIST_HEAD(&poll->wait.entry);
+-	init_waitqueue_func_entry(&poll->wait, wake_func);
+-	poll->wait.private = req;
+-
+ 	mask = vfs_poll(req->file, &ipt->pt) & poll->events;
+ 
+ 	spin_lock_irq(&ctx->completion_lock);
+@@ -4297,6 +4409,7 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
+ 	struct async_poll *apoll;
+ 	struct io_poll_table ipt;
+ 	__poll_t mask, ret;
++	bool had_io;
+ 
+ 	if (!req->file || !file_can_poll(req->file))
+ 		return false;
+@@ -4311,6 +4424,7 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
+ 
+ 	req->flags |= REQ_F_POLLED;
+ 	memcpy(&apoll->work, &req->work, sizeof(req->work));
++	had_io = req->io != NULL;
+ 
+ 	get_task_struct(current);
+ 	req->task = current;
+@@ -4330,7 +4444,9 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
+ 					io_async_wake);
+ 	if (ret) {
+ 		ipt.error = 0;
+-		apoll->poll.done = true;
++		/* only remove double add if we did it here */
++		if (!had_io)
++			io_poll_remove_double(req);
+ 		spin_unlock_irq(&ctx->completion_lock);
+ 		memcpy(&req->work, &apoll->work, sizeof(req->work));
+ 		kfree(apoll);
+@@ -4363,6 +4479,7 @@ static bool io_poll_remove_one(struct io_kiocb *req)
+ 	bool do_complete;
+ 
+ 	if (req->opcode == IORING_OP_POLL_ADD) {
++		io_poll_remove_double(req);
+ 		do_complete = __io_poll_remove_one(req, &req->poll);
+ 	} else {
+ 		struct async_poll *apoll = req->apoll;
+@@ -4463,49 +4580,6 @@ static int io_poll_remove(struct io_kiocb *req)
+ 	return 0;
+ }
+ 
+-static void io_poll_complete(struct io_kiocb *req, __poll_t mask, int error)
+-{
+-	struct io_ring_ctx *ctx = req->ctx;
+-
+-	req->poll.done = true;
+-	io_cqring_fill_event(req, error ? error : mangle_poll(mask));
+-	io_commit_cqring(ctx);
+-}
+-
+-static void io_poll_task_handler(struct io_kiocb *req, struct io_kiocb **nxt)
+-{
+-	struct io_ring_ctx *ctx = req->ctx;
+-	struct io_poll_iocb *poll = &req->poll;
+-
+-	if (io_poll_rewait(req, poll)) {
+-		spin_unlock_irq(&ctx->completion_lock);
+-		return;
+-	}
+-
+-	hash_del(&req->hash_node);
+-	io_poll_complete(req, req->result, 0);
+-	req->flags |= REQ_F_COMP_LOCKED;
+-	io_put_req_find_next(req, nxt);
+-	spin_unlock_irq(&ctx->completion_lock);
+-
+-	io_cqring_ev_posted(ctx);
+-}
+-
+-static void io_poll_task_func(struct callback_head *cb)
+-{
+-	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+-	struct io_kiocb *nxt = NULL;
+-
+-	io_poll_task_handler(req, &nxt);
+-	if (nxt) {
+-		struct io_ring_ctx *ctx = nxt->ctx;
+-
+-		mutex_lock(&ctx->uring_lock);
+-		__io_queue_sqe(nxt, NULL);
+-		mutex_unlock(&ctx->uring_lock);
+-	}
+-}
+-
+ static int io_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 			void *key)
+ {
 -- 
 2.25.1
 
