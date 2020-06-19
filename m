@@ -2,89 +2,100 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA47C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895A02078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:13:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M9q2XpuU"
+	by mail.kernel.org (Postfix) with ESMTP id D14302080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgFSHNj (ORCPT
+        id S1730300AbgFSHOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:13:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53475 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728109AbgFSHNi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:13:38 -0400
-X-UUID: d6e89bb465a149788b5b552f2b6f28bf-20200619
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ge4Q1IGNmven9DEwI5s/AYTPPYmWkvgiVPEkL7m9LtI=;
-        b=M9q2XpuUPKOgdGV049XKRskPDU9OY/g1aBHPIBEN+X6ADjyZR7Q3LoaSXElk2pylXOH0sCWRb0460ICYCNgEosZcpjvFOrRQBV94OMMBShz0HYfCbMd6sH6tc2jzpvraGNgMwEWC6tkfbkHbr5lryexkgIAW08MD3ZRpS7oczAo=;
-X-UUID: d6e89bb465a149788b5b552f2b6f28bf-20200619
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 487082109; Fri, 19 Jun 2020 15:13:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 19 Jun 2020 15:13:33 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 19 Jun 2020 15:13:33 +0800
-Message-ID: <1592550813.23952.5.camel@mtksdaap41>
-Subject: Re: [PATCH 09/10] media: dt-bindings: mtk-vcodec: specify SCP node
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        "Pi-Hsun Shih" <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 19 Jun 2020 15:13:33 +0800
-In-Reply-To: <20200520082723.96136-10-acourbot@chromium.org>
-References: <20200520082723.96136-1-acourbot@chromium.org>
-         <20200520082723.96136-10-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 19 Jun 2020 03:14:38 -0400
+Received: from l2mail1.panix.com ([166.84.1.75]:56829 "EHLO l2mail1.panix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729859AbgFSHOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:14:37 -0400
+X-Greylist: delayed 1026 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Jun 2020 03:14:36 EDT
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+        by l2mail1.panix.com (Postfix) with ESMTPS id 49p8kf2y85zDSs
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:57:30 -0400 (EDT)
+Received: from xps-7390 (cpe-23-242-39-94.socal.res.rr.com [23.242.39.94])
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 49p8kc55jszTg9;
+        Fri, 19 Jun 2020 02:57:28 -0400 (EDT)
+Date:   Thu, 18 Jun 2020 23:57:27 -0700 (PDT)
+From:   "Kenneth R. Crudup" <kenny@panix.com>
+Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Commit 25f12ae45fc1 ("maccess: rename probe_kernel_address to
+ get_kernel_nofault") causing several OOPSes
+In-Reply-To: <20200619065007.GA3041@lst.de>
+Message-ID: <alpine.DEB.2.22.394.2006182351090.9276@xps-7390>
+References: <alpine.DEB.2.22.394.2006181751270.9276@xps-7390> <20200619065007.GA3041@lst.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 4A4C11D294B15114B2E1BEFFA5738803A511605A5CDDAEB32273C11F7D27DE922000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTIwIGF0IDE3OjI3ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gVGhlIG1lZGlhdGVrIGNvZGVjcyBjYW4gdXNlIGVpdGhlciB0aGUgVlBVIG9yIHRoZSBT
-Q1AgYXMgdGhlaXIgaW50ZXJmYWNlDQo+IHRvIGZpcm13YXJlLiBSZWZsZWN0IHRoaXMgaW4gdGhl
-IERUIGJpbmRpbmdzLg0KPiANCkFja2VkLWJ5OiBUaWZmYW55IExpbiA8dGlmZmFueS5saW5AbWVk
-aWF0ZWsuY29tPg0KDQoNCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIENvdXJib3QgPGFjb3Vy
-Ym90QGNocm9taXVtLm9yZz4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWVkaWEvbWVkaWF0ZWstdmNvZGVjLnR4dCB8IDQgKysrLQ0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlay12Y29kZWMudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLXZjb2Rl
-Yy50eHQNCj4gaW5kZXggYjZiNWRkZTZhYmQ4Li43YWVmMGE0ZmUyMDcgMTAwNjQ0DQo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlay12Y29kZWMu
-dHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRp
-YXRlay12Y29kZWMudHh0DQo+IEBAIC0xOSw3ICsxOSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+ICAtIGlvbW11cyA6IHNob3VsZCBwb2ludCB0byB0aGUgcmVzcGVjdGl2ZSBJT01NVSBibG9j
-ayB3aXRoIG1hc3RlciBwb3J0IGFzDQo+ICAgIGFyZ3VtZW50LCBzZWUgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L21lZGlhdGVrLGlvbW11LnR4dA0KPiAgICBmb3IgZGV0
-YWlscy4NCj4gLS0gbWVkaWF0ZWssdnB1IDogdGhlIG5vZGUgb2YgdmlkZW8gcHJvY2Vzc29yIHVu
-aXQNCj4gK09uZSBvZiB0aGUgdHdvIGZvbGxvd2luZyBub2RlczoNCj4gKy0gbWVkaWF0ZWssdnB1
-IDogdGhlIG5vZGUgb2YgdGhlIHZpZGVvIHByb2Nlc3NvciB1bml0LCBpZiB1c2luZyBWUFUuDQo+
-ICstIG1lZGlhdGVrLHNjcCA6IHRoZSBub29kZSBvZiB0aGUgU0NQIHVuaXQsIGlmIHVzaW5nIFND
-UC4NCj4gIA0KPiANCj4gIEV4YW1wbGU6DQoNCg==
 
+On Fri, 19 Jun 2020, Christoph Hellwig wrote:
+
+> That is indeed really strange, as that commit is just a rename.
+> Well, Linus also added swapping of the argument order, but again it
+> shouldn't change much.
+
+Thing is, there's other examples of the previous version in the kernel tree- any
+chance there's a usage conflict (Thunderbolt has a ROM in it, maybe something in
+"probe_roms.c"? (Just guessing, no idea):
+
+----
+afind probe_kernel_address
+./lib/test_lockup.c:        probe_kernel_address(ptr, buf) ||
+./lib/test_lockup.c:        probe_kernel_address(ptr + size - 1, buf)) {
+./lib/test_lockup.c:    if (probe_kernel_address(ptr, magic) || magic != expected) {
+./arch/arm64/kernel/traps.c:            if (probe_kernel_address((__force __le32 *)pc, instr_le))
+./arch/sh/kernel/traps.c:       if (probe_kernel_address((insn_size_t *)addr, opcode))
+./arch/x86/kernel/traps.c:      if (probe_kernel_address((unsigned short *)addr, ud))
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom_list, device) != 0)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + 0x18, offset) != 0)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + offset + 0x4, vendor) != 0)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + offset + 0x6, device) != 0)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + offset + 0x8, list) == 0 &&
+./arch/x86/kernel/probe_roms.c:             probe_kernel_address(rom + offset + 0xc, rev) == 0 &&
+./arch/x86/kernel/probe_roms.c: return probe_kernel_address(ptr, sig) == 0 && sig == ROMSIGNATURE;
+./arch/x86/kernel/probe_roms.c: for (sum = 0; length && probe_kernel_address(rom++, c) == 0; length--)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + 2, c) != 0)
+./arch/x86/kernel/probe_roms.c:         if (probe_kernel_address(rom + 2, c) != 0)
+./arch/x86/mm/fault.c:          if (probe_kernel_address(instr, opcode))
+./arch/x86/mm/fault.c:          if (probe_kernel_address(instr, opcode))
+./arch/x86/mm/fault.c:  return probe_kernel_address((unsigned long *)p, dummy);
+./arch/x86/pci/pcbios.c:                if (probe_kernel_address(&check->fields.signature, sig))
+./arch/arm/mm/alignment.c:              fault = probe_kernel_address(ip, instr);
+./arch/arm/mm/alignment.c:              fault = probe_kernel_address(ip, instr);
+./arch/s390/mm/fault.c: return probe_kernel_address((unsigned long *)p, dummy);
+./arch/powerpc/kernel/process.c:                    probe_kernel_address((const void *)pc, instr)) {
+./arch/powerpc/kernel/kprobes.c:                if (probe_kernel_address(addr, instr))
+./arch/powerpc/sysdev/fsl_pci.c:                        ret = probe_kernel_address((void *)regs->nip, inst);
+./arch/riscv/kernel/kgdb.c:     if (probe_kernel_address((void *)pc, op_code))
+./arch/riscv/kernel/kgdb.c:     error = probe_kernel_address((void *)addr, stepped_opcode);
+./arch/riscv/kernel/traps.c:    if (probe_kernel_address((bug_insn_t *)pc, insn))
+./arch/riscv/kernel/traps.c:    if (probe_kernel_address((bug_insn_t *)pc, insn))
+----
+
+> Do you see any compiler warnings or something
+> odd in the kernel log before the actual crash?
+
+Not that I could see, but I'll try building again later on.
+
+	-Kenny
+
+-- 
+Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
