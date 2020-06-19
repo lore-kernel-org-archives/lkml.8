@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B7A20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCB020809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584797;
-	bh=97KhVImh3fMbPEhCdHz6ESrRxmRllU7uaOXxayOKOV8=;
+	s=default; t=1592584804;
+	bh=AfBtStXJXaYPmnT+dTRLZ/pe4//6x1OcubtVyz9z2Gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkQlJEBLV8ZaL1CQ4q0cPqHliabSqA6VwCAumbOG0PMjuF0vGUxJDYPXQis/pX/Mw
-	 C1R16rBXjf9q6bGBLPV4zC09Fy+HQj848Kxa22xY3pcdQd0XfelFmi/rV9sLwknoqk
-	 FDsX12/y3M2wSmG/OnvAIHbXlji73vhGhArFXSq0=
+	b=x5+OasScBuG+LRvPXddBzBVBE2Kvz1xJuh6RXdjig5UquB9rdd1phqOFcELCkM41x
+	 KEj6TBBlr/kPxXAc97BREQnE41XxlSfE8/fl5JHMm5JJ5PfCAfBzPetlnVKgcxtfiL
+	 2VoD/oLgPFdKk0PG2bbrVFPfQyEY5mBukXQrBDm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbgFSOqL (ORCPT
+        id S2395422AbgFSQkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388787AbgFSOqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:02 -0400
+        id S2388796AbgFSOqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924F92083B;
-        Fri, 19 Jun 2020 14:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D80621582;
+        Fri, 19 Jun 2020 14:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577962;
-        bh=97KhVImh3fMbPEhCdHz6ESrRxmRllU7uaOXxayOKOV8=;
+        s=default; t=1592577964;
+        bh=AfBtStXJXaYPmnT+dTRLZ/pe4//6x1OcubtVyz9z2Gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzp+XAKHH39Jp+HmviDVl8J2GtQEmQDk1bkQsmrcnkPc7hPTdP+VlZECbEaFF/49C
-         lCPWtvMSiM27Ap+CRziGUJyFxBe9NmrwMFYyejw7tDj11lJtEbtc70yOv3ymMSsobr
-         DXeaA5pw8Ralx3CWdkbnU6KTn48dPFF/TUYqVkOI=
+        b=qXBZhqEdTikibEfHj9mjf3naQGfuywZ01lKwxNz+r3gr00XX2txAdMG5rgDp/p08h
+         +5lh9Wdug2JF2eu8H9Dmg6G330TRm3EbuJvD0BYmNJr0pQuyRKKT82RvRvo21YdwVe
+         lPzXXxmutVXAK5GS6FvQ2v+3cK9ooEQ50xRpmuy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH 4.14 006/190] x86: uaccess: Inhibit speculation past access_ok() in user_access_begin()
-Date:   Fri, 19 Jun 2020 16:30:51 +0200
-Message-Id: <20200619141633.788051361@linuxfoundation.org>
+Subject: [PATCH 4.14 007/190] lib: Reduce user_access_begin() boundaries in strncpy_from_user() and strnlen_user()
+Date:   Fri, 19 Jun 2020 16:30:52 +0200
+Message-Id: <20200619141633.835800444@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,45 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6e693b3ffecb0b478c7050b44a4842854154f715 upstream.
+commit ab10ae1c3bef56c29bac61e1201c752221b87b41 upstream.
 
-Commit 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
-makes the access_ok() check part of the user_access_begin() preceding a
-series of 'unsafe' accesses.  This has the desirable effect of ensuring
-that all 'unsafe' accesses have been range-checked, without having to
-pick through all of the callsites to verify whether the appropriate
-checking has been made.
+The range passed to user_access_begin() by strncpy_from_user() and
+strnlen_user() starts at 'src' and goes up to the limit of userspace
+although reads will be limited by the 'count' param.
 
-However, the consolidated range check does not inhibit speculation, so
-it is still up to the caller to ensure that they are not susceptible to
-any speculative side-channel attacks for user addresses that ultimately
-fail the access_ok() check.
+On 32 bits powerpc (book3s/32) access has to be granted for each
+256Mbytes segment and the cost increases with the number of segments to
+unlock.
 
-This is an oversight, so use __uaccess_begin_nospec() to ensure that
-speculation is inhibited until the access_ok() check has passed.
+Limit the range with 'count' param.
 
-Reported-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/include/asm/uaccess.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/strncpy_from_user.c |   14 +++++++-------
+ lib/strnlen_user.c      |   14 +++++++-------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -717,7 +717,7 @@ static __must_check inline bool user_acc
- {
- 	if (unlikely(!access_ok(type, ptr, len)))
- 		return 0;
--	__uaccess_begin();
-+	__uaccess_begin_nospec();
- 	return 1;
- }
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -29,13 +29,6 @@ static inline long do_strncpy_from_user(
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+ 	unsigned long res = 0;
  
+-	/*
+-	 * Truncate 'max' to the user-specified limit, so that
+-	 * we only have one limit we need to check in the loop
+-	 */
+-	if (max > count)
+-		max = count;
+-
+ 	if (IS_UNALIGNED(src, dst))
+ 		goto byte_at_a_time;
+ 
+@@ -113,6 +106,13 @@ long strncpy_from_user(char *dst, const
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
+ 
++		/*
++		 * Truncate 'max' to the user-specified limit, so that
++		 * we only have one limit we need to check in the loop
++		 */
++		if (max > count)
++			max = count;
++
+ 		kasan_check_write(dst, count);
+ 		check_object_size(dst, count, false);
+ 		if (user_access_begin(VERIFY_READ, src, max)) {
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -32,13 +32,6 @@ static inline long do_strnlen_user(const
+ 	unsigned long c;
+ 
+ 	/*
+-	 * Truncate 'max' to the user-specified limit, so that
+-	 * we only have one limit we need to check in the loop
+-	 */
+-	if (max > count)
+-		max = count;
+-
+-	/*
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+@@ -114,6 +107,13 @@ long strnlen_user(const char __user *str
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
+ 
++		/*
++		 * Truncate 'max' to the user-specified limit, so that
++		 * we only have one limit we need to check in the loop
++		 */
++		if (max > count)
++			max = count;
++
+ 		if (user_access_begin(VERIFY_READ, str, max)) {
+ 			retval = do_strnlen_user(str, count, max);
+ 			user_access_end();
 
 
