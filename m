@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB19C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4318C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9A821532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9486221532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582596;
-	bh=u5I5OiKQo2tv1dXqFTNJTpAWXyj4VFEDy54gB1njSDY=;
+	s=default; t=1592582600;
+	bh=qvMEqAuOf5Z/TluxxmrPx3SKltHINKkkkiAXGoLWkaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwU95Z8CChMfPol9ZpcIKye9JtXIRLnspnFzjdgptUlswRU5H6hPkY/qMu2TAulYv
-	 xbVQLkQHE8+/0av+akm8ivVAliJ0fBj2HrhC4zQ9Hofb9cPdzhf9DJcLDK9kss9M0L
-	 BoFx4JCQ3DT0RdoQZ/c0NoMOR9sXCiBcDchW7xE0=
+	b=ty/c/NRHySx2JdgzC0ms1Sa9POKIVdYVNsbhWRMIhHhIj5qxdTVOQPe07B/O3FTtX
+	 g/r/xVFd15qODeNW9kG8QzoQQ0IVP2zSX3BZ3gO9TXzmfQDJ1eyuopcrHIfddmDK3O
+	 +tMWp+Wv9lN0nM2axFlFUH5t3lGK2ksyKJNoDhlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403858AbgFSQDJ (ORCPT
+        id S2404305AbgFSQDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391776AbgFSPLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:53 -0400
+        id S2392132AbgFSPLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CB5721927;
-        Fri, 19 Jun 2020 15:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D46120776;
+        Fri, 19 Jun 2020 15:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579513;
-        bh=u5I5OiKQo2tv1dXqFTNJTpAWXyj4VFEDy54gB1njSDY=;
+        s=default; t=1592579499;
+        bh=qvMEqAuOf5Z/TluxxmrPx3SKltHINKkkkiAXGoLWkaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OP/Q7Sj8cF46l15ar9nwKTmNcoyiR20FVBrV4n1GtEFPB4MceAuYoNg00U6zZ2sZA
-         MFtq11BVovgID+F89VamkHaTJd4L8NGBShNTSWq1BFAaHCQnZPfvmff5cQUjsllD+n
-         ymjWCrdPLfxr+b5G5USzP0q837RouZzsuPUWkehg=
+        b=GfQnHfD//U8ZfiWJOrqCMrD2cBdQpA+PdCUBQIgxoIC3sR1gPlxHgrMvtgA3OnUBf
+         JDYiSTwriXmlc3UGy8eyy8xX33JDpRGjj1nbRvH2i0KL6amz1gXhQL9YjYq98Pu7cI
+         tRy4aW6CCfQnKEXe+YlDMcDMNcKEVl+AJlJYzLoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Omar Sandoval <osandov@fb.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 164/261] btrfs: fix error handling when submitting direct I/O bio
-Date:   Fri, 19 Jun 2020 16:32:55 +0200
-Message-Id: <20200619141657.759935343@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Cornwall <Jay.Cornwall@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 128/261] drm/amdgpu: Sync with VM root BO when switching VM to CPU update mode
+Date:   Fri, 19 Jun 2020 16:32:19 +0200
+Message-Id: <20200619141656.002097270@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,63 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-commit 6d3113a193e3385c72240096fe397618ecab6e43 upstream.
+[ Upstream commit 90ca78deb004abe75b5024968a199acb96bb70f9 ]
 
-In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
-stripe or chunk, we submit orig_bio without cloning it. In this case, we
-don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
-decrement pending_bios to -1, and we never complete orig_bio. Fix it by
-initializing pending_bios to 1 instead of incrementing later.
+This fixes an intermittent bug where a root PD clear operation still in
+progress could overwrite a PDE update done by the CPU, resulting in a
+VM fault.
 
-Fixing this exposes another bug: we put orig_bio prematurely and then
-put it again from end_io. Fix it by not putting orig_bio.
-
-After this change, pending_bios is really more of a reference count, but
-I'll leave that cleanup separate to keep the fix small.
-
-Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 108b4d928c03 ("drm/amd/amdgpu: Update VM function pointer")
+Reported-by: Jay Cornwall <Jay.Cornwall@amd.com>
+Tested-by: Jay Cornwall <Jay.Cornwall@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8534,7 +8534,6 @@ static int btrfs_submit_direct_hook(stru
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index c7514f743409..6335bd4ae374 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -2867,10 +2867,17 @@ int amdgpu_vm_make_compute(struct amdgpu_device *adev, struct amdgpu_vm *vm, uns
+ 	WARN_ONCE((vm->use_cpu_for_update && !amdgpu_gmc_vram_full_visible(&adev->gmc)),
+ 		  "CPU update of VM recommended only for large BAR system\n");
  
- 	/* bio split */
- 	ASSERT(geom.len <= INT_MAX);
--	atomic_inc(&dip->pending_bios);
- 	do {
- 		clone_len = min_t(int, submit_len, geom.len);
+-	if (vm->use_cpu_for_update)
++	if (vm->use_cpu_for_update) {
++		/* Sync with last SDMA update/clear before switching to CPU */
++		r = amdgpu_bo_sync_wait(vm->root.base.bo,
++					AMDGPU_FENCE_OWNER_UNDEFINED, true);
++		if (r)
++			goto free_idr;
++
+ 		vm->update_funcs = &amdgpu_vm_cpu_funcs;
+-	else
++	} else {
+ 		vm->update_funcs = &amdgpu_vm_sdma_funcs;
++	}
+ 	dma_fence_put(vm->last_update);
+ 	vm->last_update = NULL;
  
-@@ -8584,7 +8583,8 @@ submit:
- 	if (!status)
- 		return 0;
- 
--	bio_put(bio);
-+	if (bio != orig_bio)
-+		bio_put(bio);
- out_err:
- 	dip->errors = 1;
- 	/*
-@@ -8625,7 +8625,7 @@ static void btrfs_submit_direct(struct b
- 	bio->bi_private = dip;
- 	dip->orig_bio = bio;
- 	dip->dio_bio = dio_bio;
--	atomic_set(&dip->pending_bios, 0);
-+	atomic_set(&dip->pending_bios, 1);
- 	io_bio = btrfs_io_bio(bio);
- 	io_bio->logical = file_offset;
- 
+-- 
+2.25.1
+
 
 
