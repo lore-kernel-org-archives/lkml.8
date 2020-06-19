@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6238204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692AC206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585136;
-	bh=lbF6sIeU9WMTXx2rz1p0SggkawNhrB2OOVw0p1MoR6A=;
+	s=default; t=1592585139;
+	bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvLxNGsJKuhxxpDNtOn6B7PVxe84qznbRXlXzWL4KS0gZ7zrGdUPVgHfKPDYtM2Lb
-	 zeRBPfh0N7uMP3LcXn5VeWKzyBCRFJV2AApwFzcUjY9xlYfUfqFnPvrmcLNdEl1wIO
-	 d0Emn2bYJm7jZOdsKrQ4Z+yRqGznQ/iiEVrbNmLw=
+	b=uzeyQQSCPCg3T/ZmuumKjjVkOU5bV01XfTCvaOTlfvA4xOog9rqzySWiqMyyo2Bh8
+	 H89D9ckpWa0bDo9T7KjPJsIrk7IFo2ugvP90sAYtdre1YSp982PyzCd0vsMks1cTZZ
+	 +j3E0MS+D0jcupWWutt9QViX7Q3RRs+zVYLWcouo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388564AbgFSQpf (ORCPT
+        id S2404988AbgFSQpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387988AbgFSOmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:06 -0400
+        id S2388324AbgFSOmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 971B220CC7;
-        Fri, 19 Jun 2020 14:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4489121527;
+        Fri, 19 Jun 2020 14:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577726;
-        bh=lbF6sIeU9WMTXx2rz1p0SggkawNhrB2OOVw0p1MoR6A=;
+        s=default; t=1592577723;
+        bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwCkymbbME3nb5i0MQagV16H0UlTDe8IpM3S7qnYK6FqqxhoWqShjC9NX8kJUJCIK
-         5cLzCdN9NKuTQzSAAPjVe0mlgpgCcFDQxlsLesA5u1FMiDJmgYBNRT+ig3rir2yfS3
-         VcQ71/XqhtDilJTl7CWUzUk7Or2M4h9Bqx4aD8DQ=
+        b=PHnLZiZ4MS23H2UZmZ0mOBSI7NxogEazxpceEBPOri1A/1+UDfbdzwLPBvMpciM7i
+         xNEBwxd7NYHecEZ3WNQ6lE6BIczrlYV42fvk7qmsXQM3OZJk0ySDdfzvYLhRhPjnFL
+         uE1/Ovn8Tui6YmvRnhJ2Ntez6Gm1uUC1yjbwo4Bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jon Doron <arilou@gmail.com>,
-        Roman Kagan <rvkagan@yandex-team.ru>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/128] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-Date:   Fri, 19 Jun 2020 16:32:39 +0200
-Message-Id: <20200619141623.648443544@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 056/128] objtool: Ignore empty alternatives
+Date:   Fri, 19 Jun 2020 16:32:30 +0200
+Message-Id: <20200619141623.160513124@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,73 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Doron <arilou@gmail.com>
+From: Julien Thierry <jthierry@redhat.com>
 
-[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
+[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
 
-The problem the patch is trying to address is the fact that 'struct
-kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-modes.
+The .alternatives section can contain entries with no original
+instructions. Objtool will currently crash when handling such an entry.
 
-In 64-bit mode the default alignment boundary is 64 bits thus
-forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-boundary is at 32 bits thus no extra gaps.
+Just skip that entry, but still give a warning to discourage useless
+entries.
 
-This is an issue as even when the kernel is 64 bit, the userspace using
-the interface can be both 32 and 64 bit but the same 32 bit userspace has
-to work with 32 bit kernel.
-
-The issue is fixed by forcing the 64 bit layout, this leads to ABI
-change for 32 bit builds and while we are obviously breaking '32 bit
-userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-with 64 bit kernel' one.
-
-As the interface has no (known) users and 32 bit KVM is rather baroque
-nowadays, this seems like a reasonable decision.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Jon Doron <arilou@gmail.com>
-Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
-Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/virtual/kvm/api.txt | 2 ++
- include/uapi/linux/kvm.h          | 2 ++
- 2 files changed, 4 insertions(+)
+ tools/objtool/check.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index d1908e50b506..b8f5bf2a890a 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -3534,9 +3534,11 @@ EOI was received.
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 			__u32 type;
-+			__u32 pad1;
- 			union {
- 				struct {
- 					__u32 msr;
-+					__u32 pad2;
- 					__u64 control;
- 					__u64 evt_page;
- 					__u64 msg_page;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index a0a365cbf3c9..0c02441d2cc9 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -159,9 +159,11 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 	__u32 type;
-+	__u32 pad1;
- 	union {
- 		struct {
- 			__u32 msr;
-+			__u32 pad2;
- 			__u64 control;
- 			__u64 evt_page;
- 			__u64 msg_page;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index b0b8ba9b800c..c7399d7f4bc7 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -778,6 +778,12 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
+ 
+ 		if (special_alt->group) {
++			if (!special_alt->orig_len) {
++				WARN_FUNC("empty alternative entry",
++					  orig_insn->sec, orig_insn->offset);
++				continue;
++			}
++
+ 			ret = handle_group_alt(file, special_alt, orig_insn,
+ 					       &new_insn);
+ 			if (ret)
 -- 
 2.25.1
 
