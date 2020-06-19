@@ -2,169 +2,136 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE90C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46C120786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHZegl49"
+	by mail.kernel.org (Postfix) with ESMTP id 18F5D20890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbgFSJDr (ORCPT
+        id S1731661AbgFSJFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgFSJDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:03:46 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BA4C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:03:45 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f185so8409683wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:reply-to:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=eqGVTaL7I09fSt8xiiKydMdPTw03g9WyqCugj1c7ZRA=;
-        b=WHZegl49L3AkFCgz3WyYZZbEvupHczYEKrdM1x6tWtAezTNUXZBegkTQukvdkW707A
-         6dxg9RLez7dkRHPxfd7qtiHLBdxozDGoNK24+x7iXX2VKl1f1RnGpAivJ9JeRJsaniwE
-         OZA/7X9gVSsadd5s8rkvYY1MKSNo9N7Lc+sn8D5EMJi6CSECyZ4aLUAY6IrndZDHLQSK
-         vsjLCnypQXQ0JN6ABfEk7UPJQXXGQDwq/B+QIJRjEw9jf7+/JZTGS7zPbPRh1xMX4A8J
-         3n+p45V3dd/TzpmoWS7qrq/wIYjQ96oWWpgXUTSxv9rVlc8jdTHvADOLSSN5UuJtPlY5
-         jHOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:reply-to:to:cc:references:in-reply-to
-         :subject:date:message-id:mime-version:content-transfer-encoding
-         :content-language:thread-index;
-        bh=eqGVTaL7I09fSt8xiiKydMdPTw03g9WyqCugj1c7ZRA=;
-        b=CJSSgoH+6kMAD/dq3JEFIyd4iT6UHComwsGr2d16r+hdPh5SLrb6UD2OEs/aYONA1d
-         0ZK9AvIB3HE2z1YsSGTGwwnS+b1ta+5ZSwyve+GJ+2BEUlFhkSCgufnRxJCCHw8jZNFC
-         funqZ3QzSV7BNL8w3jHjYLMb8kDLCDP/IPPZjYrRoj/LejFc5pj7UNulx6czAS3GKJeh
-         eU+azGlENnxAGL8L3wVJF3TchBfB1BKweXmWnWOxKBQj8kjmSqR3dibhKpf0KkpRhTHv
-         Uhg1r/QKY1P6nKlj8505gWgnSIedC3ktNuiy5aCbIQtwZ1TwDjVAA1edyWTSowlJP9OM
-         /epA==
-X-Gm-Message-State: AOAM531M9McDonKApnFFJO9p4d03FR1Rd8+UArbAO0n1A5LyGnjYYmIy
-        v4QM9BsGtKClPi7Gl9ZC05mG186lDrk=
-X-Google-Smtp-Source: ABdhPJzuTfHjOBExJd3YwtBUHiqSp3UHmcldRUcFGypgt2huvdymHXtQIIzqnWZVOgUAKmQBDbZxSw==
-X-Received: by 2002:a1c:7f87:: with SMTP id a129mr2857945wmd.10.1592557424353;
-        Fri, 19 Jun 2020 02:03:44 -0700 (PDT)
-Received: from CBGR90WXYV0 ([54.239.6.188])
-        by smtp.gmail.com with ESMTPSA id h188sm6418392wmh.2.2020.06.19.02.03.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 02:03:43 -0700 (PDT)
-From:   Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: "Paul Durrant" <paul@xen.org>
-Reply-To: <paul@xen.org>
-To:     "'Boris Ostrovsky'" <boris.ostrovsky@oracle.com>,
-        "'Souptick Joarder'" <jrdr.linux@gmail.com>, <jgross@suse.com>,
-        <sstabellini@kernel.org>
-Cc:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
-        "'John Hubbard'" <jhubbard@nvidia.com>
-References: <1592363698-4266-1-git-send-email-jrdr.linux@gmail.com> <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com>
-In-Reply-To: <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com>
-Subject: RE: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
-Date:   Fri, 19 Jun 2020 10:03:42 +0100
-Message-ID: <00a901d64618$888e12a0$99aa37e0$@xen.org>
+        Fri, 19 Jun 2020 05:05:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53543 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731538AbgFSJFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:05:02 -0400
+IronPort-SDR: qWFhVEpIFMwAmVoHNHT2Kz2TlDx806AY1pjC+SSgkm5lXuZgDj6z9xlEK9VflUA+EaMA/yfqPg
+ HstDcgPOc9Hw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="123160675"
+X-IronPort-AV: E=Sophos;i="5.75,254,1589266800"; 
+   d="scan'208";a="123160675"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 02:05:01 -0700
+IronPort-SDR: kF7t/FU4z5wGAUzCozSJdjd4BBAbdDGgBBHDlB9u9WN/LIQDdScZQmzCyhb/NdB4JlLBMi1ZDx
+ 6ziPktrLxEQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,254,1589266800"; 
+   d="scan'208";a="310110943"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Jun 2020 02:04:58 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jmCxI-00ERf1-JA; Fri, 19 Jun 2020 12:05:00 +0300
+Date:   Fri, 19 Jun 2020 12:05:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+Message-ID: <20200619090500.GC2428291@smile.fi.intel.com>
+References: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+ <202006160420.iatdr9ab%lkp@intel.com>
+ <CACG_h5qUZsR7Zd9a+BQJqyuJZBrv-en+gC-sgcV+xV+A5ZOBhA@mail.gmail.com>
+ <CAHp75Ve_=LwV6fO3ESgbCOVDVr=C5wrnAJX9od9evFvHU5-Krw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQLNWdkmTQEG0NOkr/mSq3vuIFPj4QGVx8AxpuTONkA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve_=LwV6fO3ESgbCOVDVr=C5wrnAJX9od9evFvHU5-Krw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Sent: 17 June 2020 18:57
-> To: Souptick Joarder <jrdr.linux@gmail.com>; jgross@suse.com; =
-sstabellini@kernel.org
-> Cc: xen-devel@lists.xenproject.org; linux-kernel@vger.kernel.org; John =
-Hubbard <jhubbard@nvidia.com>;
-> paul@xen.org
-> Subject: Re: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to =
-pin_user_pages*()
->=20
-> On 6/16/20 11:14 PM, Souptick Joarder wrote:
-> > In 2019, we introduced pin_user_pages*() and now we are converting
-> > get_user_pages*() to the new API as appropriate. [1] & [2] could
-> > be referred for more information.
-> >
-> > [1] Documentation/core-api/pin_user_pages.rst
-> >
-> > [2] "Explicit pinning of user-space pages":
-> >         https://lwn.net/Articles/807108/
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > ---
-> > Hi,
-> >
-> > I have compile tested this patch but unable to run-time test,
-> > so any testing help is much appriciated.
-> >
-> > Also have a question, why the existing code is not marking the
-> > pages dirty (since it did FOLL_WRITE) ?
->=20
->=20
-> Indeed, seems to me it should. Paul?
->=20
+On Fri, Jun 19, 2020 at 11:38:59AM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 19, 2020 at 10:02 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> 
+> ...
+> 
+> > > config: sparc64-randconfig-s032-20200615 (attached as .config)
+> > > compiler: sparc64-linux-gcc (GCC) 9.3.0
+> > > reproduce:
+> > >         # apt-get install sparse
+> > >         # sparse version: v0.6.2-rc1-3-g55607964-dirty
+> > >         # save the attached .config to linux build tree
+> > >         make W=1 C=1 ARCH=sparc64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> ...
+> 
+> > > sparse warnings: (new ones prefixed by >>)
+> > >
+> > > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> > > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> > >    include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
+> > > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> > > >> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
+> 
+> > It seems to me that to reproduce this warning, I have to use the
+> > sparc64 compiler. I have installed 'sparc64-linux-gnu-gcc' on my
+> > computer.
+> 
+> Sparse is not a compiler.
 
-Yes, it looks like that was an oversight. The hypercall may well result =
-in data being copied back into the buffers so the whole pages array =
-should be considered dirty.
+On x86_64:
 
-  Paul
+  CHECK   drivers/gpio/gpio-xilinx.c
+  include/linux/bitmap.h:639:45: warning: shift too big (64) for type unsigned long
+  include/linux/bitmap.h:639:45: warning: shift too big (64) for type unsigned long
+  include/linux/bitmap.h:594:63: warning: shift too big (64) for type unsigned long
+  include/linux/bitmap.h:639:45: warning: shift too big (64) for type unsigned long
+  include/linux/bitmap.h:638:17: warning: invalid access past the end of 'old' (8 8)
 
->=20
+> > I have to specify that this compiler needs to be used for build
+> > process. How/ Where do I specify this?
 > >
-> >  drivers/xen/privcmd.c | 7 ++-----
-> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> > index a250d11..543739e 100644
-> > --- a/drivers/xen/privcmd.c
-> > +++ b/drivers/xen/privcmd.c
-> > @@ -594,7 +594,7 @@ static int lock_pages(
-> >  		if (requested > nr_pages)
-> >  			return -ENOSPC;
-> >
-> > -		pinned =3D get_user_pages_fast(
-> > +		pinned =3D pin_user_pages_fast(
-> >  			(unsigned long) kbufs[i].uptr,
-> >  			requested, FOLL_WRITE, pages);
-> >  		if (pinned < 0)
-> > @@ -614,10 +614,7 @@ static void unlock_pages(struct page *pages[], =
-unsigned int nr_pages)
-> >  	if (!pages)
-> >  		return;
-> >
-> > -	for (i =3D 0; i < nr_pages; i++) {
-> > -		if (pages[i])
-> > -			put_page(pages[i]);
-> > -	}
-> > +	unpin_user_pages(pages, nr_pages);
->=20
->=20
-> Why are you no longer checking for valid pages?
->=20
->=20
-> -boris
->=20
->=20
->=20
+> > I have downloaded the config.gz (has config file) and placed it at the
+> > root of the linux kernel project tree. But the Makefile STILL has
+> > 'gcc' as the compiler. When I build, it is the 'gcc' compiler being
+> > used and not 'sparc64-linux-gnu-gcc'. I know I can manually change the
+> > Makefile to use sparc64 compiler, but I think there must be some more
+> > elegant way to do this, perhaps using make menuconfig?
+> 
+> If you wish to run a compilation, download a compiler from [1], and,
+> after adding its bin/ folder to PATH, run
+> make CROSS_COMPILE=sparc64-linux- ARCH=sparc64 ... # first generate .config
+> 
+> > Kindly illuminate as to how shall I reproduce the compiler warning.
+> 
+> > > 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @638           map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> > > 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @639           map[index + 1] |= (value >> space);
+> 
+> Hmm... I think I sent a reply [2] where I explained how space can be
+> 64. Do you agree with analysis?
+> 
+> [1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/
+> [2]: https://lore.kernel.org/lkml/20200616081428.GP2428291@smile.fi.intel.com/
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
