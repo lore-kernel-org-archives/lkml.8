@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D056D206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D94020809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581542;
-	bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+	s=default; t=1592581545;
+	bh=X9M32Bh0nXxv5LYujkA9sCqehA1ijPRpYu/JYe4UznQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DeeRmUyAGsR6lwukruQo3gvtVuIkAUnTTywifAZwih/QDZnvS4ecFScau+RKt0u+g
-	 kV+mRPIeqt+aq3ntky1nrFQOOguie23A1tMCDHk/nRrXjg9L511FZFuTfg8op2+fkI
-	 R/HZGiOoczdsatHdkwhTuqFNAdu7QYblSUXpkm9U=
+	b=MgLY+fM6Xk4dLgQGjUtmXxrwBUyRsi5DTnpNJgDMtU7z6gtDpRw+jkS/pm4X5YMVU
+	 OstDGVUKWV2uXRcwVYb5foY64gcXZNnZMw6nnyrggXpLfQvco5hZHa9umwQf3jGTdW
+	 aI+Eb49YyrzbUl0PLofxT7cz75po2HBLBjnEb2sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405226AbgFSPpl (ORCPT
+        id S2404398AbgFSP1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404087AbgFSP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:12 -0400
+        id S2393018AbgFSPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BAAB217D8;
-        Fri, 19 Jun 2020 15:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D2920734;
+        Fri, 19 Jun 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580431;
-        bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+        s=default; t=1592580335;
+        bh=X9M32Bh0nXxv5LYujkA9sCqehA1ijPRpYu/JYe4UznQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwZnKFjENYdHJhfrS5n26fM68FDY4WXOx4zK/8wZbG6Vm4t6LBim8GcsKNLC8HbBV
-         gghkX8NJP0hQZ68bu7St7ufR3lT7xh7fxRwyk8Bt1kZA9uJY+mjUx/KWvn6/G18aiJ
-         8noW8AwvUkd2fhcjHwDWm4hok0DSd2lStnIkN+d8=
+        b=lLM1GexaBp9Qu158dBsb83dSJVkPdxucju/IZOE8dJq/Oz84HchC1QUJiVTtDUDtW
+         KuUF9XBPSy3NTMLk819LyAvjlQPP/FHGLoi53HUOZkuF1BaGixgV3fHL6XX+01pkA2
+         OYRgJnxrjYh+xDr2vaimCUvLOhU34L9rJq5TLwk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaige Li <likaige@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, chen gong <curry.gong@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 216/376] MIPS: tools: Fix resource leak in elf-entry.c
-Date:   Fri, 19 Jun 2020 16:32:14 +0200
-Message-Id: <20200619141720.552774693@linuxfoundation.org>
+Subject: [PATCH 5.7 209/376] drm/amd/powerpay: Disable gfxoff when setting manual mode on picasso and raven
+Date:   Fri, 19 Jun 2020 16:32:07 +0200
+Message-Id: <20200619141720.229972974@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,66 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaige Li <likaige@loongson.cn>
+From: chen gong <curry.gong@amd.com>
 
-[ Upstream commit f33a0b941017b9cb5a4e975af198b855b2f2b455 ]
+[ Upstream commit cbd2d08c7463e78d625a69e9db27ad3004cbbd99 ]
 
-There is a file descriptor resource leak in elf-entry.c, fix this
-by adding fclose() before return and die.
+[Problem description]
+1. Boot up picasso platform, launches desktop, Don't do anything (APU enter into "gfxoff" state)
+2. Remote login to platform using SSH, then type the command line:
+	sudo su -c "echo manual > /sys/class/drm/card0/device/power_dpm_force_performance_level"
+	sudo su -c "echo 2 > /sys/class/drm/card0/device/pp_dpm_sclk" (fix SCLK to 1400MHz)
+3. Move the mouse around in Window
+4. Phenomenon :  The screen frozen
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Tester will switch sclk level during glmark2 run time.
+APU will enter "gfxoff" state intermittently during glmark2 run time.
+The system got hanged if fix GFXCLK to 1400MHz when APU is in "gfxoff"
+state.
+
+[Debug]
+1. Fix SCLK to X MHz
+	1400: screen frozen, screen black, then OS will reboot.
+	1300: screen frozen.
+	1200: screen frozen, screen black.
+	1100: screen frozen, screen black, then OS will reboot.
+	1000: screen frozen, screen black.
+	900:  screen frozen, screen black, then OS will reboot.
+	800:  Situation Nomal, issue disappear.
+	700:  Situation Nomal, issue disappear.
+2. SBIOS setting: AMD CBS --> SMU Debug Options -->SMU Debug --> "GFX DLDO Psm Margin Control":
+	50 : Situation Nomal, issue disappear.
+	45 : Situation Nomal, issue disappear.
+	40 : Situation Nomal, issue disappear.
+	35 : Situation Nomal, issue disappear.
+	30 : screen black.
+	25 : screen frozen, then blurred screen.
+	20 : screen frozen.
+	15 : screen black.
+	10 : screen frozen.
+	5  : screen frozen, then blurred screen.
+3. Disable GFXOFF feature
+	Situation Nomal, issue disappear.
+
+[Why]
+Through a period of time debugging with Sys Eng team and SMU team, Sys
+Eng team said this is voltage/frequency marginal issue not a F/W or H/W
+bug. This experiment proves that default targetPsm [for f=1400MHz] is
+not sufficient when GFXOFF is enabled on Picasso.
+
+SMU team think it is an odd test conditions to force sclk="1400MHz" when
+GPU is in "gfxoff" state，then wake up the GFX. SCLK should be in the
+"lowest frequency" when gfxoff.
+
+[How]
+Disable gfxoff when setting manual mode.
+Enable gfxoff when setting other mode(exiting manual mode) again.
+
+By the way, from the user point of view, now that user switch to manual
+mode and force SCLK Frequency, he don't want SCLK be controlled by
+workload.It becomes meaningless to "switch to manual mode" if APU enter "gfxoff"
+due to lack of workload at this point.
+
+Tips: Same issue observed on Raven.
+
+Signed-off-by: chen gong <curry.gong@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/tools/elf-entry.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/mips/tools/elf-entry.c b/arch/mips/tools/elf-entry.c
-index adde79ce7fc0..dbd14ff05b4c 100644
---- a/arch/mips/tools/elf-entry.c
-+++ b/arch/mips/tools/elf-entry.c
-@@ -51,11 +51,14 @@ int main(int argc, const char *argv[])
- 	nread = fread(&hdr, 1, sizeof(hdr), file);
- 	if (nread != sizeof(hdr)) {
- 		perror("Unable to read input file");
-+		fclose(file);
- 		return EXIT_FAILURE;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+index 49e2e43f2e4a..532f4d908b8d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -383,6 +383,15 @@ static ssize_t amdgpu_set_dpm_forced_performance_level(struct device *dev,
+ 		return count;
  	}
  
--	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG))
-+	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG)) {
-+		fclose(file);
- 		die("Input is not an ELF\n");
++	if (adev->asic_type == CHIP_RAVEN) {
++		if (adev->rev_id < 8) {
++			if (current_level != AMD_DPM_FORCED_LEVEL_MANUAL && level == AMD_DPM_FORCED_LEVEL_MANUAL)
++				amdgpu_gfx_off_ctrl(adev, false);
++			else if (current_level == AMD_DPM_FORCED_LEVEL_MANUAL && level != AMD_DPM_FORCED_LEVEL_MANUAL)
++				amdgpu_gfx_off_ctrl(adev, true);
++		}
 +	}
- 
- 	switch (hdr.ehdr32.e_ident[EI_CLASS]) {
- 	case ELFCLASS32:
-@@ -67,6 +70,7 @@ int main(int argc, const char *argv[])
- 			entry = be32toh(hdr.ehdr32.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 
-@@ -83,14 +87,17 @@ int main(int argc, const char *argv[])
- 			entry = be64toh(hdr.ehdr64.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 		break;
- 
- 	default:
-+		fclose(file);
- 		die("Invalid ELF class\n");
- 	}
- 
- 	printf("0x%016" PRIx64 "\n", entry);
-+	fclose(file);
- 	return EXIT_SUCCESS;
- }
++
+ 	/* profile_exit setting is valid only when current mode is in profile mode */
+ 	if (!(current_level & (AMD_DPM_FORCED_LEVEL_PROFILE_STANDARD |
+ 	    AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK |
 -- 
 2.25.1
 
