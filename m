@@ -2,251 +2,203 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53821C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FC62073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8904D20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViIqqV0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388560AbgFSUBJ (ORCPT
+        id S2388786AbgFSUBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:01:09 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34038 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgFSUBI (ORCPT
+        Fri, 19 Jun 2020 16:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgFSUBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:01:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 8991E2A5519
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     axboe@kernel.dk, corbet@lwn.net, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, rdunlap@infradead.org,
-        dongli.zhang@oracle.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v3] docs: block: Create blk-mq documentation
-Date:   Fri, 19 Jun 2020 17:01:14 -0300
-Message-Id: <20200619200114.6896-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 19 Jun 2020 16:01:37 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF09C06174E;
+        Fri, 19 Jun 2020 13:01:36 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l10so10833303wrr.10;
+        Fri, 19 Jun 2020 13:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Cxjci5St9eZYx3yplpvSM+3ebTUiAn7Gy/G5e/Xp384=;
+        b=ViIqqV0q/KAoiUTv/wUitJGoyF0Pui9iukheMkIQ2AoxhdlqPrh4SXqjzkvJM4oiwg
+         1FwXdU8ZchjAhZa0TlBMnYbW6mgWNpXkxjP0P0aZOOmC+NGP8Qut8qwcbSa9Wb2bE8eu
+         /zM8Os/tZR814i3DS/Rx2HTlQkbTwJ/iTcwshUcxn8rV+QabNmrke30l9J6Zklot/MIX
+         OYGu7LvOc3MWtBAQuHqEihMry6guSZZJJaLNU9G7hgFuUpc6RTMNXHRD+r4jJpj40pZJ
+         LxmU2MNiomhHZLANPTt+udo51UCNGR0NZNkK6SB1LFg63tL3qUxiyrIqqIofetuyDgKA
+         3rbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Cxjci5St9eZYx3yplpvSM+3ebTUiAn7Gy/G5e/Xp384=;
+        b=ukje1MMBm+9zAyJYA6xsoNLAg+rglEINu6UPw61lB3NtGS0iKSeC/M8BJG/Wxlk/KB
+         vZ9SIuBtYmhYnrYLK4j7dljJw5U2zpP0bCnDqCRoP13odZTnsblFGwG+KzT76z7C4WtW
+         CL7DNaQncpBsIXmg7nq/GK8dx3ESdOxEvVCysosGMAiA6UGbOBrAhuVkLUVqr7TZPILR
+         x4Hngcpx8HeZv2fAF5YBCLIArdNY2kmOXgchzT+aZgqC0nna2sxzC4psIp5m1rT5DZM8
+         hKvXktCcdkH/tPZ41bBqy64wf/JD2H3J9XSSJ9idgnMptCa4BJm814vkgEE1zRbcIvvA
+         FRCQ==
+X-Gm-Message-State: AOAM532zWBmU2iIQj3zLFXzputOH4em3xfN5z3tT/2Uln/TKnkjXkA3u
+        MzHDjlzdM54WdSUwuakHFenlRdawaB4=
+X-Google-Smtp-Source: ABdhPJwr3duP5ZBRsQVrYNR2c1YeKqfjG+Wr3p6A9ERqKimXd82YSECM/mCW/K2eGe+S01ykbvUCUg==
+X-Received: by 2002:adf:eec2:: with SMTP id a2mr5571390wrp.136.1592596895411;
+        Fri, 19 Jun 2020 13:01:35 -0700 (PDT)
+Received: from [192.168.86.31] ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id g3sm9225078wrb.46.2020.06.19.13.01.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 13:01:34 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: Document max17040
+ extensions
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+References: <20200618101340.2671020-1-iskren.chernev@gmail.com>
+ <20200619155938.tpyeerqdn7dqcvw4@earth.universe>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+Message-ID: <c7747c37-58c0-79ee-0416-71bb460d168d@gmail.com>
+Date:   Fri, 19 Jun 2020 23:01:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200619155938.tpyeerqdn7dqcvw4@earth.universe>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a documentation providing a background and explanation around the
-operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
 
-The reference for writing this documentation was the source code and
-"Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
-Systems", by Axboe et al.
+On 6/19/20 6:59 PM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Thu, Jun 18, 2020 at 01:13:39PM +0300, Iskren Chernev wrote:
+>> Maxim max17040 is a fuel gauge from a larger family utilising the Model
+>> Gauge technology. Document all different compatible strings that the
+>> max17040 driver recognizes.
+>>
+>> Some devices in the wild report double the capacity. The
+>> maxim,double-soc (from State-Of-Charge) property fixes that.
+>>
+>> Complete device reset might lead to very inaccurate readings. Specify
+>> maxim,skip-reset to avoid that.
+>>
+>> To compensate for the battery chemistry and operating conditions the
+>> chips support a compensation value. Specify one or two byte compensation
+>> via the maxim,rcomp byte array.
+>>
+>> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+>> ---
+>> v1: https://lkml.org/lkml/2020/6/8/682
+>>
+>> Changes in v2:
+>> - add maxim,skip-reset
+>> - remove 2 byte rcomp from example, the specified compat string supports 1 byte
+>>†† rcomp
+>>
+>>† .../power/supply/max17040_battery.txt†††††††† | 24 ++++++++++++++++++-
+>>† 1 file changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> index 4e0186b8380fa..3ee91c295027f 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> @@ -2,7 +2,9 @@ max17040_battery
+>>† ~~~~~~~~~~~~~~~~
+>>
+>>† Required properties :
+>> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
+>> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
+>> +†††††††† "maxim,max17044", "maxim,max17048", "maxim,max17049",
+>> +††††††† "maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+>>†† - reg: i2c slave address
+>>
+>>† Optional properties :
+>> @@ -11,6 +13,18 @@ Optional properties :
+>>††††††††††††††††† generated. Can be configured from 1 up to 32
+>>††††††††††††††††† (%). If skipped the power up default value of
+>>††††††††††††††††† 4 (%) will be used.
+>> +- maxim,double-soc :†††††††† Certain devices return double the capacity.
+>> +††††††††††††††† Specify this boolean property to divide the
+>> +††††††††††††††† reported value in 2 and thus normalize it.
+>> +††††††††††††††† SOC == State of Charge == Capacity.
+>
+> Can this be derived from the compatible?
+>
 
-Signed-off-by: Andr√© Almeida <andrealmeid@collabora.com>
----
-Changes from v2:
-- More fixed typos
-- Once again, reworked the definition of `blk_mq_hw_ctx` in "Hardware
-  dispatch queues" section
+So far, I'm aware of 2 devices using max17048 that need this setting. That
+would be 100% of the 17048 devices I know of [1]. At the same time, according to
+the max17048 documentation this is not the case.
 
-Changes from v1:
-- Fixed typos
-- Reworked blk_mq_hw_ctx
+[1] These are the Samsung Galaxy S5 (klte) and the LG Nexus 5 (hammerhead).
 
-Hello,
+>> +- maxim,skip-reset :††††††† Do not reset device on driver initialization.
+>> +††††††††††††††† Some devices report extremely inaccurately after
+>> +††††††††††††††† a hard reset.
+>
+> Same question.
+>
+> -- Sebastian
+>
 
-This commit was tested using "make htmldocs" and the HTML output has
-been verified.
+This is even weirder. There is no mention in the documentation about whether
+the device should be reset on boot (because the fuelgauge is on even during
+device off times). Testing on 17040 and 17043 reveals no issues with resetting
+on boot, but on the 17048 I have; the readings are up to 2x wrong if you do
+reset on boot. Not doing a reset *might* leave the device in a state that is
+not 100% known by the driver, but I don't know of any real world problems
+stemming from that.
 
-Thanks,
-	Andr√©
----
- Documentation/block/blk-mq.rst | 155 +++++++++++++++++++++++++++++++++
- Documentation/block/index.rst  |   1 +
- 2 files changed, 156 insertions(+)
- create mode 100644 Documentation/block/blk-mq.rst
+So in a sense, I can apply both of these quirks for 17048, and it will work for
+all devices I have tested on, but it won't follow the spec. That is why
+I decided to mark them as special behavior needing configuration per use case.
+On the other hand, I can incorporate them in 17048, and if someone complains
+the bindings can be introduced later (because they are stable API and
+introducing them now is a bit over engineered).
 
-diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
-new file mode 100644
-index 000000000000..d1b8f04a822d
---- /dev/null
-+++ b/Documentation/block/blk-mq.rst
-@@ -0,0 +1,155 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================================================
-+Multi-Queue Block IO Queueing Mechanism (blk-mq)
-+================================================
-+
-+The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
-+devices to achieve a huge number of input/output operations per second (IOPS)
-+through queueing and submitting IO requests to block devices simultaneously,
-+benefiting from the parallelism offered by modern storage devices.
-+
-+Introduction
-+============
-+
-+Background
-+----------
-+
-+Magnetic hard disks have been the de facto standard from the beginning of the
-+development of the kernel. The Block IO subsystem aimed to achieve the best
-+performance possible for those devices with a high penalty when doing random
-+access, and the bottleneck was the mechanical moving parts, a lot slower than
-+any layer on the storage stack. One example of such optimization technique
-+involves ordering read/write requests according to the current position of the
-+hard disk head.
-+
-+However, with the development of Solid State Drives and Non-Volatile Memories
-+without mechanical parts nor random access penalty and capable of performing
-+high parallel access, the bottleneck of the stack had moved from the storage
-+device to the operating system. In order to take advantage of the parallelism
-+in those devices' design, the multi-queue mechanism was introduced.
-+
-+The former design had a single queue to store block IO requests with a single
-+lock. That did not scale well in SMP systems due to dirty data in cache and the
-+bottleneck of having a single lock for multiple processors. This setup also
-+suffered with congestion when different processes (or the same process, moving
-+to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
-+spawns multiple queues with individual entry points local to the CPU, removing
-+the need for a lock. A deeper explanation on how this works is covered in the
-+following section (`Operation`_).
-+
-+Operation
-+---------
-+
-+When the userspace performs IO to a block device (reading or writing a file,
-+for instance), blk-mq takes action: it will store and manage IO requests to
-+the block device, acting as middleware between the userspace (and a file
-+system, if present) and the block device driver.
-+
-+blk-mq has two group of queues: software staging queues and hardware dispatch
-+queues. When the request arrives at the block layer, it will try the shortest
-+path possible: send it directly to the hardware queue. However, there are two
-+cases that it might not do that: if there's an IO scheduler attached at the
-+layer or if we want to try to merge requests. In both cases, requests will be
-+sent to the software queue.
-+
-+Then, after the requests are processed by software queues, they will be placed
-+at the hardware queue, a second stage queue were the hardware has direct access
-+to process those requests. However, if the hardware does not have enough
-+resources to accept more requests, blk-mq will places requests on a temporary
-+queue, to be sent in the future, when the hardware is able.
-+
-+Software staging queues
-+~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The block IO subsystem adds requests (represented by struct
-+:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
-+sent directly to the driver. A request is a collection of BIOs. They arrived at
-+the block layer through the data structure struct :c:type:`bio`. The block
-+layer will then build a new structure from it, the struct :c:type:`request`
-+that will be used to communicate with the device driver. Each queue has its
-+own lock and the number of queues is defined by a per-CPU or per-node basis.
-+
-+The staging queue can be used to merge requests for adjacent sectors. For
-+instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
-+Even if random access to SSDs and NVMs have the same time of response compared
-+to sequential access, grouped requests for sequential access decreases the
-+number of individual requests. This technique of merging requests is called
-+plugging.
-+
-+Along with that, the requests can be reordered to ensure fairness of system
-+resources (e.g. to ensure that no application suffers from starvation) and/or to
-+improve IO performance, by an IO scheduler.
-+
-+IO Schedulers
-+^^^^^^^^^^^^^
-+
-+There are several schedulers implemented by the block layer, each one following
-+a heuristic to improve the IO performance. They are "pluggable" (as in plug
-+and play), in the sense of they can be selected at run time using sysfs. You
-+can read more about Linux's IO schedulers `here
-+<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
-+happens only between requests in the same queue, so it is not possible to merge
-+requests from different queues, otherwise there would be cache trashing and a
-+need to have a lock for each queue. After the scheduling, the requests are
-+eligible to be sent to the hardware. One of the possible schedulers to be
-+selected is the NOOP scheduler, the most straightforward one, that implements a
-+simple FIFO, without performing any reordering. This is useful in the following
-+scenarios: when scheduling will be performed in a next step somewhere in the
-+stack, like block device controllers; the actual sector position of blocks are
-+transparent for the host, meaning it hasn't enough information to take a proper
-+decision; or the overhead of reordering is higher than the handicap of
-+non-sequential accesses.
-+
-+Hardware dispatch queues
-+~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The hardware queue (represented by struct :c:type:`blk_mq_hw_ctx`) is a struct
-+used by device drivers to map the device submission queues (or device DMA ring
-+buffer), and are the last step of the block layer submission code before the
-+low level device driver taking ownership of the request. To run this queue, the
-+block layer removes requests from the associated software queues and tries to
-+dispatch to the hardware.
-+
-+If it's not possible to send the requests directly to hardware, they will be
-+added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
-+next time the block layer runs a queue, it will send the requests laying at the
-+:c:type:`dispatch` list first, to ensure a fairness dispatch with those
-+requests that were ready to be sent first. The number of hardware queues
-+depends on the number of hardware contexts supported by the hardware and its
-+device driver, but it will not be more than the number of cores of the system.
-+There is no reordering at this stage, and each software queue has a set of
-+hardware queues to send requests for.
-+
-+.. note::
-+
-+        Neither the block layer nor the device protocols guarantee
-+        the order of completion of requests. This must be handled by
-+        higher layers, like the filesystem.
-+
-+Tag-based completion
-+~~~~~~~~~~~~~~~~~~~~
-+
-+In order to indicate which request has been completed, every request is
-+identified by an integer, ranging from 0 to the dispatch queue size. This tag
-+is generated by the block layer and later reused by the device driver, removing
-+the need to create a redundant identifier. When a request is completed in the
-+drive, the tag is sent back to the block layer to notify it of the finalization.
-+This removes the need to do a linear search to find out which IO has been
-+completed.
-+
-+Further reading
-+---------------
-+
-+- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
-+
-+- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
-+
-+- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
-+
-+Source code documentation
-+=========================
-+
-+.. kernel-doc:: include/linux/blk-mq.h
-+
-+.. kernel-doc:: block/blk-mq.c
-diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
-index 026addfc69bc..86dcf7159f99 100644
---- a/Documentation/block/index.rst
-+++ b/Documentation/block/index.rst
-@@ -10,6 +10,7 @@ Block
-    bfq-iosched
-    biodoc
-    biovecs
-+   blk-mq
-    capability
-    cmdline-partition
-    data-integrity
--- 
-2.27.0
+>> +- maxim,rcomp :††††††††††† A value to compensate readings for various
+>> +††††††††††††††† battery chemistries and operating temperatures.
+>> +††††††††††††††† max17040,41 have 2 byte rcomp, default to
+>> +††††††††††††††† 0x97 0x00. All other devices have one byte
+>> +††††††††††††††† rcomp, default to 0x97.
+>>† - interrupts :†††††††††††† Interrupt line see Documentation/devicetree/
+>>††††††††††††††††† bindings/interrupt-controller/interrupts.txt
+>>† - wakeup-source :††††††† This device has wakeup capabilities. Use this
+>> @@ -31,3 +45,11 @@ Example:
+>>††††††††† interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>>††††††††† wakeup-source;
+>>††††† };
+>> +
+>> +††† battery-fuel-gauge@36 {
+>> +††††††† compatible = "maxim,max17048";
+>> +††††††† reg = <0x36>;
+>> +††††††† maxim,rcomp = /bits/ 8 <0x97>;
+>> +††††††† maxim,alert-low-soc-level = <10>;
+>> +††††††† maxim,double-soc;
+>> +††† };
+>>
+>> base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
+>> --
+>> 2.27.0
+>>
+
+P.S sorry for the double email, forgot reply-all
 
