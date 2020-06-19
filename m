@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9340B20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B9C20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578887;
-	bh=6ZTilro9TUJ7Kc4+PNa3OIDDZnDEfHbZlo9JY75x6is=;
+	s=default; t=1592578899;
+	bh=CKS5+HdSoST1TSqe2wRB6hzz6m7D616MmSXTHXlLY/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jlisjz6LIVUdTQTYINMXp7pE8l2e7XPD+n5OiPQxI8p3VxI0tydP0AN9fvNIXw08S
-	 VZYyXfHh87BobtYZgnv2g5tX5SCIwWTmB2qgcA32ty8At4SHwBTIl7xGhZhQy7kUXj
-	 e1tMMxhtJM6JEgRhfoXhBOLsC8Q3Kgnl8rDsZy74=
+	b=uKiDtp8QmF6dNVJya3fbLY8jc89mKm0s7zxgoh2AQxX1p3ZzrBrTiNCLMEx5Ak9fH
+	 Cpw62qJ60cxHV1F6VpHCYD3HPeQtDPQOHW7/EMwDAo+y6Tsm4YNF/5SIcFHM/vp6GL
+	 xq3DH+i5s8++LNh8rpUBZHXGbeufIpAPRkTUBzbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390709AbgFSPBZ (ORCPT
+        id S2390725AbgFSPBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390277AbgFSPAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:34 -0400
+        id S2390660AbgFSPAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DC7C20776;
-        Fri, 19 Jun 2020 15:00:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01B082186A;
+        Fri, 19 Jun 2020 15:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578835;
-        bh=6ZTilro9TUJ7Kc4+PNa3OIDDZnDEfHbZlo9JY75x6is=;
+        s=default; t=1592578845;
+        bh=CKS5+HdSoST1TSqe2wRB6hzz6m7D616MmSXTHXlLY/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqikAN4be4pw8T2hsirdId30QjnDoSYpd+8NdDA0He3wd0qDOqS2ZqPMIg5r7DLti
-         O7v3VZB18IOvPQkBQQ0HDy8Z6ZUMjXWonO103ZuekU4O8iEKSVwihbWMeUXUSPP4eH
-         EWLcC9zXmcSMzfNGO4zuRtNa+/vUs4ZOmpRcwZFE=
+        b=Kf3qJcXgdDvUIr+ovviaHJzeE0lyLTrbqV+/3RRGdnTj19PFGPVIBmMh+sTmiXCNt
+         YtJ8ATJQAX3DGqgEvFVoWpxL098tZ9J0yD08yEwsYZVbS+EyoTrCHWtLXr+muu230l
+         uNc2dY7BKEzDYEJGkZPmR8IcR9FuJiLNZfzYDXGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        greybus-dev@lists.linaro.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 174/267] PCI: Dont disable decoding when mmio_always_on is set
-Date:   Fri, 19 Jun 2020 16:32:39 +0200
-Message-Id: <20200619141657.136698762@linuxfoundation.org>
+Subject: [PATCH 4.19 178/267] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
+Date:   Fri, 19 Jun 2020 16:32:43 +0200
+Message-Id: <20200619141657.320999023@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,37 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit b6caa1d8c80cb71b6162cb1f1ec13aa655026c9f ]
+[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
 
-Don't disable MEM/IO decoding when a device have both non_compliant_bars
-and mmio_always_on.
+Using a fixed 1s timeout for all commands is a bit problematic.
 
-That would allow us quirk devices with junk in BARs but can't disable
-their decoding.
+For some commands it means waiting longer than needed for the timeout to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+1s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Acked-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
+
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/greybus/sdio.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index fa4c386c8cd8..a21c04d8a40b 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1634,7 +1634,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	/* Device class may be changed after fixup */
- 	class = dev->class >> 8;
+diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
+index 38e85033fc4b..afb2e5e5111a 100644
+--- a/drivers/staging/greybus/sdio.c
++++ b/drivers/staging/greybus/sdio.c
+@@ -411,6 +411,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 	struct gb_sdio_command_request request = {0};
+ 	struct gb_sdio_command_response response;
+ 	struct mmc_data *data = host->mrq->data;
++	unsigned int timeout_ms;
+ 	u8 cmd_flags;
+ 	u8 cmd_type;
+ 	int i;
+@@ -469,9 +470,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 		request.data_blksz = cpu_to_le16(data->blksz);
+ 	}
  
--	if (dev->non_compliant_bars) {
-+	if (dev->non_compliant_bars && !dev->mmio_always_on) {
- 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
- 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
- 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+-	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
+-				&request, sizeof(request), &response,
+-				sizeof(response));
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
++		GB_OPERATION_TIMEOUT_DEFAULT;
++
++	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
++					&request, sizeof(request), &response,
++					sizeof(response), timeout_ms);
+ 	if (ret < 0)
+ 		goto out;
+ 
 -- 
 2.25.1
 
