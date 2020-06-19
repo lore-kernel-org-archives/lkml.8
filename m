@@ -3,105 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE30C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3632168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583219;
-	bh=hNXuY4IdArx4X/t8b8+ZXW+5RDTmt+OyvBLO1v2Pzjs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+mAY2GJ+XBQQQitTXm6J9Cw+zcOW5RclRugpS9KVH7H3a+7dJEkYdy0co4LwACUk
-	 afl87b8D/LDxqQqyJ+A/+0Y7u0I8uOrMaRZqUgjznMW6vHnFralE4CpCncyklHxLk5
-	 98zIL1Nhvson19pB906+ZYSil7VmyAgZjbBrwWBs=
+	by mail.kernel.org (Postfix) with ESMTP id 604732168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="brCeUYEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbgFSPEA (ORCPT
+        id S2394393AbgFSQNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391065AbgFSPD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07C9021974;
-        Fri, 19 Jun 2020 15:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579036;
-        bh=hNXuY4IdArx4X/t8b8+ZXW+5RDTmt+OyvBLO1v2Pzjs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqF87qfDeWpmI/Dfs1JpvKKGpg7aRt8sX1hIBkng8xqgOcWk3p6Mz4AWDzeQvtddB
-         5EDN8SXHWUs9Y9/9LfqJtmcOZ+uSUAzlp5v9L0oUkiRE+aE73vd7H4wdW/IB25zVVr
-         v1PlppL0ZhnW58vuCH1t4k9+G8cq8kLuxV35HFWs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 221/267] PCI: vmd: Add device id for VMD device 8086:9A0B
-Date:   Fri, 19 Jun 2020 16:33:26 +0200
-Message-Id: <20200619141659.321557678@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:13:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34690 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391485AbgFSQNf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592583214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8qSToaPYAxy41TNCcRoZVJZv9P7/HBXlbwWJ2Rk2g+I=;
+        b=brCeUYEuGUc8O0y0d0KLSHPvLjnttWqnVwVNsXG29Wd9/k+3bRhDCa1mdV2PJvjpkN51hJ
+        /8wkYuVUlDKOka8QEyv7VYti8FqyKxVRbKMN2LK36YVmkdKBU0aNwNXYUskQ8Uox8tq3Mv
+        FO2dY7BLPJBn28hl8CURyvax+BON6rE=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-lQ_fRiqJOWuYszhH5N8upg-1; Fri, 19 Jun 2020 12:13:32 -0400
+X-MC-Unique: lQ_fRiqJOWuYszhH5N8upg-1
+Received: by mail-qk1-f199.google.com with SMTP id w14so7560834qkb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:13:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8qSToaPYAxy41TNCcRoZVJZv9P7/HBXlbwWJ2Rk2g+I=;
+        b=eeyIAVkb90zGRS4qQzgZ54XCXLgXSHGeGAxArd6W+mj5O/QMppyP1kJDGgRzviwYS7
+         6mF3OuCvzVFcudF6qrPY86Kwo/XLAgAZKUHYuaNUZk4vE/6dtaA0lTGnoggke0xTL5V2
+         uslPBjT45s1u4e1dJrHGO/RZPHXxiBj+JYDnh0jHTycbgXbHBMne4Aw/WX5OilGpk9wP
+         OnQnsWDsc2Hz4qp60ndsGuahSRFEb5HPPN0DJRdq29YCOJJz847+hgu5f1+td72w1ZOm
+         ZlNbymBjrG7Hyw8La5wfRIFZHE8eDXNBflsy99x4TC4m+Famq2XIDwFP6XgUPAoZp1e/
+         TFnQ==
+X-Gm-Message-State: AOAM531BDb+HDCKxg77Arn09ND7P/+bQTfXcJf8trpQ9KrJ1BY9fmmxA
+        LezLWr1D4gjzY3iZ1Bv9FAb7G2MST7+5KwEOiN4I8yfLljgotWdk7YyjSkqhIag3KffXJ9fKuxc
+        4DCyqOIHzRtAlcG79S1haY7AW
+X-Received: by 2002:ac8:46d6:: with SMTP id h22mr4171913qto.145.1592583211270;
+        Fri, 19 Jun 2020 09:13:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxPf3L9dwnzhcKrCo1xqDr8zLwbACSJhy9YaZ+W+WiIy3zkGSSlH37gZSMbp9D62VN2NzGxsA==
+X-Received: by 2002:ac8:46d6:: with SMTP id h22mr4171872qto.145.1592583210896;
+        Fri, 19 Jun 2020 09:13:30 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id s52sm7597075qtb.3.2020.06.19.09.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 09:13:30 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Peter Xu <peterx@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 16/26] mm/powerpc: Use general page fault accounting
+Date:   Fri, 19 Jun 2020 12:13:27 -0400
+Message-Id: <20200619161327.9564-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
+References: <20200619160538.8641-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+Use the general page fault accounting by passing regs into handle_mm_fault().
 
-[ Upstream commit ec11e5c213cc20cac5e8310728b06793448b9f6d ]
-
-This patch adds support for this VMD device which supports the bus
-restriction mode.
-
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+CC: Michael Ellerman <mpe@ellerman.id.au>
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/pci/controller/vmd.c | 2 ++
- include/linux/pci_ids.h      | 1 +
- 2 files changed, 3 insertions(+)
+ arch/powerpc/mm/fault.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index ab36e5ca1aca..b52885020c85 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -866,6 +866,8 @@ static const struct pci_device_id vmd_ids[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
- 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
-+		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b047b0af530d..8d3b39028968 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3003,6 +3003,7 @@
- #define PCI_DEVICE_ID_INTEL_84460GX	0x84ea
- #define PCI_DEVICE_ID_INTEL_IXP4XX	0x8500
- #define PCI_DEVICE_ID_INTEL_IXP2800	0x9004
-+#define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
- #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 992b10c3761c..e325d13efaf5 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -563,7 +563,7 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	 * make sure we exit gracefully rather than endlessly redo
+ 	 * the fault.
+ 	 */
+-	fault = handle_mm_fault(vma, address, flags, NULL);
++	fault = handle_mm_fault(vma, address, flags, regs);
  
- #define PCI_VENDOR_ID_SCALEMP		0x8686
+ #ifdef CONFIG_PPC_MEM_KEYS
+ 	/*
+@@ -604,14 +604,9 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	/*
+ 	 * Major/minor page fault accounting.
+ 	 */
+-	if (major) {
+-		current->maj_flt++;
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
++	if (major)
+ 		cmo_account_page_fault();
+-	} else {
+-		current->min_flt++;
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+-	}
++
+ 	return 0;
+ }
+ NOKPROBE_SYMBOL(__do_page_fault);
 -- 
-2.25.1
-
-
+2.26.2
 
