@@ -2,53 +2,56 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7A2217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20972158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579804;
-	bh=8s7unfe+GuuuqKiQwBF2A355/C9ArBFhCefUl/pMFy0=;
+	s=default; t=1592579812;
+	bh=vvdsUyh4/pxM07iiVjNfdaPg3hzQ8TBXAqWOytNYNZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLM9a4UuBONko4VCVBK8s4xuwED3H4hWKT4VnILR9VgKhnPTTGE7v6nyj3/3tkjz0
-	 l3uWL9VaDvFPXyEjDSofDfVSCuWZEUsrFykSQA6uFjMAUPATdginM1kAPZelM0fVjZ
-	 Lxo+MdTz1zxBoRENr8f0CU/HZYjoRACuHWqHa9P0=
+	b=AMizk/lLdmWXnB8DCl5/gD2hTYM1L5wmdQoA08138rvsTFJHVza2eH7uGVKIUrRbX
+	 Qv+4rFt/qtfS0jIwV8sH3lAfI1iywHMGWKAaOM0U2i81AvqOlWHGyKPgR6R0MizVaO
+	 6EGfNEEYYC7VRa8C0GGr2Dvtg35xhTQjJyNqbDrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392488AbgFSPQm (ORCPT
+        id S2404103AbgFSPQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47248 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391927AbgFSPQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:37 -0400
+        id S2392495AbgFSPQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:16:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA9721582;
-        Fri, 19 Jun 2020 15:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AD322080C;
+        Fri, 19 Jun 2020 15:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579796;
-        bh=8s7unfe+GuuuqKiQwBF2A355/C9ArBFhCefUl/pMFy0=;
+        s=default; t=1592579804;
+        bh=vvdsUyh4/pxM07iiVjNfdaPg3hzQ8TBXAqWOytNYNZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOcZCRrlc6VDgAx/ezph/z8AXzBZmxpZIi+gkeT+2un/nRU8zBtgvyqVJfK9lO1V+
-         KOfUa2RXowVWXhwUttvPFxrZ/Nywg7q6Q7Y4XAkL1H5C1E2M5+pmUTk0M3aqWXznLF
-         iprSZV0zZBqhQbcMERmHC/YewsF4ZbttdFZj6Tyc=
+        b=J+jXRqHq6lgVdwaZb+7vaJ1+qQaUz5Jzc5iRfSl7p0qYjFIh7aaWtYFDmHFEl9TAB
+         KgG9F6dzywb2356A9ZXFvAp5e9GkPV4/KDuAnBYkrA+09u9+XsiAmaHGoz6gN+xexc
+         YJM9lXrVk/PAh6+UyGCcZF38wkDv5W9voC+EupU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 252/261] mtd: rawnand: pasemi: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:34:23 +0200
-Message-Id: <20200619141701.951193560@linuxfoundation.org>
+        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 011/376] media: si2157: Better check for running tuner in init
+Date:   Fri, 19 Jun 2020 16:28:49 +0200
+Message-Id: <20200619141710.897023785@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,49 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Brad Love <brad@nextdimension.cc>
 
-commit f51466901c07e6930435d30b02a21f0841174f61 upstream.
+[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
 
-nand_cleanup() is supposed to be called on error after a successful
-call to nand_scan() to free all NAND resources.
+Getting the Xtal trim property to check if running is less error prone.
+Reset if_frequency if state is unknown.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible, hence pointing it as the commit to
-fix for backporting purposes, even if this commit is not introducing
-any bug.
+Replaces the previous "garbage check".
 
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-41-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Brad Love <brad@nextdimension.cc>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/pasemi_nand.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/tuners/si2157.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/drivers/mtd/nand/raw/pasemi_nand.c
-+++ b/drivers/mtd/nand/raw/pasemi_nand.c
-@@ -146,7 +146,7 @@ static int pasemi_nand_probe(struct plat
- 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
- 		dev_err(dev, "Unable to register MTD device\n");
- 		err = -ENODEV;
--		goto out_lpc;
-+		goto out_cleanup_nand;
- 	}
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index 898e0f9f8b70..20487b25fbe1 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -75,24 +75,23 @@ static int si2157_init(struct dvb_frontend *fe)
+ 	struct si2157_cmd cmd;
+ 	const struct firmware *fw;
+ 	const char *fw_name;
+-	unsigned int uitmp, chip_id;
++	unsigned int chip_id, xtal_trim;
  
- 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
-@@ -154,6 +154,8 @@ static int pasemi_nand_probe(struct plat
+ 	dev_dbg(&client->dev, "\n");
  
- 	return 0;
+-	/* Returned IF frequency is garbage when firmware is not running */
+-	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
++	/* Try to get Xtal trim property, to verify tuner still running */
++	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
+ 	cmd.wlen = 4;
+ 	cmd.rlen = 4;
+ 	ret = si2157_cmd_execute(client, &cmd);
+-	if (ret)
+-		goto err;
  
-+ out_cleanup_nand:
-+	nand_cleanup(chip);
-  out_lpc:
- 	release_region(lpcctl, 4);
-  out_ior:
+-	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
+-	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
++	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
+ 
+-	if (uitmp == dev->if_frequency / 1000)
++	if (ret == 0 && xtal_trim < 16)
+ 		goto warm;
+ 
++	dev->if_frequency = 0; /* we no longer know current tuner state */
++
+ 	/* power up */
+ 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
+ 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+-- 
+2.25.1
+
 
 
