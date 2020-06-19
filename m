@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B700EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C121C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9412D20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B33220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582013;
-	bh=dCNKZt2vzXQyX7n5Z8K3XEJ/qwtJSmWy73gkWpZ/lnA=;
+	s=default; t=1592582016;
+	bh=pRLBDBQ9z6eh6B+AyGoduKroeDK6488kLgakcE/Mq3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOx1Ms/ffpe2Gqm3lhBEt9AL0YbNKM3fraqzJswYwG23xs0ynlW0BNRVzO0nI8cDg
-	 jSYsOFtiK2ABGRACyKuPztmsSWjUY5TqTwkUQMzso8tk/RFqmdK6Hy2F2YW69oVapB
-	 f34OOegAkRzJvQcxmS5bxeA0iIhm7yBtvgT0RqzM=
+	b=dlfh32qQCR334wFbX/rhOLUua9rUfiYwqY48Baxm1Jo5nSZUZbogEuXR48eSYUZmX
+	 a46O8txQB/D3TvIBr/swslVwrkX80tiX5IQgeQXclpuSnR2YI0cZOXbecM01LZPgRU
+	 XmeWfNH1NpjkrQIih8UCCNheCvn/01Ol4c96t8Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392568AbgFSPWa (ORCPT
+        id S2405396AbgFSPxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404046AbgFSPPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:46 -0400
+        id S2388839AbgFSPWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45CD2080C;
-        Fri, 19 Jun 2020 15:15:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3139821582;
+        Fri, 19 Jun 2020 15:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579746;
-        bh=dCNKZt2vzXQyX7n5Z8K3XEJ/qwtJSmWy73gkWpZ/lnA=;
+        s=default; t=1592580148;
+        bh=pRLBDBQ9z6eh6B+AyGoduKroeDK6488kLgakcE/Mq3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdqCAf2RdzrcVynMY2ZGp8ESyGJJYgiXP8vQjv611k98m2o4513PTAVOyF07J3tk8
-         UVNVZHcQ+rb0S2rqXG/3m8mxAkqphBOR2S8LrfYBbrv2Tg8xWmm+AkcCmItRNAZdOJ
-         QpA1QULaLOwRqJwyp9P23pTwHfdnFmELLZqw3Qs4=
+        b=ut8kNZI/keUu4wNmSYkFdELuwFpP9pgZIQkrchxd2bdKNoO/WVHhxh8mfJNanFnMP
+         w5QRs3IoA3KBJoMpuDoM87EKyAli1TSurYVgzWUIgNqPTnwnQTxkCTf5OC1hwbckD4
+         ufQcxpWUu9elwLdm5nWvClcKrlga5zKj6WHnOj3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 249/261] mtd: rawnand: oxnas: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:34:20 +0200
-Message-Id: <20200619141701.822430425@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 140/376] iocost_monitor: drop string wrap around numbers when outputting json
+Date:   Fri, 19 Jun 2020 16:30:58 +0200
+Message-Id: <20200619141716.961418697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,49 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit 154298e2a3f6c9ce1d76cdb48d89fd5b107ea1a3 upstream.
+[ Upstream commit 21f3cfeab304fc07b90d93d98d4d2f62110fe6b2 ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+Wrapping numbers in strings is used by some to work around bit-width issues in
+some enviroments. The problem isn't innate to json and the workaround seems to
+cause more integration problems than help. Let's drop the string wrapping.
 
-While at it, be consistent and move the function call in the error
-path thanks to a goto statement.
-
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-37-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/cgroup/iocost_monitor.py | 42 +++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
---- a/drivers/mtd/nand/raw/oxnas_nand.c
-+++ b/drivers/mtd/nand/raw/oxnas_nand.c
-@@ -140,10 +140,8 @@ static int oxnas_nand_probe(struct platf
- 			goto err_release_child;
+diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
+index 9d8e9613008a..103605f5be8c 100644
+--- a/tools/cgroup/iocost_monitor.py
++++ b/tools/cgroup/iocost_monitor.py
+@@ -112,14 +112,14 @@ class IocStat:
  
- 		err = mtd_device_register(mtd, NULL, 0);
--		if (err) {
--			nand_release(chip);
--			goto err_release_child;
--		}
-+		if (err)
-+			goto err_cleanup_nand;
+     def dict(self, now):
+         return { 'device'               : devname,
+-                 'timestamp'            : str(now),
+-                 'enabled'              : str(int(self.enabled)),
+-                 'running'              : str(int(self.running)),
+-                 'period_ms'            : str(self.period_ms),
+-                 'period_at'            : str(self.period_at),
+-                 'period_vtime_at'      : str(self.vperiod_at),
+-                 'busy_level'           : str(self.busy_level),
+-                 'vrate_pct'            : str(self.vrate_pct), }
++                 'timestamp'            : now,
++                 'enabled'              : self.enabled,
++                 'running'              : self.running,
++                 'period_ms'            : self.period_ms,
++                 'period_at'            : self.period_at,
++                 'period_vtime_at'      : self.vperiod_at,
++                 'busy_level'           : self.busy_level,
++                 'vrate_pct'            : self.vrate_pct, }
  
- 		oxnas->chips[nchips] = chip;
- 		++nchips;
-@@ -159,6 +157,8 @@ static int oxnas_nand_probe(struct platf
+     def table_preamble_str(self):
+         state = ('RUN' if self.running else 'IDLE') if self.enabled else 'OFF'
+@@ -179,19 +179,19 @@ class IocgStat:
  
- 	return 0;
- 
-+err_cleanup_nand:
-+	nand_cleanup(chip);
- err_release_child:
- 	of_node_put(nand_np);
- err_clk_unprepare:
+     def dict(self, now, path):
+         out = { 'cgroup'                : path,
+-                'timestamp'             : str(now),
+-                'is_active'             : str(int(self.is_active)),
+-                'weight'                : str(self.weight),
+-                'weight_active'         : str(self.active),
+-                'weight_inuse'          : str(self.inuse),
+-                'hweight_active_pct'    : str(self.hwa_pct),
+-                'hweight_inuse_pct'     : str(self.hwi_pct),
+-                'inflight_pct'          : str(self.inflight_pct),
+-                'debt_ms'               : str(self.debt_ms),
+-                'use_delay'             : str(self.use_delay),
+-                'delay_ms'              : str(self.delay_ms),
+-                'usage_pct'             : str(self.usage),
+-                'address'               : str(hex(self.address)) }
++                'timestamp'             : now,
++                'is_active'             : self.is_active,
++                'weight'                : self.weight,
++                'weight_active'         : self.active,
++                'weight_inuse'          : self.inuse,
++                'hweight_active_pct'    : self.hwa_pct,
++                'hweight_inuse_pct'     : self.hwi_pct,
++                'inflight_pct'          : self.inflight_pct,
++                'debt_ms'               : self.debt_ms,
++                'use_delay'             : self.use_delay,
++                'delay_ms'              : self.delay_ms,
++                'usage_pct'             : self.usage,
++                'address'               : self.address }
+         for i in range(len(self.usages)):
+             out[f'usage_pct_{i}'] = str(self.usages[i])
+         return out
+-- 
+2.25.1
+
 
 
