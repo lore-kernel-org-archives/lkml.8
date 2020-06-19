@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1BB21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F8C206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584998;
-	bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
+	s=default; t=1592585001;
+	bh=dKI2bBLdOxhTvg24W0G8MlZlOLhMnxcDkqMRMjlOq/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxVSeTcF3GStXFXPJjqka9AEw9OLO5a9eD3KhAfR1aeKLbSMuI+XHzC/p3/1yKvt3
-	 +6GzvEDtp2Kx8t7MEdGdHAtzeRao01HBs/lrov0UaC6X4+uTaQr/J6zTnUqgzmhW7t
-	 ijeKB+5Aoaz5AuqCAC3Ox8i8bY4NfYriCNxz5FNY=
+	b=WKnuWCMYJyUNuzzXg4sVf54qnf3hmYqGrwx9Jig99FIkDGXWs6qlOoZ8uso2jcpBF
+	 wWWoLMbZOEf+5xM27QE0hwZYLTghaWocSJKRHiW3nCdRkWDSTJ6bhAdNUqWf/kKpAc
+	 doZxueB5eQpu/XbvCzreSgtCf+3P0O8IETtBni+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395541AbgFSQnP (ORCPT
+        id S2392765AbgFSQnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387924AbgFSOnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:37 -0400
+        id S2388143AbgFSOne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB1082168B;
-        Fri, 19 Jun 2020 14:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DF720CC7;
+        Fri, 19 Jun 2020 14:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577817;
-        bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
+        s=default; t=1592577814;
+        bh=dKI2bBLdOxhTvg24W0G8MlZlOLhMnxcDkqMRMjlOq/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ie1f9veYeQUGgL/ewulAhH8Cf5OJjXqdovrX116zlExP02Gug7zjJfhjN6F+RuYdv
-         ZEtSBo6RFccfDqZHxw5YNNoMSd/L9SqhUmOmvZt45XK1Q0wXx/+qe4Dn0PNSKy8fqg
-         ixXMLcUtE84f2bz8KZCC+x/FljoJNWvIpuf70u1k=
+        b=loX73Dr5Lyc5nL6fAIKK/aOjdZ4qHbLOpE4LwpPHSvXpDndreTlmQPdCLVuMcpIHS
+         bNYeQvuWss6bVth8H+uUK2IpRINCNMkxibuKSA3myPBw/QglZ0Xd/hfLtQ27bTBlaY
+         hBgocONQfPPWGvYT+VZiyDOVvRHEQUdNAtOq9gxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.9 102/128] ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
-Date:   Fri, 19 Jun 2020 16:33:16 +0200
-Message-Id: <20200619141625.517958714@linuxfoundation.org>
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 4.9 101/128] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
+Date:   Fri, 19 Jun 2020 16:33:15 +0200
+Message-Id: <20200619141625.468965144@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit c36a71b4e35ab35340facdd6964a00956b9fef0a upstream.
+commit 0c4395fb2aa77341269ea619c5419ea48171883f upstream.
 
-If eh->eh_max is 0, EXT_MAX_EXTENT/INDEX would evaluate to unsigned
-(-1) resulting in illegal memory accesses. Although there is no
-consistent repro, we see that generic/019 sometimes crashes because of
-this bug.
+Don't immediately return if the signature is portable and security.ima is
+not present. Just set error so that memory allocated is freed before
+returning from evm_calc_hmac_or_hash().
 
-Ran gce-xfstests smoke and verified that there were no regressions.
-
-Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-Link: https://lore.kernel.org/r/20200421023959.20879-2-harshadshirwadkar@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4_extents.h |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ security/integrity/evm/evm_crypto.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/ext4_extents.h
-+++ b/fs/ext4/ext4_extents.h
-@@ -169,10 +169,13 @@ struct ext4_ext_path {
- 	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
- #define EXT_LAST_INDEX(__hdr__) \
- 	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
--#define EXT_MAX_EXTENT(__hdr__) \
--	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
-+#define EXT_MAX_EXTENT(__hdr__)	\
-+	((le16_to_cpu((__hdr__)->eh_max)) ? \
-+	((EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) \
-+					: 0)
- #define EXT_MAX_INDEX(__hdr__) \
--	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
-+	((le16_to_cpu((__hdr__)->eh_max)) ? \
-+	((EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) : 0)
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -240,7 +240,7 @@ static int evm_calc_hmac_or_hash(struct
  
- static inline struct ext4_extent_header *ext_inode_hdr(struct inode *inode)
- {
+ 	/* Portable EVM signatures must include an IMA hash */
+ 	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
+-		return -EPERM;
++		error = -EPERM;
+ out:
+ 	kfree(xattr_value);
+ 	kfree(desc);
 
 
