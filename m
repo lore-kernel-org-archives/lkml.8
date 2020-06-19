@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A110C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756C82067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D9320809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584528;
-	bh=KeY8v4RJ7yN+WDz+J0DVALBSxCJOqAb2txDykQhp+Vw=;
+	s=default; t=1592584539;
+	bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r5sUShyTTkM8yzQ7GEtjoyT7DFhLK26VUqOfpXnjI+1Q9N+KIAuoeZmedqf5c28uI
-	 D/IhTKC8/UsO0FvJ/n7+fSe9bSlDOe8CalF7EhMmhVGnGN1BW+9JtlxUgmEcjaRat0
-	 ExjBzabbIIiP6Yvr5xFmL349vrB1K1GZ0s7Hr00o=
+	b=WwrBTy2Gu9dQ0RHgQ/BxLCaCYDiAg2bUOHMn0x2SdgbohHX+51qLCSrKis7XlIVfE
+	 V6n/k7021KRsgXjhzVZEZweer1roJItCn2g9X1monAECigOlEa79L/km1/fN5dXu2z
+	 +jdjgTGVGzZs7Vqdn8JSwqc2yoq7G/x0MYTR6IBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395206AbgFSQf0 (ORCPT
+        id S2395210AbgFSQfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:35:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389262AbgFSOtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:55 -0400
+        id S2387935AbgFSOtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196F52158C;
-        Fri, 19 Jun 2020 14:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E069920DD4;
+        Fri, 19 Jun 2020 14:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578194;
-        bh=KeY8v4RJ7yN+WDz+J0DVALBSxCJOqAb2txDykQhp+Vw=;
+        s=default; t=1592578182;
+        bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GlxEwThBJmzW7LE4SO6aozeBcJEbu1bXNub5PqKAHiur6OE36Fg8sXYtoRhJVpxxS
-         qmdS/E2K3Wu+o/VKdNIbzhyG8AWvLVaKOK4a0Zbi/VUPvGP/qvimdQkoAOkVqDfdm1
-         7yzSuw06a8C/wDcMpbbodFFsongc+ZGaErlINDo0=
+        b=rfi0WfGzdeP+8KtVsECu2Vp74etXfhv7NJXe+hgRTL6f/G4IElC/3NO7wNDkatVCg
+         igSBFqlbju1EV0tHRJr7T9VlTqrCk+jUyOXCeV2JAUnzpeiOKb9wXQtl1qgG/HUEe6
+         17ofgKm0x5hrBfdGruZRxACNVj+WZsiGwJOwHV7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kexec@lists.infradead.org,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2@marvell.com,
-        Manish Chopra <manishc@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/190] net: qed*: Reduce RX and TX default ring count when running inside kdump kernel
-Date:   Fri, 19 Jun 2020 16:32:44 +0200
-Message-Id: <20200619141639.584026001@linuxfoundation.org>
+Subject: [PATCH 4.14 114/190] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Fri, 19 Jun 2020 16:32:39 +0200
+Message-Id: <20200619141639.329046102@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -64,142 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhupesh Sharma <bhsharma@redhat.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 73e030977f7884dbe1be0018bab517e8d02760f8 ]
+[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
 
-Normally kdump kernel(s) run under severe memory constraint with the
-basic idea being to save the crashdump vmcore reliably when the primary
-kernel panics/hangs.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-Currently the qed* ethernet driver ends up consuming a lot of memory in
-the kdump kernel, leading to kdump kernel panic when one tries to save
-the vmcore via ssh/nfs (thus utilizing the services of the underlying
-qed* network interfaces).
-
-An example OOM message log seen in the kdump kernel can be seen here
-[1], with crashkernel size reservation of 512M.
-
-Using tools like memstrack (see [2]), we can track the modules taking up
-the bulk of memory in the kdump kernel and organize the memory usage
-output as per 'highest allocator first'. An example log for the OOM case
-indicates that the qed* modules end up allocating approximately 216M
-memory, which is a large part of the total crashkernel size:
-
- dracut-pre-pivot[676]: ======== Report format module_summary: ========
- dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
- dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
-
-This patch reduces the default RX and TX ring count from 1024 to 64
-when running inside kdump kernel, which leads to a significant memory
-saving.
-
-An example log with the patch applied shows the reduced memory
-allocation in the kdump kernel:
- dracut-pre-pivot[674]: ======== Report format module_summary: ========
- dracut-pre-pivot[674]: Module qed using 141.8MB (2268 pages), peak allocation 141.8MB (2268 pages)
- <..snip..>
-[dracut-pre-pivot[674]: Module qede using 4.8MB (76 pages), peak allocation 4.9MB (78 pages)
-
-Tested crashdump vmcore save via ssh/nfs protocol using underlying qed*
-network interface after applying this patch.
-
-[1] OOM log:
-------------
-
- kworker/0:6: page allocation failure: order:6,
- mode:0x60c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null)
- kworker/0:6 cpuset=/ mems_allowed=0
- CPU: 0 PID: 145 Comm: kworker/0:6 Not tainted 4.18.0-109.el8.aarch64 #1
- Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL025
- 01/18/2019
- Workqueue: events work_for_cpu_fn
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x24/0x30
-  dump_stack+0x90/0xb4
-  warn_alloc+0xf4/0x178
-  __alloc_pages_nodemask+0xcac/0xd58
-  alloc_pages_current+0x8c/0xf8
-  kmalloc_order_trace+0x38/0x108
-  qed_iov_alloc+0x40/0x248 [qed]
-  qed_resc_alloc+0x224/0x518 [qed]
-  qed_slowpath_start+0x254/0x928 [qed]
-   __qede_probe+0xf8/0x5e0 [qede]
-  qede_probe+0x68/0xd8 [qede]
-  local_pci_probe+0x44/0xa8
-  work_for_cpu_fn+0x20/0x30
-  process_one_work+0x1ac/0x3e8
-  worker_thread+0x44/0x448
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x18
-  Cannot start slowpath
-  qede: probe of 0000:05:00.1 failed with error -12
-
-[2]. Memstrack tool: https://github.com/ryncsn/memstrack
-
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Cc: Manish Chopra <manishc@marvell.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
- drivers/net/ethernet/qlogic/qede/qede_main.c | 11 +++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index a80531b5aecc..c132b08cefde 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -528,12 +528,14 @@ void qede_update_rx_prod(struct qede_dev *edev, struct qede_rx_queue *rxq);
- #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
- #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
- #define NUM_RX_BDS_MIN		128
-+#define NUM_RX_BDS_KDUMP_MIN	63
- #define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 5977884b008e..a4a06d173858 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -279,12 +279,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
  
- #define TX_RING_SIZE_POW	13
- #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
- #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
- #define NUM_TX_BDS_MIN		128
-+#define NUM_TX_BDS_KDUMP_MIN	63
- #define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
- 
- #define QEDE_MIN_PKT_LEN		64
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index dab202f343c6..8bb734486bf3 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -29,6 +29,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
-+#include <linux/crash_dump.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/version.h>
-@@ -624,8 +625,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
- 	edev->dp_module = dp_module;
- 	edev->dp_level = dp_level;
- 	edev->ops = qed_ops;
--	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
--	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
 +
-+	if (is_kdump_kernel()) {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_KDUMP_MIN;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_KDUMP_MIN;
-+	} else {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-+	}
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
  
- 	DP_INFO(edev, "Allocated netdev with %d tx queues and %d rx queues\n",
- 		info->num_queues, info->num_queues);
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  LINKER_LOAD_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index baa34e4deb78..516e593a8ee9 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -87,7 +87,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
+ 
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 36f2e860ba3e..be63fff95b2a 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -50,7 +50,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = LINKER_LOAD_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
 -- 
 2.25.1
 
