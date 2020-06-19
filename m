@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E36C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A4D2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A1121532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582677;
-	bh=LlEmdwwdSR30dYv/6jAzupX03aWWG4GzpIKmnzZutfA=;
+	s=default; t=1592582678;
+	bh=0YVnDIreOK/Qgcug016q4I9zteEoAUnaRTsD50qmXB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=els+4DMzFwPsoagUxo8WSjrGlS962PiCUyzHuONpusv8CetGbfuyakIrLlwc0h+yT
-	 OEsTfgrDxF96N9zCqPbhAGOGb2OYIoZKG1HY+iU/8kOsSVegPKdze7WBQILbp2bCh8
-	 keQNklfEAwUblICAiMDoQiKs5y6wtlt11Xs06HLc=
+	b=Q15Xw9IM6ADjKa7CuN0tEGMBVMv0rM3VNhELm1hn8PlRSNy2S86ym0FMPC8IG5lrp
+	 dGRgJAXc8Eyk+pRfBYVwpexgAE17Va74CjoGTI9yKvQrK2/ERmppi/VRvtPp/qtZ1D
+	 3398WfB4sCYrRAzqriaUlrEUtB9mOyQZpYoAOguI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392049AbgFSPKr (ORCPT
+        id S2391624AbgFSPKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391566AbgFSPKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:34 -0400
+        id S2392011AbgFSPKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E623E2186A;
-        Fri, 19 Jun 2020 15:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CD3206FA;
+        Fri, 19 Jun 2020 15:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579433;
-        bh=LlEmdwwdSR30dYv/6jAzupX03aWWG4GzpIKmnzZutfA=;
+        s=default; t=1592579422;
+        bh=0YVnDIreOK/Qgcug016q4I9zteEoAUnaRTsD50qmXB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8fn4C7h0YZ1KNgbPqlACUn6Re05tFsIn7Dxu0crzKkCw8XRo+gsaLTDavhxuk5oS
-         tCkuVSMYH8SBjmrthqzLlIT9jtA3Vwzh9S3A+/pQpB3iTyBz/p4v5106QYBjfl6Pik
-         KrnttlB8EJfli9KtsZ70WQ4rW+3T2Z2MT1SvJh5s=
+        b=XdcUN/ku7r101smX8Ajd1PfHbMLxCVThOKTKaioWuVHF8fOTF9Q0deZFkH4DsoHj+
+         2EV4iGYl3gYlSQcie7KSxlrwcG4+DqP0Lg59fwJ0sCLqdI4FHpJWzrzf2x8kNnzxxW
+         yQ8K3leSzTPSFlghFEXM5q/Yo9Qb89+DStmWooLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/261] btrfs: qgroup: mark qgroup inconsistent if were inherting snapshot to a new qgroup
-Date:   Fri, 19 Jun 2020 16:32:25 +0200
-Message-Id: <20200619141656.276038496@linuxfoundation.org>
+Subject: [PATCH 5.4 130/261] x86/mm: Stop printing BRK addresses
+Date:   Fri, 19 Jun 2020 16:32:21 +0200
+Message-Id: <20200619141656.093870447@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,121 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit cbab8ade585a18c4334b085564d9d046e01a3f70 ]
+[ Upstream commit 67d631b7c05eff955ccff4139327f0f92a5117e5 ]
 
-[BUG]
-For the following operation, qgroup is guaranteed to be screwed up due
-to snapshot adding to a new qgroup:
+This currently leaks kernel physical addresses into userspace.
 
-  # mkfs.btrfs -f $dev
-  # mount $dev $mnt
-  # btrfs qgroup en $mnt
-  # btrfs subv create $mnt/src
-  # xfs_io -f -c "pwrite 0 1m" $mnt/src/file
-  # sync
-  # btrfs qgroup create 1/0 $mnt/src
-  # btrfs subv snapshot -i 1/0 $mnt/src $mnt/snapshot
-  # btrfs qgroup show -prce $mnt/src
-  qgroupid         rfer         excl     max_rfer     max_excl parent  child
-  --------         ----         ----     --------     -------- ------  -----
-  0/5          16.00KiB     16.00KiB         none         none ---     ---
-  0/257         1.02MiB     16.00KiB         none         none ---     ---
-  0/258         1.02MiB     16.00KiB         none         none 1/0     ---
-  1/0             0.00B        0.00B         none         none ---     0/258
-	        ^^^^^^^^^^^^^^^^^^^^
-
-[CAUSE]
-The problem is in btrfs_qgroup_inherit(), we don't have good enough
-check to determine if the new relation would break the existing
-accounting.
-
-Unlike btrfs_add_qgroup_relation(), which has proper check to determine
-if we can do quick update without a rescan, in btrfs_qgroup_inherit() we
-can even assign a snapshot to multiple qgroups.
-
-[FIX]
-Fix it by manually marking qgroup inconsistent for snapshot inheritance.
-
-For subvolume creation, since all its extents are exclusively owned, we
-don't need to rescan.
-
-In theory, we should call relation check like quick_update_accounting()
-when doing qgroup inheritance and inform user about qgroup accounting
-inconsistency.
-
-But we don't have good mechanism to relay that back to the user in the
-snapshot creation context, thus we can only silently mark the qgroup
-inconsistent.
-
-Anyway, user shouldn't use qgroup inheritance during snapshot creation,
-and should add qgroup relationship after snapshot creation by 'btrfs
-qgroup assign', which has a much better UI to inform user about qgroup
-inconsistent and kick in rescan automatically.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Link: https://lkml.kernel.org/r/20200229231120.1147527-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/mm/init.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 590defdf8860..b94f6f99e90d 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2636,6 +2636,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 	struct btrfs_root *quota_root;
- 	struct btrfs_qgroup *srcgroup;
- 	struct btrfs_qgroup *dstgroup;
-+	bool need_rescan = false;
- 	u32 level_size = 0;
- 	u64 nums;
- 
-@@ -2779,6 +2780,13 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 				goto unlock;
- 		}
- 		++i_qgroups;
-+
-+		/*
-+		 * If we're doing a snapshot, and adding the snapshot to a new
-+		 * qgroup, the numbers are guaranteed to be incorrect.
-+		 */
-+		if (srcid)
-+			need_rescan = true;
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index fd10d91a6115..af352e228fa2 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -121,8 +121,6 @@ __ref void *alloc_low_pages(unsigned int num)
+ 	} else {
+ 		pfn = pgt_buf_end;
+ 		pgt_buf_end += num;
+-		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
+-			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
  	}
  
- 	for (i = 0; i <  inherit->num_ref_copies; ++i, i_qgroups += 2) {
-@@ -2798,6 +2806,9 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 
- 		dst->rfer = src->rfer - level_size;
- 		dst->rfer_cmpr = src->rfer_cmpr - level_size;
-+
-+		/* Manually tweaking numbers certainly needs a rescan */
-+		need_rescan = true;
- 	}
- 	for (i = 0; i <  inherit->num_excl_copies; ++i, i_qgroups += 2) {
- 		struct btrfs_qgroup *src;
-@@ -2816,6 +2827,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 
- 		dst->excl = src->excl + level_size;
- 		dst->excl_cmpr = src->excl_cmpr + level_size;
-+		need_rescan = true;
- 	}
- 
- unlock:
-@@ -2823,6 +2835,8 @@ unlock:
- out:
- 	if (!committing)
- 		mutex_unlock(&fs_info->qgroup_ioctl_lock);
-+	if (need_rescan)
-+		fs_info->qgroup_flags |= BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
- 	return ret;
- }
- 
+ 	for (i = 0; i < num; i++) {
 -- 
 2.25.1
 
