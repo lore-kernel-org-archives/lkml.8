@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A92C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF17321527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30BB21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577699;
-	bh=H5xDzHKG9GRHH4R47pWgDEYLAYfTowtEAnmIXJQZqIg=;
+	s=default; t=1592577704;
+	bh=lhdD1PiLme7UhYUKgbRViewWMsE28bVNHQ/k6U2U2AA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSsm3tfw6qy6yh3JDKGAhQ9PcwXL+W2i0pC8Nb+xsUDFgrqlL0Q1Y+Q8FFuXeiiml
-	 md2JVEPCWyHSPi6HbXm8QSNNRQiQj2eFK75KWFpvyJPSFK316pJAwq+TrEP0p/YqDq
-	 61ZnSAMmOhX7ITvOrmGMr2sbDbzi9OYh0aKyJilo=
+	b=xiizcqTWA5hXDJAO8PzHjdIPrCvRl8wL9+Dq1Eqo0Y5pMJn/FMoGBoKoyfxd8gfX1
+	 1LXO/BkATUzqsi1uVDtTIn4+hsiqkRj0cNBSMXiWG/bnJARnMfN7IfEyFvnK+ULcfn
+	 dAPT0V+Scfb9zeXz+Zjg7RZDmMbNbkyKRI6JZP2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbgFSOlg (ORCPT
+        id S2388281AbgFSOln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60092 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388265AbgFSOlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:31 -0400
+        id S2388244AbgFSOle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B000021527;
-        Fri, 19 Jun 2020 14:41:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DEB921582;
+        Fri, 19 Jun 2020 14:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577691;
-        bh=H5xDzHKG9GRHH4R47pWgDEYLAYfTowtEAnmIXJQZqIg=;
+        s=default; t=1592577693;
+        bh=lhdD1PiLme7UhYUKgbRViewWMsE28bVNHQ/k6U2U2AA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlmhxmzbBgBQqCy2xjWJLFb07tyd7Bhst29UnS8wJ6t5q4Bm3JhjQJUpFxUyhD3Xq
-         +3cTsgWyDhS0YDZSb/L2OgTbXUdSajkr2Nx413uSlCvrQk9BsX9FGWTD67JzsoxfPY
-         10Si6ldzUexdDD+BOLOlBFKToL9StYk0nVtKF5YE=
+        b=bsb3rqaMILGuDgfGCCBhKsj0X4SQZIQbXGpX1HU89GCfzCFR2aRwUx0rIJJqzBP3q
+         POnw+RNljsmQ6PC3yQc2Ng9ui1y7++wdB10m0DEfu5VbiwLhMtF4sJxQZR3kUggKI/
+         V+QAPq3ofECoDvTjVYblD/gSLyIzYKEY6cqkP588=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 049/128] fat: dont allow to mount if the FAT length == 0
-Date:   Fri, 19 Jun 2020 16:32:23 +0200
-Message-Id: <20200619141622.792607521@linuxfoundation.org>
+        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
+        Barret Rhoden <brho@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.9 050/128] perf: Add cond_resched() to task_function_call()
+Date:   Fri, 19 Jun 2020 16:32:24 +0200
+Message-Id: <20200619141622.847720330@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -64,42 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Barret Rhoden <brho@google.com>
 
-commit b1b65750b8db67834482f758fc385bfa7560d228 upstream.
+commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b upstream.
 
-If FAT length == 0, the image doesn't have any data. And it can be the
-cause of overlapping the root dir and FAT entries.
+Under rare circumstances, task_function_call() can repeatedly fail and
+cause a soft lockup.
 
-Also Windows treats it as invalid format.
+There is a slight race where the process is no longer running on the cpu
+we targeted by the time remote_function() runs.  The code will simply
+try again.  If we are very unlucky, this will continue to fail, until a
+watchdog fires.  This can happen in a heavily loaded, multi-core virtual
+machine.
 
-Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
+Signed-off-by: Barret Rhoden <brho@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fat/inode.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/events/core.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -1512,6 +1512,12 @@ static int fat_read_bpb(struct super_blo
- 		goto out;
- 	}
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -90,11 +90,11 @@ static void remote_function(void *data)
+  * @info:	the function call argument
+  *
+  * Calls the function @func when the task is currently running. This might
+- * be on the current CPU, which just calls the function directly
++ * be on the current CPU, which just calls the function directly.  This will
++ * retry due to any failures in smp_call_function_single(), such as if the
++ * task_cpu() goes offline concurrently.
+  *
+- * returns: @func return value, or
+- *	    -ESRCH  - when the process isn't running
+- *	    -EAGAIN - when the process moved away
++ * returns @func return value or -ESRCH when the process isn't running
+  */
+ static int
+ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+@@ -107,11 +107,16 @@ task_function_call(struct task_struct *p
+ 	};
+ 	int ret;
  
-+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
-+		if (!silent)
-+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
-+		goto out;
-+	}
+-	do {
+-		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
+-		if (!ret)
+-			ret = data.ret;
+-	} while (ret == -EAGAIN);
++	for (;;) {
++		ret = smp_call_function_single(task_cpu(p), remote_function,
++					       &data, 1);
++		ret = !ret ? data.ret : -EAGAIN;
 +
- 	error = 0;
++		if (ret != -EAGAIN)
++			break;
++
++		cond_resched();
++	}
  
- out:
+ 	return ret;
+ }
 
 
