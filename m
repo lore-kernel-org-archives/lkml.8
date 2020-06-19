@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50120C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2224421582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826BA21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580399;
-	bh=5itkUDluYpaS3Zxz7oL2dZm1OCRzVTnguZY9d4Ovqcg=;
+	s=default; t=1592580402;
+	bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGZ37I8iWBVCZleyigcawcnQvBHJy2ohd2tNuOrUOI25XelCjK7WP3VMQ12x3hErs
-	 8fjXp8RtCb6IsGOtgKfNpukJAAQrovOR9q1P+FiWIW2KGOIZJlGR28SXx+1z/0CgJc
-	 c6cIUdQENibnSi52s6HxiHkY1pcdZZLFF9ttdnoA=
+	b=aOKaqWeTVDyBIH86o78ZKxV4kk9/bHeVK9CBpx6Vxx8TZxmZKKh7g5pUU6m4ltuMW
+	 Wrq7mT/X0hnbDaWSRg2oubroYhHJ/ikKh0hQLE9ss5rJYRx+d38nwQHgqPphoStY4k
+	 lfyeQeOUfS44Q9pCLUZ6QyVok6/SYQwKkER4T4TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393006AbgFSP0i (ORCPT
+        id S2393503AbgFSP0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388599AbgFSPYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:30 -0400
+        id S2393288AbgFSPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BCBD21548;
-        Fri, 19 Jun 2020 15:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A77217A0;
+        Fri, 19 Jun 2020 15:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580269;
-        bh=5itkUDluYpaS3Zxz7oL2dZm1OCRzVTnguZY9d4Ovqcg=;
+        s=default; t=1592580279;
+        bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UYH+yIq7+p673tfPFaG2wKSXwRioVrEzQ01gYF8rskqDdo8WIeLboZSi8B2mdfzkb
-         TsHX6HmKXQM8iFdEAKncdJGKrYO/gDuff9M/XWzyclzeVvRdDJkvawTErmpUTp7Ahp
-         NdlcV8D0/u167zwwORc37ze86/97jsL7E2DoU91Y=
+        b=UNnUjEi3NmxkJ87Ws/gH9eCjx5AjQSDmwV+lmkE1g23XUgeZYmk76Gv15moZkI9Do
+         DXae9FuLwFnWPLLwRdzTYvuJ9E4kWswODm/UwzXIav9q7UMPuf1P7B39t7ddQ/egPZ
+         c5P5ud/VYmT1xm6UYem3K7/AMHkUN5UyLko4bsyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 178/376] mt76: mt7663: fix mt7615_mac_cca_stats_reset routine
-Date:   Fri, 19 Jun 2020 16:31:36 +0200
-Message-Id: <20200619141718.780052087@linuxfoundation.org>
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 190/376] veth: Adjust hard_start offset on redirect XDP frames
+Date:   Fri, 19 Jun 2020 16:31:48 +0200
+Message-Id: <20200619141719.343785866@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,54 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 886a862d3677ac0d3b57d19ffcf5b2d48b9c5267 ]
+[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
 
-Fix PHYMUX_5 register definition for mt7663 in
-mt7615_mac_cca_stats_reset routine
+When native XDP redirect into a veth device, the frame arrives in the
+xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
+which can run a new XDP bpf_prog on the packet. Doing so requires
+converting xdp_frame to xdp_buff, but the tricky part is that
+xdp_frame memory area is located in the top (data_hard_start) memory
+area that xdp_buff will point into.
 
-Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+The current code tried to protect the xdp_frame area, by assigning
+xdp_buff.data_hard_start past this memory. This results in 32 bytes
+less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
+
+This protect step is actually not needed, because BPF-helper
+bpf_xdp_adjust_head() already reserve this area, and don't allow
+BPF-prog to expand into it. Thus, it is safe to point data_hard_start
+directly at xdp_frame memory area.
+
+Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
+Reported-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c  | 8 +++++++-
- drivers/net/wireless/mediatek/mt76/mt7615/regs.h | 1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/veth.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index a27a6d164009..656231786d55 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -1574,8 +1574,14 @@ void mt7615_mac_cca_stats_reset(struct mt7615_phy *phy)
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index aece0e5eec8c..d5691bb84448 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -564,13 +564,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 					struct veth_stats *stats)
  {
- 	struct mt7615_dev *dev = phy->dev;
- 	bool ext_phy = phy != &dev->phy;
--	u32 reg = MT_WF_PHY_R0_PHYMUX_5(ext_phy);
-+	u32 reg;
+ 	void *hard_start = frame->data - frame->headroom;
+-	void *head = hard_start - sizeof(struct xdp_frame);
+ 	int len = frame->len, delta = 0;
+ 	struct xdp_frame orig_frame;
+ 	struct bpf_prog *xdp_prog;
+ 	unsigned int headroom;
+ 	struct sk_buff *skb;
  
-+	if (is_mt7663(&dev->mt76))
-+		reg = MT7663_WF_PHY_R0_PHYMUX_5;
-+	else
-+		reg = MT_WF_PHY_R0_PHYMUX_5(ext_phy);
++	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
++	hard_start -= sizeof(struct xdp_frame);
 +
-+	/* reset PD and MDRDY counters */
- 	mt76_clear(dev, reg, GENMASK(22, 20));
- 	mt76_set(dev, reg, BIT(22) | BIT(20));
- }
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-index 1e0d95b917e1..f7c2a633841c 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-@@ -151,6 +151,7 @@ enum mt7615_reg_base {
- #define MT_WF_PHY_WF2_RFCTRL0_LPBCN_EN	BIT(9)
+ 	rcu_read_lock();
+ 	xdp_prog = rcu_dereference(rq->xdp_prog);
+ 	if (likely(xdp_prog)) {
+@@ -592,7 +594,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			break;
+ 		case XDP_TX:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (unlikely(veth_xdp_tx(rq, &xdp, bq) < 0)) {
+ 				trace_xdp_exception(rq->dev, xdp_prog, act);
+@@ -605,7 +606,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			goto xdp_xmit;
+ 		case XDP_REDIRECT:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
+ 				frame = &orig_frame;
+@@ -629,7 +629,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 	rcu_read_unlock();
  
- #define MT_WF_PHY_R0_PHYMUX_5(_phy)	MT_WF_PHY(0x0614 + ((_phy) << 9))
-+#define MT7663_WF_PHY_R0_PHYMUX_5	MT_WF_PHY(0x0414)
- 
- #define MT_WF_PHY_R0_PHYCTRL_STS0(_phy)	MT_WF_PHY(0x020c + ((_phy) << 9))
- #define MT_WF_PHYCTRL_STAT_PD_OFDM	GENMASK(31, 16)
+ 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
+-	skb = veth_build_skb(head, headroom, len, 0);
++	skb = veth_build_skb(hard_start, headroom, len, 0);
+ 	if (!skb) {
+ 		xdp_return_frame(frame);
+ 		stats->rx_drops++;
 -- 
 2.25.1
 
