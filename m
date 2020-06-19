@@ -2,372 +2,186 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC95C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC414C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EB420734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4+3GNNf"
+	by mail.kernel.org (Postfix) with ESMTP id B4DB821D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbgFSWzq (ORCPT
+        id S1730007AbgFSW45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:55:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25882 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729852AbgFSWzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:55:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592607342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1fEONkl9Gy02J0c8XlWrhRAhX7Fsb4oNDGiD/9Th2Aw=;
-        b=X4+3GNNf5ePxHfn2X+F/ycm5RCiFojQjLRO94TNfDDCMq+M1NcgQXpLAwiI3et36jq+DXZ
-        N46Wn0Cde8804lqSDaZK4K0AjBGVQTdFSfox9UcG1s7Y63rRYbO8TIJbmzjgGzki7WAOz5
-        jdmTFrbMOqS5YYZqq2jFoYD7g5kBS3Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-wu38IFGPONCQkEv5id5BfQ-1; Fri, 19 Jun 2020 18:55:38 -0400
-X-MC-Unique: wu38IFGPONCQkEv5id5BfQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B211800053;
-        Fri, 19 Jun 2020 22:55:36 +0000 (UTC)
-Received: from w520.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3802871661;
-        Fri, 19 Jun 2020 22:55:35 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 16:55:34 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200619165534.6d0c22e2@w520.home>
-In-Reply-To: <20200610052314.GB13961@joy-OptiPlex-7040>
-References: <20200601065726.GA5906@joy-OptiPlex-7040>
-        <20200601104307.259b0fe1@x1.home>
-        <20200602082858.GA8915@joy-OptiPlex-7040>
-        <20200602133435.1ab650c5@x1.home>
-        <20200603014058.GA12300@joy-OptiPlex-7040>
-        <20200603170452.7f172baf@x1.home>
-        <20200604024228.GD12300@joy-OptiPlex-7040>
-        <20200603221058.1927a0fc@x1.home>
-        <20200605020231.GE12300@joy-OptiPlex-7040>
-        <20200605101301.6abb8a3b@x1.home>
-        <20200610052314.GB13961@joy-OptiPlex-7040>
+        Fri, 19 Jun 2020 18:56:57 -0400
+Received: from smtp.uniroma2.it ([160.80.6.16]:33339 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729890AbgFSW4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 18:56:47 -0400
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05JMuRJA014086
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 20 Jun 2020 00:56:27 +0200
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Donald Sharp <sharpd@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Dinesh Dutt <didutt@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stefano Salsano <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
+        Ahmed Abdelsalam <ahabdels@gmail.com>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [net-next,v1,0/5] Strict mode for VRF
+Date:   Sat, 20 Jun 2020 00:54:42 +0200
+Message-Id: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 01:23:14 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+This patch set adds the new "strict mode" functionality to the Virtual
+Routing and Forwarding infrastructure (VRF). Hereafter we discuss the
+requirements and the main features of the "strict mode" for VRF.
 
-> On Fri, Jun 05, 2020 at 10:13:01AM -0600, Alex Williamson wrote:
-> > On Thu, 4 Jun 2020 22:02:31 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Wed, Jun 03, 2020 at 10:10:58PM -0600, Alex Williamson wrote:  
-> > > > On Wed, 3 Jun 2020 22:42:28 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >     
-> > > > > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:    
-> > > > > > On Tue, 2 Jun 2020 21:40:58 -0400
-> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > > >       
-> > > > > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:      
-> > > > > > > > I'm not at all happy with this.  Why do we need to hide the migration
-> > > > > > > > sparse mmap from the user until migration time?  What if instead we
-> > > > > > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> > > > > > > > where the existing capability is the normal runtime sparse setup and
-> > > > > > > > the user is required to use this new one prior to enabled device_state
-> > > > > > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
-> > > > > > > > the region and refuse to change device_state if there are outstanding
-> > > > > > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> > > > > > > > required, no new irqfds, an incremental change to the protocol,
-> > > > > > > > backwards compatible to the extent that a vendor driver requiring this
-> > > > > > > > will automatically fail migration.
-> > > > > > > >         
-> > > > > > > right. looks we need to use this approach to solve the problem.
-> > > > > > > thanks for your guide.
-> > > > > > > so I'll abandon the current remap irq way for dirty tracking during live
-> > > > > > > migration.
-> > > > > > > but anyway, it demos how to customize irq_types in vendor drivers.
-> > > > > > > then, what do you think about patches 1-5?      
-> > > > > > 
-> > > > > > In broad strokes, I don't think we've found the right solution yet.  I
-> > > > > > really question whether it's supportable to parcel out vfio-pci like
-> > > > > > this and I don't know how I'd support unraveling whether we have a bug
-> > > > > > in vfio-pci, the vendor driver, or how the vendor driver is making use
-> > > > > > of vfio-pci.
-> > > > > >
-> > > > > > Let me also ask, why does any of this need to be in the kernel?  We
-> > > > > > spend 5 patches slicing up vfio-pci so that we can register a vendor
-> > > > > > driver and have that vendor driver call into vfio-pci as it sees fit.
-> > > > > > We have two patches creating device specific interrupts and a BAR
-> > > > > > remapping scheme that we've decided we don't need.  That brings us to
-> > > > > > the actual i40e vendor driver, where the first patch is simply making
-> > > > > > the vendor driver work like vfio-pci already does, the second patch is
-> > > > > > handling the migration region, and the third patch is implementing the
-> > > > > > BAR remapping IRQ that we decided we don't need.  It's difficult to
-> > > > > > actually find the small bit of code that's required to support
-> > > > > > migration outside of just dealing with the protocol we've defined to
-> > > > > > expose this from the kernel.  So why are we trying to do this in the
-> > > > > > kernel?  We have quirk support in QEMU, we can easily flip
-> > > > > > MemoryRegions on and off, etc.  What access to the device outside of
-> > > > > > what vfio-pci provides to the user, and therefore QEMU, is necessary to
-> > > > > > implement this migration support for i40e VFs?  Is this just an
-> > > > > > exercise in making use of the migration interface?  Thanks,
-> > > > > >       
-> > > > > hi Alex
-> > > > > 
-> > > > > There was a description of intention of this series in RFC v1
-> > > > > (https://www.spinics.net/lists/kernel/msg3337337.html).
-> > > > > sorry, I didn't include it in starting from RFC v2.
-> > > > > 
-> > > > > "
-> > > > > The reason why we don't choose the way of writing mdev parent driver is
-> > > > > that    
-> > > > 
-> > > > I didn't mention an mdev approach, I'm asking what are we accomplishing
-> > > > by doing this in the kernel at all versus exposing the device as normal
-> > > > through vfio-pci and providing the migration support in QEMU.  Are you
-> > > > actually leveraging having some sort of access to the PF in supporting
-> > > > migration of the VF?  Is vfio-pci masking the device in a way that
-> > > > prevents migrating the state from QEMU?
-> > > >    
-> > > yes, communication to PF is required. VF state is managed by PF and is
-> > > queried from PF when VF is stopped.
-> > > 
-> > > migration support in QEMU seems only suitable to devices with dirty
-> > > pages and device state available by reading/writing device MMIOs, which
-> > > is not the case for most devices.  
-> > 
-> > Post code for such a device.
-> >  
-> hi Alex,
-> There's an example in i40e vf. virtual channel related resources are in
-> guest memory. dirty page tracking requires the info stored in those
-> guest memory.
-> 
-> there're two ways to get the resources addresses:
-> (1) always trap VF registers related. as in Alex Graf's qemu code.
-> 
-> starting from beginning, it tracks rw of Admin Queue Configuration registers.
-> Then in the write handler vfio_i40evf_aq_mmio_mem_region_write(), guest
-> commands are processed to record the guest dma addresses of the virtual
-> channel related resources.
-> e.g. vdev->vsi_config is read from the guest dma addr contained in
-> command I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES.
-> 
-> 
-> vfio_i40evf_initfn()
-> {
->  ...
->  memory_region_init_io(&vdev->aq_mmio_mem, OBJECT(dev),
->                           &vfio_i40evf_aq_mmio_mem_region_ops,
->                           vdev, "i40evf AQ config",
->                           I40E_VFGEN_RSTAT - I40E_VF_ARQBAH1);
->  ...
-> }
-> 
-> vfio_i40evf_aq_mmio_mem_region_write()
-> {
->    ...
->     switch (addr) {
->     case I40E_VF_ARQBAH1:
->     case I40E_VF_ARQBAL1:
->     case I40E_VF_ARQH1:
->     case I40E_VF_ARQLEN1:
->     case I40E_VF_ARQT1:
->     case I40E_VF_ATQBAH1:
->     case I40E_VF_ATQBAL1:
->     case I40E_VF_ATQH1:
->     case I40E_VF_ATQT1:
->     case I40E_VF_ATQLEN1:
->         vfio_i40evf_vw32(vdev, addr, data);
->         vfio_i40e_aq_update(vdev); ==> update & process atq commands
->         break;
->     default:
->         vfio_i40evf_w32(vdev, addr, data);
->         break;
->     }
-> }
-> vfio_i40e_aq_update(vdev)
-> 	|->vfio_i40e_atq_process_one(vdev, vfio_i40evf_vr32(vdev, I40E_VF_ATQH1)
-> 		|-> hwaddr addr = vfio_i40e_get_atqba(vdev) + (index * sizeof(desc));
-> 		|   pci_dma_read(pdev, addr, &desc, sizeof(desc));//read guest's command
-> 		|   vfio_i40e_record_atq_cmd(vdev, pdev, &desc)
-> 			
-> 		
-> 
-> vfio_i40e_record_atq_cmd(...I40eAdminQueueDescriptor *desc) {
-> 	data_addr = desc->params.external.addr_high;
-> 	...
-> 
-> 	switch (desc->cookie_high) {
-> 	...
-> 	case I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES:
-> 	pci_dma_read(pdev, data_addr, &vdev->vsi_config,
-> 		         MIN(desc->datalen, sizeof(vdev->vsi_config)));
-> 	...
-> 	}
-> 	...
-> }
-> 
-> 
-> (2) pass through all guest MMIO accesses and only do MMIO trap when migration
-> is about to start.
-> This is the way we're using in the host vfio-pci vendor driver (or mdev parent driver)
-> of i40e vf device (sorry for no public code available still).
-> 
-> when migration is about to start, it's already too late to get the guest dma
-> address for those virtual channel related resources merely by MMIO
-> trapping, so we have to ask for them from PF.
-> 
-> 
-> 
-> <...>
-> 
-> > > > > for interfaces exported in patch 3/10-5/10, they anyway need to be
-> > > > > exported for writing mdev parent drivers that pass through devices at
-> > > > > normal time to avoid duplication. and yes, your worry about    
-> > > > 
-> > > > Where are those parent drivers?  What are their actual requirements?
-> > > >    
-> > > if this way of registering vendor ops to vfio-pci is not permitted,
-> > > vendors have to resort to writing its mdev parent drivers for VFs. Those
-> > > parent drivers need to pass through VFs at normal time, doing exactly what
-> > > vfio-pci does and only doing what vendor ops does during migration.
-> > > 
-> > > if vfio-pci could export common code to those parent drivers, lots of
-> > > duplicated code can be avoided.  
-> > 
-> > There are two sides to this argument though.  We could also argue that
-> > mdev has already made it too easy to implement device emulation in the
-> > kernel, the barrier is that such emulation is more transparent because
-> > it does require a fair bit of code duplication from vfio-pci.  If we
-> > make it easier to simply re-use vfio-pci for much of this, and even
-> > take it a step further by allowing vendor drivers to masquerade behind
-> > vfio-pci, then we're creating an environment where vendors don't need
-> > to work with QEMU to get their device emulation accepted.  They can
-> > write their own vendor drivers, which are now simplified and sanctioned
-> > by exported functions in vfio-pci.  They can do this easily and open up
-> > massive attack vectors, hiding behind vfio-pci.
-> >   
-> your concern is reasonable.
-> 
-> > I know that I was advocating avoiding user driver confusion, ie. does
-> > the user bind a device to vfio-pci, i40e_vf_vfio, etc, but maybe that's
-> > the barrier we need such that a user can make an informed decision
-> > about what they're actually using.  If a vendor then wants to implement
-> > a feature in vfio-pci, we'll need to architect an interface for it
-> > rather than letting them pick and choose which pieces of vfio-pci to
-> > override.
-> >   
-> > > > > identification of bug sources is reasonable. but if a device is binding
-> > > > > to vfio-pci with a vendor module loaded, and there's a bug, they can do at
-> > > > > least two ways to identify if it's a bug in vfio-pci itself.
-> > > > > (1) prevent vendor modules from loading and see if the problem exists
-> > > > > with pure vfio-pci.
-> > > > > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
-> > > > > operations to vfio-pci.    
-> > > > 
-> > > > The code split is still extremely ad-hoc, there's no API.  An mdev
-> > > > driver isn't even a sub-driver of vfio-pci like you're trying to
-> > > > accomplish here, there would need to be a much more defined API when
-> > > > the base device isn't even a vfio_pci_device.  I don't see how this
-> > > > series would directly enable an mdev use case.
-> > > >     
-> > > similar to Yi's series https://patchwork.kernel.org/patch/11320841/.
-> > > we can parcel the vdev creation code in vfio_pci_probe() to allow calling from
-> > > mdev parent probe routine. (of course, also need to parcel code to free vdev)
-> > > e.g.
-> > > 
-> > > void *vfio_pci_alloc_vdev(struct pci_dev *pdev, const struct pci_device_id *id)
-> > > {
-> > > 	struct vfio_pci_device *vdev;
-> > >         vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
-> > >         if (!vdev) {
-> > >                 ret = -ENOMEM;
-> > >                 goto out_group_put;
-> > >         }
-> > > 
-> > >         vdev->pdev = pdev;
-> > >         vdev->irq_type = VFIO_PCI_NUM_IRQS;
-> > >         mutex_init(&vdev->igate);
-> > >         spin_lock_init(&vdev->irqlock);
-> > >         mutex_init(&vdev->ioeventfds_lock);
-> > >         INIT_LIST_HEAD(&vdev->ioeventfds_list);
-> > > 	...
-> > > 	vfio_pci_probe_power_state(vdev);
-> > > 
-> > >         if (!disable_idle_d3) {
-> > >                 vfio_pci_set_power_state(vdev, PCI_D0);
-> > >                 vfio_pci_set_power_state(vdev, PCI_D3hot);
-> > >         }
-> > > 	return vdev;
-> > > }
-> > > 
-> > > static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev, const struct pci_device_id *id))
-> > > {
-> > > 
-> > >        void *vdev = vfio_pci_alloc_vdev(pdev, id);
-> > > 
-> > >        //save the vdev pointer 
-> > > 
-> > > }
-> > > then all the exported interfaces from this series can also benefit the
-> > > mdev use case.  
-> > 
-> > You need to convince me that we're not just doing this for the sake of
-> > re-using a migration interface.  We do need vendor specific drivers to
-> > support migration, but implementing those vendor specific drivers in
-> > the kernel just because we have that interface is the wrong answer.  If
-> > we can implement that device specific migration support in QEMU and
-> > limit the attack surface from the hypervisor or guest into the host
-> > kernel, that's a better answer.  As I've noted above, I'm afraid all of
-> > these attempts to parcel out vfio-pci are only going to serve to
-> > proliferate vendor modules that have limited community review, expand
-> > the attack surface, and potentially harm the vfio ecosystem overall
-> > through bad actors and reduced autonomy.  Thanks,
-> >  
-> The requirement to access PF as mentioned above is one of the reason for
-> us to implement the emulation in kernel.
-> Another reason is that we don't want to duplicate a lot of kernel logic in
-> QEMU as what'd done in Alex Graf's "vfio-i40e". then QEMU has to be
-> updated along kernel driver changing. The effort for maintenance and
-> version matching is a big burden to vendors.
-> But you are right, there're less review in virtualization side to code under
-> vendor specific directory. That's also the pulse for us to propose
-> common helper APIs for them to call, not only for convenience and
-> duplication-less, but also for code with full review.
-> 
-> would you mind giving us some suggestions for where to go?
+On VRF creation, it is necessary to specify the associated routing table used
+during the lookup operations. Currently, there is no mechanism that avoids
+creating multiple VRFs sharing the same routing table. In other words, it is not
+possible to force a one-to-one relationship between a specific VRF and the table
+associated with it.
 
-Not duplicating kernel code into userspace isn't a great excuse.  What
-we need to do to emulate a device is not an exact mapping to what a
-driver for that device needs to do.  If we need to keep the device
-driver and the emulation in sync then we haven't done a good job with
-the emulation.  What would it look like if we only had an additional
-device specific region on the vfio device fd we could use to get the
-descriptor information we need from the PF?  This would be more inline
-with the quirks we provide for IGD assignment.  Thanks,
 
-Alex
+The "strict mode" imposes that each VRF can be associated to a routing table
+only if such routing table is not already in use by any other VRF.
+In particular, the strict mode ensures that:
+ 
+ 1) given a specific routing table, the VRF (if exists) is uniquely identified;
+ 2) given a specific VRF, the related table is not shared with any other VRF.
+
+Constraints (1) and (2) force a one-to-one relationship between each VRF and the
+corresponding routing table.
+
+
+The strict mode feature is designed to be network-namespace aware and it can be
+directly enabled/disabled acting on the "strict_mode" parameter.
+Read and write operations are carried out through the classic sysctl command on
+net.vrf.strict_mode path, i.e: sysctl -w net.vrf.strict_mode=1.
+
+Only two distinct values {0,1} are accepted by the strict_mode parameter:
+
+ - with strict_mode=0, multiple VRFs can be associated with the same table.
+   This is the (legacy) default kernel behavior, the same that we experience
+   when the strict mode patch set is not applied;
+
+ - with strict_mode=1, the one-to-one relationship between the VRFs and the
+   associated tables is guaranteed. In this configuration, the creation of a VRF
+   which refers to a routing table already associated with another VRF fails and
+   the error is returned to the user.
+
+
+The kernel keeps track of the associations between a VRF and the routing table
+during the VRF setup, in the "management" plane. Therefore, the strict mode does
+not impact the performance or the intrinsic functionality of the data plane in
+any way.
+
+When the strict mode is active it is always possible to disable the strict mode,
+while the reverse operation is not always allowed.
+Setting the strict_mode parameter to 0 is equivalent to removing the one-to-one
+constraint between any single VRF and its associated routing table.
+
+Conversely, if the strict mode is disabled and there are multiple VRFs that
+refer to the same routing table, then it is prohibited to set the strict_mode
+parameter to 1. In this configuration, any attempt to perform the operation will
+lead to an error and it will be reported to the user.
+To enable strict mode once again (by setting the strict_mode parameter to 1),
+you must first remove all the VRFs that share common tables.
+
+There are several use cases which can take advantage from the introduction of
+the strict mode feature. In particular, the strict mode allows us to:
+
+  i) guarantee the proper functioning of some applications which deal with
+     routing protocols;
+
+ ii) perform some tunneling decap operations which require to use specific
+     routing tables for segregating and forwarding the traffic.
+
+
+Considering (i), the creation of different VRFs that point to the same table
+leads to the situation where two different routing entities believe they have
+exclusive access to the same table. This leads to the situation where different
+routing daemons can conflict for gaining routes control due to overlapping
+tables. By enabling strict mode it is possible to prevent this situation which
+often occurs due to incorrect configurations done by the users. 
+The ability to enable/disable the strict mode functionality does not depend on
+the tool used for configuring the networking. In essence, the strict mode patch
+solves, at the kernel level, what some other patches [1] had tried to solve at
+the userspace level (using only iproute2) with all the related problems.
+
+Considering (ii), the introduction of the strict mode functionality allows us
+implementing the SRv6 End.DT4 behavior. Such behavior terminates a SR tunnel and
+it forwards the IPv4 traffic according to the routes present in the routing
+table supplied during the configuration. The SRv6 End.DT4 can be realized
+exploiting the routing capabilities made available by the VRF infrastructure.
+This behavior could leverage a specific VRF for forcing the traffic to be
+forwarded in accordance with the routes available in the VRF table.
+Anyway, in order to make the End.DT4 properly work, it must be guaranteed that
+the table used for the route lookup operations is bound to one and only one VRF.
+In this way, it is possible to use the table for uniquely retrieving the
+associated VRF and for routing packets.
+
+I would like to thank David Ahern for his constant and valuable support during
+the design and development phases of this patch set.
+
+Comments, suggestions and improvements are very welcome!
+
+Thanks,
+Andrea Mayer
+
+
+v1
+ l3mdev: add infrastructure for table to VRF mapping
+  - define l3mdev_lock as static, thanks to Jakub Kicinski;
+  - move lookup_by_table_id_t from l3mdev.c to l3mdev.h and update the
+    l3mdev_dev_table_lookup_{un}register functions accordingly, thanks to
+    David Ahern.
+
+ vrf: track associations between VRF devices and tables
+  - change shared_tables type from 'int' to 'u32', thanks to Stephen Hemminger
+    and David Ahern;
+  - update comments for share_tables.
+
+ vrf: add sysctl parameter for strict mode
+  - change type 'void __user *buffer' to 'void *buffer' in argument 3 of
+    vrf_shared_table_handler function, thanks to Jakub Kicinski.
+
+
+[1] https://lore.kernel.org/netdev/20200307205916.15646-1-sharpd@cumulusnetworks.com/
+
+Andrea Mayer (5):
+  l3mdev: add infrastructure for table to VRF mapping
+  vrf: track associations between VRF devices and tables
+  vrf: add sysctl parameter for strict mode
+  vrf: add l3mdev registration for table to VRF device lookup
+  selftests: add selftest for the VRF strict mode
+
+ drivers/net/vrf.c                             | 450 +++++++++++++++++-
+ include/net/l3mdev.h                          |  39 ++
+ net/l3mdev/l3mdev.c                           |  93 ++++
+ .../selftests/net/vrf_strict_mode_test.sh     | 390 +++++++++++++++
+ 4 files changed, 963 insertions(+), 9 deletions(-)
+ create mode 100755 tools/testing/selftests/net/vrf_strict_mode_test.sh
+
+-- 
+2.20.1
 
