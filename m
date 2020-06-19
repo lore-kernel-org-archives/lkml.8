@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B895FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F811C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B940206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5176F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbgFSM1H (ORCPT
+        id S1732278AbgFSM1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:27:07 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59931 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733036AbgFSMZY (ORCPT
+        Fri, 19 Jun 2020 08:27:09 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:41145 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733035AbgFSMZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:25:24 -0400
+        Fri, 19 Jun 2020 08:25:23 -0400
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3A7D024000F;
-        Fri, 19 Jun 2020 12:25:22 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0ADF120000C;
+        Fri, 19 Jun 2020 12:25:20 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -31,9 +31,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v3 8/8] MIPS: dts: ocelot: describe the load/save GPIO
-Date:   Fri, 19 Jun 2020 14:23:00 +0200
-Message-Id: <20200619122300.2510533-9-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v3 7/8] dt-bindings: net: phy: vsc8531: document the load/save GPIO
+Date:   Fri, 19 Jun 2020 14:22:59 +0200
+Message-Id: <20200619122300.2510533-8-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
 References: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
@@ -44,75 +44,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+A new optional property can be used to reference the load/save GPIO,
+used for PTP hardware clock (PHC) operations. This patch documents it in
+the binding documentation.
 
-This patch adds a description of the load/save GPIN pin, used in the
-VSC8584 PHY for timestamping operations. The related pinctrl description
-is also added.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- arch/mips/boot/dts/mscc/ocelot_pcb120.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-index 33991fd209f5..897de5025d7f 100644
---- a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-+++ b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-@@ -3,6 +3,7 @@
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 5ff37c68c941..87a27d775d48 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -31,6 +31,8 @@ Optional properties:
+ 			  VSC8531_LINK_100_ACTIVITY (2),
+ 			  VSC8531_LINK_ACTIVITY (0) and
+ 			  VSC8531_DUPLEX_COLLISION (8).
++- load-save-gpios	: GPIO used for the load/save operation of the PTP
++			  hardware clock (PHC).
  
- /dts-v1/;
  
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/phy/phy-ocelot-serdes.h>
- #include "ocelot.dtsi"
-@@ -25,6 +26,11 @@ phy_int_pins: phy_int_pins {
- 		pins = "GPIO_4";
- 		function = "gpio";
- 	};
-+
-+	phy_load_save_pins: phy_load_save_pins {
-+		pins = "GPIO_10";
-+		function = "ptp2";
-+	};
- };
- 
- &mdio0 {
-@@ -34,27 +40,31 @@ &mdio0 {
- &mdio1 {
- 	status = "okay";
- 	pinctrl-names = "default";
--	pinctrl-0 = <&miim1>, <&phy_int_pins>;
-+	pinctrl-0 = <&miim1>, <&phy_int_pins>, <&phy_load_save_pins>;
- 
- 	phy7: ethernet-phy@0 {
- 		reg = <0>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy6: ethernet-phy@1 {
- 		reg = <1>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy5: ethernet-phy@2 {
- 		reg = <2>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy4: ethernet-phy@3 {
- 		reg = <3>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- };
- 
+ Table: 1 - Edge rate change
+@@ -67,4 +69,5 @@ Example:
+                 vsc8531,edge-slowdown	= <7>;
+                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
+                 vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
++		load-save-gpios		= <&gpio 10 GPIO_ACTIVE_HIGH>;
+         };
 -- 
 2.26.2
 
