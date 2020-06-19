@@ -2,171 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3464FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1652D206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A6B20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olNdwx7E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LotKzde0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733011AbgFSTL2 (ORCPT
+        id S1732726AbgFSTM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
+        Fri, 19 Jun 2020 15:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgFSTL1 (ORCPT
+        with ESMTP id S1727848AbgFSTM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:11:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E124C06174E;
-        Fri, 19 Jun 2020 12:11:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so9394165wme.3;
-        Fri, 19 Jun 2020 12:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=chbWz7xzFy579TbWBa7IgoDaVrcNNu3e+ZV8C+3+5ts=;
-        b=olNdwx7EKNULbKgME9rHSKmUDJKGownFmH7K7UdqCiyAe31tms05xsgDMDHl0NOZyn
-         e4JT2rb2s3q5lfqM11BP72moDoCJO7fo8XhUHqRhLmM9Rkjt/Mcz6AzymyLaafuA8Ulb
-         XTVeNEMS1qKMS0ZFjOH4/+4FZ+XMgy0Z+itG4tjjFKBv1tiJ5h7bNhFkbXDaSQ/Fpz4X
-         ea1xDim6+696Be1q0Zr3RvYmOvlbnd3iJrBAwzkYAU7fiPUm1Tydf4L5z5X/RqFkIs6D
-         rXFOo0qB32FQo9vj/cdysyW33DCxg/zYBiOMh8UCXO3mP8EhhV49/E8yMaB/+LvgfTFf
-         Q3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=chbWz7xzFy579TbWBa7IgoDaVrcNNu3e+ZV8C+3+5ts=;
-        b=VdWFgVwlnRqe8zFuiuGj8opy7XaeoK5ZpfZCPIrgo/CuJbrl+ZkrYpPuSiHHZnqd35
-         xsxqI6V3EiZW7/QxmLrT3UZ8OZ5bSRQ6GUfiiiaEm4BMlrLnPVel/vYaLr+fs4fil6eb
-         QIw34rlQ+/uhxRjSlWG/1Lvw6UQp6zcJjZ++poAgorFrMhmeDrnLsUuIInECsorFvRbd
-         eQslSf0/1BAFV2f4gmTk6fTH4hf6MQ7AcqI6qgs5Fc08p9wfO/PyIjULwdvkLHG3amet
-         pNbe7PZDlev6biEPgzvs90AmLpk84RiNdTCYtoUKqGpjuaQV4FT2OBTTWQwaSNkBGy23
-         Yn8g==
-X-Gm-Message-State: AOAM530KAt8ILVAbMWEsY1a5MmdQAlZ3TxgiKMH1KFm+akFgx5eFo4Ja
-        Idycx9xCG/P8UURrK5eiYgL2yhbplaXe+6lcFUo=
-X-Google-Smtp-Source: ABdhPJwcHFy0tih4Jg9lH/i7Ldu0yNdrmwrIvxAKTo0TP4xm3PszQ+8aXnDybDwn0lmkl3Yy4KGqnVo3R2CnXN9sXgU=
-X-Received: by 2002:a7b:cd96:: with SMTP id y22mr5280023wmj.56.1592593883868;
- Fri, 19 Jun 2020 12:11:23 -0700 (PDT)
+        Fri, 19 Jun 2020 15:12:26 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05BCC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0SOhWW0ptYBXJaqZ7r6SRlKPoSW36fKX4F/Z1w9lS04=; b=LotKzde06lRQCfnSJV0/HomH9/
+        WZ3nXTWkj4DQcy707D1Gok3XqkZ07oyE6FYccQnzwEb7tk05RTXktw6FTwm/wawn1dMnx/ORuE0Y+
+        sxdki6wMyt0KTmng2K4GG+cyeHDl+54OtrYusmx2yGiN5egpSIu5SAT9+TfVTAM8+ZZ/8HscVzLSM
+        a2nHAztcZofFg2RS6I4/kMx9F27XxQ3CZxbRUK+pTvLg+F3i5AAqJxF/Crg+RFSysfyQSvfrjp4La
+        gBY9D+op921lOxejahX9eOcljN8ek49jQRfRtaSkdLLssm4ON5Vq0ro30yyvth1J7s5X0caB4lKoE
+        Yfq+/8RQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmMQa-0005K0-8y; Fri, 19 Jun 2020 19:11:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8764E302753;
+        Fri, 19 Jun 2020 21:11:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 725AF2C28E842; Fri, 19 Jun 2020 21:11:50 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 21:11:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com
+Subject: Re: [PATCH 08/21] x86/msr-index: Add bunch of MSRs for Arch LBR
+Message-ID: <20200619191150.GH576888@hirez.programming.kicks-ass.net>
+References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
+ <1592575449-64278-9-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
- <20200617152835.GF6578@ziepe.ca> <20200618150051.GS20149@phenom.ffwll.local>
- <20200618172338.GM6578@ziepe.ca> <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca> <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca> <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca> <20200619180935.GA10009@redhat.com>
-In-Reply-To: <20200619180935.GA10009@redhat.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 19 Jun 2020 15:11:12 -0400
-Message-ID: <CADnq5_Pw_85Kzh1of=MbDi4g9POeF3jO4AJ7p2FjY5XZW0=vsQ@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592575449-64278-9-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 2:09 PM Jerome Glisse <jglisse@redhat.com> wrote:
->
-> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
-> > On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
-> >
-> > > The madness is only that device B's mmu notifier might need to wait
-> > > for fence_B so that the dma operation finishes. Which in turn has to
-> > > wait for device A to finish first.
-> >
-> > So, it sound, fundamentally you've got this graph of operations across
-> > an unknown set of drivers and the kernel cannot insert itself in
-> > dma_fence hand offs to re-validate any of the buffers involved?
-> > Buffers which by definition cannot be touched by the hardware yet.
-> >
-> > That really is a pretty horrible place to end up..
-> >
-> > Pinning really is right answer for this kind of work flow. I think
-> > converting pinning to notifers should not be done unless notifier
-> > invalidation is relatively bounded.
-> >
-> > I know people like notifiers because they give a bit nicer performance
-> > in some happy cases, but this cripples all the bad cases..
-> >
-> > If pinning doesn't work for some reason maybe we should address that?
->
-> Note that the dma fence is only true for user ptr buffer which predate
-> any HMM work and thus were using mmu notifier already. You need the
-> mmu notifier there because of fork and other corner cases.
->
-> For nouveau the notifier do not need to wait for anything it can update
-> the GPU page table right away. Modulo needing to write to GPU memory
-> using dma engine if the GPU page table is in GPU memory that is not
-> accessible from the CPU but that's never the case for nouveau so far
-> (but i expect it will be at one point).
->
->
-> So i see this as 2 different cases, the user ptr case, which does pin
-> pages by the way, where things are synchronous. Versus the HMM cases
-> where everything is asynchronous.
->
->
-> I probably need to warn AMD folks again that using HMM means that you
-> must be able to update the GPU page table asynchronously without
-> fence wait. The issue for AMD is that they already update their GPU
-> page table using DMA engine. I believe this is still doable if they
-> use a kernel only DMA engine context, where only kernel can queue up
-> jobs so that you do not need to wait for unrelated things and you can
-> prioritize GPU page table update which should translate in fast GPU
-> page table update without DMA fence.
+On Fri, Jun 19, 2020 at 07:03:56AM -0700, kan.liang@linux.intel.com wrote:
 
-All devices which support recoverable page faults also have a
-dedicated paging engine for the kernel driver which the driver already
-makes use of.  We can also update the GPU page tables with the CPU.
+> +#define ARCH_LBR_INFO_MISPRED		BIT_ULL(63)
+> +#define ARCH_LBR_INFO_IN_TSX		BIT_ULL(62)
+> +#define ARCH_LBR_INFO_TSX_ABORT		BIT_ULL(61)
 
-Alex
+That's identical to what we already have.
 
->
->
-> > > Full disclosure: We are aware that we've designed ourselves into an
-> > > impressive corner here, and there's lots of talks going on about
-> > > untangling the dma synchronization from the memory management
-> > > completely. But
-> >
-> > I think the documenting is really important: only GPU should be using
-> > this stuff and driving notifiers this way. Complete NO for any
-> > totally-not-a-GPU things in drivers/accel for sure.
->
-> Yes for user that expect HMM they need to be asynchronous. But it is
-> hard to revert user ptr has it was done a long time ago.
->
-> Cheers,
-> J=C3=A9r=C3=B4me
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> +#define ARCH_LBR_INFO_CYC_CNT_VALID	BIT_ULL(60)
+
+If you call that LBR_INFO_CYC_VALID or something, then we good there.
+
+> +#define ARCH_LBR_INFO_BR_TYPE_OFFSET	56
+> +#define ARCH_LBR_INFO_BR_TYPE		(0xfull << ARCH_LBR_INFO_BR_TYPE_OFFSET)
+
+Same
+
+> +#define ARCH_LBR_INFO_CYC_CNT		0xffff
+
+And we already have that in LBR_INFO_CYCLES.
+
