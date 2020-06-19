@@ -2,60 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84763C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5374BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CDD208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3407D20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577340;
-	bh=O7wyNPiK1g/JdyXlhdCdPIgcCXj1dV14a/RbWD4vIeA=;
+	s=default; t=1592577343;
+	bh=hQDiJarSWIuTsTWkapjJqtY3sawCtDgZzEQGAJeb3bU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0uasKebZC5IDVVePBifaNzI7LtROyFDSVIhx4ev9J4TSTmDZ/kaUpRzDF8FlX5Q+
-	 2Tt5pHK980myUEziyZnsnbFJTQxfVo3tkjQBFZPLCxlzWESsQPDjUrTTp67WZoTjOS
-	 6OGFtJhoRv2PFO/72aeP7J9bTgIgtv8VbVGr+f+8=
+	b=AAwerzUFnynli6czEt5Q9hIAHgkLRaYdvoGEN3nOawBMmbEL/fEKYj/o8ULDkK0Ij
+	 6SBTdXJ1VdrpiEChkoVMU5XT1pGsMnnATfFvIdzmSuNpJ+HSi/mziIjQappbwQTVwA
+	 yaTbsMA2mevu0Q+0Vde3zeFx9X9IiaKzw7CHY8o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbgFSOfi (ORCPT
+        id S1733275AbgFSOfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:35:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51516 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgFSOff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:35:35 -0400
+        id S1733211AbgFSOfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:35:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75FFD206F1;
-        Fri, 19 Jun 2020 14:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276982070A;
+        Fri, 19 Jun 2020 14:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577335;
-        bh=O7wyNPiK1g/JdyXlhdCdPIgcCXj1dV14a/RbWD4vIeA=;
+        s=default; t=1592577337;
+        bh=hQDiJarSWIuTsTWkapjJqtY3sawCtDgZzEQGAJeb3bU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13402xgAhc1I+HwdchcCL0jaqbIJFlkqClWhxiOjkj4kCcl0gczSadHfr/uYBa85l
-         gHuh4pq2mxzcPgvqwejupPw8UL8+XziU5sFesiQbDKxlW9J2Wyxp6VipFLHDopc5LF
-         RNZhSAWwJK/vd18NoRwtO46h2+zwNpWSvKrvxa+E=
+        b=VTenO3X3WQJDSb9KchmLMe/9p/g2xxsL0/0EYiSFGUNrv0rrBffe9U40Pc90cbRiR
+         XJXFBeVHC2OHClgK5tDIYfTaTZvUhICdBsxGeM+CJvwvkggCkwwG+my4gbC7l17pVv
+         x1+/jpGnkbVozUn4G/egYJJDlcXEE4N103i6tjU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alistair Delva <adelva@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Bob Haarman <inglorion@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH 4.4 010/101] x86_64: Fix jiffies ODR violation
-Date:   Fri, 19 Jun 2020 16:31:59 +0200
-Message-Id: <20200619141614.542129965@linuxfoundation.org>
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.4 011/101] x86/speculation: Prevent rogue cross-process SSBD shutdown
+Date:   Fri, 19 Jun 2020 16:32:00 +0200
+Message-Id: <20200619141614.598594986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -68,125 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Haarman <inglorion@google.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-commit d8ad6d39c35d2b44b3d48b787df7f3359381dcbf upstream.
+commit dbbe2ad02e9df26e372f38cc3e70dab9222c832e upstream.
 
-'jiffies' and 'jiffies_64' are meant to alias (two different symbols that
-share the same address).  Most architectures make the symbols alias to the
-same address via a linker script assignment in their
-arch/<arch>/kernel/vmlinux.lds.S:
+On context switch the change of TIF_SSBD and TIF_SPEC_IB are evaluated
+to adjust the mitigations accordingly. This is optimized to avoid the
+expensive MSR write if not needed.
 
-jiffies = jiffies_64;
+This optimization is buggy and allows an attacker to shutdown the SSBD
+protection of a victim process.
 
-which is effectively a definition of jiffies.
+The update logic reads the cached base value for the speculation control
+MSR which has neither the SSBD nor the STIBP bit set. It then OR's the
+SSBD bit only when TIF_SSBD is different and requests the MSR update.
 
-jiffies and jiffies_64 are both forward declared for all architectures in
-include/linux/jiffies.h. jiffies_64 is defined in kernel/time/timer.c.
+That means if TIF_SSBD of the previous and next task are the same, then
+the base value is not updated, even if TIF_SSBD is set. The MSR write is
+not requested.
 
-x86_64 was peculiar in that it wasn't doing the above linker script
-assignment, but rather was:
-1. defining jiffies in arch/x86/kernel/time.c instead via the linker script.
-2. overriding the symbol jiffies_64 from kernel/time/timer.c in
-arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
+Subsequently if the TIF_STIBP bit differs then the STIBP bit is updated
+in the base value and the MSR is written with a wrong SSBD value.
 
-As Fangrui notes:
+This was introduced when the per task/process conditional STIPB
+switching was added on top of the existing SSBD switching.
 
-  In LLD, symbol assignments in linker scripts override definitions in
-  object files. GNU ld appears to have the same behavior. It would
-  probably make sense for LLD to error "duplicate symbol" but GNU ld
-  is unlikely to adopt for compatibility reasons.
+It is exploitable if the attacker creates a process which enforces SSBD
+and has the contrary value of STIBP than the victim process (i.e. if the
+victim process enforces STIBP, the attacker process must not enforce it;
+if the victim process does not enforce STIBP, the attacker process must
+enforce it) and schedule it on the same core as the victim process. If
+the victim runs after the attacker the victim becomes vulnerable to
+Spectre V4.
 
-This results in an ODR violation (UB), which seems to have survived
-thus far. Where it becomes harmful is when;
+To fix this, update the MSR value independent of the TIF_SSBD difference
+and dependent on the SSBD mitigation method available. This ensures that
+a subsequent STIPB initiated MSR write has the correct state of SSBD.
 
-1. -fno-semantic-interposition is used:
+[ tglx: Handle X86_FEATURE_VIRT_SSBD & X86_FEATURE_VIRT_SSBD correctly
+        and massaged changelog ]
 
-As Fangrui notes:
-
-  Clang after LLVM commit 5b22bcc2b70d
-  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
-  defaults to -fno-semantic-interposition similar semantics which help
-  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
-  within the same translation unit. Unlike GCC
-  -fno-semantic-interposition, Clang emits such relocations referencing
-  local symbols for non-pic code as well.
-
-This causes references to jiffies to refer to '.Ljiffies$local' when
-jiffies is defined in the same translation unit. Likewise, references to
-jiffies_64 become references to '.Ljiffies_64$local' in translation units
-that define jiffies_64.  Because these differ from the names used in the
-linker script, they will not be rewritten to alias one another.
-
-2. Full LTO
-
-Full LTO effectively treats all source files as one translation
-unit, causing these local references to be produced everywhere.  When
-the linker processes the linker script, there are no longer any
-references to jiffies_64' anywhere to replace with 'jiffies'.  And
-thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
-at all.
-
-In the process of porting patches enabling Full LTO from arm64 to x86_64,
-spooky bugs have been observed where the kernel appeared to boot, but init
-doesn't get scheduled.
-
-Avoid the ODR violation by matching other architectures and define jiffies
-only by linker script.  For -fno-semantic-interposition + Full LTO, there
-is no longer a global definition of jiffies for the compiler to produce a
-local symbol which the linker script won't ensure aliases to jiffies_64.
-
-Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Bob Haarman <inglorion@google.com>
+Fixes: 5bfbe3ad5840 ("x86/speculation: Prepare for per task indirect branch speculation control")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://github.com/ClangBuiltLinux/linux/issues/852
-Link: https://lkml.kernel.org/r/20200602193100.229287-1-inglorion@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/time.c        |    4 ----
- arch/x86/kernel/vmlinux.lds.S |    4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ arch/x86/kernel/process.c |   28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -22,10 +22,6 @@
- #include <asm/hpet.h>
- #include <asm/time.h>
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -333,28 +333,20 @@ static __always_inline void __speculatio
+ 	u64 msr = x86_spec_ctrl_base;
+ 	bool updmsr = false;
  
--#ifdef CONFIG_X86_64
--__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
--#endif
--
- unsigned long profile_pc(struct pt_regs *regs)
- {
- 	unsigned long pc = instruction_pointer(regs);
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -34,13 +34,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT, CONF
- #ifdef CONFIG_X86_32
- OUTPUT_ARCH(i386)
- ENTRY(phys_startup_32)
--jiffies = jiffies_64;
- #else
- OUTPUT_ARCH(i386:x86-64)
- ENTRY(phys_startup_64)
--jiffies_64 = jiffies;
- #endif
+-	/*
+-	 * If TIF_SSBD is different, select the proper mitigation
+-	 * method. Note that if SSBD mitigation is disabled or permanentely
+-	 * enabled this branch can't be taken because nothing can set
+-	 * TIF_SSBD.
+-	 */
+-	if (tif_diff & _TIF_SSBD) {
+-		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
++	/* Handle change of TIF_SSBD depending on the mitigation method. */
++	if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
++		if (tif_diff & _TIF_SSBD)
+ 			amd_set_ssb_virt_state(tifn);
+-		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
++	} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
++		if (tif_diff & _TIF_SSBD)
+ 			amd_set_core_ssb_state(tifn);
+-		} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
+-			   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
+-			msr |= ssbd_tif_to_spec_ctrl(tifn);
+-			updmsr  = true;
+-		}
++	} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++		   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
++		updmsr |= !!(tif_diff & _TIF_SSBD);
++		msr |= ssbd_tif_to_spec_ctrl(tifn);
+ 	}
  
-+jiffies = jiffies_64;
-+
- #if defined(CONFIG_X86_64) && defined(CONFIG_DEBUG_RODATA)
- /*
-  * On 64-bit, align RODATA to 2MB so that even with CONFIG_DEBUG_RODATA
+-	/*
+-	 * Only evaluate TIF_SPEC_IB if conditional STIBP is enabled,
+-	 * otherwise avoid the MSR write.
+-	 */
++	/* Only evaluate TIF_SPEC_IB if conditional STIBP is enabled. */
+ 	if (IS_ENABLED(CONFIG_SMP) &&
+ 	    static_branch_unlikely(&switch_to_cond_stibp)) {
+ 		updmsr |= !!(tif_diff & _TIF_SPEC_IB);
 
 
