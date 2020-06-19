@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5090EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49960C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2198C2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA8221852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578590;
-	bh=GibQffaZiT5SahzB4RVbVR61djiqNgKqwWI9cX+EDJw=;
+	s=default; t=1592578600;
+	bh=h55ON5kaA7BxQH2lIVX2jSGQ5jdYL7N0sFMEo9HEn80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZ7hycFX/F6ggQINxqIWPtOV5cHN2HexnJb5eCsmPcSpuZxpwzoCYLkes3l4+8P+y
-	 s05v/OrwDa+okMueblmNhysPr6csHwGlajlmlzmazcPjE5k8Tdk4cih7kIKS0Bhevi
-	 fPdsC90V6FlgF5LwI6QF3RRM4qImdeSyiAFnjb8Q=
+	b=sz5hGR2cTB/Iofnf/jnFojxyuG5ONhmOBi5vNtLXFG4lt/OtgwZATWJoe8CmR3ffQ
+	 rTyIVxVj1lYNJ+SErkeAIvLQ5MzyaYFMuDIjpuMCYvmZfo3neLJUbZU3Lkb8KsiB+S
+	 +HmYx8Akf2Rc4wT2Chahr/3Fg+BzTPorpq96Q1gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390066AbgFSO4X (ORCPT
+        id S2390107AbgFSO4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390045AbgFSO4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:56:10 -0400
+        id S2390058AbgFSO4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C035C2184D;
-        Fri, 19 Jun 2020 14:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89079217D8;
+        Fri, 19 Jun 2020 14:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578570;
-        bh=GibQffaZiT5SahzB4RVbVR61djiqNgKqwWI9cX+EDJw=;
+        s=default; t=1592578581;
+        bh=h55ON5kaA7BxQH2lIVX2jSGQ5jdYL7N0sFMEo9HEn80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiTBFrxVBSj8SGUPUJMV0jQ8VJefVpuz8TMh9JA1O7s/BzECYBjxF4bQIwmtLF2dB
-         93Rd9whAAi4FRwu4S18t3wQJeAMjucbUnx4ZCAK/zQA123xS+L4NenEfrBbtmwMJOF
-         OIyTavOPXjMFzItYS3hvEsjUOQ1n9YQ3HsNFAxQE=
+        b=jpFhlfzgvuVtAmRIv0g+pxiokLDhNxeee1Da96u9DzUimhHh/Uapr7Ccn4rYvN0W+
+         VooglfrKh9kivF/zvYvSvJ9h0SMGw3K6qtif96MGalqp7GKB8kA1tYfTf1w4uu7Z6N
+         182W0PbDbcKpOhGto+N6qrSnPBnvFH0X53pLoWWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 072/267] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-Date:   Fri, 19 Jun 2020 16:30:57 +0200
-Message-Id: <20200619141652.354659631@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 076/267] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+Date:   Fri, 19 Jun 2020 16:31:01 +0200
+Message-Id: <20200619141652.538508546@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -58,32 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
+commit 3204be4109ad681523e3461ce64454c79278450a upstream.
 
-Restoring the ASID from the hsave area on VMEXIT is wrong, because its
-value depends on the handling of TLB flushes.  Just skipping the field in
-copy_vmcb_control_area will do.
+AArch32 CP1x registers are overlayed on their AArch64 counterparts
+in the vcpu struct. This leads to an interesting problem as they
+are stored in their CPU-local format, and thus a CP1x register
+doesn't "hit" the lower 32bit portion of the AArch64 register on
+a BE host.
+
+To workaround this unfortunate situation, introduce a bias trick
+in the vcpu_cp1x() accessors which picks the correct half of the
+64bit register.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_host.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3319,7 +3319,7 @@ static inline void copy_vmcb_control_are
- 	dst->iopm_base_pa         = from->iopm_base_pa;
- 	dst->msrpm_base_pa        = from->msrpm_base_pa;
- 	dst->tsc_offset           = from->tsc_offset;
--	dst->asid                 = from->asid;
-+	/* asid not copied, it is handled manually for svm->vmcb.  */
- 	dst->tlb_ctl              = from->tlb_ctl;
- 	dst->int_ctl              = from->int_ctl;
- 	dst->int_vector           = from->int_vector;
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -335,8 +335,10 @@ void vcpu_write_sys_reg(struct kvm_vcpu
+  * CP14 and CP15 live in the same array, as they are backed by the
+  * same system registers.
+  */
+-#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+-#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
++#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
++
++#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
++#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
+ 
+ struct kvm_vm_stat {
+ 	ulong remote_tlb_flush;
 
 
