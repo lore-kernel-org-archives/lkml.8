@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6082C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC89206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE56E20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581073;
-	bh=QpqFatomJNIZinxVMriLwhh76eQ5JXxDrrQ4EMDUW1s=;
+	s=default; t=1592581084;
+	bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8yi9LrLE0fbf3EJ1qIQqYdvn87X3izmYMKKblo48BhO7VyHQ/ocJ9OviYyNKFkgz
-	 Q5RHXcsIiqAwdtoXZFRZRAGxlkiZ8ZXnGVLj/LzkttzZ2LkeUdw+gmfd/c/D8okfFl
-	 ojz5kw4vtlWDzaDrh35LtCLEat+KF0PnkCYHQX6A=
+	b=ix6nkejf6N+/4GgGPC0gBqG3788V8IRnEjk/y98Dd+Ly17nPyBgoWKWpZt8IyAica
+	 MTTIe5LNLuZ7B+Lp4XYoYm31AaWI6b9LNpfDX/ZibZdRrWLFiyFqE7xwhTticU5nZ/
+	 vhBSq7M7nSQJTkfwWhmY0OcEP2fux9PH3S+6nf78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405157AbgFSPhv (ORCPT
+        id S2393684AbgFSP3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393518AbgFSP3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:51 -0400
+        id S2404312AbgFSP3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 894A620734;
-        Fri, 19 Jun 2020 15:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF7B21927;
+        Fri, 19 Jun 2020 15:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580590;
-        bh=QpqFatomJNIZinxVMriLwhh76eQ5JXxDrrQ4EMDUW1s=;
+        s=default; t=1592580558;
+        bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FumfSQbrslIZNZ9Ns/a118exq6/UGKIn5MPxYnNj5top1JNNLLIvD1bDPfMwg2D/L
-         +vKB1zwR55tPflZoBczvz7sCqBCnaA2XqAikycJXKJIZzOVhJKK87Gub6ardVr7csk
-         bFPfHFn4olMOnmKPF1N4KGbB+DX+WBsC1g/CURnE=
+        b=Xqfi3KmfZM8NzVK66zZwWn1WOR0m1cxr/ug20lnw/fcIKFb3NqyrGLP0n9jPE7+CP
+         Ss5ogzXvC6M+QvRu9EqlB13w9oB8YhK14DSlVEYHH1+cbFjAxWlUw+wNSti45cE0qx
+         noSEwVSOuGUbli/GJbdQJU8huo7CtzwPPZWkDa1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.7 306/376] b43_legacy: Fix connection problem with WPA3
-Date:   Fri, 19 Jun 2020 16:33:44 +0200
-Message-Id: <20200619141724.823110674@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH 5.7 278/376] ima: Remove __init annotation from ima_pcrread()
+Date:   Fri, 19 Jun 2020 16:33:16 +0200
+Message-Id: <20200619141723.494348122@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,42 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 6a29d134c04a8acebb7a95251acea7ad7abba106 upstream.
+commit 8b8c704d913b0fe490af370631a4200e26334ec0 upstream.
 
-Since the driver was first introduced into the kernel, it has only
-handled the ciphers associated with WEP, WPA, and WPA2. It fails with
-WPA3 even though mac80211 can handle those additional ciphers in software,
-b43legacy did not report that it could handle them. By setting MFP_CAPABLE using
-ieee80211_set_hw(), the problem is fixed.
+Commit 6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in
+ima_eventdigest_init()") added a call to ima_calc_boot_aggregate() so that
+the digest can be recalculated for the boot_aggregate measurement entry if
+the 'd' template field has been requested. For the 'd' field, only SHA1 and
+MD5 digests are accepted.
 
-With this change, b43legacy will handle the ciphers it knows in hardware,
-and let mac80211 handle the others in software. It is not necessary to
-use the module parameter NOHWCRYPT to turn hardware encryption off.
-Although this change essentially eliminates that module parameter,
-I am choosing to keep it for cases where the hardware is broken,
-and software encryption is required for all ciphers.
+Given that ima_eventdigest_init() does not have the __init annotation, all
+functions called should not have it. This patch removes __init from
+ima_pcrread().
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526155909.5807-3-Larry.Finger@lwfinger.net
+Cc: stable@vger.kernel.org
+Fixes:  6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/b43legacy/main.c |    1 +
- 1 file changed, 1 insertion(+)
+ security/integrity/ima/ima_crypto.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/broadcom/b43legacy/main.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-@@ -3801,6 +3801,7 @@ static int b43legacy_wireless_init(struc
- 	/* fill hw info */
- 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(hw, SIGNAL_DBM);
-+	ieee80211_hw_set(hw, MFP_CAPABLE); /* Allow WPA3 in software */
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -645,7 +645,7 @@ int ima_calc_buffer_hash(const void *buf
+ 	return calc_buffer_shash(buf, len, hash);
+ }
  
- 	hw->wiphy->interface_modes =
- 		BIT(NL80211_IFTYPE_AP) |
+-static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
++static void ima_pcrread(u32 idx, struct tpm_digest *d)
+ {
+ 	if (!ima_tpm_chip)
+ 		return;
 
 
