@@ -2,109 +2,114 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC56C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0157920885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952F82078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="L88q8AT/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YOIrJO8Z"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rJanF4yE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbgFSHHE (ORCPT
+        id S1729968AbgFSHMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:07:04 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51629 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729009AbgFSHHC (ORCPT
+        Fri, 19 Jun 2020 03:12:44 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:31793 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729080AbgFSHMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:07:02 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3925E580110;
-        Fri, 19 Jun 2020 03:07:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 19 Jun 2020 03:07:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=Iaq/G/g6pbIsquztKfoYM/2rAsj
-        V4HKssqKg+8kxQbM=; b=L88q8AT/RGODoyttIOo/VtluZCybnabYcpoLzIW2uEV
-        FMKP4dNQ9Nl6HE/nSHxWU+kJazmFlrFknoX+AkHnR7UYdtKLYX+szv6rFsl/P3vy
-        GBKVsE2nOVk/x6Qv90LELqbheen81SbT0B5SnJvrLdFVXkC55YABWtL8SN8gTnZw
-        1/UANpjBsPZMiBFpER7XwI9p2iRPqDXYPHZUlvJnvajeLjU9tWCxzdC3DkJoegn5
-        uxjmAoijso6p/SfgpfMBvreIktsaOw9MdkrPGhWVeMS4Les6zcK5HETjwt1K3lFA
-        HpfguQpisi/m47dg9wui6cBghW0Rd/WoVktklKMN/rw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Iaq/G/
-        g6pbIsquztKfoYM/2rAsjV4HKssqKg+8kxQbM=; b=YOIrJO8ZUj6zGNfOLzjcAx
-        b5RiG1iFbZcbL2/KeBLyZPcsopk/EQ5l4cQMRAnr2XFlTjzXwyRbpAlnBNP5p3T6
-        7M2v79P76YDSe9U+7ox397Sbj0S8VO71+rvNVszQE9MMj7kYUKXXOaKDCmJa95nK
-        racG0aJY6CeM4ozEzKesUYzChJ4bdhC/RQWx6DaLL9rPYAiCAQr/dl5xpDKwMKyZ
-        WVRGS5fD92Nb5K7PFpUwvlC+CsOBirzH9Bc43r46lkyknZIn0KaUOHLjs8X34gx1
-        tbFVVjTFaiVC2FRYBIBiaz9kPN1FewKyQT0kZoVlNHfncNYOm1tCPRyJZnJ4S4Kg
-        ==
-X-ME-Sender: <xms:FGTsXtliYZaq89sSjvtZu8aEyMEx0DQw79i6GJhxUQvxskPMs2iCUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejhedgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepjefhte
-    evueegjeejtddtkeetieeiheeuhedvfffffedvteeifeffgfejffeuvedtnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghdprghpphhsphhothdrtghomhenucfkphepkeefrdekie
-    drkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:FGTsXo0oSBxPcRILkBfAPAcAgoyJs1G_NNzcnYu1TQKSaTbvkKblgg>
-    <xmx:FGTsXjpKhH4OtvvVo6oi9Dse80IOClZerPBo7jkUCQSqOs9ciXHBuw>
-    <xmx:FGTsXtkiX7cfddVeeLSSXrZkzd__e7Ibd-PhWITKFpU4-Uwmzb0PbA>
-    <xmx:FWTsXkI1IsKBl76qrrWcY8Ga8m4HINlwk9uO17LAzlD_CMeJ7xijoA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1F79D3280059;
-        Fri, 19 Jun 2020 03:07:00 -0400 (EDT)
-Date:   Fri, 19 Jun 2020 09:05:27 +0200
-From:   Greg KH <greg@kroah.com>
-To:     syzbot <syzbot+42bc0d31b9a21faebdf8@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, bp@alien8.de, devel@etsukata.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, x86@kernel.org
-Subject: Re: INFO: trying to register non-static key in is_dynamic_key
-Message-ID: <20200619070527.GA544353@kroah.com>
-References: <00000000000004a76305a8624d22@google.com>
+        Fri, 19 Jun 2020 03:12:41 -0400
+X-UUID: 2a41c7a71e8548eb9f4581e19eb902ed-20200619
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sU2yodu52kHAngph3lY1etIFjGoRAmnTFcEZex/XlNw=;
+        b=rJanF4yEjLeVa/C488ipGMWhq74NWKx7ZOgfTwXvvx4C/wS7EMo/kvDpaHrW3P278ZM018nCxuf69QdYJnWh7+2kWMgmz5MzNIHazlu4IjE6GqeAbh3uBmzX55zZOwyvL9t+f1JusihGNIR6aYO1hNdxX+To07zuZBcHlFrgpLQ=;
+X-UUID: 2a41c7a71e8548eb9f4581e19eb902ed-20200619
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1634906651; Fri, 19 Jun 2020 15:12:36 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 19 Jun 2020 15:12:35 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 19 Jun 2020 15:12:35 +0800
+Message-ID: <1592550754.23952.4.camel@mtksdaap41>
+Subject: Re: [PATCH 08/10] media: mtk-vcodec: add support for MT8183 encoder
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        "Pi-Hsun Shih" <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 19 Jun 2020 15:12:34 +0800
+In-Reply-To: <20200520082723.96136-9-acourbot@chromium.org>
+References: <20200520082723.96136-1-acourbot@chromium.org>
+         <20200520082723.96136-9-acourbot@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000004a76305a8624d22@google.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:17:15PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
-> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13f305a9100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=16c2467d4b6dbee2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=42bc0d31b9a21faebdf8
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136ad566100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10138f7a100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+42bc0d31b9a21faebdf8@syzkaller.appspotmail.com
-> 
-> INFO: trying to register non-static key.
-> the code is fine but needs lockdep annotation.
-
-Why is INFO: triggering syzbot?
+T24gV2VkLCAyMDIwLTA1LTIwIGF0IDE3OjI3ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gRnJvbTogWXVuZmVpIERvbmcgPHl1bmZlaS5kb25nQG1lZGlhdGVrLmNvbT4NCj4gDQo+
+IE5vdyB0aGF0IGFsbCB0aGUgc3VwcG9ydGluZyBibG9ja3MgYXJlIHByZXNlbnQsIGVuYWJsZSBl
+bmNvZGVyIGZvcg0KPiBNVDgxODMuDQo+IA0KDQpBY2tlZC1ieTogVGlmZmFueSBMaW4gPHRpZmZh
+bnkubGluQG1lZGlhdGVrLmNvbT4NCg0KDQo+IFNpZ25lZC1vZmYtYnk6IFl1bmZlaSBEb25nIDx5
+dW5mZWkuZG9uZ0BtZWRpYXRlay5jb20+DQo+IFthY291cmJvdDogcmVmYWN0b3IsIGNsZWFudXAg
+YW5kIHNwbGl0XQ0KPiBDby1kZXZlbG9wZWQtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291cmJv
+dEBjaHJvbWl1bS5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291
+cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0tLQ0KPiAgLi4uL3BsYXRmb3JtL210ay12Y29kZWMvbXRr
+X3Zjb2RlY19kcnYuaCAgICAgIHwgIDEgKw0KPiAgLi4uL3BsYXRmb3JtL210ay12Y29kZWMvbXRr
+X3Zjb2RlY19lbmNfZHJ2LmMgIHwgMjIgKysrKysrKysrKysrKysrKysrKw0KPiAgMiBmaWxlcyBj
+aGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRp
+YS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZHJ2LmggYi9kcml2ZXJzL21lZGlhL3Bs
+YXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19kcnYuaA0KPiBpbmRleCA1OWI0Yjc1MDY2NmIu
+LmEyNzE2MTE3NTBhZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGst
+dmNvZGVjL210a192Y29kZWNfZHJ2LmgNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9t
+dGstdmNvZGVjL210a192Y29kZWNfZHJ2LmgNCj4gQEAgLTMwMiw2ICszMDIsNyBAQCBzdHJ1Y3Qg
+bXRrX3Zjb2RlY19jdHggew0KPiAgDQo+ICBlbnVtIG10a19jaGlwIHsNCj4gIAlNVEtfTVQ4MTcz
+LA0KPiArCU1US19NVDgxODMsDQo+ICB9Ow0KPiAgDQo+ICAvKioNCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuY19kcnYuYyBiL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuY19kcnYuYw0KPiBp
+bmRleCBjOGE0Yjg1YTgxYzQuLmI4ZmU0MDhkZDZjNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jX2Rydi5jDQo+ICsrKyBiL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuY19kcnYuYw0KPiBA
+QCAtNjIsNiArNjIsMTQgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfdmlkZW9fZm10IG10a192
+aWRlb19mb3JtYXRzX2NhcHR1cmVfbXQ4MTczW10gPSAgew0KPiAgCX0sDQo+ICB9Ow0KPiAgDQo+
+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a192aWRlb19mbXQgbXRrX3ZpZGVvX2Zvcm1hdHNfY2Fw
+dHVyZV9tdDgxODNbXSA9ICB7DQo+ICsJew0KPiArCQkuZm91cmNjID0gVjRMMl9QSVhfRk1UX0gy
+NjQsDQo+ICsJCS50eXBlID0gTVRLX0ZNVF9FTkMsDQo+ICsJCS5udW1fcGxhbmVzID0gMSwNCj4g
+Kwl9LA0KPiArfTsNCj4gKw0KPiAgLyogV2FrZSB1cCBjb250ZXh0IHdhaXRfcXVldWUgKi8NCj4g
+IHN0YXRpYyB2b2lkIHdha2VfdXBfY3R4KHN0cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4LCB1bnNp
+Z25lZCBpbnQgcmVhc29uKQ0KPiAgew0KPiBAQCAtNDI0LDggKzQzMiwyMiBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IG10a192Y29kZWNfZW5jX3BkYXRhIG10ODE3M19wZGF0YSA9IHsNCj4gIAkubWF4
+X2JpdHJhdGUgPSA0MDAwMDAwLA0KPiAgfTsNCj4gIA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBt
+dGtfdmNvZGVjX2VuY19wZGF0YSBtdDgxODNfcGRhdGEgPSB7DQo+ICsJLmNoaXAgPSBNVEtfTVQ4
+MTgzLA0KPiArCS5oYXNfbHRfaXJxID0gZmFsc2UsDQo+ICsJLnVzZXNfZXh0ID0gdHJ1ZSwNCj4g
+KwkuY2FwdHVyZV9mb3JtYXRzID0gbXRrX3ZpZGVvX2Zvcm1hdHNfY2FwdHVyZV9tdDgxODMsDQo+
+ICsJLm51bV9jYXB0dXJlX2Zvcm1hdHMgPSBBUlJBWV9TSVpFKG10a192aWRlb19mb3JtYXRzX2Nh
+cHR1cmVfbXQ4MTgzKSwNCj4gKwkvKiBNVDgxODMgc3VwcG9ydHMgdGhlIHNhbWUgb3V0cHV0IGZv
+cm1hdHMgYXMgTVQ4MTczICovDQo+ICsJLm91dHB1dF9mb3JtYXRzID0gbXRrX3ZpZGVvX2Zvcm1h
+dHNfb3V0cHV0X210ODE3MywNCj4gKwkubnVtX291dHB1dF9mb3JtYXRzID0gQVJSQVlfU0laRSht
+dGtfdmlkZW9fZm9ybWF0c19vdXRwdXRfbXQ4MTczKSwNCj4gKwkubWluX2JpdHJhdGUgPSA2NCwN
+Cj4gKwkubWF4X2JpdHJhdGUgPSA0MDAwMDAwMCwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25z
+dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a192Y29kZWNfZW5jX21hdGNoW10gPSB7DQo+ICAJey5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My12Y29kZWMtZW5jIiwgLmRhdGEgPSAmbXQ4MTcz
+X3BkYXRhfSwNCj4gKwl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXZjb2RlYy1lbmMi
+LCAuZGF0YSA9ICZtdDgxODNfcGRhdGF9LA0KPiAgCXt9LA0KPiAgfTsNCj4gIE1PRFVMRV9ERVZJ
+Q0VfVEFCTEUob2YsIG10a192Y29kZWNfZW5jX21hdGNoKTsNCg0K
 
