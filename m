@@ -3,136 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82977C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B46921707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583954;
-	bh=d9xj5dr0nAfh++8H+d0Yf1p2MrGb9TGXnHRFeMCwHf4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wuIxMEFwAchDP0PyJphL5uD+ckquwr8LPxxDV+201a8c2HftPlG9OsyaF255RYFnr
-	 /jr6Ki8uHyMLNH3LF1uFm66bUFG9XYwjMeUyav/sbhWzIIKb8pCudt6nQ29hC65DfI
-	 JiJWUYRHOPoguWPP79u0QNJwOIpyasEmws7GTe1s=
+	by mail.kernel.org (Postfix) with ESMTP id 56E95217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NS3ndFjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390229AbgFSO5V (ORCPT
+        id S2394848AbgFSQZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390172AbgFSO5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B134D21852;
-        Fri, 19 Jun 2020 14:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578622;
-        bh=d9xj5dr0nAfh++8H+d0Yf1p2MrGb9TGXnHRFeMCwHf4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c011GiJGSsjcvaEwNN9HKO4SsDVjgvmS8Q3j37sQsB2999JGdeDgLHjZY2zVd7bvJ
-         1iwhirOpFnfDJOw3rw8Ugco55eE/pUMDw9NgtNQxG3OTATWv5wwW3OYMKtX4wQczaO
-         bQE29FI8X9GBVdBcvozXm+X8FrxuvuMCuJJ0FWAY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/267] KVM: x86/mmu: Consolidate "is MMIO SPTE" code
-Date:   Fri, 19 Jun 2020 16:30:37 +0200
-Message-Id: <20200619141651.381887149@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:25:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51842 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393938AbgFSQZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:25:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGPgSs114399;
+        Fri, 19 Jun 2020 11:25:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592583942;
+        bh=rdXTXheLXpVlv0n0chHBII5wZ22hLFGxnY/oJyMh91A=;
+        h=From:To:CC:Subject:Date;
+        b=NS3ndFjS3TmPbRQcBRY2wPk8DH5i0zP7recwWjRYFxCznkFkpLyY7NrsBF+t9KYfD
+         ZCZG5qcniRx6JR4ggyBDRNdHTzbFeS4eeHrjNYHAo2XrHVWhC5Wkux/e4wL6zAM9es
+         CXEsJiNUSaGmSNkWQYv6L2AUr9iEI3j4rFrm6tbI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGPgqc057447;
+        Fri, 19 Jun 2020 11:25:42 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
+ Jun 2020 11:25:42 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 19 Jun 2020 11:25:42 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGPfoR005636;
+        Fri, 19 Jun 2020 11:25:42 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+CC:     Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] arm64: arch_k3: enable chipid driver
+Date:   Fri, 19 Jun 2020 19:25:27 +0300
+Message-ID: <20200619162527.1226-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+Select TI chip id driver for TI's SoCs based on K3 architecture to provide
+this information to user space and Kernel as it is required by other
+drivers to determine SoC revision to function properly.
 
-[ Upstream commit 26c44a63a291893e0a00f01e96b6e1d0310a79a9 ]
-
-Replace the open-coded "is MMIO SPTE" checks in the MMU warnings
-related to software-based access/dirty tracking to make the code
-slightly more self-documenting.
-
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- arch/x86/kvm/mmu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 440ffe810e5d..ac0a794267d4 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -299,6 +299,11 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value)
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_set_mmio_spte_mask);
- 
-+static bool is_mmio_spte(u64 spte)
-+{
-+	return (spte & shadow_mmio_mask) == shadow_mmio_value;
-+}
-+
- static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
- {
- 	return sp->role.ad_disabled;
-@@ -306,7 +311,7 @@ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
- 
- static inline bool spte_ad_enabled(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return !(spte & shadow_acc_track_value);
- }
- 
-@@ -317,13 +322,13 @@ static bool is_nx_huge_page_enabled(void)
- 
- static inline u64 spte_shadow_accessed_mask(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return spte_ad_enabled(spte) ? shadow_accessed_mask : 0;
- }
- 
- static inline u64 spte_shadow_dirty_mask(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return spte_ad_enabled(spte) ? shadow_dirty_mask : 0;
- }
- 
-@@ -393,11 +398,6 @@ static void mark_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, u64 gfn,
- 	mmu_spte_set(sptep, mask);
- }
- 
--static bool is_mmio_spte(u64 spte)
--{
--	return (spte & shadow_mmio_mask) == shadow_mmio_value;
--}
--
- static gfn_t get_mmio_spte_gfn(u64 spte)
- {
- 	u64 gpa = spte & shadow_nonpresent_or_rsvd_lower_gfn_mask;
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8dd05b2a925c..1d3710e3626a 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -98,6 +98,7 @@ config ARCH_K3
+ 	select TI_SCI_PROTOCOL
+ 	select TI_SCI_INTR_IRQCHIP
+ 	select TI_SCI_INTA_IRQCHIP
++	select TI_K3_SOCINFO
+ 	help
+ 	  This enables support for Texas Instruments' K3 multicore SoC
+ 	  architecture.
 -- 
-2.25.1
-
-
+2.17.1
 
