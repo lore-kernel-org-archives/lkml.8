@@ -2,57 +2,61 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E31C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C2B2100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A092166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584248;
-	bh=8K0DiG5m3/Kac9wy/hVtWgjJWdFjzTJoSPEQSyGP45k=;
+	s=default; t=1592584251;
+	bh=Wbwb0uAwC8Fd8ZuONJ/WdEG5V12dLGIN8gNRj3+Jb1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vh5anDjUslMv2eadsEI9V3WrFC8ahqjq887k81iub36fRCqatZgsB/lFe25pZZ63H
-	 RvU05QToYdECcWo2xs7dz/fiidMi4yPc6RpXwqDV0n8yepAv4gofJ9ywriiymRipWf
-	 KPCU1EAIXv5S+r5uy+cHYhnjf/tTk1/d5OA18heU=
+	b=0f8OTEES6Vt191p6RAI8ziM6tfWMXtohPJoaUWRXu7dqAl6fvrzIz3G1GWG/a/SCl
+	 7gU9wJ1ndIKCv0MAm1Yu4CaaYVWa8EDCVVyusMAlQl3mmdzWCvponrDVtPiA8xEiTQ
+	 w9p4AF3eOsrOk8xJhJM+/4cZlExCDXtS6rt8TFA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395026AbgFSQar (ORCPT
+        id S2395034AbgFSQat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389689AbgFSOxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:22 -0400
+        id S2389685AbgFSOxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA00218AC;
-        Fri, 19 Jun 2020 14:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B9421852;
+        Fri, 19 Jun 2020 14:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578402;
-        bh=8K0DiG5m3/Kac9wy/hVtWgjJWdFjzTJoSPEQSyGP45k=;
+        s=default; t=1592578400;
+        bh=Wbwb0uAwC8Fd8ZuONJ/WdEG5V12dLGIN8gNRj3+Jb1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmDS5LBFjA0KlJuuKzj2kx/s01dV8yg5p8aMWsSitg1TZw5zn1c+EXawlG3OfQjVQ
-         qhC6AJ5vq2p/2nQ/Ce3l4s/4R3donM9O+wax1wc3a7GV/n303KoO6Yw8ilDfK5/g32
-         8p22gUwo6YUL9mIboi2J2dCFSQnWjhMNMJxqDZ4A=
+        b=esha5tSWKhxNTPRjI7vG6WwtWOgxZSsGOY9nB5kbq6JabOG+njPGBlgYp6KGp7ZMa
+         SFvkoYvVcGKD5m1kYpSQhBDLe2sOiirzL6GbL9QqvCnS47RItwJX3VdzX1L8wVTKk1
+         cTgRMABd1PEHjxrY9f9oeb1oi4yQ/xpIVLJDBC/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 001/267] ipv6: fix IPV6_ADDRFORM operation logic
-Date:   Fri, 19 Jun 2020 16:29:46 +0200
-Message-Id: <20200619141648.919524762@linuxfoundation.org>
+        stable@vger.kernel.org, Darrel Goeddel <dgoeddel@forcepoint.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Mark Scott <mscott@forcepoint.com>
+Subject: [PATCH 4.14 157/190] PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints
+Date:   Fri, 19 Jun 2020 16:33:22 +0200
+Message-Id: <20200619141641.584929306@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,77 +65,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Ashok Raj <ashok.raj@intel.com>
 
-[ Upstream commit 79a1f0ccdbb4ad700590f61b00525b390cb53905 ]
+[ Upstream commit 3247bd10a4502a3075ce8e1c3c7d31ef76f193ce ]
 
-Socket option IPV6_ADDRFORM supports UDP/UDPLITE and TCP at present.
-Previously the checking logic looks like:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol != IPPROTO_TCP)
-	break;
+All Intel platforms guarantee that all root complex implementations must
+send transactions up to IOMMU for address translations. Hence for Intel
+RCiEP devices, we can assume some ACS-type isolation even without an ACS
+capability.
 
-After commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation"), TCP
-was blocked as the logic changed to:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
-	break;
-else
-	break;
+>From the Intel VT-d spec, r3.1, sec 3.16 ("Root-Complex Peer to Peer
+Considerations"):
 
-Then after commit 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
-UDP/UDPLITE were blocked as the logic changed to:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
+  When DMA remapping is enabled, peer-to-peer requests through the
+  Root-Complex must be handled as follows:
 
-if (sk->sk_protocol != IPPROTO_TCP)
-	break;
+  - The input address in the request is translated (through first-level,
+    second-level or nested translation) to a host physical address (HPA).
+    The address decoding for peer addresses must be done only on the
+    translated HPA. Hardware implementations are free to further limit
+    peer-to-peer accesses to specific host physical address regions (or
+    to completely disallow peer-forwarding of translated requests).
 
-Fix it by using Eric's code and simply remove the break in TCP check, which
-looks like:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
-else
-	break;
+  - Since address translation changes the contents (address field) of
+    the PCI Express Transaction Layer Packet (TLP), for PCI Express
+    peer-to-peer requests with ECRC, the Root-Complex hardware must use
+    the new ECRC (re-computed with the translated address) if it
+    decides to forward the TLP as a peer request.
 
-Fixes: 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  - Root-ports, and multi-function root-complex integrated endpoints, may
+    support additional peer-to-peer control features by supporting PCI
+    Express Access Control Services (ACS) capability. Refer to ACS
+    capability in PCI Express specifications for details.
+
+Since Linux didn't give special treatment to allow this exception, certain
+RCiEP MFD devices were grouped in a single IOMMU group. This doesn't permit
+a single device to be assigned to a guest for instance.
+
+In one vendor system: Device 14.x were grouped in a single IOMMU group.
+
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+
+After this patch:
+
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+  /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+
+14.0 and 14.2 are integrated devices, but legacy end points, whereas 14.3
+was a PCIe-compliant RCiEP.
+
+  00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+    Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+
+This permits assigning this device to a guest VM.
+
+[bhelgaas: drop "Fixes" tag since this doesn't fix a bug in that commit]
+Link: https://lore.kernel.org/r/1590699462-7131-1-git-send-email-ashok.raj@intel.com
+Tested-by: Darrel Goeddel <dgoeddel@forcepoint.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Mark Scott <mscott@forcepoint.com>,
+Cc: Romil Sharma <rsharma@forcepoint.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ipv6_sockglue.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -185,14 +185,15 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			}
--			if (sk->sk_protocol == IPPROTO_TCP &&
--			    sk->sk_prot != &tcpv6_prot) {
--				retv = -EBUSY;
-+			} else if (sk->sk_protocol == IPPROTO_TCP) {
-+				if (sk->sk_prot != &tcpv6_prot) {
-+					retv = -EBUSY;
-+					break;
-+				}
-+			} else {
- 				break;
- 			}
--			if (sk->sk_protocol != IPPROTO_TCP)
--				break;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 3e1a0a207734..0472e69833c8 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4513,6 +4513,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+ 	return acs_flags ? 0 : 1;
+ }
+ 
++static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	/*
++	 * Intel RCiEP's are required to allow p2p only on translated
++	 * addresses.  Refer to Intel VT-d specification, r3.1, sec 3.16,
++	 * "Root-Complex Peer to Peer Considerations".
++	 */
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
++		return -ENOTTY;
 +
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++}
++
+ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	/*
+@@ -4596,6 +4610,7 @@ static const struct pci_dev_acs_enabled {
+ 	/* I219 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+ 	/* QCOM QDF2xxx root ports */
+ 	{ 0x17cb, 0x400, pci_quirk_qcom_rp_acs },
+ 	{ 0x17cb, 0x401, pci_quirk_qcom_rp_acs },
+-- 
+2.25.1
+
 
 
