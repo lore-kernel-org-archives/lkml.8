@@ -2,206 +2,123 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D44C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9050C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9B720890
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7A020789
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:22:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUprA435"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgFSEQ5 convert rfc822-to-8bit (ORCPT
+        id S1728137AbgFSEW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:16:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45916 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgFSEQ4 (ORCPT
+        Fri, 19 Jun 2020 00:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgFSEWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:16:56 -0400
-Received: from mail-pl1-f198.google.com ([209.85.214.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jm8ST-0003Bg-LU
-        for linux-kernel@vger.kernel.org; Fri, 19 Jun 2020 04:16:53 +0000
-Received: by mail-pl1-f198.google.com with SMTP id x8so5458321pll.19
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:16:53 -0700 (PDT)
+        Fri, 19 Jun 2020 00:22:25 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D52C06174E;
+        Thu, 18 Jun 2020 21:22:25 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id j4so3416453plk.3;
+        Thu, 18 Jun 2020 21:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z3GUFsva8EQpwFe5HMmUvMzv7A1xWJY+kiZONaSTGso=;
+        b=EUprA435Od+Y8lek6U+HfiNDhNNPXmzEvmh3IotGrECuAHywhJoec/xQnwM7tiQaQz
+         wrFB+M0XoWLsTVH7XFdCbJxUNHZVgWJHCanK+tmdhgbBwbh9b4r++Jfng1wO5ox7zHv2
+         VJMSGCgs2Smvu58ZtQ5MFVy2yDowHSnDk7RarLOEMoCs4zsf5Pr/5fd2aUGkn5VZ3qzZ
+         ZVt/YIIy6ilJbS8y/QGzj0Cg4gGEDQ3gPjB7Izi7SumhmydGiO2Jt6tJ4tXMvPUdz7XL
+         msoBwbCprL1AZIsBLbseZK63Zg3VCS9gPT/5H1vY8wwUiLOKyKz2uyuv1NtjDujxEJ1+
+         Qfqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xPGhMsH5BAJY2SnMB4S7uPRyLNT6K14xlqaxOAZv3to=;
-        b=Y/jkdm/DVYrfaxcgT1EW9tsl8/kl6NN1Ac3RuJl6RPFSmh0EUpUXPJKemmJh+Cyz4r
-         I0fk5buEamxXuqDQo/hZUMNT1DGNHfaxJtZggd6xreB+roVpPmZcwpBY7kr3b+v4mrjs
-         0X30jRbyXcaalvD8shpvlFlVVyWLBUOYsejPfeoIGiliKYIQmyUT/aNgA2pBY6e99QtY
-         TWhnPG7o4FSWvxc5jy29hvVQO+yGXPcJJuNvipKK+YApWNxxghLzRhi2fyACMiIJIFvp
-         TOaRTCp7DdrqQ12YOXE0NtnlqoSh5UsUsdeSul2fWtoO75Z1ezX0e5HUD3rgSRMEMPA1
-         ud5A==
-X-Gm-Message-State: AOAM530hdE5C1nK4bEyzLiKU6uNgmRR8I2dBrGFo0mafkbhrEGoyoSKh
-        YbKeYaNleAhqxoF/Djm9cpRsCumxOiPkozRVnF1D+ddoLqC2SRA3lkfUPTg1XQsjiua9O7ppltT
-        IbdioVEmFBZbmTMAxtD6Bi/oy5dDf7tPWqM/mgcZV3A==
-X-Received: by 2002:a65:4c8a:: with SMTP id m10mr1507709pgt.138.1592540212093;
-        Thu, 18 Jun 2020 21:16:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFWyjdmQuBq3Tq7NpYQ2+kssm4u29Qa/b3v33nhK4iOvAtAidX052gjfmchPjC6b9FtGhrEg==
-X-Received: by 2002:a65:4c8a:: with SMTP id m10mr1507679pgt.138.1592540211604;
-        Thu, 18 Jun 2020 21:16:51 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id gm11sm3834302pjb.9.2020.06.18.21.16.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jun 2020 21:16:51 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3] HID: i2c-hid: Enable touchpad wakeup from
- Suspend-to-Idle
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
-Date:   Fri, 19 Jun 2020 12:16:47 +0800
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
-        HungNien Chen <hn.chen@weidahitech.com>,
-        Pavel Balan <admin@kryma.net>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <FAF68BF5-FCBC-4D08-AF0F-98EEA209BB86@canonical.com>
-References: <20200618145515.5055-1-kai.heng.feng@canonical.com>
- <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z3GUFsva8EQpwFe5HMmUvMzv7A1xWJY+kiZONaSTGso=;
+        b=F+OaaFWAQMADYnKTkaz7ErqOpKJF0ML9HkvH98SsK5d/MSdoY7eqb8UuwJSyW5CvNk
+         nOEkpBY//hNndCmZTj3/6EouG7su1dAD4D/rlGuiRtb49Je9cy03snRtA13UHb+ZyYro
+         gg/IDKEwFOHY0lgAHMhqexWSJHXNz9aKWC7A/uGWY2R31TMkXzADGxdRXf0JMBrYFoyZ
+         RlODkPWPuly9PJSC/Pnwj465uEMX8QsFu9aS+T2O9v7uxi79vw/W0H5aFAONvVzLBkOc
+         xo4imGEWYS0ayhOdMO4mrCCPghAgwXILRHwFEDoLdbCYMgXsNBSz0nbZjzbGpN8F7MHE
+         HcjA==
+X-Gm-Message-State: AOAM530hM33MrE8BzmojFomalWOo6QcrH/IBYZxCa/U5vvJYcV8neukg
+        bTRTIHB6v7Sx2Yz8V8jQEV0Yp2NX8tE=
+X-Google-Smtp-Source: ABdhPJymq9m4Ug+KBob+tkN8AU2UPVKb07m77ZsScNRLIsRPt3uzaI3IYl11BJKFxgzvBGkDCEqsGQ==
+X-Received: by 2002:a17:902:ea82:: with SMTP id x2mr6779510plb.88.1592540544767;
+        Thu, 18 Jun 2020 21:22:24 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:f960:d5b8:822f:1ca1? ([2404:7a87:83e0:f800:f960:d5b8:822f:1ca1])
+        by smtp.gmail.com with ESMTPSA id 27sm3870622pjg.19.2020.06.18.21.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 21:22:24 -0700 (PDT)
+Subject: Re: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
+To:     Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Namjae Jeon' <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
+ <20200616021808.5222-1-kohada.t2@gmail.com>
+ <414101d64477$ccb661f0$662325d0$@samsung.com>
+ <aac9d6c7-1d62-a85d-9bcb-d3c0ddc8fcd6@gmail.com>
+ <500801d64572$0bdd2940$23977bc0$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <0a93d1a1-dc34-f799-240e-843d7f021bbf@gmail.com>
+Date:   Fri, 19 Jun 2020 13:22:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <500801d64572$0bdd2940$23977bc0$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+>> I mentioned rmdir as an example.
+>> However, this problem is not only with rmdirs.
+>> VOL_DIRTY remains when some functions abort with an error.
+>> In original, VOL_DIRTY is not cleared even if performe 'sync'.
+>> With this patch, it ensures that VOL_DIRTY will be cleared by 'sync'.
+>>
+>> Is my description insufficient?
+> 
+> I understood what you said. However, it is a natural result
+> when deleting the related code with EXFAT_SB_DIRTY flag.
+> 
+> So I thought it would be better to separate it into new problems
+> related to VOL_DIRTY-set under not real errors.
 
-> On Jun 18, 2020, at 23:28, Hans de Goede <hdegoede@redhat.com> wrote:
-> 
-> Hi,
-> 
-> On 6/18/20 4:55 PM, Kai-Heng Feng wrote:
->> Many laptops can be woken up from Suspend-to-Idle by touchpad. This is
->> also the default behavior on other OSes.
->> So let's enable the wakeup support if the system defaults to
->> Suspend-to-Idle.
-> 
-> I have been debugging a spurious wakeup issue on an Asus T101HA,
-> where the system would not stay suspended when the lid was closed.
-> 
-> The issue turns out to be that the touchpad is generating touch
-> events when the lid/display gets close to the touchpad. In this case
-> wakeup is already enabled by default because it is an USB device.
+I see.
+It seems that it is better to consider separately when consistency is corrupted and when it is kept.
 
-Sounds like a mechanical/hardware issue to me.
-I've seen some old laptops have the same issue.
-
-Swollen battery can push up the touchpad, makes it contact to touchscreen, and wakes up the system.
-
+>> BTW
+>> Even with this patch applied,  VOL_DIRTY remains until synced in the above
+>> case.
+>> It's not  easy to reproduce as rmdir, but I'll try to fix it in the future.
 > 
-> So I do not believe that this is a good idea, most current devices
-> with a HID multi-touch touchpad use i2c-hid and also use S2idle,
-> so this will basically enable wakeup by touchpad on almost all
-> current devices.
+> I think it's not a problem not to clear VOL_DIRTY under real errors,
+> because VOL_DIRTY is just like a hint to note that write was not finished clearly.
+> 
+> If you mean there are more situation like ENOTEMPTY you mentioned,
+> please make new patch to fix them.
 
-However, it's really handy to wake up the system from touchpad.
+Hmm.
+VOL_DIRTY is easily cleared by another write operation.
+For that purpose, I think MediaFailure is more appropriate.
 
-> 
-> There will likely be other devices with the same issue as the T101HA,
-> but currently we are not seeing this issue because by default i2c-hid
-> devices do not have wakeup enabled. This change will thus likely cause
-> new spurious wakeup issues on more devices. So this seems like a
-> bad idea.
-
-But only under lid is closed?
-
-I wonder if it's okay to handle the case in s2idle_loop() or in userspace?
-Lid close -> Wakeup event from touchpad -> Found the lid is closed 
--> Turn off touchpad wakeup -> continue suspend.
-
-> 
-> Also your commit message mentions touchpads, but the change
-> will also enable wakeup on most touchscreens out there, meaning
-> that just picking up a device in tablet mode and accidentally
-> touching the screen will wake it up.
-
-I tried touch and i2c-hid touchscreen and it doesn't wake up the system.
-However we should still handle the two different cases, probably differentiate touchpad and touchscreen in hid-multitouch.
-
-> 
-> Also hid multi-touch devices have 3 modes, see the diagrams
-> in Microsoft hw design guides for win8/10 touch devices:
-> 1. Reporting events with low latency (high power mode)
-> 2. Reporting events with high latency (lower power mode)
-> 3. Not reporting events (lowest power mode)
-> 
-> I actually still need to write some patches for hid-multitouch.c
-> to set the mode to 2 or 3 on suspend depending on the device_may_wakeup
-> setting of the parent. Once that patch is written, it should
-> put most i2c-hid mt devices in mode 3, hopefully also helping
-> with Linux' relative high power consumption when a device is
-> suspended. With your change instead my to-be-written patch
-> would put the device in mode 2, which would still be an
-> improvement but less so.
-
-IIRC, touchpad and touchscreen connect to different parents on all laptops I worked on.
-So I think it's possible to enable mode 2 for touchpad, and mode 3 for touchscreen.
-
-Touchpad wake is really handy, let's figure out how to enable it while covering all potential regression risks.
-
-Kai-Heng
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> 
-> 
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> v3:
->>  - Use device_init_wakeup().
->>  - Wording change.
->> v2:
->>  - Fix compile error when ACPI is not enabled.
->>  drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
->> index 294c84e136d7..dae1d072daf6 100644
->> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
->> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
->> @@ -931,6 +931,12 @@ static void i2c_hid_acpi_fix_up_power(struct device *dev)
->>  		acpi_device_fix_up_power(adev);
->>  }
->>  +static void i2c_hid_acpi_enable_wakeup(struct device *dev)
->> +{
->> +	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
->> +		device_init_wakeup(dev, true);
->> +}
->> +
->>  static const struct acpi_device_id i2c_hid_acpi_match[] = {
->>  	{"ACPI0C50", 0 },
->>  	{"PNP0C50", 0 },
->> @@ -945,6 +951,8 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
->>  }
->>    static inline void i2c_hid_acpi_fix_up_power(struct device *dev) {}
->> +
->> +static inline void i2c_hid_acpi_enable_wakeup(struct device *dev) {}
->>  #endif
->>    #ifdef CONFIG_OF
->> @@ -1072,6 +1080,8 @@ static int i2c_hid_probe(struct i2c_client *client,
->>    	i2c_hid_acpi_fix_up_power(&client->dev);
->>  +	i2c_hid_acpi_enable_wakeup(&client->dev);
->> +
->>  	device_enable_async_suspend(&client->dev);
->>    	/* Make sure there is something at this address */
-> 
-
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
