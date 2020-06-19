@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213DA206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03748206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580955;
-	bh=Cj3n0XTwhCg+EkvrE/zsdb1K+4DKdGGpbmvgDDCCccU=;
+	s=default; t=1592580958;
+	bh=THVtaWUnXGtkXiUpMl98ezwe7oGbMPmTprpCeiVDeSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eG8JUx7J7ABXdrOEgcvZowoLGvPFBGfDef+BbfbHSvGXWJVgvtBlFoDmx4gAacakI
-	 YF+11L2SRIuH+Ti+rmmaeVT+yJliIKSAiVCSgzh4db+/T9m3aJFkSL2ANdpuR/ppu7
-	 8bSQUBGLls/9zyQ8cHldPoBTnJXhc7O3MwEwcGCQ=
+	b=wmtEiQNOcKYeA+Gq3V3kW5kuxpNm2lYmpIEjuWQu8PA1mLooTkNgOOXUxx+Ayj9c1
+	 uziIGSwozzSdy4NIju7iQAAPNPCRrvG3cgG19Emgwj0NB8DOR2idTpkeIEJM0kTvTP
+	 u/0XjNSkx/Fw+65iLb6xz9YEqWC7B4RhVjurnqh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393821AbgFSPbY (ORCPT
+        id S2405037AbgFSPf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393783AbgFSPbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:10 -0400
+        id S2393812AbgFSPbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963E720734;
-        Fri, 19 Jun 2020 15:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262E52166E;
+        Fri, 19 Jun 2020 15:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580669;
-        bh=Cj3n0XTwhCg+EkvrE/zsdb1K+4DKdGGpbmvgDDCCccU=;
+        s=default; t=1592580679;
+        bh=THVtaWUnXGtkXiUpMl98ezwe7oGbMPmTprpCeiVDeSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Kno/ZUqUMj8cq5M5PAowHEBT1IJX0KqlUL2TvaAt6/TJG72i0Gf8j4/AHOvjcpA9
-         +ruZraO7lmS90Oobw1b5yvdvFzUJcoSzoLMYaIWeC2+tAob5yqmuGUZ7+4FaEDMYS0
-         sOgxlftVHpfreJp1XBm4uFAJglDeAy/sptIYxBoo=
+        b=uBXco2l95FCrWMmx7GaN1Pa/qEwDZRYP+BKzV+VblnO5+B8sVxuEIwvxJjaIXJgN6
+         yeWtSC9v6ZzAYjuL7BwJzdnArp3vvt5UTdz33zwNeaPRMUzjk2wtUrqncibhSz5g//
+         uwWq5rEr3fjxRIpzt9x/+O9I38xvwl3LQqV7p4jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 337/376] drivers/macintosh: Fix memleak in windfarm_pm112 driver
-Date:   Fri, 19 Jun 2020 16:34:15 +0200
-Message-Id: <20200619141726.285539729@linuxfoundation.org>
+Subject: [PATCH 5.7 340/376] powerpc/kasan: Fix shadow pages allocation failure
+Date:   Fri, 19 Jun 2020 16:34:18 +0200
+Message-Id: <20200619141726.427515605@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,100 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-commit 93900337b9ac2f4eca427eff6d187be2dc3b5551 upstream.
+commit d2a91cef9bbdeb87b7449fdab1a6be6000930210 upstream.
 
-create_cpu_loop() calls smu_sat_get_sdb_partition() which does
-kmalloc() and returns the allocated buffer. In fact it's called twice,
-and neither buffer is freed.
+Doing kasan pages allocation in MMU_init is too early, kernel doesn't
+have access yet to the entire memory space and memblock_alloc() fails
+when the kernel is a bit big.
 
-This results in a memory leak as reported by Erhard:
-  unreferenced object 0xc00000047081f840 (size 32):
-    comm "kwindfarm", pid 203, jiffies 4294880630 (age 5552.877s)
-    hex dump (first 32 bytes):
-      c8 06 02 7f ff 02 ff 01 fb bf 00 41 00 20 00 00  ...........A. ..
-      00 07 89 37 00 a0 00 00 00 00 00 00 00 00 00 00  ...7............
-    backtrace:
-      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
-      [<000000003010fcb7>] .pm112_wf_notify+0x104c/0x13bc [windfarm_pm112]
-      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
-      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
-      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
-      [<000000000d54838d>] .kthread+0x13c/0x190
-      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
-  unreferenced object 0xc0000004737089f0 (size 16):
-    comm "kwindfarm", pid 203, jiffies 4294880879 (age 5552.050s)
-    hex dump (first 16 bytes):
-      c4 04 01 7f 22 11 e0 e6 ff 55 7b 12 ec 11 00 00  ...."....U{.....
-    backtrace:
-      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
-      [<00000000b94ef7e1>] .pm112_wf_notify+0x1294/0x13bc [windfarm_pm112]
-      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
-      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
-      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
-      [<000000000d54838d>] .kthread+0x13c/0x190
-      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
+Do it from kasan_init() instead.
 
-Fix it by rearranging the logic so we deal with each buffer
-separately, which then makes it easy to free the buffer once we're
-done with it.
-
-Fixes: ac171c46667c ("[PATCH] powerpc: Thermal control for dual core G5s")
-Cc: stable@vger.kernel.org # v2.6.16+
-Reported-by: Erhard F. <erhard_f@mailbox.org>
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Erhard F. <erhard_f@mailbox.org>
-Link: https://lore.kernel.org/r/20200423060038.3308530-1-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/c24163ee5d5f8cdf52fefa45055ceb35435b8f15.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/macintosh/windfarm_pm112.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/powerpc/include/asm/kasan.h      |    2 --
+ arch/powerpc/mm/init_32.c             |    2 --
+ arch/powerpc/mm/kasan/kasan_init_32.c |    4 +++-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/macintosh/windfarm_pm112.c
-+++ b/drivers/macintosh/windfarm_pm112.c
-@@ -132,14 +132,6 @@ static int create_cpu_loop(int cpu)
- 	s32 tmax;
- 	int fmin;
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -27,12 +27,10 @@
  
--	/* Get PID params from the appropriate SAT */
--	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
--	if (hdr == NULL) {
--		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
--		return -EINVAL;
--	}
--	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
+ #ifdef CONFIG_KASAN
+ void kasan_early_init(void);
+-void kasan_mmu_init(void);
+ void kasan_init(void);
+ void kasan_late_init(void);
+ #else
+ static inline void kasan_init(void) { }
+-static inline void kasan_mmu_init(void) { }
+ static inline void kasan_late_init(void) { }
+ #endif
+ 
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -170,8 +170,6 @@ void __init MMU_init(void)
+ 	btext_unmap();
+ #endif
+ 
+-	kasan_mmu_init();
 -
- 	/* Get FVT params to get Tmax; if not found, assume default */
- 	hdr = smu_sat_get_sdb_partition(chip, 0xC4 + core, NULL);
- 	if (hdr) {
-@@ -152,6 +144,16 @@ static int create_cpu_loop(int cpu)
- 	if (tmax < cpu_all_tmax)
- 		cpu_all_tmax = tmax;
+ 	setup_kup();
  
-+	kfree(hdr);
-+
-+	/* Get PID params from the appropriate SAT */
-+	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
-+	if (hdr == NULL) {
-+		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
-+		return -EINVAL;
-+	}
-+	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
-+
- 	/*
- 	 * Darwin has a minimum fan speed of 1000 rpm for the 4-way and
- 	 * 515 for the 2-way.  That appears to be overkill, so for now,
-@@ -174,6 +176,9 @@ static int create_cpu_loop(int cpu)
- 		pid.min = fmin;
- 
- 	wf_cpu_pid_init(&cpu_pid[cpu], &pid);
-+
-+	kfree(hdr);
-+
- 	return 0;
+ 	/* Shortly after that, the entire linear mapping will be available */
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -132,7 +132,7 @@ static void __init kasan_unmap_early_sha
+ 	flush_tlb_kernel_range(k_start, k_end);
  }
  
+-void __init kasan_mmu_init(void)
++static void __init kasan_mmu_init(void)
+ {
+ 	int ret;
+ 	struct memblock_region *reg;
+@@ -160,6 +160,8 @@ void __init kasan_mmu_init(void)
+ 
+ void __init kasan_init(void)
+ {
++	kasan_mmu_init();
++
+ 	kasan_remap_early_shadow_ro();
+ 
+ 	clear_page(kasan_early_shadow_page);
 
 
