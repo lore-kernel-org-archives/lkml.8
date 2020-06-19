@@ -2,77 +2,120 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB58C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABDD22283
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fMi+T9UO"
+	by mail.kernel.org (Postfix) with ESMTP id 39D25222EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592605441;
+	bh=lpWOFSAg1+TkOuoqTZhM/vkmwNWUocGtdWu/J2wCakI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VHriNWPXcTUZIkdlXLksirKYyV+0VzXDfexDeukxUsdVJgA0RmBgKnb2252uWC9oB
+	 3uF+bd7Nzbv3WGw7qkFItOt+qOQ8dQ5XJjz/Di9FOg0fWnzmzGMIK2zipM2pW5WuBM
+	 eKKVAoMmAdCU33DxoO9k9aFIBHrzUpgXnY5X/wzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgFSWWV (ORCPT
+        id S1729320AbgFSWYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:22:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46674 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729283AbgFSWWU (ORCPT
+        Fri, 19 Jun 2020 18:24:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729229AbgFSWX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:22:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592605339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KckeDijG9hpK4dBhAcGm37ROV9Z0JbkQ/pdnyqRrzZU=;
-        b=fMi+T9UOLKrIqrxAbFmOCj4ZDMlDH7COtNPEeTSyhpxhjCNECPkt60ZadQr2uMfGGBfdPR
-        LOxDdWIw2V5R9peBr52ok2fmXc3Tyjd6dcYFXy6YKid84zTInVIqFHZhpRLvVPMlCp6To/
-        zpr1sjyv+vlkXjMEAJHxpvPAt+hqdcw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-PIKCnAkpPOuGYwEIMmjiMg-1; Fri, 19 Jun 2020 18:22:15 -0400
-X-MC-Unique: PIKCnAkpPOuGYwEIMmjiMg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 668F3464;
-        Fri, 19 Jun 2020 22:22:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA75B5BAC3;
-        Fri, 19 Jun 2020 22:22:12 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <0000000000005805de05a87732bf@google.com>
-References: <0000000000005805de05a87732bf@google.com>
-To:     syzbot <syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com>
-Cc:     dhowells@redhat.com, davem@davemloft.net, kuba@kernel.org,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: net-next test error: KASAN: use-after-free Write in afs_wake_up_async_call
+        Fri, 19 Jun 2020 18:23:59 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D93C06174E;
+        Fri, 19 Jun 2020 15:23:59 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b4so10456929qkn.11;
+        Fri, 19 Jun 2020 15:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=145gDxPs4UjYBcZ4oStF0WngBWodlGruxxsqd7FuCUg=;
+        b=Kk6pcx/vpw5c9Vm519/nmC7IlCQ5PEgq77a4uNMJGFxHMnh81Y5hPAZ3kOKOXBblvC
+         4kxQp4oHPCFH7vgM8ziZkSyRmBMOV1DHRoES6At3qq3L1qqTcuAjwLmQj/maA1U1GOLJ
+         0vIkEluNxZw05LAYudI9dv9VTQFnKfMoa/cfUokbxNz6QAJWpdyr8BcUYHiL6qXZmoD2
+         rk5Cjvq7JyAGTPwJALA6zpwtU8zyxYAJJ8U+7cbONSRLMQy1X+Q6cLUlrUAv+8cKDYbO
+         NP0xyF4452zygPMvuiqsfwgb21qKLDs/7QT8mqXscjNpQ3OSNP/WSwmzRCOhcVHpY74U
+         AUgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=145gDxPs4UjYBcZ4oStF0WngBWodlGruxxsqd7FuCUg=;
+        b=VLyw5VqV0IDOzCw+1vVb55W/NdbVZaUYUjUJvk9lOOz0gNOhiFZZCshSycu0YaA/Yh
+         GolO10m+IOHH8vKSzbKQInx5zyjr6HYTHfxHafu2ySu2jK2n/Ylz54aTkdk3aunSj33q
+         D4sIn/9UlyBiONu7RNOLtMkBwrkS4T816Vd0qCTS+hxun/WexToyoTskDBPNsR2NvZiu
+         aMUqI1OMYQ41L5uSaa83kSwlt+OZ0R5Th+OUzjlFKaopvmCnfyarTJkjegtwa0/46kIS
+         /zml2Iz2eQldOx2XsbYTWJroJbVlAZqBVya42e//wH5XJxhGl/FshifC69Ft934zFgrH
+         CwKQ==
+X-Gm-Message-State: AOAM532Xn0SUksusMemS0p8DBTl6oCoflw6iz8ZbPyKI7Nun4ax2PSRK
+        EArzCVrCUSqtXe3U3WT4RFI=
+X-Google-Smtp-Source: ABdhPJxMlduq8nlFoUJ1WNTxjYcATahyZco+/QgnyHvmhYWPBmhSWSNmkIKbLWhVUjx4HWOpGO34ng==
+X-Received: by 2002:a37:5805:: with SMTP id m5mr5773473qkb.176.1592605438317;
+        Fri, 19 Jun 2020 15:23:58 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id g51sm7850276qtb.69.2020.06.19.15.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 15:23:57 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 18:23:56 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Cc:     Ian Kent <raven@themaw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+Message-ID: <20200619222356.GA13061@mtj.duckdns.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+ <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2215551.1592605332.1@warthog.procyon.org.uk>
-Date:   Fri, 19 Jun 2020 23:22:12 +0100
-Message-ID: <2215552.1592605332@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com> wrote:
+On Fri, Jun 19, 2020 at 01:41:39PM -0700, Rick Lindsley wrote:
+> On 6/19/20 8:38 AM, Tejun Heo wrote:
+> 
+> > I don't have strong objections to the series but the rationales don't seem
+> > particularly strong. It's solving a suspected problem but only half way. It
+> > isn't clear whether this can be the long term solution for the problem
+> > machine and whether it will benefit anyone else in a meaningful way either.
+> 
+> I don't understand your statement about solving the problem halfway. Could
+> you elaborate?
 
-> This crash does not have a reproducer. I cannot test it.
+Spending 5 minutes during boot creating sysfs objects doesn't seem like a
+particularly good solution and I don't know whether anyone else would
+experience similar issues. Again, not necessarily against improving the
+scalability of kernfs code but the use case seems a bit out there.
 
-This should do it:
+> > I think Greg already asked this but how are the 100,000+ memory objects
+> > used? Is that justified in the first place?
+> 
+> They are used for hotplugging and partitioning memory. The size of the
+> segments (and thus the number of them) is dictated by the underlying
+> hardware.
 
-	insmod fs/afs/kafs.ko; rmmod kafs
+This sounds so bad. There gotta be a better interface for that, right?
 
-David
+Thanks.
 
+-- 
+tejun
