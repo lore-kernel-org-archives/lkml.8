@@ -2,157 +2,208 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A67821556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9815720809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzqwU9Ch"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZyWYcff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404657AbgFSPlr (ORCPT
+        id S2405163AbgFSPl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:41:47 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393816AbgFSPj5 (ORCPT
+        Fri, 19 Jun 2020 11:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394020AbgFSPlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:39:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592581196;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=q4ovKratZCSdmGZkEH5XxtAVk/bfW/tIg5fwu53CctM=;
-        b=RzqwU9ChZrIlw1dtCZThu9PJ32yph2MamkvPAhT5xOuNtj4Ra5Qth4NI8x/Ex95HArkTYE
-        D44jUSfuI7Lz8V0brZLUJ4EF6calprKrOXTZPzR8ILiQ1zz4UmxO7F9vREtivXebQ2w8/C
-        G4Kxtju6hx0TJut1/FVdnzF5ih9hUtg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-hVCkjmcDMROqzLzmByb_xw-1; Fri, 19 Jun 2020 11:39:52 -0400
-X-MC-Unique: hVCkjmcDMROqzLzmByb_xw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7829F80559E;
-        Fri, 19 Jun 2020 15:39:49 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-112-254.ams2.redhat.com [10.36.112.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2965860BF4;
-        Fri, 19 Jun 2020 15:39:44 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
-        babu.moger@amd.com
-Subject: [PATCH v2 04/11] KVM: x86: rename update_bp_intercept to update_exception_bitmap
-Date:   Fri, 19 Jun 2020 17:39:18 +0200
-Message-Id: <20200619153925.79106-5-mgamal@redhat.com>
-In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
-References: <20200619153925.79106-1-mgamal@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Fri, 19 Jun 2020 11:41:37 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB43C06174E;
+        Fri, 19 Jun 2020 08:41:36 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so10654524ejc.8;
+        Fri, 19 Jun 2020 08:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DponZSTc3PXadFZ/Va5z+HlpHIhGzNlZ4rlMGnjJEz8=;
+        b=QZyWYcffTCxTAou4/XDL0wFs/ac5lDwo/8AznACPc3AmiBImc+1vq2iwTECxAuhJex
+         ILxAYIS7Ex3EoQiZMwOB3xhsl8aswr8UHePRXi+Nl/oqfinyXTGKJtrS8TKVKwBgxoWl
+         jPWPS/8nw6i3tmrT2b5pJ5lcNKgUus2kUTV6ZZNzx3vMudu8g04fHJBBLuafGVuq3ZV9
+         VPLQlbfV7P1HxJiwfRIT6gZzsnO2t6M5XfElFaZ+PedcGHKmknXmXZdFae8ceJOZU8n5
+         4BofWIMkQsw8X44nTMSHEJhL3nW2HqE7taPGMVvXjEPxPryPqSBPGZ+XccR8/gEbZacw
+         tI1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DponZSTc3PXadFZ/Va5z+HlpHIhGzNlZ4rlMGnjJEz8=;
+        b=B+4cZGJTpuGxlzS+htlFz/yA3x0+YYSMk5LMAHxpL4Yxzl+js1YNeNWJ/7hO0QoiBn
+         9yFTk6ifl4Ty0Gr8towPk0q6g7+ENiYt5CUCktSRc+wVtkBsCmJTyVOp0wHnGr+8y4W9
+         /SJgVlxJQPi3D/OLEBOJoPvPH1mSFddUnvnziDiI1pRlFHknC6d3nXVRuQGjKjlz/RJf
+         BT2syRBcIafT1moiESCrHUPpkiGEHiIHEVlm5gDdw+F1M7+gSevsbcDgOhM0OkYRnUIL
+         1EIl3zCZyQdFVjvuqJUGV5UiJ8y1+Xc8wmTqkfjMY8xHpO8HjEDIRSbFJQXjt5V9svWY
+         K1jQ==
+X-Gm-Message-State: AOAM530YIEz1lRzUgR1aXJBY3kDPqbbavwtpHjUQ3d55bnML8HzJyueo
+        kaZH8v0EP0u/+uyjnaxm0lA=
+X-Google-Smtp-Source: ABdhPJwc5KBg86fF95A4Q+GvR1ansr7SgCbM42vcDpjhFxtXdUQn7fnpXSNMr7CNxA3gP5x3Tao2WQ==
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr4397827ejj.155.1592581295536;
+        Fri, 19 Jun 2020 08:41:35 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.gmail.com with ESMTPSA id ew9sm4986163ejb.121.2020.06.19.08.41.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 08:41:35 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bvanassche@acm.org
+Cc:     beanhuo@micron.com
+Subject: [PATCH v2 2/2] scsi: fix coding style errors in scsi_lib.c
+Date:   Fri, 19 Jun 2020 17:41:17 +0200
+Message-Id: <20200619154117.10262-3-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200619154117.10262-1-huobean@gmail.com>
+References: <20200619154117.10262-1-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Bean Huo <beanhuo@micron.com>
 
-We would like to introduce a callback to update the #PF intercept
-when CPUID changes.  Just reuse update_bp_intercept since VMX is
-already using update_exception_bitmap instead of a bespoke function.
+Delete trailing whitespace, multiple blank lines, and make
+switch/case be at the same indent.
 
-While at it, remove an unnecessary assignment in the SVM version,
-which is already done in the caller (kvm_arch_vcpu_ioctl_set_guest_debug)
-and has nothing to do with the exception bitmap.
-
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/svm/svm.c          | 7 +++----
- arch/x86/kvm/vmx/vmx.c          | 2 +-
- arch/x86/kvm/x86.c              | 2 +-
- 4 files changed, 6 insertions(+), 7 deletions(-)
+ drivers/scsi/scsi_lib.c | 43 ++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index bc0fb116cc5c..7ebdb43632e0 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1098,7 +1098,7 @@ struct kvm_x86_ops {
- 	void (*vcpu_load)(struct kvm_vcpu *vcpu, int cpu);
- 	void (*vcpu_put)(struct kvm_vcpu *vcpu);
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index c47650f7f0d3..be8f5050f837 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -389,7 +389,7 @@ static void scsi_single_lun_run(struct scsi_device *current_sdev)
+ 		spin_unlock_irqrestore(shost->host_lock, flags);
+ 		scsi_kick_queue(sdev->request_queue);
+ 		spin_lock_irqsave(shost->host_lock, flags);
+-	
++
+ 		scsi_device_put(sdev);
+ 	}
+  out:
+@@ -1455,18 +1455,18 @@ static void scsi_softirq_done(struct request *rq)
+ 	scsi_log_completion(cmd, disposition);
  
--	void (*update_bp_intercept)(struct kvm_vcpu *vcpu);
-+	void (*update_exception_bitmap)(struct kvm_vcpu *vcpu);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 	u64 (*get_segment_base)(struct kvm_vcpu *vcpu, int seg);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8ccfa4197d9c..94108e6cc6da 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1627,7 +1627,7 @@ static void svm_set_segment(struct kvm_vcpu *vcpu,
- 	mark_dirty(svm->vmcb, VMCB_SEG);
+ 	switch (disposition) {
+-		case SUCCESS:
+-			scsi_finish_command(cmd);
+-			break;
+-		case NEEDS_RETRY:
+-			scsi_queue_insert(cmd, SCSI_MLQUEUE_EH_RETRY);
+-			break;
+-		case ADD_TO_MLQUEUE:
+-			scsi_queue_insert(cmd, SCSI_MLQUEUE_DEVICE_BUSY);
+-			break;
+-		default:
+-			scsi_eh_scmd_add(cmd);
+-			break;
++	case SUCCESS:
++		scsi_finish_command(cmd);
++		break;
++	case NEEDS_RETRY:
++		scsi_queue_insert(cmd, SCSI_MLQUEUE_EH_RETRY);
++		break;
++	case ADD_TO_MLQUEUE:
++		scsi_queue_insert(cmd, SCSI_MLQUEUE_DEVICE_BUSY);
++		break;
++	default:
++		scsi_eh_scmd_add(cmd);
++		break;
+ 	}
  }
  
--static void update_bp_intercept(struct kvm_vcpu *vcpu)
-+static void update_exception_bitmap(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -2024,7 +2024,6 @@ scsi_mode_select(struct scsi_device *sdev, int pf, int sp, int modepage,
+ 		real_buffer[1] = data->medium_type;
+ 		real_buffer[2] = data->device_specific;
+ 		real_buffer[3] = data->block_descriptor_length;
+-		
  
-@@ -1636,8 +1636,7 @@ static void update_bp_intercept(struct kvm_vcpu *vcpu)
- 	if (vcpu->guest_debug & KVM_GUESTDBG_ENABLE) {
- 		if (vcpu->guest_debug & KVM_GUESTDBG_USE_SW_BP)
- 			set_exception_intercept(svm, BP_VECTOR);
--	} else
--		vcpu->guest_debug = 0;
-+	}
- }
+ 		cmd[0] = MODE_SELECT;
+ 		cmd[4] = len;
+@@ -2110,7 +2109,7 @@ scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
+ 		if (scsi_sense_valid(sshdr)) {
+ 			if ((sshdr->sense_key == ILLEGAL_REQUEST) &&
+ 			    (sshdr->asc == 0x20) && (sshdr->ascq == 0)) {
+-				/* 
++				/*
+ 				 * Invalid command operation code
+ 				 */
+ 				sdev->use_10_for_ms = 0;
+@@ -2119,7 +2118,7 @@ scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
+ 		}
+ 	}
  
- static void new_asid(struct vcpu_svm *svm, struct svm_cpu_data *sd)
-@@ -3989,7 +3988,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.vcpu_blocking = svm_vcpu_blocking,
- 	.vcpu_unblocking = svm_vcpu_unblocking,
+-	if(scsi_status_is_good(result)) {
++	if (scsi_status_is_good(result)) {
+ 		if (unlikely(buffer[0] == 0x86 && buffer[1] == 0x0b &&
+ 			     (modepage == 6 || modepage == 8))) {
+ 			/* Initio breakage? */
+@@ -2129,7 +2128,7 @@ scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
+ 			data->device_specific = 0;
+ 			data->longlba = 0;
+ 			data->block_descriptor_length = 0;
+-		} else if(use_10_for_ms) {
++		} else if (use_10_for_ms) {
+ 			data->length = buffer[0]*256 + buffer[1] + 2;
+ 			data->medium_type = buffer[2];
+ 			data->device_specific = buffer[3];
+@@ -2212,7 +2211,7 @@ scsi_device_set_state(struct scsi_device *sdev, enum scsi_device_state state)
+ 			goto illegal;
+ 		}
+ 		break;
+-			
++
+ 	case SDEV_RUNNING:
+ 		switch (oldstate) {
+ 		case SDEV_CREATED:
+@@ -2497,7 +2496,7 @@ EXPORT_SYMBOL_GPL(sdev_evt_send_simple);
+  *	(which must be a legal transition).  When the device is in this
+  *	state, only special requests will be accepted, all others will
+  *	be deferred.  Since special requests may also be requeued requests,
+- *	a successful return doesn't guarantee the device will be 
++ *	a successful return doesn't guarantee the device will be
+  *	totally quiescent.
+  *
+  *	Must be called with user context, may sleep.
+@@ -2623,10 +2622,10 @@ int scsi_internal_device_block_nowait(struct scsi_device *sdev)
+ 			return err;
+ 	}
  
--	.update_bp_intercept = update_bp_intercept,
-+	.update_exception_bitmap = update_exception_bitmap,
- 	.get_msr_feature = svm_get_msr_feature,
- 	.get_msr = svm_get_msr,
- 	.set_msr = svm_set_msr,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 36c771728c8c..f82c42ac87f9 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7881,7 +7881,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.vcpu_load = vmx_vcpu_load,
- 	.vcpu_put = vmx_vcpu_put,
- 
--	.update_bp_intercept = update_exception_bitmap,
-+	.update_exception_bitmap = update_exception_bitmap,
- 	.get_msr_feature = vmx_get_msr_feature,
- 	.get_msr = vmx_get_msr,
- 	.set_msr = vmx_set_msr,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ac8642e890b1..84f1f0084d2e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9275,7 +9275,7 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+-	/* 
++	/*
+ 	 * The device has transitioned to SDEV_BLOCK.  Stop the
+ 	 * block layer from calling the midlayer with this device's
+-	 * request queue. 
++	 * request queue.
  	 */
- 	kvm_set_rflags(vcpu, rflags);
+ 	blk_mq_quiesce_queue_nowait(q);
+ 	return 0;
+@@ -2661,7 +2660,7 @@ static int scsi_internal_device_block(struct scsi_device *sdev)
  
--	kvm_x86_ops.update_bp_intercept(vcpu);
-+	kvm_x86_ops.update_exception_bitmap(vcpu);
- 
- 	r = 0;
- 
+ 	return err;
+ }
+- 
++
+ void scsi_start_queue(struct scsi_device *sdev)
+ {
+ 	struct request_queue *q = sdev->request_queue;
 -- 
-2.26.2
+2.17.1
 
