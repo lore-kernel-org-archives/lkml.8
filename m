@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F827C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21744C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF24821556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5886217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577865;
-	bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
+	s=default; t=1592577872;
+	bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HfUb4hrJB9ffwwGYq6nDbcHr/cPXLHMaJv074nIDdtQHhkjD/zZN/FhmXex7XnX71
-	 LiQexVkhOZ1VEqBtVzVuWg74tKDus5gLTcUjR6IZYvxOlUdtFl5WYH2aWH3F/XewR0
-	 YW13SFOez17CKzQXd66ql9IL1pA3TtnKshC6lCvY=
+	b=G50V+Uq/j4axsX8oJivoNbH+tM68P+Wk9NJvMxmr9S8wEQBSdx+Z+29ftDfTLli+Q
+	 0iVQhv1Tgv7Xt8mtZ55yadbaOVK/7EA66keLpLenpIkP1D3u2RJiNo9agXlZW8+THO
+	 E0mCXg3UZrmhRCIi5Nq4ITNKy6JosqzGSiAhbPyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388559AbgFSOoY (ORCPT
+        id S2388573AbgFSOo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388531AbgFSOoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:00 -0400
+        id S2388537AbgFSOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F6F2168B;
-        Fri, 19 Jun 2020 14:43:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDECD2168B;
+        Fri, 19 Jun 2020 14:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577840;
-        bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
+        s=default; t=1592577850;
+        bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNzGcQ2AP1NE7N7RyIog4lBTl3ylQBrK3TjOLanHgiwTT0GeZUK34GRBzOGfikn+7
-         lt/gxOdD19JvmeNWI6yR9kX4WXFveUhsgsY3sKo1kG3ZZHI5Fopc3O1hjaDbu4UaBU
-         KJtxuIei7zUXZGyP98q8CHiEFtlGlvGVpti9KPU8=
+        b=gxFkBOlV18//lQoAgtHzg91rc7XBOyRwW6YFl+gPDBkQLRHN0JIsqpnJAWOdYKbs/
+         aScuqPK7Ol567+FsBoQaK7SOdBOr2g5AbJA8j8w3u374e/brDKnzdh6DluECfX8nVr
+         AeJXrAzPQ3Ub/dV0G3/AKUxeiZO/Q/f5x4gSte5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 110/128] b43legacy: Fix case where channel status is corrupted
-Date:   Fri, 19 Jun 2020 16:33:24 +0200
-Message-Id: <20200619141625.965539385@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 114/128] power: vexpress: add suppress_bind_attrs to true
+Date:   Fri, 19 Jun 2020 16:33:28 +0200
+Message-Id: <20200619141626.163662700@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,56 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-commit ec4d3e3a054578de34cd0b587ab8a1ac36f629d9 upstream.
+commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
 
-This patch fixes commit 75388acd0cd8 ("add mac80211-based driver for
-legacy BCM43xx devices")
+Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
+attributes available via the sysfs, so lets be explicit here and use
+".suppress_bind_attrs = true" to prevent userspace from doing something
+silly.
 
-In https://bugzilla.kernel.org/show_bug.cgi?id=207093, a defect in
-b43legacy is reported. Upon testing, thus problem exists on PPC and
-X86 platforms, is present in the oldest kernel tested (3.2), and
-has been present in the driver since it was first added to the kernel.
-
-The problem is a corrupted channel status received from the device.
-Both the internal card in a PowerBook G4 and the PCMCIA version
-(Broadcom BCM4306 with PCI ID 14e4:4320) have the problem. Only Rev, 2
-(revision 4 of the 802.11 core) of the chip has been tested. No other
-devices using b43legacy are available for testing.
-
-Various sources of the problem were considered. Buffer overrun and
-other sources of corruption within the driver were rejected because
-the faulty channel status is always the same, not a random value.
-It was concluded that the faulty data is coming from the device, probably
-due to a firmware bug. As that source is not available, the driver
-must take appropriate action to recover.
-
-At present, the driver reports the error, and them continues to process
-the bad packet. This is believed that to be a mistake, and the correct
-action is to drop the correpted packet.
-
-Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx devices")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reported-and-tested by: F. Erhard <erhard_f@mailbox.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200407190043.1686-1-Larry.Finger@lwfinger.net
+Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/b43legacy/xmit.c |    1 +
+ drivers/power/reset/vexpress-poweroff.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/broadcom/b43legacy/xmit.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/xmit.c
-@@ -571,6 +571,7 @@ void b43legacy_rx(struct b43legacy_wldev
- 	default:
- 		b43legacywarn(dev->wl, "Unexpected value for chanstat (0x%X)\n",
- 		       chanstat);
-+		goto drop;
- 	}
+--- a/drivers/power/reset/vexpress-poweroff.c
++++ b/drivers/power/reset/vexpress-poweroff.c
+@@ -150,6 +150,7 @@ static struct platform_driver vexpress_r
+ 	.driver = {
+ 		.name = "vexpress-reset",
+ 		.of_match_table = vexpress_reset_of_match,
++		.suppress_bind_attrs = true,
+ 	},
+ };
  
- 	memcpy(IEEE80211_SKB_RXCB(skb), &status, sizeof(status));
 
 
