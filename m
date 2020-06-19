@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D67EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A46ED2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01F62158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584447;
-	bh=LKve3kRvNjn/XBpYeAq/fEYQEKfR38eu4arP2VpgTDs=;
+	s=default; t=1592584454;
+	bh=ed5UvQWkwOySrDiddzC7rusa9jUpPSdfPpjp03LaDyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYTjKrYBrNYU4LxyAxJ1Xr3xy1Er1/8StNEWT0F1ku8ItQB9yocGKtQQmo9YIGRN0
-	 VEcRulVP6tR+gDC4fRGd3zs1kRWE8IfXoJYUcX+VN/ifr07xl35ESaD95AalNDXOFr
-	 os/kBIe19SfZHdAyonCJuLaqVHYfI9Exn0bRAsm0=
+	b=GY3dksoX+6RsgW2677ZGkSKQRWisJDfCS5i7s+z9Q1xx2tew+EBncDOjbd76F4TRW
+	 1QSBx649x6YNnJ7o7GvWTnnA1kzbTG7aZOBoeS9lczAOZ3Un+HAJueoLd258mOmioh
+	 12Ioxj8MCxZZ7L+pKLNXjwCnXLddpJGyy6sIDy+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394963AbgFSQeG (ORCPT
+        id S2393839AbgFSQeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44540 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389047AbgFSOvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:16 -0400
+        id S2389418AbgFSOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3E1C206DB;
-        Fri, 19 Jun 2020 14:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AC521548;
+        Fri, 19 Jun 2020 14:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578275;
-        bh=LKve3kRvNjn/XBpYeAq/fEYQEKfR38eu4arP2VpgTDs=;
+        s=default; t=1592578269;
+        bh=ed5UvQWkwOySrDiddzC7rusa9jUpPSdfPpjp03LaDyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+RSOxJeUC/BQbVpc8GwiTuYA51snjK60bZU1k7QzZEtbgXQ2VtdjYv61KBaZzSGM
-         g1EhExakX4WMuk78ILvMwt66omIyueg9e/j9ifADp/JPvckEU5oyZJzxuz4ChqKQrA
-         QiU/nB1XcMjKVHRstKHMQBRe2ltg+nWART/4IRSA=
+        b=qOTqPGWoxbxuFitDULY3YrBu96WbYjBQ6vKg1Xbq5vQd59Ly7dWkREALcXQglXymr
+         B5+v5Zt8+M8YYiCl7JJtgy1qCT2MLPmKRDwPWn/TZ3twH/FLZ2X5yqgURrL6mUR6DS
+         LEDDxEz73Vgpx7v3nJpiTJpsWAvve75OIQpCRLMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
+        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 150/190] PCI: Avoid FLR for AMD Starship USB 3.0
-Date:   Fri, 19 Jun 2020 16:33:15 +0200
-Message-Id: <20200619141641.227065937@linuxfoundation.org>
+Subject: [PATCH 4.14 148/190] PCI: Disable MSI for Freescale Layerscape PCIe RC mode
+Date:   Fri, 19 Jun 2020 16:33:13 +0200
+Message-Id: <20200619141641.120639909@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,67 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
+[ Upstream commit 06dc4ee54e306eff61cbdac3593b42b09f618103 ]
 
-The AMD Starship USB 3.0 host controller advertises Function Level Reset
-support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
-on this device.
+The Freescale PCIe controller advertises the MSI/MSI-X capability in both
+RC and Endpoint mode, but in RC mode it doesn't support MSI/MSI-X by
+itself; it can only transfer MSI/MSI-X from downstream devices.
 
-Without this quirk, when attempting to assign (pass through) an AMD
-Starship USB 3.0 host controller to a guest OS, the system becomes
-increasingly unresponsive over the course of several minutes, eventually
-requiring a hard reset.  Shortly after attempting to start the guest, I see
-these messages:
+Add a quirk to prevent use of MSI/MSI-X in RC mode.
 
-  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
-
-And then eventually:
-
-  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
-  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
-  ...
-  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
-
-Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
-motherboard with an AMD Ryzen Threadripper 3970X.
-
-Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 8d01c6d372fe..1bc7d4bcfea4 100644
+index e7ed051ec125..c751f2f81142 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -4873,6 +4873,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * FLR may cause the following to devices to hang:
-  *
-  * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Starship USB 3.0 Host Controller 0x148c
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-@@ -4883,6 +4884,7 @@ static void quirk_no_flr(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+@@ -4912,3 +4912,11 @@ static void quirk_no_ats(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
+ #endif /* CONFIG_PCI_ATS */
++
++/* Freescale PCIe doesn't support MSI in RC mode */
++static void quirk_fsl_no_msi(struct pci_dev *pdev)
++{
++	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
++		pdev->no_msi = 1;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
 -- 
 2.25.1
 
