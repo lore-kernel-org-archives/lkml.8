@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8523520776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711CD206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578250;
-	bh=SqVHw7je2X5s8JwVsx+Av0VwbuYw1mf97YZ/CeNZ7SQ=;
+	s=default; t=1592578252;
+	bh=Zl35wCPdR6TlYziZIdihY+3fGlog9FY38U1LOAbiZak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDd0yr+VqSA+fSD5u1bnzSDu3G0q84B8VWQ0m57wL2QGNY3njVhGqhIw10jqy1+Hl
-	 CWVaDIWRzNbxGhmIr7NmSXycddYem6K7GdvB2eT4tEL355f3ou0moLo1/8wi5cJn2E
-	 cndSmgAYBdt0igkRkganLVIZO6nQkALxRylI+1Fo=
+	b=bsCJTbgnxR2GVktoLAW40f1C2U1Tav+iuARvskCLbmGBroAXKRo7rJDpZG82fY+Fv
+	 WSV8JqeRJdTN0FYvfI6PTKrq9m7NRGBnDOVNubfhjKTXDjF6nuUQgcD4lAsCTNlmfi
+	 +SMph7aUhi/+m5CpoqG33mb+yLaxeWl9GYD8da00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389364AbgFSOus (ORCPT
+        id S2389370AbgFSOuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388693AbgFSOu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:28 -0400
+        id S2388565AbgFSOud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CDB20DD4;
-        Fri, 19 Jun 2020 14:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC0E2166E;
+        Fri, 19 Jun 2020 14:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578228;
-        bh=SqVHw7je2X5s8JwVsx+Av0VwbuYw1mf97YZ/CeNZ7SQ=;
+        s=default; t=1592578233;
+        bh=Zl35wCPdR6TlYziZIdihY+3fGlog9FY38U1LOAbiZak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpNTz1wEdrDOoJV2JegSKsns3PwhCNdI3SZq2qsRYq39fgJZnx64dhgBlrVwA8V5I
-         tE4b6C15692aRGATSnhysUhbKPsVhsa4DcUQl40A00mXSkxr4jB1NyN733YZHNgl0R
-         9ua1HxIpH6mX8wpflY2xFJQW+o73PIbLQTL42bp4=
+        b=AYOmf4PFpQMuMs5zS8r3q91fC59urI7bGc2R+Td4B3sU/qh9heMhQJiLsYEImLw7n
+         8P3Kps9g0iX53r3zAFmhWUDNEZcBeUESvyWiCohpaB99yLi8yRp8SRjJMzG6PRryAS
+         8yd01lYSgglr3U6WjOOgFU+Cbykqm7rWOjbkGjR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/190] mips: Add udelay lpj numbers adjustment
-Date:   Fri, 19 Jun 2020 16:32:50 +0200
-Message-Id: <20200619141639.868789638@linuxfoundation.org>
+Subject: [PATCH 4.14 135/190] mmc: sdhci-esdhc-imx: fix the mask for tuning start point
+Date:   Fri, 19 Jun 2020 16:33:00 +0200
+Message-Id: <20200619141640.377207625@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -67,125 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Haibo Chen <haibo.chen@nxp.com>
 
-[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
+[ Upstream commit 1194be8c949b8190b2882ad8335a5d98aa50c735 ]
 
-Loops-per-jiffies is a special number which represents a number of
-noop-loop cycles per CPU-scheduler quantum - jiffies. As you
-understand aside from CPU-specific implementation it depends on
-the CPU frequency. So when a platform has the CPU frequency fixed,
-we have no problem and the current udelay interface will work
-just fine. But as soon as CPU-freq driver is enabled and the cores
-frequency changes, we'll end up with distorted udelay's. In order
-to fix this we have to accordinly adjust the per-CPU udelay_val
-(the same as the global loops_per_jiffy) number. This can be done
-in the CPU-freq transition event handler. We subscribe to that event
-in the MIPS arch time-inititalization method.
+According the RM, the bit[6~0] of register ESDHC_TUNING_CTRL is
+TUNING_START_TAP, bit[7] of this register is to disable the command
+CRC check for standard tuning. So fix it here.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: d87fc9663688 ("mmc: sdhci-esdhc-imx: support setting tuning start point")
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Link: https://lore.kernel.org/r/1590488522-9292-1-git-send-email-haibo.chen@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
-index a6ebc8135112..df18f386d457 100644
---- a/arch/mips/kernel/time.c
-+++ b/arch/mips/kernel/time.c
-@@ -22,12 +22,82 @@
- #include <linux/smp.h>
- #include <linux/spinlock.h>
- #include <linux/export.h>
-+#include <linux/cpufreq.h>
-+#include <linux/delay.h>
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 8c0b80a54e4d..6d1ac9443eb2 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -79,7 +79,7 @@
+ #define ESDHC_STD_TUNING_EN		(1 << 24)
+ /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
+ #define ESDHC_TUNING_START_TAP_DEFAULT	0x1
+-#define ESDHC_TUNING_START_TAP_MASK	0xff
++#define ESDHC_TUNING_START_TAP_MASK	0x7f
+ #define ESDHC_TUNING_STEP_MASK		0x00070000
+ #define ESDHC_TUNING_STEP_SHIFT		16
  
- #include <asm/cpu-features.h>
- #include <asm/cpu-type.h>
- #include <asm/div64.h>
- #include <asm/time.h>
- 
-+#ifdef CONFIG_CPU_FREQ
-+
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
-+static unsigned long glb_lpj_ref;
-+static unsigned long glb_lpj_ref_freq;
-+
-+static int cpufreq_callback(struct notifier_block *nb,
-+			    unsigned long val, void *data)
-+{
-+	struct cpufreq_freqs *freq = data;
-+	struct cpumask *cpus = freq->policy->cpus;
-+	unsigned long lpj;
-+	int cpu;
-+
-+	/*
-+	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
-+	 * the loops delay. (Is this possible?)
-+	 */
-+	if (freq->flags & CPUFREQ_CONST_LOOPS)
-+		return NOTIFY_OK;
-+
-+	/* Save the initial values of the lpjes for future scaling. */
-+	if (!glb_lpj_ref) {
-+		glb_lpj_ref = boot_cpu_data.udelay_val;
-+		glb_lpj_ref_freq = freq->old;
-+
-+		for_each_online_cpu(cpu) {
-+			per_cpu(pcp_lpj_ref, cpu) =
-+				cpu_data[cpu].udelay_val;
-+			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
-+		}
-+	}
-+
-+	/*
-+	 * Adjust global lpj variable and per-CPU udelay_val number in
-+	 * accordance with the new CPU frequency.
-+	 */
-+	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
-+	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
-+		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
-+						glb_lpj_ref_freq,
-+						freq->new);
-+
-+		for_each_cpu(cpu, cpus) {
-+			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
-+					    per_cpu(pcp_lpj_ref_freq, cpu),
-+					    freq->new);
-+			cpu_data[cpu].udelay_val = (unsigned int)lpj;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block cpufreq_notifier = {
-+	.notifier_call  = cpufreq_callback,
-+};
-+
-+static int __init register_cpufreq_notifier(void)
-+{
-+	return cpufreq_register_notifier(&cpufreq_notifier,
-+					 CPUFREQ_TRANSITION_NOTIFIER);
-+}
-+core_initcall(register_cpufreq_notifier);
-+
-+#endif /* CONFIG_CPU_FREQ */
-+
- /*
-  * forward reference
-  */
 -- 
 2.25.1
 
