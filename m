@@ -2,139 +2,120 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C00C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0072721532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582993;
-	bh=7vHlbNH5y8voS2cDM4bKwMfkLZfQfTj4TTeCBy55ia8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThwtVMmvxgPjZQZK0q1XAkVh3GL41Lyy4tQ4TtBloTUeY/tkpEm48mh6X77hmXGHr
-	 mJ8pKnJWltSHsdpDwfHeYw1difW6FgHFw2CjBqTPFMgYZYSs37FzOPLe+lca/XZvc1
-	 PPXCSqG9ZigjGImnxUaOAUefnSkT1MfYg1w4MvyM=
+	by mail.kernel.org (Postfix) with ESMTP id 6D0E121532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394303AbgFSQJv (ORCPT
+        id S2394294AbgFSQJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:09:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40200 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389548AbgFSPG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391500AbgFSPG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:06:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876D921835;
-        Fri, 19 Jun 2020 15:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579216;
-        bh=7vHlbNH5y8voS2cDM4bKwMfkLZfQfTj4TTeCBy55ia8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cG443gEvZE+uEvBhKVYquURTGjwPJbpLPOtRUhiplCOI+XjnnMmwXznjetJQBttgV
-         Y2gWma+URpOcuBbisLhzZAhofk3eamLlJBSmDZW2wZcr36gN0pxtCL9Q5+exXm+TXw
-         hciOauGWFiXQtnmm4Gp0Cudp7Lkw46JdtrE2sfqg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Tobias Baumann <017623705678@o2online.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/261] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
-Date:   Fri, 19 Jun 2020 16:31:02 +0200
-Message-Id: <20200619141652.375741763@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49pMbJ5SR2z9v09n;
+        Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HWsNtuMNdH_C; Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbJ4gGDz9v09j;
+        Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1ECC8B87B;
+        Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 9KI_eDtvs7VY; Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E0178B879;
+        Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2FD8265AF4; Fri, 19 Jun 2020 15:06:54 +0000 (UTC)
+Message-Id: <c634cadd3ef2c9667838c4fe2bd425a72c8fcbd5.1592578278.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1592578278.git.christophe.leroy@csgroup.eu>
+References: <cover.1592578278.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v1 3/8] powerpc: Set user/kernel boundary at TASK_SIZE instead
+ of PAGE_OFFSET
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 19 Jun 2020 15:06:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+User space stops at TASK_SIZE. At the moment, kernel space starts
+at PAGE_OFFSET.
 
-[ Upstream commit 91995b904ec2e44b5c159ac6a5d3f154345a4de7 ]
+In order to use space between TASK_SIZE and PAGE_OFFSET for modules,
+make TASK_SIZE the limit between user and kernel space.
 
-The vendor driver (from the 3.10 kernel) triggers a soft reset every
-time before starting a new command. While this fixes a problem where
-SDIO cards are not detected at all (because all commands simply
-timed out) this hurts SD card read performance a bit (in my tests
-between 10% to 20%).
+Note that fault.c already considers TASK_SIZE as the boundary between
+user and kernel space.
 
-Trigger a soft reset after we got a CRC error or if the previous command
-timed out (just like the vendor driver from the same 3.10 kernel for the
-newer SDHC controller IP does). This fixes detection of SDIO cards and
-doesn't hurt SD card read performance at the same time.
-
-With this patch the initialization of an RTL8723BS SDIO card looks like
-this:
-  req done (CMD52): -110: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
-  starting CMD0 arg 00000000 flags 000000c0
-  req done (CMD0): 0: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
-  starting CMD8 arg 000001aa flags 000002f5
-  req done (CMD8): -110: 00000000 00000000 00000000 00000000
-  starting CMD5 arg 00000000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD5 arg 00200000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD3 arg 00000000 flags 00000075
-  req done (CMD3): 0: 00010000 00000000 00000000 00000000
-  starting CMD7 arg 00010000 flags 00000015
-  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
-  starting CMD52 arg 00000000 flags 00000195
-  req done (CMD52): 0: 00001032 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  starting CMD52 arg 00000e00 flags 00000195
-  req done (CMD52): 0: 00001000 00000000 00000000 00000000
-  starting CMD52 arg 80000e02 flags 00000195
-  req done (CMD52): 0: 00001002 00000000 00000000 00000000
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
-  starting CMD52 arg 00020000 flags 00000195
-  req done (CMD52): 0: 00001007 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  new high speed SDIO card at address 0001
-
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Link: https://lore.kernel.org/r/20200503222805.2668941-1-martin.blumenstingl@googlemail.com
-Tested-by: Tobias Baumann <017623705678@o2online.de>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- drivers/mmc/host/meson-mx-sdio.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/include/asm/page.h | 2 +-
+ arch/powerpc/mm/ptdump/ptdump.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index 999214e8cf2b..360d523132bd 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -246,6 +246,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index a63fe6f3a0ff..352a2b80d505 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -256,7 +256,7 @@ static inline bool pfn_valid(unsigned long pfn)
+ #ifdef CONFIG_PPC_BOOK3E_64
+ #define is_kernel_addr(x)	((x) >= 0x8000000000000000ul)
+ #else
+-#define is_kernel_addr(x)	((x) >= PAGE_OFFSET)
++#define is_kernel_addr(x)	((x) >= TASK_SIZE)
+ #endif
  
- 	mrq = host->mrq;
+ #ifndef CONFIG_PPC_BOOK3S_64
+diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+index b71cc628facd..e995f2e9e9f7 100644
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -351,7 +351,7 @@ static void populate_markers(void)
+ {
+ 	int i = 0;
  
-+	if (host->cmd->error)
-+		meson_mx_mmc_soft_reset(host);
-+
- 	host->mrq = NULL;
- 	host->cmd = NULL;
+-	address_markers[i++].start_address = PAGE_OFFSET;
++	address_markers[i++].start_address = TASK_SIZE;
+ 	address_markers[i++].start_address = VMALLOC_START;
+ 	address_markers[i++].start_address = VMALLOC_END;
+ #ifdef CONFIG_PPC64
+@@ -388,7 +388,7 @@ static int ptdump_show(struct seq_file *m, void *v)
+ 	struct pg_state st = {
+ 		.seq = m,
+ 		.marker = address_markers,
+-		.start_address = PAGE_OFFSET,
++		.start_address = TASK_SIZE,
+ 	};
  
+ #ifdef CONFIG_PPC64
+@@ -432,7 +432,7 @@ void ptdump_check_wx(void)
+ 		.seq = NULL,
+ 		.marker = address_markers,
+ 		.check_wx = true,
+-		.start_address = PAGE_OFFSET,
++		.start_address = TASK_SIZE,
+ 	};
+ 
+ #ifdef CONFIG_PPC64
 -- 
-2.25.1
-
-
+2.25.0
 
