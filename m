@@ -2,284 +2,205 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77E7F20FC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7B21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fBej0NlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390782AbgFSUDY (ORCPT
+        id S2391475AbgFSUDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:03:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37940 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388823AbgFSUDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:03:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9C70E8030866;
-        Fri, 19 Jun 2020 20:03:14 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Q4yMHA-hPdvJ; Fri, 19 Jun 2020 23:03:12 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 3/3] serial: 8250_dw: Fix common clocks usage race condition
-Date:   Fri, 19 Jun 2020 23:02:51 +0300
-Message-ID: <20200619200251.9066-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 19 Jun 2020 16:03:39 -0400
+Received: from mail-eopbgr760079.outbound.protection.outlook.com ([40.107.76.79]:48196
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389332AbgFSUDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 16:03:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JG0wmHbsWmqhq8i//9RVirkPbeepXJw/3CezNwkc3pCHdGJ7ZKBPK3O97W9KVihxQjiJRQtYcjrBJCfab+qyclFUkAaPRNiZ15HvRNzPZutDMyXAyucV3EWPhgun0SrPGK1vGxyzi9TFL4VOG4LBrYfiLrLUhAa2bcP6CcvsfVlaHHi2a9TIVyYB6OdowF9OSy14WTP92aHN586Tpp964drrzB2HWKFsdSMNsgQSyAVAowS6IMIUHatKjoHHeZ37tKixdP3UBaaPDesJ5/+jHGhdgPXpj4IL9C8KJyM2YAwivZt4ne0i/crndyvD5eOZjKB/ViVfxx8FKZUSRetnRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CSLqUErcw365gbQeTkLCzN7f8n341o9UbrWcBRLrfjQ=;
+ b=lTD6eyHr8gS5LN9kKxNYg6Yiqy+fDp/epVqzI3ahBkegI6xflqkXOcGL0jZs4Ms/CDWlfNgRczgk3WNiM8ll6Ypc74fUW9/quEOsxg5eYZs7k6v66MPStBakzKZd62EZ84hlw/zpF98Au/kTHADrOTnzHb5tHxwn9swPA+zZX1HDTT5StoAGQTg6c4zg3K392lKsNAY9WZ5cCoEHzt8X47XehQ6LfSAiYvYOIraKRirJ7o8EkoV4jOwYaybZFF2yadyJgtE8Dh/GA8pCsyVyjOsHBem43y4xuwPkdQZwi5Yo2JnuIxT0Tr0mqt30wD6ZtJm6rfotRdM037knM2GDig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CSLqUErcw365gbQeTkLCzN7f8n341o9UbrWcBRLrfjQ=;
+ b=fBej0NlVcaEAY0Hfo+XSsuwFQUt1DVlDIHSK6RBnqCCKmX1N/CXLBz6qdxWX+57WLTom0XTrzUmNoA7V8iHwhI3aQaJkox78XepfCnMsIYXZX8wXNDaZaTFnk45ZkU6flqQOD3k+jX1RurtNWSc3pov4rKLqu2IO1Ffv0pw00/E=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
+ 2020 20:03:34 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 20:03:34 +0000
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+References: <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca> <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+ <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
+ <20200619195538.GT6578@ziepe.ca>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <789aa42e-0ddc-14f2-96be-07c00603efea@amd.com>
+Date:   Fri, 19 Jun 2020 16:03:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200619195538.GT6578@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::21) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.2.100] (142.116.63.128) by YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Fri, 19 Jun 2020 20:03:33 +0000
+X-Originating-IP: [142.116.63.128]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1cfc64bd-c014-4a4f-d855-08d8148bd8bc
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4446:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4446767A85FE9FC4C73E0E2292980@SA0PR12MB4446.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6bEP4Afs8TryzdJCPZ/qf9DxGNSXnRcJT0O4u+UQHr6G9Mkm9kO4Wm5WA9Hfi47yz+TOEVeWfw9V/8CVq3Pg8C9G43wUGBzaTIXzu0F10eKH+2B/xwB1P8bZSFlGRExJeZ+O0ZtCHiedC7pLF8VjSj17kVj90EbsKfJ+9cOwyZti4jjNMKiTIckN1HrOWgJxaA3Ba0OuuaKsgwEk5E8xl6/12S/ZUcoCwB+t2ZYHZQvzq8lPEyTrzl1jNMe2y/LJ5D6Pycyl3E+Xn+F6saYtONFiXNmBDSZ9bbexOlCBmF6NWMbMRy0zdfk4J5I5bOk2+PlHrumIuVWTDz1XuOpRP9y249seiupSdBXfWl3RC3bgaHoIAqrw57xRGpR4ulke
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(66946007)(66476007)(66556008)(52116002)(26005)(186003)(16526019)(83380400001)(316002)(16576012)(54906003)(44832011)(956004)(2616005)(86362001)(31696002)(31686004)(478600001)(8936002)(7416002)(36756003)(6486002)(8676002)(2906002)(5660300002)(4326008)(6916009)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Zo3Tf0t1VWiIXIkWjW7LU93PiNZvBn4o11OFBIf8WZrvL0ap8ev6rgTzu5wNys6FJ9NzVyMpq9kShPiZI9GMltnchmtsvteP6GkLziwTejEpNFvTF4rAvdGvslSXIoxWP35/iCj1bViqZxBOeRkcLYaL8hSD8guBCEB1KKiJEKfFKH+3LqG7jkI92g0xaMyNviryYnmGjKV5cA9wBaUv4CJgE6wa8J0cg5Pmw5ulbartrue4hdvYcsEBOznW+3HrX3jrw/Yp2bU+KbO8hXy6skywADcIThQoQwk/bvGn0wnmfwNm9Kd2aTZ+tYtP3pBN26+2i2+bs4oX/WR+ApB3RKOqbTy13dfl7cYiisz6DjsAu7WS7f4cjSC5pz0eGJDFR5ScIyo/vcUK2/t9ojVKp2q8xnM1pBIJFmnJH5v+Yz3iqqqgvk5V4XnK7O2c/f7PZUXdrCEUnZ1onwzDVqJKuqgqM3ZyyjlJY3CTbv4P6MoFwSn+KrEbyHHgEoBGXCPQ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cfc64bd-c014-4a4f-d855-08d8148bd8bc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 20:03:34.4488
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SbWO5zAONhMZfIimuvSuyttgMifJlQQgcid2omNW9KsnrGQTxsQRr8wsNKEF67CSGfL7sVwM0z1EvF9Dr1wxcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The race condition may happen if the UART reference clock is shared with
-some other device (on Baikal-T1 SoC it's another DW UART port). In this
-case if that device changes the clock rate while serial console is using
-it the DW 8250 UART port might not only end up with an invalid uartclk
-value saved, but may also experience a distorted output data since
-baud-clock could have been changed. In order to fix this lets at least
-try to adjust the 8250 port setting like UART clock rate in case if the
-reference clock rate change is discovered. The driver will call the new
-method to update 8250 UART port clock rate settings. It's done by means of
-the clock event notifier registered at the port startup and unregistered
-in the shutdown callback method.
 
-Note 1. In order to avoid deadlocks we had to execute the UART port update
-method in a dedicated deferred work. This is due to (in my opinion
-redundant) the clock update implemented in the dw8250_set_termios()
-method.
-Note 2. Before the ref clock is manually changed by the custom
-set_termios() function we swap the port uartclk value with new rate
-adjusted to be suitable for the requested baud. It is necessary in
-order to effectively disable a functionality of the ref clock events
-handler for the current UART port, since uartclk update will be done
-a bit further in the generic serial8250_do_set_termios() function.
+Am 2020-06-19 um 3:55 p.m. schrieb Jason Gunthorpe:
+> On Fri, Jun 19, 2020 at 03:48:49PM -0400, Felix Kuehling wrote:
+>> Am 2020-06-19 um 2:18 p.m. schrieb Jason Gunthorpe:
+>>> On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
+>>>> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+>>>>> On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+>>>>>
+>>>>>> The madness is only that device B's mmu notifier might need to wait
+>>>>>> for fence_B so that the dma operation finishes. Which in turn has to
+>>>>>> wait for device A to finish first.
+>>>>> So, it sound, fundamentally you've got this graph of operations across
+>>>>> an unknown set of drivers and the kernel cannot insert itself in
+>>>>> dma_fence hand offs to re-validate any of the buffers involved?
+>>>>> Buffers which by definition cannot be touched by the hardware yet.
+>>>>>
+>>>>> That really is a pretty horrible place to end up..
+>>>>>
+>>>>> Pinning really is right answer for this kind of work flow. I think
+>>>>> converting pinning to notifers should not be done unless notifier
+>>>>> invalidation is relatively bounded. 
+>>>>>
+>>>>> I know people like notifiers because they give a bit nicer performance
+>>>>> in some happy cases, but this cripples all the bad cases..
+>>>>>
+>>>>> If pinning doesn't work for some reason maybe we should address that?
+>>>> Note that the dma fence is only true for user ptr buffer which predate
+>>>> any HMM work and thus were using mmu notifier already. You need the
+>>>> mmu notifier there because of fork and other corner cases.
+>>> I wonder if we should try to fix the fork case more directly - RDMA
+>>> has this same problem and added MADV_DONTFORK a long time ago as a
+>>> hacky way to deal with it.
+>>>
+>>> Some crazy page pin that resolved COW in a way that always kept the
+>>> physical memory with the mm that initiated the pin?
+>>>
+>>> (isn't this broken for O_DIRECT as well anyhow?)
+>>>
+>>> How does mmu_notifiers help the fork case anyhow? Block fork from
+>>> progressing?
+>> How much the mmu_notifier blocks fork progress depends, on quickly we
+>> can preempt GPU jobs accessing affected memory. If we don't have
+>> fine-grained preemption capability (graphics), the best we can do is
+>> wait for the GPU jobs to complete. We can also delay submission of new
+>> GPU jobs to the same memory until the MMU notifier is done. Future jobs
+>> would use the new page addresses.
+>>
+>> With fine-grained preemption (ROCm compute), we can preempt GPU work on
+>> the affected adders space to minimize the delay seen by fork.
+>>
+>> With recoverable device page faults, we can invalidate GPU page table
+>> entries, so device access to the affected pages stops immediately.
+>>
+>> In all cases, the end result is, that the device page table gets updated
+>> with the address of the copied pages before the GPU accesses the COW
+>> memory again.Without the MMU notifier, we'd end up with the GPU
+>> corrupting memory of the other process.
+> The model here in fork has been wrong for a long time, and I do wonder
+> how O_DIRECT manages to not be broken too.. I guess the time windows
+> there are too small to get unlucky.
+>
+> If you have a write pin on a page then it should not be COW'd into the
+> fork'd process but copied with the originating page remaining with the
+> original mm. 
+>
+> I wonder if there is some easy way to achive that - if that is the
+> main reason to use notifiers then it would be a better solution.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Other than the application changing its own virtual address mappings
+(mprotect, munmap, etc.), triggering MMU notifiers, we also get MMU
+notifiers from THP worker threads, and NUMA balancing.
 
----
+When we start doing migration to DEVICE_PRIVATE memory with HMM, we also
+get MMU notifiers during those driver-initiated migrations.
 
-Changelog v2:
-- Move exclusive ref clock lock/unlock precudures to the 8250 port
-  startup/shutdown methods.
-- The changelog message has also been slightly modified due to the
-  alteration.
-- Remove Alexey' SoB tag.
-- Cc someone from ARM who might be concerned regarding this change.
-- Cc someone from Clocks Framework to get their comments on this patch.
+Regards,
+  Felix
 
-Changelog v3:
-- Refactor the original patch to adjust the UART port divisor instead of
-  requesting an exclusive ref clock utilization.
 
-Changelog v5:
-- Refactor dw8250_clk_work_cb() function cheking the clk_get_rate()
-  return value for being erroneous and exit if it is.
-- Don't update p->uartclk on the port startup. It will be updated later in
-  the same procedure at the set_termios() function being invoked by the
-  serial_core anyway.
----
- drivers/tty/serial/8250/8250_dw.c | 105 +++++++++++++++++++++++++++++-
- 1 file changed, 102 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 12866083731d..fa59c026270f 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -19,6 +19,8 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+#include <linux/notifier.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
-@@ -43,6 +45,8 @@ struct dw8250_data {
- 	int			msr_mask_off;
- 	struct clk		*clk;
- 	struct clk		*pclk;
-+	struct notifier_block	clk_notifier;
-+	struct work_struct	clk_work;
- 	struct reset_control	*rst;
- 
- 	unsigned int		skip_autocfg:1;
-@@ -54,6 +58,16 @@ static inline struct dw8250_data *to_dw8250_data(struct dw8250_port_data *data)
- 	return container_of(data, struct dw8250_data, data);
- }
- 
-+static inline struct dw8250_data *clk_to_dw8250_data(struct notifier_block *nb)
-+{
-+	return container_of(nb, struct dw8250_data, clk_notifier);
-+}
-+
-+static inline struct dw8250_data *work_to_dw8250_data(struct work_struct *work)
-+{
-+	return container_of(work, struct dw8250_data, clk_work);
-+}
-+
- static inline int dw8250_modify_msr(struct uart_port *p, int offset, int value)
- {
- 	struct dw8250_data *d = to_dw8250_data(p->private_data);
-@@ -260,6 +274,46 @@ static int dw8250_handle_irq(struct uart_port *p)
- 	return 0;
- }
- 
-+static void dw8250_clk_work_cb(struct work_struct *work)
-+{
-+	struct dw8250_data *d = work_to_dw8250_data(work);
-+	struct uart_8250_port *up;
-+	unsigned long rate;
-+
-+	rate = clk_get_rate(d->clk);
-+	if (rate <= 0)
-+		return;
-+
-+	up = serial8250_get_port(d->data.line);
-+
-+	serial8250_update_uartclk(&up->port, rate);
-+}
-+
-+static int dw8250_clk_notifier_cb(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct dw8250_data *d = clk_to_dw8250_data(nb);
-+
-+	/*
-+	 * We have no choice but to defer the uartclk update due to two
-+	 * deadlocks. First one is caused by a recursive mutex lock which
-+	 * happens when clk_set_rate() is called from dw8250_set_termios().
-+	 * Second deadlock is more tricky and is caused by an inverted order of
-+	 * the clk and tty-port mutexes lock. It happens if clock rate change
-+	 * is requested asynchronously while set_termios() is executed between
-+	 * tty-port mutex lock and clk_set_rate() function invocation and
-+	 * vise-versa. Anyway if we didn't have the reference clock alteration
-+	 * in the dw8250_set_termios() method we wouldn't have needed this
-+	 * deferred event handling complication.
-+	 */
-+	if (event == POST_RATE_CHANGE) {
-+		queue_work(system_unbound_wq, &d->clk_work);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static void
- dw8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
- {
-@@ -283,9 +337,16 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
- 	clk_disable_unprepare(d->clk);
- 	rate = clk_round_rate(d->clk, baud * 16);
- 	if (rate > 0) {
--		ret = clk_set_rate(d->clk, rate);
--		if (!ret)
--			p->uartclk = rate;
-+		/*
-+		 * Premilinary set the uartclk to the new clock rate so the
-+		 * clock update event handler caused by the clk_set_rate()
-+		 * calling wouldn't actually update the UART divisor since
-+		 * we about to do this anyway.
-+		 */
-+		swap(p->uartclk, rate);
-+		ret = clk_set_rate(d->clk, p->uartclk);
-+		if (ret)
-+			swap(p->uartclk, rate);
- 	}
- 	clk_prepare_enable(d->clk);
- 
-@@ -312,6 +373,39 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
- 	serial8250_do_set_ldisc(p, termios);
- }
- 
-+static int dw8250_startup(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+	int ret;
-+
-+	/*
-+	 * Some platforms may provide a reference clock shared between several
-+	 * devices. In this case before using the serial port first we have to
-+	 * make sure that any clock state change is known to the UART port at
-+	 * least post factum.
-+	 */
-+	if (d->clk) {
-+		ret = clk_notifier_register(d->clk, &d->clk_notifier);
-+		if (ret)
-+			dev_warn(p->dev, "Failed to set the clock notifier\n");
-+	}
-+
-+	return serial8250_do_startup(p);
-+}
-+
-+static void dw8250_shutdown(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+
-+	serial8250_do_shutdown(p);
-+
-+	if (d->clk) {
-+		clk_notifier_unregister(d->clk, &d->clk_notifier);
-+
-+		flush_work(&d->clk_work);
-+	}
-+}
-+
- /*
-  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
-  * channel on platforms that have DMA engines, but don't have any channels
-@@ -407,6 +501,8 @@ static int dw8250_probe(struct platform_device *pdev)
- 	p->serial_out	= dw8250_serial_out;
- 	p->set_ldisc	= dw8250_set_ldisc;
- 	p->set_termios	= dw8250_set_termios;
-+	p->startup	= dw8250_startup;
-+	p->shutdown	= dw8250_shutdown;
- 
- 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
- 	if (!p->membase)
-@@ -468,6 +564,9 @@ static int dw8250_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->clk))
- 		return PTR_ERR(data->clk);
- 
-+	INIT_WORK(&data->clk_work, dw8250_clk_work_cb);
-+	data->clk_notifier.notifier_call = dw8250_clk_notifier_cb;
-+
- 	err = clk_prepare_enable(data->clk);
- 	if (err)
- 		dev_warn(dev, "could not enable optional baudclk: %d\n", err);
--- 
-2.26.2
-
+>
+> Jason
