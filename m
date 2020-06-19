@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD584C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA19C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A97B21919
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B9421D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580584;
-	bh=tH3Xht3LJp4Pj+XEDbZoLHPhR/pCQ8NSKBwMakmsDvQ=;
+	s=default; t=1592580590;
+	bh=61pORohPiWeZyY+dHqg22TWv4zbtArNyLSuNKbDcWpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2NT+jZRM79sXzPmwsO5zhw4ueiorjYQRv7z+y4OXwr/yKTAiV9NDvZopjXmlIlfFl
-	 X32FuVUY4uW2yMAlAhah/VbNrC8CKUMacFumLLooR1zqm7MVIizDy31bORslTzH52k
-	 ThgEyCSEpOfUUA+YNoWogRQfoV1KWGDEkPdnVKQY=
+	b=d13TbRSt9yyTFUXGW9SHSMPmSxOgH1MIZTQ17LOHMRGT6gPVz6mASfrL3Oe+Hl65+
+	 1+/OkLela+lTibAgNjG1fEiN3fv2FkSBlE2w0imNkr7YUs8piVS7YrWtg8EZYmenen
+	 mm68pt5WpuNNGxwU/jlk7yRrtf+786U9IxozPBuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404707AbgFSP3n (ORCPT
+        id S2392861AbgFSP3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404667AbgFSP3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:32 -0400
+        id S2404686AbgFSP3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D682A21BE5;
-        Fri, 19 Jun 2020 15:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 544E220734;
+        Fri, 19 Jun 2020 15:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580571;
-        bh=tH3Xht3LJp4Pj+XEDbZoLHPhR/pCQ8NSKBwMakmsDvQ=;
+        s=default; t=1592580576;
+        bh=61pORohPiWeZyY+dHqg22TWv4zbtArNyLSuNKbDcWpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zg5YZ+iaItUKng1WxdGtjZD5b7+Y6PRqbiWlzfJff/g7ayNYP7g7nveqpp9O2Fm8m
-         3JsO/a/94CfA3nQFiO3PtrJ7KZp/UIMnW4IDzpa0mjNY4URJ7U6Pvkxu9/eGjM7nT6
-         UV9V/IMmRy6zjfGvMr0Y7RJqQELX1uiaRgZphJHc=
+        b=ER9F1OMmg0uvzrCTLY1uWDurKepXv7RxzZNMyVNy5jQ5VB0kj8AcJ1oO21P/5e6EO
+         GxlvGE2nPTzCqwbDUSUckbeE160enHBTiK3TWw/c5w+7RDAzoum15kPdzDKxC4944e
+         eWqrnvKTGy5MOUbCx+PwlsSwxOFtvGYLK3+RCcLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.7 300/376] media: cedrus: Program output format during each run
-Date:   Fri, 19 Jun 2020 16:33:38 +0200
-Message-Id: <20200619141724.541035605@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.7 302/376] Bluetooth: hci_bcm: respect IRQ polarity from DT
+Date:   Fri, 19 Jun 2020 16:33:40 +0200
+Message-Id: <20200619141724.636538661@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,68 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit a8876c22eab9a871834f85de83e98bbf7e6e264d upstream.
+commit b25e4df4a83e516efbdeeefb5b2d3e259639a56e upstream.
 
-Previously, the output format was programmed as part of the ioctl()
-handler. However, this has two problems:
+The IRQ polarity is be configured in bcm_setup_sleep(). Make the
+configured value match what is in the DeviceTree.
 
-  1) If there are multiple active streams with different output
-     formats, the hardware will use whichever format was set last
-     for both streams. Similarly, an ioctl() done in an inactive
-     context will wrongly affect other active contexts.
-  2) The registers are written while the device is not actively
-     streaming. To enable runtime PM tied to the streaming state,
-     all hardware access needs to be moved inside cedrus_device_run().
-
-The call to cedrus_dst_format_set() is now placed just before the
-codec-specific callback that programs the hardware.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 50e761516f2b ("media: platform: Add Cedrus VPU decoder driver")
-Suggested-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Suggested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: f25a96c8eb46 ("Bluetooth: hci_bcm: enable IRQ capability from devicetree")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_dec.c   |    2 ++
- drivers/staging/media/sunxi/cedrus/cedrus_video.c |    3 ---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_bcm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-@@ -74,6 +74,8 @@ void cedrus_device_run(void *priv)
- 
- 	v4l2_m2m_buf_copy_metadata(run.src, run.dst, true);
- 
-+	cedrus_dst_format_set(dev, &ctx->dst_fmt);
-+
- 	dev->dec_ops[ctx->current_codec]->setup(ctx, &run);
- 
- 	/* Complete request(s) controls if needed. */
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -273,7 +273,6 @@ static int cedrus_s_fmt_vid_cap(struct f
- 				struct v4l2_format *f)
- {
- 	struct cedrus_ctx *ctx = cedrus_file2ctx(file);
--	struct cedrus_dev *dev = ctx->dev;
- 	struct vb2_queue *vq;
- 	int ret;
- 
-@@ -287,8 +286,6 @@ static int cedrus_s_fmt_vid_cap(struct f
- 
- 	ctx->dst_fmt = f->fmt.pix;
- 
--	cedrus_dst_format_set(dev, &ctx->dst_fmt);
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -1153,7 +1153,8 @@ static int bcm_of_probe(struct bcm_devic
+ 	device_property_read_u8_array(bdev->dev, "brcm,bt-pcm-int-params",
+ 				      bdev->pcm_int_params, 5);
+ 	bdev->irq = of_irq_get_byname(bdev->dev->of_node, "host-wakeup");
 -
++	bdev->irq_active_low = irq_get_trigger_type(bdev->irq)
++			     & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW);
  	return 0;
  }
  
