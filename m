@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4232721582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60CE2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577736;
-	bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
+	s=default; t=1592577738;
+	bh=5Je26gO6C3CocQCMRXvtb19WLm+OtkVowkKyukTrP44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8q5Y7skhWCRQWUs4er+ZqaARhWB/OdTnj8aEbAUAGrhC0cWEBIUbZUEJaFGI4rGz
-	 alFuf+/B0ACeF0ZHUIvDRsMPSxLQjjBLL2rXw//AlmmRSK8W/xLj/YWOoxZiMmRPqO
-	 9+VEp7HMEk4Uhdyl0Dmo0BmKLAnuiMINjeh4xEHA=
+	b=k66rrqb9rv+4UeLvC9gjl1jSeSrXK49EQo+QTqA2UotNohsvy6wxhtA2gsT56jGwy
+	 h3/KQD5lul2Km2JB8+SGEk58kTdaERVpkfVE5VIBHU25hlJX4PoLw88K7PU+QYS2+X
+	 Zhdvdud+ZdqzAiuX+qGYHT/8LonSXmHLMeMg5Drg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388339AbgFSOmM (ORCPT
+        id S1733291AbgFSOmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60798 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388315AbgFSOmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:01 -0400
+        id S2387999AbgFSOmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED3220A8B;
-        Fri, 19 Jun 2020 14:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ED8820CC7;
+        Fri, 19 Jun 2020 14:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577721;
-        bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
+        s=default; t=1592577733;
+        bh=5Je26gO6C3CocQCMRXvtb19WLm+OtkVowkKyukTrP44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/pJjACZzjtE2pue+j0aMOz4oC2wu1EzwOD1a34OlApGPHzC6nPj5tX5WeidJnJNb
-         LwszwCWn0yIixpxGGk2CDmkqC8MKCodBWhvBrFUTa/RRHdFyt2TRhV/t9mWo0Sh4H9
-         KXxUuH7+pXfFc0ZcKCmDTe2SHhlq50FamotqzC6c=
+        b=LbKxH4j8+CKOrDFdPRyNCtsqIy940NcejMo/ha9hlJLicCk5amNYQSYOQ9hbk7JyV
+         kOjMD2GXstEdniy/HnmviY7hbHtF+BQgDqj+ZrN/R1Lt+MsjZ8c+WMqiwcvPYj+2Ka
+         lAkY5wZxBz/kLmNNqvaKYZcO05owkj5f6m+xcsrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 022/128] spi: bcm2835aux: Fix controller unregister order
-Date:   Fri, 19 Jun 2020 16:31:56 +0200
-Message-Id: <20200619141621.339552116@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 068/128] e1000: Distribute switch variables for initialization
+Date:   Fri, 19 Jun 2020 16:32:42 +0200
+Message-Id: <20200619141623.808308755@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,62 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Kees Cook <keescook@chromium.org>
 
-commit b9dd3f6d417258ad0beeb292a1bc74200149f15d upstream.
+[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
 
-The BCM2835aux SPI driver uses devm_spi_register_master() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-bcm2835aux_spi_remove() before unregistering the SPI controller via
-devres_release_all().
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-This order is incorrect:  bcm2835aux_spi_remove() turns off the SPI
-controller, including its interrupts and clock.  The SPI controller
-is thus no longer usable.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-When the SPI controller is subsequently unregistered, it unbinds all
-its slave devices.  If their drivers need to access the SPI bus,
-e.g. to quiesce their interrupts, unbinding will fail.
+drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
+drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
+ 3143 |     unsigned int pull_size;
+      |                  ^~~~~~~~~
 
-As a rule, devm_spi_register_master() must not be used if the
-->remove() hook performs teardown steps which shall be performed
-after unbinding of slaves.
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
-Fix by using the non-devm variant spi_register_master().  Note that the
-struct spi_master as well as the driver-private data are not freed until
-after bcm2835aux_spi_remove() has finished, so accessing them is safe.
-
-Fixes: 1ea29b39f4c8 ("spi: bcm2835aux: add bcm2835 auxiliary spi device driver")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.4+
-Cc: Martin Sperl <kernel@martin.sperl.org>
-Link: https://lore.kernel.org/r/32f27f4d8242e4d75f9a53f7e8f1f77483b08669.1589557526.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c |    4 +++-
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -485,7 +485,7 @@ static int bcm2835aux_spi_probe(struct p
- 		goto out_clk_disable;
- 	}
- 
--	err = devm_spi_register_master(&pdev->dev, master);
-+	err = spi_register_master(master);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
- 		goto out_clk_disable;
-@@ -505,6 +505,8 @@ static int bcm2835aux_spi_remove(struct
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
- 
-+	spi_unregister_master(master);
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 39a09e18c1b7..3b16ee0de246 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -3167,8 +3167,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+ 		if (skb->data_len && hdr_len == len) {
+ 			switch (hw->mac_type) {
++			case e1000_82544: {
+ 				unsigned int pull_size;
+-			case e1000_82544:
 +
- 	bcm2835aux_spi_reset_hw(bs);
- 
- 	/* disable the HW block by releasing the clock */
+ 				/* Make sure we have room to chop off 4 bytes,
+ 				 * and that the end alignment will work out to
+ 				 * this hardware's requirements
+@@ -3189,6 +3190,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 				}
+ 				len = skb_headlen(skb);
+ 				break;
++			}
+ 			default:
+ 				/* do nothing */
+ 				break;
+-- 
+2.25.1
+
 
 
