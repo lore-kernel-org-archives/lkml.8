@@ -2,92 +2,86 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23079C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C86802184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="d6JTVPWK"
+	by mail.kernel.org (Postfix) with ESMTP id 0A61A21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbgFSNWx (ORCPT
+        id S1732608AbgFSNXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgFSNWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:22:52 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE3EC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:22:52 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0bac004d57d24caa4a0e33.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ac00:4d57:d24c:aa4a:e33])
+        Fri, 19 Jun 2020 09:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732503AbgFSNXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:23:11 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1747A1EC03D0;
-        Fri, 19 Jun 2020 15:22:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592572970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gEMLO6KVm1oIKIAxLPOc4rRHgVZxc+y/BwsFuOfLTRE=;
-        b=d6JTVPWK6JBiDGrITcwYYDhlXhKkzeVLRPbq6uoLnES4BND4yX3uHsRq2vAbtGeY+Bb0W/
-        myqVvLmlEO0kJ8Y3l1WCGAo+w8vke9bE3kRcXsw3/H72OQFnS3DmGmp5Nzv/YTO3+5O5bv
-        jwUx6ekS+qY6Y5iL8MGHE4RcWxm2mBQ=
-Date:   Fri, 19 Jun 2020 15:22:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D80D21527;
+        Fri, 19 Jun 2020 13:23:09 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 09:23:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-Message-ID: <20200619132243.GC32683@zn.tnic>
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
- <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <20200618220139.GH27951@zn.tnic>
- <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
- <20200619074053.GA32683@zn.tnic>
- <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619092307.3fc89312@oasis.local.home>
+In-Reply-To: <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+        <20200618195525.7889-3-qais.yousef@arm.com>
+        <jhjwo43cpfl.mognet@arm.com>
+        <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:01:36AM -0300, Daniel Gutson wrote:
-> Then the user will not know that he/she could improve the security of the
-> system by enabling the feature in the BIOS.
+On Fri, 19 Jun 2020 13:51:48 +0100
+Qais Yousef <qais.yousef@arm.com> wrote:
 
-And how is the user going to know from your "module"? AFAICT, your
-module loads on any system - not only on ones which have MKTME in CPUID.
+> > On 18/06/20 20:55, Qais Yousef wrote:  
+> > > There is a report that when uclamp is enabled, a netperf UDP test
+> > > regresses compared to a kernel compiled without uclamp.
+> > >
+> > > https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
+> > >  
+> > 
+> > ISTR the perennial form for those is: https://lkml.kernel.org/r/<message-id>  
+> 
+> The link is correct permalinnk from lore and contains the message-id as Peter
+> likes and he has accepted this form before.
+> 
+> If you look closely you'll see that what you suggest is just moving 'lkml' to
+> replace lore in the dns name and put an /r/. I don't see a need to enforce one
+> form over the other as the one I used is much easier to get.
 
-> The fact that the CPU has the cap and the BIOS disables it, can
-> trigger a prevention action.
+The two produce the same result, and I personally have used both. I'm
+starting to move over to lore over lkml, as that seems to be becoming
+the more popular form.
 
-I can only venture guesses what "prevention action" is - you'll have to
-be more verbose here.
+> 
+> If Peter really insists I'll be happy to change.
 
--- 
-Regards/Gruss,
-    Boris.
+But I agree, if Peter is insistent on lkml over lore, then it really
+doesn't make a difference to switch it. As I said, they are identical
+in what they produce.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+-- Steve
