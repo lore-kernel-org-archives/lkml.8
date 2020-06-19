@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42174C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB53D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0932168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583464;
-	bh=jmAKpld+lTOVjuEKHUlx8HpjpNQaUm30K9TiwyuX2OA=;
+	s=default; t=1592583468;
+	bh=6S2fDLxmDnfTFWydrz1jYnq7JRIpFlbNQ1c1RYxkUe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YU165Womc3ugiqo/3Ct8WpgpnPyl/PPQg+9CzJrFJsF2aeJprEEp8kCsA0yadlfLI
-	 szgkFELNvznjDj+kD3XmfBYz3IdkeW+a+Pvl+FgdlRnyvG3sKWDGBGf9nsrJR7fMtn
-	 VxnixobWqLejgBRvuogsN0blgI68xKkxNuQKIZoE=
+	b=BQMC5nLsJryX1t6I4CiIw10eHOqqrKyxMS5VDOeddEW0bMuzt/kBtyprJzj21kM97
+	 rCMRGH23BPOyvAy5vY0AdA611f49wBDjBTiOf0QUS1BTsacOdQZiHMGINDZvMNWD9J
+	 lHeaLXPDPTWlzscrVZY+L0FwMndTnqGdSruyXvBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394510AbgFSQRm (ORCPT
+        id S2394525AbgFSQRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390814AbgFSPCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:17 -0400
+        id S2390809AbgFSPCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17B32206DB;
-        Fri, 19 Jun 2020 15:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744BB21D94;
+        Fri, 19 Jun 2020 15:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578936;
-        bh=jmAKpld+lTOVjuEKHUlx8HpjpNQaUm30K9TiwyuX2OA=;
+        s=default; t=1592578934;
+        bh=6S2fDLxmDnfTFWydrz1jYnq7JRIpFlbNQ1c1RYxkUe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCQ1KUtqxB3wPvrXpZv60M+MpbwWEqCeEAdICEok2EwAUY5xPPt5K0lUIePlUFbXv
-         8i1RXWtpUA9w9mAgHCbmVtN20qmKpmlolzgdsolUxnRJW8yrj/6r9aNlYZQ9o16hCO
-         Ex+q8fxJ6b9CuNNCMJEEFfTDCUVPWKmop4cBLr9I=
+        b=PoYGFP3EzjJSeDGAFjndIU0/fXyWFcHHyTd01c3ZHHA/FyfcnKvrI4yVy4qgLaViL
+         12t5In3kYLqTjuZW9Q5Oqoen/oR+KgNYYj6wlWeop5m62S3OY7/wtL6ntb1mwoP5Li
+         zzHjCBqqTieIgHnzTpzT5uGdunJEIORl8Tr8pHmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/267] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date:   Fri, 19 Jun 2020 16:32:51 +0200
-Message-Id: <20200619141657.674097159@linuxfoundation.org>
+Subject: [PATCH 4.19 212/267] misc: pci_endpoint_test: Add support to test PCI EP in AM654x
+Date:   Fri, 19 Jun 2020 16:33:17 +0200
+Message-Id: <20200619141658.905037205@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -63,80 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+[ Upstream commit 5bb04b19230c02cc1b450b029856cbe093e09908 ]
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
+TI's AM654x PCIe EP has a restriction that BAR_0 is mapped to
+application registers. "PCIe Inbound Address Translation" section in
+AM65x Sitara Processors TRM (SPRUID7 – April 2018) describes BAR0 as
+reserved.
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+Configure pci_endpoint_test to use BAR_2 instead.
 
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
+Also set alignment to 64K since "PCIe Subsystem Address Translation"
+section in TRM indicates minimum ATU window size is 64K.
 
-And now we need to exten the whitelist again with 10 / "Notebook"...
-
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 5f8120d12859..d122f33d43ac 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,21 +157,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 2b3d61d565f0..2c472f9cc135 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -75,6 +75,11 @@
+ #define PCI_ENDPOINT_TEST_IRQ_TYPE		0x24
+ #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
  
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
--
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
++#define PCI_DEVICE_ID_TI_AM654			0xb00c
++
++#define is_am654_pci_dev(pdev)		\
++		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
++
+ static DEFINE_IDA(pci_endpoint_test_ida);
  
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
+ #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
+@@ -593,6 +598,7 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 	int ret = -EINVAL;
+ 	enum pci_barno bar;
+ 	struct pci_endpoint_test *test = to_endpoint_test(file->private_data);
++	struct pci_dev *pdev = test->pdev;
+ 
+ 	mutex_lock(&test->mutex);
+ 	switch (cmd) {
+@@ -600,6 +606,8 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 		bar = arg;
+ 		if (bar < 0 || bar > 5)
+ 			goto ret;
++		if (is_am654_pci_dev(pdev) && bar == BAR_0)
++			goto ret;
+ 		ret = pci_endpoint_test_bar(test, bar);
+ 		break;
+ 	case PCITEST_LEGACY_IRQ:
+@@ -792,11 +800,20 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
+ 
++static const struct pci_endpoint_test_data am654_data = {
++	.test_reg_bar = BAR_2,
++	.alignment = SZ_64K,
++	.irq_type = IRQ_TYPE_MSI,
++};
++
+ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
++	  .driver_data = (kernel_ulong_t)&am654_data
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 -- 
 2.25.1
 
