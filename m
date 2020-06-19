@@ -2,142 +2,111 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E550EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6A0720B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD23B20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592580059;
+	bh=uyTL2Lu6aIQbzbN9xNngetGgXUNcmBdT+z3cenf8g70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LCIipsB0dZKhxZy2/erRLA3wzYSv3ufXMMY3JmksH+GCIh+YWZr2Bwadiuk/e+Pku
+	 TXGtxSkmEc2BtH42YLrdk41bMHYjUeoWVP87Sebqb+sJ1FUo8Oxx5s1c/m/gA/91QF
+	 7S3N+OFxmYf714cX0ZXwZbK9sz7F68JLb+2sToWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392755AbgFSPUu (ORCPT
+        id S2392781AbgFSPU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392503AbgFSPRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:36 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC33C0613F0;
-        Fri, 19 Jun 2020 08:17:35 -0700 (PDT)
-Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jmIln-0007JW-Up; Fri, 19 Jun 2020 17:17:32 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] block: remove unnecessary ioc nested locking
-Date:   Fri, 19 Jun 2020 17:23:17 +0206
-Message-Id: <20200619151718.22338-2-john.ogness@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200619151718.22338-1-john.ogness@linutronix.de>
-References: <20200619151718.22338-1-john.ogness@linutronix.de>
+        Fri, 19 Jun 2020 11:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390364AbgFSPR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 837F9206DB;
+        Fri, 19 Jun 2020 15:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579847;
+        bh=uyTL2Lu6aIQbzbN9xNngetGgXUNcmBdT+z3cenf8g70=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jPEznpxMl71i7LqyS/bK05iomjlk3hhmML8SPKLcUdkX5UgrwIqVngYXxDQ4Qhy4v
+         gkXV9vusDePI2BzaYDuc1Jtj/xDSPWXyeDWG3VSKAo/rkDx2YYbF9bVvACFAARQY2Y
+         UdM/0AFQEUhLkpNYkUEkDMIA3YdQK9Uil1iEgzT8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 027/376] net: ena: fix error returning in ena_com_get_hash_function()
+Date:   Fri, 19 Jun 2020 16:29:05 +0200
+Message-Id: <20200619141711.648570465@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy CFQ IO scheduler could call put_io_context() in its exit_icq()
-elevator callback. This led to a lockdep warning, which was fixed in
-commit d8c66c5d5924 ("block: fix lockdep warning on io_context release
-put_io_context()") by using a nested subclass for the ioc spinlock.
-However, with commit f382fb0bcef4 ("block: remove legacy IO schedulers")
-the CFQ IO scheduler no longer exists.
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-The BFQ IO scheduler also implements the exit_icq() elevator callback but
-does not call put_io_context().
+[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
 
-The nested subclass for the ioc spinlock is no longer needed. Since it
-existed as an exception and no longer applies, remove the nested subclass
-usage.
+In case the "func" parameter is NULL we now return "-EINVAL".
+This shouldn't happen in general, but when it does happen, this is the
+proper way to handle it.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
+We also check func for NULL in the beginning of the function, as there
+is no reason to do all the work and realize in the end of the function
+it was useless.
+
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-ioc.c | 26 ++++++--------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 9df50fb507ca..5dbcfa1b872e 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -96,15 +96,7 @@ static void ioc_release_fn(struct work_struct *work)
- {
- 	struct io_context *ioc = container_of(work, struct io_context,
- 					      release_work);
--	unsigned long flags;
--
--	/*
--	 * Exiting icq may call into put_io_context() through elevator
--	 * which will trigger lockdep warning.  The ioc's are guaranteed to
--	 * be different, use a different locking subclass here.  Use
--	 * irqsave variant as there's no spin_lock_irq_nested().
--	 */
--	spin_lock_irqsave_nested(&ioc->lock, flags, 1);
-+	spin_lock_irq(&ioc->lock);
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index a250046b8e18..07b0f396d3c2 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2345,6 +2345,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 		rss->hash_key;
+ 	int rc;
  
- 	while (!hlist_empty(&ioc->icq_list)) {
- 		struct io_cq *icq = hlist_entry(ioc->icq_list.first,
-@@ -115,13 +107,13 @@ static void ioc_release_fn(struct work_struct *work)
- 			ioc_destroy_icq(icq);
- 			spin_unlock(&q->queue_lock);
- 		} else {
--			spin_unlock_irqrestore(&ioc->lock, flags);
-+			spin_unlock_irq(&ioc->lock);
- 			cpu_relax();
--			spin_lock_irqsave_nested(&ioc->lock, flags, 1);
-+			spin_lock_irq(&ioc->lock);
- 		}
- 	}
++	if (unlikely(!func))
++		return -EINVAL;
++
+ 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
+ 				    ENA_ADMIN_RSS_HASH_FUNCTION,
+ 				    rss->hash_key_dma_addr,
+@@ -2357,8 +2360,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (rss->hash_func)
+ 		rss->hash_func--;
  
--	spin_unlock_irqrestore(&ioc->lock, flags);
-+	spin_unlock_irq(&ioc->lock);
+-	if (func)
+-		*func = rss->hash_func;
++	*func = rss->hash_func;
  
- 	kmem_cache_free(iocontext_cachep, ioc);
- }
-@@ -170,7 +162,6 @@ void put_io_context(struct io_context *ioc)
-  */
- void put_io_context_active(struct io_context *ioc)
- {
--	unsigned long flags;
- 	struct io_cq *icq;
- 
- 	if (!atomic_dec_and_test(&ioc->active_ref)) {
-@@ -178,19 +169,14 @@ void put_io_context_active(struct io_context *ioc)
- 		return;
- 	}
- 
--	/*
--	 * Need ioc lock to walk icq_list and q lock to exit icq.  Perform
--	 * reverse double locking.  Read comment in ioc_release_fn() for
--	 * explanation on the nested locking annotation.
--	 */
--	spin_lock_irqsave_nested(&ioc->lock, flags, 1);
-+	spin_lock_irq(&ioc->lock);
- 	hlist_for_each_entry(icq, &ioc->icq_list, ioc_node) {
- 		if (icq->flags & ICQ_EXITED)
- 			continue;
- 
- 		ioc_exit_icq(icq);
- 	}
--	spin_unlock_irqrestore(&ioc->lock, flags);
-+	spin_unlock_irq(&ioc->lock);
- 
- 	put_io_context(ioc);
- }
+ 	if (key)
+ 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
 -- 
-2.20.1
+2.25.1
+
+
 
