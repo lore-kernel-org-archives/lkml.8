@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08334C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D520C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1CB92186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA212193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578946;
-	bh=5UNtXju/TGZiyi7Mp3VzIKG2SZmOupWS+VMhDKt0wRw=;
+	s=default; t=1592578951;
+	bh=xxUjlhi8/WByqG1Pmjnz44v+8zF0P2hZJkQQenoOhaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vwN60OCaeyff20vJrpm3YcX2WERQTKXPdCG7rsvby1Z/3g/9qID4DXYfHWnGYMzB
-	 /tAeCgmdIE31RLMBdaye6DbpZDgUF/2Rmi4BeJx0yDxlJKSpj+nReG1TdenWdLlLPS
-	 lWsLETzXupdyPV6jwxoWp5dE4BQVtNhP85pDzD+I=
+	b=g9de1CDoiMQtiFCfc0CMYDN16cZeYLAiGS1lbMj3Dzaaw5EfqEsB3obgqJZpSZrXG
+	 2eXhmOZTO+qAH/YIBTGIla/sea12n8J4vKSsMIVgQn9GX0/AcHYEemg1OntQrO6mXp
+	 q32aTapqFObSyJEKXGiO3uSaVkhPnPhGQcWcwmRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390834AbgFSPCY (ORCPT
+        id S2390503AbgFSPC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390733AbgFSPBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:40 -0400
+        id S2390753AbgFSPB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C3620734;
-        Fri, 19 Jun 2020 15:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9672D2193E;
+        Fri, 19 Jun 2020 15:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578900;
-        bh=5UNtXju/TGZiyi7Mp3VzIKG2SZmOupWS+VMhDKt0wRw=;
+        s=default; t=1592578916;
+        bh=xxUjlhi8/WByqG1Pmjnz44v+8zF0P2hZJkQQenoOhaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNYKDtI5Ci55EvW3Z/vhhPL3rW0d7ryLa0hLIwKnhRKrv/sJoU3SYSEinH/M8/8E9
-         tlxw17wnsaY2CAYq2ddPmH3CTwmsjqtlPfHAbq6I03Exhaumy5stA4CBdFRMXgntp+
-         Tj7fXj3nmLwD9j+jE6fX8U5GIoft9dz6okycExis=
+        b=knxf76yKaJjCrk1DO2t3RVaAlMPVGZxn2qDSqRsFFx0hRpeBhre6WLe7oKuQhNFqY
+         QPSr7QWqytibyR8yrFe6HbL7Aij3olGixui4YmwbpZnnjSBnAK6Wsa54wP7S9aec4x
+         mps58hYWuiB97eJ1XBfO3WIeDSt4xVDR1A2m0F0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcos Scriven <marcos@scriven.org>,
+        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 200/267] PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
-Date:   Fri, 19 Jun 2020 16:33:05 +0200
-Message-Id: <20200619141658.342667229@linuxfoundation.org>
+Subject: [PATCH 4.19 205/267] pci:ipmi: Move IPMI PCI class id defines to pci_ids.h
+Date:   Fri, 19 Jun 2020 16:33:10 +0200
+Message-Id: <20200619141658.569061824@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,60 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Scriven <marcos@scriven.org>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 0d14f06cd6657ba3446a5eb780672da487b068e7 ]
+[ Upstream commit 05c3d056086a6217a77937b7fa0df35ec75715e6 ]
 
-The AMD Matisse HD Audio & USB 3.0 devices advertise Function Level Reset
-support, but hang when an FLR is triggered.
-
-To reproduce the problem, attach the device to a VM, then detach and try to
-attach again.
-
-Rename the existing quirk_intel_no_flr(), which was not Intel-specific, to
-quirk_no_flr(), and apply it to prevent the use of FLR on these AMD
-devices.
-
-Link: https://lore.kernel.org/r/CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com
-Signed-off-by: Marcos Scriven <marcos@scriven.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_si_pci.c | 5 -----
+ include/linux/pci_ids.h         | 4 ++++
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index fb061e1bc084..7a835c49409e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4956,13 +4956,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
+index 022e03634ce2..9e9700b1a8e6 100644
+--- a/drivers/char/ipmi/ipmi_si_pci.c
++++ b/drivers/char/ipmi/ipmi_si_pci.c
+@@ -18,11 +18,6 @@ module_param_named(trypci, si_trypci, bool, 0);
+ MODULE_PARM_DESC(trypci, "Setting this to zero will disable the"
+ 		 " default scan of the interfaces identified via pci");
  
--/* FLR may cause some 82579 devices to hang */
--static void quirk_intel_no_flr(struct pci_dev *dev)
-+/*
-+ * FLR may cause the following to devices to hang:
-+ *
-+ * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Matisse USB 3.0 Host Controller 0x149c
-+ * Intel 82579LM Gigabit Ethernet Controller 0x1502
-+ * Intel 82579V Gigabit Ethernet Controller 0x1503
-+ *
-+ */
-+static void quirk_no_flr(struct pci_dev *dev)
- {
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
- }
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+-#define PCI_CLASS_SERIAL_IPMI		0x0c07
+-#define PCI_CLASS_SERIAL_IPMI_SMIC	0x0c0700
+-#define PCI_CLASS_SERIAL_IPMI_KCS	0x0c0701
+-#define PCI_CLASS_SERIAL_IPMI_BT	0x0c0702
+-
+ #define PCI_DEVICE_ID_HP_MMC 0x121A
  
- static void quirk_no_ext_tags(struct pci_dev *pdev)
- {
+ static void ipmi_pci_cleanup(struct si_sm_io *io)
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index f4e278493f5b..861ee391dc33 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -117,6 +117,10 @@
+ #define PCI_CLASS_SERIAL_USB_DEVICE	0x0c03fe
+ #define PCI_CLASS_SERIAL_FIBER		0x0c04
+ #define PCI_CLASS_SERIAL_SMBUS		0x0c05
++#define PCI_CLASS_SERIAL_IPMI		0x0c07
++#define PCI_CLASS_SERIAL_IPMI_SMIC	0x0c0700
++#define PCI_CLASS_SERIAL_IPMI_KCS	0x0c0701
++#define PCI_CLASS_SERIAL_IPMI_BT	0x0c0702
+ 
+ #define PCI_BASE_CLASS_WIRELESS			0x0d
+ #define PCI_CLASS_WIRELESS_RF_CONTROLLER	0x0d10
 -- 
 2.25.1
 
