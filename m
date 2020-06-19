@@ -2,60 +2,75 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67CA207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65786207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgFSJRu (ORCPT
+        id S1730380AbgFSJSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:17:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44930 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbgFSJRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:17:49 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 69C6EAD15B3E23525768;
-        Fri, 19 Jun 2020 17:17:48 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 19 Jun
- 2020 17:17:43 +0800
-Subject: Re: [PATCH v3] f2fs-tools: introduce set_node_footer to initialize
- node footer
-To:     <zhaowuyun@wingtech.com>, <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592556344-2301-1-git-send-email-zhaowuyun@wingtech.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0ae2bfe6-70c0-82ad-6973-300fde3edbcd@huawei.com>
-Date:   Fri, 19 Jun 2020 17:17:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 19 Jun 2020 05:18:24 -0400
+Received: from smtp.asem.it ([151.1.184.197]:55382 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgFSJSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:18:20 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000329244.MSG 
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:18:15 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
+ Jun 2020 11:18:12 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 19 Jun 2020 11:18:12 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] net: ethernet: oki-semi: pch_gbe: fix spelling mistake
+Date:   Fri, 19 Jun 2020 11:18:11 +0200
+Message-ID: <20200619091811.28651-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1592556344-2301-1-git-send-email-zhaowuyun@wingtech.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090210.5EEC82D6.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/19 16:45, zhaowuyun@wingtech.com wrote:
-> From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> 
-> the filesystem will use the cold flag, so deal with it to avoid
-> potential issue of inconsistency
-> 
-> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+Fix typo: "Triger" --> "Trigger"
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe.h b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe.h
+index 32b9d7705404..55cef5b16aa5 100644
+--- a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe.h
++++ b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe.h
+@@ -147,7 +147,7 @@ struct pch_gbe_regs {
+ #define PCH_GBE_RH_ALM_FULL_8   0x00001000      /* 8 words */
+ #define PCH_GBE_RH_ALM_FULL_16  0x00002000      /* 16 words */
+ #define PCH_GBE_RH_ALM_FULL_32  0x00003000      /* 32 words */
+-/* RX FIFO Read Triger Threshold */
++/* RX FIFO Read Trigger Threshold */
+ #define PCH_GBE_RH_RD_TRG_4     0x00000000      /* 4 words */
+ #define PCH_GBE_RH_RD_TRG_8     0x00000200      /* 8 words */
+ #define PCH_GBE_RH_RD_TRG_16    0x00000400      /* 16 words */
+-- 
+2.17.1
+
