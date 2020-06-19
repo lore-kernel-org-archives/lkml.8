@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1549EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B34C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BFF21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E166C21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577964;
-	bh=yVlSZ/n9zmirRQUKA//+cMaYSvBlSctS/WZL1Q04WAM=;
+	s=default; t=1592577969;
+	bh=+QMo37ufAabq0igFYA6n7M8KW0mBfbxQ1kaR5smOkdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rbMNbjXVIpd49aGXokODezX99Wkq9FcYuljPDug86mYNg1aDIs0m05GObuMwi6Ejw
-	 ceYxKsnnR4Ol0ng5Jq5A1PmmFiLdLXPdjo4/kN2/MODfWflNbMMAeGxhvwa6sUVL1v
-	 URN3w95mDrf002eQDEEJvUj5jpHiod9G6rlQ6A5Y=
+	b=adbNiNKVcV7/EjC0ZMD99Gjxl/gZyFwBhoGIXETLvto8veFrgpmawuyF/41F2/prx
+	 ZNUyt+5xPg90g++uZ6l7HK0O8polci4AF+0DPAfl4ioaLJmTqWlEJ+VruJmdVNsGWf
+	 qzXPig+FiqAco83aPFO6YTpXF8efwCd5Y+CU9i2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388788AbgFSOqC (ORCPT
+        id S2388797AbgFSOqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388761AbgFSOpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:52 -0400
+        id S2388778AbgFSOp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC72420A8B;
-        Fri, 19 Jun 2020 14:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4091620A8B;
+        Fri, 19 Jun 2020 14:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577951;
-        bh=yVlSZ/n9zmirRQUKA//+cMaYSvBlSctS/WZL1Q04WAM=;
+        s=default; t=1592577956;
+        bh=+QMo37ufAabq0igFYA6n7M8KW0mBfbxQ1kaR5smOkdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N81JUJ6/gDuUW9NSqCrTNKa4lGOrg9eH1V8uZPpuLg42XrlyARnyRAy2hzpTzkpdj
-         nLeACaNlU7KipB//JnuRpnJz8cclNZKBGZoOwkMoh76zpuJYg3IZRVRFrR6R+mc1CL
-         APKzCOD3igMLdl4mSZqd1HKZcfhk5s9ZsmjepqMw=
+        b=bEoiC21D+uQvWmGLF8ATsJ0lvA8t/MccDukiz4RKdk+9JtHfE8Ckh/N+yiFMeVAyH
+         +n8Nojgry4b44VdKwmdx+IJ+oIPII02vwUgfpSEaOWRYIhIpRijkDAqq6/CpsDI/2R
+         u1FQ5O9jtydnXIWuwoZzLYXulnhMxt1NtpcEOs00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Macpaul Lin <macpaul.lin@mediatek.com>
-Subject: [PATCH 4.14 025/190] ALSA: usb-audio: Fix inconsistent card PM state after resume
-Date:   Fri, 19 Jun 2020 16:31:10 +0200
-Message-Id: <20200619141634.767771607@linuxfoundation.org>
+        stable@vger.kernel.org, Matt Turner <mattst88@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 004/190] Fix acccess_ok() on alpha and SH
+Date:   Fri, 19 Jun 2020 16:30:49 +0200
+Message-Id: <20200619141633.684100017@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,127 +62,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 862b2509d157c629dd26d7ac6c6cdbf043d332eb upstream.
+commit 94bd8a05cd4de344a9a57e52ef7d99550251984f upstream.
 
-When a USB-audio interface gets runtime-suspended via auto-pm feature,
-the driver suspends all functionality and increment
-chip->num_suspended_intf.  Later on, when the system gets suspended to
-S3, the driver increments chip->num_suspended_intf again, skips the
-device changes, and sets the card power state to
-SNDRV_CTL_POWER_D3hot.  In return, when the system gets resumed from
-S3, the resume callback decrements chip->num_suspended_intf.  Since
-this refcount is still not zero (it's been runtime-suspended), the
-whole resume is skipped.  But there is a small pitfall here.
+Commit 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
+broke both alpha and SH booting in qemu, as noticed by Guenter Roeck.
 
-The problem is that the driver doesn't restore the card power state
-after this resume call, leaving it as SNDRV_CTL_POWER_D3hot.  So,
-even after the system resume finishes, the card instance still appears
-as if it were system-suspended, and this confuses many ioctl accesses
-that are blocked unexpectedly.
+It turns out that the bug wasn't actually in that commit itself (which
+would have been surprising: it was mostly a no-op), but in how the
+addition of access_ok() to the strncpy_from_user() and strnlen_user()
+functions now triggered the case where those functions would test the
+access of the very last byte of the user address space.
 
-In details, we have two issues behind the scene: one is that the card
-power state is changed only when the refcount becomes zero, and
-another is that the prior auto-suspend check is kept in a boolean
-flag.  Although the latter problem is almost negligible since the
-auto-pm feature is imposed only on the primary interface, but this can
-be a potential problem on the devices with multiple interfaces.
+The string functions actually did that user range test before too, but
+they did it manually by just comparing against user_addr_max().  But
+with user_access_begin() doing the check (using "access_ok()"), it now
+exposed problems in the architecture implementations of that function.
 
-This patch addresses those issues by the following:
+For example, on alpha, the access_ok() helper macro looked like this:
 
-- Replace chip->autosuspended boolean flag with chip->system_suspend
-  counter
+  #define __access_ok(addr, size) \
+        ((get_fs().seg & (addr | size | (addr+size))) == 0)
 
-- At the first system-suspend, chip->num_suspended_intf is recorded to
-  chip->system_suspend
+and what it basically tests is of any of the high bits get set (the
+USER_DS masking value is 0xfffffc0000000000).
 
-- At system-resume, the card power state is restored when the
-  chip->num_suspended_intf refcount reaches to chip->system_suspend,
-  i.e. the state returns to the auto-suspended
+And that's completely wrong for the "addr+size" check.  Because it's
+off-by-one for the case where we check to the very end of the user
+address space, which is exactly what the strn*_user() functions do.
 
-Also, the patch fixes yet another hidden problem by the code
-refactoring along with the fixes above: namely, when some resume
-procedure failed, the driver left chip->num_suspended_intf that was
-already decreased, and it might lead to the refcount unbalance.
-In the new code, the refcount decrement is done after the whole resume
-procedure, and the problem is avoided as well.
+Why? Because "addr+size" will be exactly the size of the address space,
+so trying to access the last byte of the user address space will fail
+the __access_ok() check, even though it shouldn't.  As a result, the
+user string accessor functions failed consistently - because they
+literally don't know how long the string is going to be, and the max
+access is going to be that last byte of the user address space.
 
-Fixes: 0662292aec05 ("ALSA: usb-audio: Handle normal and auto-suspend equally")
-Reported-and-tested-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603153709.6293-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Side note: that alpha macro is buggy for another reason too - it re-uses
+the arguments twice.
+
+And SH has another version of almost the exact same bug:
+
+  #define __addr_ok(addr) \
+        ((unsigned long __force)(addr) < current_thread_info()->addr_limit.seg)
+
+so far so good: yes, a user address must be below the limit.  But then:
+
+  #define __access_ok(addr, size)         \
+        (__addr_ok((addr) + (size)))
+
+is wrong with the exact same off-by-one case: the case when "addr+size"
+is exactly _equal_ to the limit is actually perfectly fine (think "one
+byte access at the last address of the user address space")
+
+The SH version is actually seriously buggy in another way: it doesn't
+actually check for overflow, even though it did copy the _comment_ that
+talks about overflow.
+
+So it turns out that both SH and alpha actually have completely buggy
+implementations of access_ok(), but they happened to work in practice
+(although the SH overflow one is a serious serious security bug, not
+that anybody likely cares about SH security).
+
+This fixes the problems by using a similar macro on both alpha and SH.
+It isn't trying to be clever, the end address is based on this logic:
+
+        unsigned long __ao_end = __ao_a + __ao_b - !!__ao_b;
+
+which basically says "add start and length, and then subtract one unless
+the length was zero".  We can't subtract one for a zero length, or we'd
+just hit an underflow instead.
+
+For a lot of access_ok() users the length is a constant, so this isn't
+actually as expensive as it initially looks.
+
+Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/card.c     |   20 +++++++++++++-------
- sound/usb/usbaudio.h |    2 +-
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ arch/alpha/include/asm/uaccess.h |    8 +++++---
+ arch/sh/include/asm/uaccess.h    |    7 +++++--
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -768,9 +768,6 @@ static int usb_audio_suspend(struct usb_
- 	if (chip == (void *)-1L)
- 		return 0;
+--- a/arch/alpha/include/asm/uaccess.h
++++ b/arch/alpha/include/asm/uaccess.h
+@@ -30,11 +30,13 @@
+  * Address valid if:
+  *  - "addr" doesn't have any high-bits set
+  *  - AND "size" doesn't have any high-bits set
+- *  - AND "addr+size" doesn't have any high-bits set
++ *  - AND "addr+size-(size != 0)" doesn't have any high-bits set
+  *  - OR we are in kernel mode.
+  */
+-#define __access_ok(addr, size) \
+-	((get_fs().seg & (addr | size | (addr+size))) == 0)
++#define __access_ok(addr, size) ({				\
++	unsigned long __ao_a = (addr), __ao_b = (size);		\
++	unsigned long __ao_end = __ao_a + __ao_b - !!__ao_b;	\
++	(get_fs().seg & (__ao_a | __ao_b | __ao_end)) == 0; })
  
--	chip->autosuspended = !!PMSG_IS_AUTO(message);
--	if (!chip->autosuspended)
--		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
- 	if (!chip->num_suspended_intf++) {
- 		list_for_each_entry(as, &chip->pcm_list, list) {
- 			snd_pcm_suspend_all(as->pcm);
-@@ -783,6 +780,11 @@ static int usb_audio_suspend(struct usb_
- 			snd_usb_mixer_suspend(mixer);
- 	}
- 
-+	if (!PMSG_IS_AUTO(message) && !chip->system_suspend) {
-+		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
-+		chip->system_suspend = chip->num_suspended_intf;
-+	}
+ #define access_ok(type, addr, size)			\
+ ({							\
+--- a/arch/sh/include/asm/uaccess.h
++++ b/arch/sh/include/asm/uaccess.h
+@@ -16,8 +16,11 @@
+  * sum := addr + size;  carry? --> flag = true;
+  * if (sum >= addr_limit) flag = true;
+  */
+-#define __access_ok(addr, size)		\
+-	(__addr_ok((addr) + (size)))
++#define __access_ok(addr, size)	({				\
++	unsigned long __ao_a = (addr), __ao_b = (size);		\
++	unsigned long __ao_end = __ao_a + __ao_b - !!__ao_b;	\
++	__ao_end >= __ao_a && __addr_ok(__ao_end); })
 +
- 	return 0;
- }
- 
-@@ -795,10 +797,11 @@ static int __usb_audio_resume(struct usb
- 
- 	if (chip == (void *)-1L)
- 		return 0;
--	if (--chip->num_suspended_intf)
--		return 0;
- 
- 	atomic_inc(&chip->active); /* avoid autopm */
-+	if (chip->num_suspended_intf > 1)
-+		goto out;
-+
- 	/*
- 	 * ALSA leaves material resumption to user space
- 	 * we just notify and restart the mixers
-@@ -813,9 +816,12 @@ static int __usb_audio_resume(struct usb
- 		snd_usbmidi_resume(p);
- 	}
- 
--	if (!chip->autosuspended)
-+ out:
-+	if (chip->num_suspended_intf == chip->system_suspend) {
- 		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
--	chip->autosuspended = 0;
-+		chip->system_suspend = 0;
-+	}
-+	chip->num_suspended_intf--;
- 
- err_out:
- 	atomic_dec(&chip->active); /* allow autopm after this point */
---- a/sound/usb/usbaudio.h
-+++ b/sound/usb/usbaudio.h
-@@ -37,7 +37,7 @@ struct snd_usb_audio {
- 	struct usb_interface *pm_intf;
- 	u32 usb_id;
- 	struct mutex mutex;
--	unsigned int autosuspended:1;	
-+	unsigned int system_suspend;
- 	atomic_t active;
- 	atomic_t shutdown;
- 	atomic_t usage_count;
+ #define access_ok(type, addr, size)	\
+ 	(__chk_user_ptr(addr),		\
+ 	 __access_ok((unsigned long __force)(addr), (size)))
 
 
