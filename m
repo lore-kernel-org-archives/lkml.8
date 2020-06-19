@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2885C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14452C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A042221707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE90121707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583584;
-	bh=I4j9cgFKmU/e3A06B8j3e0Dn3D6aWeZNdZzrQfrzmSU=;
+	s=default; t=1592583591;
+	bh=Bavk9QbyY+cBR5Q37haU6BSR4Badx9cgk1Oa4nFKzzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ErkkYbjUOhsYZo/ubZgREg8zlSIwW5oL3Nv64t1fgc0MewL0CjMxckr06BWRsimA
-	 V9+nVmZnmRxVP70799LoLKo/8f9eKdQvNfgxkTKCBRp69GoB09e7ntbPIamhkabF96
-	 P7gibBsRWOk31hUJvAsazGMe5VULgrHI5cp+9fS8=
+	b=n5D66xf6Wc8V/wj7IvQe8Hn5Nfz6U+hp7158YSZm9Qt8KWtoPSTMSTfcK++IEa24D
+	 vORMYdW7T2IssHynyS4ShOn03FZTdc2pKcbPyb4LnZoVtQLYEK6fquc1oksBlgL4ZO
+	 83xTm6feqPjsf7kafekgk3sga+s3KuRZjcUAt+tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394602AbgFSQTn (ORCPT
+        id S2394608AbgFSQTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390742AbgFSPBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:51 -0400
+        id S2389657AbgFSPBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5520F21841;
-        Fri, 19 Jun 2020 15:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A60920734;
+        Fri, 19 Jun 2020 15:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578911;
-        bh=I4j9cgFKmU/e3A06B8j3e0Dn3D6aWeZNdZzrQfrzmSU=;
+        s=default; t=1592578905;
+        bh=Bavk9QbyY+cBR5Q37haU6BSR4Badx9cgk1Oa4nFKzzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mIwTmoAjg98Ci/46JyAwVjF/z6v95g782EsyFhQFt97csPIyxVcGQOiZl7do4GTuJ
-         wW5OaPO9n0y6Bp1JtKIMqwFlx0WQiLdD54BtrR4Z0aEs0PXCxIZFkWkd1n/8OA/sVh
-         6B2etcYYPGHz8uSaYUBzUsAIqfNPxvipSf/7kt44=
+        b=rKjFqojThTZMkGaJ7VH3CnOgSN6weQMU8a72zKzvs8vzpzPuEZBr9CzpP6Z5vj9Tp
+         M/NCLtYXLYCOLBMb9Vac/uIbsgoiOPv4IXn1cbUBdZocSwCPaSvw56RM5qbgJRJ02m
+         DqzGyG3PeRGK7JcVYZ4lQBYi/GP0K2fxfCoAmpM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Darrel Goeddel <dgoeddel@forcepoint.com>,
-        Ashok Raj <ashok.raj@intel.com>,
+        stable@vger.kernel.org, Abhinav Ratna <abhinav.ratna@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Mark Scott <mscott@forcepoint.com>
-Subject: [PATCH 4.19 203/267] PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints
-Date:   Fri, 19 Jun 2020 16:33:08 +0200
-Message-Id: <20200619141658.474621270@linuxfoundation.org>
+        Scott Branden <scott.branden@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 202/267] PCI: Add ACS quirk for iProc PAXB
+Date:   Fri, 19 Jun 2020 16:33:07 +0200
+Message-Id: <20200619141658.429157336@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -65,111 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+From: Abhinav Ratna <abhinav.ratna@broadcom.com>
 
-[ Upstream commit 3247bd10a4502a3075ce8e1c3c7d31ef76f193ce ]
+[ Upstream commit 46b2c32df7a462d0e64b68c513e5c4c1b2a399a7 ]
 
-All Intel platforms guarantee that all root complex implementations must
-send transactions up to IOMMU for address translations. Hence for Intel
-RCiEP devices, we can assume some ACS-type isolation even without an ACS
-capability.
+iProc PAXB Root Ports don't advertise an ACS capability, but they do not
+allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
+each Root Port can be in a separate IOMMU group.
 
->From the Intel VT-d spec, r3.1, sec 3.16 ("Root-Complex Peer to Peer
-Considerations"):
-
-  When DMA remapping is enabled, peer-to-peer requests through the
-  Root-Complex must be handled as follows:
-
-  - The input address in the request is translated (through first-level,
-    second-level or nested translation) to a host physical address (HPA).
-    The address decoding for peer addresses must be done only on the
-    translated HPA. Hardware implementations are free to further limit
-    peer-to-peer accesses to specific host physical address regions (or
-    to completely disallow peer-forwarding of translated requests).
-
-  - Since address translation changes the contents (address field) of
-    the PCI Express Transaction Layer Packet (TLP), for PCI Express
-    peer-to-peer requests with ECRC, the Root-Complex hardware must use
-    the new ECRC (re-computed with the translated address) if it
-    decides to forward the TLP as a peer request.
-
-  - Root-ports, and multi-function root-complex integrated endpoints, may
-    support additional peer-to-peer control features by supporting PCI
-    Express Access Control Services (ACS) capability. Refer to ACS
-    capability in PCI Express specifications for details.
-
-Since Linux didn't give special treatment to allow this exception, certain
-RCiEP MFD devices were grouped in a single IOMMU group. This doesn't permit
-a single device to be assigned to a guest for instance.
-
-In one vendor system: Device 14.x were grouped in a single IOMMU group.
-
-  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-  /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-
-After this patch:
-
-  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-  /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-
-14.0 and 14.2 are integrated devices, but legacy end points, whereas 14.3
-was a PCIe-compliant RCiEP.
-
-  00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-    Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-
-This permits assigning this device to a guest VM.
-
-[bhelgaas: drop "Fixes" tag since this doesn't fix a bug in that commit]
-Link: https://lore.kernel.org/r/1590699462-7131-1-git-send-email-ashok.raj@intel.com
-Tested-by: Darrel Goeddel <dgoeddel@forcepoint.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+[bhelgaas: commit log, comment, use common implementation style]
+Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
+Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-Cc: stable@vger.kernel.org
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Mark Scott <mscott@forcepoint.com>,
-Cc: Romil Sharma <rsharma@forcepoint.com>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/pci/quirks.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 013b84880e1d..d6236bb26950 100644
+index 92892b1c35fa..013b84880e1d 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -4543,6 +4543,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4543,6 +4543,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
  	return acs_flags ? 0 : 1;
  }
  
-+static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
++static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
 +{
 +	/*
-+	 * Intel RCiEP's are required to allow p2p only on translated
-+	 * addresses.  Refer to Intel VT-d specification, r3.1, sec 3.16,
-+	 * "Root-Complex Peer to Peer Considerations".
++	 * iProc PAXB Root Ports don't advertise an ACS capability, but
++	 * they do not allow peer-to-peer transactions between Root Ports.
++	 * Allow each Root Port to be in a separate IOMMU group by masking
++	 * SV/RR/CR/UF bits.
 +	 */
-+	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
-+		return -ENOTTY;
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
 +
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++	return acs_flags ? 0 : 1;
 +}
 +
- static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- {
- 	/*
-@@ -4626,6 +4640,7 @@ static const struct pci_dev_acs_enabled {
- 	/* I219 */
- 	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
- 	/* QCOM QDF2xxx root ports */
- 	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
- 	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
+ static const struct pci_dev_acs_enabled {
+ 	u16 vendor;
+ 	u16 device;
+@@ -4634,6 +4647,7 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+ 	{ 0 }
+ };
+ 
 -- 
 2.25.1
 
