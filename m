@@ -2,212 +2,123 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2971CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0743C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583444;
-	bh=ZR4AINEJ0HXo04aAnhgMlxdhz1Gu2pYnd6eCZvpm7hM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLlDSJWC6W1bwbqslo0fCn1hnBOp60fPr4UZOZCs3x8DYHrwvnVaDOJYpyQGHkwfm
-	 ycMsNgSQEcZPmwG07GvCawy9JL/KiPbd6JozNzW2GlbYH6p/THi4xaeVrjHgovyEOw
-	 lQtZKBy0p56amPDpVO/alh6dlDGj71mGrDUUdfAY=
+	by mail.kernel.org (Postfix) with ESMTP id 2D7BE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+Q5WK32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394423AbgFSQRW (ORCPT
+        id S2394512AbgFSQRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390845AbgFSPCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 119D221841;
-        Fri, 19 Jun 2020 15:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578952;
-        bh=ZR4AINEJ0HXo04aAnhgMlxdhz1Gu2pYnd6eCZvpm7hM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ipp+7iYjpTx8u6JUg3Nlb4xRfPBByl5MDYipwn7cn9mQo55K1EUG64hAhGSN9+ZQx
-         OoMX4s6/W3rTtpK+FD5QwG8PO5s+aXZi9SVy44YpMTvtRhHjgMFpce4E4Oz56B7rbd
-         UNUYIp6ZfvlOXraD/1NjHcnfvGPOdKTlkWPdFapE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 189/267] btrfs: send: emit file capabilities after chown
-Date:   Fri, 19 Jun 2020 16:32:54 +0200
-Message-Id: <20200619141657.810851803@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390753AbgFSPCb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:31 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3CDC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:02:31 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id y123so5760683vsb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KA1YYiLoYecDSXE7VUrhPC0pwfaz8HP7Uv5Pt43IOGY=;
+        b=s+Q5WK32U7x677VRiwsxq5vLGWbQmVm3qU5gzbBqxiAwaSVsdmV07dmcuRGlhrvRgG
+         gN3uVtClNBaOwGDGW+v0DnBXSP4Zm9FtdpKu5SXMFi4L23Y8wXEH0zoKon8G5VxoicCO
+         OzqH3UQ+Z2/HQSudWwlKu8rM/8m4nffPcAsiaxJmupRD9QjVSJZyQ5THFvZ2ZPnFT4Bf
+         wh4G66yucWvORbH60yEO2YLbaesEfRiyQPh8KrTmU8Ml/nuiYAFjgzhvlR4HXx3tmo61
+         i9w/weX5MHfrvqUltQMp55oet6EA22B754bpfiWu6Wdg0ExgKWQBRiYLmJ9AfH8Ys6ZT
+         tD+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KA1YYiLoYecDSXE7VUrhPC0pwfaz8HP7Uv5Pt43IOGY=;
+        b=Azo0GXGrXyCtlDa7kYLXUY/QA4fdPzWmX9PNS1JolYkkHl8P0kloTULyry08/E3QKc
+         LTuc6PWgxrJNc6Oe4iV/dufs44XNm6+YJVxw6T7F1HjLyK2BUnb48I/iFh4LGrD/bUAr
+         6fcfkwO/g0p17b31iwJtUWJBHYjFlht1Etjw/11GaF+rBweA6d/2u5fnpE/qlb7zzroy
+         Ep3CSLnKkwIOFgkKALItiz7RuBwwjoIR2FopFZs1Fwm0A3rUjczj+C7azf2wbQPv7O38
+         3ZIdizdceR0ZlgqzKBb+6Qx12xhsu8CH3dDCNGybjfsrNRhClvhdFaS280oqcXHF9CsY
+         53gg==
+X-Gm-Message-State: AOAM532Q88GAUPrlcaa6HujkUxU58lfLjRO4azQ2NxPpNOjNNPr/oEMS
+        UiMG8eM29wOgaYeSRPsBaIBau05msCwsD9ClY98=
+X-Google-Smtp-Source: ABdhPJz0U06vlRhoVb1EWe/pOvxcbD9a9RtgKCo3ANqJYbtqd6LdQTJsOKMaiouqkGcQgFgC7XuHVltyeyzAvVYDw70=
+X-Received: by 2002:a67:684f:: with SMTP id d76mr7813592vsc.66.1592578950686;
+ Fri, 19 Jun 2020 08:02:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
+ <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
+ <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
+ <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com> <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
+ <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com> <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
+ <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com> <CAD2FfiF8QEarhyFD1GkfnaR+spyH86sChgRZm37ab_gzS2m_wg@mail.gmail.com>
+ <aef4ff03-3a98-4425-2b01-203a88401370@intel.com>
+In-Reply-To: <aef4ff03-3a98-4425-2b01-203a88401370@intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Fri, 19 Jun 2020 16:02:19 +0100
+Message-ID: <CAD2FfiEit9HR_ikc3WQXg9c_hyNHtk6b0rVnYJd-R8gJ7tbQOw@mail.gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Daniel Gutson <daniel@eclypsium.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+On Fri, 19 Jun 2020 at 15:48, Dave Hansen <dave.hansen@intel.com> wrote:
+> You cut out the important part.  The "pretty sure" involves a bunch of
+> preconditions and knowing what your hardware configuration is in the
+> first place.
 
-commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
+Totally agree.
 
-Whenever a chown is executed, all capabilities of the file being touched
-are lost.  When doing incremental send with a file with capabilities,
-there is a situation where the capability can be lost on the receiving
-side. The sequence of actions bellow shows the problem:
+> Let's take a step back.  We add read-only ABIs so that decisions can be
+> made.  What decision will somebody make from the ABI being proposed here?
 
-  $ mount /dev/sda fs1
-  $ mount /dev/sdb fs2
+The question of "is my memory encrypted" is what I'm trying to decide.
+To the end user (or the person marking a compliance ticksheet for a
+government contract) all they want to know is the end result. At the
+moment for AMD SME this seems much simpler as there are less
+"preconditions".
 
-  $ touch fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
-  $ btrfs send fs1/snap_init | btrfs receive fs2
+> Someone does 'cat /proc/mktme' (or whatever) and it says "1" or
+> whatever, which means yay, encryption is on.  What do they do?
 
-  $ chgrp adm fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
+I think "is my memory encrypted" for Intel has to be a superset of:
 
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+1. TME in CPU info
+2. not disabled by the platform
+3. not using unencrypted swap
+4. not using a memory accelerator
+5. entire DRAM area is marked with EFI_MEMORY_CPU_CRYPTO
 
-  $ btrfs send fs1/snap_complete | btrfs receive fs2
-  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+It seems the only way to answer the questions and make it easy for the
+consumer to know the answer is to ask the kernel for each of the 5
+different questions. At the moment we can only get 1, 3, maybe 4, soon
+to be 5, but not 2.
 
-At this point, only a chown was emitted by "btrfs send" since only the
-group was changed. This makes the cap_sys_nice capability to be dropped
-from fs2/snap_incremental/foo.bar
-
-To fix that, only emit capabilities after chown is emitted. The current
-code first checks for xattrs that are new/changed, emits them, and later
-emit the chown. Now, __process_new_xattr skips capabilities, letting
-only finish_inode_if_needed to emit them, if they exist, for the inode
-being processed.
-
-This behavior was being worked around in "btrfs receive" side by caching
-the capability and only applying it after chown. Now, xattrs are only
-emmited _after_ chown, making that workaround not needed anymore.
-
-Link: https://github.com/kdave/btrfs-progs/issues/202
-CC: stable@vger.kernel.org # 4.4+
-Suggested-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
-
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -23,6 +23,7 @@
- #include "btrfs_inode.h"
- #include "transaction.h"
- #include "compression.h"
-+#include "xattr.h"
- 
- /*
-  * Maximum number of references an extent can have in order for us to attempt to
-@@ -4543,6 +4544,10 @@ static int __process_new_xattr(int num,
- 	struct fs_path *p;
- 	struct posix_acl_xattr_header dummy_acl;
- 
-+	/* Capabilities are emitted by finish_inode_if_needed */
-+	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
-+		return 0;
-+
- 	p = fs_path_alloc();
- 	if (!p)
- 		return -ENOMEM;
-@@ -5105,6 +5110,64 @@ static int send_extent_data(struct send_
- 	return 0;
- }
- 
-+/*
-+ * Search for a capability xattr related to sctx->cur_ino. If the capability is
-+ * found, call send_set_xattr function to emit it.
-+ *
-+ * Return 0 if there isn't a capability, or when the capability was emitted
-+ * successfully, or < 0 if an error occurred.
-+ */
-+static int send_capabilities(struct send_ctx *sctx)
-+{
-+	struct fs_path *fspath = NULL;
-+	struct btrfs_path *path;
-+	struct btrfs_dir_item *di;
-+	struct extent_buffer *leaf;
-+	unsigned long data_ptr;
-+	char *buf = NULL;
-+	int buf_len;
-+	int ret = 0;
-+
-+	path = alloc_path_for_send();
-+	if (!path)
-+		return -ENOMEM;
-+
-+	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
-+				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
-+	if (!di) {
-+		/* There is no xattr for this inode */
-+		goto out;
-+	} else if (IS_ERR(di)) {
-+		ret = PTR_ERR(di);
-+		goto out;
-+	}
-+
-+	leaf = path->nodes[0];
-+	buf_len = btrfs_dir_data_len(leaf, di);
-+
-+	fspath = fs_path_alloc();
-+	buf = kmalloc(buf_len, GFP_KERNEL);
-+	if (!fspath || !buf) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
-+	if (ret < 0)
-+		goto out;
-+
-+	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
-+	read_extent_buffer(leaf, buf, data_ptr, buf_len);
-+
-+	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
-+			strlen(XATTR_NAME_CAPS), buf, buf_len);
-+out:
-+	kfree(buf);
-+	fs_path_free(fspath);
-+	btrfs_free_path(path);
-+	return ret;
-+}
-+
- static int clone_range(struct send_ctx *sctx,
- 		       struct clone_root *clone_root,
- 		       const u64 disk_byte,
-@@ -5936,6 +5999,10 @@ static int finish_inode_if_needed(struct
- 			goto out;
- 	}
- 
-+	ret = send_capabilities(sctx);
-+	if (ret < 0)
-+		goto out;
-+
- 	/*
- 	 * If other directory inodes depended on our current directory
- 	 * inode's move/rename, now do their move/rename operations.
-
-
+Richard.
