@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3FA206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9B421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579431;
-	bh=QAMWE1/DBYx5+V1FZnPPGk7MNCHZVe3zjX7evAGd5dE=;
+	s=default; t=1592579436;
+	bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhxcsRfTRYvmse9l7ZN2d0hcbDGlwWQchyasYc8+ExtQKLBLPiu9kv4ieizhPbMZE
-	 qKH+MzqYIjj3u9F8bGqxduj3UzmG/Ej/1lk/1tPL/eZ+stnkgmb9RQqvg89hQF3wFM
-	 +zHJV+WKBeIg7Pz+y94eGfiUCTjcrcD2kEXVMAAI=
+	b=w+V7Kxho81DWa9wmmvrwyggkpM+TXASqWnbcqOhoznbTogF5AdN4ecSBjDGRlW/47
+	 EOGnJZvWdww2yTuoPgJxQWz8KfTpYx9fndOMQUTTEZOu+iH3HygxqC84E+L3ozjIaY
+	 pUhus5/d+0zARHV0KqadqWA1oIHR4rtxBquROyUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392022AbgFSPKa (ORCPT
+        id S2392032AbgFSPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40140 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392001AbgFSPKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:15 -0400
+        id S2392005AbgFSPKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2ACD20776;
-        Fri, 19 Jun 2020 15:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A8F206FA;
+        Fri, 19 Jun 2020 15:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579414;
-        bh=QAMWE1/DBYx5+V1FZnPPGk7MNCHZVe3zjX7evAGd5dE=;
+        s=default; t=1592579417;
+        bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4HNLJ/nq4xk/DJdvHJdYvl6ENE69Mka3Ibx0BZaufl3xJluhQYnJkorjdAzwxfpf
-         Y3u4Xm+IdHKSDZGIUnADHyktn8F5LolyFrObbTtZJn8gTy2iFzVNi95Y6CQeOM/B08
-         6e2iBG2LuzKnwW+upisWMwAZyAuz0iFoFV2LRKqU=
+        b=Eop+5ZteeRSkASjEygUO0ukQEp4qxVH/BMQJJCnHYZHtcrw2yXxqfwaTChdOigXxn
+         hoLXVq5P4xmmEt/WlHTxVWRta3LoilBtihYfYYUtkqvU3ILF3TI2cbFFgxrCP7AmwB
+         5mbBJdWy0T82bXHFjFd3LA6iJkTMeKUDzPlwAkKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/261] xfs: reset buffer write failure state on successful completion
-Date:   Fri, 19 Jun 2020 16:31:48 +0200
-Message-Id: <20200619141654.521884857@linuxfoundation.org>
+Subject: [PATCH 5.4 088/261] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
+Date:   Fri, 19 Jun 2020 16:31:39 +0200
+Message-Id: <20200619141654.102091639@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,81 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b6983e80b03bd4fd42de71993b3ac7403edac758 ]
+[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
 
-The buffer write failure flag is intended to control the internal
-write retry that XFS has historically implemented to help mitigate
-the severity of transient I/O errors. The flag is set when a buffer
-is resubmitted from the I/O completion path due to a previous
-failure. It is checked on subsequent I/O completions to skip the
-internal retry and fall through to the higher level configurable
-error handling mechanism. The flag is cleared in the synchronous and
-delwri submission paths and also checked in various places to log
-write failure messages.
+The log_addrs->log_addr_type[i] value is a u8 which is controlled by
+the user and comes from the ioctl.  If it's over 31 then that results in
+undefined behavior (shift wrapping) and that leads to a Smatch static
+checker warning.  We already cap the value later so we can silence the
+warning just by re-ordering the existing checks.
 
-There are a couple minor problems with the current usage of this
-flag. One is that we issue an internal retry after every submission
-from xfsaild due to how delwri submission clears the flag. This
-results in double the expected or configured number of write
-attempts when under sustained failures. Another more subtle issue is
-that the flag is never cleared on successful I/O completion. This
-can cause xfs_wait_buftarg() to suggest that dirty buffers are being
-thrown away due to the existence of the flag, when the reality is
-that the flag might still be set because the write succeeded on the
-retry.
+I think the UBSan checker will also catch this bug at runtime and
+generate a warning.  But otherwise the bug is harmless.
 
-Clear the write failure flag on successful I/O completion to address
-both of these problems. This means that the internal retry attempt
-occurs once since the last time a buffer write failed and that
-various other contexts only see the flag set when the immediately
-previous write attempt has failed.
-
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_buf.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/cec/cec-adap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 0abba171aa89..1264ac63e4e5 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1162,8 +1162,10 @@ xfs_buf_ioend(
- 		bp->b_ops->verify_read(bp);
- 	}
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index b14c09cd9593..06383b26712b 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1732,6 +1732,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 		unsigned j;
  
--	if (!bp->b_error)
-+	if (!bp->b_error) {
-+		bp->b_flags &= ~XBF_WRITE_FAIL;
- 		bp->b_flags |= XBF_DONE;
-+	}
- 
- 	if (bp->b_iodone)
- 		(*(bp->b_iodone))(bp);
-@@ -1223,7 +1225,7 @@ xfs_bwrite(
- 
- 	bp->b_flags |= XBF_WRITE;
- 	bp->b_flags &= ~(XBF_ASYNC | XBF_READ | _XBF_DELWRI_Q |
--			 XBF_WRITE_FAIL | XBF_DONE);
-+			 XBF_DONE);
- 
- 	error = xfs_buf_submit(bp);
- 	if (error)
-@@ -1929,7 +1931,7 @@ xfs_buf_delwri_submit_buffers(
- 		 * synchronously. Otherwise, drop the buffer from the delwri
- 		 * queue and submit async.
- 		 */
--		bp->b_flags &= ~(_XBF_DELWRI_Q | XBF_WRITE_FAIL);
-+		bp->b_flags &= ~_XBF_DELWRI_Q;
- 		bp->b_flags |= XBF_WRITE;
- 		if (wait_list) {
- 			bp->b_flags &= ~XBF_ASYNC;
+ 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
++		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
++			dprintk(1, "unknown logical address type\n");
++			return -EINVAL;
++		}
+ 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
+ 			dprintk(1, "duplicate logical address type\n");
+ 			return -EINVAL;
+@@ -1752,10 +1756,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 			dprintk(1, "invalid primary device type\n");
+ 			return -EINVAL;
+ 		}
+-		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
+-			dprintk(1, "unknown logical address type\n");
+-			return -EINVAL;
+-		}
+ 		for (j = 0; j < feature_sz; j++) {
+ 			if ((features[j] & 0x80) == 0) {
+ 				if (op_is_dev_features)
 -- 
 2.25.1
 
