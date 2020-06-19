@@ -2,162 +2,129 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCDF821D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4FC20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592580688;
+	bh=Ai+rXpiLCM2HOmHhqAwjX8/Uqr7oSxre2HP7sX8sHR0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SkAHf/EpXARm7JNNjhqP8GZegb4ekzcb+GJ1Px7TlG8wTnQ5G3sQEt46zkB06l3dc
+	 yrlu0N1auxteuEU6TRHPdKAKj8k3Xll2AnPUDhbiXYIWfveuulSIQ/02Bwe2/GGDdT
+	 8VrxQn9x42mrhnnpZII0DNGcc4sKO0wOsD6gQe9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393810AbgFSPbT (ORCPT
+        id S2393830AbgFSPb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60204 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393777AbgFSPbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id DE1C12A54AD
-Received: by earth.universe (Postfix, from userid 1000)
-        id 651323C08CD; Fri, 19 Jun 2020 17:31:03 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 17:31:03 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Mario.Limonciello@dell.com, y.linux@paritcher.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, mjg59@srcf.ucam.org
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Message-ID: <20200619153103.k4ewdaljqubcrvvc@earth.universe>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <20200609154938.udo7mn7ka7z7pr6c@pali>
- <20200609164533.qtup47io2aoc5hgl@earth.universe>
- <136a06e3-0f00-d252-ebdd-a76c8a575db8@redhat.com>
+        Fri, 19 Jun 2020 11:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393799AbgFSPbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B832166E;
+        Fri, 19 Jun 2020 15:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580674;
+        bh=Ai+rXpiLCM2HOmHhqAwjX8/Uqr7oSxre2HP7sX8sHR0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sLGbFW/hDPBH2NRFEP2UCK4nElDs4ba1+Qp2CxsjltfEB9el8BG2bd6TWyssTbrlM
+         ESK+379dm93kRYZ+625jzGheaQTjS8vI+X089btZtgzXPGySHy8+G+aMa+zRxZBAv4
+         cDbn8Zy6CNR1RyM5O665aewlpvVhxN2S8OwoSQZE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: [PATCH 5.7 312/376] EDAC/amd64: Add AMD family 17h model 60h PCI IDs
+Date:   Fri, 19 Jun 2020 16:33:50 +0200
+Message-Id: <20200619141725.105933893@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="asks2luctm5jqxfa"
-Content-Disposition: inline
-In-Reply-To: <136a06e3-0f00-d252-ebdd-a76c8a575db8@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexander Monakov <amonakov@ispras.ru>
 
---asks2luctm5jqxfa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit b6bea24d41519e8c31e4798f1c1a3f67e540c5d0 upstream.
 
-Hi,
+Add support for AMD Renoir (4000-series Ryzen CPUs).
 
-On Tue, Jun 09, 2020 at 06:59:13PM +0200, Hans de Goede wrote:
-> Hi Sebastian,
->=20
-> On 6/9/20 6:45 PM, Sebastian Reichel wrote:
-> > Hi,
-> >=20
-> > On Tue, Jun 09, 2020 at 05:49:38PM +0200, Pali Roh=E1r wrote:
-> > > On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
-> > > > Can you please comment here how you would like to see events like t=
-his should come
-> > > > through to userspace?
-> > > >=20
-> > > > * Wrong power adapter (you have X and should have Y)
-> > > > * You have plugged a dock into the wrong port
-> > > > * Fn-lock mode
-> > >=20
-> > > In my opinion, Fn-lock mode is related to input subsystem and should =
-be
-> > > probably reported via input device. For a user, fn-lock is similar li=
-ke
-> > > caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
-> > > laptops and therefore I would expect that kernel provide fn-lock state
-> > > for all laptops (thinkpad / latitude / ...) via same interface. And n=
-ot
-> > > via dell-specific interface or general-vendor-message interface.
-> > >=20
-> > > Wrong power adapter sounds like something related to power subsystem.
-> > > Adding Sebastian to the loop, maybe he can provide some useful ideas
-> > > about it.
-> >=20
-> > I'm missing a bit of context. I suppose this is about connecting a
-> > non-genuine power adapter rejected by the embedded controller?
-> > Support for that should be hooked into 'drivers/acpi/ac.c' (note:
-> > so far there is no standard power-supply class property for this).
-> > Also printing a warning to dmesg seems sensible.
->=20
-> This is not so much about non-genuine as about the adapter having
-> the wrong wattage. E.g. plugging a 65W adapter in a laptop which
-> has a 45W CPU + a 35W discrete GPU will not allow the laptop to
-> really charge while it is in use.
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20200510204842.2603-4-amonakov@ispras.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Ok. So how much information is available over WMI? Exposing the
-max. input power via the power-supply API makes sense in any case.
+---
+ drivers/edac/amd64_edac.c |   14 ++++++++++++++
+ drivers/edac/amd64_edac.h |    3 +++
+ 2 files changed, 17 insertions(+)
 
-> One issue I see with doing this in the power_supply class is that
-> the charger is represented by the standard ACPI AC adapter stuff,
-> which does not have this info. This sort of extra info comes from
-> WMI. Now we could have the WMI driver register a second power_supply
-> device, but that means having 2 power_supply devices representing
-> the 1 AC adapter which does not feel right.
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2319,6 +2319,16 @@ static struct amd64_family_type family_t
+ 			.dbam_to_cs		= f17_addr_mask_to_cs_size,
+ 		}
+ 	},
++	[F17_M60H_CPUS] = {
++		.ctl_name = "F17h_M60h",
++		.f0_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F0,
++		.f6_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F6,
++		.max_mcs = 2,
++		.ops = {
++			.early_channel_count	= f17_early_channel_count,
++			.dbam_to_cs		= f17_addr_mask_to_cs_size,
++		}
++	},
+ 	[F17_M70H_CPUS] = {
+ 		.ctl_name = "F17h_M70h",
+ 		.f0_id = PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
+@@ -3357,6 +3367,10 @@ static struct amd64_family_type *per_fam
+ 			fam_type = &family_types[F17_M30H_CPUS];
+ 			pvt->ops = &family_types[F17_M30H_CPUS].ops;
+ 			break;
++		} else if (pvt->model >= 0x60 && pvt->model <= 0x6f) {
++			fam_type = &family_types[F17_M60H_CPUS];
++			pvt->ops = &family_types[F17_M60H_CPUS].ops;
++			break;
+ 		} else if (pvt->model >= 0x70 && pvt->model <= 0x7f) {
+ 			fam_type = &family_types[F17_M70H_CPUS];
+ 			pvt->ops = &family_types[F17_M70H_CPUS].ops;
+--- a/drivers/edac/amd64_edac.h
++++ b/drivers/edac/amd64_edac.h
+@@ -120,6 +120,8 @@
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
++#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F0 0x1448
++#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F6 0x144e
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
+ #define PCI_DEVICE_ID_AMD_19H_DF_F0	0x1650
+@@ -293,6 +295,7 @@ enum amd_families {
+ 	F17_CPUS,
+ 	F17_M10H_CPUS,
+ 	F17_M30H_CPUS,
++	F17_M60H_CPUS,
+ 	F17_M70H_CPUS,
+ 	F19_CPUS,
+ 	NUM_FAMILIES,
 
-I agree. WMI and ACPI information need to be merged and exposed
-as one device to userspace. It's not the first time we have this
-kind of requirement, but so far it was about merging battery info
-=66rom two places. Unfortunately no code has been written so far to
-support this.
 
-> I was myself actually thinking more along the lines of adding a
-> new mechanism to the kernel where the kernel can send messages
-> to userspace (either with some special tag inside dmesg, or through
-> a new mechanism) indication that the message should be shown
-> as a notification (dialog/bubble/whatever) inside the UI.
->
-> This could be useful for this adapter case, but e.g. also for
-> pluging a thunderbolt device into a non thunderbolt capable
-> Type-C port, a superspeed USB device into a USB-2 only USB
-> port and probably other cases.
->=20
-> Rather then inventing separate userspace APIs for all these
-> cases having a general notification mechanism might be
-> quite useful for this (as long as the kernel does not
-> over use it).
-
-I don't think this is a good idea. It brings all kind of
-localization problems. Also the information is not machine
-parsable. It looks more like a hack to get things working
-quickly by avoiding using/designing proper APIs.
-
--- Sebastian
-
---asks2luctm5jqxfa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s2ikACgkQ2O7X88g7
-+pphDQ//U3O3wYfKysir/AJz9pc7ViJ82wmiKbe8bdYV8V4sQPlUQ4YCzUil/++R
-BiwlvG1tcn90CEffDWsffJ5qe5FKsLisYSZamWPwvV7hbu+wzyjx1tvLR6LC3v/2
-cbSzYJmhwzecEPoX3mnuODDk0sZXGijWghl1mwIlc+Z9JF83m1GoVsE14pJa3bF/
-hf9Bb5P7ozdTaa+cS8m08duJkmKP1y2KDcbWkrilo8lXYcU3DMi5iv+SU/j3o3AN
-jC405SUpNV8dzL0y3Bo1qa/BK3JPmPQaL2YbOlnw12AoQU8+wPStwaqd6S4jLFyh
-jL3VD4trgKVD+f6lz7ivjfwo3/lo3TvE9dLCMx+7N3EcDQbEjNhWr45ns/EY10Sj
-PVN9kIhmxVIjfuFfnXq9HXtIQ0I4fi7wA8YJewX2xI5UY+c5Mp2bq3C1hyMnFV1+
-YMIkyK8WsrVgEq7yo+qVazhh7lZLoz7SlFNPVZkXi8Bo5fWDBKPgIwbms4XeZeLd
-Br7qJXE8tuev1HCATpQszwYcHQqG96un6Zyq3mESJoOVi6+XdvdholMQxNj1bCwi
-6OvuVrsGbh02Hpbo9YwP+D+SQAdNaf8FCFzhzs4jd43tkysNWVhr69yKDC1/HFOQ
-KiBgpkmp51m/DCn7K9JYQQxOkEbMRGqYui+DS65JuRVNrzEWWLc=
-=3JZ5
------END PGP SIGNATURE-----
-
---asks2luctm5jqxfa--
