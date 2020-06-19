@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7364C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04540C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8340D2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCAF20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580607;
-	bh=RTFHDTDn9cZ+Wm9DgGSO8r9TEyLNqlMrJWr1Kv2pi7E=;
+	s=default; t=1592580617;
+	bh=mRprGrgwdsJrDNlMaCGk8jPiTdDXpQReQLUWRumm3ck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imadV+g0/kHF47el1+fHAMuvQ41DZFI0dPk7nZgdsvxonX823CiTfYMzU/MGPOSvx
-	 /WotOlJrus+lqlerJBrUdW9DW8WGkqPislc47GmsUIcl/BPdv8xNz0ymq6wsKZ9guj
-	 3ZgOf5WTYB9OKWp6LPdsRnpv57HiI1T4bxTaSrXY=
+	b=L90f9bVdI8j0fbegRlkLRyVwVeMcgb01vyAutHZ//VUP7h3OAVKpEkzYoRC+HMr7A
+	 qsZVLaNTLReAjDjwg50uq/vPvvE5veEEdnWKkKW7gFhHQA3a/TeyIJyZJe2d8STHQr
+	 Rjbi+DUYj2It5TkJRXr/4auaHwu3MDDNbmiDio9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404768AbgFSPaG (ORCPT
+        id S2393714AbgFSPaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404408AbgFSP37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:59 -0400
+        id S2404775AbgFSPaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B6E20734;
-        Fri, 19 Jun 2020 15:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536922186A;
+        Fri, 19 Jun 2020 15:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580598;
-        bh=RTFHDTDn9cZ+Wm9DgGSO8r9TEyLNqlMrJWr1Kv2pi7E=;
+        s=default; t=1592580608;
+        bh=mRprGrgwdsJrDNlMaCGk8jPiTdDXpQReQLUWRumm3ck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWQMgn9vXqLSRofVLqcqXRcQDUCoaKE+C3kBiXcn8K69s14idXtcFhcbIeSwet8cC
-         I7Kc5bDaaegUaFXlwjZ9DZP8+A0VeakfWItvyuFscLc/i9Pqe+5I1KZ8Vz1XopytjB
-         bt2ITkjgoklYPc9HYiXTLhVvj7dpvNeLrR4EeS48=
+        b=dKKVEgpUCL1/PiKU+SuXVpDD0QCn178nMtQ5krDq7vPY3+Vu0uepwq95tFhm4H1cz
+         7S+2/6PIqfyRO05y29zRhD+HyFejL1UL2Bpn7jPKRPabL7EiMSR7Ghz/+k4DYecysU
+         6zbp3xUKQi7YsQcI/R98XWZJP9i6YYf1QXNfqB9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.7 280/376] ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
-Date:   Fri, 19 Jun 2020 16:33:18 +0200
-Message-Id: <20200619141723.591697131@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 284/376] PCI: Avoid Pericom USB controller OHCI/EHCI PME# defect
+Date:   Fri, 19 Jun 2020 16:33:22 +0200
+Message-Id: <20200619141723.776433881@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,45 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit c36a71b4e35ab35340facdd6964a00956b9fef0a upstream.
+[ Upstream commit 68f5fc4ea9ddf9f77720d568144219c4e6452cde ]
 
-If eh->eh_max is 0, EXT_MAX_EXTENT/INDEX would evaluate to unsigned
-(-1) resulting in illegal memory accesses. Although there is no
-consistent repro, we see that generic/019 sometimes crashes because of
-this bug.
+Both Pericom OHCI and EHCI devices advertise PME# support from all power
+states:
 
-Ran gce-xfstests smoke and verified that there were no regressions.
+  06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
+    Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
+    Capabilities: [80] Power Management version 3
+      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
 
-Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-Link: https://lore.kernel.org/r/20200421023959.20879-2-harshadshirwadkar@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
+    Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
+    Capabilities: [80] Power Management version 3
+      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
 
+But testing shows that it's unreliable: there is a 20% chance PME# won't be
+asserted when a USB device is plugged.
+
+Remove PME support for both devices to make USB plugging work reliably.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+Link: https://lore.kernel.org/r/20200508065343.32751-2-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4_extents.h |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/fs/ext4/ext4_extents.h
-+++ b/fs/ext4/ext4_extents.h
-@@ -170,10 +170,13 @@ struct partial_cluster {
- 	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
- #define EXT_LAST_INDEX(__hdr__) \
- 	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
--#define EXT_MAX_EXTENT(__hdr__) \
--	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
-+#define EXT_MAX_EXTENT(__hdr__)	\
-+	((le16_to_cpu((__hdr__)->eh_max)) ? \
-+	((EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) \
-+					: 0)
- #define EXT_MAX_INDEX(__hdr__) \
--	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
-+	((le16_to_cpu((__hdr__)->eh_max)) ? \
-+	((EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) : 0)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..268f74d43a73 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5568,6 +5568,19 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
  
- static inline struct ext4_extent_header *ext_inode_hdr(struct inode *inode)
++/*
++ * Device [12d8:0x400e] and [12d8:0x400f]
++ * These devices advertise PME# support in all power states but don't
++ * reliably assert it.
++ */
++static void pci_fixup_no_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# is unreliable, disabling it\n");
++	dev->pme_support = 0;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
++
+ static void apex_pci_fixup_class(struct pci_dev *pdev)
  {
+ 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
+-- 
+2.25.1
+
 
 
