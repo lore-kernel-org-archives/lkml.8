@@ -2,108 +2,85 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A80CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65EC6207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmeOPYSr"
+	by mail.kernel.org (Postfix) with ESMTP id 062C7207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgFSDK6 (ORCPT
+        id S1730191AbgFSDLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:10:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
+        Thu, 18 Jun 2020 23:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgFSDK5 (ORCPT
+        with ESMTP id S1728607AbgFSDLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:10:57 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9352CC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:10:57 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id e11so7991795ilr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k6ZI9jEu4UoQH8Ofl7MpW97yrlCPyVzQQV94+qZWb8U=;
-        b=UmeOPYSrUN6dlw88r+8c68vMbFTyxQl6BKY8HqajIj3Sme5eyzgZxI6XNv9w+bX2yf
-         eTGtBbP5c/irV2OpdZkBfW/ZJjYWe7rpNUVp5/MuURcsnF6ypJbPATL5BziQKbcmrvZj
-         3UhVHcp8BGGRdpvOi/3Mbtl2s5lnxd5N+kxvFLJvGNUVFhq9RfHI/XNNHcr3LPqcB4ni
-         xKiZalhKBcCd2YjJO8PbK7f7l4l6agKssZ+hw1qaClquF0pH0mp7GZFFm7FN2jgX4xx2
-         bwHqKweMQXBYkE7KdSAOHA1Zm3fpuQMtxU0esomvQqQ9dqsZbM0FnZcrhCnZoPHe8mgx
-         sfXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k6ZI9jEu4UoQH8Ofl7MpW97yrlCPyVzQQV94+qZWb8U=;
-        b=bcc9p8GuKmqjtKAXHYJ9k98tUfXWD2LmBpV348N1W9jMElcKRs8dHmb8MSnWCSqkTx
-         F6/LkKJrdShTidBO5Yr7A25uw/TrD2e9Vg3TPz0lNpuH9vAUNY0KqSgMRMYBB5IJtP9N
-         4fsCajkyKuMWCcRKOGWDWoImsMhSGQ1fA0UZBxGrjw1Gd9haQQkMFjcfseJqRGqeVIGs
-         gQjmervb/riA82x4NoTskfFL6pXoRMplTPo+XjO9C5N5wXduwxW2pC1yPxZuYovxCkqX
-         zn6uJotBZWuHZefEkVLCEZWRgiXq73qyYb1+CSZcYTf10x1YIfbmjt/LmpKCRXcxJdqh
-         va9A==
-X-Gm-Message-State: AOAM533YSk7lG8bVVxhjBUazIxI8+FN39eEo2HWOyykypl1vuQPszyXB
-        dr2FuzbPrfpR7AajxoHo8ydEuWMKTqhbegDVw4Bw948jPKI=
-X-Google-Smtp-Source: ABdhPJwaUPUjh5iP87WvfjlRzBJaBXuIHA1S2VNCspN7rX/fwOAwsPRg3xTDXsriK5rJAHcob414hklhrUmGrj8CjtA=
-X-Received: by 2002:a92:c941:: with SMTP id i1mr1565588ilq.94.1592536256993;
- Thu, 18 Jun 2020 20:10:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618144407.520952071@infradead.org> <20200618144801.819246178@infradead.org>
-In-Reply-To: <20200618144801.819246178@infradead.org>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Fri, 19 Jun 2020 11:10:45 +0800
-Message-ID: <CAJhGHyDFoZq993uj7A8UAmiK-vvScFnyiOwWEFS0SOG2h3-VWg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] x86/entry: Increase entry_stack size to a full page
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        dvyukov@google.com, elver@google.com, andreyknvl@google.com,
-        mark.rutland@arm.com, mhelsley@vmware.com,
-        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
-        mbenes@suse.cz, Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jun 2020 23:11:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8215BC06174E;
+        Thu, 18 Jun 2020 20:11:32 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E741C120ED49A;
+        Thu, 18 Jun 2020 20:11:30 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:11:30 -0700 (PDT)
+Message-Id: <20200618.201130.941014011043746603.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, joakim.tjernlund@infinera.com,
+        madalin.bucur@oss.nxp.com, fido_max@inbox.ru,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net 0/2] Reapply DSA fix for dpaa-eth with proper
+ Fixes: tag
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200616151910.3908882-1-olteanv@gmail.com>
+References: <20200616151910.3908882-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:11:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 4:37 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Marco crashed in bad_iret with a Clang11/KCSAN build due to
-> overflowing the stack. Now that we run C code on it, expand it to a
-> full page.
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Tue, 16 Jun 2020 18:19:08 +0300
 
-Some of my experimental code also once got crashed due to overflowing
-the stack. I'm glad to have the stack expanded, thanks.
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> Joakim notified me that this fix breaks stable trees.
+> It turns out that my assessment about who-broke-who was wrong.
+> The real Fixes: tag should have been:
+> 
+> Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
+> 
+> which changes the device on which SET_NETDEV_DEV is made.
+> 
+> git describe --tags 060ad66f97954
+> v5.4-rc3-783-g060ad66f9795
+> 
+> Which means that it shouldn't have been backported to 4.19 and below.
+> This series reverts the commit with the misleading commit message, and
+> reapplies it with a corrected one. The resulting code is exactly the
+> same, but now, the revert should make it to the stable trees (along with
+> the bad fix), and the new fix should only make it down to v5.4.y.
+> 
+> Changes in v2:
+> Corrected the reversed sysfs paths in the new commit description.
 
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+This is so messy.
 
->
-> Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> Reported-by: Marco Elver <elver@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/include/asm/processor.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -370,7 +370,7 @@ struct x86_hw_tss {
->  #define IO_BITMAP_OFFSET_INVALID       (__KERNEL_TSS_LIMIT + 1)
->
->  struct entry_stack {
-> -       unsigned long           words[64];
-> +       char    stack[PAGE_SIZE];
->  };
->
->  struct entry_stack_page {
->
->
+What's done is done, just submit the necessary revert to -stable
+if necessary and let's not just change things back and forth
+because then we'll have two commits which make identical changes
+and each having a different Fixes: tag which is confusing.
+
+Thanks.
