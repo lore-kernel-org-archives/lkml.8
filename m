@@ -2,133 +2,139 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF78C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2366BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE73820DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34B320890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592542671;
+	bh=yFtAPLLd6gnycK0COIs2gXngVAPSjGWQpA9vnNwjAnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LpflEZvHjShyFVFX7JnrLW15vU+UKxCvyq9x4KKHz57ShROKdINx6kkRaE7txie+8
+	 8oA4sjvX71OM2+YPA5WAyVaugJIXoxe5L2Hzv6Ab10K1sGc4vhlqN8oPxaIT1Rh0Sh
+	 9Y0KozuBKZoODBEy79RJLaoiMX2ps8f1D4xEZ7qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgFSE4R (ORCPT
+        id S1728321AbgFSE5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:56:17 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54977 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFSE4Q (ORCPT
+        Fri, 19 Jun 2020 00:57:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:38158 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFSE5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:56:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id t23so5855341iog.21
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:56:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=kVV7AQIUbbYdGbVlGXkgoxxP+MlYua7sKpJCqtMOVU4=;
-        b=Fd1254y3ug3IxkQCyjGp6iXud4hewUKyyVB673DTKKTWlbd5FureOmeftFrkk6+o1f
-         zGovpSQ//qsqqLWmHZcew7KfAmtf2/HOi9z7fkzmVQByaQJ3NR+O2z5MHGHpI6nrqVmi
-         +I0TIyylB4s5cjhl5JnV5PtpqTYmkSwYuf5r7J4JgE8QxVpotJhef2yOBWpvKvw2KtZD
-         Q0HfSEsSR/SrpzZgatza4Qjb/BUoyQc77pJlLIdhtse82EvfAo5AlPNsEB6W2EitG5mN
-         rK4Sq3BcF2EBR3IUen1ef10NqEqU6ko/pyBWreFSJLoFwwsoYq5Zb5fHrz4/mlg7FVIv
-         uneQ==
-X-Gm-Message-State: AOAM5304dMUtNAmOwTFjwaiSdf9fBqV7k+K/N0u9pOkUAr+VASWW1Y/8
-        U9PZur+cybrQpWD6jMaFq1E6X38IpnYIFthgzKWiW4r5Kone
-X-Google-Smtp-Source: ABdhPJwdNZQyzkPUlSgTaQiywiDsztu4+RdFjl3U3aswkL4CZhfKr0IA6BTtV1XwM3rxXzkhoJ+yY9MmVKDBru/N5YVV3R1a/wEA
+        Fri, 19 Jun 2020 00:57:46 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05J4v8F1026953;
+        Fri, 19 Jun 2020 13:57:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05J4v8F1026953
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592542629;
+        bh=dujpi7I0U9k7gbH9ypmk/muZnwGY/nD2/xY7qqg2JjM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uCfc7PEQubisNfpiKftcKHuBLk64k3wrCfGxB83f+uQqNJdFJJvfpgWtTKuwP7dxj
+         a7lgTgtJ4DkjJ1j6oPdNVBoUnG8Hhf1LHPpW3Rs8ljJufGTOigVwKlS27spG+ovjoS
+         GumI20+Xp7SmPg30kxUkGflqRlpCB4noQjHXhMyttIY5tN2Ak2bFd8uAhMszU8+DYL
+         tJI/vPLkLXzdaRMljZtl/X5pcCIHM/pETidDH3zr88Z6mdla89YEWh1vhjwbi/CXcI
+         qLfNAUeq0scaLBWOp3vvhXkZcgAnQWBj6nv1u+A87BLKWbXUBC0XygJIQZBT0+ussc
+         Fbw+8waxzPrlg==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id d5so1999677vkb.12;
+        Thu, 18 Jun 2020 21:57:08 -0700 (PDT)
+X-Gm-Message-State: AOAM533CaHYd8MCpo73bd7VAX40aMSpAnbObzozvUmaVnYRApiKBAQqs
+        SQ49qrBylucMYWEHStsOntDnGJ3WmGn8dU+JHng=
+X-Google-Smtp-Source: ABdhPJwF2+6s/DEQsVrx9/QAVaGe864JOw9u3yxQfvLNoqvvOVeomg1kILExUV5hpH0dC11xaTrLQnOctSvACrHda1o=
+X-Received: by 2002:a1f:1f04:: with SMTP id f4mr6113993vkf.73.1592542627476;
+ Thu, 18 Jun 2020 21:57:07 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:ab94:: with SMTP id t20mr2096716jan.13.1592542575012;
- Thu, 18 Jun 2020 21:56:15 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 21:56:15 -0700
-In-Reply-To: <0000000000001d3ff605995c23d6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000792f4f05a868b670@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in sys_imageblit
-From:   syzbot <syzbot+33f89a9a6b6acd893b11@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200617030220.34733-1-masahiroy@kernel.org> <20200617030220.34733-2-masahiroy@kernel.org>
+ <b1eef508475f2ad501a153bb9d90d64a5128ecdd.camel@perches.com>
+In-Reply-To: <b1eef508475f2ad501a153bb9d90d64a5128ecdd.camel@perches.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 19 Jun 2020 13:56:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR-hYJyOHe6Mgw6-3SbDMqd4udq2o1fk1TzVSAy8gsPXQ@mail.gmail.com>
+Message-ID: <CAK7LNAR-hYJyOHe6Mgw6-3SbDMqd4udq2o1fk1TzVSAy8gsPXQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Revert "checkpatch: kconfig: prefer 'help' over '---help---'"
+To:     Joe Perches <joe@perches.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Wed, Jun 17, 2020 at 1:37 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2020-06-17 at 12:02 +0900, Masahiro Yamada wrote:
+> > This reverts commit 84af7a6194e493fae312a2b7fa5a3b51f76d9282.
+>
+> Also: https://lore.kernel.org/patchwork/patch/1255848/
+> ---
 
-HEAD commit:    435faf5c Merge tag 'riscv-for-linus-5.8-mw0' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1768c725100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3dbb617b9c2a5bdf
-dashboard link: https://syzkaller.appspot.com/bug?extid=33f89a9a6b6acd893b11
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f3f485100000
+Yes, I removed --help-- support in 1/2.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+33f89a9a6b6acd893b11@syzkaller.appspotmail.com
+https://patchwork.kernel.org/patch/11608927/
 
-BUG: unable to handle page fault for address: fffff520013df608
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 7ffcd067 P4D 7ffcd067 PUD 2c920067 PMD 29858067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 2 PID: 8457 Comm: syz-executor.0 Not tainted 5.7.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-RIP: 0010:fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
-RIP: 0010:sys_imageblit+0x616/0x1240 drivers/video/fbdev/core/sysimgblt.c:275
-Code: 0f b6 14 28 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 5c 0b 00 00 8b 44 24 20 4d 8d 77 04 4c 89 fa 48 c1 ea 03 23 07 <42> 0f b6 0c 2a 4c 89 fa 83 e2 07 33 44 24 14 83 c2 03 38 ca 7c 08
-RSP: 0018:ffffc90001867578 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff888023ac8402 RCX: ffffffff88786a40
-RDX: 1ffff920013df608 RSI: ffffffff83c3bbbc RDI: ffffffff88786a40
-RBP: 0000000000000fef R08: ffff888029cf8040 R09: 0000000000000001
-R10: ffffffff8a8b743f R11: fffffbfff1516e87 R12: 0000000000000007
-R13: dffffc0000000000 R14: ffffc90009efb044 R15: ffffc90009efb040
-FS:  0000000000000000(0000) GS:ffff88802d000000(0063) knlGS:00000000f7f0fb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: fffff520013df608 CR3: 000000001b812000 CR4: 0000000000340ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- drm_fb_helper_sys_imageblit+0x1c/0x180 drivers/gpu/drm/drm_fb_helper.c:747
- bit_putcs_unaligned drivers/video/fbdev/core/bitblit.c:139 [inline]
- bit_putcs+0x8d0/0xd60 drivers/video/fbdev/core/bitblit.c:188
- fbcon_putcs+0x345/0x3f0 drivers/video/fbdev/core/fbcon.c:1362
- do_update_region+0x398/0x630 drivers/tty/vt/vt.c:683
- invert_screen+0x2a7/0x600 drivers/tty/vt/vt.c:800
- highlight drivers/tty/vt/selection.c:57 [inline]
- clear_selection drivers/tty/vt/selection.c:84 [inline]
- clear_selection+0x55/0x70 drivers/tty/vt/selection.c:80
- vc_do_resize+0xff3/0x1370 drivers/tty/vt/vt.c:1230
- fbcon_do_set_font+0x4a0/0x950 drivers/video/fbdev/core/fbcon.c:2608
- fbcon_set_font+0x732/0x870 drivers/video/fbdev/core/fbcon.c:2705
- con_font_set drivers/tty/vt/vt.c:4571 [inline]
- con_font_op+0xd65/0x1160 drivers/tty/vt/vt.c:4636
- compat_kdfontop_ioctl drivers/tty/vt/vt_ioctl.c:1151 [inline]
- vt_compat_ioctl+0x23a/0x6c0 drivers/tty/vt/vt_ioctl.c:1213
- tty_compat_ioctl+0x19c/0x410 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl fs/ioctl.c:865 [inline]
- __se_compat_sys_ioctl fs/ioctl.c:816 [inline]
- __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:816
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-Modules linked in:
-CR2: fffff520013df608
----[ end trace fbceb2e52f6d552c ]---
-RIP: 0010:fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
-RIP: 0010:sys_imageblit+0x616/0x1240 drivers/video/fbdev/core/sysimgblt.c:275
-Code: 0f b6 14 28 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 5c 0b 00 00 8b 44 24 20 4d 8d 77 04 4c 89 fa 48 c1 ea 03 23 07 <42> 0f b6 0c 2a 4c 89 fa 83 e2 07 33 44 24 14 83 c2 03 38 ca 7c 08
-RSP: 0018:ffffc90001867578 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff888023ac8402 RCX: ffffffff88786a40
-RDX: 1ffff920013df608 RSI: ffffffff83c3bbbc RDI: ffffffff88786a40
-RBP: 0000000000000fef R08: ffff888029cf8040 R09: 0000000000000001
-R10: ffffffff8a8b743f R11: fffffbfff1516e87 R12: 0000000000000007
-R13: dffffc0000000000 R14: ffffc90009efb044 R15: ffffc90009efb040
-FS:  0000000000000000(0000) GS:ffff88802d000000(0063) knlGS:00000000f7f0fb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: fffff520013df608 CR3: 000000001b812000 CR4: 0000000000340ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
+
+>  scripts/checkkconfigsymbols.py | 2 +-
+>  scripts/checkpatch.pl          | 6 +-----
+>  scripts/kconfig/lexer.l        | 2 +-
+>  3 files changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/scripts/checkkconfigsymbols.py b/scripts/checkkconfigsymbols.py
+> index 00a10a293f4f..1548f9ce4682 100755
+> --- a/scripts/checkkconfigsymbols.py
+> +++ b/scripts/checkkconfigsymbols.py
+> @@ -34,7 +34,7 @@ REGEX_SOURCE_SYMBOL = re.compile(SOURCE_SYMBOL)
+>  REGEX_KCONFIG_DEF = re.compile(DEF)
+>  REGEX_KCONFIG_EXPR = re.compile(EXPR)
+>  REGEX_KCONFIG_STMT = re.compile(STMT)
+> -REGEX_KCONFIG_HELP = re.compile(r"^\s+(help|---help---)\s*$")
+> +REGEX_KCONFIG_HELP = re.compile(r"^\s+help\s*$")
+>  REGEX_FILTER_SYMBOLS = re.compile(r"[A-Za-z0-9]$")
+>  REGEX_NUMERIC = re.compile(r"0[xX][0-9a-fA-F]+|[0-9]+")
+>  REGEX_QUOTES = re.compile("(\"(.*?)\")")
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 524df88f9364..738bb3fcf202 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3044,11 +3044,7 @@ sub process {
+>
+>                                 if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+>                                         $is_start = 1;
+> -                               } elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+> -                                       if ($lines[$ln - 1] =~ "---help---") {
+> -                                               WARN("CONFIG_DESCRIPTION",
+> -                                                    "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
+> -                                       }
+> +                               } elsif ($lines[$ln - 1] =~ /^\+\s*help\s*$/) {
+>                                         $length = -1;
+>                                 }
+>
+> diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+> index 6354c905b006..4b7339ff4c8b 100644
+> --- a/scripts/kconfig/lexer.l
+> +++ b/scripts/kconfig/lexer.l
+> @@ -105,7 +105,7 @@ n   [A-Za-z0-9_-]
+>  "endchoice"            return T_ENDCHOICE;
+>  "endif"                        return T_ENDIF;
+>  "endmenu"              return T_ENDMENU;
+> -"help"|"---help---"    return T_HELP;
+> +"help"                 return T_HELP;
+>  "hex"                  return T_HEX;
+>  "if"                   return T_IF;
+>  "imply"                        return T_IMPLY;
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
