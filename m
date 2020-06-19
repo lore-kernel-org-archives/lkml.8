@@ -2,126 +2,142 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5D621532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jo6wL5xA"
+	by mail.kernel.org (Postfix) with ESMTP id 6545820809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592581634;
+	bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MihziDbxQoxPNhhX/GHApaDCMeRgnZMfpvzEwG9JD1ipH9L55LAdRF85aRqGmAjQi
+	 NatELRFYtqAoN0tzs509Gy2D2dT+J1DCuz6IT+0Fz/rDJHi5Ak7dB4zCg31tnrtLFc
+	 Dwd5hjXPe/s2IDLfgIhrbcQmkQDCrOOVPrHGpz5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393677AbgFSPrI (ORCPT
+        id S2404284AbgFSP0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403875AbgFSPq5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:46:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361E9C06174E;
-        Fri, 19 Jun 2020 08:46:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so12034751ljc.8;
-        Fri, 19 Jun 2020 08:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2aeO2u4RtaCPo8nCEgw4qCFKUHWK0LPFLeoI2aW5HPQ=;
-        b=jo6wL5xA6o2oH5Qfa/Iq4GtVdDCLwHsr8D1YOa8ko3zROJAiMn/5bGOz6il/WVub71
-         sgkOp5yYot9p6XVr6ItkoFtBdxyEetxbA3qJ1aBlqE2UyowCwErx9g0KfuWMbY02+zCX
-         aM+An3sSPzlrRJKkObwEk0GKPbwYYeV7uPOaOrHOU1v72UV0PV1J2xb1Xtsf0Foiurn9
-         s2mqi/EQ+kM1jYqerwtJhJjsCnpn8C5AZSkHmrKrILzE4485907xY8fZdWSZSHer0v2e
-         SdSy4vj6XHFIPnVV0DS9bk7+A//zYOx/0mWh5yCkAjb3CrfOopT/l/KkiUuTU+ywyy4q
-         PODQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2aeO2u4RtaCPo8nCEgw4qCFKUHWK0LPFLeoI2aW5HPQ=;
-        b=QPHpONugUZc1W7DQy9TX/pi/KmaSmhlbHBrGcFYrfQj8pdmMgw0OspnnORGq0u91qa
-         NJCnRMDCcuB6jXvgrjkWzdkH6dG7xppvH+KuPZuffVALD8iMIIYeRh7QXYNDEdcXpVDz
-         4EghiQSD5UXbZJ1+I/NTttGPv8QB03fKXIXb6KQyKmEBNCogrW25wXzEuiU6b1vF+ERE
-         NjbkgXlIGfFU8WX6rtj3PF4p3CNxfRGqQ9UikZsmJlJrgC2Cc8Fb4ZNCMgK4xl0f+Dv+
-         ixSMqC1kahW+x6+YpYofnBOZkEdwxCk83GnDGbMKdlyNvMCtJqxAKBas7MVUhrKgZFwy
-         TDcQ==
-X-Gm-Message-State: AOAM530NABG6kjVibXNlGSC9gP6cPxwhMQ5F657oUBMVztUaF0haF20f
-        rstWC6uPBW6Ldr+w/zOPby8=
-X-Google-Smtp-Source: ABdhPJwUhOSSv9Ni5UNYPTcQgeNwmvJEp3WKGXZARh2sfgnjRmYeeL7JRfK5VaDXWSsF2HWXIUVk1w==
-X-Received: by 2002:a2e:9a55:: with SMTP id k21mr2282446ljj.340.1592581615594;
-        Fri, 19 Jun 2020 08:46:55 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id f24sm1222442ljk.125.2020.06.19.08.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 08:46:54 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Fri, 19 Jun 2020 17:46:52 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
- ptrs
-Message-ID: <20200619154652.GA19990@pc636>
-References: <20200618005214.GN8681@bombadil.infradead.org>
- <20200618031823.GQ2723@paulmck-ThinkPad-P72>
- <20200618173520.GC14613@pc636>
- <20200618175719.GT2723@paulmck-ThinkPad-P72>
- <20200618183448.GA15136@pc636>
- <20200618190359.GU2723@paulmck-ThinkPad-P72>
- <20200618203557.GB16976@pc636>
- <20200618203821.GU8681@bombadil.infradead.org>
- <20200618211709.GA17263@pc636>
- <20200618213427.GV2723@paulmck-ThinkPad-P72>
+        Fri, 19 Jun 2020 11:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403913AbgFSPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31A121841;
+        Fri, 19 Jun 2020 15:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580215;
+        bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g8gNXJ5a/39GmqGp/MRWOR5YXLpVc3m5hkH/20Bo2jFOvX5e3EfunbzNC+FDfPtVj
+         Q8Zi/kxsLqdNc5FtnXaBSMh81MHWvnJk2RA4vErdhCXkF12L7MKB5djYk8pyDK+g0u
+         s0eoWtOCLRZ6XwuIjiCeCYwf3YiWNvUl7W+qtUoo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 165/376] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
+Date:   Fri, 19 Jun 2020 16:31:23 +0200
+Message-Id: <20200619141718.134551345@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618213427.GV2723@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:34:27PM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 18, 2020 at 11:17:09PM +0200, Uladzislau Rezki wrote:
-> > > > <snip>
-> > > >     trace_rcu_invoke_kfree_bulk_callback(
-> > > >         rcu_state.name, bkvhead[i]->nr_records,
-> > > >             bkvhead[i]->records);
-> > > >     if (i == 0)
-> > > >         kfree_bulk(bkvhead[i]->nr_records,
-> > > >             bkvhead[i]->records);
-> > > >     else
-> > > >         vfree_bulk(bkvhead[i]->nr_records,
-> > > >             bkvhead[i]->records);
-> > > > <snip>
-> > > > 
-> > > > Matthew, what is your thought?
-> > > 
-> > > That was my thinking too.  If we had a kvfree_bulk(), I would expect it to
-> > > handle a mixture of vfree and kfree, but you've segregated them already.
-> > > So I think this is better.
-> > >
-> > Yes, the segregation is done. Having vfree_bulk() is enough then.
-> > We are on the same page :)
-> 
-> Very good.  When does kfree_rcu() and friends move out of kernel/rcu?
-> 
-Do you mean to move the whole logic of kfree_rcu() from top to down to mm/?
+From: Hans de Goede <hdegoede@redhat.com>
 
-Thanks!
+[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
 
---
-Vlad Rezki
+Split the sparse keymap into 2 separate keymaps, a buttons and a switches
+keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
+
+This is a preparation patch for not telling userspace that we have switches
+when we do not have them (and for doing the same for the buttons).
+
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 191894d648bb..634096cef21a 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -40,14 +40,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++};
++
++static const struct key_entry intel_vbtn_switchmap[] = {
+ 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+ 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+-	{ KE_END },
+ };
+ 
++#define KEYMAP_LEN \
++	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++
+ struct intel_vbtn_priv {
++	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
+ 	bool wakeup_mode;
+ };
+@@ -55,13 +61,29 @@ struct intel_vbtn_priv {
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	int ret;
++	int ret, keymap_len = 0;
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
++		       ARRAY_SIZE(intel_vbtn_keymap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++	}
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
++		       ARRAY_SIZE(intel_vbtn_switchmap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
++	}
++
++	priv->keymap[keymap_len].type = KE_END;
+ 
+ 	priv->input_dev = devm_input_allocate_device(&device->dev);
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.25.1
+
+
+
