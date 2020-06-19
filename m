@@ -4,75 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC32C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D3820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1618E20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582166;
-	bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
+	s=default; t=1592582171;
+	bh=z5nwrUz46eCPaaeTyxkgdtjAhcbQYe0hlyBsLNeRDzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhpYIQHpBA185oDQomz8biSLcUuwSpeKfHhG8FTJVocFTO43NXN3n4p93HMNnAYwi
-	 Mw0jtYQT7JW2IZc/Hci8Onphy62wNEDFRNDPI5nGknwgKamRQpxgxoVNF9WSXVhQoT
-	 guRu7VmPI3H37J/QavLxkc0gh9do/CS+YRQwr+X8=
+	b=lm38rVq/eYOFWzGUpWEUWdXxX9piP6kLGWwJIpPR+x6KYPYdUjn72XLRpXWmBBBmp
+	 Dx7ny9U3GF3LvYm0HiDPipPPAf/0klH8v2kXXHgewHI04vLtbMS12KapsXhZBffgAk
+	 DPQpyl2TGytxOYfneIrbzqvOKmhZqCKE1yPtFPi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392832AbgFSP4E (ORCPT
+        id S2393063AbgFSP4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52384 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392803AbgFSPVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:04 -0400
+        id S2392796AbgFSPVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6763C20B80;
-        Fri, 19 Jun 2020 15:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0209F20706;
+        Fri, 19 Jun 2020 15:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580063;
-        bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
+        s=default; t=1592580061;
+        bh=z5nwrUz46eCPaaeTyxkgdtjAhcbQYe0hlyBsLNeRDzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWkYR3ES6KoSt/In5VvLlH0AGYeb2j50o63ViWuzJ/WhyTPQDTRxSjVjrEmPFA4G1
-         gNalg5XSWtLWGJFPQzFGj5EdT1nLfX4EPJscFHHS0OAwI3ANqdOjaYHGM0TpdDWvxz
-         GLf/eQ8FddkLxQN9mStJCcLALyLH7n+AKA/wc1Hs=
+        b=PJNPFcwOuHYIplQSup9Kdv1+1gZjJy5xZAjtmhECq8m40OdrFiXSM9j5VnNtNHewE
+         ruWsGPRip7K9kTDkCfXbKeuxVMeDUtWajakAIujjFGhLJbpaKgootFE2SrzDlt2qHZ
+         sYWUGwLs9RdppVVa15+T0lYwskgisStiKIocbtYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, teroincn@gmail.com,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/376] staging: android: ion: use vmap instead of vm_map_ram
-Date:   Fri, 19 Jun 2020 16:29:59 +0200
-Message-Id: <20200619141714.182247111@linuxfoundation.org>
+Subject: [PATCH 5.7 107/376] audit: fix a net reference leak in audit_list_rules_send()
+Date:   Fri, 19 Jun 2020 16:30:25 +0200
+Message-Id: <20200619141715.410845988@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -85,67 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit 5bf9917452112694b2c774465ee4dbe441c84b77 ]
+[ Upstream commit 3054d06719079388a543de6adb812638675ad8f5 ]
 
-vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
-with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
+If audit_list_rules_send() fails when trying to create a new thread
+to send the rules it also fails to cleanup properly, leaking a
+reference to a net structure.  This patch fixes the error patch and
+renames audit_send_list() to audit_send_list_thread() to better
+match its cousin, audit_send_reply_thread().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Gao Xiang <xiang@kernel.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Nitin Gupta <ngupta@vflare.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lkml.kernel.org/r/20200414131348.444715-4-hch@lst.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: teroincn@gmail.com
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/android/ion/ion_heap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/audit.c       |  2 +-
+ kernel/audit.h       |  2 +-
+ kernel/auditfilter.c | 16 +++++++---------
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
-index 473b465724f1..0755b11348ed 100644
---- a/drivers/staging/android/ion/ion_heap.c
-+++ b/drivers/staging/android/ion/ion_heap.c
-@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
- 
- static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
- {
--	void *addr = vm_map_ram(pages, num, -1, pgprot);
-+	void *addr = vmap(pages, num, VM_MAP, pgprot);
- 
- 	if (!addr)
- 		return -ENOMEM;
- 	memset(addr, 0, PAGE_SIZE * num);
--	vm_unmap_ram(addr, num);
-+	vunmap(addr);
- 
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 033b14712340..f711f424a28a 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -880,7 +880,7 @@ main_queue:
  	return 0;
  }
+ 
+-int audit_send_list(void *_dest)
++int audit_send_list_thread(void *_dest)
+ {
+ 	struct audit_netlink_list *dest = _dest;
+ 	struct sk_buff *skb;
+diff --git a/kernel/audit.h b/kernel/audit.h
+index 2eed4d231624..f0233dc40b17 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -229,7 +229,7 @@ struct audit_netlink_list {
+ 	struct sk_buff_head q;
+ };
+ 
+-int audit_send_list(void *_dest);
++int audit_send_list_thread(void *_dest);
+ 
+ extern int selinux_audit_rule_update(void);
+ 
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 026e34da4ace..a10e2997aa6c 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1161,11 +1161,8 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+  */
+ int audit_list_rules_send(struct sk_buff *request_skb, int seq)
+ {
+-	u32 portid = NETLINK_CB(request_skb).portid;
+-	struct net *net = sock_net(NETLINK_CB(request_skb).sk);
+ 	struct task_struct *tsk;
+ 	struct audit_netlink_list *dest;
+-	int err = 0;
+ 
+ 	/* We can't just spew out the rules here because we might fill
+ 	 * the available socket buffer space and deadlock waiting for
+@@ -1173,25 +1170,26 @@ int audit_list_rules_send(struct sk_buff *request_skb, int seq)
+ 	 * happen if we're actually running in the context of auditctl
+ 	 * trying to _send_ the stuff */
+ 
+-	dest = kmalloc(sizeof(struct audit_netlink_list), GFP_KERNEL);
++	dest = kmalloc(sizeof(*dest), GFP_KERNEL);
+ 	if (!dest)
+ 		return -ENOMEM;
+-	dest->net = get_net(net);
+-	dest->portid = portid;
++	dest->net = get_net(sock_net(NETLINK_CB(request_skb).sk));
++	dest->portid = NETLINK_CB(request_skb).portid;
+ 	skb_queue_head_init(&dest->q);
+ 
+ 	mutex_lock(&audit_filter_mutex);
+ 	audit_list_rules(seq, &dest->q);
+ 	mutex_unlock(&audit_filter_mutex);
+ 
+-	tsk = kthread_run(audit_send_list, dest, "audit_send_list");
++	tsk = kthread_run(audit_send_list_thread, dest, "audit_send_list");
+ 	if (IS_ERR(tsk)) {
+ 		skb_queue_purge(&dest->q);
++		put_net(dest->net);
+ 		kfree(dest);
+-		err = PTR_ERR(tsk);
++		return PTR_ERR(tsk);
+ 	}
+ 
+-	return err;
++	return 0;
+ }
+ 
+ int audit_comparator(u32 left, u32 op, u32 right)
 -- 
 2.25.1
 
