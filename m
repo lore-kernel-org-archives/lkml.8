@@ -2,101 +2,139 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DAE21548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8B221548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nr0oj9+i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ME17mnS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbgFSSNR (ORCPT
+        id S1732747AbgFSSNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732041AbgFSSNQ (ORCPT
+        Fri, 19 Jun 2020 14:13:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26036 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732562AbgFSSNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:13:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30482C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RmbBPWj+7r7cqSwWtOeyaSwx07WIPg3ahEci8gVOaTA=; b=nr0oj9+i1nU+XggYl68VFl4O20
-        ycUQUbuGYzrReMInedxQ7HLFwcZYS62ox4SNXYmTmfEytI7VL1Kt/gsT3/FcuW/xZqY9KM03Z1JIi
-        uYw2CLEHjQpEXulaXvMAoSP38iBlwwJz2mWpVYXsyTd5oUJDdmv/YK8+6Zp6FUrYaENNZMsICdAC9
-        sDoUjoIwzmAu668dtmk03w0uA/zA6fXSuE+GVJYtcRNXUgPZOhCJX1AjUMxAX5Elo3FdNvkG0S7mO
-        higWTDwSFZawGMFn+cWyj/Fju8qMPIjSFhrZ2L07vbmzEjpR5IHkS7hi6diEqTjYJ590/MZqx3HDM
-        /e9liLgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmLVh-000625-Bj; Fri, 19 Jun 2020 18:13:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92EE230018A;
-        Fri, 19 Jun 2020 20:13:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 836BE2C27FBC0; Fri, 19 Jun 2020 20:13:03 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 20:13:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Fix initialization of strut uclamp_rq
-Message-ID: <20200619181303.GD576888@hirez.programming.kicks-ass.net>
-References: <20200618195525.7889-1-qais.yousef@arm.com>
- <20200618195525.7889-2-qais.yousef@arm.com>
- <20200619173055.GA576888@hirez.programming.kicks-ass.net>
- <20200619173944.blwuimtuqmcxlj2v@e107158-lin.cambridge.arm.com>
+        Fri, 19 Jun 2020 14:13:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592590416;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z8Lv9ap/5+MGtYWPoEO0+lkl3xRdUoM0YERSQDqAgkI=;
+        b=ME17mnS3p1wQU2TaGHG19c9tf2Rr2EfgUEpsp2uDhZlzWMKBBR/ZuRu6IbmN+ARFNO1lCA
+        piz2VimXFkAK4ooU7tfhjfvtuklLDxBc7TOiWBkri9OHQ26ERNMCwR8qx1sBfU7AbYSUNc
+        KrH2V/lA8vChElgUepiddvX1l722faA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-0m28QoAtN9SxtVrQMRv6IA-1; Fri, 19 Jun 2020 14:13:32 -0400
+X-MC-Unique: 0m28QoAtN9SxtVrQMRv6IA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E8CF835B40;
+        Fri, 19 Jun 2020 18:13:30 +0000 (UTC)
+Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C9EA19723;
+        Fri, 19 Jun 2020 18:13:28 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 14:13:26 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma@vger.kernel.org,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-media@vger.kernel.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619181326.GB10009@redhat.com>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200619173944.blwuimtuqmcxlj2v@e107158-lin.cambridge.arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 06:39:44PM +0100, Qais Yousef wrote:
-> On 06/19/20 19:30, Peter Zijlstra wrote:
-> > On Thu, Jun 18, 2020 at 08:55:24PM +0100, Qais Yousef wrote:
-> > 
-> > > +	for_each_clamp_id(clamp_id) {
-> > > +		memset(uc_rq[clamp_id].bucket,
-> > > +		       0,
-> > > +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
-> > > +
-> > > +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
-> > 
-> > I think you can replace all that with:
-> > 
-> > 		*uc_rq = (struct uclamp_rq){
-> > 			.value = uclamp_none(clamp_id),
-> > 		};
-> > 
-> > it's shorter and is free or weird line-breaks :-)
+On Thu, Jun 11, 2020 at 07:35:35PM -0400, Felix Kuehling wrote:
+> Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
+> > On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
+> >>> I still have my doubts about allowing fence waiting from within shrinkers.
+> >>> IMO ideally they should use a trywait approach, in order to allow memory
+> >>> allocation during command submission for drivers that
+> >>> publish fences before command submission. (Since early reservation object
+> >>> release requires that).
+> >> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
+> >> with a mempool to make sure it can handle it's allocations.
+> >>
+> >>> But since drivers are already waiting from within shrinkers and I take your
+> >>> word for HMM requiring this,
+> >> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
+> >> one, the shrinker one is a lot less established.
+> > I really question if HW that needs something like DMA fence should
+> > even be using mmu notifiers - the best use is HW that can fence the
+> > DMA directly without having to get involved with some command stream
+> > processing.
+> >
+> > Or at the very least it should not be a generic DMA fence but a
+> > narrowed completion tied only into the same GPU driver's command
+> > completion processing which should be able to progress without
+> > blocking.
+> >
+> > The intent of notifiers was never to endlessly block while vast
+> > amounts of SW does work.
+> >
+> > Going around and switching everything in a GPU to GFP_ATOMIC seems
+> > like bad idea.
+> >
+> >> I've pinged a bunch of armsoc gpu driver people and ask them how much this
+> >> hurts, so that we have a clear answer. On x86 I don't think we have much
+> >> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
+> >> (but nouveau I think doesn't use dma_fence in there). 
 > 
-> Sure. I just sent v2 so that people will be encouraged to run tests hopefully.
-> But will fix in v3.
-> 
-> Do we actually need to 0 out anything here? Shouldn't the runqueues all be in
-> BSS which gets initialized to 0 by default at boot?
-> 
-> Maybe better stay explicit..
+> Soon nouveau will get company. We're working on a recoverable page fault
+> implementation for HMM in amdgpu where we'll need to update page tables
+> using the GPUs SDMA engine and wait for corresponding fences in MMU
+> notifiers.
 
-C99 named initializer (as used here) explicitly zero initializes all
-unnamed members. Is that explicit enough? ;-)
+Note that HMM mandate, and i stressed that several time in the past,
+that all GPU page table update are asynchronous and do not have to
+wait on _anything_.
+
+I understand that you use DMA engine for GPU page table update but
+if you want to do so with HMM then you need a GPU page table update
+only DMA context where all GPU page table update goes through and
+where user space can not queue up job.
+
+It can be for HMM only but if you want to mix HMM with non HMM then
+everything need to be on that queue and other command queue will have
+to depends on it.
+
+Cheers,
+Jérôme
+
