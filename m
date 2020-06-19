@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C23C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3459D21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041512168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583845;
-	bh=4p3kFaNwbjzRd7XMk2dV+c7fRUlfKlHkAbQyxboRuws=;
+	s=default; t=1592583849;
+	bh=sQG5gy8/4YWySdG1MXeZANWu3ngaDR5pMb+AKs4zVsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hx4UmuYtC4WA4qfefolWg2ikmNFwsQQ7Fl9vO7MSSZZ3VJxtOI33vaB7W+xk+45LQ
-	 7POychcT2ietE9R/bzvhPuCh01VxEntGWDJsg2nY4nuaJaX6VbrESx3Mg4PrrgJ63H
-	 IhiFZoQoF7p226S4iLZwATZCptKFGjt4hjJSR5e8=
+	b=iEw9Ibo+xOOXhw4914MOMd9QbWo0+To50qfVJQ8y75GNkprvb/MEaJquQZ2z15Qjv
+	 Uph966LMXUIAjHuObrvsLKSTl2u8Zff9bPKjqMXKwqFg5BtaeFkCDhRSGNjZr4/vJY
+	 kKe2dgLVYBURp8YyyrUr55IgnPz75egaaG3JZxxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394784AbgFSQYD (ORCPT
+        id S2390920AbgFSQYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390411AbgFSO6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:34 -0400
+        id S2390404AbgFSO6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EDA21852;
-        Fri, 19 Jun 2020 14:58:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37153218AC;
+        Fri, 19 Jun 2020 14:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578714;
-        bh=4p3kFaNwbjzRd7XMk2dV+c7fRUlfKlHkAbQyxboRuws=;
+        s=default; t=1592578711;
+        bh=sQG5gy8/4YWySdG1MXeZANWu3ngaDR5pMb+AKs4zVsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cH0/pCNz+ejY0Mn/C4usmLq7jCGAm2SXPBklt/p0J6HFdHnF7MRZIrV97grX73Q26
-         l93aAh/4lmbJcheXusJdnmfY7UuA77i5rlCdZz+t4TUFuxIuC7yUOz7TTD/Nru4NxN
-         qld6cJKycJxBb2j+nH2o11kCLbGzwpajipAG3UJE=
+        b=PC5TRQED8qMJda1mPXoJM79qIeSdxti2Zst0cb0vO/w3z4DBoxJu6+g3iGbYyplxW
+         /C0lBQyKpR77/OG7CDus/EtVQPiY0mMX3HRJjAmBHeWTobWlikaehQA0Fry+EK3AjT
+         BYE4ZcqHPgI7aKLZV2ou8ApbC4mtBT9j+Ngz/dS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Juxin Gao <gaojuxin@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 129/267] Bluetooth: btbcm: Add 2 missing models to subver tables
-Date:   Fri, 19 Jun 2020 16:31:54 +0200
-Message-Id: <20200619141655.019747553@linuxfoundation.org>
+Subject: [PATCH 4.19 128/267] MIPS: Make sparse_init() using top-down allocation
+Date:   Fri, 19 Jun 2020 16:31:53 +0200
+Message-Id: <20200619141654.971048944@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,52 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit c03ee9af4e07112bd3fc688daca9e654f41eca93 ]
+[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
 
-Currently the bcm_uart_subver_ and bcm_usb_subver_table-s lack entries
-for the BCM4324B5 and BCM20703A1 chipsets. This makes the code use just
-"BCM" as prefix for the filename to pass to request-firmware, making it
-harder for users to figure out which firmware they need. This especially
-is problematic with the UART attached BCM4324B5 where this leads to the
-filename being just "BCM.hcd".
+In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
+memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
+process failed with kernel panic.
 
-Add the 2 missing devices to subver tables. This has been tested on:
+(1) On the Loongson and SiByte platform
+arch/mips/loongson64/dma.c
+arch/mips/sibyte/common/dma.c
+void __init plat_swiotlb_setup(void)
+{
+	swiotlb_init(1);
+}
 
-1. A Dell XPS15 9550 where this makes btbcm.c try to load
-"BCM20703A1-0a5c-6410.hcd" before it tries to load "BCM-0a5c-6410.hcd".
+kernel/dma/swiotlb.c
+void  __init
+swiotlb_init(int verbose)
+{
+...
+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+		return;
+...
+	pr_warn("Cannot allocate buffer");
+	no_iotlb_memory = true;
+}
 
-2. A Thinkpad 8 where this makes btbcm.c try to load
-"BCM4324B5.hcd" before it tries to load "BCM.hcd"
+phys_addr_t swiotlb_tbl_map_single()
+{
+...
+	if (no_iotlb_memory)
+		panic("Can not allocate SWIOTLB buffer earlier ...");
+...
+}
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+(2) On the Cavium OCTEON platform
+arch/mips/cavium-octeon/dma-octeon.c
+void __init plat_swiotlb_setup(void)
+{
+...
+	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+	if (!octeon_swiotlb)
+		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+		      __func__, swiotlbsize, PAGE_SIZE);
+...
+}
+
+Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
+than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
+case.
+
+In order to reduce the possibility of kernel panic when failed to get IO
+TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
+small as possible before plat_swiotlb_setup(), so make sparse_init() using
+top-down allocation.
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btbcm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/kernel/setup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index e3e4d929e74f..ff6203c331ff 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -324,6 +324,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
- 	{ 0x4103, "BCM4330B1"	},	/* 002.001.003 */
- 	{ 0x410e, "BCM43341B0"	},	/* 002.001.014 */
- 	{ 0x4406, "BCM4324B3"	},	/* 002.004.006 */
-+	{ 0x4606, "BCM4324B5"	},	/* 002.006.006 */
- 	{ 0x6109, "BCM4335C0"	},	/* 003.001.009 */
- 	{ 0x610c, "BCM4354"	},	/* 003.001.012 */
- 	{ 0x2122, "BCM4343A0"	},	/* 001.001.034 */
-@@ -334,6 +335,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
- };
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index e87c98b8a72c..2c2480be3f36 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -933,7 +933,17 @@ static void __init arch_mem_init(char **cmdline_p)
+ 				BOOTMEM_DEFAULT);
+ #endif
+ 	device_tree_init();
++
++	/*
++	 * In order to reduce the possibility of kernel panic when failed to
++	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
++	 * low memory as small as possible before plat_swiotlb_setup(), so
++	 * make sparse_init() using top-down allocation.
++	 */
++	memblock_set_bottom_up(false);
+ 	sparse_init();
++	memblock_set_bottom_up(true);
++
+ 	plat_swiotlb_setup();
  
- static const struct bcm_subver_table bcm_usb_subver_table[] = {
-+	{ 0x2105, "BCM20703A1"	},	/* 001.001.005 */
- 	{ 0x210b, "BCM43142A0"	},	/* 001.001.011 */
- 	{ 0x2112, "BCM4314A0"	},	/* 001.001.018 */
- 	{ 0x2118, "BCM20702A0"	},	/* 001.001.024 */
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
 -- 
 2.25.1
 
