@@ -2,52 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D460C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 129F520734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545572193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580504;
-	bh=I+5PxFlAec6ZbIZDVLDUQQfmz13yYiWv4RHLnKQLQQc=;
+	s=default; t=1592580508;
+	bh=E/7HYZcFWCYad9Xsm1E7dzZCby4y08/7lx/4/FuHRzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wqmkmea10NQEbZg6hRREA9htTI1lWeryJD8aAT2PG9a1Qc2mX91pNefY9yLUnvVWW
-	 kskWiGnAEzv97IDcRiAcTqYeCzsEN75ieliG+fEgN8PucZmH5t6y0zr9ngPNVBwaIg
-	 g8pY088cUifVknUCnai85FGgtKPssoO7AjPMoGI4=
+	b=zaB5BCXqhtFFtA+0MjRG6Uns5g2TMVDWwYmYJ9FDirS1R0RexNIEaa634vlqR3BeO
+	 sgGJlx5e43Qx0ALMDaNuy+NCbnB1wBqY0l2R9dQWWtNyEcFOw4cc5PbEc/jBW50avy
+	 +XlUvwtDSx3Mwv8t9aMeiQgV8c1OBLl/N7+m32H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404555AbgFSP2X (ORCPT
+        id S2404573AbgFSP21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393594AbgFSP1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:44 -0400
+        id S2404442AbgFSP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF1CA20734;
-        Fri, 19 Jun 2020 15:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6FF20734;
+        Fri, 19 Jun 2020 15:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580463;
-        bh=I+5PxFlAec6ZbIZDVLDUQQfmz13yYiWv4RHLnKQLQQc=;
+        s=default; t=1592580473;
+        bh=E/7HYZcFWCYad9Xsm1E7dzZCby4y08/7lx/4/FuHRzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxbDjr3N9SgUB3pZXErHrBrXTHz6ciEmvCsyua9Ief4ebTb2Xx8qnRP/4QGJjP7lp
-         jgmKJvM0TQzyYDJcjLh8qqvOEJkbfPjzmDGVhY16KrvvHrdS1wQtT1NpP8njsb/usN
-         uFSThNNyD9y9jw0aPOKvdiB6nZ9SUpuvyylHm3zU=
+        b=cpxfa3b7bBewY50nO54MI8B1QeyteHQn3wk0pXVbhecrWI3r0k1R7mj6QtKy1SrB9
+         kd8LsEoBV0nM/B93VVTdESi3c0OjviEnm247gWgl0zySWsMTkX3MsgjZL2p6sLPkEG
+         O0pTVpPfqf+1/WcHxqKDSDpeVXkuyjuh33ZAHJis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 259/376] btrfs: send: emit file capabilities after chown
-Date:   Fri, 19 Jun 2020 16:32:57 +0200
-Message-Id: <20200619141722.586851130@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <Mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 245/376] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
+Date:   Fri, 19 Jun 2020 16:32:43 +0200
+Message-Id: <20200619141721.923424374@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,154 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
+[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
 
-Whenever a chown is executed, all capabilities of the file being touched
-are lost.  When doing incremental send with a file with capabilities,
-there is a situation where the capability can be lost on the receiving
-side. The sequence of actions bellow shows the problem:
+The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
+with recent kernels. This model reports a chassis-type of 10 / "Notebook"
+which is not on the recently introduced chassis-type whitelist
 
-  $ mount /dev/sda fs1
-  $ mount /dev/sdb fs2
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
+"Convertible" as being capable of generating valid SW_TABLET_MOD events.
 
-  $ touch fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
-  $ btrfs send fs1/snap_init | btrfs receive fs2
+Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
+switch on "Detachable" and "Portable" chassis-types") extended the
+whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
 
-  $ chgrp adm fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
+And now we need to exten the whitelist again with 10 / "Notebook"...
 
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+The issue original fixed by the whitelist is really a ACPI DSDT bug on
+the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
+even though it is not a 2-in-1 at all, but a regular laptop.
 
-  $ btrfs send fs1/snap_complete | btrfs receive fs2
-  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+So since this is a workaround for a DSDT issue on that specific model,
+instead of extending the whitelist over and over again, lets switch to
+a blacklist and only blacklist the chassis-type of the model for which
+the chassis-type check was added.
 
-At this point, only a chown was emitted by "btrfs send" since only the
-group was changed. This makes the cap_sys_nice capability to be dropped
-from fs2/snap_incremental/foo.bar
+Note this also fixes the current version of the code no longer checking
+if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
 
-To fix that, only emit capabilities after chown is emitted. The current
-code first checks for xattrs that are new/changed, emits them, and later
-emit the chown. Now, __process_new_xattr skips capabilities, letting
-only finish_inode_if_needed to emit them, if they exist, for the inode
-being processed.
-
-This behavior was being worked around in "btrfs receive" side by caching
-the capability and only applying it after chown. Now, xattrs are only
-emmited _after_ chown, making that workaround not needed anymore.
-
-Link: https://github.com/kdave/btrfs-progs/issues/202
-CC: stable@vger.kernel.org # 4.4+
-Suggested-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -23,6 +23,7 @@
- #include "btrfs_inode.h"
- #include "transaction.h"
- #include "compression.h"
-+#include "xattr.h"
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 4921fc15dc6c..a05b80955dcd 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -158,21 +158,18 @@ static void detect_tablet_mode(struct platform_device *device)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
+ {
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+-	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
- /*
-  * Maximum number of references an extent can have in order for us to attempt to
-@@ -4545,6 +4546,10 @@ static int __process_new_xattr(int num,
- 	struct fs_path *p;
- 	struct posix_acl_xattr_header dummy_acl;
+-	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+-		return false;
+-
+-	switch (chassis_type_int) {
+-	case  8: /* Portable */
+-	case 31: /* Convertible */
+-	case 32: /* Detachable */
+-		break;
+-	default:
++	/*
++	 * Some normal laptops have a VGBS method despite being non-convertible
++	 * and their VGBS method always returns 0, causing detect_tablet_mode()
++	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
++	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
++	 * switches on any devices with a DMI chassis_type of 9.
++	 */
++	if (chassis_type && strcmp(chassis_type, "9") == 0)
+ 		return false;
+-	}
  
-+	/* Capabilities are emitted by finish_inode_if_needed */
-+	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
-+		return 0;
-+
- 	p = fs_path_alloc();
- 	if (!p)
- 		return -ENOMEM;
-@@ -5107,6 +5112,64 @@ static int send_extent_data(struct send_
- 	return 0;
- }
- 
-+/*
-+ * Search for a capability xattr related to sctx->cur_ino. If the capability is
-+ * found, call send_set_xattr function to emit it.
-+ *
-+ * Return 0 if there isn't a capability, or when the capability was emitted
-+ * successfully, or < 0 if an error occurred.
-+ */
-+static int send_capabilities(struct send_ctx *sctx)
-+{
-+	struct fs_path *fspath = NULL;
-+	struct btrfs_path *path;
-+	struct btrfs_dir_item *di;
-+	struct extent_buffer *leaf;
-+	unsigned long data_ptr;
-+	char *buf = NULL;
-+	int buf_len;
-+	int ret = 0;
-+
-+	path = alloc_path_for_send();
-+	if (!path)
-+		return -ENOMEM;
-+
-+	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
-+				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
-+	if (!di) {
-+		/* There is no xattr for this inode */
-+		goto out;
-+	} else if (IS_ERR(di)) {
-+		ret = PTR_ERR(di);
-+		goto out;
-+	}
-+
-+	leaf = path->nodes[0];
-+	buf_len = btrfs_dir_data_len(leaf, di);
-+
-+	fspath = fs_path_alloc();
-+	buf = kmalloc(buf_len, GFP_KERNEL);
-+	if (!fspath || !buf) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
-+	if (ret < 0)
-+		goto out;
-+
-+	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
-+	read_extent_buffer(leaf, buf, data_ptr, buf_len);
-+
-+	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
-+			strlen(XATTR_NAME_CAPS), buf, buf_len);
-+out:
-+	kfree(buf);
-+	fs_path_free(fspath);
-+	btrfs_free_path(path);
-+	return ret;
-+}
-+
- static int clone_range(struct send_ctx *sctx,
- 		       struct clone_root *clone_root,
- 		       const u64 disk_byte,
-@@ -5972,6 +6035,10 @@ static int finish_inode_if_needed(struct
- 			goto out;
- 	}
- 
-+	ret = send_capabilities(sctx);
-+	if (ret < 0)
-+		goto out;
-+
- 	/*
- 	 * If other directory inodes depended on our current directory
- 	 * inode's move/rename, now do their move/rename operations.
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
+-- 
+2.25.1
+
 
 
