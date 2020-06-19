@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A956C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559A82158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE80F218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584463;
-	bh=dKI2bBLdOxhTvg24W0G8MlZlOLhMnxcDkqMRMjlOq/4=;
+	s=default; t=1592584470;
+	bh=Di2MMUfV9E4W+mJymjb01swf4edgnWzTp3VZ5Zc+FhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jS3qw454Xw2DmHvQsaJUTXGhlLkpj6I5d6YFJv7PK5BH93gnOAkNDw3YpVVe8+/k3
-	 EpGF+ZbIpBZR6S2wY/JoPx6p8hnjyCPKLUG/KXcVEI+7pkOTxWCl+fFPZs22TlOfSe
-	 OGBiyNZCgwc+BnBGenSlW2hemK+Nh0J0b29SKkmc=
+	b=sqfePHABGjU17pkvwkYjVdE4X6VbC07ExI6urG6r8+oFinX2jWGrzvXMosoxc7ENd
+	 tuK+inFnPZFcApXq4SL46YtlhO2WNo7syRmavMkN6EZ2QqnwKJqLueS0n+0zE+IqrW
+	 bQThNYxetL8Va0BzkBoGKdlsFbBdKgfEC1mhlUcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395166AbgFSQeW (ORCPT
+        id S2395174AbgFSQe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44208 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389390AbgFSOu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:59 -0400
+        id S2388565AbgFSOuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC100206DB;
-        Fri, 19 Jun 2020 14:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C922166E;
+        Fri, 19 Jun 2020 14:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578259;
-        bh=dKI2bBLdOxhTvg24W0G8MlZlOLhMnxcDkqMRMjlOq/4=;
+        s=default; t=1592578251;
+        bh=Di2MMUfV9E4W+mJymjb01swf4edgnWzTp3VZ5Zc+FhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmIzDIeGNpiBrq9WDPudHo2QEkHlBPNowvbk9tV9fLsAEh9B/lmmAiS+5dMXiFlM+
-         ylcnCjVAGRPyMH+G0atcBpHhCnCHbgud1Q+iJkBIjwxvvqituxqJkALlHqojEvDADz
-         l9xUpD7e9xiwVBGQ7qBrzSddH3IlUQqB2GtVVNh4=
+        b=rIXAEZC8zfNC9xABERLxMl6JK1WaXZuKVWGz1E4p4A7slXQZ3VRHiUPvTTPrBssgw
+         Z03Bgs6y1Tb+XLCiQ12W8EH7xLs+eAVC8JyE9iDPXW6FyVokTUWfEbOmA6+9B/7qE9
+         I3bhjFEW2vhWOMapmIOuljBi14LaNADd1d9oxHwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        David.Laight@aculab.com (big endian system concerns),
         Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 4.14 144/190] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
-Date:   Fri, 19 Jun 2020 16:33:09 +0200
-Message-Id: <20200619141640.884963419@linuxfoundation.org>
+Subject: [PATCH 4.14 142/190] ima: Fix ima digest hash table key calculation
+Date:   Fri, 19 Jun 2020 16:33:07 +0200
+Message-Id: <20200619141640.753748779@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,34 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-commit 0c4395fb2aa77341269ea619c5419ea48171883f upstream.
+commit 1129d31b55d509f15e72dc68e4b5c3a4d7b4da8d upstream.
 
-Don't immediately return if the signature is portable and security.ima is
-not present. Just set error so that memory allocated is freed before
-returning from evm_calc_hmac_or_hash().
+Function hash_long() accepts unsigned long, while currently only one byte
+is passed from ima_hash_key(), which calculates a key for ima_htable.
 
-Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Given that hashing the digest does not give clear benefits compared to
+using the digest itself, remove hash_long() and return the modulus
+calculated on the first two bytes of the digest with the number of slots.
+Also reduce the depth of the hash table by doubling the number of slots.
+
 Cc: stable@vger.kernel.org
+Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
+Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Acked-by: David.Laight@aculab.com (big endian system concerns)
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/evm/evm_crypto.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/integrity/ima/ima.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -240,7 +240,7 @@ static int evm_calc_hmac_or_hash(struct
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -40,7 +40,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 =
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+ #define IMA_EVENT_NAME_LEN_MAX	255
  
- 	/* Portable EVM signatures must include an IMA hash */
- 	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
--		return -EPERM;
-+		error = -EPERM;
- out:
- 	kfree(xattr_value);
- 	kfree(desc);
+-#define IMA_HASH_BITS 9
++#define IMA_HASH_BITS 10
+ #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
+ 
+ #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
+@@ -167,9 +167,10 @@ struct ima_h_table {
+ };
+ extern struct ima_h_table ima_htable;
+ 
+-static inline unsigned long ima_hash_key(u8 *digest)
++static inline unsigned int ima_hash_key(u8 *digest)
+ {
+-	return hash_long(*digest, IMA_HASH_BITS);
++	/* there is no point in taking a hash of part of a digest */
++	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
+ }
+ 
+ #define __ima_hooks(hook)		\
 
 
