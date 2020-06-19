@@ -2,42 +2,42 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B77C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB162222C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECE72223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h9Ue237V"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="De1MkR8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgFSV6N (ORCPT
+        id S1728623AbgFSV60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:58:13 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4459 "EHLO
+        Fri, 19 Jun 2020 17:58:26 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4452 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbgFSV5K (ORCPT
+        with ESMTP id S1728281AbgFSV5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:57:10 -0400
+        Fri, 19 Jun 2020 17:57:09 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eed34800007>; Fri, 19 Jun 2020 14:56:16 -0700
+        id <B5eed34800006>; Fri, 19 Jun 2020 14:56:16 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Fri, 19 Jun 2020 14:57:07 -0700
 X-PGP-Universal: processed;
         by hqpgpgate101.nvidia.com on Fri, 19 Jun 2020 14:57:07 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
  2020 21:56:59 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Fri, 19 Jun 2020 21:56:59 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5eed34aa0003>; Fri, 19 Jun 2020 14:56:58 -0700
+        id <B5eed34ab0001>; Fri, 19 Jun 2020 14:56:59 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
         <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
@@ -50,80 +50,59 @@ CC:     Jerome Glisse <jglisse@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Shuah Khan <shuah@kernel.org>,
         Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 00/16] mm/hmm/nouveau: THP mapping and migration
-Date:   Fri, 19 Jun 2020 14:56:33 -0700
-Message-ID: <20200619215649.32297-1-rcampbell@nvidia.com>
+Subject: [PATCH 02/16] nouveau: fix migrate page regression
+Date:   Fri, 19 Jun 2020 14:56:35 -0700
+Message-ID: <20200619215649.32297-3-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592603776; bh=cY2z0OG1pUaoe5jBUN9mz4n6ug8KS7Y4KUbr8HDt6lM=;
+        t=1592603776; bh=aaU6roovY2dxLmV2cNcmX9CI+ssI/Uf3SDOsfiZQ3j8=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=h9Ue237VUS0DYlx4+ZPf7DBfdsfGNigyNS8eyYLe4mqxhix4iw4hCoiwj2ACeJcIP
-         cOTmq6M+LU527F7YEWJ/54n1+Y5dEeKouADPnbmr/KPkjT3o7tPCziz0MoMr3pTyp8
-         A1HW3B5f4n7FfjOHYCOtmc7IWlH5MRslPGnMBkrylKMFrXZnTHcKMnGmyTWhiSDiR3
-         HOTG6yr7LJLQEWip29sWfhQOotCaV5PlNKnifKnVuKEFYI9228oqDmbwJnbmLHiKu7
-         8L0xm1X2SJ5LKTbMoZamhFqZdsFKD5qaniMTzm5doSBLxYF69Hm2lMaHC1hEA3Rdja
-         a/eQhOsyz/uLA==
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=De1MkR8oWHF1KFuhZ0JpAb6i05JdEidrktpSMDL/LlbcWshB+D/ZZh0iq7cf+NBxb
+         BLoRvXZZS622uXzpmVMb+kGdjIrieWaQsnw1XdheNvYmAkeD05LUBSDA08TLrdESh8
+         8czeLHoEcgr+U4WfroMbf/doE3CjiFzPkokQz0MRlm89TPNG4P7mwcYizNKo2joPCz
+         e99NuYztZpZMFRa97S1ag8Vh6rJ3QoWizMqGlqgGaamDJOG0g4ZPHYKA2LjKd1jZ1F
+         IEfBHyOqVr1/3UsUzokKyPTiW2lzWm6RnfvwrJquvdpQ8InOMtE2z2YCzfDauAQS7v
+         FqvMJhdTI+KtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches apply to linux-5.8.0-rc1. Patches 1-3 should probably go
-into 5.8, the others can be queued for 5.9. Patches 4-6 improve the HMM
-self tests. Patch 7-8 prepare nouveau for the meat of this series which
-adds support and testing for compound page mapping of system memory
-(patches 9-11) and compound page migration to device private memory
-(patches 12-16). Since these changes are split across mm core, nouveau,
-and testing, I'm guessing Jason Gunthorpe's HMM tree would be appropriate.
+The patch to add zero page migration to GPU memory inadvertantly included
+part of a future change which broke normal page migration to GPU memory
+by copying too much data and corrupting GPU memory.
+Fix this by only copying one page instead of a byte count.
 
-Ralph Campbell (16):
-  mm: fix migrate_vma_setup() src_owner and normal pages
-  nouveau: fix migrate page regression
-  nouveau: fix mixed normal and device private page migration
-  mm/hmm: fix test timeout on slower machines
-  mm/hmm/test: remove redundant page table invalidate
-  mm/hmm: test mixed normal and device private migrations
-  nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
-  nouveau/hmm: fault one page at a time
-  mm/hmm: add output flag for compound page mapping
-  nouveau/hmm: support mapping large sysmem pages
-  hmm: add tests for HMM_PFN_COMPOUND flag
-  mm/hmm: optimize migrate_vma_setup() for holes
-  mm: support THP migration to device private memory
-  mm/thp: add THP allocation helper
-  mm/hmm/test: add self tests for THP migration
-  nouveau: support THP migration to private memory
+Fixes: 9d4296a7d4b3 ("drm/nouveau/nouveau/hmm: fix migrate zero page to GPU=
+")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/gpu/drm/nouveau/nouveau_dmem.c        | 177 +++++---
- drivers/gpu/drm/nouveau/nouveau_svm.c         | 241 +++++------
- drivers/gpu/drm/nouveau/nouveau_svm.h         |   3 +-
- .../gpu/drm/nouveau/nvkm/subdev/mmu/base.c    |   6 +-
- .../gpu/drm/nouveau/nvkm/subdev/mmu/priv.h    |   2 +
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c |  10 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h |   3 -
- .../drm/nouveau/nvkm/subdev/mmu/vmmgp100.c    |  29 +-
- include/linux/gfp.h                           |  10 +
- include/linux/hmm.h                           |   4 +-
- include/linux/migrate.h                       |   1 +
- include/linux/mm.h                            |   1 +
- lib/test_hmm.c                                | 359 ++++++++++++----
- lib/test_hmm_uapi.h                           |   2 +
- mm/hmm.c                                      |  10 +-
- mm/huge_memory.c                              |  46 ++-
- mm/internal.h                                 |   1 -
- mm/memory.c                                   |  10 +-
- mm/memremap.c                                 |   9 +-
- mm/migrate.c                                  | 236 +++++++++--
- mm/page_alloc.c                               |   1 +
- tools/testing/selftests/vm/hmm-tests.c        | 388 +++++++++++++++++-
- 22 files changed, 1203 insertions(+), 346 deletions(-)
-
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
+au/nouveau_dmem.c
+index e5c230d9ae24..cc9993837508 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -550,7 +550,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(stru=
+ct nouveau_drm *drm,
+ 					 DMA_BIDIRECTIONAL);
+ 		if (dma_mapping_error(dev, *dma_addr))
+ 			goto out_free_page;
+-		if (drm->dmem->migrate.copy_func(drm, page_size(spage),
++		if (drm->dmem->migrate.copy_func(drm, 1,
+ 			NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, *dma_addr))
+ 			goto out_dma_unmap;
+ 	} else {
 --=20
 2.20.1
 
