@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7189AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC92C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9072067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A6C21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584638;
-	bh=ilHl00Ind+MYDpzE63x8S6agboplY2CjLSDXuXLXyDk=;
+	s=default; t=1592584641;
+	bh=xCvhklzmLu/JLE8mtxHrM3M2TUrYdKLNq2hDaxul1rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CiyXZCn6EtKdmVRI0d9frFRdShGZzapgsUMID0gHCQmw01HuFEax38KUnxoysJyJb
-	 mj5e8yRvQKYBmETklbOgrRPw9JmAG5EWagtw9HRxXmFO3muaUeMzthVE7C0JUQ3MhI
-	 /ImskkZcZSvAIhJjoI27+8ZNlR3HL7/C1Ae9ywY8=
+	b=vQzygn3mVbGSJGwXZyNqkHWEbHuj9BOILbgcUaaRMg6v0dk372TqxA1JuA1aRVexu
+	 Ng/alqULIpR5aDfA8kx7RY7hQhn/SECH0fn+rX2fv2LzsO7qJLH2KYR/SOv/t4LfmF
+	 DSx3rDcvK5b6citIKImmgUCehg27rKJmWG+krPeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395163AbgFSQhQ (ORCPT
+        id S2388192AbgFSOsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389048AbgFSOsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:43 -0400
+        id S2389067AbgFSOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CDA2083B;
-        Fri, 19 Jun 2020 14:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0BA20DD4;
+        Fri, 19 Jun 2020 14:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578123;
-        bh=ilHl00Ind+MYDpzE63x8S6agboplY2CjLSDXuXLXyDk=;
+        s=default; t=1592578095;
+        bh=xCvhklzmLu/JLE8mtxHrM3M2TUrYdKLNq2hDaxul1rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBF38mPBXqEFcq3uq4wZx+gyaeRTmeAptatqCjS8wBughjYSaMr3QeTndtyC59sFx
-         Zv5EX+BpD6UaKO0aAZGIue7YhSSLLrmp7+nGuIYLhOEXGwL5XNbIUqDknpzvuexAVQ
-         vtczoGGRCZIM9ZI33RTW1YPbY7YhYNEW9mTLfqXw=
+        b=p3OYh2OLILiZ3XJurpcCMn2FCkMVVczWypFcrngSwkVUA+lcvTlsqsMREZPn94avb
+         /0wpONJ4Hq7wxF+15jOpTLJ09rxOJcFfPBQWSw/fjSbzf5C9imlchqmiYO36TUdGDW
+         CjUbMjDXSIF9KuJdIcSHQZCKU51EzuzQZVoxcX7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Shobhit Srivastava <shobhit.srivastava@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/190] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
-Date:   Fri, 19 Jun 2020 16:32:15 +0200
-Message-Id: <20200619141638.088594819@linuxfoundation.org>
+Subject: [PATCH 4.14 080/190] spi: pxa2xx: Apply CS clk quirk to BXT
+Date:   Fri, 19 Jun 2020 16:32:05 +0200
+Message-Id: <20200619141637.586222192@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,46 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
+[ Upstream commit 6eefaee4f2d366a389da0eb95e524ba82bf358c4 ]
 
-We are currently treating any non-zero return value from btrfs_next_leaf()
-the same way, by going to the code that inserts a new checksum item in the
-tree. However if btrfs_next_leaf() returns an error (a value < 0), we
-should just stop and return the error, and not behave as if nothing has
-happened, since in that case we do not have a way to know if there is a
-next leaf or we are currently at the last leaf already.
+With a couple allies at Intel, and much badgering, I got confirmation
+from Intel that at least BXT suffers from the same SPI chip-select
+issue as Cannonlake (and beyond). The issue being that after going
+through runtime suspend/resume, toggling the chip-select line without
+also sending data does nothing.
 
-So fix that by returning the error from btrfs_next_leaf().
+Add the quirk to BXT to briefly toggle dynamic clock gating off and
+on, forcing the fabric to wake up enough to notice the CS register
+change.
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index 717d82d51bb1..edd5f152e448 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -795,10 +795,12 @@ again:
- 		nritems = btrfs_header_nritems(path->nodes[0]);
- 		if (!nritems || (path->slots[0] >= nritems - 1)) {
- 			ret = btrfs_next_leaf(root, path);
--			if (ret == 1)
-+			if (ret < 0) {
-+				goto out;
-+			} else if (ret > 0) {
- 				found_next = 1;
--			if (ret != 0)
- 				goto insert;
-+			}
- 			slot = path->slots[0];
- 		}
- 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index b73fde1de463..1579eb2bc29f 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -156,6 +156,7 @@ static const struct lpss_config lpss_platforms[] = {
+ 		.tx_threshold_hi = 48,
+ 		.cs_sel_shift = 8,
+ 		.cs_sel_mask = 3 << 8,
++		.cs_clk_stays_gated = true,
+ 	},
+ 	{	/* LPSS_CNL_SSP */
+ 		.offset = 0x200,
 -- 
 2.25.1
 
