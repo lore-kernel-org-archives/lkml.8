@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3CE321532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8548A21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582374;
-	bh=5KjT2Q7sslPxO+QD3x+tYDerEQL9bSgfkWmtLzJrTJI=;
+	s=default; t=1592582379;
+	bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yc9NGZFUAfee9ZxnUoqoHggBZWvsmqKCUJO0llVHujX0lejO1nX5bWR1d+UUGvsXY
-	 WskbL1PyswJCCAnuVzUOkdyxgnMWUCXVGPVnGmnnK6BpBLCGy2nWODxXymkOudSnQq
-	 6XuQm5QVCoYVfXGPzUtSZObMRVprewGwId2l9obw=
+	b=bAaJVsJrn668CdgE1rQ88rGvIthbsVj+xbxZ42Wxrc45tXGBjm+VzP0IQasPKFQGN
+	 RmrbRkC1WXZ/Py3f53IpxlH54mXxPHLpzMMYywcWqo/QMA65+vVAo4QiaWR5XN4Id9
+	 +bEA6XX0Z6RPlfiONNg/3i6NezuEMMXilCuweAEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393090AbgFSP7c (ORCPT
+        id S2390447AbgFSP7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390447AbgFSPTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:11 -0400
+        id S2390420AbgFSPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D8321582;
-        Fri, 19 Jun 2020 15:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A0A2184D;
+        Fri, 19 Jun 2020 15:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579950;
-        bh=5KjT2Q7sslPxO+QD3x+tYDerEQL9bSgfkWmtLzJrTJI=;
+        s=default; t=1592579947;
+        bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mCzcThRbZBOZgusM4OUEs3yisoIaj4tccXmbDBU9Z8KG7doC17hmkWlfimz90Kar
-         d9K6/q5XwcGGFU2UzBBdMVmFBpvd6XZhiUahTDgPQo4H0yTzexPFfJkaDdTcwzab07
-         hpyGV5+96/lMPX/lSkBfd17x7sggsKcpY09XJbJ4=
+        b=td7Jr9+sxMVEAx+qz7lHYq+bde7pTrGeYQy9XWisn/at3cta0Ekb96CarJZw+uAw+
+         P0DSPAjXuHOEbC9mxsXhoISLJnK6GTkofib1KVdm+LSRA1VF6oPeaUb5O4qTidxi3U
+         /c5XVvTcmLFazgkUpXidpbLvYNz9ol+gmihRPWV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 048/376] io_uring: cleanup io_poll_remove_one() logic
-Date:   Fri, 19 Jun 2020 16:29:26 +0200
-Message-Id: <20200619141712.629967948@linuxfoundation.org>
+Subject: [PATCH 5.7 065/376] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
+Date:   Fri, 19 Jun 2020 16:29:43 +0200
+Message-Id: <20200619141713.430930456@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,71 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 3bfa5bcb26f0b52d7ae8416aa0618fff21aceaaf ]
+[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
 
-We only need apoll in the one section, do the juggling with the work
-restoration there. This removes a special case further down as well.
+Recent work with KASan exposed the folling hard-coded bitmask
+in arch/arm/mm/proc-macros.S:
 
-No functional changes in this patch.
+  bic     rd, sp, #8128
+  bic     rd, rd, #63
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This forms the bitmask 0x1FFF that is coinciding with
+(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
+that THREAD_SIZE is always 8K (8192).
+
+As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
+this bug.
+
+Fix it by this little oneline suggested by Ard:
+
+  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
+
+Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
+
+We have to also include <linux/const.h> since the THREAD_SIZE
+expands to use the _AC() macro.
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ arch/arm/mm/proc-macros.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index f071505e3430..07d9414268f1 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4354,32 +4354,31 @@ static bool __io_poll_remove_one(struct io_kiocb *req,
- 		do_complete = true;
- 	}
- 	spin_unlock(&poll->head->lock);
-+	hash_del(&req->hash_node);
- 	return do_complete;
- }
+diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
+index 5461d589a1e2..60ac7c5999a9 100644
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -5,6 +5,7 @@
+  *  VMA_VM_FLAGS
+  *  VM_EXEC
+  */
++#include <linux/const.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
  
- static bool io_poll_remove_one(struct io_kiocb *req)
- {
--	struct async_poll *apoll = NULL;
- 	bool do_complete;
- 
- 	if (req->opcode == IORING_OP_POLL_ADD) {
- 		do_complete = __io_poll_remove_one(req, &req->poll);
- 	} else {
--		apoll = req->apoll;
-+		struct async_poll *apoll = req->apoll;
-+
- 		/* non-poll requests have submit ref still */
--		do_complete = __io_poll_remove_one(req, &req->apoll->poll);
--		if (do_complete)
-+		do_complete = __io_poll_remove_one(req, &apoll->poll);
-+		if (do_complete) {
- 			io_put_req(req);
--	}
--
--	hash_del(&req->hash_node);
--
--	if (do_complete && apoll) {
--		/*
--		 * restore ->work because we need to call io_req_work_drop_env.
--		 */
--		memcpy(&req->work, &apoll->work, sizeof(req->work));
--		kfree(apoll);
-+			/*
-+			 * restore ->work because we will call
-+			 * io_req_work_drop_env below when dropping the
-+			 * final reference.
-+			 */
-+			memcpy(&req->work, &apoll->work, sizeof(req->work));
-+			kfree(apoll);
-+		}
- 	}
- 
- 	if (do_complete) {
+@@ -30,7 +31,7 @@
+  * act_mm - get current->active_mm
+  */
+ 	.macro	act_mm, rd
+-	bic	\rd, sp, #8128
++	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
+ 	bic	\rd, \rd, #63
+ 	ldr	\rd, [\rd, #TI_TASK]
+ 	.if (TSK_ACTIVE_MM > IMM12_MASK)
 -- 
 2.25.1
 
