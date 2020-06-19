@@ -2,104 +2,124 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6101C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F094DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B755B2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQKBtVxb"
+	by mail.kernel.org (Postfix) with ESMTP id D05482080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592585289;
+	bh=zl0ACyDj7vFcEaBdi95zIaIux1rc3z6IveIFcj/66R8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pKSexPNFf3QB59KgJ4PPqwfCkazbalE2rJIYHPuu7899yfhCWHjkM34wefBy8F3vD
+	 maLzK63APP4PSD57/sWpJsMzoRJpGiqqAL2n6X1NKF6V4o1trAAhoM4vM/K+QnPqQR
+	 TJeC27PhH9ziSRTivO67svxRAgYycqRUMk5HATfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405734AbgFSQr5 (ORCPT
+        id S2405750AbgFSQsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388196AbgFSQry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:47:54 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4458C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:47:54 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id q2so5967007vsr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NWEHEDf9ab+QI14tCX+z1GolOFkuRHuWtHZkHv7sE/8=;
-        b=ZQKBtVxbpMHTtarCdFEv2SLhsy1BOUCpKkvJz+7JCgxv+YLk8hpjSCZhAzUBGAQ2t4
-         +4YZTMvnx+jQZOqP8+yheWFmnjN6wUksFeVVlPRasvalm5mL/phB2Uw2Dpwkx4wYwtx1
-         ak4GFtqU29TNADOA1+On2OteQPA5/swts1SbLg92Igwa6/zSOrESGoCqlzS4kGd6qbV0
-         fUA8bTqfUeUHaaBzHIfPrWawa//gyGKcrkLltdj6GguP+ufq93wLJbA1CYEEknvQEs9Z
-         w0Z2OJvuAhb28Xf7dsz6nK3QfzKqBfyzurDhADJ8v0x4BqJBMKiLfZgIMYq/dx+H9BfL
-         rVxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NWEHEDf9ab+QI14tCX+z1GolOFkuRHuWtHZkHv7sE/8=;
-        b=cm8iXqi4svszy32nPAmJJ8+mrXfPgxsLjDQRYL6ZWg4TMzC87FcKHBS+iOSnoc6AnF
-         lkhnUuN5DLsDvuWjptUQAJmfM9KY9wCZHnV25BGNJvU+aFWTZOjxRutu0aFI+3MmQhnT
-         vKhzedrNruYyC7XD21j7bzD82R/l/wTARz9MKPzSb5qfFmbUrz7w53QLoYrz5wPkPlDc
-         7Bn95OIRy2suHsj9I4vQs7KNwhlXOjKV5z++ZSoyxJwseIs5evmikACNOr4kcXhaA1rB
-         P4DauHWCTgRJ9gqnDTzQ0KK7Ho/6k9YZz5yCutkyeMjqTK40XZhEcMOiDjU7JMOM6hUD
-         SVDw==
-X-Gm-Message-State: AOAM5337sg+igYKPlotJs2YrclgpL710kfoWB+pfduR9AqUMP5bZYS8T
-        MOy33bYuv327u5De/sP2yfMuK99qLcJTWep2Wpo=
-X-Google-Smtp-Source: ABdhPJzoqfCqyBo15NraAidXM2iN73KVqB72eAgjyPEtEdAyPlU41JcnyfE4tEok1IiLqFElTgTX4gcAbxB4NSramx0=
-X-Received: by 2002:a67:fd16:: with SMTP id f22mr8103695vsr.213.1592585273962;
- Fri, 19 Jun 2020 09:47:53 -0700 (PDT)
+        Fri, 19 Jun 2020 12:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387803AbgFSOkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FFF620A8B;
+        Fri, 19 Jun 2020 14:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577650;
+        bh=zl0ACyDj7vFcEaBdi95zIaIux1rc3z6IveIFcj/66R8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LGznwckhDwgdHD8JLIuTwkYx+sJPbiVKFoAY06xV4xbOoNHqChEtfF4J+13L47P0b
+         QbDpaPtqyYtcJVN8J0cEqozUsWmKrr4oFSivZtKuadtjgMRHZRhSUD52qW+/FAxfxQ
+         UicuoPip1N3hyMD6/60gmCVIaHsN0C20W6uuqMFs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 034/128] spi: bcm2835: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:32:08 +0200
+Message-Id: <20200619141621.988992893@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
+References: <20200619141620.148019466@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200618220139.GH27951@zn.tnic> <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
- <20200619074053.GA32683@zn.tnic> <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
- <20200619132243.GC32683@zn.tnic> <CAD2FfiEr0kRWp2ut_PVqVDEVZqwESUxv=fxM9wUgi3n=ZCzPcQ@mail.gmail.com>
- <20200619134432.GE32683@zn.tnic> <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
- <20200619161026.GF32683@zn.tnic> <CAD2FfiGN5kdHHEz-6Oy9S-fFT35bJH0ZOfqfn5SyCG_Y2LtE_w@mail.gmail.com>
- <20200619164056.GB2235992@kroah.com>
-In-Reply-To: <20200619164056.GB2235992@kroah.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 17:47:42 +0100
-Message-ID: <CAD2FfiHVyt2hWBqcgtxbBaLEuxuzz6yAe1+8sK5J0SYWVEr5qQ@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Daniel Gutson <daniel@eclypsium.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 17:41, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> > Yes. I want to show the user *why* TME is not available.
-> So even if it is "available" that's fine, even if it is not being used?
+From: Lukas Wunner <lukas@wunner.de>
 
-No, it's just one more thing we can check and report. For instance,
-"Full memory encryption: NO [firmware-disabled, unencrypted-swap, EFI
-memory map incomplete]
+[ Upstream commit 9dd277ff92d06f6aa95b39936ad83981d781f49b ]
 
-> And how can you ever tell if a BIOS disables a CPU feature, yet the chip
-> still has it?
+The BCM2835 SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+bcm2835_spi_remove() before unregistering the SPI controller via
+devres_release_all().
 
-Isn't that what the "x86/tme: enabled by BIOS" kernel log entry is for?
+This order is incorrect:  bcm2835_spi_remove() tears down the DMA
+channels and turns off the SPI controller, including its interrupts
+and clock.  The SPI controller is thus no longer usable.
 
-Richard.
+When the SPI controller is subsequently unregistered, it unbinds all
+its slave devices.  If their drivers need to access the SPI bus,
+e.g. to quiesce their interrupts, unbinding will fail.
+
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed
+after unbinding of slaves.
+
+Fix by using the non-devm variant spi_register_controller().  Note that
+the struct spi_controller as well as the driver-private data are not
+freed until after bcm2835_spi_remove() has finished, so accessing them
+is safe.
+
+Fixes: 247263dba208 ("spi: bcm2835: use devm_spi_register_master()")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.13+
+Link: https://lore.kernel.org/r/2397dd70cdbe95e0bc4da2b9fca0f31cb94e5aed.1589557526.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-bcm2835.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index eab27d41ba83..df6abc75bc16 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -793,7 +793,7 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 		goto out_clk_disable;
+ 	}
+ 
+-	err = devm_spi_register_master(&pdev->dev, master);
++	err = spi_register_master(master);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
+ 		goto out_clk_disable;
+@@ -813,6 +813,8 @@ static int bcm2835_spi_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct bcm2835_spi *bs = spi_master_get_devdata(master);
+ 
++	spi_unregister_master(master);
++
+ 	/* Clear FIFOs, and disable the HW block */
+ 	bcm2835_wr(bs, BCM2835_SPI_CS,
+ 		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
+-- 
+2.25.1
+
+
+
