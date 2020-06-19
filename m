@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2093C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC85DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6903207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A54207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582643;
-	bh=OFSmEOpw7XL/3upg6rxCi50S6LgPyI7pNBP+vW5EA5M=;
+	s=default; t=1592582646;
+	bh=gt02xV2gTXAGJGD8SHqqXs6e/DU/oGfgASH0Dlqg5Pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfCO1bto9KOWroKFPQe32OlE3MI8zdMpMclxtPIeAza8coGguiQALqZfRUI1jVE5C
-	 FcDIiQnSlwPeHgG3S3NErp/xMb/s3ws/Qytzl9msHMa0pIOxbfexlFj2uJRaHptr2H
-	 UNgpicpTTBVfMu/8oeHe/UyEGVLiVmtS+z/pvqpQ=
+	b=J4gw1oFyUrowVHyouszHuxO6pJMw3OzrsT+cDXVnVowCvC9Xa+Pf3mhcVZ7z7JdWr
+	 0zmEEfUqYs8TkKYWJNzkHanJsCMphdCEkZAQDO9jumWFVHtCvdTSb0SwF7xCuiBVkx
+	 UejrnDhfwAkpKUs6jG6/N3ZRxhcYeVGmeehcBm18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391448AbgFSPLG (ORCPT
+        id S2394214AbgFSQEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403788AbgFSPKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:52 -0400
+        id S2403814AbgFSPLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 759B9206FA;
-        Fri, 19 Jun 2020 15:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC15A206FA;
+        Fri, 19 Jun 2020 15:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579451;
-        bh=OFSmEOpw7XL/3upg6rxCi50S6LgPyI7pNBP+vW5EA5M=;
+        s=default; t=1592579465;
+        bh=gt02xV2gTXAGJGD8SHqqXs6e/DU/oGfgASH0Dlqg5Pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/03ozNYArhQjGMDTT6dB22JLFTU8svBZzZpXtP/VYqYIhEuFQg6oQWk7BuR1osrL
-         dn8nGh9SGuaHOpHaP8iAMD0PxKV0WMENJUU3mDH3Y3z+LTswbZWtemUUk0lDOckIze
-         0+9Mga/0kp6UwVt4gGXvJ6TndHQ1UIx8/JGPTi3U=
+        b=tnzXoAeR07UBiLyseJxFYodbVhA4gAHXEZL/D6vKuvlfi5CiGrvocHdYZfOW7rcs3
+         dft7gYU+QWh1RyAd4tQquV7h2oKuE9YmZLs6uK6ZbMsxShxoBMOfhZrfyooWaELfVc
+         VpfFwrDr3sax2CZhZpbg3Rf3APJlWHQJ731RqJYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 140/261] mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
-Date:   Fri, 19 Jun 2020 16:32:31 +0200
-Message-Id: <20200619141656.574156309@linuxfoundation.org>
+Subject: [PATCH 5.4 145/261] iwlwifi: mvm: fix aux station leak
+Date:   Fri, 19 Jun 2020 16:32:36 +0200
+Message-Id: <20200619141656.825052015@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,37 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Sharon <sara.sharon@intel.com>
 
-[ Upstream commit d863cb03fb2aac07f017b2a1d923cdbc35021280 ]
+[ Upstream commit f327236df2afc8c3c711e7e070f122c26974f4da ]
 
-sdhci-msm can support auto cmd12.
-So enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk.
+When mvm is initialized we alloc aux station with aux queue.
+We later free the station memory when driver is stopped, but we
+never free the queue's memory, which casues a leak.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1587363626-20413-3-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Add a proper de-initialization of the station.
+
+Signed-off-by: Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200529092401.0121c5be55e9.Id7516fbb3482131d0c9dfb51ff20b226617ddb49@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c  |  5 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c   | 18 +++++++++++++-----
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h   |  6 +++---
+ 3 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 8b2a6a362c60..84cffdef264b 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1742,7 +1742,9 @@ static const struct sdhci_ops sdhci_msm_ops = {
- static const struct sdhci_pltfm_data sdhci_msm_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
--		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 6ca087ffd163..ed92a8e8cd51 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -1193,14 +1193,13 @@ void __iwl_mvm_mac_stop(struct iwl_mvm *mvm)
+ 	 */
+ 	flush_work(&mvm->roc_done_wk);
+ 
++	iwl_mvm_rm_aux_sta(mvm);
 +
- 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops = &sdhci_msm_ops,
- };
+ 	iwl_mvm_stop_device(mvm);
+ 
+ 	iwl_mvm_async_handlers_purge(mvm);
+ 	/* async_handlers_list is empty and will stay empty: HW is stopped */
+ 
+-	/* the fw is stopped, the aux sta is dead: clean up driver state */
+-	iwl_mvm_del_aux_sta(mvm);
+-
+ 	/*
+ 	 * Clear IN_HW_RESTART and HW_RESTART_REQUESTED flag when stopping the
+ 	 * hw (as restart_complete() won't be called in this case) and mac80211
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 71d339e90a9e..41f62793a57c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -2080,16 +2080,24 @@ int iwl_mvm_rm_snif_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ 	return ret;
+ }
+ 
+-void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm)
+ {
+-	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+-}
++	int ret;
+ 
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm)
+-{
+ 	lockdep_assert_held(&mvm->mutex);
+ 
++	iwl_mvm_disable_txq(mvm, NULL, mvm->aux_queue, IWL_MAX_TID_COUNT, 0);
++	ret = iwl_mvm_rm_sta_common(mvm, mvm->aux_sta.sta_id);
++	if (ret)
++		IWL_WARN(mvm, "Failed sending remove station\n");
+ 	iwl_mvm_dealloc_int_sta(mvm, &mvm->aux_sta);
++
++	return ret;
++}
++
++void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++{
++	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+ }
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+index 8d70093847cb..da2d1ac01229 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -541,7 +541,7 @@ int iwl_mvm_sta_tx_agg(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 		       int tid, u8 queue, bool start);
+ 
+ int iwl_mvm_add_aux_sta(struct iwl_mvm *mvm);
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm);
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm);
+ 
+ int iwl_mvm_alloc_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
+ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 -- 
 2.25.1
 
