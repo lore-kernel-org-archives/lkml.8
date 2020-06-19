@@ -2,127 +2,150 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A83C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC022168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583006;
-	bh=LrwI3WVVMEZTLt+oktHm+tTG2mf3KGJ3BQ4rafhaoYY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxyKunVVw05buF2gYPjvtvJpqCJzuAxUx1hxi8Kk1E056BJJmyojCVkr3aOTl4jZ0
-	 a5XXQOwDhfDlkRx/RKqRTw24/yU7Hhcs6j+DznFKU51AAS38oAyWdBlgsQPMHduj9D
-	 80qNVbmDaWsK9HnjhZVjKy1EmP/SE0FRVwwXt+64=
+	by mail.kernel.org (Postfix) with ESMTP id DE27C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404068AbgFSQKF (ORCPT
+        id S2394254AbgFSQKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:10:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61879 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391487AbgFSPGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D38C221974;
-        Fri, 19 Jun 2020 15:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579208;
-        bh=LrwI3WVVMEZTLt+oktHm+tTG2mf3KGJ3BQ4rafhaoYY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AKkPjlNJiAYZ2iZj5VfE2YNCBOCGXU1x7AjYrPXaOL9FVbrAHVvm3oUtbO8LtNDD/
-         UWRrxZB/mevfrbQzEURifgGVCR/2yhLG8d1pjJlCWEGFiS5YCPzz1KDU/TCvOniQXk
-         qmTqv5V2xZYz7gD+qCsEHrxE3OGEK0O4OIvbtca0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthias Schiffer <mschiffer@universe-factory.net>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/261] batman-adv: Revert "disable ethtool link speed detection when auto negotiation off"
-Date:   Fri, 19 Jun 2020 16:30:59 +0200
-Message-Id: <20200619141652.229645547@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2404125AbgFSQKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:10:10 -0400
+IronPort-SDR: TKMhlxq6sLTSpi9FX4kfvgLNITpE5/PdVeD9BsRnIYz78t+yJaMW5/SewWfbt1RcU7qqSSLnYN
+ W9GP4tfEVi8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="142922485"
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="142922485"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 09:10:09 -0700
+IronPort-SDR: 7RubQq9VxRUfRzuPMeOWSStaHKgmrTEFu3KNxl6djYfk5OGCi6GIlI27lydbeTOfyd4+aOyEOX
+ VW8+JfhjviTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="274323199"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga003.jf.intel.com with ESMTP; 19 Jun 2020 09:10:09 -0700
+Date:   Fri, 19 Jun 2020 09:10:09 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH 3/4] pci: acs: Enable PCI_ACS_TB for
+ untrusted/external-facing devices
+Message-ID: <20200619161009.GH42799@otc-nc-03>
+References: <20200616011742.138975-1-rajatja@google.com>
+ <20200616011742.138975-3-rajatja@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616011742.138975-3-rajatja@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
-
-[ Upstream commit 9ad346c90509ebd983f60da7d082f261ad329507 ]
-
-The commit 8c46fcd78308 ("batman-adv: disable ethtool link speed detection
-when auto negotiation off") disabled the usage of ethtool's link_ksetting
-when auto negotation was enabled due to invalid values when used with
-tun/tap virtual net_devices. According to the patch, automatic measurements
-should be used for these kind of interfaces.
-
-But there are major flaws with this argumentation:
-
-* automatic measurements are not implemented
-* auto negotiation has nothing to do with the validity of the retrieved
-  values
-
-The first point has to be fixed by a longer patch series. The "validity"
-part of the second point must be addressed in the same patch series by
-dropping the usage of ethtool's link_ksetting (thus always doing automatic
-measurements over ethernet).
-
-Drop the patch again to have more default values for various net_device
-types/configurations. The user can still overwrite them using the
-batadv_hardif's BATADV_ATTR_THROUGHPUT_OVERRIDE.
-
-Reported-by: Matthias Schiffer <mschiffer@universe-factory.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/bat_v_elp.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
-
-diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
-index 2614a9caee00..a39af0eefad3 100644
---- a/net/batman-adv/bat_v_elp.c
-+++ b/net/batman-adv/bat_v_elp.c
-@@ -120,20 +120,7 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
- 	rtnl_lock();
- 	ret = __ethtool_get_link_ksettings(hard_iface->net_dev, &link_settings);
- 	rtnl_unlock();
--
--	/* Virtual interface drivers such as tun / tap interfaces, VLAN, etc
--	 * tend to initialize the interface throughput with some value for the
--	 * sake of having a throughput number to export via ethtool. This
--	 * exported throughput leaves batman-adv to conclude the interface
--	 * throughput is genuine (reflecting reality), thus no measurements
--	 * are necessary.
--	 *
--	 * Based on the observation that those interface types also tend to set
--	 * the link auto-negotiation to 'off', batman-adv shall check this
--	 * setting to differentiate between genuine link throughput information
--	 * and placeholders installed by virtual interfaces.
--	 */
--	if (ret == 0 && link_settings.base.autoneg == AUTONEG_ENABLE) {
-+	if (ret == 0) {
- 		/* link characteristics might change over time */
- 		if (link_settings.base.duplex == DUPLEX_FULL)
- 			hard_iface->bat_v.flags |= BATADV_FULL_DUPLEX;
--- 
-2.25.1
+Hi Rajat
 
 
+On Mon, Jun 15, 2020 at 06:17:41PM -0700, Rajat Jain wrote:
+> When enabling ACS, currently the bit "translation blocking" was
+> not getting changed at all. Set it to disable translation blocking
 
+Maybe you meant "enable translation blocking" ?
+
+Keep the commit log simple:
+
+When enabling ACS, enable translation blocking for external facing ports
+and untrusted devices.
+
+> too for all external facing or untrusted devices. This is OK
+> because ATS is only allowed on internal devces.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/pci/pci.c    |  4 ++++
+>  drivers/pci/quirks.c | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d2ff987585855..79853b52658a2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+>  	/* Upstream Forwarding */
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	if (dev->external_facing || dev->untrusted)
+> +		/* Translation Blocking */
+> +		ctrl |= (cap & PCI_ACS_TB);
+> +
+>  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+>  }
+>  
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b341628e47527..6294adeac4049 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +/*
+> + * Currently this quirk does the equivalent of
+> + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
+> + *
+> + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
+> + * if dev->external_facing || dev->untrusted
+> + */
+>  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
+>  {
+>  	if (!pci_quirk_intel_pch_acs_match(dev))
+> @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+>  	ctrl |= (cap & PCI_ACS_CR);
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	if (dev->external_facing || dev->untrusted)
+> +		/* Translation Blocking */
+> +		ctrl |= (cap & PCI_ACS_TB);
+> +
+>  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
+>  
+>  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
+> -- 
+> 2.27.0.290.gba653c62da-goog
+> 
