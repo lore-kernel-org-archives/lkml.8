@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE439C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8772193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8272158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580122;
-	bh=7LFZjE6VzhV8QzbPwumbo7+c/KPcY+V7r3MsGoHhnmA=;
+	s=default; t=1592580132;
+	bh=7RDSSuE0x1CRJMtpeeSsfflH94SQLQHmYsHUUAk+q2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJt9FGqMSy+wKMYm3KIZ6urqK7buDIGn2z/6LsZqemOKxx8qqrr7aL2F/uwwxbQpp
-	 ETtBqCTeWGBkTUKZLKrHzXOCquZYwz3Dix7drUqp2aE9TelQDDtRDjE+Je6aZ3EzUZ
-	 XrE/7y/YpQFnF/X/mJgRPncV5RI+vgUAWPoxoxPY=
+	b=p++5GkRS7f0bOikpe3dzZJoKF+IM6/HUIu/CPFrDNqtujenDm0TXJpWqUBFzM+DYh
+	 +zjjNQ6zn3y5G7/A1PSIF3wWBaCQHwHlZmpoqGEvP6n5JWjM7d6SmEImM0DxJtdSpQ
+	 ZzGJhIlbxctJI4A5Hhm1Y3+3gzmEAufHd9fhQG6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392940AbgFSPWB (ORCPT
+        id S2392959AbgFSPWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46468 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392443AbgFSPP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:57 -0400
+        id S2391873AbgFSPPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03DC521835;
-        Fri, 19 Jun 2020 15:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A936B2080C;
+        Fri, 19 Jun 2020 15:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579756;
-        bh=7LFZjE6VzhV8QzbPwumbo7+c/KPcY+V7r3MsGoHhnmA=;
+        s=default; t=1592579751;
+        bh=7RDSSuE0x1CRJMtpeeSsfflH94SQLQHmYsHUUAk+q2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0djIqWalBiOeps9vf9BEPhVUoZEg6HkpL5jooWTNEEm2n9wC+HCY+bOxx96aw9xI2
-         IiEDY2ANQtYgpKnTGAAolrHhUgkVnWouspUF6ltarWMtJ2UXHtlENjywx3F8HtKAv3
-         IY/XAgbz64LFq4up8KChKqpXhMPksLatMGFJAyXM=
+        b=LTmTKpJ0FXoJ9UWuifw+/guZJWq8SSxeTl2rI6/rNzhax+PsgB62ymPKPGLXqwYzS
+         6Lkb6/MUZ4wg317nHkW3oSxkil7i8HSCrSeYpTKmnNHM0fHAFQRLdve+R89RBUXWpg
+         1EIKGT6UAC2WlZOABvkCUf4sKIJ/GXFFX5zvnvEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 224/261] kernel/cpu_pm: Fix uninitted local in cpu_pm
-Date:   Fri, 19 Jun 2020 16:33:55 +0200
-Message-Id: <20200619141700.602158226@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 251/261] mtd: rawnand: plat_nand: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:22 +0200
+Message-Id: <20200619141701.913106920@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,54 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit b5945214b76a1f22929481724ffd448000ede914 upstream.
+commit 5284024b4dac5e94f7f374ca905c7580dbc455e9 upstream.
 
-cpu_pm_notify() is basically a wrapper of notifier_call_chain().
-notifier_call_chain() doesn't initialize *nr_calls to 0 before it
-starts incrementing it--presumably it's up to the callers to do this.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
-This potentially means you could get too many or two few calls to
-CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
-luck of the stack.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible, hence pointing it as the commit to
+fix for backporting purposes, even if this commit is not introducing
+any bug.
 
-Let's fix this.
-
-Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: stable@vger.kernel.org
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-43-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/plat_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/cpu_pm.c
-+++ b/kernel/cpu_pm.c
-@@ -80,7 +80,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_unregister_noti
-  */
- int cpu_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
+--- a/drivers/mtd/nand/raw/plat_nand.c
++++ b/drivers/mtd/nand/raw/plat_nand.c
+@@ -92,7 +92,7 @@ static int plat_nand_probe(struct platfo
+ 	if (!err)
+ 		return err;
  
- 	ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
-@@ -131,7 +131,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_exit);
-  */
- int cpu_cluster_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
- 
- 	ret = cpu_pm_notify(CPU_CLUSTER_PM_ENTER, -1, &nr_calls);
+-	nand_release(&data->chip);
++	nand_cleanup(&data->chip);
+ out:
+ 	if (pdata->ctrl.remove)
+ 		pdata->ctrl.remove(pdev);
 
 
