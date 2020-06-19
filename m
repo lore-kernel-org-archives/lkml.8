@@ -2,104 +2,96 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710EC2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6657920809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592587025;
-	bh=ZXqvXAmVATfcOFfYDgssdi24IIgo7rfGyS4R1yKWIB0=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=0Uph26ONIu5wOK9d5TDsOCZ+c0vJawvysr2rVoWlqnF79KrqTUySK/r1b/FNeujqS
-	 YVbFhBx4bSKjyAQPTS6ExCtcvwknjyEsY5dput9+/9Uqgxeui2j/3+qTmITsXePMAT
-	 boh6HoeqycXeDaJ+LsIaIqzckMzF3L78Kt/CV2q8=
+	s=default; t=1592587192;
+	bh=UU6h0Ye5eIxC7LueL8AYqU7mot8kZdliXuGlk2DiP0M=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=jjReSOPejz1Os3SmS1qpYmHKgP+KrNx7zT/rbEDJpEGOUUEqOPyTFsq69t0JVSZIy
+	 oRTY+WlN4FkqgKJI2xxv2mDvzvroeMw9Sao4qPz3/sDqrjUQWQHA0Hfhej4VPVxgic
+	 lDToYQ8Jut7apaguuyALcngDQGD1wfYzDSoMoP5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732124AbgFSRRE (ORCPT
+        id S1732585AbgFSRTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 13:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgFSRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:17:02 -0400
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725788AbgFSRTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:19:50 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ED0120DD4;
-        Fri, 19 Jun 2020 17:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C5A4214DB;
+        Fri, 19 Jun 2020 17:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592587022;
-        bh=ZXqvXAmVATfcOFfYDgssdi24IIgo7rfGyS4R1yKWIB0=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=d78wgNJsoEVyI8veX7Z8JHTuu5+qT47of6JK7UQwqdGNtgoorNO6t9sgsZ45aMfcW
-         cLArwSQOeEaOU4+uXfwiliUP97QcEIZ90wvmEEJGAZ9bRSDY1+ixU48ZkayuafuX04
-         5vQyqOmXeLNuNALDkTVsl1UeclqvlEaztkvdql7k=
-Subject: Re: [PATCH] pci: pcie: AER: Fix logging of Correctable errors
-To:     Matt Jolly <Kangie@footclan.ninja>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200618155511.16009-1-Kangie@footclan.ninja>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <d611dabd-b943-8492-a29e-0b7fb1980de8@kernel.org>
-Date:   Fri, 19 Jun 2020 13:17:00 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        s=default; t=1592587190;
+        bh=UU6h0Ye5eIxC7LueL8AYqU7mot8kZdliXuGlk2DiP0M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GQsI0Q9wfEmvoWW++btFeKUl2SOze4JhxLrZzB+AsI5xJbGQ1jIiIB9uz8bgTpIgX
+         3V323vrb5AYbd5Tck7ypW7k/c+jmZ+6NNbR7WfG4gqUWXlM2iHLPuOKRGTTrc9yjJm
+         w3lRufpR1bq40Hx3cVfje8OIkRoEJfCFN7sL9/cs=
+Date:   Fri, 19 Jun 2020 12:25:14 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>
+Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] NTB: Use struct_size() helper in devm_kzalloc()
+Message-ID: <20200619172514.GA1074@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200618155511.16009-1-Kangie@footclan.ninja>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/2020 11:55 AM, Matt Jolly wrote:
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _struct_size_.
 
-> +		pci_warn(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> +			dev->vendor, dev->device,
-> +			info->status, info->mask);
-> +	} else {
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-<snip>
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/ntb/test/ntb_msi_test.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> +		pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> +			dev->vendor, dev->device,
-> +			info->status, info->mask);
+diff --git a/drivers/ntb/test/ntb_msi_test.c b/drivers/ntb/test/ntb_msi_test.c
+index 99d826ed9c34..7095ecd6223a 100644
+--- a/drivers/ntb/test/ntb_msi_test.c
++++ b/drivers/ntb/test/ntb_msi_test.c
+@@ -319,7 +319,6 @@ static void ntb_msit_remove_dbgfs(struct ntb_msit_ctx *nm)
+ static int ntb_msit_probe(struct ntb_client *client, struct ntb_dev *ntb)
+ {
+ 	struct ntb_msit_ctx *nm;
+-	size_t struct_size;
+ 	int peers;
+ 	int ret;
+ 
+@@ -352,9 +351,7 @@ static int ntb_msit_probe(struct ntb_client *client, struct ntb_dev *ntb)
+ 		return ret;
+ 	}
+ 
+-	struct_size = sizeof(*nm) + sizeof(*nm->peers) * peers;
+-
+-	nm = devm_kzalloc(&ntb->dev, struct_size, GFP_KERNEL);
++	nm = devm_kzalloc(&ntb->dev, struct_size(nm, peers, peers), GFP_KERNEL);
+ 	if (!nm)
+ 		return -ENOMEM;
+ 
+-- 
+2.27.0
 
-
-Function pointers for pci_warn vs. pci_err ?
-
-This looks like a lot of copy/paste.
