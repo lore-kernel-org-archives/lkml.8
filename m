@@ -2,132 +2,177 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2342CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0527320DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F2920DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732979AbgFSNje (ORCPT
+        id S1732844AbgFSNlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:39:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:59516 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 09:41:13 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40530 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732503AbgFSNjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:39:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 285DD13A1;
-        Fri, 19 Jun 2020 06:38:59 -0700 (PDT)
-Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 186F73F6CF;
-        Fri, 19 Jun 2020 06:38:57 -0700 (PDT)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
-        cristian.marussi@arm.com
-Subject: [PATCH v10 4/9] firmware: arm_scmi: Enable notification core
-Date:   Fri, 19 Jun 2020 14:38:29 +0100
-Message-Id: <20200619133834.18497-5-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619133834.18497-1-cristian.marussi@arm.com>
-References: <20200619133834.18497-1-cristian.marussi@arm.com>
+        id S1726124AbgFSNlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:41:08 -0400
+IronPort-SDR: nfoJQH5BGMNV+73jPfyIhjf9GrLuCnsdQJrxrjJCF0HtN9IV0IiUOO4loikuuvctkfUCgZJ0jD
+ KJFOAFsrxZmw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="142035387"
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="142035387"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 06:41:04 -0700
+IronPort-SDR: 7a6fRNvxQocMKFtpy6dheILuMZlNC+47soiadq6ZNoMhv0FDBFbc26o7AeG0lq/RmKEjJnIqPR
+ NRo405rUk2Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="300061811"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Jun 2020 06:41:04 -0700
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 19 Jun 2020 06:41:04 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.193]) by
+ fmsmsx158.amr.corp.intel.com ([169.254.15.146]) with mapi id 14.03.0439.000;
+ Fri, 19 Jun 2020 06:41:04 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Charan Teja Kalla <charante@codeaurora.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+CC:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+Thread-Topic: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+Thread-Index: AQHWRjDU8ynrfmeG7EGyHovmSs13oqjf8L+w
+Date:   Fri, 19 Jun 2020 13:41:03 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E866301154BAE9E@FMSMSX108.amr.corp.intel.com>
+References: <a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org>
+In-Reply-To: <a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initialize and enable SCMI Notifications core support during bus/driver
-probe phase, so that protocols can start registering their supported
-events during their initialization.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
-V3 --> V4
-- simplified core initialization: protocols events' registrations is now
-  disjoint from users' callback registrations, so that events' generation
-  can be enabled earlier for registered events and delayed for pending
-  ones in order to support deferred (or missing) protocol initialization
-V2 --> V3
-- reviewed core initialization: all implemented protocols must complete
-  their protocol-events registration phases before notifications can be
-  enabled as a whole; in the meantime any user's callback registration
-  requests possibly issued while the notifications were not enabled
-  remain pending: a dedicated worker completes the handlers registration
-  once all protocols have been initialized.
-  NOTE THAT this can lead to ISSUES with late inserted or missing SCMI
-  modules (i.e. for protocols defined in the DT and implemented by the
-  platform but lazily loaded or not loaded at all.), since in these
-  scenarios notifications dispatching will be enabled later or never.
-- reviewed core exit: protocol users (devices) are accounted on probe/
-  remove, and protocols' events are unregisteredonce last user go
-  (can happen only at shutdown)
-V1 --> V2
-- added timestamping
-- moved notification init/exit and using devres
----
- drivers/firmware/arm_scmi/driver.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 136acbe2f4a1..37600ef46b1a 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- 
- #include "common.h"
-+#include "notify.h"
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/scmi.h>
-@@ -204,11 +205,13 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
- 
- static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
- {
-+	u64 ts;
- 	struct scmi_xfer *xfer;
- 	struct device *dev = cinfo->dev;
- 	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
- 	struct scmi_xfers_info *minfo = &info->rx_minfo;
- 
-+	ts = ktime_get_boottime_ns();
- 	xfer = scmi_xfer_get(cinfo->handle, minfo);
- 	if (IS_ERR(xfer)) {
- 		dev_err(dev, "failed to get free message slot (%ld)\n",
-@@ -221,6 +224,8 @@ static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
- 	scmi_dump_header_dbg(dev, &xfer->hdr);
- 	info->desc->ops->fetch_notification(cinfo, info->desc->max_msg_size,
- 					    xfer);
-+	scmi_notify(cinfo->handle, xfer->hdr.protocol_id,
-+		    xfer->hdr.id, xfer->rx.buf, xfer->rx.len, ts);
- 
- 	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
- 			   xfer->hdr.protocol_id, xfer->hdr.seq,
-@@ -788,6 +793,9 @@ static int scmi_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (scmi_notification_init(handle))
-+		dev_err(dev, "SCMI Notifications NOT available.\n");
-+
- 	ret = scmi_base_protocol_init(handle);
- 	if (ret) {
- 		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
-@@ -830,6 +838,8 @@ static int scmi_remove(struct platform_device *pdev)
- 	struct scmi_info *info = platform_get_drvdata(pdev);
- 	struct idr *idr = &info->tx_idr;
- 
-+	scmi_notification_exit(&info->handle);
-+
- 	mutex_lock(&scmi_list_mutex);
- 	if (info->users)
- 		ret = -EBUSY;
--- 
-2.17.1
-
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogY2hhcmFudGU9Y29kZWF1cm9yYS5v
+cmdAbWcuY29kZWF1cm9yYS5vcmcNCj48Y2hhcmFudGU9Y29kZWF1cm9yYS5vcmdAbWcuY29kZWF1
+cm9yYS5vcmc+IE9uIEJlaGFsZiBPZiBDaGFyYW4gVGVqYQ0KPkthbGxhDQo+U2VudDogRnJpZGF5
+LCBKdW5lIDE5LCAyMDIwIDc6NTcgQU0NCj5UbzogU3VtaXQgU2Vtd2FsIDxzdW1pdC5zZW13YWxA
+bGluYXJvLm9yZz47IFJ1aGwsIE1pY2hhZWwgSg0KPjxtaWNoYWVsLmoucnVobEBpbnRlbC5jb20+
+OyBEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTTsgb3BlbiBsaXN0OkRNQQ0KPkJVRkZFUiBTSEFSSU5H
+IEZSQU1FV09SSyA8bGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnPjsgRFJJIG1haWxpbmcNCj5s
+aXN0IDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPg0KPkNjOiBMaW5hcm8gTU0gU0lH
+IDxsaW5hcm8tbW0tc2lnQGxpc3RzLmxpbmFyby5vcmc+OyBMS01MIDxsaW51eC0NCj5rZXJuZWxA
+dmdlci5rZXJuZWwub3JnPg0KPlN1YmplY3Q6IFtQQVRDSCB2Ml0gZG1hYnVmOiB1c2Ugc3Bpbmxv
+Y2sgdG8gYWNjZXNzIGRtYWJ1Zi0+bmFtZQ0KPg0KPlRoZXJlIGV4aXN0cyBhIHNsZWVwLXdoaWxl
+LWF0b21pYyBidWcgd2hpbGUgYWNjZXNzaW5nIHRoZSBkbWFidWYtPm5hbWUNCj51bmRlciBtdXRl
+eCBpbiB0aGUgZG1hYnVmZnNfZG5hbWUoKS4gVGhpcyBpcyBjYXVzZWQgZnJvbSB0aGUgU0VMaW51
+eA0KPnBlcm1pc3Npb25zIGNoZWNrcyBvbiBhIHByb2Nlc3Mgd2hlcmUgaXQgdHJpZXMgdG8gdmFs
+aWRhdGUgdGhlIGluaGVyaXRlZA0KPmZpbGVzIGZyb20gZm9yaygpIGJ5IHRyYXZlcnNpbmcgdGhl
+bSB0aHJvdWdoIGl0ZXJhdGVfZmQoKSAod2hpY2gNCj50cmF2ZXJzZSBmaWxlcyB1bmRlciBzcGlu
+X2xvY2spIGFuZCBjYWxsDQo+bWF0Y2hfZmlsZShzZWN1cml0eS9zZWxpbnV4L2hvb2tzLmMpIHdo
+ZXJlIHRoZSBwZXJtaXNzaW9uIGNoZWNrcyBoYXBwZW4uDQo+VGhpcyBhdWRpdCBpbmZvcm1hdGlv
+biBpcyBsb2dnZWQgdXNpbmcgZHVtcF9jb21tb25fYXVkaXRfZGF0YSgpIHdoZXJlIGl0DQo+Y2Fs
+bHMgZF9wYXRoKCkgdG8gZ2V0IHRoZSBmaWxlIHBhdGggbmFtZS4gSWYgdGhlIGZpbGUgY2hlY2sg
+aGFwcGVuIG9uDQo+dGhlIGRtYWJ1ZidzIGZkLCB0aGVuIGl0IGVuZHMgdXAgaW4gLT5kbWFidWZm
+c19kbmFtZSgpIGFuZCB1c2UgbXV0ZXggdG8NCj5hY2Nlc3MgZG1hYnVmLT5uYW1lLiBUaGUgZmxv
+dyB3aWxsIGJlIGxpa2UgYmVsb3c6DQo+Zmx1c2hfdW5hdXRob3JpemVkX2ZpbGVzKCkNCj4gIGl0
+ZXJhdGVfZmQoKQ0KPiAgICBzcGluX2xvY2soKSAtLT4gU3RhcnQgb2YgdGhlIGF0b21pYyBzZWN0
+aW9uLg0KPiAgICAgIG1hdGNoX2ZpbGUoKQ0KPiAgICAgICAgZmlsZV9oYXNfcGVybSgpDQo+ICAg
+ICAgICAgIGF2Y19oYXNfcGVybSgpDQo+ICAgICAgICAgICAgYXZjX2F1ZGl0KCkNCj4gICAgICAg
+ICAgICAgIHNsb3dfYXZjX2F1ZGl0KCkNCj4JICAgICAgICBjb21tb25fbHNtX2F1ZGl0KCkNCj4J
+CSAgZHVtcF9jb21tb25fYXVkaXRfZGF0YSgpDQo+CQkgICAgYXVkaXRfbG9nX2RfcGF0aCgpDQo+
+CQkgICAgICBkX3BhdGgoKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgIGRtYWJ1ZmZzX2RuYW1l
+KCkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgIG11dGV4X2xvY2soKS0tPiBTbGVlcCB3aGls
+ZSBhdG9taWMuDQo+DQo+Q2FsbCB0cmFjZSBjYXB0dXJlZCAob24gNC4xOSBrZXJuZWxzKSBpcyBi
+ZWxvdzoNCj5fX19taWdodF9zbGVlcCsweDIwNC8weDIwOA0KPl9fbWlnaHRfc2xlZXArMHg1MC8w
+eDg4DQo+X19tdXRleF9sb2NrX2NvbW1vbisweDVjLzB4MTA2OA0KPl9fbXV0ZXhfbG9ja19jb21t
+b24rMHg1Yy8weDEwNjgNCj5tdXRleF9sb2NrX25lc3RlZCsweDQwLzB4NTANCj5kbWFidWZmc19k
+bmFtZSsweGEwLzB4MTcwDQo+ZF9wYXRoKzB4ODQvMHgyOTANCj5hdWRpdF9sb2dfZF9wYXRoKzB4
+NzQvMHgxMzANCj5jb21tb25fbHNtX2F1ZGl0KzB4MzM0LzB4NmU4DQo+c2xvd19hdmNfYXVkaXQr
+MHhiOC8weGY4DQo+YXZjX2hhc19wZXJtKzB4MTU0LzB4MjE4DQo+ZmlsZV9oYXNfcGVybSsweDcw
+LzB4MTgwDQo+bWF0Y2hfZmlsZSsweDYwLzB4NzgNCj5pdGVyYXRlX2ZkKzB4MTI4LzB4MTY4DQo+
+c2VsaW51eF9icHJtX2NvbW1pdHRpbmdfY3JlZHMrMHgxNzgvMHgyNDgNCj5zZWN1cml0eV9icHJt
+X2NvbW1pdHRpbmdfY3JlZHMrMHgzMC8weDQ4DQo+aW5zdGFsbF9leGVjX2NyZWRzKzB4MWMvMHg2
+OA0KPmxvYWRfZWxmX2JpbmFyeSsweDNhNC8weDE0ZTANCj5zZWFyY2hfYmluYXJ5X2hhbmRsZXIr
+MHhiMC8weDFlMA0KPg0KPlNvLCB1c2Ugc3BpbmxvY2sgdG8gYWNjZXNzIGRtYWJ1Zi0+bmFtZSB0
+byBhdm9pZCBzbGVlcC13aGlsZS1hdG9taWMuDQo+DQo+Q2M6IDxzdGFibGVAdmdlci5rZXJuZWwu
+b3JnPiBbNS4zK10NCj5TaWduZWQtb2ZmLWJ5OiBDaGFyYW4gVGVqYSBSZWRkeSA8Y2hhcmFudGVA
+Y29kZWF1cm9yYS5vcmc+DQo+LS0tDQo+DQo+Q2hhbmdlcyBpbiBWMjogQWRkcmVzc2VkIHJldmll
+dyBjb21tZW50cyBmcm9tIFJ1aGwsIE1pY2hhZWwgSg0KPg0KPkNoYW5nZXMgaW4gVjE6IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjU1MDU1Lw0KPg0KPiBkcml2ZXJz
+L2RtYS1idWYvZG1hLWJ1Zi5jIHwgMTEgKysrKysrKy0tLS0NCj4gaW5jbHVkZS9saW51eC9kbWEt
+YnVmLmggICB8ICAxICsNCj4gMiBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDQgZGVs
+ZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hLWJ1Zi9kbWEtYnVmLmMgYi9k
+cml2ZXJzL2RtYS1idWYvZG1hLWJ1Zi5jDQo+aW5kZXggMDFjZTEyNS4uZDgxZDI5OCAxMDA2NDQN
+Cj4tLS0gYS9kcml2ZXJzL2RtYS1idWYvZG1hLWJ1Zi5jDQo+KysrIGIvZHJpdmVycy9kbWEtYnVm
+L2RtYS1idWYuYw0KPkBAIC00NSwxMCArNDUsMTAgQEAgc3RhdGljIGNoYXIgKmRtYWJ1ZmZzX2Ru
+YW1lKHN0cnVjdCBkZW50cnkgKmRlbnRyeSwNCj5jaGFyICpidWZmZXIsIGludCBidWZsZW4pDQo+
+IAlzaXplX3QgcmV0ID0gMDsNCj4NCj4gCWRtYWJ1ZiA9IGRlbnRyeS0+ZF9mc2RhdGE7DQo+LQlk
+bWFfcmVzdl9sb2NrKGRtYWJ1Zi0+cmVzdiwgTlVMTCk7DQo+KwlzcGluX2xvY2soJmRtYWJ1Zi0+
+bmFtZV9sb2NrKTsNCj4gCWlmIChkbWFidWYtPm5hbWUpDQo+IAkJcmV0ID0gc3RybGNweShuYW1l
+LCBkbWFidWYtPm5hbWUsIERNQV9CVUZfTkFNRV9MRU4pOw0KPi0JZG1hX3Jlc3ZfdW5sb2NrKGRt
+YWJ1Zi0+cmVzdik7DQo+KwlzcGluX3VubG9jaygmZG1hYnVmLT5uYW1lX2xvY2spOw0KPg0KPiAJ
+cmV0dXJuIGR5bmFtaWNfZG5hbWUoZGVudHJ5LCBidWZmZXIsIGJ1ZmxlbiwgIi8lczolcyIsDQo+
+IAkJCSAgICAgZGVudHJ5LT5kX25hbWUubmFtZSwgcmV0ID4gMCA/IG5hbWUgOiAiIik7DQo+QEAg
+LTM0MSw4ICszNDEsMTAgQEAgc3RhdGljIGxvbmcgZG1hX2J1Zl9zZXRfbmFtZShzdHJ1Y3QgZG1h
+X2J1Zg0KPipkbWFidWYsIGNvbnN0IGNoYXIgX191c2VyICpidWYpDQo+IAkJa2ZyZWUobmFtZSk7
+DQo+IAkJZ290byBvdXRfdW5sb2NrOw0KPiAJfQ0KPisJc3Bpbl9sb2NrKCZkbWFidWYtPm5hbWVf
+bG9jayk7DQo+IAlrZnJlZShkbWFidWYtPm5hbWUpOw0KPiAJZG1hYnVmLT5uYW1lID0gbmFtZTsN
+Cj4rCXNwaW5fdW5sb2NrKCZkbWFidWYtPm5hbWVfbG9jayk7DQoNCldoaWxlIHRoaXMgY29kZSBw
+YXRoIGlzIG9rLCBJIHdvdWxkIGhhdmUgc2VwYXJhdGVkIHRoZSBwcm90ZWN0aW9uIG9mIHRoZQ0K
+YXR0YWNobWVudCBsaXN0IGFuZCB0aGUgbmFtZSBtYW5pcHVsYXRpb24uDQoNCmRtYV9yZXN2X2xv
+Y2socmVzdikNCmlmICghbGlzdF9lbXB0eShhdHRhY2htZW50KQ0KCXJldCA9IC1FQlVTWQ0KZG1h
+X3Jlc3ZfdW5sb2NrKHJlc3YpDQoNCmlmIChyZXQpIHsNCglrZnJlZShuYW1lKQ0KCXJldHVybiBy
+ZXQ7DQp9DQoNCnNwaW5sb2NrKG5hbV9sb2NrKQ0KLi4uDQoNCk5lc3RpbmcgbG9ja3MgIHRoYXQg
+ZG9uJ3QgbmVlZCB0byBiZSBuZXN0ZWQgYWx3YXlzIG1ha2VzIG1lIG5lcnZvdXMNCmZvciBmdXR1
+cmUgdXNlIHRoYXQgbWlzc2VzIHRoZSBsb2NrL3VubG9jayBwYXR0ZXJuLg0KDQpIb3dldmVyLCB0
+aGlzIGxvb2tzIHJlYXNvbmFibGUuDQoNCldpdGggdGhpcyBjdXJyZW50IGNvZGUsIG9yIGlmIHlv
+dSB1cGRhdGUgdG8gdGhlIGFib3ZlIHBhdHRlcm46DQoNClJldmlld2VkLWJ5OiBNaWNoYWVsIEou
+IFJ1aGwgPG1pY2hhZWwuai5ydWhsQGludGVsLmNvbT4NCg0KTWlrZQ0KDQoNCj4gb3V0X3VubG9j
+azoNCj4gCWRtYV9yZXN2X3VubG9jayhkbWFidWYtPnJlc3YpOw0KPkBAIC00MDUsMTAgKzQwNywx
+MCBAQCBzdGF0aWMgdm9pZCBkbWFfYnVmX3Nob3dfZmRpbmZvKHN0cnVjdCBzZXFfZmlsZQ0KPipt
+LCBzdHJ1Y3QgZmlsZSAqZmlsZSkNCj4gCS8qIERvbid0IGNvdW50IHRoZSB0ZW1wb3JhcnkgcmVm
+ZXJlbmNlIHRha2VuIGluc2lkZSBwcm9jZnMgc2VxX3Nob3cNCj4qLw0KPiAJc2VxX3ByaW50Ziht
+LCAiY291bnQ6XHQlbGRcbiIsIGZpbGVfY291bnQoZG1hYnVmLT5maWxlKSAtIDEpOw0KPiAJc2Vx
+X3ByaW50ZihtLCAiZXhwX25hbWU6XHQlc1xuIiwgZG1hYnVmLT5leHBfbmFtZSk7DQo+LQlkbWFf
+cmVzdl9sb2NrKGRtYWJ1Zi0+cmVzdiwgTlVMTCk7DQo+KwlzcGluX2xvY2soJmRtYWJ1Zi0+bmFt
+ZV9sb2NrKTsNCj4gCWlmIChkbWFidWYtPm5hbWUpDQo+IAkJc2VxX3ByaW50ZihtLCAibmFtZTpc
+dCVzXG4iLCBkbWFidWYtPm5hbWUpOw0KPi0JZG1hX3Jlc3ZfdW5sb2NrKGRtYWJ1Zi0+cmVzdik7
+DQo+KwlzcGluX3VubG9jaygmZG1hYnVmLT5uYW1lX2xvY2spOw0KPiB9DQo+DQo+IHN0YXRpYyBj
+b25zdCBzdHJ1Y3QgZmlsZV9vcGVyYXRpb25zIGRtYV9idWZfZm9wcyA9IHsNCj5AQCAtNTQ2LDYg
+KzU0OCw3IEBAIHN0cnVjdCBkbWFfYnVmICpkbWFfYnVmX2V4cG9ydChjb25zdCBzdHJ1Y3QNCj5k
+bWFfYnVmX2V4cG9ydF9pbmZvICpleHBfaW5mbykNCj4gCWRtYWJ1Zi0+c2l6ZSA9IGV4cF9pbmZv
+LT5zaXplOw0KPiAJZG1hYnVmLT5leHBfbmFtZSA9IGV4cF9pbmZvLT5leHBfbmFtZTsNCj4gCWRt
+YWJ1Zi0+b3duZXIgPSBleHBfaW5mby0+b3duZXI7DQo+KwlzcGluX2xvY2tfaW5pdCgmZG1hYnVm
+LT5uYW1lX2xvY2spOw0KPiAJaW5pdF93YWl0cXVldWVfaGVhZCgmZG1hYnVmLT5wb2xsKTsNCj4g
+CWRtYWJ1Zi0+Y2JfZXhjbC5wb2xsID0gZG1hYnVmLT5jYl9zaGFyZWQucG9sbCA9ICZkbWFidWYt
+PnBvbGw7DQo+IAlkbWFidWYtPmNiX2V4Y2wuYWN0aXZlID0gZG1hYnVmLT5jYl9zaGFyZWQuYWN0
+aXZlID0gMDsNCj5kaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9kbWEtYnVmLmggYi9pbmNsdWRl
+L2xpbnV4L2RtYS1idWYuaA0KPmluZGV4IGFiMGMxNTYuLjkzMTA4ZmQgMTAwNjQ0DQo+LS0tIGEv
+aW5jbHVkZS9saW51eC9kbWEtYnVmLmgNCj4rKysgYi9pbmNsdWRlL2xpbnV4L2RtYS1idWYuaA0K
+PkBAIC0zMTEsNiArMzExLDcgQEAgc3RydWN0IGRtYV9idWYgew0KPiAJdm9pZCAqdm1hcF9wdHI7
+DQo+IAljb25zdCBjaGFyICpleHBfbmFtZTsNCj4gCWNvbnN0IGNoYXIgKm5hbWU7DQo+KwlzcGlu
+bG9ja190IG5hbWVfbG9jazsNCj4gCXN0cnVjdCBtb2R1bGUgKm93bmVyOw0KPiAJc3RydWN0IGxp
+c3RfaGVhZCBsaXN0X25vZGU7DQo+IAl2b2lkICpwcml2Ow0KPi0tDQo+VGhlIFF1YWxjb21tIElu
+bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYQ0KPkZv
+cnVtLCBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0DQo=
