@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6510FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9B421852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435BA206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579436;
-	bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
+	s=default; t=1592579440;
+	bh=3J//wm36//AEStju1ppLMr4exvv9fdRyG83XN1eX8ck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w+V7Kxho81DWa9wmmvrwyggkpM+TXASqWnbcqOhoznbTogF5AdN4ecSBjDGRlW/47
-	 EOGnJZvWdww2yTuoPgJxQWz8KfTpYx9fndOMQUTTEZOu+iH3HygxqC84E+L3ozjIaY
-	 pUhus5/d+0zARHV0KqadqWA1oIHR4rtxBquROyUw=
+	b=BJYWanyZfPN8ujndz/uRWe6UCnhxa+COL2PRFx8obdy9ynFDigYlbtpPxHLqUag4v
+	 bk5FgKmmIKTRqmnpYPPBTpijKetuRLcRtIK5mOhbRNk2cM4WprbTqv407J6v5tJNo5
+	 /V+9FFniN1fkhFtaLoSwXHy4AQ2g3A3y3rDYqQgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392032AbgFSPKe (ORCPT
+        id S2403784AbgFSPKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392005AbgFSPKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:17 -0400
+        id S2388839AbgFSPKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A8F206FA;
-        Fri, 19 Jun 2020 15:10:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B9A20734;
+        Fri, 19 Jun 2020 15:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579417;
-        bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
+        s=default; t=1592579419;
+        bh=3J//wm36//AEStju1ppLMr4exvv9fdRyG83XN1eX8ck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eop+5ZteeRSkASjEygUO0ukQEp4qxVH/BMQJJCnHYZHtcrw2yXxqfwaTChdOigXxn
-         hoLXVq5P4xmmEt/WlHTxVWRta3LoilBtihYfYYUtkqvU3ILF3TI2cbFFgxrCP7AmwB
-         5mbBJdWy0T82bXHFjFd3LA6iJkTMeKUDzPlwAkKM=
+        b=Kok5cJU0/ZzmRC9/h/LgyF5td8OxZNRNiCZBCUYhPd5BA2rxDOVIN/YDAq85bhGZZ
+         Xgjt+Y7VHh4gLvslQkFD7L6ga83UQAjydZv6NO4LyOEyK0IAGHuFbpgacWBLzIYnyt
+         JHD9xe0gleE3YV7zP892s/LgMGiadofUwVXFGINo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org,
+        Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ben Segall <bsegall@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/261] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
-Date:   Fri, 19 Jun 2020 16:31:39 +0200
-Message-Id: <20200619141654.102091639@linuxfoundation.org>
+Subject: [PATCH 5.4 121/261] sched: Defend cfs and rt bandwidth quota against overflow
+Date:   Fri, 19 Jun 2020 16:32:12 +0200
+Message-Id: <20200619141655.669305317@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,54 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Huaixin Chang <changhuaixin@linux.alibaba.com>
 
-[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
+[ Upstream commit d505b8af58912ae1e1a211fabc9995b19bd40828 ]
 
-The log_addrs->log_addr_type[i] value is a u8 which is controlled by
-the user and comes from the ioctl.  If it's over 31 then that results in
-undefined behavior (shift wrapping) and that leads to a Smatch static
-checker warning.  We already cap the value later so we can silence the
-warning just by re-ordering the existing checks.
+When users write some huge number into cpu.cfs_quota_us or
+cpu.rt_runtime_us, overflow might happen during to_ratio() shifts of
+schedulable checks.
 
-I think the UBSan checker will also catch this bug at runtime and
-generate a warning.  But otherwise the bug is harmless.
+to_ratio() could be altered to avoid unnecessary internal overflow, but
+min_cfs_quota_period is less than 1 << BW_SHIFT, so a cutoff would still
+be needed. Set a cap MAX_BW for cfs_quota_us and rt_runtime_us to
+prevent overflow.
 
-Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Link: https://lkml.kernel.org/r/20200425105248.60093-1-changhuaixin@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-adap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/sched/core.c  |  8 ++++++++
+ kernel/sched/rt.c    | 12 +++++++++++-
+ kernel/sched/sched.h |  2 ++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index b14c09cd9593..06383b26712b 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1732,6 +1732,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 		unsigned j;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4874e1468279..361cbc2dc966 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7374,6 +7374,8 @@ static DEFINE_MUTEX(cfs_constraints_mutex);
  
- 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
-+		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
-+			dprintk(1, "unknown logical address type\n");
-+			return -EINVAL;
-+		}
- 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
- 			dprintk(1, "duplicate logical address type\n");
- 			return -EINVAL;
-@@ -1752,10 +1756,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 			dprintk(1, "invalid primary device type\n");
- 			return -EINVAL;
- 		}
--		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
--			dprintk(1, "unknown logical address type\n");
--			return -EINVAL;
--		}
- 		for (j = 0; j < feature_sz; j++) {
- 			if ((features[j] & 0x80) == 0) {
- 				if (op_is_dev_features)
+ const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
+ static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
++/* More than 203 days if BW_SHIFT equals 20. */
++static const u64 max_cfs_runtime = MAX_BW * NSEC_PER_USEC;
+ 
+ static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
+ 
+@@ -7401,6 +7403,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
+ 	if (period > max_cfs_quota_period)
+ 		return -EINVAL;
+ 
++	/*
++	 * Bound quota to defend quota against overflow during bandwidth shift.
++	 */
++	if (quota != RUNTIME_INF && quota > max_cfs_runtime)
++		return -EINVAL;
++
+ 	/*
+ 	 * Prevent race between setting of cfs_rq->runtime_enabled and
+ 	 * unthrottle_offline_cfs_rqs().
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 7bf917e4d63a..5b04bba4500d 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -9,6 +9,8 @@
+ 
+ int sched_rr_timeslice = RR_TIMESLICE;
+ int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
++/* More than 4 hours if BW_SHIFT equals 20. */
++static const u64 max_rt_runtime = MAX_BW;
+ 
+ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
+ 
+@@ -2513,6 +2515,12 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
+ 	if (rt_period == 0)
+ 		return -EINVAL;
+ 
++	/*
++	 * Bound quota to defend quota against overflow during bandwidth shift.
++	 */
++	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
++		return -EINVAL;
++
+ 	mutex_lock(&rt_constraints_mutex);
+ 	read_lock(&tasklist_lock);
+ 	err = __rt_schedulable(tg, rt_period, rt_runtime);
+@@ -2634,7 +2642,9 @@ static int sched_rt_global_validate(void)
+ 		return -EINVAL;
+ 
+ 	if ((sysctl_sched_rt_runtime != RUNTIME_INF) &&
+-		(sysctl_sched_rt_runtime > sysctl_sched_rt_period))
++		((sysctl_sched_rt_runtime > sysctl_sched_rt_period) ||
++		 ((u64)sysctl_sched_rt_runtime *
++			NSEC_PER_USEC > max_rt_runtime)))
+ 		return -EINVAL;
+ 
+ 	return 0;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c7e7481968bf..570659f1c6e2 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1889,6 +1889,8 @@ extern void init_dl_rq_bw_ratio(struct dl_rq *dl_rq);
+ #define BW_SHIFT		20
+ #define BW_UNIT			(1 << BW_SHIFT)
+ #define RATIO_SHIFT		8
++#define MAX_BW_BITS		(64 - BW_SHIFT)
++#define MAX_BW			((1ULL << MAX_BW_BITS) - 1)
+ unsigned long to_ratio(u64 period, u64 runtime);
+ 
+ extern void init_entity_runnable_average(struct sched_entity *se);
 -- 
 2.25.1
 
