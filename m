@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5098FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D61DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2579821582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E0A2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580273;
-	bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
+	s=default; t=1592580279;
+	bh=oka/rNmtiRJwDwVogsEa+EcBiai5h5lBqQBMHdewr8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGG7fYImEhBrKL8Oy2wMmCiZ/y0NSZKcpXyoLlcyvoVFZVJ2l2nIA8vrp9ud41Bwm
-	 CILXhI9Rjnl31jSSy+/PA+gKc6+o0I5DkCSIwubWX5El+JtJ/4hixtztcqTga8eFnH
-	 cw7mjzjRjvS6VU9+KmcHh3gREbA42NqOzfWi8RxU=
+	b=ANrOjvCqk/5fhVnxIGTYmdNgRAWXJHMXwwCxeTCJDbd8Zn/Nd3o+bopQkvcloFMW2
+	 u9mQuVqxLDbzjgKSIFe+H3PAC/RHn+y1YkNfvT6guX6tJE8IXFaG//L8b5nmoaxiFj
+	 +opxXNlYWGz7SbMK/o0vvh1SbBwyOVAE7oCKQG2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393282AbgFSPYc (ORCPT
+        id S2393290AbgFSPYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:24:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392824AbgFSPVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:15 -0400
+        id S2392844AbgFSPVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3D520706;
-        Fri, 19 Jun 2020 15:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD55521548;
+        Fri, 19 Jun 2020 15:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580074;
-        bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
+        s=default; t=1592580082;
+        bh=oka/rNmtiRJwDwVogsEa+EcBiai5h5lBqQBMHdewr8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDu1eD76p4eOLVHwhhqR4Hn9407ceJKCVigrdcQzadJc5erVfQ7lTmCpbBhHTX96l
-         CINRZ1WnEuRmS+wbOnZB0rUdjKVd4M06AaSIDvBN72MBWp4Fr/jk4Ohqo1WcEaPcL2
-         /RrEPIScMchzrXBDelcKhkgM3WfRjYzX3ZsMZbEI=
+        b=ECnz0empwOUoVz2Jvc/jRoz3S2tC/JzTuhWOIrPwkcOWRo3v4QcRTCIcV9oWdhQK8
+         WkKrL3JA5re3FmSuwXXdn3vbrYJwmNJ07c68SE1pB8APhy0rtf9Dsd2UUa29mtUGMi
+         LrYL+rDYngOODoQ6WxMwHLpg7bwYzDBd3pIN8nUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Sriram R <srirrama@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 082/376] ubsan: entirely disable alignment checks under UBSAN_TRAP
-Date:   Fri, 19 Jun 2020 16:30:00 +0200
-Message-Id: <20200619141714.225619751@linuxfoundation.org>
+Subject: [PATCH 5.7 085/376] ath11k: Avoid mgmt tx count underflow
+Date:   Fri, 19 Jun 2020 16:30:03 +0200
+Message-Id: <20200619141714.368063613@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -65,46 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sriram R <srirrama@codeaurora.org>
 
-[ Upstream commit 9380ce246a052a1e00121cd480028b6907aeae38 ]
+[ Upstream commit 800113ff4b1d277c2b66ffc04d4d38f202a0d187 ]
 
-Commit 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under
-COMPILE_TEST") tried to fix the pathological results of UBSAN_ALIGNMENT
-with UBSAN_TRAP (which objtool would rightly scream about), but it made
-an assumption about how COMPILE_TEST gets set (it is not set for
-randconfig).  As a result, we need a bigger hammer here: just don't
-allow the alignment checks with the trap mode.
+The mgmt tx count reference is incremented/decremented on every mgmt tx and on
+tx completion event from firmware.
+In case of an unexpected mgmt tx completion event from firmware,
+the counter would underflow. Avoid this by decrementing
+only when the tx count is greater than 0.
 
-Fixes: 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under COMPILE_TEST")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Elena Petrova <lenaptr@google.com>
-Link: http://lkml.kernel.org/r/202005291236.000FCB6@keescook
-Link: https://lore.kernel.org/lkml/742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org/
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sriram R <srirrama@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585567028-9242-1-git-send-email-srirrama@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Kconfig.ubsan | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath11k/wmi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 929211039bac..27bcc2568c95 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
- config UBSAN_ALIGNMENT
- 	bool "Enable checks for pointers alignment"
- 	default !HAVE_EFFICIENT_UNALIGNED_ACCESS
--	depends on !X86 || !COMPILE_TEST
-+	depends on !UBSAN_TRAP
- 	help
- 	  This option enables the check of unaligned memory accesses.
- 	  Enabling this option on architectures that support unaligned
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
+index 6fec62846279..73beca6d6b5f 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.c
++++ b/drivers/net/wireless/ath/ath11k/wmi.c
+@@ -3740,8 +3740,9 @@ static int wmi_process_mgmt_tx_comp(struct ath11k *ar, u32 desc_id,
+ 
+ 	ieee80211_tx_status_irqsafe(ar->hw, msdu);
+ 
+-	WARN_ON_ONCE(atomic_read(&ar->num_pending_mgmt_tx) == 0);
+-	atomic_dec(&ar->num_pending_mgmt_tx);
++	/* WARN when we received this event without doing any mgmt tx */
++	if (atomic_dec_if_positive(&ar->num_pending_mgmt_tx) < 0)
++		WARN_ON_ONCE(1);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
