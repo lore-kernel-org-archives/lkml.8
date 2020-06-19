@@ -2,462 +2,193 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD583C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64319C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A162321D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367D321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Q/vQ2c/R";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Mf+hxfgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgFSW5Z (ORCPT
+        id S1730109AbgFSW5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:57:25 -0400
-Received: from smtp.uniroma2.it ([160.80.6.16]:33334 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbgFSW4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:56:48 -0400
-Received: from localhost.localdomain ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05JMuRJF014086
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 20 Jun 2020 00:56:29 +0200
-From:   Andrea Mayer <andrea.mayer@uniroma2.it>
-To:     David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shrijeet Mukherjee <shrijeet@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Donald Sharp <sharpd@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Dinesh Dutt <didutt@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stefano Salsano <stefano.salsano@uniroma2.it>,
-        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
-        Ahmed Abdelsalam <ahabdels@gmail.com>,
-        Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: [net-next,v1,5/5] selftests: add selftest for the VRF strict mode
-Date:   Sat, 20 Jun 2020 00:54:47 +0200
-Message-Id: <20200619225447.1445-6-andrea.mayer@uniroma2.it>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
-References: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
+        Fri, 19 Jun 2020 18:57:32 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50420 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730021AbgFSW5W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 18:57:22 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JMsCir023116;
+        Fri, 19 Jun 2020 15:57:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=6hIjoTmd1LM1QJygvVjlWgxEyBWHDQEv/FmlOzrT8l0=;
+ b=Q/vQ2c/RF6mP/yQHspRqKRE2mwkC5yoNwnUKnMkETDqXimHXup0ypT2DU9AP2jsCpPA/
+ QHp4ColJXxhvOTKg2/r0v+KAeq5S8+bq3GQpXCSzCZfrH4Bth1T+xi8JJe5g7+ic9vmN
+ Oa84CD16mp7aO33Wv/SMyweyAoSZW08LK1Q= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31rwgsbys8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 19 Jun 2020 15:57:09 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 19 Jun 2020 15:57:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gx7jioYzCOyblXSZzj2ngM3MCb2JlPK7BCKNSULM1276O3MRKQ29nSb9skR/5B2D0M2GHnWfRx7TJaBp5mG18fzog/04esm5gwqNddK8wp1zCGB/zIgT14H98xdVMeu9aQeimia9B3miLOV8lvAmtek0FoyNCu7OdULa4MAmtlCdH5feIrgNQhz/IsEkULPYmj6HfVqgJF30a33T5rbdl44JanTZI8lJ5f+VRkBMQdLWW+Ug7QVjsNa3rr1Gwig6kwdPZnMhTc+0KVnkwwVV0sCzPSORAccaSf5bbV+JdJ5vpouNufY8aTYmIz+eFwRx16UvnII7E8VliQCI4v8H2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hIjoTmd1LM1QJygvVjlWgxEyBWHDQEv/FmlOzrT8l0=;
+ b=SGnCLgMbLLIBAFcjRfROTyVmQM2pXxoQxjW1S0EdnCrQFkBqpzW4/jBXv9el5GJvrVWG7+fSHXFYrkryTOa2Zys7dcFqA5cOWzgVNYkULoTS3/r8gpddY04b61rAp3kY5uLj4gH0pOFv+FeIOqQUg8ZxW2mt/tDrTgsc60VXxG/wJ4iUjx/L/KIM1bOklt9SfSdiiAvtcUMrBiaVJsIyzcb+u3dYeeXBpRTCGL6Ua9EXVaVdu8ldLvhElsNX9bvA+WM7ma/PIQPbgi8Hl5VqxUgkHhT3bat6gZJmkQ1f7YVRzcaHfKY5fRJHmM7XTymexQKz6a84uhyhw+ZsyZe7lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hIjoTmd1LM1QJygvVjlWgxEyBWHDQEv/FmlOzrT8l0=;
+ b=Mf+hxfgVfve//bOFUBOeJJDmwE93fD6VkvMOzHgPgmDCQ70ygyXV11Yaz0yOqT+Z0v6VDvkL8warf79hF/vTdEyVlFdqcYsvvnmiryxg8ceP9X+Qc4wmshIlcyRJqx3gDX/bwrzXNnOl685ac8yHt7XkGedPv/NWSGIRN4zxOro=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3144.namprd15.prod.outlook.com (2603:10b6:a03:fe::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
+ 2020 22:57:07 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 22:57:07 +0000
+Date:   Fri, 19 Jun 2020 15:57:04 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     David Rientjes <rientjes@google.com>
+CC:     Andrea Arcangeli <aarcange@redhat.com>,
+        Yang Shi <shy828301@gmail.com>,
+        <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: kernel BUG at mm/huge_memory.c:2613!
+Message-ID: <20200619225704.GC237539@carbon.dhcp.thefacebook.com>
+References: <20200619001938.GA135965@carbon.dhcp.thefacebook.com>
+ <CAHbLzkrDcn-GQOrAM=m7+2g5_J6obsz4K50Oqb-1RD5p1iWTPQ@mail.gmail.com>
+ <20200619011449.GC135965@carbon.dhcp.thefacebook.com>
+ <20200619024026.GB21081@redhat.com>
+ <20200619185540.GB217189@carbon.lan>
+ <alpine.DEB.2.22.394.2006191354080.26224@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2006191354080.26224@chino.kir.corp.google.com>
+X-ClientProxiedBy: BY5PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::35) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:a2a9) by BY5PR03CA0025.namprd03.prod.outlook.com (2603:10b6:a03:1e0::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23 via Frontend Transport; Fri, 19 Jun 2020 22:57:06 +0000
+X-Originating-IP: [2620:10d:c090:400::5:a2a9]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aae7227b-684a-40b9-9892-08d814a4175b
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3144:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3144A8139B66B907FE2D1FCBBE980@BYAPR15MB3144.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: R/G/8oEb7vQBmOB64xLWRxv50peqSOFGnv32FrbJ+Nnoh78GcFJclw5GkEZDLzeCagxIJgYEyZ9cuvOdgumft6u/wwd4EfdWj/0/VQwI5fPNF/5oe5n2r7oXsia+f4tqyzVD5xF+yk3MU4PLORZjbLvB2qXCk7QR54VDBrgKByXqD7yGu1Ka4YC/UkartCMtR/jayT9rLWWN1Mn23JrWRCceX29rS6dEZhiAw4pVjR/7fsfdIGDm5ljsHlSTTbJadTDK6uttEYvf2jMHqxyF86dUwdP1RlTMHootpk3qz7asfBqPXwNwEnrmfQcJQh0II6Xlyfr5IaPqBGROPUw2U8Ujm8iZxh+cHOBXDdIlq85Nt6ITKIcL/RYdsjdxguft
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(366004)(39860400002)(396003)(2906002)(86362001)(66946007)(1076003)(66476007)(66556008)(16526019)(478600001)(7416002)(186003)(54906003)(316002)(9686003)(8936002)(55016002)(7696005)(52116002)(8676002)(6916009)(33656002)(4326008)(5660300002)(83380400001)(6506007)(14583001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: WmoV5lzelW17iBZ0E+/nh17IGMz37BEc0pLNVC6roRFHK56mt3f6Ju8LGZWPuljrzuVaaDBpoIrUbeltKqJQEtrdMKYnClUisc3Sl0SMMuIsNg/xgwPGW9dvIg2u0eyLoa8jZZwCqJ15tuihzPB7dPdrq8SQckbcO+O2BA4cl2mxS464W0vfm8nzkAMRLYZLaIx8tQ856fXX9KaqUUyi4YC0zYxU0kAIbfB9UnU1koTnBDdw9i7YFbxG2uyFFkMvyeUQjrJlrB3RKN3akLs6vfT19bIjYS6kFRJMiZ3NICbv8zneZ/fyuCxvO3kCyzZ0qJlRzN8LmVvzlgeQAMH/Imjv0hgC3m62HfCGFsE0JK6ZXf3//Bk8YjDSCQLWDGVDT4I6JvA/5pmA73y3tz9LbZvVWsh0qnhLDZx8o680c76X/Phztpga4MCcOZz9oZwMsi8jqwAAxegn1K33i2HLxPrbE6TfzzG+PSsLqsAbfwxq31LWAN5KLke3WF9YxulNkRpRHZaEKxcgeDbQUJHh6w==
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae7227b-684a-40b9-9892-08d814a4175b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 22:57:07.3128
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F8C7lOXC5CwRSQfGMtw2CoZOy7+D/iSLpeWlT3eNLDrdmR1AYmZ7/usSg/PxOkXk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3144
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_22:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ cotscore=-2147483648 spamscore=0 suspectscore=1 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ adultscore=0 mlxlogscore=999 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006190160
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new strict mode functionality is tested in different configurations and
-on different network namespaces.
+On Fri, Jun 19, 2020 at 01:56:28PM -0700, David Rientjes wrote:
+> On Fri, 19 Jun 2020, Roman Gushchin wrote:
+> 
+> > [   40.287524] BUG: unable to handle page fault for address: ffffa77b833df000
+> > [   40.287529] #PF: supervisor write access in kernel mode
+> > [   40.287531] #PF: error_code(0x000b) - reserved bit violation
+> > [   40.287532] PGD 40d14e067 P4D 40d14e067 PUD 40d14f067 PMD 3ec54d067
+> > PTE 80001688033d9163
+> > [   40.287538] Oops: 000b [#2] SMP NOPTI
+> > [   40.287542] CPU: 9 PID: 1986 Comm: pulseaudio Tainted: G      D
+> >       5.8.0-rc1+ #697
+> > [   40.287544] Hardware name: Gigabyte Technology Co., Ltd.
+> > AB350-Gaming/AB350-Gaming-CF, BIOS F25 01/16/2019
+> > [   40.287550] RIP: 0010:__memset+0x24/0x30
+> > [   40.287553] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89
+> > d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48
+> > 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89
+> > d1 f3
+> > [   40.287556] RSP: 0018:ffffa77b827a7e08 EFLAGS: 00010216
+> > [   40.287558] RAX: 0000000000000000 RBX: ffff90f77dced800 RCX: 00000000000008a0
+> > [   40.287560] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa77b833df000
+> > [   40.287561] RBP: ffff90f7898c7000 R08: ffff90f78c507768 R09: ffffa77b833df000
+> > [   40.287563] R10: ffffa77b833df000 R11: ffff90f7839f2d40 R12: 0000000000000000
+> > [   40.287564] R13: ffff90f76a802e00 R14: ffffffffc0cb8880 R15: ffff90f770f4e700
+> > [   40.287567] FS:  00007f3d8e8df880(0000) GS:ffff90f78ee40000(0000)
+> > knlGS:0000000000000000
+> > [   40.287569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   40.287570] CR2: ffffa77b833df000 CR3: 00000003fa556000 CR4: 00000000003406e0
+> > [   40.287572] Call Trace:
+> > [   40.287584]  snd_pcm_hw_params+0x3fd/0x490 [snd_pcm]
+> > [   40.287593]  snd_pcm_common_ioctl+0x1c5/0x1110 [snd_pcm]
+> > [   40.287601]  ? snd_pcm_info_user+0x64/0x80 [snd_pcm]
+> > [   40.287608]  snd_pcm_ioctl+0x23/0x30 [snd_pcm]
+> > [   40.287613]  ksys_ioctl+0x82/0xc0
+> > [   40.287617]  __x64_sys_ioctl+0x16/0x20
+> > [   40.287622]  do_syscall_64+0x4d/0x90
+> > [   40.287627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Hi Roman,
+> 
+> If you have CONFIG_AMD_MEM_ENCRYPT set, this should be resolved by
+> 
+> commit dbed452a078d56bc7f1abecc3edd6a75e8e4484e
+> Author: David Rientjes <rientjes@google.com>
+> Date:   Thu Jun 11 00:25:57 2020 -0700
+> 
+>     dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL
+> 
+> Or you might want to wait for 5.8-rc2 instead which includes this fix.
+> 
 
-Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
----
- .../selftests/net/vrf_strict_mode_test.sh     | 390 ++++++++++++++++++
- 1 file changed, 390 insertions(+)
- create mode 100755 tools/testing/selftests/net/vrf_strict_mode_test.sh
+Hello, David!
 
-diff --git a/tools/testing/selftests/net/vrf_strict_mode_test.sh b/tools/testing/selftests/net/vrf_strict_mode_test.sh
-new file mode 100755
-index 000000000000..5274f4a1fba1
---- /dev/null
-+++ b/tools/testing/selftests/net/vrf_strict_mode_test.sh
-@@ -0,0 +1,390 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# This test is designed for testing the new VRF strict_mode functionality.
-+
-+ret=0
-+
-+# identifies the "init" network namespace which is often called root network
-+# namespace.
-+INIT_NETNS_NAME="init"
-+
-+PAUSE_ON_FAIL=${PAUSE_ON_FAIL:=no}
-+
-+log_test()
-+{
-+	local rc=$1
-+	local expected=$2
-+	local msg="$3"
-+
-+	if [ ${rc} -eq ${expected} ]; then
-+		nsuccess=$((nsuccess+1))
-+		printf "\n    TEST: %-60s  [ OK ]\n" "${msg}"
-+	else
-+		ret=1
-+		nfail=$((nfail+1))
-+		printf "\n    TEST: %-60s  [FAIL]\n" "${msg}"
-+		if [ "${PAUSE_ON_FAIL}" = "yes" ]; then
-+			echo
-+			echo "hit enter to continue, 'q' to quit"
-+			read a
-+			[ "$a" = "q" ] && exit 1
-+		fi
-+	fi
-+}
-+
-+print_log_test_results()
-+{
-+	if [ "$TESTS" != "none" ]; then
-+		printf "\nTests passed: %3d\n" ${nsuccess}
-+		printf "Tests failed: %3d\n"   ${nfail}
-+	fi
-+}
-+
-+log_section()
-+{
-+	echo
-+	echo "################################################################################"
-+	echo "TEST SECTION: $*"
-+	echo "################################################################################"
-+}
-+
-+ip_expand_args()
-+{
-+	local nsname=$1
-+	local nsarg=""
-+
-+	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
-+		nsarg="-netns ${nsname}"
-+	fi
-+
-+	echo "${nsarg}"
-+}
-+
-+vrf_count()
-+{
-+	local nsname=$1
-+	local nsarg="$(ip_expand_args ${nsname})"
-+
-+	ip ${nsarg} -o link show type vrf | wc -l
-+}
-+
-+count_vrf_by_table_id()
-+{
-+	local nsname=$1
-+	local tableid=$2
-+	local nsarg="$(ip_expand_args ${nsname})"
-+
-+	ip ${nsarg} -d -o link show type vrf | grep "table ${tableid}" | wc -l
-+}
-+
-+add_vrf()
-+{
-+	local nsname=$1
-+	local vrfname=$2
-+	local vrftable=$3
-+	local nsarg="$(ip_expand_args ${nsname})"
-+
-+	ip ${nsarg} link add ${vrfname} type vrf table ${vrftable} &>/dev/null
-+}
-+
-+add_vrf_and_check()
-+{
-+	local nsname=$1
-+	local vrfname=$2
-+	local vrftable=$3
-+	local cnt
-+	local rc
-+
-+	add_vrf ${nsname} ${vrfname} ${vrftable}; rc=$?
-+
-+	cnt=$(count_vrf_by_table_id ${nsname} ${vrftable})
-+
-+	log_test ${rc} 0 "${nsname}: add vrf ${vrfname}, ${cnt} vrfs for table ${vrftable}"
-+}
-+
-+add_vrf_and_check_fail()
-+{
-+	local nsname=$1
-+	local vrfname=$2
-+	local vrftable=$3
-+	local cnt
-+	local rc
-+
-+	add_vrf ${nsname} ${vrfname} ${vrftable}; rc=$?
-+
-+	cnt=$(count_vrf_by_table_id ${nsname} ${vrftable})
-+
-+	log_test ${rc} 2 "${nsname}: CANNOT add vrf ${vrfname}, ${cnt} vrfs for table ${vrftable}"
-+}
-+
-+del_vrf_and_check()
-+{
-+	local nsname=$1
-+	local vrfname=$2
-+	local nsarg="$(ip_expand_args ${nsname})"
-+
-+	ip ${nsarg} link del ${vrfname}
-+	log_test $? 0 "${nsname}: remove vrf ${vrfname}"
-+}
-+
-+config_vrf_and_check()
-+{
-+	local nsname=$1
-+	local addr=$2
-+	local vrfname=$3
-+	local nsarg="$(ip_expand_args ${nsname})"
-+
-+	ip ${nsarg} link set dev ${vrfname} up && \
-+		ip ${nsarg} addr add ${addr} dev ${vrfname}
-+	log_test $? 0 "${nsname}: vrf ${vrfname} up, addr ${addr}"
-+}
-+
-+read_strict_mode()
-+{
-+	local nsname=$1
-+	local rval
-+	local rc=0
-+	local nsexec=""
-+
-+	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
-+		# a custom network namespace is provided
-+		nsexec="ip netns exec ${nsname}"
-+	fi
-+
-+	rval="$(${nsexec} bash -c "cat /proc/sys/net/vrf/strict_mode" | \
-+		grep -E "^[0-1]$")" &> /dev/null
-+	if [ $? -ne 0 ]; then
-+		# set errors
-+		rval=255
-+		rc=1
-+	fi
-+
-+	# on success, rval can be only 0 or 1; on error, rval is equal to 255
-+	echo ${rval}
-+	return ${rc}
-+}
-+
-+read_strict_mode_compare_and_check()
-+{
-+	local nsname=$1
-+	local expected=$2
-+	local res
-+
-+	res="$(read_strict_mode ${nsname})"
-+	log_test ${res} ${expected} "${nsname}: check strict_mode=${res}"
-+}
-+
-+set_strict_mode()
-+{
-+	local nsname=$1
-+	local val=$2
-+	local nsexec=""
-+
-+	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
-+		# a custom network namespace is provided
-+		nsexec="ip netns exec ${nsname}"
-+	fi
-+
-+	${nsexec} bash -c "echo ${val} >/proc/sys/net/vrf/strict_mode" &>/dev/null
-+}
-+
-+enable_strict_mode()
-+{
-+	local nsname=$1
-+
-+	set_strict_mode ${nsname} 1
-+}
-+
-+disable_strict_mode()
-+{
-+	local nsname=$1
-+
-+	set_strict_mode ${nsname} 0
-+}
-+
-+disable_strict_mode_and_check()
-+{
-+	local nsname=$1
-+
-+	disable_strict_mode ${nsname}
-+	log_test $? 0 "${nsname}: disable strict_mode (=0)"
-+}
-+
-+enable_strict_mode_and_check()
-+{
-+	local nsname=$1
-+
-+	enable_strict_mode ${nsname}
-+	log_test $? 0 "${nsname}: enable strict_mode (=1)"
-+}
-+
-+enable_strict_mode_and_check_fail()
-+{
-+	local nsname=$1
-+
-+	enable_strict_mode ${nsname}
-+	log_test $? 1 "${nsname}: CANNOT enable strict_mode"
-+}
-+
-+strict_mode_check_default()
-+{
-+	local nsname=$1
-+	local strictmode
-+	local vrfcnt
-+
-+	vrfcnt=$(vrf_count ${nsname})
-+	strictmode=$(read_strict_mode ${nsname})
-+	log_test ${strictmode} 0 "${nsname}: strict_mode=0 by default, ${vrfcnt} vrfs"
-+}
-+
-+setup()
-+{
-+	modprobe vrf
-+
-+	ip netns add testns
-+	ip netns exec testns ip link set lo up
-+}
-+
-+cleanup()
-+{
-+	ip netns del testns 2>/dev/null
-+
-+	ip link del vrf100 2>/dev/null
-+	ip link del vrf101 2>/dev/null
-+	ip link del vrf102 2>/dev/null
-+
-+	echo 0 >/proc/sys/net/vrf/strict_mode 2>/dev/null
-+}
-+
-+vrf_strict_mode_tests_init()
-+{
-+	vrf_strict_mode_check_support init
-+
-+	strict_mode_check_default init
-+
-+	add_vrf_and_check init vrf100 100
-+	config_vrf_and_check init 172.16.100.1/24 vrf100
-+
-+	enable_strict_mode_and_check init
-+
-+	add_vrf_and_check_fail init vrf101 100
-+
-+	disable_strict_mode_and_check init
-+
-+	add_vrf_and_check init vrf101 100
-+	config_vrf_and_check init 172.16.101.1/24 vrf101
-+
-+	enable_strict_mode_and_check_fail init
-+
-+	del_vrf_and_check init vrf101
-+
-+	enable_strict_mode_and_check init
-+
-+	add_vrf_and_check init vrf102 102
-+	config_vrf_and_check init 172.16.102.1/24 vrf102
-+
-+	# the strict_modle is enabled in the init
-+}
-+
-+vrf_strict_mode_tests_testns()
-+{
-+	vrf_strict_mode_check_support testns
-+
-+	strict_mode_check_default testns
-+
-+	enable_strict_mode_and_check testns
-+
-+	add_vrf_and_check testns vrf100 100
-+	config_vrf_and_check testns 10.0.100.1/24 vrf100
-+
-+	add_vrf_and_check_fail testns vrf101 100
-+
-+	add_vrf_and_check_fail testns vrf102 100
-+
-+	add_vrf_and_check testns vrf200 200
-+
-+	disable_strict_mode_and_check testns
-+
-+	add_vrf_and_check testns vrf101 100
-+
-+	add_vrf_and_check testns vrf102 100
-+
-+	#the strict_mode is disabled in the testns
-+}
-+
-+vrf_strict_mode_tests_mix()
-+{
-+	read_strict_mode_compare_and_check init 1
-+
-+	read_strict_mode_compare_and_check testns 0
-+
-+	del_vrf_and_check testns vrf101
-+
-+	del_vrf_and_check testns vrf102
-+
-+	disable_strict_mode_and_check init
-+
-+	enable_strict_mode_and_check testns
-+
-+	enable_strict_mode_and_check init
-+	enable_strict_mode_and_check init
-+
-+	disable_strict_mode_and_check testns
-+	disable_strict_mode_and_check testns
-+
-+	read_strict_mode_compare_and_check init 1
-+
-+	read_strict_mode_compare_and_check testns 0
-+}
-+
-+vrf_strict_mode_tests()
-+{
-+	log_section "VRF strict_mode test on init network namespace"
-+	vrf_strict_mode_tests_init
-+
-+	log_section "VRF strict_mode test on testns network namespace"
-+	vrf_strict_mode_tests_testns
-+
-+	log_section "VRF strict_mode test mixing init and testns network namespaces"
-+	vrf_strict_mode_tests_mix
-+}
-+
-+vrf_strict_mode_check_support()
-+{
-+	local nsname=$1
-+	local output
-+	local rc
-+
-+	output="$(lsmod | grep '^vrf' | awk '{print $1}')"
-+	if [ -z "${output}" ]; then
-+		modinfo vrf || return $?
-+	fi
-+
-+	# we do not care about the value of the strict_mode; we only check if
-+	# the strict_mode parameter is available or not.
-+	read_strict_mode ${nsname} &>/dev/null; rc=$?
-+	log_test ${rc} 0 "${nsname}: net.vrf.strict_mode is available"
-+
-+	return ${rc}
-+}
-+
-+if [ "$(id -u)" -ne 0 ];then
-+	echo "SKIP: Need root privileges"
-+	exit 0
-+fi
-+
-+if [ ! -x "$(command -v ip)" ]; then
-+	echo "SKIP: Could not run test without ip tool"
-+	exit 0
-+fi
-+
-+cleanup &> /dev/null
-+
-+setup
-+vrf_strict_mode_tests
-+cleanup
-+
-+print_log_test_results
-+
-+exit $ret
--- 
-2.20.1
+Thank you for pointing at it! Unfortunately, there must be something wrong
+with drivers, your patch didn't help much. I still see the same stacktrace.
 
+I'll try again after 5.8-rc2 will be out.
+
+Thanks!
