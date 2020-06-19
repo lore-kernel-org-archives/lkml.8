@@ -2,53 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9994BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD249206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78969204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585309;
-	bh=M5fd0eDw+8QWXAEFGd3bGemif6hc4uE35x4W0JpWdsM=;
+	s=default; t=1592585315;
+	bh=vufx0vyQjbhKY6H1Jy6DAqwq30Pr95FUeTOb5XINOxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRCij5vcpHjPwpBldRPu3Ct85N0vusYzHRmC75SySlXsJRZD9mf+00erRJtFt2jl1
-	 NidHxiBAfZRnbK/+vQJ+1sZSD4l/8HeK2OMlKY1hbgF0zyY+shVIJYQy7R7IYCJ3NN
-	 RDb0qCkeMxRIJMHRCSn4r8jWHTNBHhc6xoDXWUIk=
+	b=WgTsUUj33Xk85AtdhGzrAU0uxNWd5IqsAVoZhgK09qN50FaY8YrTC87h87V/d3v9U
+	 gKum6oHAnvdtQTzWqUodavLWQCL1HtENkgGubg1x+W/NKgp2b+sv2UQsHsNLUJcYde
+	 yLNUDSJnvQ3KvieZkXGI6jaLssc3HVaz5+CUevls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387628AbgFSQs2 (ORCPT
+        id S2405749AbgFSQse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388152AbgFSOka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:40:30 -0400
+        id S2387825AbgFSOkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2989720773;
-        Fri, 19 Jun 2020 14:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1770620773;
+        Fri, 19 Jun 2020 14:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577629;
-        bh=M5fd0eDw+8QWXAEFGd3bGemif6hc4uE35x4W0JpWdsM=;
+        s=default; t=1592577622;
+        bh=vufx0vyQjbhKY6H1Jy6DAqwq30Pr95FUeTOb5XINOxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VAOQdzMSSR19pvuUxVz2KWXVWBVVFbbvedHfbruZvpJ3imrT63pFews5PSnwXwLPz
-         XR5de4ZhRPa+o+1LfrUaU1R6kGZCgRjvEBzQa8H4nNxSsNdTB6WrAicUEBbCFKw3fT
-         vxUukKWIq5ZvwR+z+haAYdkLmo2PzBQaJ2ZGT87c=
+        b=P/UyZlNJace8g7YuDpoz/zC/Ng8ZfZQMWWAKa2L9QpX+Md9egy5Y1SMUZSovg4uXD
+         J7IQopgadXQC4Jwyxwe97PMLiHxzPPrTYfOMr8OoFIG7XEnpyDaaiFfZ4jf8SRgYDA
+         wxPdoCmplUk79uGUOf2h3vpR/2bqKK+jbJgoIQAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/128] sched/fair: Dont NUMA balance for kthreads
-Date:   Fri, 19 Jun 2020 16:31:40 +0200
-Message-Id: <20200619141620.471245074@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bart.vanassche@sandisk.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.9 003/128] scsi: return correct blkprep status code in case scsi_init_io() fails.
+Date:   Fri, 19 Jun 2020 16:31:37 +0200
+Message-Id: <20200619141620.323404815@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,55 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Johannes Thumshirn <jthumshirn@suse.de>
 
-[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
+commit e7661a8e5ce10b5321882d0bbaf3f81070903319 upstream.
 
-Stefano reported a crash with using SQPOLL with io_uring:
+When instrumenting the SCSI layer to run into the
+!blk_rq_nr_phys_segments(rq) case the following warning emitted from the
+block layer:
 
-  BUG: kernel NULL pointer dereference, address: 00000000000003b0
-  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-  RIP: 0010:task_numa_work+0x4f/0x2c0
-  Call Trace:
-   task_work_run+0x68/0xa0
-   io_sq_thread+0x252/0x3d0
-   kthread+0xf9/0x130
-   ret_from_fork+0x35/0x40
+blk_peek_request: bad return=-22
 
-which is task_numa_work() oopsing on current->mm being NULL.
+This happens because since commit fd3fc0b4d730 ("scsi: don't BUG_ON()
+empty DMA transfers") we return the wrong error value from
+scsi_prep_fn() back to the block layer.
 
-The task work is queued by task_tick_numa(), which checks if current->mm is
-NULL at the time of the call. But this state isn't necessarily persistent,
-if the kthread is using use_mm() to temporarily adopt the mm of a task.
+[mkp: silenced checkpatch]
 
-Change the task_tick_numa() check to exclude kernel threads in general,
-as it doesn't make sense to attempt ot balance for kthreads anyway.
-
-Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Fixes: fd3fc0b4d730 scsi: don't BUG_ON() empty DMA transfers
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Bart Van Assche <bart.vanassche@sandisk.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[iwamatsu: - backport for 4.4.y and 4.9.y
+    - Use rq->nr_phys_segments instead of blk_rq_nr_phys_segments]
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5e65c7eea872..8233032a2f01 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2542,7 +2542,7 @@ void task_tick_numa(struct rq *rq, struct task_struct *curr)
- 	/*
- 	 * We don't care about NUMA placement if we don't have memory.
- 	 */
--	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
- 		return;
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1029,10 +1029,10 @@ int scsi_init_io(struct scsi_cmnd *cmd)
+ 	struct scsi_device *sdev = cmd->device;
+ 	struct request *rq = cmd->request;
+ 	bool is_mq = (rq->mq_ctx != NULL);
+-	int error;
++	int error = BLKPREP_KILL;
  
- 	/*
--- 
-2.25.1
-
+ 	if (WARN_ON_ONCE(!rq->nr_phys_segments))
+-		return -EINVAL;
++		goto err_exit;
+ 
+ 	error = scsi_init_sgtable(rq, &cmd->sdb);
+ 	if (error)
 
 
