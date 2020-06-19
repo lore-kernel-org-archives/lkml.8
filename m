@@ -2,55 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1CAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0646FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3DAD206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FC2206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584982;
-	bh=4+YLrJjEjRgkQhhkBuQT0yHkcuSYyIbSyxuHpnzWm4A=;
+	s=default; t=1592584990;
+	bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPmS2k/8+Fh5oQCaJQKSH18gp8MD2NPLZAC7V9vfDAVUyKCDGAfXDUkokr3k8tH9L
-	 sA7JwYw86yxgsbj1Qog5MSatwQWOBU9AvD+er0lYdSFpaJmpsAUe2Om90q16nYw+mq
-	 bc0NkdsRDXdapJ1vjfTWFQnmuyy/CkobXBdom0U4=
+	b=jNyKZuIE4/ofJazeppBDaENzB5LHhZs1N6ef5KoAZxxTsesBeZLgH9VrBr2kQEq4n
+	 IMBz0GYICuNKSsSAEravNd+4gkKIR6tXjMGvRNYTVIqVhnfhUp669fj29VPJNCO1J5
+	 NYWX+IzdM5Tx3qnqkbKxAVJ1mkucHKInyiePMzU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388532AbgFSOn7 (ORCPT
+        id S2395562AbgFSQnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388497AbgFSOnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:43 -0400
+        id S2388515AbgFSOnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3857D21556;
-        Fri, 19 Jun 2020 14:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65E3E21582;
+        Fri, 19 Jun 2020 14:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577822;
-        bh=4+YLrJjEjRgkQhhkBuQT0yHkcuSYyIbSyxuHpnzWm4A=;
+        s=default; t=1592577834;
+        bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QOQY0U8wcmk0QJ8W3RmvLpm4r3EoClhC6Gc3k1DW5vCTA5VmMnU5KiT+22oHJBOsr
-         4hHdEafI00AzzAUAjZZRxZxHCUoC/xjXcm4am+5KsiKDz3p+hM/ggcZWRKI1vbNSFj
-         73i7ibiYq9qOsKj7sExXPVt42v2it6XxRe1d5ONM=
+        b=WyJgo7Ch+HrDti2xvkLzuArqtIhNpoRUPuQPEyisGIMgBPf0A+WrLLnJ1x9tjTFS4
+         t6utcySG9ssaqY2CSN6NALubA8iQsxcGzTX8JG93Ztx//BZVIzmJe3wrgtLgWZwt12
+         uH3wdj/k7w9t9D0C/4b4TbpPaCMP6BxYeELsWcb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 104/128] btrfs: fix error handling when submitting direct I/O bio
-Date:   Fri, 19 Jun 2020 16:33:18 +0200
-Message-Id: <20200619141625.620331889@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 108/128] carl9170: remove P2P_GO support
+Date:   Fri, 19 Jun 2020 16:33:22 +0200
+Message-Id: <20200619141625.856965303@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -63,67 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit 6d3113a193e3385c72240096fe397618ecab6e43 ]
+commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
 
-In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
-stripe or chunk, we submit orig_bio without cloning it. In this case, we
-don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
-decrement pending_bios to -1, and we never complete orig_bio. Fix it by
-initializing pending_bios to 1 instead of incrementing later.
+This patch follows up on a bug-report by Frank Schäfer that
+discovered P2P GO wasn't working with wpa_supplicant.
+This patch removes part of the broken P2P GO support but
+keeps the vif switchover code in place.
 
-Fixing this exposes another bug: we put orig_bio prematurely and then
-put it again from end_io. Fix it by not putting orig_bio.
+Cc: <stable@vger.kernel.org>
+Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
+Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-After this change, pending_bios is really more of a reference count, but
-I'll leave that cleanup separate to keep the fix small.
-
-Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
+ drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
+ 2 files changed, 5 insertions(+), 20 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 250c8403ec67..c425443c31fe 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8494,7 +8494,6 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip,
- 	bio->bi_private = dip;
- 	bio->bi_end_io = btrfs_end_dio_bio;
- 	btrfs_io_bio(bio)->logical = file_offset;
--	atomic_inc(&dip->pending_bios);
+--- a/drivers/net/wireless/ath/carl9170/fw.c
++++ b/drivers/net/wireless/ath/carl9170/fw.c
+@@ -351,9 +351,7 @@ static int carl9170_fw(struct ar9170 *ar
+ 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
  
- 	while (bvec <= (orig_bio->bi_io_vec + orig_bio->bi_vcnt - 1)) {
- 		nr_sectors = BTRFS_BYTES_TO_BLKS(root->fs_info, bvec->bv_len);
-@@ -8560,7 +8559,8 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip,
- 	if (!ret)
- 		return 0;
+ 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
+-			if_comb_types |=
+-				BIT(NL80211_IFTYPE_AP) |
+-				BIT(NL80211_IFTYPE_P2P_GO);
++			if_comb_types |= BIT(NL80211_IFTYPE_AP);
  
--	bio_put(bio);
-+	if (bio != orig_bio)
-+		bio_put(bio);
- out_err:
- 	dip->errors = 1;
- 	/*
-@@ -8607,7 +8607,7 @@ static void btrfs_submit_direct(struct bio *dio_bio, struct inode *inode,
- 	io_bio->bi_private = dip;
- 	dip->orig_bio = io_bio;
- 	dip->dio_bio = dio_bio;
--	atomic_set(&dip->pending_bios, 0);
-+	atomic_set(&dip->pending_bios, 1);
- 	btrfs_bio = btrfs_io_bio(io_bio);
- 	btrfs_bio->logical = file_offset;
+ #ifdef CONFIG_MAC80211_MESH
+ 			if_comb_types |=
+--- a/drivers/net/wireless/ath/carl9170/main.c
++++ b/drivers/net/wireless/ath/carl9170/main.c
+@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
+ 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
+ 	    (vif->type != NL80211_IFTYPE_AP));
  
--- 
-2.25.1
-
+-	/* While the driver supports HW offload in a single
+-	 * P2P client configuration, it doesn't support HW
+-	 * offload in the favourit, concurrent P2P GO+CLIENT
+-	 * configuration. Hence, HW offload will always be
+-	 * disabled for P2P.
++	/* The driver used to have P2P GO+CLIENT support,
++	 * but since this was dropped and we don't know if
++	 * there are any gremlins lurking in the shadows,
++	 * so best we keep HW offload disabled for P2P.
+ 	 */
+ 	ar->disable_offload |= vif->p2p;
+ 
+@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
+ 			if (vif->type == NL80211_IFTYPE_STATION)
+ 				break;
+ 
+-			/* P2P GO [master] use-case
+-			 * Because the P2P GO station is selected dynamically
+-			 * by all participating peers of a WIFI Direct network,
+-			 * the driver has be able to change the main interface
+-			 * operating mode on the fly.
+-			 */
+-			if (main_vif->p2p && vif->p2p &&
+-			    vif->type == NL80211_IFTYPE_AP) {
+-				old_main = main_vif;
+-				break;
+-			}
+-
+ 			err = -EBUSY;
+ 			rcu_read_unlock();
+ 
 
 
