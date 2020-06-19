@@ -5,74 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D066BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A990E21548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE092158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580247;
-	bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
+	s=default; t=1592580253;
+	bh=hX12khJAdZqJIox8b1e42ktmh3BYm/+28o1Cp2ygp9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkDQt/D7jRQSa+LM/aT7qqCHUJGPf2+2NlQm70jz2jAcOHfKNo59yEWQR64hQxGah
-	 dd8eqexV6OR6eDM/tx3Vsx4HV/6P8TdH+ojVbKnTcnoN2Gi+jN+n8QjFTNQed695ov
-	 S02ilUGM/bcDYH5nE88ypziiwGMWfj2/751md+Mo=
+	b=gvU7soVzKyvaGOsD8eEPVxKSifPHJkN0u/XosA71Ynk9NdRO0diYLFHpsGyrB1ynM
+	 XpFPw9fps4c5J4GaFS4tegwqJEczsmkyS5XPgN9e/a/B2z25XA2D7ztJdkFXYTKpEc
+	 5mAHgq8OODfGw6NLPGKKQdzhycjRXan1ln8vmJwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393249AbgFSPYF (ORCPT
+        id S2404062AbgFSPYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392714AbgFSPUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:35 -0400
+        id S2392735AbgFSPUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2074E20B80;
-        Fri, 19 Jun 2020 15:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D8A20B80;
+        Fri, 19 Jun 2020 15:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580034;
-        bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
+        s=default; t=1592580043;
+        bh=hX12khJAdZqJIox8b1e42ktmh3BYm/+28o1Cp2ygp9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oodt6X1dXL1bJqLFD6JAqzUOWyeTsSyy4EMzICHONIOixFudgYEsqo83IEPmPDdtg
-         AdKXEAyoL8pykwfTYo/U4msBsE6pOtGdNJKoda7k+KGZdGbKM2z2imbGyF53/U5nn8
-         DE4emR7T3wQ30uCirWZ2iAtjqVyyq3WuwRXefM9I=
+        b=0X/6FC2/VRY56IhuoSb6eYEBLq0AWe/m7adPXVVevzs7SB9hzGgQIRoC7R8mwxPdq
+         wh+5Run5jEvCaa7QOWDoI08wfxYloydlG1vIH33l7LScg0JBiQwxEjeOLoUg09TZEM
+         /nGqw+WnEb3W1PGwmlLZdttgOIfUIVJE8DOpuygo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/376] x86: fix vmap arguments in map_irq_stack
-Date:   Fri, 19 Jun 2020 16:29:58 +0200
-Message-Id: <20200619141714.133229741@linuxfoundation.org>
+Subject: [PATCH 5.7 100/376] media: dvb: return -EREMOTEIO on i2c transfer failure.
+Date:   Fri, 19 Jun 2020 16:30:18 +0200
+Message-Id: <20200619141715.082043748@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -85,60 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 0348801151b5aefbcf9d6e9b9e30aceb3a2a7b13 ]
+[ Upstream commit 96f3a9392799dd0f6472648a7366622ffd0989f3 ]
 
-vmap does not take a gfp_t, the flags argument is for VM_* flags.
+Currently when i2c transfers fail the error return -EREMOTEIO
+is assigned to err but then later overwritten when the tuner
+attach call is made.  Fix this by returning early with the
+error return code -EREMOTEIO on i2c transfer failure errors.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Gao Xiang <xiang@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Nitin Gupta <ngupta@vflare.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lkml.kernel.org/r/20200414131348.444715-3-hch@lst.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+If the transfer fails, an uninitialized value will be read from b2.
+
+Addresses-Coverity: ("Unused value")
+
+Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 2 +-
+ drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 12df3a4abfdd..6b32ab009c19 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -43,7 +43,7 @@ static int map_irq_stack(unsigned int cpu)
- 		pages[i] = pfn_to_page(pa >> PAGE_SHIFT);
+diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
+index d4ea72bf09c5..5131c8d4c632 100644
+--- a/drivers/media/usb/dvb-usb/dibusb-mb.c
++++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
+@@ -81,7 +81,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
+ 
+ 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
+ 		err("tuner i2c write failed.");
+-		ret = -EREMOTEIO;
++		return -EREMOTEIO;
  	}
  
--	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
-+	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, VM_MAP, PAGE_KERNEL);
- 	if (!va)
- 		return -ENOMEM;
- 
+ 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
 -- 
 2.25.1
 
