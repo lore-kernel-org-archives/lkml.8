@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E33C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAF3620809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE7A20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584699;
-	bh=wGfsfRARAdevjLxfyzn7UsVt81QTzzFME9TjijF6snw=;
+	s=default; t=1592584700;
+	bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crmn8MyP5WB26MzdOSMe0fKNl8DqybLUT76vQieuVOBRriofKPXWzj9z/OwZQO+l9
-	 a9nxrWG4jS3XqCQz7Z6qG23TAfHpm8dz5Ky+JVncuXBbzfSspt8ZpUp9C4KmGsaBaA
-	 wnSqSelNgpVlAszmyRBD3cDF/FvGV7xTk+jQ5Fos=
+	b=rwldC8zyAVVy6JJpjfiuNZ9I/Z2TW54MEtCZEU8hUUNRVArPdMcgMbya3JqchBT2O
+	 UGZH2zT2gazIXu59bsUShpWxSXrsHazaBIjLVtAbExoDb+Lrf6fXOl8zS+QMkBwRwi
+	 suHFCNm/QKpJvBX+WNJqYy26U4oj30/2Ru9ybtvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395383AbgFSQiR (ORCPT
+        id S2395375AbgFSQiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:38:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:38:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388986AbgFSOrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:45 -0400
+        id S2388988AbgFSOrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBC73217A0;
-        Fri, 19 Jun 2020 14:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 222FE2083B;
+        Fri, 19 Jun 2020 14:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578065;
-        bh=wGfsfRARAdevjLxfyzn7UsVt81QTzzFME9TjijF6snw=;
+        s=default; t=1592578067;
+        bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkDCKl6lNgKup3tL2b8s177qDhYYhvsCZu1Q67rzWWdp7B7QfatlFQTvJaNgl+29G
-         9q6YCsKgrqhAHx0PTjq/1CNf2bWBvSdOTjJcXRv+G+MaNLe3SnaZRn5yPoMKd8V/zY
-         lZucDE4L1Tv9ANbkvgM9k1TBSdi7pRjSkBGYygLo=
+        b=VT8ieQ3R+VfM+4b9P3xL42t7LQLtKK7BTmCBNi8kLV8J6DKvJXSCPQ3sQfpQ3B5l/
+         jaJtbwg4u93T24LhkUKdxjYw2UA1KN7uwpgFp2o2WYI1iwohQSIyuKXjLD0m4yYT2e
+         g8Jx8Xp0PxE4WH4gpLkid+77SEDmzYfauHGZen20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
-        Barret Rhoden <brho@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 069/190] perf: Add cond_resched() to task_function_call()
-Date:   Fri, 19 Jun 2020 16:31:54 +0200
-Message-Id: <20200619141637.032031369@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Andi Shyti <andi.shyti@intel.com>
+Subject: [PATCH 4.14 070/190] agp/intel: Reinforce the barrier after GTT updates
+Date:   Fri, 19 Jun 2020 16:31:55 +0200
+Message-Id: <20200619141637.076619086@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,68 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b upstream.
+commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
 
-Under rare circumstances, task_function_call() can repeatedly fail and
-cause a soft lockup.
+After changing the timing between GTT updates and execution on the GPU,
+we started seeing sporadic failures on Ironlake. These were narrowed
+down to being an insufficiently strong enough barrier/delay after
+updating the GTT and scheduling execution on the GPU. By forcing the
+uncached read, and adding the missing barrier for the singular
+insert_page (relocation paths), the sporadic failures go away.
 
-There is a slight race where the process is no longer running on the cpu
-we targeted by the time remote_function() runs.  The code will simply
-try again.  If we are very unlucky, this will continue to fail, until a
-watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-machine.
-
-Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
+Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
+Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Andi Shyti <andi.shyti@intel.com>
+Cc: stable@vger.kernel.org # v4.0+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/char/agp/intel-gtt.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -94,11 +94,11 @@ static void remote_function(void *data)
-  * @info:	the function call argument
-  *
-  * Calls the function @func when the task is currently running. This might
-- * be on the current CPU, which just calls the function directly
-+ * be on the current CPU, which just calls the function directly.  This will
-+ * retry due to any failures in smp_call_function_single(), such as if the
-+ * task_cpu() goes offline concurrently.
-  *
-- * returns: @func return value, or
-- *	    -ESRCH  - when the process isn't running
-- *	    -EAGAIN - when the process moved away
-+ * returns @func return value or -ESRCH when the process isn't running
-  */
- static int
- task_function_call(struct task_struct *p, remote_function_f func, void *info)
-@@ -111,11 +111,16 @@ task_function_call(struct task_struct *p
- 	};
- 	int ret;
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -846,6 +846,7 @@ void intel_gtt_insert_page(dma_addr_t ad
+ 			   unsigned int flags)
+ {
+ 	intel_private.driver->write_entry(addr, pg, flags);
++	readl(intel_private.gtt + pg);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -871,7 +872,7 @@ void intel_gtt_insert_sg_entries(struct
+ 			j++;
+ 		}
+ 	}
+-	wmb();
++	readl(intel_private.gtt + j - 1);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -1105,6 +1106,7 @@ static void i9xx_cleanup(void)
  
--	do {
--		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
--		if (!ret)
--			ret = data.ret;
--	} while (ret == -EAGAIN);
-+	for (;;) {
-+		ret = smp_call_function_single(task_cpu(p), remote_function,
-+					       &data, 1);
-+		ret = !ret ? data.ret : -EAGAIN;
-+
-+		if (ret != -EAGAIN)
-+			break;
-+
-+		cond_resched();
-+	}
- 
- 	return ret;
+ static void i9xx_chipset_flush(void)
+ {
++	wmb();
+ 	if (intel_private.i9xx_flush_page)
+ 		writel(1, intel_private.i9xx_flush_page);
  }
 
 
