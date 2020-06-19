@@ -2,117 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E16C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D87AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79AF3208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C531208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmEOGUp1"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jQ8P3pnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbgFSRWt (ORCPT
+        id S2392240AbgFSRXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
+        Fri, 19 Jun 2020 13:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFSRWs (ORCPT
+        with ESMTP id S1731175AbgFSRXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:22:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB6DC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:22:48 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b201so4720849pfb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:22:48 -0700 (PDT)
+        Fri, 19 Jun 2020 13:23:11 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6345EC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:23:10 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id q8so9618382qkm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ykiyUBcX7lv0L02KjGOJYnNL284qndFCqddofaXQGhM=;
-        b=DmEOGUp1l+mc7oLgPAXP4ow/v0iL4q0vdktF7FaO72WHHr9IDU5NxrUPIZd1+bBjQf
-         dTDBpj+Cj4cBSkhUk7QUcY8PiwNUGbwAiyzcrvmCx1xZyGh+cFhjM+SdP8MVlcLF8J7a
-         9sgawsqVdZbX0Hk/k7LGLjbVW+EBsgPNFBotTxqTlrec/SPIDY8+Ifaf8yWhtYCf1D1P
-         0qDb4hKEMpas+WUtQAPqJ5XJ4DfMKCdkhlqoMdHWfuPZzmp8m3rosi5qX5P+y679FWpx
-         6nbpayxmPnUOyqwTgSzoFgqJmyiSyKEhVkedqgBtMwQRpyYFYuNXwFytIyaFl5jZGziY
-         wYGA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rta7XgSy0ckbOhf+G5R08zHN2raoo0kZf2xw2Sh0l/k=;
+        b=jQ8P3pnIGa3vZkblMbXH41QZ61fe/Sb9vA5uPOR3SMNdZKsu0blkPtrxpS3aWVoNKr
+         DxLMI5S5juOldxRe7+RlT3GajySSEpNFCHak6ENUR11aQ3nJENjJ+AjGwVIg3GcU1gtL
+         AFg4tJnhN/LzdKUCOPE+zScs2pSCySWCm6gLf1r8dvVDgTF8uLAu4b0cSB8SVQcBr9IO
+         hvo365OipT4dztwxdexoBi2dZXF91j/xcy5DKKz/ErbusQM/iZVWPTDKzHQRUnZ5G+PQ
+         1Vw552gg3QCopo/fc6PBC9ArUokmC/IBfhMuddzwZFS3/FrWylp92kucX6mn/XCcEkQF
+         2/SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ykiyUBcX7lv0L02KjGOJYnNL284qndFCqddofaXQGhM=;
-        b=BqQaa4fTEiNuYr8XYdjmbYt36xO0+XeVwp8E5sVeRdvfD/7g0WaCY9zmxB+OwP7pFt
-         w2GFFDCclR8DrhpjcmqhmBU4eJ9U+5T/6jLR0eRIChT1N66riAs0BNLCcY+prOwB34fn
-         nKAg2iWnaK23PGIu6oriyPi9x5W62meZdcJdHN/mqJU52FX80++734XFZaBAd/O3ar9s
-         q937gZU+qLsXmIM9FQ4nLBSRCbUnWATJICML0CTNP74lWnDwb9CSCzGfolEXXPvDkAx6
-         plLskYVTIwJ55fK15ER/TaM8UBewLHM+LzFbZaI9zzdYXYLhsqYoHBZMyVfrdFlICXlP
-         wLBQ==
-X-Gm-Message-State: AOAM531UNwqCKSfOLLTRhcwFiMZaP+uX/O/rIAED5d4zTTIXp8kbXzkL
-        qeVey0ErxdGyZfT9HlGTogg=
-X-Google-Smtp-Source: ABdhPJzICZfJ745drSzqyE/YfQ9U/bajMnz4wLScZa8TtChqLw3rST0e2UrE+D0qFU8EPbXoOgTKbQ==
-X-Received: by 2002:a62:5e83:: with SMTP id s125mr8468465pfb.315.1592587367772;
-        Fri, 19 Jun 2020 10:22:47 -0700 (PDT)
-Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id t201sm6426048pfc.104.2020.06.19.10.22.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rta7XgSy0ckbOhf+G5R08zHN2raoo0kZf2xw2Sh0l/k=;
+        b=H8H8IeVdwlRgMdI70ZjYLbuaW0eSIFd4E0Qg5gRfDO20G7XLRNykcWhZ9rzMXU6pVg
+         x5q+ZlMzKx093+jMuDosj3UISCVNT5o6woBKh6Vv7Ova0WCu50hHb9NjT1yN6oYdSyvl
+         vn0uXosJlrIMsXXoMRuqS3fISuVw1ah0UOKEIh3LfY+yuCpTkMUfcebloTQnjClrBlb4
+         Lke0D1BzKBmiZ54RqqrhYadCw37/BU/f6sF0/GEusdxtm6hVL+bP8algqN3lfBR6d7F9
+         /JHHVyBNUG+OmDcyJUm0xiN8D+v+qHfJZgtrkyVrUd2oZVhVD8HAR2sf6YDhxeWtcjoY
+         KHbg==
+X-Gm-Message-State: AOAM531PuA56kVxk+boNqAMR6R539Tho6ltY1+2tGTwt5j1gMbDyrqCG
+        OYdWmUQlZkC6WrL9H71Ohx1l5JG0M2jl5g==
+X-Google-Smtp-Source: ABdhPJzDMW9WT5FfWlenUCjhHpgpjiA2TJ2PiIGS5w9RkI8RANL7HnmArRn+HLKwhDBh+PaKr6DrLw==
+X-Received: by 2002:ae9:ed0d:: with SMTP id c13mr4076677qkg.181.1592587389664;
+        Fri, 19 Jun 2020 10:23:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id z77sm7263705qka.59.2020.06.19.10.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 10:22:47 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH] hvc: unify console setup naming
-Date:   Sat, 20 Jun 2020 02:22:40 +0900
-Message-Id: <20200619172240.754910-1-sergey.senozhatsky@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 19 Jun 2020 10:23:08 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmKjM-00ArZ4-2Z; Fri, 19 Jun 2020 14:23:08 -0300
+Date:   Fri, 19 Jun 2020 14:23:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619172308.GQ6578@ziepe.ca>
+References: <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca>
+ <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the 'common' foo_console_setup() naming scheme. There are 71
-foo_console_setup() callbacks and only one foo_setup_console().
+On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
----
- drivers/tty/hvc/hvc_xen.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> The madness is only that device B's mmu notifier might need to wait
+> for fence_B so that the dma operation finishes. Which in turn has to
+> wait for device A to finish first.
 
-diff --git a/drivers/tty/hvc/hvc_xen.c b/drivers/tty/hvc/hvc_xen.c
-index 5ef08905fe05..2a0e51a20e34 100644
---- a/drivers/tty/hvc/hvc_xen.c
-+++ b/drivers/tty/hvc/hvc_xen.c
-@@ -603,7 +603,7 @@ static void xen_hvm_early_write(uint32_t vtermno, const char *str, int len) { }
- #endif
- 
- #ifdef CONFIG_EARLY_PRINTK
--static int __init xenboot_setup_console(struct console *console, char *string)
-+static int __init xenboot_console_setup(struct console *console, char *string)
- {
- 	static struct xencons_info xenboot;
- 
-@@ -647,7 +647,7 @@ static void xenboot_write_console(struct console *console, const char *string,
- struct console xenboot_console = {
- 	.name		= "xenboot",
- 	.write		= xenboot_write_console,
--	.setup		= xenboot_setup_console,
-+	.setup		= xenboot_console_setup,
- 	.flags		= CON_PRINTBUFFER | CON_BOOT | CON_ANYTIME,
- 	.index		= -1,
- };
--- 
-2.27.0
+So, it sound, fundamentally you've got this graph of operations across
+an unknown set of drivers and the kernel cannot insert itself in
+dma_fence hand offs to re-validate any of the buffers involved?
+Buffers which by definition cannot be touched by the hardware yet.
 
+That really is a pretty horrible place to end up..
+
+Pinning really is right answer for this kind of work flow. I think
+converting pinning to notifers should not be done unless notifier
+invalidation is relatively bounded. 
+
+I know people like notifiers because they give a bit nicer performance
+in some happy cases, but this cripples all the bad cases..
+
+If pinning doesn't work for some reason maybe we should address that?
+
+> Full disclosure: We are aware that we've designed ourselves into an
+> impressive corner here, and there's lots of talks going on about
+> untangling the dma synchronization from the memory management
+> completely. But
+
+I think the documenting is really important: only GPU should be using
+this stuff and driving notifiers this way. Complete NO for any
+totally-not-a-GPU things in drivers/accel for sure.
+
+Jason
