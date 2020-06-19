@@ -2,109 +2,136 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5528C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAA3121924
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578718;
-	bh=Rf+/owul+CG1XcnLh7G/H67RI/5knus/0Lkvl89ilTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVZ+F/XL7Z+2MG5/PoqNw9ZfeAc0yizbUGcW5avYhiRZzf6R5zZGvPLBlr+rL3+io
-	 Cc7NlqXQsdfMwMNMwHcaLNFvQhnKBA25n66NhCmSzm2IQ2dIkffdZvhO+qqA3cumP+
-	 dOLEsYzdwBBTKPI+OxrIG+wL44+FelQY9/q7qFVs=
+	by mail.kernel.org (Postfix) with ESMTP id B1E8B21924
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QZny18/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389987AbgFSO6h (ORCPT
+        id S2390419AbgFSO6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390384AbgFSO6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA24221852;
-        Fri, 19 Jun 2020 14:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578704;
-        bh=Rf+/owul+CG1XcnLh7G/H67RI/5knus/0Lkvl89ilTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cISw6pGZP+OHlRAnUNS+gT/vCjY0KTtMwfXmy61k4qBFcVn82AHpr62ciAGtIUmJG
-         J1n4JChA+nkFEOMUtVI1MQR5Nl+wSc2H38wRbO+BylPhY9MgXLYWfmY+EE4mGFf7hX
-         5jSyfC5wJHoxD9o6aXxVqbCc9g5DFRJKU5QE1UN0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/267] drm: bridge: adv7511: Extend list of audio sample rates
-Date:   Fri, 19 Jun 2020 16:31:19 +0200
-Message-Id: <20200619141653.377605203@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 10:58:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390391AbgFSO63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:29 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63690C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:58:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d4so4598883pgk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=sCfJ6MRetCzZa1NZ4rYQiXY2G31ZEnc/4E26KrcXmPc=;
+        b=QZny18/SqgE+neIyWHL2sFRFJb8lqyjueOj1pOy0V6d5j1S3n0MqvWbGeu8El0o0Ta
+         5ZnIo2kqLVpAH/4d2CBUPD4VdDtyc0/z+gGARF4rUK2nkQcNLTp3k28lsHUOhK+Z9OK4
+         IkVvVNV4LnsjKA/z4ShCGiz6AQIKy7NAdxEM5Fe4iz6FuNb//7bYw1G2OrSaIS4aYIae
+         fCB8jWF5VbztYAjw22xKsMZtPTGl7u88wjU6jOuilHqfCXeJO5pEZBXZ+Urh22haijfT
+         Ku1nbjvpIbBROK7jqUbSbnu7xfDgB4b4b7Z5zPRyf9xr1BGnUsB1iMJFdTLwrbHzF+kM
+         wC4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=sCfJ6MRetCzZa1NZ4rYQiXY2G31ZEnc/4E26KrcXmPc=;
+        b=jChQIWEjRwUMDNoasRQ5nKd+hVDyYGHA87ahxSsJJ9Pj9tI3PARX7p6B72gov3e7Hg
+         2mCFgnRvD1LQ3NE/ldjil5zcmAgSOflVpgwfuDUDcBuTI5dHYr9gWtY34IxLvIAzc6aV
+         V4DqxL8FTa6v65x2+TwkdsFTF3p+3KqNUeim8vFXxkqgLZjCZJpSs0XWAyHLEpXT9tMY
+         Ykw+rHQSzsE4qTtYkRmLgIzOEP6zXdfl7zeKVnW9MkqGeAwZn+U5+QGqhbFVkRBSCeoJ
+         AqAYcS/n0WGeIsfjwf+uJY6NCWy+VxW3R8JBjPWkqVD5aPHcpUIB8Gij4hYw79SsyiKl
+         dA7g==
+X-Gm-Message-State: AOAM533sjbVeIfmczUoPgvO4eC+YLM8UccWoPintb5BeGmaMnMKn6/4Z
+        BwD//4kcdVgGOegq2rBqqgHskFuTdNkIng==
+X-Google-Smtp-Source: ABdhPJzR2GkfaR9ElBMnp1MlDz7n7rV5CEI7/KJfOSG2rVMrYC18qTlMIAVyZ7fTrcf1jTVRAlwiOw==
+X-Received: by 2002:a62:aa07:: with SMTP id e7mr8097875pff.87.1592578705575;
+        Fri, 19 Jun 2020 07:58:25 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id p19sm6251000pff.116.2020.06.19.07.58.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:58:24 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.8-rc2
+Message-ID: <bf5c364b-aaf4-ed48-4f52-07304d6e732b@kernel.dk>
+Date:   Fri, 19 Jun 2020 08:58:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bogdan Togorean <bogdan.togorean@analog.com>
+Hi Linus,
 
-[ Upstream commit b97b6a1f6e14a25d1e1ca2a46c5fa3e2ca374e22 ]
+io_uring fixes that should go into this release:
 
-ADV7511 support sample rates up to 192kHz. CTS and N parameters should
-be computed accordingly so this commit extend the list up to maximum
-supported sample rate.
+- Catch a case where io_sq_thread() didn't do proper mm acquire
 
-Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200413113513.86091-2-bogdan.togorean@analog.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+- Ensure poll completions are reaped on shutdown
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-index 1b4783d45c53..3a218b56a008 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-@@ -20,13 +20,15 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
- {
- 	switch (fs) {
- 	case 32000:
--		*n = 4096;
-+	case 48000:
-+	case 96000:
-+	case 192000:
-+		*n = fs * 128 / 1000;
- 		break;
- 	case 44100:
--		*n = 6272;
--		break;
--	case 48000:
--		*n = 6144;
-+	case 88200:
-+	case 176400:
-+		*n = fs * 128 / 900;
- 		break;
- 	}
- 
+- Async cancelation and run fixes (Pavel)
+
+- io-poll race fixes (Xiaoguang)
+
+- Request cleanup race fix (Xiaoguang)
+
+Please pull!
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-06-19
+
+for you to fetch changes up to 6f2cc1664db20676069cff27a461ccc97dbfd114:
+
+  io_uring: fix possible race condition against REQ_F_NEED_CLEANUP (2020-06-18 08:32:44 -0600)
+
+----------------------------------------------------------------
+io_uring-5.8-2020-06-19
+
+----------------------------------------------------------------
+Jens Axboe (2):
+      io_uring: acquire 'mm' for task_work for SQPOLL
+      io_uring: reap poll completions while waiting for refs to drop on exit
+
+Pavel Begunkov (7):
+      io_uring: fix lazy work init
+      io-wq: reorder cancellation pending -> running
+      io-wq: add an option to cancel all matched reqs
+      io_uring: cancel all task's requests on exit
+      io_uring: batch cancel in io_uring_cancel_files()
+      io_uring: lazy get task
+      io_uring: cancel by ->task not pid
+
+Xiaoguang Wang (3):
+      io_uring: don't fail links for EAGAIN error in IOPOLL mode
+      io_uring: add memory barrier to synchronize io_kiocb's result and iopoll_completed
+      io_uring: fix possible race condition against REQ_F_NEED_CLEANUP
+
+ fs/io-wq.c    | 108 ++++++++++++++++++-----------------
+ fs/io-wq.h    |   4 +-
+ fs/io_uring.c | 177 +++++++++++++++++++++++++++++++++++++++-------------------
+ 3 files changed, 177 insertions(+), 112 deletions(-)
+
 -- 
-2.25.1
-
-
+Jens Axboe
 
