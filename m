@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B75C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56977C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6D121924
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DF420771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbgFSOHu (ORCPT
+        id S1732974AbgFSOHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:07:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:54724 "EHLO mga06.intel.com"
+        Fri, 19 Jun 2020 10:07:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54728 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731784AbgFSOHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:07:46 -0400
-IronPort-SDR: boBhcLovMiLxW9vHXHOPkLozUZu4hrqZYKC21AASWw1dWBiy2KqhjSMUb180DOdupTZmFtwiBK
- ANtjeuIkbV5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452805"
+        id S1732664AbgFSOHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:07:47 -0400
+IronPort-SDR: GCH0xTuu+cvMVWt38MIajuIpGjt2fkG2tarFmSJqnHjEKlapZveb/1cjRMJwIxoDXQRt8APK+5
+ 648IgMmG4keQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452808"
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="204452805"
+   d="scan'208";a="204452808"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:44 -0700
-IronPort-SDR: s86JjjODGBw5FSxVGNkT7ydcQmvzPgubnYbPOqB59VbJKI9GHbFHN9+RjlfyBJ7kG0fkPbmfKo
- 2ulUVKkRSkzw==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:45 -0700
+IronPort-SDR: CwpXNLPoUOB6kGVB4Dq+i/h2KE9GWq7NHf0aX307ZQ1VHPwp8RKyCzwaaJz5xVvp5KbvSBAI0Y
+ Hnqt7T2p3vRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="383837410"
+   d="scan'208";a="383837419"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:43 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:45 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -45,9 +45,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 02/21] perf/x86/intel/lbr: Add pointers for LBR enable and disable
-Date:   Fri, 19 Jun 2020 07:03:50 -0700
-Message-Id: <1592575449-64278-3-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 03/21] perf/x86/intel/lbr: Add pointer for LBR reset
+Date:   Fri, 19 Jun 2020 07:03:51 -0700
+Message-Id: <1592575449-64278-4-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
 References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
@@ -58,116 +58,146 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The method to enable and disable Architectural LBR is different from
-the previous model-specific LBR. Perf has to implement different
-functions.
+The method to reset Architectural LBRs is different from previous
+model-specific LBR. Perf has to implement a different function.
 
-The function pointers for LBR enable and disable are introduced. Perf
-should initialize the corresponding functions at boot time.
+A function pointer is introduced for LBR reset. The enum of
+LBR_FORMAT_* is also moved to perf_event.h. Perf should initialize the
+corresponding functions at boot time, and avoid checking lbr_format at
+run time.
 
-The current model-specific LBR functions are set as default.
-
-The __intel_pmu_lbr_disable() and __intel_pmu_lbr_enable() are not
-static functions anymore. The prefix "__" is removed from the name.
+The current 64-bit LBR reset function is set as default.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 6 ++++++
- arch/x86/events/intel/lbr.c  | 8 ++++----
- arch/x86/events/perf_event.h | 7 +++++++
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/core.c |  5 +++++
+ arch/x86/events/intel/lbr.c  | 20 +++-----------------
+ arch/x86/events/perf_event.h | 16 ++++++++++++++++
+ 3 files changed, 24 insertions(+), 17 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 332954c..56966fc 100644
+index 56966fc..995acdb 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3951,6 +3951,9 @@ static __initconst const struct x86_pmu core_pmu = {
- 	.cpu_dead		= intel_pmu_cpu_dead,
+@@ -3954,6 +3954,7 @@ static __initconst const struct x86_pmu core_pmu = {
  
- 	.check_period		= intel_pmu_check_period,
-+
-+	.lbr_enable		= intel_pmu_lbr_enable,
-+	.lbr_disable		= intel_pmu_lbr_disable,
+ 	.lbr_enable		= intel_pmu_lbr_enable,
+ 	.lbr_disable		= intel_pmu_lbr_disable,
++	.lbr_reset		= intel_pmu_lbr_reset_64,
  };
  
  static __initconst const struct x86_pmu intel_pmu = {
-@@ -3996,6 +3999,9 @@ static __initconst const struct x86_pmu intel_pmu = {
- 	.check_period		= intel_pmu_check_period,
+@@ -4002,6 +4003,7 @@ static __initconst const struct x86_pmu intel_pmu = {
  
- 	.aux_output_match	= intel_pmu_aux_output_match,
-+
-+	.lbr_enable		= intel_pmu_lbr_enable,
-+	.lbr_disable		= intel_pmu_lbr_disable,
+ 	.lbr_enable		= intel_pmu_lbr_enable,
+ 	.lbr_disable		= intel_pmu_lbr_disable,
++	.lbr_reset		= intel_pmu_lbr_reset_64,
  };
  
  static __init void intel_clovertown_quirk(void)
+@@ -4628,6 +4630,9 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.intel_cap.capabilities = capabilities;
+ 	}
+ 
++	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
++		x86_pmu.lbr_reset = intel_pmu_lbr_reset_32;
++
+ 	intel_ds_init();
+ 
+ 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 65113b1..bdd38b6 100644
+index bdd38b6..ff320d1 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -150,7 +150,7 @@ static void intel_pmu_lbr_filter(struct cpu_hw_events *cpuc);
-  * otherwise it becomes near impossible to get a reliable stack.
-  */
+@@ -8,17 +8,6 @@
  
--static void __intel_pmu_lbr_enable(bool pmi)
-+void intel_pmu_lbr_enable(bool pmi)
+ #include "../perf_event.h"
+ 
+-enum {
+-	LBR_FORMAT_32		= 0x00,
+-	LBR_FORMAT_LIP		= 0x01,
+-	LBR_FORMAT_EIP		= 0x02,
+-	LBR_FORMAT_EIP_FLAGS	= 0x03,
+-	LBR_FORMAT_EIP_FLAGS2	= 0x04,
+-	LBR_FORMAT_INFO		= 0x05,
+-	LBR_FORMAT_TIME		= 0x06,
+-	LBR_FORMAT_MAX_KNOWN    = LBR_FORMAT_TIME,
+-};
+-
+ static const enum {
+ 	LBR_EIP_FLAGS		= 1,
+ 	LBR_TSX			= 2,
+@@ -194,7 +183,7 @@ void intel_pmu_lbr_disable(void)
+ 	wrmsrl(MSR_IA32_DEBUGCTLMSR, debugctl);
+ }
+ 
+-static void intel_pmu_lbr_reset_32(void)
++void intel_pmu_lbr_reset_32(void)
  {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	u64 debugctl, lbr_select = 0, orig_debugctl;
-@@ -185,7 +185,7 @@ static void __intel_pmu_lbr_enable(bool pmi)
- 		wrmsrl(MSR_IA32_DEBUGCTLMSR, debugctl);
+ 	int i;
+ 
+@@ -202,7 +191,7 @@ static void intel_pmu_lbr_reset_32(void)
+ 		wrmsrl(x86_pmu.lbr_from + i, 0);
  }
  
--static void __intel_pmu_lbr_disable(void)
-+void intel_pmu_lbr_disable(void)
+-static void intel_pmu_lbr_reset_64(void)
++void intel_pmu_lbr_reset_64(void)
  {
- 	u64 debugctl;
+ 	int i;
  
-@@ -545,7 +545,7 @@ void intel_pmu_lbr_enable_all(bool pmi)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+@@ -221,10 +210,7 @@ void intel_pmu_lbr_reset(void)
+ 	if (!x86_pmu.lbr_nr)
+ 		return;
  
- 	if (cpuc->lbr_users)
--		__intel_pmu_lbr_enable(pmi);
-+		x86_pmu.lbr_enable(pmi);
- }
+-	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
+-		intel_pmu_lbr_reset_32();
+-	else
+-		intel_pmu_lbr_reset_64();
++	x86_pmu.lbr_reset();
  
- void intel_pmu_lbr_disable_all(void)
-@@ -553,7 +553,7 @@ void intel_pmu_lbr_disable_all(void)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
- 	if (cpuc->lbr_users)
--		__intel_pmu_lbr_disable();
-+		x86_pmu.lbr_disable();
- }
- 
- static void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
+ 	cpuc->last_task_ctx = NULL;
+ 	cpuc->last_log_id = 0;
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index f1cd1ca..a61a076 100644
+index a61a076..abf95ef 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -679,6 +679,9 @@ struct x86_pmu {
- 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
- 	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
+@@ -179,6 +179,17 @@ struct x86_perf_task_context;
+ #define MAX_LBR_ENTRIES		32
  
-+	void		(*lbr_enable)(bool pmi);
-+	void		(*lbr_disable)(void);
+ enum {
++	LBR_FORMAT_32		= 0x00,
++	LBR_FORMAT_LIP		= 0x01,
++	LBR_FORMAT_EIP		= 0x02,
++	LBR_FORMAT_EIP_FLAGS	= 0x03,
++	LBR_FORMAT_EIP_FLAGS2	= 0x04,
++	LBR_FORMAT_INFO		= 0x05,
++	LBR_FORMAT_TIME		= 0x06,
++	LBR_FORMAT_MAX_KNOWN    = LBR_FORMAT_TIME,
++};
 +
++enum {
+ 	X86_PERF_KFREE_SHARED = 0,
+ 	X86_PERF_KFREE_EXCL   = 1,
+ 	X86_PERF_KFREE_MAX
+@@ -681,6 +692,7 @@ struct x86_pmu {
+ 
+ 	void		(*lbr_enable)(bool pmi);
+ 	void		(*lbr_disable)(void);
++	void		(*lbr_reset)(void);
+ 
  	/*
  	 * Intel PT/LBR/BTS are exclusive
- 	 */
-@@ -1059,8 +1062,12 @@ void intel_pmu_lbr_del(struct perf_event *event);
+@@ -1056,6 +1068,10 @@ u64 lbr_from_signext_quirk_wr(u64 val);
  
- void intel_pmu_lbr_enable_all(bool pmi);
+ void intel_pmu_lbr_reset(void);
  
-+void intel_pmu_lbr_enable(bool pmi);
++void intel_pmu_lbr_reset_32(void);
 +
- void intel_pmu_lbr_disable_all(void);
- 
-+void intel_pmu_lbr_disable(void);
++void intel_pmu_lbr_reset_64(void);
 +
- void intel_pmu_lbr_read(void);
+ void intel_pmu_lbr_add(struct perf_event *event);
  
- void intel_pmu_lbr_init_core(void);
+ void intel_pmu_lbr_del(struct perf_event *event);
 -- 
 2.7.4
 
