@@ -2,103 +2,98 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5415C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DC3206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C329E208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYAsabp6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="soVACX5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732960AbgFSNpX (ORCPT
+        id S1732974AbgFSNqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44066 "EHLO
+        Fri, 19 Jun 2020 09:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732785AbgFSNpW (ORCPT
+        with ESMTP id S1732695AbgFSNqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:45:22 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F15C06174E;
-        Fri, 19 Jun 2020 06:45:21 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id s18so11288463ioe.2;
-        Fri, 19 Jun 2020 06:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3KbCMnQ3fWd4OCh5WOjleAHLA7RE7+a68TWER+fluSg=;
-        b=RYAsabp67D/InlnPAiumJVkynZbAgsyRWv4Mx9DAozwizFjB3/C+cwmRYwLobjEppu
-         XWfoPExMMTISzF0JO3JD+Ar/qKt30A38vOuCNYiYFKuO4K2shOkdLphM76VKwsZP278/
-         bROUHjsEyd0yjTjSyaVI3QU56PW/2eYV7tmVCkJCQjxTVAQ1N84j4K8YB+ZWQM0rZLT1
-         wvBmz/1UCukS4r5gRZbxtEN5sTHsQSNXjQES5a4B0wQbYgJgctrL9230vCWGdveOI8Bu
-         UKvPuIrQAgTrxQJD7iv8fDot778pxeU8OXTeUgc+VmUpWieYaCHFtIKngEKGHKEbdG9O
-         h6Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3KbCMnQ3fWd4OCh5WOjleAHLA7RE7+a68TWER+fluSg=;
-        b=YJWUX0GTI7id8TgxSszwUVXnvv5QG8a12TRBpXDCYxSAY5PMSE7nAkenDtw6R4WLox
-         I0lRpKexGHXYsmnmDGWzmbhdoZl/7BzrzZpiYex7S85DPzv7FOlz2wq4IvK0iGK9C+xQ
-         QL55FyB42xPK4X/1uGt8Koiudr65Taah5gxB9osSoqVdV9LPxXXElIX88iwDwTpt+1ny
-         ReNZhawkCZvdj3whsER0S91vgFESbfVB+kyK+ttw0j+HVsqDxqWQj9Usoa/iMHGoi/8K
-         YlMPfw4HTHoI+I0r40nCcjUZqv//As0WXROE0UAJo2mIuCjNeGXsF5bVrpvpesyPpr/p
-         o08w==
-X-Gm-Message-State: AOAM532KhZePrV8JPeqHHquQPtwlGtkwr3Ino4yYrq1QSWK8bJe50viI
-        f7JbptEBwhFhi65RZW/nRvhfNtVyaIZeshJv8/s=
-X-Google-Smtp-Source: ABdhPJymf9lkb/99ztlOPnVqmjfseQ5wZThn/cprANDQ+siUR8wjgIkqr7UjfS+nJJstOGBrPuLNfd2PIePPHzrSZU8=
-X-Received: by 2002:a05:6602:2e87:: with SMTP id m7mr4397605iow.203.1592574320698;
- Fri, 19 Jun 2020 06:45:20 -0700 (PDT)
+        Fri, 19 Jun 2020 09:46:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD94C06174E;
+        Fri, 19 Jun 2020 06:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mBr2Dog35BqG+RyTNPha2esLGVpTLQRGG3cv7MWSe60=; b=soVACX5yYdkb7jdgKOmo6zfik5
+        Jv2cxNQEL5SZgExWNYoWzXPVE4vzg5/Fmano1VHg6I1Jm+hIGkjgYY6w0ozdHzl8szyQioZnzuMMq
+        hyxD4WgR5o1dzYTIFlcBTTsoJ+18t9KDnwbAr4vrg4zYVGF/T2THmjRU/FdwXdcq0msVmsyWiMa8w
+        P2ivUKcPAyoi3iwGmDvwsM8LvDGOPu5sSoX2+UsiHjnBWo+gyZQrRrNjEiagUV2XbU+OfMA9zuE7l
+        th7SQ/TWy8ee4vke7kIl9K3O32LvGlWCBxi33WQh7fHWFW7wKJyCEs8ttyoWHCk4wy9QQd/u+PcVU
+        O6jz0y3w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmHLM-0002ts-Tm; Fri, 19 Jun 2020 13:46:08 +0000
+Date:   Fri, 19 Jun 2020 06:46:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Yu Kuai <yukuai3@huawei.com>, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH] xfs: fix use-after-free on CIL context on shutdown
+Message-ID: <20200619134608.GA32599@infradead.org>
+References: <20200611013952.2589997-1-yukuai3@huawei.com>
+ <20200611022848.GQ2040@dread.disaster.area>
+ <20200611024503.GR2040@dread.disaster.area>
 MIME-Version: 1.0
-References: <20200617145310.GK3183@techsingularity.net>
-In-Reply-To: <20200617145310.GK3183@techsingularity.net>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 19 Jun 2020 16:45:09 +0300
-Message-ID: <CAOQ4uxjdTUnA2ACQtyZ95QkTtH_zaKZEYLyok73yjrhuUyXmtg@mail.gmail.com>
-Subject: Re: [PATCH] fs, pseudo: Do not update atime for pseudo inodes
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611024503.GR2040@dread.disaster.area>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 5:53 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> The kernel uses internal mounts created by kern_mount() and populated
-> with files with no lookup path by alloc_file_pseudo() for a variety of
-> reasons. An relevant example is anonymous pipes because every vfs_write
-> also checks if atime needs to be updated even though it is unnecessary.
-> Most of the relevant users for alloc_file_pseudo() either have no statfs
-> helper or use simple_statfs which does not return st_atime. The closest
+On Thu, Jun 11, 2020 at 12:45:03PM +1000, Dave Chinner wrote:
+> 
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> xlog_wait() on the CIL context can reference a freed context if the
+> waiter doesn't get scheduled before the CIL context is freed. This
+> can happen when a task is on the hard throttle and the CIL push
+> aborts due to a shutdown. This was detected by generic/019:
+> 
+> thread 1			thread 2
+> 
+> __xfs_trans_commit
+>  xfs_log_commit_cil
+>   <CIL size over hard throttle limit>
+>   xlog_wait
+>    schedule
+> 				xlog_cil_push_work
+> 				wake_up_all
+> 				<shutdown aborts commit>
+> 				xlog_cil_committed
+> 				kmem_free
+> 
+>    remove_wait_queue
+>     spin_lock_irqsave --> UAF
+> 
+> Fix it by moving the wait queue to the CIL rather than keeping it in
+> in the CIL context that gets freed on push completion. Because the
+> wait queue is now independent of the CIL context and we might have
+> multiple contexts in flight at once, only wake the waiters on the
+> push throttle when the context we are pushing is over the hard
+> throttle size threshold.
+> 
+> Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
+> Reported-by: Yu Kuai <yukuai3@huawei.com>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
 
-st_atime is returned by simple_getattr()
+Looks good:
 
-> proxy measure is the proc fd representations of such inodes which do not
-> appear to change once they are created. This patch sets the S_NOATIME
-> on inode->i_flags for inodes created by new_inode_pseudo() so that atime
-> will not be updated.
->
-
-new_inode() calls new_inode_pseudo() ...
-You need to factor out a new helper.
-
-Either you can provide callers analysis of all new_inode_pseudo() users
-or use a new helper to set S_NOATIME and call it from the relevant users
-(pipe, socket).
-
-How about S_NOCMTIME while you are at it?
-Doesn't file_update_time() show in profiling?
-Is there a valid use case for updating c/mtime of anonymous socket/pipe?
-
-Thanks,
-Amir.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
