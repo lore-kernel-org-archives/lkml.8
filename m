@@ -2,110 +2,155 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5174C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602ED20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HNNQPXzq"
+	by mail.kernel.org (Postfix) with ESMTP id AA1D420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgFSCmR (ORCPT
+        id S1729140AbgFSCsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 22:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729853AbgFSCmQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 22:42:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D611C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 19:42:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 64so3739240pfv.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 19:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=9e80yMHZbPkPTyU+sZPbiOukpOCOqIvKBeY3mrA0Y5A=;
-        b=HNNQPXzqGVe/GMkz7DjfenyPubxRILX0j2RLdtVwD8GF7OTpLR5Pwc5RdoLwKmUsRk
-         6iUU0KeYStS6h1lC7UGeQb9zcbCOBigomrxHYLLGNjnQ0QJr0Kplo58XqBacdAwt+u4R
-         VCSKGWyVvmsnmjdG6bLHsADjECECpyCP/+mww=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=9e80yMHZbPkPTyU+sZPbiOukpOCOqIvKBeY3mrA0Y5A=;
-        b=coh8gWMBhoHXiQz38XWi9ATFvqIWyZQJy8n5N8Iol1f/VCuusBdsgUgFGLkJ7cd7gl
-         qhZpe3gDzLQlJQXCjwWDjiwo+uS3R6yrjXwITaws5BcE0gdTblXnOBYRRk2NjpGbKiWo
-         XcpDbar+QJOf/wOhhZkE4j4+knHe3dGWu4525ZrXtlPZ+C4wW3c0PkOyWJj8AYcpUH5q
-         UnjIN8lG7IvgnRRvBv8gbnhoyG2/Bz94m5lXLft9YSQIFVjBAWj0gZSXzvEVBYJ+/bnv
-         UKSCYZ6DrOg1nLtou1lL5RlfqpVMtVemR7DmryBXKtQAGl52wJ9RVBvxSP8A9ZFKZzKS
-         fPeQ==
-X-Gm-Message-State: AOAM533ymtHVxHevsujP5ugazjvvicqxeRYf75wLnMie/uKbZdFwZWR9
-        ADr+aMhxlz1QX0JQ2kWgixyyeg==
-X-Google-Smtp-Source: ABdhPJybrrj0a9EBMYt0EbHe0jA6QfVUNY2GxJXQaUaLQWJmUfQYGIhzEObjIJu/CMKpY1Png1WPMQ==
-X-Received: by 2002:a63:e455:: with SMTP id i21mr1290469pgk.23.1592534535152;
-        Thu, 18 Jun 2020 19:42:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z9sm3598944pjr.39.2020.06.18.19.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 19:42:14 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 19:42:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] overflow helper addition for v5.8-rc2
-Message-ID: <202006181937.CA6017A@keescook>
+        Thu, 18 Jun 2020 22:48:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6285 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727114AbgFSCsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 22:48:23 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 91C94DE41C02577A07ED;
+        Fri, 19 Jun 2020 10:48:20 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 19 Jun
+ 2020 10:48:16 +0800
+Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:_[PATCH]_f2fs-tools:_set_cold_flag?=
+ =?UTF-8?Q?_for_non-dir_node?=
+To:     Zac <zhaowuyun@wingtech.com>, <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1592484487-12072-1-git-send-email-zhaowuyun@wingtech.com>
+ <4a2d19c4-1ede-0172-fe50-c8464ee341df@huawei.com>
+ <000001d645e0$4aa645d0$dff2d170$@wingtech.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <ffcc8474-f2af-1934-9219-f4de6757e4a7@huawei.com>
+Date:   Fri, 19 Jun 2020 10:48:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <000001d645e0$4aa645d0$dff2d170$@wingtech.com>
+Content-Type: text/plain; charset="gbk"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2020/6/19 10:21, Zac wrote:
+>> On 2020/6/18 20:48, zhaowuyun@wingtech.com wrote:
+>>> From: Wuyun Zhao <zhaowuyun@wingtech.com>
+>>
+>> Thanks for the patch. :)
+>>
+>> Please add commit message here.
+> 
+> OK
+> 
+>>>
+>>> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+>>> ---
+>>>  fsck/dir.c  |  1 +
+>>>  fsck/node.c |  1 +
+>>>  fsck/node.h | 11 +++++++++++
+>>>  3 files changed, 13 insertions(+)
+>>>
+>>> diff --git a/fsck/dir.c b/fsck/dir.c
+>>> index 5f4f75e..dc03c98 100644
+>>> --- a/fsck/dir.c
+>>> +++ b/fsck/dir.c
+>>> @@ -522,6 +522,7 @@ static void init_inode_block(struct f2fs_sb_info
+>> *sbi,
+>>>  	node_blk->footer.nid = cpu_to_le32(de->ino);
+>>>  	node_blk->footer.flag = 0;
+>>>  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
+>>> +	set_cold_node(node_blk, S_ISDIR(mode));
+>>>
+>>>  	if (S_ISDIR(mode)) {
+>>>  		make_empty_dir(sbi, node_blk);
+>>> diff --git a/fsck/node.c b/fsck/node.c
+>>> index 229a99c..1d291ca 100644
+>>> --- a/fsck/node.c
+>>> +++ b/fsck/node.c
+>>> @@ -79,6 +79,7 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
+>>>  	node_blk->footer.ino = f2fs_inode->footer.ino;
+>>>  	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+>>>  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
+>>> +	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+>>
+>> How about wrapping these node footer fields assignment into a function?
+>> then
+>> we can reuse this in other places.
+>>
+>> void set_node_footer(nid, ino, ofs, ver, is_dir)
+>> {
+>> 	node_blk->footer.nid = cpu_to_le32(nid);
+>> 	node_blk->footer.ino = f2fs_inode->footer.ino;
+>> 	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+>> 	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
+>> 	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+>> }
+> 
+> Ok, That's good.
+> 
+>>>
+>>>  	type = CURSEG_COLD_NODE;
+>>>  	if (IS_DNODE(node_blk)) {
+>>> diff --git a/fsck/node.h b/fsck/node.h
+>>> index 6bce1fb..99139b1 100644
+>>> --- a/fsck/node.h
+>>> +++ b/fsck/node.h
+>>> @@ -161,6 +161,17 @@ static inline int is_node(struct f2fs_node
+>> *node_blk, int type)
+>>>  	return le32_to_cpu(node_blk->footer.flag) & (1 << type);
+>>>  }
+>>
+>> Beside this, I think we need to use set_node_footer() in:
+>> - f2fs_write_root_inode
+>> - f2fs_write_qf_inode
+>> - f2fs_write_lpf_inode
+>>
+>> as well to fix mkfs bugs.
+> 
+> the root inode and the lpf inode is dir, need to set cold flag? 
 
-Please pull this tiny overflow helper addition for v5.8-rc2. During the
-treewide clean-ups of zero-length "flexible arrays", the struct_size()
-helper was heavily used, but it was noticed that many times it would
-have been nice to have an additional helper to get the size of just the
-flexible array itself. This need appears to be even more common when
-cleaning up the 1-byte array "flexible arrays", so Gustavo implemented
-it. I'd love to get this landed before -rc2 so it can be used during
-the v5.9 dev cycle to ease the 1-byte array cleanups.
+No, but it is worth to use set_node_footer(..., is_dir:true) for cleanup.
 
-Thanks!
+Thanks,
 
--Kees
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/overflow-v5.8-rc2
-
-for you to fetch changes up to b19d57d0f3cc6f1022edf94daf1d70506a09e3c2:
-
-  overflow.h: Add flex_array_size() helper (2020-06-16 20:45:08 -0700)
-
-----------------------------------------------------------------
-Add flex-array size helper
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      overflow.h: Add flex_array_size() helper
-
- include/linux/overflow.h | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
-
--- 
-Kees Cook
+> 
+>> Thanks,
+>>
+>>>
+>>> +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
+>>> +{
+>>> +	unsigned int flag = le32_to_cpu(rn->footer.flag);
+>>> +
+>>> +	if (is_dir)
+>>> +		flag &= ~(0x1 << COLD_BIT_SHIFT);
+>>> +	else
+>>> +		flag |= (0x1 << COLD_BIT_SHIFT);
+>>> +	rn->footer.flag = cpu_to_le32(flag);
+>>> +}
+>>> +
+>>>  #define is_fsync_dnode(node_blk)	is_node(node_blk, FSYNC_BIT_SHIFT)
+>>>  #define is_dent_dnode(node_blk)		is_node(node_blk,
+>> DENT_BIT_SHIFT)
+>>>
+>>>
+> 
+> .
+> 
