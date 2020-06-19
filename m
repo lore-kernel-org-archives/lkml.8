@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D47020B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51B320706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580074;
-	bh=h6qgXN4fgHCA3UiZlx2CBU9FEsMck4TG+MvMhPBdHmg=;
+	s=default; t=1592580077;
+	bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A90uK2DHaQowK3jjpryStX9VMXkc+odYVheTUXXhucNCkGUbpMuZW8cfcHvNyZkEt
-	 LkrmKseDrkXXGZL0J32vh6VTW6kzzchFmNinum436cuf0KAsfhTUg5aFxFGQfnbH1c
-	 4xxLOQByC3zvPWj42XdnXDGdnoofAFFOby7WiuY4=
+	b=v8LmPk+EycNgOzX4nbGsEAQlyy/paXSdPmN8rgBpa6dm6cH82/DW5e2WznTo26V/D
+	 fKq6c7dgD0VytTCLR5CGyRJNlrx2BJtthGCw5ouLGVLqUq4x5iZ3NbgUnwhaccIuB/
+	 v4HYdY3FkTITtrq0oicXImOAK20ptXhkY50BIWwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392541AbgFSPVN (ORCPT
+        id S2392830AbgFSPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49004 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392591AbgFSPSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:37 -0400
+        id S2392590AbgFSPSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE9221582;
-        Fri, 19 Jun 2020 15:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A423217D8;
+        Fri, 19 Jun 2020 15:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579916;
-        bh=h6qgXN4fgHCA3UiZlx2CBU9FEsMck4TG+MvMhPBdHmg=;
+        s=default; t=1592579913;
+        bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W619LnvFfdAahcwPOUmFplfsbisuEJLAftB10ETVivdyeTd9S4iF4xAOYcJ+COT6R
-         uIC6W2CjGo/lRUDRfft6AiEtqR/1o8pkkYmqm0brTvDQsynGWlASL23RzKEiwPxWAm
-         PwnOAVeJKCPJA3FCGz2ViszE+sxtKR7U151+o6DM=
+        b=MvLaKlLpQk31EZlwf6T0UPT1UuTs+sHoZhu29mYNbvNXtdaf5otO5lHtz2hNwkoeP
+         2PLshzTZgoXQ9TAlbrz8wryhvJpInVXYkswUrvLt5pFc3i8MHIcGb7mMY+ePA7OXC0
+         LB2KeDpkUgQYV6DIY2xpj9GqcOZhU3jwYR5yWu9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alston Tang <alston64@fb.com>,
+        stable@vger.kernel.org, Veronika Kabatova <vkabatov@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 022/376] libbpf: Fix memory leak and possible double-free in hashmap__clear
-Date:   Fri, 19 Jun 2020 16:29:00 +0200
-Message-Id: <20200619141711.409839515@linuxfoundation.org>
+Subject: [PATCH 5.7 021/376] selftests/bpf: Copy runqslower to OUTPUT directory
+Date:   Fri, 19 Jun 2020 16:28:59 +0200
+Message-Id: <20200619141711.365228398@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,43 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Veronika Kabatova <vkabatov@redhat.com>
 
-[ Upstream commit 229bf8bf4d910510bc1a2fd0b89bd467cd71050d ]
+[ Upstream commit b26d1e2b60284dc9f66ffad9ccd5c5da1100bb4b ]
 
-Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
-of the remaining entries. Also NULL-out bucket list to prevent possible
-double-free between hashmap__clear() and hashmap__free().
+$(OUTPUT)/runqslower makefile target doesn't actually create runqslower
+binary in the $(OUTPUT) directory. As lib.mk expects all
+TEST_GEN_PROGS_EXTENDED (which runqslower is a part of) to be present in
+the OUTPUT directory, this results in an error when running e.g. `make
+install`:
 
-Running test_progs-asan flavor clearly showed this problem.
+rsync: link_stat "tools/testing/selftests/bpf/runqslower" failed: No
+       such file or directory (2)
 
-Reported-by: Alston Tang <alston64@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
+Copy the binary into the OUTPUT directory after building it to fix the
+error.
+
+Fixes: 3a0d3092a4ed ("selftests/bpf: Build runqslower from selftests")
+Signed-off-by: Veronika Kabatova <vkabatov@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200428173742.2988395-1-vkabatov@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/hashmap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/testing/selftests/bpf/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index 54c30c802070..cffb96202e0d 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 7729892e0b04..4e654d41c7af 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -141,7 +141,8 @@ VMLINUX_BTF := $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+ $(OUTPUT)/runqslower: $(BPFOBJ)
+ 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
+ 		    OUTPUT=$(SCRATCH_DIR)/ VMLINUX_BTF=$(VMLINUX_BTF)   \
+-		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR)
++		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR) &&	\
++		    cp $(SCRATCH_DIR)/runqslower $@
  
- void hashmap__clear(struct hashmap *map)
- {
-+	struct hashmap_entry *cur, *tmp;
-+	int bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
-+	}
- 	free(map->buckets);
-+	map->buckets = NULL;
- 	map->cap = map->cap_bits = map->sz = 0;
- }
+ $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
  
 -- 
 2.25.1
