@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF251C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A193C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0754207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793A8204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582725;
-	bh=DlI6oCseilzi6eilp8Gz7Ep8tm7QK7mbRC7ltwIV4Lc=;
+	s=default; t=1592582735;
+	bh=7GNl6M4KWJ3+Rr0cswo6ka81wRD78EgUHOeMUu2UoBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ai/gioWYHpeoJbGbqqAgHpiFFk9snNjbtLV89YeqzN25xtmaAg5h2Pw0tS7K+pNYp
-	 3MnsIJRH4MQEkJsZbt6d3nNRPKmKbyKnsGGI2+zMYa+sTEM+ZKYwJ8Z8FpaNY5s6OC
-	 DdEdk0+TByKDoCR8er5WhsKEyWlfQyiDZTDMkA/I=
+	b=EsOnJlXcelHZDxLNNUVS412nbjQRa4vGQQBU8VWbG86dJYnn9ABG1NrkBL2oh/aeS
+	 gDGYxUTKHNiSx6BdVO+ies5EsRJ9UAJlLzUd2nap0q3mSVqCrL6yOFr8O3I3hK930u
+	 nImoEpK94SCX3v+uWXMpB+t+0jTonzbl668hnOhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392336AbgFSQFY (ORCPT
+        id S2391911AbgFSQFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39534 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391959AbgFSPJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:46 -0400
+        id S2391272AbgFSPJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:09:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9AAE21D7E;
-        Fri, 19 Jun 2020 15:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D10B20776;
+        Fri, 19 Jun 2020 15:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579385;
-        bh=DlI6oCseilzi6eilp8Gz7Ep8tm7QK7mbRC7ltwIV4Lc=;
+        s=default; t=1592579374;
+        bh=7GNl6M4KWJ3+Rr0cswo6ka81wRD78EgUHOeMUu2UoBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KtykpfGuOlXevp4AJpO+R8cijSshbqpx0ax8PZltUnZRDHmxTR3lMdV9q7Gk9psmJ
-         VsikR1MT9HDlBZfepD4aaauYelRIyNEzyIeD3Wz9koryPBD7bd/PByTBRjwz3xVNXo
-         5O5epXfJuvmVGVDmkIsIGe8bDBQnGWvg9XeUUm2g=
+        b=Q0uujtgEDKljA6WWbNODKloygXmNTrV26bXiZxdrigHzejTL03bIxK5inoWukYBpm
+         Hbm/75QsZ3FWe3s8kNc0QOvTc/rM2xQF+UUr0obZDKvzLnt6ZjMWWaNUqqRakEm4Kl
+         mqx7aiHnnoaHNl1p8ntZsdsGbhiwRv9378ipYHYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 115/261] veth: Adjust hard_start offset on redirect XDP frames
-Date:   Fri, 19 Jun 2020 16:32:06 +0200
-Message-Id: <20200619141655.378836850@linuxfoundation.org>
+        stable@vger.kernel.org, Chih-Min Chen <chih-min.chen@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 111/261] mt76: avoid rx reorder buffer overflow
+Date:   Fri, 19 Jun 2020 16:32:02 +0200
+Message-Id: <20200619141655.188648843@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -63,84 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
+[ Upstream commit 7c4f744d6703757be959f521a7a441bf34745d99 ]
 
-When native XDP redirect into a veth device, the frame arrives in the
-xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-which can run a new XDP bpf_prog on the packet. Doing so requires
-converting xdp_frame to xdp_buff, but the tricky part is that
-xdp_frame memory area is located in the top (data_hard_start) memory
-area that xdp_buff will point into.
+Enlarge slot to support 11ax 256 BA (256 MPDUs in an AMPDU)
 
-The current code tried to protect the xdp_frame area, by assigning
-xdp_buff.data_hard_start past this memory. This results in 32 bytes
-less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
-
-This protect step is actually not needed, because BPF-helper
-bpf_xdp_adjust_head() already reserve this area, and don't allow
-BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-directly at xdp_frame memory area.
-
-Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-Reported-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
+Signed-off-by: Chih-Min Chen <chih-min.chen@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/veth.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mediatek/mt76/agg-rx.c | 8 ++++----
+ drivers/net/wireless/mediatek/mt76/mt76.h   | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 9f3c839f9e5f..88cfd63f08a6 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -510,13 +510,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 					struct veth_xdp_tx_bq *bq)
+diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+index 8f3d36a15e17..cbff0dfc9631 100644
+--- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
++++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+@@ -143,8 +143,8 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
+ 	struct ieee80211_sta *sta;
+ 	struct mt76_rx_tid *tid;
+ 	bool sn_less;
+-	u16 seqno, head, size;
+-	u8 ackp, idx;
++	u16 seqno, head, size, idx;
++	u8 ackp;
+ 
+ 	__skb_queue_tail(frames, skb);
+ 
+@@ -230,7 +230,7 @@ out:
+ }
+ 
+ int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno,
+-		       u16 ssn, u8 size)
++		       u16 ssn, u16 size)
  {
- 	void *hard_start = frame->data - frame->headroom;
--	void *head = hard_start - sizeof(struct xdp_frame);
- 	int len = frame->len, delta = 0;
- 	struct xdp_frame orig_frame;
- 	struct bpf_prog *xdp_prog;
- 	unsigned int headroom;
- 	struct sk_buff *skb;
+ 	struct mt76_rx_tid *tid;
  
-+	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
-+	hard_start -= sizeof(struct xdp_frame);
-+
- 	rcu_read_lock();
- 	xdp_prog = rcu_dereference(rq->xdp_prog);
- 	if (likely(xdp_prog)) {
-@@ -538,7 +540,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			break;
- 		case XDP_TX:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (unlikely(veth_xdp_tx(rq->dev, &xdp, bq) < 0)) {
- 				trace_xdp_exception(rq->dev, xdp_prog, act);
-@@ -550,7 +551,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			goto xdp_xmit;
- 		case XDP_REDIRECT:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
- 				frame = &orig_frame;
-@@ -572,7 +572,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 	rcu_read_unlock();
+@@ -254,7 +254,7 @@ EXPORT_SYMBOL_GPL(mt76_rx_aggr_start);
  
- 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
--	skb = veth_build_skb(head, headroom, len, 0);
-+	skb = veth_build_skb(hard_start, headroom, len, 0);
- 	if (!skb) {
- 		xdp_return_frame(frame);
- 		goto err;
+ static void mt76_rx_aggr_shutdown(struct mt76_dev *dev, struct mt76_rx_tid *tid)
+ {
+-	u8 size = tid->size;
++	u16 size = tid->size;
+ 	int i;
+ 
+ 	cancel_delayed_work(&tid->reorder_work);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+index 502814c26b33..52a16b42dfd7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+@@ -240,8 +240,8 @@ struct mt76_rx_tid {
+ 	struct delayed_work reorder_work;
+ 
+ 	u16 head;
+-	u8 size;
+-	u8 nframes;
++	u16 size;
++	u16 nframes;
+ 
+ 	u8 started:1, stopped:1, timer_pending:1;
+ 
+@@ -723,7 +723,7 @@ int mt76_get_survey(struct ieee80211_hw *hw, int idx,
+ void mt76_set_stream_caps(struct mt76_dev *dev, bool vht);
+ 
+ int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid,
+-		       u16 ssn, u8 size);
++		       u16 ssn, u16 size);
+ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid);
+ 
+ void mt76_wcid_key_setup(struct mt76_dev *dev, struct mt76_wcid *wcid,
 -- 
 2.25.1
 
