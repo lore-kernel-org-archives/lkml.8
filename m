@@ -2,93 +2,124 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5369C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAF3206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9BF20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMObCSL9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QLUC48eA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732786AbgFSNZm (ORCPT
+        id S1732636AbgFSN0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
+        Fri, 19 Jun 2020 09:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgFSNZl (ORCPT
+        with ESMTP id S1726124AbgFSN0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:25:41 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6D0C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:25:41 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id 190so5564921vsr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:25:41 -0700 (PDT)
+        Fri, 19 Jun 2020 09:26:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A7CEC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:26:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so9710865wrc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pe441WW1LSRPBER/VEbJr71Ehe68Su2JNokTKHgWsUo=;
-        b=NMObCSL95MeDllpzNfH0ZIZFI9gkF+Nq9ikx+KgYGOL3YrPBj/NyGTy2yXCVZra3RT
-         odLX1nmh3+/D9YyhGWxoWFmSXi0CcCCnfZfyp5PE9jo9Cp3ncOGKRZf4qXKgWtBdewAB
-         tpu/HZho1v755nKSNN66unfqcGKPukGGUbUSk1QlOUG8TajVCebhjLeATKFjFx8vQtSX
-         8n5LKY/u8XRsMX0DU5ia8SG1wNir9yV0p5oJkAqAJ6X9v5aRtdsGVNSbDf1XCRdYwW1w
-         l3GEtlxQQ86ncH2xy+0Fd8ABfZxgPRs+JMRxvBnE1Ql2W3uDSeN07n/NHDfiVfXxZ5ET
-         TH9Q==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EDl06g4tI7RUg4Oea7vYlL/mQwT19V4CjRtIu35w2Zs=;
+        b=QLUC48eAWY3hijmku8GpuBCuKGMbRGGYnsCvnSOMwCSReiU4gDckvhQ0mon/l8lK/8
+         demq2lvGDTinTcrmwzXSzSMooLCanOrZY5bnL4kpHqRxswAMMY0u7CoALWURUENrULgN
+         UnEh58Or9livqzI2yxoJtbcVzmnzwA//5M3auAd+RtH3HKRwaG12KUWy+IZgTFSP5UHc
+         xtv0yV7b0GCoTn4J7Rx/4pYxh1H6XW5yil/MsUTROGIWdlrSuRcbUQa5MaBvwoqWT18V
+         208bMswjw8Tz8GLkzrsnhVFROipwdtTnbmaiuiNfrXSSkD/AGVWneSktvOq4Qfv+d7G/
+         spgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pe441WW1LSRPBER/VEbJr71Ehe68Su2JNokTKHgWsUo=;
-        b=uP3LPqt577KHsKxFZr9RVZlRS0gjYLJyNQ/hpfL3cJaby5T60v1sasfi8nIo2TaDji
-         O54onsC6pLC+KP+5NAclI8L0PBo40DfoI6ERGP5rb7RxkQLFitlzIuHWABALKzdklJgy
-         VF7w3Fj7FRnk9aNrBaNQbVtkcYIVylfpizfEvzWv1Cua5EMC9wN0mcJMEkQgns5uNktr
-         stYn91N3x7qcUY9R4tY4ZYKGXScy3czgfb45gZwC0CuTX4bvWuD8ng2G5qFVKImQHJHN
-         E2rSXChgsJ2qwhHHPm6PUkmpfttpkE7ESMnCVWS5EJsNzmG6dS7p0KI5JRJ82FA8YzR9
-         cxZw==
-X-Gm-Message-State: AOAM532CRGq2ly175ZSSNNawr8Okd02SDkmn8W3xAnsNrII6S3W+sxY9
-        aItgHXefxy8H/mRk8RWKRYolj5bdka/qL3qUcig=
-X-Google-Smtp-Source: ABdhPJzrnULhvbYSHWb4G/lzbbPmR2mlw4laspTNJshTGQvru6rETCFSB0YjIa3VA6ykCwQjvSV8DCHN4XQduCEVb04=
-X-Received: by 2002:a67:f595:: with SMTP id i21mr7602571vso.3.1592573140318;
- Fri, 19 Jun 2020 06:25:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EDl06g4tI7RUg4Oea7vYlL/mQwT19V4CjRtIu35w2Zs=;
+        b=KTt6zu23+EcJSEmTysC6GMWDgBd+mgV+4ZLu9bWhESrdE+Rja726+NTJPDrI4dpTQW
+         eMQEOc+gby5BPG5witOys7wdDYRi5LMF9dMv88bH5NYkefvqHpzzcW7s69kJpDmAbrFv
+         H06i1sM39XUmWD3B1+Nlzx6OljMxKyw064YkZ3cGeXLndg0rsON8SkMkEh4JsG+EM7kX
+         hv1LPxc95MN4YVNKNrO9ZGhfB7XCk/SVS+qJJlx71nbVq/lQDwhRPLfLUIl6yYa19FIr
+         sb9VZRIPzvXoTzVfkm5taRyCjV3+EPtysPBFmNo7mksHxxnX+Iask7lxYaJO8mMdU/ww
+         6Y9A==
+X-Gm-Message-State: AOAM5301muInfYRKwccjnn0+Rxv8Rl5pqk07zTW89QE2styt8NOgA6w2
+        Go56mkRLAyeBQzwVBgXuVoUXXw==
+X-Google-Smtp-Source: ABdhPJxnbuGZHxhaFkC20h6Lj9zI284RFEXrueAkWZLrV5n8WksPkz86OBiz1yA1TokXrXfksJVcRA==
+X-Received: by 2002:a5d:464e:: with SMTP id j14mr4100659wrs.393.1592573193795;
+        Fri, 19 Jun 2020 06:26:33 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id u12sm7506265wrq.90.2020.06.19.06.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 06:26:32 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 15:26:27 +0200
+From:   Marco Elver <elver@google.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] kcsan: Improve small stylistic detail in compiler-clang.h
+Message-ID: <20200619132627.GD222848@elver.google.com>
+References: <20200619125721.15946-1-sedat.dilek@gmail.com>
 MIME-Version: 1.0
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
-In-Reply-To: <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 14:25:28 +0100
-Message-ID: <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619125721.15946-1-sedat.dilek@gmail.com>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 00:52, Dave Hansen <dave.hansen@intel.com> wrote:
-> It doesn't tell you if your data is encrypted.
+On Fri, Jun 19, 2020 at 02:57PM +0200, Sedat Dilek wrote:
+> Commit 5cbaefe9743bf14c9d3106db0cc19f8cb0a3ca22
+> ("kcsan: Improve various small stylistic details")
+> 
+> ...forgot to improve a stylistic detail that was already done at
+> another place in compiler-clang.h file.
+> 
+> Fixes: 5cbaefe9743b ("kcsan: Improve various small stylistic details")
+> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> ---
+>  include/linux/compiler-clang.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index ee37256ec8bd..c47141b185fe 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -25,7 +25,7 @@
+>  #endif
+>  
+>  #if __has_feature(thread_sanitizer)
+> -/* emulate gcc's __SANITIZE_THREAD__ flag */
+> +/* Emulate GCC's __SANITIZE_THREAD__ flag */
 
-Sorry for the perhaps naive question, but I thought MKTME was
-essentially full physical memory encryption?
+Yeah, it's inconsistent, but if you look at the rest of the file, none
+of it looks particularly pretty.
 
-Richard
+This change isn't really affecting KCSAN, but is a stylistic change
+confined to compiler-clang.h: while we're here, we could just bunch a
+couple of them into one patch and make it "compiler-clang.h: Improve
+comments style" or something.
+
+1. These sentences probably want a '.' at the end.
+
+2. Make all comments start with a capital letter, and punctuate
+   correctly.
+
+3. Multi-line comments should have the first line just '/*' and the
+   second line starts the text.
+
+Thanks,
+-- Marco
