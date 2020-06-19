@@ -2,50 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB712C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238EB20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9985420734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580895;
-	bh=oO1bjccYz64ROXGmEVK5NoXSBmGAiK54CSO+SgGWLYA=;
+	s=default; t=1592580896;
+	bh=nXTV6n7LKEwJ4P48YU2wRCjA/VUb6tyTjEfTta8LoJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yY0gjTk0QYDxNfs5j5gvRjK0IvFIfgUKTuWoRLGfJooI4luMvMD6jBgq5ABd6HMlc
-	 mCDM8rdsxpdp4y/c4aUbvSI5KgjTvvHtStwmRhk3wZROpTeNUizwPX4GUqR2XPqEsA
-	 pPf12VMC20VjY4pcX9q4oKtQ1vpyVpVOditI2rrU=
+	b=lst5dyZHnxsDvCxTpN+Ccuwz0KeT3SQHnVUxYx3vEqDtp6jt5DGzQGBb5ycp4CfjZ
+	 jQONud7vI0t4D1O1Pke7hG8vzoXYF6IOQWiUpgd7iAzuBT1KllcYY64WAtNSh/YxuH
+	 /Em8RGgc8mG2w8RJr/4NW9kAmY03I+BvyJmchXrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404977AbgFSPex (ORCPT
+        id S2393875AbgFSPcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36186 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393881AbgFSPcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:12 -0400
+        id S2393837AbgFSPb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2EE20734;
-        Fri, 19 Jun 2020 15:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB3020734;
+        Fri, 19 Jun 2020 15:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580731;
-        bh=oO1bjccYz64ROXGmEVK5NoXSBmGAiK54CSO+SgGWLYA=;
+        s=default; t=1592580716;
+        bh=nXTV6n7LKEwJ4P48YU2wRCjA/VUb6tyTjEfTta8LoJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCerBpLuIc8I/LU7BIkIJA5acUPwjcgXVcYOWjhvOSA/U3ZC+UuLYv1fo0BOs2Dn/
-         bftY3XEGPlGe3S5Src5vDUPvYBJMRoTihB2nOmZfS2z3OpEo8xGLP9pphordK2epbT
-         fJFnHQF1zLsdKKL0qRtHFjZdy0nLQQCGEW3gkZ7w=
+        b=bs60xdRrYpBW3F5umiUFuPOWI0V/6ydN4rDpVaRf3FEVw3UYrir37XfCUTVrmLCsv
+         JKIZMTYbpWRO7M5dPKzKAAAV7U0qi1+MnCqQqq18ASeb695R+fUkocfHkBpaTtj6nV
+         0RNR6AUwA7jSNKAb2e1xj+jDy/HyiUjk8voo0LkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.7 344/376] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
-Date:   Fri, 19 Jun 2020 16:34:22 +0200
-Message-Id: <20200619141726.610751005@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 356/376] mtd: rawnand: sharpsl: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:34 +0200
+Message-Id: <20200619141727.170895339@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -58,57 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 4b50c8c4eaf06a825d1c005c0b1b4a8307087b83 upstream.
+commit 0f44b3275b3798ccb97a2f51ac85871c30d6fbbc upstream.
 
-This code does not work as stated in the comment.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-$(CONFIG_MODVERSIONS) is always empty because it is expanded before
-include/config/auto.conf is included. Hence, 'make modules' with
-CONFIG_MODVERSION=y cannot record the version CRCs.
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense.
 
-This has been broken since 2003, commit ("kbuild: Enable modules to be
-build using the "make dir/" syntax"). [1]
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
-Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-49-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/mtd/nand/raw/sharpsl.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -608,12 +608,8 @@ KBUILD_MODULES :=
- KBUILD_BUILTIN := 1
+--- a/drivers/mtd/nand/raw/sharpsl.c
++++ b/drivers/mtd/nand/raw/sharpsl.c
+@@ -183,7 +183,7 @@ static int sharpsl_nand_probe(struct pla
+ 	return 0;
  
- # If we have only "make modules", don't compile built-in objects.
--# When we're building modules with modversions, we need to consider
--# the built-in objects during the descend as well, in order to
--# make sure the checksums are up to date before we record them.
--
- ifeq ($(MAKECMDGOALS),modules)
--  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
-+  KBUILD_BUILTIN :=
- endif
+ err_add:
+-	nand_release(this);
++	nand_cleanup(this);
  
- # If we have "make <whatever> modules", compile modules
-@@ -1315,6 +1311,13 @@ ifdef CONFIG_MODULES
- 
- all: modules
- 
-+# When we're building modules with modversions, we need to consider
-+# the built-in objects during the descend as well, in order to
-+# make sure the checksums are up to date before we record them.
-+ifdef CONFIG_MODVERSIONS
-+  KBUILD_BUILTIN := 1
-+endif
-+
- # Build modules
- #
- # A module can be listed more than once in obj-m resulting in
+ err_scan:
+ 	iounmap(sharpsl->io);
 
 
