@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C50C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A092186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC9D2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579586;
-	bh=dPcaarCTYjvPeBVoPTkeNd1BKWObyV8DX2VYAcMUTc8=;
+	s=default; t=1592579590;
+	bh=iGDstssJZNRPmYGflzsJwE0HzniypEW0XvpWSC3yA2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNxOcvJSoPhi7kH/Lm/QKdab9CYcpBjyX/GMkWWnvT7z5bcM4hV3ngPB/CKXXyWrO
-	 6FF9CTb1MX1x7iTigw0Ozy0Xp9JhyAk1RMcO0A3wowEET6DwG2fKS9Zi3S82lz3Jln
-	 yO/U16muCpFUagi3xL0xZt0LUs6IsMnZn57V891Q=
+	b=EbwM4104xLD/J1QtylgjgW+yv2W2I8ZgbgojkqpGufpemLt2xgqrJiIyJaksoGmu4
+	 kntt5dRll7II9JWkDQQhADRf6FPFOlj0vCI6sQRLvpYoC0A+eRPTehAg1WeVcBqb7f
+	 AEEF/5lz1Kk4U+5ptM/KGPZr/Hp+QYH6qwB5/+yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392218AbgFSPNC (ORCPT
+        id S2392226AbgFSPNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43350 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392175AbgFSPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:53 -0400
+        id S2392185AbgFSPM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B027321582;
-        Fri, 19 Jun 2020 15:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1831421582;
+        Fri, 19 Jun 2020 15:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579571;
-        bh=dPcaarCTYjvPeBVoPTkeNd1BKWObyV8DX2VYAcMUTc8=;
+        s=default; t=1592579576;
+        bh=iGDstssJZNRPmYGflzsJwE0HzniypEW0XvpWSC3yA2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e15ggPfCRIWn+W9nZXFjkX740g6zVatd3FAibq74sV5liK0lOFG70hFouV4g7q3kA
-         FUuy0vDOv3bAFktXEnXIvRfX9rtF1KnX/vF41B31O5EapPSqDPqIsCUzklotngr6k9
-         Go8L8cQxlGvM/vOWz0t4VzydYFWf2lPbOjgcSO5M=
+        b=dDGHYfQ4Z7dzBwLtZZ5McprNETbX8VRjjUvtt68yernBmkKcPIju7JbJihX6Ctc0J
+         JiYN6C1tUdftzPE2RSQSTr792jnRXercgY6Jo+aep1NOsudCmmBAXVWUpTElTIZfPU
+         r/6+Z2CSiv9lx+p/q2jGGso9Rjm2hGN7wfWdolQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 184/261] PCI: Avoid Pericom USB controller OHCI/EHCI PME# defect
-Date:   Fri, 19 Jun 2020 16:33:15 +0200
-Message-Id: <20200619141658.733979161@linuxfoundation.org>
+Subject: [PATCH 5.4 157/261] selftests/bpf, flow_dissector: Close TAP device FD after the test
+Date:   Fri, 19 Jun 2020 16:32:48 +0200
+Message-Id: <20200619141657.408451954@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,62 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit 68f5fc4ea9ddf9f77720d568144219c4e6452cde ]
+[ Upstream commit b8215dce7dfd817ca38807f55165bf502146cd68 ]
 
-Both Pericom OHCI and EHCI devices advertise PME# support from all power
-states:
+test_flow_dissector leaves a TAP device after it's finished, potentially
+interfering with other tests that will run after it. Fix it by closing the
+TAP descriptor on cleanup.
 
-  06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
-    Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
-    Capabilities: [80] Power Management version 3
-      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-
-  06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
-    Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
-    Capabilities: [80] Power Management version 3
-      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-
-But testing shows that it's unreliable: there is a 20% chance PME# won't be
-asserted when a USB device is plugged.
-
-Remove PME support for both devices to make USB plugging work reliably.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
-Link: https://lore.kernel.org/r/20200508065343.32751-2-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Fixes: 0905beec9f52 ("selftests/bpf: run flow dissector tests in skb-less mode")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200531082846.2117903-11-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 798e52051ecc..2e50eec41dc4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5551,6 +5551,19 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+index 92563898867c..9f3634c9971d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
++++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+@@ -523,6 +523,7 @@ void test_flow_dissector(void)
+ 		CHECK_ATTR(err, tests[i].name, "bpf_map_delete_elem %d\n", err);
+ 	}
  
-+/*
-+ * Device [12d8:0x400e] and [12d8:0x400f]
-+ * These devices advertise PME# support in all power states but don't
-+ * reliably assert it.
-+ */
-+static void pci_fixup_no_pme(struct pci_dev *dev)
-+{
-+	pci_info(dev, "PME# is unreliable, disabling it\n");
-+	dev->pme_support = 0;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
-+
- static void apex_pci_fixup_class(struct pci_dev *pdev)
- {
- 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
++	close(tap_fd);
+ 	bpf_prog_detach(prog_fd, BPF_FLOW_DISSECTOR);
+ 	bpf_object__close(obj);
+ }
 -- 
 2.25.1
 
