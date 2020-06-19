@@ -2,151 +2,208 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B13C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92F520809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582221;
-	bh=jMmbglSJ9HsqY9/TfgPULYPabzVlojJgWVf48BoOzOY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dx1DSRazk/DVjmWb1zhEz/Crfl5uWHE5qx+MyCVPtpGWBgXGVb7FXunpmJPaEYJGW
-	 tgpRrwH8ELngQdlBZWqHa1b+ytn+O49S1/DcBLhuBzmTsTZ/nXzGZYfDzjlyxIx+jt
-	 KlQmxPhPdypsBrkmUYFcWRPcUtEuoJNvKhBKizz8=
+	by mail.kernel.org (Postfix) with ESMTP id 7C8E221556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Q8BM5Kms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405438AbgFSP5A (ORCPT
+        id S2405448AbgFSP5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392721AbgFSPUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:57:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392722AbgFSPUi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:20:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00AA120706;
-        Fri, 19 Jun 2020 15:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580037;
-        bh=jMmbglSJ9HsqY9/TfgPULYPabzVlojJgWVf48BoOzOY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uuz9Cjt/Oe4HBabGoaSCoIJ99fjDCTrFVRorsvhAESm5eDVPoPnafM/4MWcVTIJbX
-         6nE166uuHOtT6aqs/TXqo3vioSy+OLdKKsJGDHBJnRRCcVcbPXa841yFh1kUp0QSIC
-         Hnc+MjjkelhiZILUQSIB4GlVEuPaeamgQw7kD7Yw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/376] drm/mediatek: set dpi pin mode to gpio low to avoid leakage current
-Date:   Fri, 19 Jun 2020 16:30:16 +0200
-Message-Id: <20200619141714.986755155@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8D2C061794
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:20:37 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id j4so4052188plk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5wyT4zhpVGaiWZ+0VMPzFsJ8IbyK09OnFrAoYFHELAA=;
+        b=Q8BM5Kmsr4PGo3gqetyGVs7kF64+h7ZpjdoJouL5y7jX+q/iIm0oDGsz4ojT6o9w0M
+         UJpR9D6q5VY9Mq/g6MAQVf+N+QH9gZLJ6fX4zjbjYaGBHzloyTVJLvBHapV9QNDDGzB1
+         3lkRtzBMRvuvHH7ZmhP3QLOp1j2biNhLlu7sl7/+nY4ZuMZmCIyiQL2XGFc0FhEyQWSM
+         lKidnoe9ysLsLbptvwqfnbOnxRuHw3k3fNikTK1gTqeXRMzxXcodal/jBFL7MZIdlOWA
+         kQf1BGqxw3SDZbXcb4TsRZyLRuV/TcHYYRWoRSsnnjOUBvpSqHKv5Yorx+5daAcKbS21
+         Xuyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5wyT4zhpVGaiWZ+0VMPzFsJ8IbyK09OnFrAoYFHELAA=;
+        b=aMda10u/lQObEKyLZkyywKUoKjV8/Zq/qnBwHYJ5OBIBPSZbCjQxKCB4zKPm8wI05M
+         P7VAtES8wLxyVnwLVwYikNSy2jAkVZkybWv4gP5blPyyh7M18DqXt+TdTHGNcUVSuXTR
+         qOpnBJc7fAyGJSUf5GXshlJK/m8nwfVUDm52FdJIzKwoy5rM3a8mYd3iebPsLiqiE8bT
+         1/ktfS/9T7eG7AaNS3yfx4VHbC7Ktgog+ELtuGjPxSZeRgM5pHxUjUhU8NJgMTKZGd0i
+         vIJAZhctgjdH3Ubyn+zHE5ZXisywD/Gr1NzejPpVmPG7irlL0VOb9DPI+faGAzNzcRkQ
+         3cyA==
+X-Gm-Message-State: AOAM531/K2A+OVyDPTbifaXHHpLkIe9PdcaKFsmgmvfpcdr5B1ZextiL
+        JxllnOgCzScIz5mADCVTTYGhWw==
+X-Google-Smtp-Source: ABdhPJyI6dZ6veIhT+4ahN1VGBYPXSiufUd6I/qBRzkiUcVGW/zHHYm1yb+WfYHs+rLLR8lPs7W9kg==
+X-Received: by 2002:a17:902:9b8e:: with SMTP id y14mr8582774plp.109.1592580035070;
+        Fri, 19 Jun 2020 08:20:35 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id t201sm6238118pfc.104.2020.06.19.08.20.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 08:20:34 -0700 (PDT)
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
+        "javier.gonz@samsung.com" <javier@javigon.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
+ <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
+ <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618091113.eu2xdp6zmdooy5d2@mpHalley.local>
+ <20200619094149.uaorbger326s6yzz@mpHalley.local>
+ <2ba2079c-9a5d-698a-a8f0-cbd6fdb9a9f0@lightnvm.io>
+ <ca513fd1-4ca2-c16e-8b99-73cbd7fe6290@kernel.dk>
+ <317fa6b5-ce64-114e-b34d-2be7b50c24f1@lightnvm.io>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <26f41284-6e52-58d3-6119-8ed34511e5dc@kernel.dk>
+Date:   Fri, 19 Jun 2020 09:20:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <317fa6b5-ce64-114e-b34d-2be7b50c24f1@lightnvm.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+On 6/19/20 9:14 AM, Matias Bjørling wrote:
+> On 19/06/2020 16.18, Jens Axboe wrote:
+>> On 6/19/20 5:15 AM, Matias Bjørling wrote:
+>>> On 19/06/2020 11.41, javier.gonz@samsung.com wrote:
+>>>> Jens,
+>>>>
+>>>> Would you have time to answer a question below in this thread?
+>>>>
+>>>> On 18.06.2020 11:11, javier.gonz@samsung.com wrote:
+>>>>> On 18.06.2020 08:47, Damien Le Moal wrote:
+>>>>>> On 2020/06/18 17:35, javier.gonz@samsung.com wrote:
+>>>>>>> On 18.06.2020 07:39, Damien Le Moal wrote:
+>>>>>>>> On 2020/06/18 2:27, Kanchan Joshi wrote:
+>>>>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>>>>>>
+>>>>>>>>> Introduce three new opcodes for zone-append -
+>>>>>>>>>
+>>>>>>>>>    IORING_OP_ZONE_APPEND     : non-vectord, similiar to
+>>>>>>>>> IORING_OP_WRITE
+>>>>>>>>>    IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
+>>>>>>>>>    IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
+>>>>>>>>>
+>>>>>>>>> Repurpose cqe->flags to return zone-relative offset.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>>>>>>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>>>>>>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>>>>>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>>>>>>>>> ---
+>>>>>>>>> fs/io_uring.c                 | 72
+>>>>>>>>> +++++++++++++++++++++++++++++++++++++++++--
+>>>>>>>>> include/uapi/linux/io_uring.h |  8 ++++-
+>>>>>>>>> 2 files changed, 77 insertions(+), 3 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>>>>>>> index 155f3d8..c14c873 100644
+>>>>>>>>> --- a/fs/io_uring.c
+>>>>>>>>> +++ b/fs/io_uring.c
+>>>>>>>>> @@ -649,6 +649,10 @@ struct io_kiocb {
+>>>>>>>>>      unsigned long        fsize;
+>>>>>>>>>      u64            user_data;
+>>>>>>>>>      u32            result;
+>>>>>>>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>>>>>>>> +    /* zone-relative offset for append, in bytes */
+>>>>>>>>> +    u32            append_offset;
+>>>>>>>> this can overflow. u64 is needed.
+>>>>>>> We chose to do it this way to start with because struct io_uring_cqe
+>>>>>>> only has space for u32 when we reuse the flags.
+>>>>>>>
+>>>>>>> We can of course create a new cqe structure, but that will come with
+>>>>>>> larger changes to io_uring for supporting append.
+>>>>>>>
+>>>>>>> Do you believe this is a better approach?
+>>>>>> The problem is that zone size are 32 bits in the kernel, as a number
+>>>>>> of sectors.
+>>>>>> So any device that has a zone size smaller or equal to 2^31 512B
+>>>>>> sectors can be
+>>>>>> accepted. Using a zone relative offset in bytes for returning zone
+>>>>>> append result
+>>>>>> is OK-ish, but to match the kernel supported range of possible zone
+>>>>>> size, you
+>>>>>> need 31+9 bits... 32 does not cut it.
+>>>>> Agree. Our initial assumption was that u32 would cover current zone size
+>>>>> requirements, but if this is a no-go, we will take the longer path.
+>>>> Converting to u64 will require a new version of io_uring_cqe, where we
+>>>> extend at least 32 bits. I believe this will need a whole new allocation
+>>>> and probably ioctl().
+>>>>
+>>>> Is this an acceptable change for you? We will of course add support for
+>>>> liburing when we agree on the right way to do this.
+>>> I took a quick look at the code. No expert, but why not use the existing
+>>> userdata variable? use the lowest bits (40 bits) for the Zone Starting
+>>> LBA, and use the highest (24 bits) as index into the completion data
+>>> structure?
+>>>
+>>> If you want to pass the memory address (same as what fio does) for the
+>>> data structure used for completion, one may also play some tricks by
+>>> using a relative memory address to the data structure. For example, the
+>>> x86_64 architecture uses 48 address bits for its memory addresses. With
+>>> 24 bit, one can allocate the completion entries in a 32MB memory range,
+>>> and then use base_address + index to get back to the completion data
+>>> structure specified in the sqe.
+>> For any current request, sqe->user_data is just provided back as
+>> cqe->user_data. This would make these requests behave differently
+>> from everything else in that sense, which seems very confusing to me
+>> if I was an application writer.
+>>
+>> But generally I do agree with you, there are lots of ways to make
+>> < 64-bit work as a tag without losing anything or having to jump
+>> through hoops to do so. The lack of consistency introduced by having
+>> zone append work differently is ugly, though.
+>>
+> Yep, agree, and extending to three cachelines is big no-go. We could add 
+> a flag that said the kernel has changes the userdata variable. That'll 
+> make it very explicit.
 
-[ Upstream commit 6bd4763fd532cff43f9b15704f324c45a9806f53 ]
+Don't like that either, as it doesn't really change the fact that you're
+now doing something very different with the user_data field, which is
+just supposed to be passed in/out directly. Adding a random flag to
+signal this behavior isn't very explicit either, imho. It's still some
+out-of-band (ish) notification of behavior that is different from any
+other command. This is very different from having a flag that says
+"there's extra information in this other field", which is much cleaner.
 
-Config dpi pins mode to output and pull low when dpi is disabled.
-Aovid leakage current from some dpi pins (Hsync Vsync DE ... ).
-
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_dpi.c | 31 ++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 4f0ce4cd5b8c..2994c63ea279 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -10,7 +10,9 @@
- #include <linux/kernel.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_graph.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
-@@ -74,6 +76,9 @@ struct mtk_dpi {
- 	enum mtk_dpi_out_yc_map yc_map;
- 	enum mtk_dpi_out_bit_num bit_num;
- 	enum mtk_dpi_out_channel_swap channel_swap;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pins_gpio;
-+	struct pinctrl_state *pins_dpi;
- 	int refcount;
- };
- 
-@@ -379,6 +384,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
- 	if (--dpi->refcount != 0)
- 		return;
- 
-+	if (dpi->pinctrl && dpi->pins_gpio)
-+		pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-+
- 	mtk_dpi_disable(dpi);
- 	clk_disable_unprepare(dpi->pixel_clk);
- 	clk_disable_unprepare(dpi->engine_clk);
-@@ -403,6 +411,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
- 		goto err_pixel;
- 	}
- 
-+	if (dpi->pinctrl && dpi->pins_dpi)
-+		pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
-+
- 	mtk_dpi_enable(dpi);
- 	return 0;
- 
-@@ -705,6 +716,26 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	dpi->dev = dev;
- 	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
- 
-+	dpi->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (IS_ERR(dpi->pinctrl)) {
-+		dpi->pinctrl = NULL;
-+		dev_dbg(&pdev->dev, "Cannot find pinctrl!\n");
-+	}
-+	if (dpi->pinctrl) {
-+		dpi->pins_gpio = pinctrl_lookup_state(dpi->pinctrl, "sleep");
-+		if (IS_ERR(dpi->pins_gpio)) {
-+			dpi->pins_gpio = NULL;
-+			dev_dbg(&pdev->dev, "Cannot find pinctrl idle!\n");
-+		}
-+		if (dpi->pins_gpio)
-+			pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-+
-+		dpi->pins_dpi = pinctrl_lookup_state(dpi->pinctrl, "default");
-+		if (IS_ERR(dpi->pins_dpi)) {
-+			dpi->pins_dpi = NULL;
-+			dev_dbg(&pdev->dev, "Cannot find pinctrl active!\n");
-+		}
-+	}
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dpi->regs = devm_ioremap_resource(dev, mem);
- 	if (IS_ERR(dpi->regs)) {
 -- 
-2.25.1
-
-
+Jens Axboe
 
