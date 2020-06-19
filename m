@@ -2,168 +2,117 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD74C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106B521582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F29D20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khk/dVYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbgFSOHq (ORCPT
+        id S1733200AbgFSOJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:07:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:54724 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgFSOHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:07:45 -0400
-IronPort-SDR: mElC6bW1dTEelNrDRqtzqJH8n+PJtqTP4P+PB80DbJV5qx8XmVNGnWaaG/0EV+lldRbpus+W7j
- 9WJD5EH/DVNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452794"
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="204452794"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:41 -0700
-IronPort-SDR: +vQFXuJzIGV53zy6T2aJIOSVbKFBecqWzIaKOBKcqZNCm5rikq2SqqUgaaTcn3wmT/bpatn3c4
- O4UCl3Nji02A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="383837383"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:40 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 00/21] Support Architectural LBR
-Date:   Fri, 19 Jun 2020 07:03:48 -0700
-Message-Id: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Jun 2020 10:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgFSOJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:09:23 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C31DC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:09:23 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id q2so5672996vsr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WSN+a2RVNGMBSxMoxwqKpJqZZbVxq/HTpK1YQsoLOvQ=;
+        b=khk/dVYTi6EwwazULEZ22xn6wr4m9EWCJc0ruPwHDfNSiO2Ghl8ifOFklLvezpLcLj
+         HLL91p161trSUnoVwYgLI5bdzH7DDL2CV9BHH7W1sPkkOfYES78xqlXzDQ0yLSr9oFX3
+         0tqtaO8x+IJnZFtS7DD1JQHcCegeTaJVZf1odfIhadequ2cjDsyNXEYSB8nXyWDjCyi7
+         GUgFP1QIqXLuPjIg6b8mMDNwksmfJUx49MWjS6lhD7vJnhY0Rc3QOe9RUUGDoPHg0Ykt
+         gQci6L6xS840ab1z2MW5iBFt9vmZvor/RxNyTScU3A+dmyFC9uAI5aA6CRtQNd9LtYjd
+         A4rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WSN+a2RVNGMBSxMoxwqKpJqZZbVxq/HTpK1YQsoLOvQ=;
+        b=tI9HgjWPffiNyiNS8De5LM9X4JjHR2THuOZ57aRN1CGt/FMx8RQjSMQoe7fT1AjIp0
+         MxR2jVlh7Og/rlaUIHfknDI6r/3URU2GM0ayCxJdP/SALR1QVXHVlZGuUc4d7m81Oy95
+         hdwkbhSmSZebD1rlT4q1AWqdc+dG+nvlfggR6973AMZtT9t6gPh7TLiRzUuAOhnV6oHJ
+         FyJ9VW0VgopbE41yK8m/dO9yl2/0ygaGyH1okwhCs2BEqveZpeVUlWjNCt9CWfDK6SzT
+         DFqItNfDeIhL1X8Y3gmHS5BI8Sja3w+tNPlwHDMTkObU6SFnkiBGLxC9FlMdJ6rrdmLW
+         ETNA==
+X-Gm-Message-State: AOAM531XOXvtxqveK2ueQtl/wo4sAYOfHMGVifobeiLiYTNyeUsByRE0
+        O3f9BkrbjHWLzX9KYDmPGJ8czeVJ45MdkwNrqx8=
+X-Google-Smtp-Source: ABdhPJwaU8EKkHibn0F4QFCG8an0FYGeNjzihahv6zqla/Y73Ma4JM6yScH+GXFH+vMBDQsiN+yKoefvaa9GtQbEi60=
+X-Received: by 2002:a67:d597:: with SMTP id m23mr7913365vsj.209.1592575762106;
+ Fri, 19 Jun 2020 07:09:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
+ <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
+ <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
+ <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com> <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
+ <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
+In-Reply-To: <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Fri, 19 Jun 2020 15:09:09 +0100
+Message-ID: <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Daniel Gutson <daniel@eclypsium.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Fri, 19 Jun 2020 at 14:58, Dave Hansen <dave.hansen@intel.com> wrote:
+> > Right, but for the most part you'd agree that a machine with
+> > functioning TME and encrypted swap partition is more secure than a
+> > machine without TME?
+>
+> Nope.  There might be zero memory connected to the memory controller
+> that supports TME.
 
-LBR (Last Branch Records) enables recording of software path history
-by logging taken branches and other control flows within architectural
-registers. Intel CPUs have had model-specific LBRs for quite some time
-but this evolves them into an architectural feature now.
+So you're saying that a machine with TME available and enabled is not
+considered more secure than a machine without TME?
 
-The main advantages for the users are:
-- Faster context switching due to XSAVES support and faster reset of
-  LBR MSRs via the new DEPTH MSR
-- Faster LBR read for a non-PEBS event due to XSAVES support, which
-  lowers the overhead of the NMI handler. (For a PEBS event, the LBR
-  information is recorded in the PEBS records. There is no impact on
-  the PEBS event.)
-- Linux kernel can support the LBR features without knowing the model
-  number of the current CPU.
-- Clean exposure of LBRs to guests without relying on model-specific
-  features. (An improvement for KVM. Not included in this patch series.)
-- Supports for running with a smaller number of LBRs than the full 32,
-  to lower overhead (currently not exposed, however)
+What I want to do is have a sliding scale of TME not available < TME
+available but disabled < TME available and enabled < TME available,
+enabled and being used. The extra nugget of data gets me from state 2
+to state 3.
 
-The key improvements for the perf kernel in this patch series include,
-- Doesn't require a model check. The capabilities of Architectural LBR
-  can be enumerated by CPUID.
-- Each LBR record or entry is still comprised of three MSRs,
-  IA32_LBR_x_FROM_IP, IA32_LBR_x_TO_IP and IA32_LBR_x_TO_IP, but they
-  become architectural MSRs.
-- Architectural LBR is stack-like now. Entry 0 is always the youngest
-  branch, entry 1 the next youngest... The TOS MSR has been removed.
-- A new IA32_LBR_CTL MSR is introduced to enable and configure LBRs,
-  which replaces the IA32_DEBUGCTL[bit 0] and the LBR_SELECT MSR.
-- The possible LBR depth can be retrieved from CPUID enumeration. The
-  max value is written to the new MSR_ARCH_LBR_DEPTH as the number of
-  LBR entries.
-- Faster LBR MSRs reset via the new DEPTH MSR, which avoids touching
-  potentially nearly a hundred MSRs.
-- XSAVES and XRSTORS are used to read, save/restore LBR related MSRs
-- Faster direct reporting of the branch type with the LBR without needing
-  access to the code
+> > Can I use TME if the CPU supports it, but the platform has disabled
+> > it? How do I know that my system is actually *using* the benefits the
+> > TME feature provides?
+>
+> You must have a system with UEFI 2.8, ensure TME is enabled, then make
+> sure the OS parses EFI_MEMORY_CPU_CRYPTO, then ensure you request that
+> you data be placed in a region marked with EFI_MEMORY_CPU_CRYPTO, and
+> that it be *kept* there (hint: NUMA APIs don't do this).
 
-The existing LBR capabilities, such as CPL filtering, Branch filtering,
-Call stack, Mispredict information, cycles information, Branch Type
-information, are still kept for Architectural LBRs.
+So my take-away from that is that it's currently impossible to
+actually say if your system is *actually* using TME.
 
-XSAVES and XRSTORS improvements:
-
-In perf with call stack mode, LBR information is used to reconstruct
-a call stack. To get a complete call stack, perf has to save and restore
-all LBR registers during a context switch. However, the number of LBR
-registers is huge. To reduce the overhead, LBR state component is
-introduced with architectural LBR. Perf subsystem will use XSAVES/XRSTORS
-to save/restore LBRs during a context switch.
-
-LBR call stack mode is not always enabled. Perf subsystem only needs to
-save/restore an LBR state on demand. To avoid unnecessary save/restore of
-the LBR state at a context switch, a software concept, dynamic supervisor
-state, is introduced, which
-- does not allocate a buffer in each task->fpu;
-- does not save/restore a state component at each context switch;
-- sets the bit corresponding to a dynamic supervisor feature in
-  IA32_XSS at boot time, and avoids setting it at run time;
-- dynamically allocates a specific buffer for a state component
-  on demand, e.g. only allocate a LBR-specific XSAVE buffer when LBR is
-  enabled in perf. (Note: The buffer has to include the LBR state
-  component, legacy region and XSAVE header.)
-- saves/restores a state component on demand, e.g. manually invoke
-  the XSAVES/XRSTORS instruction to save/restore the LBR state
-  to/from the buffer when perf is active and a call stack is required.
-
-The specification of Architectural LBR can be found in the latest Intel
-Architecture Instruction Set Extensions and Future Features Programming
-Reference, 319433-038.
-
-Kan Liang (21):
-  x86/cpufeatures: Add Architectural LBRs feature bit
-  perf/x86/intel/lbr: Add pointers for LBR enable and disable
-  perf/x86/intel/lbr: Add pointer for LBR reset
-  perf/x86/intel/lbr: Add pointer for LBR read
-  perf/x86/intel/lbr: Add pointers for LBR save and restore
-  perf/x86/intel/lbr: Factor out a new struct for generic optimization
-  perf/x86/intel/lbr: Use dynamic data structure for task_ctx
-  x86/msr-index: Add bunch of MSRs for Arch LBR
-  perf/x86: Expose CPUID enumeration bits for arch LBR
-  perf/x86/intel: Check Arch LBR MSRs
-  perf/x86/intel/lbr: Support LBR_CTL
-  perf/x86/intel/lbr: Support Architectural LBR
-  perf/core: Factor out functions to allocate/free the task_ctx_data
-  perf/core: Use kmem_cache to allocate the PMU specific data
-  perf/x86/intel/lbr: Create kmem_cache for the LBR context data
-  perf/x86: Remove task_ctx_size
-  x86/fpu: Use proper mask to replace full instruction mask
-  x86/fpu/xstate: Support dynamic supervisor feature for LBR
-  x86/fpu/xstate: Add helpers for LBR dynamic supervisor feature
-  perf/x86/intel/lbr: Support XSAVES/XRSTORS for LBR context switch
-  perf/x86/intel/lbr: Support XSAVES for arch LBR read
-
- arch/x86/events/core.c              |   2 +-
- arch/x86/events/intel/core.c        |  50 ++-
- arch/x86/events/intel/lbr.c         | 633 +++++++++++++++++++++++++++++++-----
- arch/x86/events/perf_event.h        | 159 ++++++++-
- arch/x86/include/asm/cpufeatures.h  |   1 +
- arch/x86/include/asm/fpu/internal.h |   9 +-
- arch/x86/include/asm/fpu/types.h    |  26 ++
- arch/x86/include/asm/fpu/xstate.h   |  36 ++
- arch/x86/include/asm/msr-index.h    |  20 ++
- arch/x86/kernel/fpu/xstate.c        |  90 ++++-
- include/linux/perf_event.h          |   5 +-
- kernel/events/core.c                |  25 +-
- 12 files changed, 951 insertions(+), 105 deletions(-)
-
--- 
-2.7.4
-
+Richard.
