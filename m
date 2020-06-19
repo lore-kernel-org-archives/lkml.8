@@ -2,186 +2,137 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0431E20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910BF206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZEqN6cvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgFSGOV (ORCPT
+        id S1726906AbgFSGUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgFSGOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 02:14:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52BDC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 23:14:18 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jmAI1-00021N-Vn; Fri, 19 Jun 2020 08:14:13 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jmAI1-0003j4-BN; Fri, 19 Jun 2020 08:14:13 +0200
-Date:   Fri, 19 Jun 2020 08:14:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v2 1/2] Add DT bindings YAML schema for PWM fan
- controller of LGM SoC
-Message-ID: <20200619061413.424lqchj77qopyyl@taurus.defre.kleine-koenig.org>
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <804603fe7d363b09e123ff8bb03486542af28c3c.1592474693.git.rahul.tanwar@linux.intel.com>
+        Fri, 19 Jun 2020 02:20:45 -0400
+Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:52958
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725290AbgFSGUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 02:20:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TbQbBisL9CxAGxMb73JXC8UJaOe/pSsVP1f7R1LD4zPHNMVgqiJBNGnEaWN0glp92dEm36ZDV9ZZs4wPtxalAgDBO09Z/AJLMbxp5ld6KjMUJuJj+4MG5RfDwcUn3oeb+v4KjDJ79Av0I/JkCjQGWY3KljzCFbVU7SG/iPq9evnXp4c3EJOykkRUu0KJKT6F6SvsdjGorTiUiB6hUUuZaHEzMvRooz6sFYCmB4LpYKPTZzBW0XOOO6MTdr4fbRMfSEUeRd6dg4R1zARoc7Q4eq5nJSZj3LKIS9BN3VtomUBI9v5u1cMQtEg5N4ZZ6RpaHnM7m8mLLIhSNNx4/kw1qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y0zNMfSmGrTwHaOMwUXWOGvzk5fJCcUBU4/AzdLNa/o=;
+ b=RqjLP0DUyJ9KwqxnXRclyeQV/OFBTHJCFmEKdGc9hUZwGdxatJG2vg8U9A+KS+9dR5PhH4OsWUlhzB9Wm0i2x8pIUdpDUT1mxz+rJ5HOL/ntj3Oa+IdbLPwnkEGCtZM10cf9OxEBluARTB4m2XGYXS3AOjpqL4vTAyD295nudmaBlELisMxS+J7ZX2/XiqAzyKyS+J3LllESIgNHXSGoOsrOghGCtwlCwJ5WKDuTRv/epWSSo4dk7WlfWEValZD0j4V0jow6b71q2XWfhksY7B/B+paMVK+aEfCBEP3I2p1HaTyoYsEKk5hcpMa//fEuChNvWp75tn0kFweyBGDXxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y0zNMfSmGrTwHaOMwUXWOGvzk5fJCcUBU4/AzdLNa/o=;
+ b=ZEqN6cvq4V0qCwSWNouKcBcjRJRYSg0NCy2oybEywrW6eJZnbtPSAdLSzdIhHaNAYgixNRQwk5bh5V+bd4Roiii6LKOtpPsyvuitlUFmGso7Ambh0WnowUGHfK6tY9Yb3jYM+XwI5M04/JTRkQ3XCIVAQqj9CuVRDYc7VtwX3wY=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB5640.eurprd04.prod.outlook.com (2603:10a6:20b:a3::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
+ 2020 06:20:41 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3088.028; Fri, 19 Jun 2020
+ 06:20:41 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Anson Huang <anson.huang@nxp.com>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] soc: imx-scu: Support module build
+Thread-Topic: [PATCH] soc: imx-scu: Support module build
+Thread-Index: AQHWRGTWXA/Y7jtl6U620nWhqctCc6jccHNQgAABg4CAABwbAIABayQAgAGBIrA=
+Date:   Fri, 19 Jun 2020 06:20:40 +0000
+Message-ID: <AM6PR04MB496696A8695FA85D1EEE276B80980@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1592369623-10723-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB49667E1B41DC2A77B3E2FEBF809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <AM6PR0402MB3911B852B49E194E5FE84505F59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39167727A8B7CEDAC531D94EF59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a3zHBRqSg1VeuKcmyQquE7n5wrEViw5KFbDGJNaMjtZRw@mail.gmail.com>
+In-Reply-To: <CAK8P3a3zHBRqSg1VeuKcmyQquE7n5wrEViw5KFbDGJNaMjtZRw@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9c8f3446-93f4-4daf-aece-08d81418e469
+x-ms-traffictypediagnostic: AM6PR04MB5640:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB5640239C080EEB8189CC11E780980@AM6PR04MB5640.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0439571D1D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HJIfXdMcdy8GAY9VBz9RJhfpQmz0byu5l+GG9QHtEJuJsrW+cNjiMxPx5Cs2bR+KbFwAQQ4lcQZPgjUH2p1x/nAiZTKf1zlLbrgR1IoNoaenl4wLoKrH4i/dmZn8jsrLgjJ6d9r03l4CV7pZXsusC/6zCB30SrRqFeE5/n6MgP027pdyjiUCKx1Pw6jzMR0Y4jV3w4iVaMym8OhxJjhgcg23kFv0VtIamhKKugtlFtrxDCwsJwgTxnhvbojg4sl1X6LO2on3o6N8zIW/Ox0UXbkk/mpxgc4KahzP+AiPZl2algeYAFH9JrDIa4l/iPHi
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(83380400001)(186003)(86362001)(26005)(8936002)(8676002)(66476007)(478600001)(66446008)(66556008)(64756008)(66946007)(2906002)(5660300002)(6636002)(33656002)(52536014)(7696005)(71200400001)(9686003)(316002)(54906003)(110136005)(4326008)(55016002)(6506007)(76116006)(44832011)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NnNTpgEwOAaaP+vvHPsgCZrK83xmB21sR79cCW4N8EXhtuJ474hQyDUis3poMgN8wifWu9Rug3y2S9uZ6d8nDiio5wEjhOvKVwwN6/p0uDHaqGQeOAjNiAebevCjmIhOzBDpo8zOMwpsCBxbxZ+YM7NgvF11uRfPQF3EumexZQp7Vqrff8vUhGy/qyErccyUy84OWpGsJr2U/Cokr0fIPYxTlH52MLHpe1pdkytvFsUIzr1VRoYj+6gVPseWSfU7r4ig4u7hdyWInZ3xJjUg1pAj92SYOJCIvgXPctYpWkVUiScRhKN/AP0SNc/LEdx9Gen6g7roILgkg3Pp1UXOOHXFHayZS4YD5dYSGDQxN/GpyuUiSdk7d+XxIX2WoEIQ9faW69UHnpHSc00mewbWEfmxexJM/IvVpHMhQ0zhv0vyLdqpdKYn5T2UJE3pkXnmsr4hx0xwYVGxg7FCPIWKKnc4OVuCB8dpacux/0Yz2hk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ryah7d65y6lyq3px"
-Content-Disposition: inline
-In-Reply-To: <804603fe7d363b09e123ff8bb03486542af28c3c.1592474693.git.rahul.tanwar@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c8f3446-93f4-4daf-aece-08d81418e469
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2020 06:20:41.4938
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R3IB1EDqY1K5GhgThSqhLIsGU+5wvu3hzEhhs5EBFirTS5F1WBLwVIxapVL/rdgC3ESK9MOynikiKcGpnmSauw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ryah7d65y6lyq3px
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Thu, Jun 18, 2020 at 08:05:12PM +0800, Rahul Tanwar wrote:
-> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
-> which is only used to control the fan attached to the system. This
-> PWM controller does not have any other consumer other than fan.
-> Add DT bindings documentation for this PWM fan controller.
->=20
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 57 ++++++++++++++++=
-++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.y=
-aml
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/D=
-ocumentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> new file mode 100644
-> index 000000000000..e71cc25e4e6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LGM SoC PWM fan controller
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  intel,fan-wire:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Specifies fan mode
-
-The default when unspecified is 2.
-
-> +
-> +  intel,tach-plus:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Specifies fan tach pulse periods
-
-Only used with fan-wire =3D 4, default =3D 2.
-
-> +
-> +  intel,max-rpm:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Specifies maximum RPM of fan attached to the system
-
-Ditto.
-
-Consistent with my concern that the fan code should not be part of the
-PWM driver I wonder if this representation that mixes fan and PWM is
-nice enough to be set in stone.
-
-If we decide to keep it as is I wonder if we should drop #pwm-cells as
-the hardware doesn't allow other uses for this PWM (IIUC) and so
-referencing this node doesn't make sense.
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#pwm-cells"
-> +  - clocks
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pwm: pwm@e0d00000 {
-> +        compatible =3D "intel,lgm-pwm";
-> +        reg =3D <0xe0d00000 0x30>;
-> +        #pwm-cells =3D <2>;
-> +        clocks =3D <&cgu0 126>;
-> +        resets =3D <&rcu0 0x30 21>;
-> +    };
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ryah7d65y6lyq3px
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7sV7IACgkQwfwUeK3K
-7AlUaQf+O5K63siGJabUxgjvmh9A5fzQL9AiGpByNXarNI6qVzq9QRjY1lWXCumE
-DonTm54RLZtZn7iySlahtQ7wG4deqYoMW2BzSDAhm5HpXOz/+yw8ldhNs7604cgz
-GylSGQgV79htDsPC2XN2CojSiCq74S3pfnwBH5rrfqgNGSCntpr9LRCS3VtMg+74
-55/iw/oLwMqcI3YHT0+WqqpsWUal9sdLHws1f1yEfbagcdpoZfgqfiQ7Cgn3HyD4
-orcHfmnLgCY7BFaU4T4Xe51E4G02F02FryWguCi+EU+UMu1y2EW/6p+J2Kj+zlM6
-1Ze+Svaokl2MYJELwu/EcV0ab1COaA==
-=ILAt
------END PGP SIGNATURE-----
-
---ryah7d65y6lyq3px--
+PiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBTZW50OiBUaHVyc2RheSwg
+SnVuZSAxOCwgMjAyMCAzOjIxIFBNDQo+IA0KPiBPbiBXZWQsIEp1biAxNywgMjAyMCBhdCAxMTo0
+MSBBTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+
+ID4gPg0KPiA+ID4gPiBJJ20gb2sgd2l0aCB0aGUgY2hhbmdlLiBCdXQgSSdtIGN1cmlvdXMgaG93
+IGNhbiB0aGlzIG1vZHVsZSBiZQ0KPiA+ID4gPiBhdXRvbG9hZGVkIHdpdGhvdXQgTU9EVUxFX0RF
+VklDRV9UQUJMRS4NCj4gPiA+ID4gSGF2ZSB5b3UgdGVzdGVkIGlmIGl0IGNhbiB3b3JrPw0KPiA+
+ID4gPg0KPiA+ID4NCj4gPiA+IEkgT05MWSB0ZXN0ZWQgdGhlIG1hbnVhbCBpbnNtb2QsIGlmIHdh
+bnQgdG8gc3VwcG9ydCBhdXRvIGxvYWQsIG1heQ0KPiA+ID4gbmVlZCBzb21lIG1vcmUgY2hhbmdl
+LCB3aWxsIHRyeSBpdCBsYXRlciBhbmQgc2VuZCBvdXQgYSBWMiBpZiBuZWVkZWQuDQo+ID4NCj4g
+PiBUaGUgZnVydGhlciBjaGVjayBzaG93cyB0aGF0LCBpZiB3YW50IHRvIHN1cHBvcnQgYXV0byBs
+b2FkLCB0aGUNCj4gPiBwbGF0Zm9ybSBkZXZpY2UgcmVnaXN0ZXIgbmVlZHMgdG8gYmUgZG9uZSBp
+biBzb21ld2hlcmUgZWxzZSB3aGljaCBpcw0KPiA+IGJ1aWx0LWluIChpbiBteSB0ZXN0LCBJIG1v
+dmUgaXQgdG8gY2xrLWlteDhxeHAuYydzIHByb2JlKSwgYW5kIGFsc28NCj4gPiBuZWVkIHRvIGFk
+ZCBiZWxvdyBtb2R1bGUgYWxpYXMgaW4gdGhpcyBkcml2ZXIsIGJlY2F1c2UgaXQgaGFzIG5vIGRl
+dmljZSBub2RlIGluDQo+IERUIGFuZCBubyBkZXZpY2UgdGFibGUgaW4gZHJpdmVyLg0KPiA+DQo+
+ID4gK01PRFVMRV9BTElBUygicGxhdGZvcm06aW14LXNjdS1zb2MiKTsNCj4gPg0KPiA+IFNpbmNl
+IHRoaXMgZHJpdmVyIGhhcyBubyBkZXZpY2Ugbm9kZSBpbiBEVCwgYW5kIHRoZSB0YXJnZXQgaXMg
+dG8gYnVpbGQNCj4gPiBhbGwgU29DIHNwZWNpZmljIGRyaXZlcnMgYXMgbW9kdWxlLCBzbyB0aGUg
+YmVzdCB3YXkgaXMgdG8gYWRkIGENCj4gPiB2aXJ0dWFsIGRldmljZSBub2RlIGluIERUIGluIG9y
+ZGVyIHRvIHN1cHBvcnQgYXV0byBsb2FkPw0KPiANCj4gSSBzZWUgdGhhdCB0aGVyZSBpcyBpbmRl
+ZWQgYSBkcml2ZXIgZm9yIHRoZSBkZXZpY2Ugbm9kZSBpbg0KPiBkcml2ZXJzL2Zpcm13YXJlL2lt
+eC9pbXgtc2N1LmMsIHRoZSBvbmx5IHJlYXNvbiBmb3IgdGhpcyBtb2R1bGUgdXNpbmcNCj4gZGV2
+aWNlX2luaXRjYWxsKCkgd2l0aCBhIG1hbnVhbA0KPiBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJf
+c2ltcGxlKCkgc2VlbXMgdG8gYmUgdGhhdCB3ZSBjYW5ub3QgaGF2ZSB0d28NCj4gcGxhdGZvcm0g
+ZHJpdmVycyBiaW5kIHRvIHRoZSBzYW1lIGRldmljZSBub2RlLg0KPiANCj4gSSB0aGluayBhIGNs
+ZWFuZXIgd2F5IHRvIGhhbmRsZSB0aGlzIHdvdWxkIGJlIHRvIGp1c3QgbW92ZSB0aGUgZW50aXJl
+IHNvYyBkcml2ZXINCj4gaW50byB0aGUgZmlybXdhcmUgZHJpdmVyIGFuZCB0aGVuIHJlbW92ZSB0
+aGUgZHVwbGljYXRpb24uDQo+IA0KDQpZZXMsIHNvdW5kcyBsaWtlIGEgZ29vZCBpZGVhIHRvIG1l
+Lg0KDQpSZWdhcmRzDQpBaXNoZW5nDQoNCj4gICAgICAgIEFybmQNCg==
