@@ -2,52 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E745C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9566DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546CD20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718AF20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585570;
-	bh=nsW59QYiE+70W8//0AtPqDPYbwUyl/wZLv8TQkNyFTo=;
+	s=default; t=1592585575;
+	bh=2XIXSXOLf1PgbSfEZzyX74dHJNMxOrXjFNQAdwEwl90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=niu4wBe/ywWZlw8l6CPNzqwZpKTQDOS4ftfP63x+wL01InkkxVVZPoeKaDFYplxxZ
-	 0LgxomYiC9snED0bvTFbtr5mLWNFDXJIBTedkktnssmjSkR6X+jYefWHDT3DfTwuXL
-	 hyyU3PiuY6J84pZI7C++Teox7PIzTsPRwku54Hgs=
+	b=0VxVVQu/njnMbPX1sYo9wxzJ1HQZjdme7OIXb1HgWF6O2qwV0XzkYNFmtGGZfVvNn
+	 9MM2ooQYqLqOv76NhXtS5XMI7I4aqA5hOfkmdk3YnBdqX7NjVIa9QLJlEDQyxN3pz0
+	 r6vtunadqF11bWOk3UIzPBXtaIeH5R3VFQCdZNxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405976AbgFSQws (ORCPT
+        id S2405983AbgFSQwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54710 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733177AbgFSOhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:47 -0400
+        id S2387774AbgFSOhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28219208B8;
-        Fri, 19 Jun 2020 14:37:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F84208C7;
+        Fri, 19 Jun 2020 14:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577467;
-        bh=nsW59QYiE+70W8//0AtPqDPYbwUyl/wZLv8TQkNyFTo=;
+        s=default; t=1592577465;
+        bh=2XIXSXOLf1PgbSfEZzyX74dHJNMxOrXjFNQAdwEwl90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w1gOVo6jBmp9DDPaBk2bcltP46kr6gefLDFzJ0ggiK3IdTyq+iL0wLVjCrRqifXvd
-         +8edmDHhvoPO8UOdoODZ8IPYB/aGIr3W79exmrNCi7va3IyZlI397LOnxQsIE375Jf
-         GQEphEe4dDh/KdS9IMeAt55ALxfZfzq2IBup4ecI=
+        b=B/4Q+EAnsqnzI4k9Gs40ILsCGJgnvKeuqozdKXK2mM701XsbNGhKNd4Q955CsmzKe
+         N0R60AKuYVLoO3LxynnSFFXlWUfDyQAQ9rXu6miHQmvzwS+rD+CMzpXuycXDoBxlsn
+         mxz9ukJ4wOEUv4+wkQDVDLOt2KW2OhPnwmG/tA/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 061/101] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Fri, 19 Jun 2020 16:32:50 +0200
-Message-Id: <20200619141617.245383704@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>,
+        Antonino Daplas <adaplas@pol.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH 4.4 034/101] video: fbdev: w100fb: Fix a potential double free.
+Date:   Fri, 19 Jun 2020 16:32:23 +0200
+Message-Id: <20200619141615.881811666@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -60,45 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+commit 18722d48a6bb9c2e8d046214c0a5fd19d0a7c9f6 upstream.
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+Some memory is vmalloc'ed in the 'w100fb_save_vidmem' function and freed in
+the 'w100fb_restore_vidmem' function. (these functions are called
+respectively from the 'suspend' and the 'resume' functions)
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, it is also freed in the 'remove' function.
+
+In order to avoid a potential double free, set the corresponding pointer
+to NULL once freed in the 'w100fb_restore_vidmem' function.
+
+Fixes: aac51f09d96a ("[PATCH] w100fb: Rewrite for platform independence")
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Antonino Daplas <adaplas@pol.net>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: <stable@vger.kernel.org> # v2.6.14+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200506181902.193290-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/w100fb.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 8d50314ac3eb..dde3cd2d4763 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -438,7 +438,7 @@ static void emac_timeout(struct net_device *dev)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -446,7 +446,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+--- a/drivers/video/fbdev/w100fb.c
++++ b/drivers/video/fbdev/w100fb.c
+@@ -583,6 +583,7 @@ static void w100fb_restore_vidmem(struct
+ 		memsize=par->mach->mem->size;
+ 		memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_extmem, memsize);
+ 		vfree(par->saved_extmem);
++		par->saved_extmem = NULL;
+ 	}
+ 	if (par->saved_intmem) {
+ 		memsize=MEM_INT_SIZE;
+@@ -591,6 +592,7 @@ static void w100fb_restore_vidmem(struct
+ 		else
+ 			memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_intmem, memsize);
+ 		vfree(par->saved_intmem);
++		par->saved_intmem = NULL;
+ 	}
+ }
  
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
- 
- 	channel = (channel == 1 ? 1 : 0);
- 
--- 
-2.25.1
-
 
 
