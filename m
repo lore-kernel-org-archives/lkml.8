@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E704C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5083C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E921021527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946ED21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584660;
-	bh=1NwQk1K6lLsrqLB6IY13pY0x8Cx6AXaH8S5+lSyieKA=;
+	s=default; t=1592584662;
+	bh=ByaBwvM0x9jrCerVOvexAYwUk8Y6Xv2hRaX91b41Llk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TNBsze+TDOPEZCg4eIf9M1hSC+MBCmo9vt+vrjaRBeCX7QfURU8tiTbPFlNIRWGsH
-	 5NYmiXCZQ6c3uos7iIZH1f4tMSabYIKb/aBHNA9iZeNGWyqtrCsygTjBRC47lCcrRb
-	 9g+5mt9XRO3iXmy3L2tCWPMldGBMODNHzgqNAY34=
+	b=VTR5dXQspL+KUwQJcqu+9ZxrX9IcC1jCQMQ61koGbaP+GfgLAzt/KROl8yWtwXZLB
+	 vyZOOM+Q6Qm35xuhj6oX80A81JSSLUBJjGFXWSdoKerjeKwweUwp6lboFJobSbqsB1
+	 PoepEY4mJeccevHVDqroEKsO379/SFng0ixEfQ0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393801AbgFSQhi (ORCPT
+        id S2395328AbgFSQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389072AbgFSOs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:26 -0400
+        id S2388374AbgFSOsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E77217A0;
-        Fri, 19 Jun 2020 14:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A299420DD4;
+        Fri, 19 Jun 2020 14:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578105;
-        bh=1NwQk1K6lLsrqLB6IY13pY0x8Cx6AXaH8S5+lSyieKA=;
+        s=default; t=1592578103;
+        bh=ByaBwvM0x9jrCerVOvexAYwUk8Y6Xv2hRaX91b41Llk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuYk3HuI20oFyyuHAtw2CUJZ22QUJGZ/gbt1/FVylZJx9IvIVdJli6JuYkuob3UoN
-         w8fyeLqE4ZGg8YigtXhXXMM26UM85Wyj97oEs3/qYLPbSKEz3AgJPClmh/6jku9pUi
-         hm7nJTYloCf5MhbzAvIxhw2AEVCxngFMRsXkjuY4=
+        b=o7a6qnMyEDBqsuAznBdyf+05YMLYD+hnYdQ1g0v07u/s8YQzyqm7pi5vgPTWrzXjK
+         qbUV7xb91WNKwEqoLSIpCSrlXYFdhOgaMJHCsEI8+1PHZzoPJ9kEO3uxGqpOFJ9fzf
+         5YCNAOmr35EIvWe2ebAcyyIRG7eXGloFBMHoo3lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/190] MIPS: Loongson: Build ATI Radeon GPU driver as module
-Date:   Fri, 19 Jun 2020 16:32:09 +0200
-Message-Id: <20200619141637.791403611@linuxfoundation.org>
+Subject: [PATCH 4.14 083/190] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
+Date:   Fri, 19 Jun 2020 16:32:08 +0200
+Message-Id: <20200619141637.739759890@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit a44de7497f91834df0b8b6d459e259788ba66794 ]
+[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
 
-When ATI Radeon GPU driver has been compiled directly into the kernel
-instead of as a module, we should make sure the firmware for the model
-(check available ones in /lib/firmware/radeon) is built-in to the kernel
-as well, otherwise there exists the following fatal error during GPU init,
-change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
+The ixgbe driver have another memory model when compiled on archs with
+PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
+two halves, but instead increment rx_buffer->page_offset by truesize of
+packet (which include headroom and tailroom for skb_shared_info).
 
-[    1.900997] [drm] Loading RS780 Microcode
-[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
-[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
-[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
-[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
-[    1.931729] [drm] radeon: finishing device.
+This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
+which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
+to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
+veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
 
-Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Maintainers notice: This fix have been queued to Jeff.
+
+Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/configs/loongson3_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 324dfee23dfb..c871e40b8878 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -250,7 +250,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_MEDIA_USB_SUPPORT=y
- CONFIG_USB_VIDEO_CLASS=m
- CONFIG_DRM=y
--CONFIG_DRM_RADEON=y
-+CONFIG_DRM_RADEON=m
- CONFIG_FB_RADEON=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_LCD_PLATFORM=m
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index ba184287e11f..64ee45b6680a 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2274,7 +2274,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
+ 	rx_buffer->page_offset ^= truesize;
+ #else
+ 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
+-				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
++				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
++				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
+ 				SKB_DATA_ALIGN(size);
+ 
+ 	rx_buffer->page_offset += truesize;
 -- 
 2.25.1
 
