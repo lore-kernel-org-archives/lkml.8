@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA57220A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BFA20773
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577617;
-	bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
+	s=default; t=1592577626;
+	bh=7MF0b77oC01ynraHWDZg4g8n84cneXiha1iL8XpCBbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWYSOLoEDJITM2zPPmXwHUgvf1c+qaBdWKtjHnzoi7aT0Qox1vueUD8JOBU1fNB7A
-	 ltC2EXisl7kaRXFxyPh5LOwgFhOpObWVpNDGm1Dzoi4FVlw7Tep+0IGu9M/3FVZbVv
-	 HZujsTPcQjMcAKlgKjhbibJULjGkKQwrpmUWnuWQ=
+	b=CY7+JErR3MgzuwkiyMGB63/9aEJ/J8Y9udL+TeGfVPYre2ZeKPsuJtadEaMBqjgDo
+	 SrIOMZernZOZjzMuYJabYU3zUlwk8s4Z5uDm2Vvo4QJ/AKPFkz2mTq+IekOlFhzbvp
+	 yEGTVbzhXAZ+V/GP9+sVLXZ00g0vEg2sld20BfDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbgFSOkQ (ORCPT
+        id S2388136AbgFSOkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbgFSOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:40:00 -0400
+        id S2388121AbgFSOkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBE5208B8;
-        Fri, 19 Jun 2020 14:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E37982070A;
+        Fri, 19 Jun 2020 14:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577600;
-        bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
+        s=default; t=1592577615;
+        bh=7MF0b77oC01ynraHWDZg4g8n84cneXiha1iL8XpCBbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JvkdqSAkXJFUG6slp7rbZwWwAoiv8unQzCe/GoPcnxoiPHrFm1D+2HuHCkJef0SZE
-         gdGff6iqwyKeOjAMCSK2DDl1u8N+0nQ/CFR9Vrfhdy7CMqU8LazqCl4yGhg3T0nt+7
-         nPgOnrUrXm9mAkN1MTbyPUf3Do6RTb4IPwyEcHbw=
+        b=OqUU8A7zaclLnvhMJHZKI+69X0pW3sV973p2ar598b2CQ9oob9yhP6VuPBbJdr4Sw
+         I1qkPQkG51IMwsIdMnzcNII894Xz0f+35H3XjIni8qYUMN3KumirkVId+gC53TOMTx
+         CjXiO6xdy+tIbs29pvUwK6MB6Dt64burerkesnr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 014/128] ALSA: es1688: Add the missed snd_card_free()
-Date:   Fri, 19 Jun 2020 16:31:48 +0200
-Message-Id: <20200619141620.902615153@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 002/128] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Fri, 19 Jun 2020 16:31:36 +0200
+Message-Id: <20200619141620.272273240@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
-Add the missed function call to fix it.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
+
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
+
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/isa/es1688/es1688.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/sound/isa/es1688/es1688.c
-+++ b/sound/isa/es1688/es1688.c
-@@ -284,8 +284,10 @@ static int snd_es968_pnp_detect(struct p
- 		return error;
- 	}
- 	error = snd_es1688_probe(card, dev);
--	if (error < 0)
-+	if (error < 0) {
-+		snd_card_free(card);
- 		return error;
-+	}
- 	pnp_set_card_drvdata(pcard, card);
- 	snd_es968_pnp_is_probed = 1;
- 	return 0;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1521,6 +1521,10 @@ static struct sk_buff *vxlan_na_create(s
+ 	daddr = eth_hdr(request)->h_source;
+ 	ns_olen = request->len - skb_transport_offset(request) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
