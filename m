@@ -2,249 +2,229 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F48C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241CF208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D180A207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZFhjTnVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732756AbgFSKpJ (ORCPT
+        id S1732747AbgFSKo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:45:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:51904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732744AbgFSKo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 06:44:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62D26D6E;
-        Fri, 19 Jun 2020 03:44:55 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 293523F71F;
-        Fri, 19 Jun 2020 03:44:44 -0700 (PDT)
-Subject: Re: [RFC PATCH v13 7/9] arm64/kvm: Add hypercall service for kvm ptp.
-To:     Jianyong Wu <jianyong.wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        Wei Chen <Wei.Chen@arm.com>, nd <nd@arm.com>
-References: <20200619093033.58344-1-jianyong.wu@arm.com>
- <20200619093033.58344-8-jianyong.wu@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <c56a5b56-8bcb-915c-ae7e-5de92161538c@arm.com>
-Date:   Fri, 19 Jun 2020 11:44:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200619093033.58344-8-jianyong.wu@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:51625 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732500AbgFSKhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:37:33 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200619103703euoutp02aed5172cd44dcf5475bb37ca4b6f45bb~Z66G31dfB2242222422euoutp02W
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:37:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200619103703euoutp02aed5172cd44dcf5475bb37ca4b6f45bb~Z66G31dfB2242222422euoutp02W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592563023;
+        bh=ePXLHe/mfRhAa1xR5V0eqYUoM9rqbQC5MkvAEkUq1G0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZFhjTnVZaE2XiZnBCSspMbkgzH5Il+E9nD+ZVHohrLrsgoN1wSxJ79CrFMiz5g1yu
+         mAS/0ZrNEkc9kXberoIVjTBNb8hD0AIYZGKbt6+AyHHuVrmv/VLa/3Zb/LL0ANN58U
+         cWEfTHTnWTZlkF70igiCj8OxDOXj2GPA+SGbEadA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200619103702eucas1p14e7a598cf79bb058dee154e1946a2c9c~Z66GdCl0p0705907059eucas1p1E;
+        Fri, 19 Jun 2020 10:37:02 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 9F.8C.06318.E459CEE5; Fri, 19
+        Jun 2020 11:37:02 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5~Z66F_rJ3n0704707047eucas1p1y;
+        Fri, 19 Jun 2020 10:37:02 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200619103701eusmtrp1ccebd68058c16a8bf7a62b76bf5d0462~Z66F4Xp_60959609596eusmtrp1-;
+        Fri, 19 Jun 2020 10:37:01 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-63-5eec954e7dc0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 98.0B.06017.D459CEE5; Fri, 19
+        Jun 2020 11:37:01 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200619103701eusmtip230514ba84e3184c5dd6c231d8b83c417~Z66FMKCde3164531645eusmtip2W;
+        Fri, 19 Jun 2020 10:37:01 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+Subject: [PATCH v7 13/36] drm: msm: fix common struct sg_table related
+ issues
+Date:   Fri, 19 Jun 2020 12:36:13 +0200
+Message-Id: <20200619103636.11974-14-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200619103636.11974-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRjmO2eXo7g6TdEPk6xpUUFesMtXhtkNTn8yqD8GmStPam1TNrUM
+        ItEKm068UI0pZWVq3lObqZg5nTNk8zbNLNNlpeU1b5mJtnlm/Xve5/I+Lx8fgfOb2c5EuCSK
+        lkqEIgHHlqVu/m3YdfLeWJCXMsUNKQxvMfRCWcpGK+o0HBnnJjkoa1gP0PNCLYay633RrNGE
+        ofKhHjZKq9dzUVdNFgcVN/Vz0fDjBRw1TH1ho/6MJuC/nip6WASouvlsFlWt6udSVfODbGog
+        SYdRFTk3qQ/LQziV0ZsHqNr3cRxKV9PHpVIqCwA1U77plN1Z24MhtCg8hpZ6+gXbhmV1VLAj
+        VYJrqXotFgf0LnJgQ0ByNxzOLMbkwJbgk/kAlswmAYvAJ2cBzHwZyAgzAOaXaMBaIslgAIyQ
+        B6Dq/mecGcyJ8YQ53OLikN5QPi7nWLADeRvAFoWdxYSTKhyOaP6sCvZkAFTmajALZpFbYXqj
+        ZpXnkX4wvlpvrXOFhWVvVpfamPnRWw1syyJI9nHhu8FnGGM6BrsztFZsD3/oKrkMdoGtGcks
+        JpAAoMlQzGWGZAC74pXWCl/40bBoribM9+2ApTWeDH0YKjuMXAsNyXWwd3yDhcbNMF39AGdo
+        Hky8w2fc26BKV/KvtqG9E2cwBXvaFNYHTgMwPVnNSgWuqv9l2QAUACc6WiYOpWU+Evqqh0wo
+        lkVLQj0uRojLgfl3tS7r5l6B10sXNIAkgMCON3JmNIjPFsbIYsUaAAlc4MA7om8N4vNChLHX
+        aWnEeWm0iJZpwEaCJXDi+Tz5fo5Phgqj6Cs0HUlL11SMsHGOA3d1fZK+R8FdZUUFIalpg017
+        pB5JXitfL4kCpy4rkVFuOjHtaNrcGzARNmU/Muc3HfGrYswdfdr/M+C0i58bZ8SxVfT0+EQk
+        2Ku3cW9pzDrQZrf9m6GuwXtpcV+TUrvcreksNE5V1zYqDhVrJ2eq0v1Dmo+2CxO3LNwYyJ2f
+        EeQIWLIwofdOXCoT/gW9h8I/WQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xe7q+U9/EGbw/Z2nRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLOc/PMlqsXH2UyWLBfmuLL1ceMllsenyN1WLi/rPsFpd3zWGzWHvkLrvF
+        84U/mC0OfnjCanF38hFGB36PNfPWMHrs/baAxWPnrLvsHtu/PWD1uN99nMlj85J6j9v/HjN7
+        TL6xnNFj980GNo/ju26xe/RtWcXo8XmTXABPlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYml
+        nqGxeayVkamSvp1NSmpOZllqkb5dgl7GnIubWQtmKVVMOHuUqYHxrEwXIyeHhICJRPe5c4xd
+        jFwcQgJLGSUmX/rKCJGQkTg5rYEVwhaW+HOtiw2i6BOjxMldD5lBEmwChhJdbyESIgKdjBLT
+        uj+ygzjMAkuYJfqmXmIDqRIW8JXYffk7WAeLgKrEpMOHwOK8AnYSTTvPQq2Tl1i94QBYDSdQ
+        /HXLQbDVQgK2EssXvGeewMi3gJFhFaNIamlxbnpusZFecWJucWleul5yfu4mRmAsbTv2c8sO
+        xq53wYcYBTgYlXh4X4S8jhNiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZT
+        oKMmMkuJJucD4zyvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOj
+        23eX5T1rOq/pTc2681JoufTxmvWur2/Na2eUVjV0m239VKaf6Y8mg3gX011lacM5X4znh0yw
+        /nNge0le9tVi/dRVFmdDr901nOay//X7ZU/OnDnQ9OX88Sl3xIz37s5XWsPO/NLe+Nqfz/Wh
+        4QbxRdflt6VPdxVIvC1YefPk7/n3lVUPaWwTV2Ipzkg01GIuKk4EAHK7XDC7AgAA
+X-CMS-MailID: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
+References: <20200619103636.11974-1-m.szyprowski@samsung.com>
+        <CGME20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2020 10:30, Jianyong Wu wrote:
-> ptp_kvm will get this service through smccc call.
-> The service offers wall time and counter cycle of host for guest.
-> caller must explicitly determines which cycle of virtual counter or
-> physical counter to return if it needs counter cycle.
-> 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->   arch/arm64/kvm/Kconfig      |  6 +++++
->   arch/arm64/kvm/hypercalls.c | 50 +++++++++++++++++++++++++++++++++++++
->   include/linux/arm-smccc.h   | 30 ++++++++++++++++++++++
->   3 files changed, 86 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> index 13489aff4440..79091f6e5e7a 100644
-> --- a/arch/arm64/kvm/Kconfig
-> +++ b/arch/arm64/kvm/Kconfig
-> @@ -60,6 +60,12 @@ config KVM_ARM_PMU
->   config KVM_INDIRECT_VECTORS
->   	def_bool HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS
->   
-> +config ARM64_KVM_PTP_HOST
-> +	bool "KVM PTP host service for arm64"
-> +	default y
-> +	help
-> +	  virtual kvm ptp clock hypercall service for arm64
-> +
->   endif # KVM
->   
->   endif # VIRTUALIZATION
-> diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
-> index db6dce3d0e23..366b0646c360 100644
-> --- a/arch/arm64/kvm/hypercalls.c
-> +++ b/arch/arm64/kvm/hypercalls.c
-> @@ -3,6 +3,7 @@
->   
->   #include <linux/arm-smccc.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/clocksource_ids.h>
->   
->   #include <asm/kvm_emulate.h>
->   
-> @@ -11,6 +12,10 @@
->   
->   int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->   {
-> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
-> +	struct system_time_snapshot systime_snapshot;
-> +	u64 cycles = 0;
-> +#endif
->   	u32 func_id = smccc_get_function(vcpu);
->   	u32 val[4] = {SMCCC_RET_NOT_SUPPORTED};
->   	u32 feature;
-> @@ -70,7 +75,52 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->   		break;
->   	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
->   		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
-> +
-> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
-> +		val[0] |= BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP);
-> +#endif
-> +		break;
-> +
-> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
-> +	/*
-> +	 * This serves virtual kvm_ptp.
-> +	 * Four values will be passed back.
-> +	 * reg0 stores high 32-bit host ktime;
-> +	 * reg1 stores low 32-bit host ktime;
-> +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
-> +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
-> +	 */
-> +	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
-> +		/*
-> +		 * system time and counter value must captured in the same
-> +		 * time to keep consistency and precision.
-> +		 */
-> +		ktime_get_snapshot(&systime_snapshot);
-> +		if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
-> +			break;
-> +		val[0] = upper_32_bits(systime_snapshot.real);
-> +		val[1] = lower_32_bits(systime_snapshot.real);
-> +		/*
-> +		 * which of virtual counter or physical counter being
-> +		 * asked for is decided by the first argument of smccc
-> +		 * call. If no first argument or invalid argument, zero
-> +		 * counter value will return;
-> +		 */
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-It's not actually possible to have "no first argument" - there's no 
-argument count, so whatever is in the register during the call with be 
-passed. I'd also caution that "first argument" is ambigious: r0 could be 
-the 'first' but is also the function number, here you mean r1.
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
-There's also a subtle cast to 32 bits here (feature is u32), which might 
-be worth a comment before someone 'optimises' by removing the 'feature' 
-variable.
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-Finally I'm not sure if zero counter value is best - would it not be 
-possible for this to be a valid counter value?
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
 
-> +		feature = smccc_get_arg1(vcpu);
-> +		switch (feature) {
-> +		case ARM_PTP_VIRT_COUNTER:
-> +			cycles = systime_snapshot.cycles -
-> +			vcpu_vtimer(vcpu)->cntvoff;
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/gpu/drm/msm/msm_gem.c    | 13 +++++--------
+ drivers/gpu/drm/msm/msm_gpummu.c | 14 ++++++--------
+ drivers/gpu/drm/msm/msm_iommu.c  |  2 +-
+ 3 files changed, 12 insertions(+), 17 deletions(-)
 
-Please indent the continuation line so that it's obvious.
-
-> +			break;
-> +		case ARM_PTP_PHY_COUNTER:
-> +			cycles = systime_snapshot.cycles;
-> +			break;
-> +		}
-> +		val[2] = upper_32_bits(cycles);
-> +		val[3] = lower_32_bits(cycles);
->   		break;
-> +#endif
-> +
->   	default:
->   		return kvm_psci_call(vcpu);
->   	}
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 86ff30131e7b..e593ec515f82 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -98,6 +98,9 @@
->   
->   /* KVM "vendor specific" services */
->   #define ARM_SMCCC_KVM_FUNC_FEATURES		0
-> +#define ARM_SMCCC_KVM_FUNC_KVM_PTP		1
-> +#define ARM_SMCCC_KVM_FUNC_KVM_PTP_PHY		2
-> +#define ARM_SMCCC_KVM_FUNC_KVM_PTP_VIRT		3
->   #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
->   #define ARM_SMCCC_KVM_NUM_FUNCS			128
->   
-> @@ -107,6 +110,33 @@
->   			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
->   			   ARM_SMCCC_KVM_FUNC_FEATURES)
->   
-> +/*
-> + * kvm_ptp is a feature used for time sync between vm and host.
-> + * kvm_ptp module in guest kernel will get service from host using
-> + * this hypercall ID.
-> + */
-> +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID				\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-> +			   ARM_SMCCC_SMC_32,				\
-> +			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
-> +			   ARM_SMCCC_KVM_FUNC_KVM_PTP)
-> +
-> +/*
-> + * kvm_ptp may get counter cycle from host and should ask for which of
-> + * physical counter or virtual counter by using ARM_PTP_PHY_COUNTER and
-> + * ARM_PTP_VIRT_COUNTER explicitly.
-> + */
-> +#define ARM_PTP_PHY_COUNTER						\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-> +			   ARM_SMCCC_SMC_32,				\
-> +			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
-> +			   ARM_SMCCC_KVM_FUNC_KVM_PTP_PHY)
-> +
-> +#define ARM_PTP_VIRT_COUNTER						\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-> +			   ARM_SMCCC_SMC_32,				\
-> +			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
-> +			   ARM_SMCCC_KVM_FUNC_KVM_PTP_VIRT)
-
-These two are not SMCCC calls themselves (just parameters to an SMCCC), 
-so they really shouldn't be defined using ARM_SMCCC_CALL_VAL (it's just 
-confusing and unnecessary). Can we not just pick small integers (e.g. 0 
-and 1) for these?
-
-We also need some documentation of these SMCCC calls somewhere which 
-would make this sort of review easier. For instance for paravirtualised 
-stolen time there is Documentation/virt/kvm/arm/pvtime.rst (which also 
-links to the published document from Arm).
-
-Steve
-
->   #ifndef __ASSEMBLY__
->   
->   #include <linux/linkage.h>
-> 
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 38b0c0e1f83e..e0d5fd36ea8f 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -53,11 +53,10 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
+ 	struct device *dev = msm_obj->base.dev->dev;
+ 
+ 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+-		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++		dma_sync_sgtable_for_device(dev, msm_obj->sgt,
++					    DMA_BIDIRECTIONAL);
+ 	} else {
+-		dma_map_sg(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++		dma_map_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
+ 	}
+ }
+ 
+@@ -66,11 +65,9 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
+ 	struct device *dev = msm_obj->base.dev->dev;
+ 
+ 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+-		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++		dma_sync_sgtable_for_cpu(dev, msm_obj->sgt, DMA_BIDIRECTIONAL);
+ 	} else {
+-		dma_unmap_sg(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++		dma_unmap_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+index 310a31b05faa..319f06c28235 100644
+--- a/drivers/gpu/drm/msm/msm_gpummu.c
++++ b/drivers/gpu/drm/msm/msm_gpummu.c
+@@ -30,21 +30,19 @@ static int msm_gpummu_map(struct msm_mmu *mmu, uint64_t iova,
+ {
+ 	struct msm_gpummu *gpummu = to_msm_gpummu(mmu);
+ 	unsigned idx = (iova - GPUMMU_VA_START) / GPUMMU_PAGE_SIZE;
+-	struct scatterlist *sg;
++	struct sg_dma_page_iter dma_iter;
+ 	unsigned prot_bits = 0;
+-	unsigned i, j;
+ 
+ 	if (prot & IOMMU_WRITE)
+ 		prot_bits |= 1;
+ 	if (prot & IOMMU_READ)
+ 		prot_bits |= 2;
+ 
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+-		dma_addr_t addr = sg->dma_address;
+-		for (j = 0; j < sg->length / GPUMMU_PAGE_SIZE; j++, idx++) {
+-			gpummu->table[idx] = addr | prot_bits;
+-			addr += GPUMMU_PAGE_SIZE;
+-		}
++	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
++		dma_addr_t addr = sg_page_iter_dma_address(&dma_iter);
++
++		BUILD_BUG_ON(GPUMMU_PAGE_SIZE != PAGE_SIZE);
++		gpummu->table[idx++] = addr | prot_bits;
+ 	}
+ 
+ 	/* we can improve by deferring flush for multiple map() */
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 3a381a9674c9..6c31e65834c6 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -36,7 +36,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+ 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 	size_t ret;
+ 
+-	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
++	ret = iommu_map_sgtable(iommu->domain, iova, sgt, prot);
+ 	WARN_ON(!ret);
+ 
+ 	return (ret == len) ? 0 : -EINVAL;
+-- 
+2.17.1
 
