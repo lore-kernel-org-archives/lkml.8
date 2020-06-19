@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF72C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F930C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97315206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC3021582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579518;
-	bh=za9EyI3o5uaFj1FcFu/tNsgXVP1mJnijVnQloGQKC8c=;
+	s=default; t=1592579522;
+	bh=wJyh5j0fx3dTdY/TvsFuOEKeXxSb+H8xonC0coZh0V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lh5C5c6U6oPjusPjsOin6tLnFCtXDAq/h0VQTqq4eCW8ZZ1VzYrnez2ebkmHQKTEG
-	 EsOCJ9bXIW7bZB6SfJurKS8RSXt+5rv2CWie74SjChFT9cSndd7ZvYvQalXRtD83p/
-	 lIC5OEUvIf+dWlrUDC6tVP+LYJ/DZYZwG+rvpxLQ=
+	b=M0tj85lYsk8XsTE6JXB+kDMo3TtAJNYMmGl5yBJZuIbb56F3o5wA29PhfCRkL0hti
+	 6hZm6z7zKqo/NiZybEGcOA2csFrFyEzeKnqTMGlZdcQ9zul5rGO9ElR56HIUzBlfdW
+	 5xp37+MUlL0kFi/K9lv/wrK/v0Xw2ZAdPVzWAEh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392140AbgFSPL4 (ORCPT
+        id S2391749AbgFSPMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42140 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403835AbgFSPLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:42 -0400
+        id S2403853AbgFSPLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDE3206FA;
-        Fri, 19 Jun 2020 15:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBC9E2158C;
+        Fri, 19 Jun 2020 15:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579502;
-        bh=za9EyI3o5uaFj1FcFu/tNsgXVP1mJnijVnQloGQKC8c=;
+        s=default; t=1592579507;
+        bh=wJyh5j0fx3dTdY/TvsFuOEKeXxSb+H8xonC0coZh0V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fctz7xQWVsAwYjjoe7xhh8R81IlgyaP+OV6SETwHTB/GzlNhldr3aAb1FJ/ONIiSj
-         HB+cDNGFOm6x/ytryHUQ9PCxknzWpHVbvZEK1wstEDPnIQt5Eau5DHlrjlAG/gqJHI
-         vf0+BmzWnqRLNzkt7Pq3TKZFnN2IH8U1EwA1JdN8=
+        b=eEer/xEJph/n1jGsK6dev0bTBhbtsUGFodnBuOCZfECvSd+u+ZPRiFkYWaicwC6cw
+         nz8z0xkwMjR5Pwv3cl12zDXzIrXCHx1gZJXGza4uwU4dCCvWV3E+2gQYRZKCiSkxP8
+         pW3Z6T69Q5eCWE+44clRiGPmmJXdA612LbAlhROU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        stable@vger.kernel.org,
+        Anton Protopopov <a.s.protopopov@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/261] selftests/bpf: CONFIG_IPV6_SEG6_BPF required for test_seg6_loop.o
-Date:   Fri, 19 Jun 2020 16:32:20 +0200
-Message-Id: <20200619141656.047260123@linuxfoundation.org>
+Subject: [PATCH 5.4 154/261] bpf: Fix map permissions check
+Date:   Fri, 19 Jun 2020 16:32:45 +0200
+Message-Id: <20200619141657.254727951@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,34 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: Anton Protopopov <a.s.protopopov@gmail.com>
 
-[ Upstream commit 3c8e8cf4b18b3a7034fab4c4504fc4b54e4b6195 ]
+[ Upstream commit 1ea0f9120c8ce105ca181b070561df5cbd6bc049 ]
 
-test_seg6_loop.o uses the helper bpf_lwt_seg6_adjust_srh();
-it will not be present if CONFIG_IPV6_SEG6_BPF is not specified.
+The map_lookup_and_delete_elem() function should check for both FMODE_CAN_WRITE
+and FMODE_CAN_READ permissions because it returns a map element to user space.
 
-Fixes: b061017f8b4d ("selftests/bpf: add realistic loop tests")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
+Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/1590147389-26482-2-git-send-email-alan.maguire@oracle.com
+Link: https://lore.kernel.org/bpf/20200527185700.14658-5-a.s.protopopov@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/config | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/bpf/syscall.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 5dc109f4c097..b9601f13cf03 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -25,6 +25,7 @@ CONFIG_XDP_SOCKETS=y
- CONFIG_FTRACE_SYSCALLS=y
- CONFIG_IPV6_TUNNEL=y
- CONFIG_IPV6_GRE=y
-+CONFIG_IPV6_SEG6_BPF=y
- CONFIG_NET_FOU=m
- CONFIG_NET_FOU_IP_TUNNELS=y
- CONFIG_IPV6_FOU=m
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 946cfdd3b2cc..e7af1ac69d75 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1118,7 +1118,8 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
+ 	map = __bpf_map_get(f);
+ 	if (IS_ERR(map))
+ 		return PTR_ERR(map);
+-	if (!(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
++	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ) ||
++	    !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
+ 		err = -EPERM;
+ 		goto err_put;
+ 	}
 -- 
 2.25.1
 
