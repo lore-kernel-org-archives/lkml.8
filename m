@@ -2,626 +2,576 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E57C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B576C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7580207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z4ZpN6M4"
+	by mail.kernel.org (Postfix) with ESMTP id 057ED207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgFSF7y (ORCPT
+        id S1728948AbgFSGCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:59:54 -0400
-Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:28096
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725446AbgFSF7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:59:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=maIWKtUN+2qM2bYgZGOLWhc2Pbd1C7ljNSHXAMT4N2SXCdamMxYjazloyEciFzQmz7RgN2zjq9KtmOt/OgLGC7yCOeOEcl/jGK/rN6Iqe4RWr7wvyS5YiZT/w6QMjjE3jnm7Ou0D7auVk5Qa6ur7uOJBnylt4MZ3Wf7GsnzyESwmbzL9oEtsKu10EzneQob6Nja2qR+nJXBMe+ZNxOEJ9qJVwUtg/ISxtdUiuMoaW7O7r9hkHohbBLsA/jPHTUFHKHxtXNnBRfv0aFveHnan+OSHbSzrXRFoA7HtQ4qGnwF9ZRCBuInnjJEGzSNQ/YuGinyA/jy02UcINami98HOug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hp0CqdilllcOye+0I0DAV+BSpR42yDhv3YTOvh7b5EM=;
- b=mU/LcoS+/kouzsB8KfmRRw+kqqaMGVHNQFH03C3Lf6vLrJ4/V6o3sGe6Y2UxoL3jZpprkG5Y1kKmYIF1bivbTQ5MTCKVGoSzvEOquLITV9qxDreAyKYSqOpZWywuAdMloUSLPKhNZcUlp+PBEUy3B3itYfAXZ+5/0gM7B5Dr1tnmff0Dqyh2GhwUZ5taV32wdMjwpeM3XOROK0rlUC0uwKXmpWN/NZ7AQQ2cPQPrX0QdSM2RW7opFMKp51Vc887KLscaLrpTtNpTq4ojVe0O6ZeKuAUMgDwDnE5T6Y9f7s5oCfuEtSwNOEjB81m+HVD4f7LzBR2GeQ8BCe0fGutLWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hp0CqdilllcOye+0I0DAV+BSpR42yDhv3YTOvh7b5EM=;
- b=Z4ZpN6M4GI6stLmm+uDkhu2CsJyP5PW50paizSinuu2x95C0Gx22Vvf7m1OaFEgR5t3QVSWgxU8hUOwHycDpw8C/nhkX7ajGDprbxt7R8x8Cc/lrqEVBbmirVDOt6HLZsN63Vp162v+cYPu5AhRfNJSwRh7MLOgdQoPyPOsz+tM=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VE1PR04MB6589.eurprd04.prod.outlook.com (2603:10a6:803:128::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Fri, 19 Jun
- 2020 05:59:46 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
- 05:59:46 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, jiri@resnulli.us
-Cc:     vinicius.gomes@intel.com, vlad@buslov.dev, claudiu.manoil@nxp.com,
-        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
-        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
-        leon@kernel.org, jiri@mellanox.com, idosch@mellanox.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        kuba@kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
-        simon.horman@netronome.com, pablo@netfilter.org,
-        moshe@mellanox.com, m-karicheri2@ti.com,
-        andre.guedes@linux.intel.com, stephen@networkplumber.org,
-        Po Liu <Po.Liu@nxp.com>
-Subject: [v2,net-next] net: qos offload add flow status with dropped count
-Date:   Fri, 19 Jun 2020 14:01:07 +0800
-Message-Id: <20200619060107.6325-1-po.liu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324034745.30979-1-Po.Liu@nxp.com>
-References: <20200324034745.30979-1-Po.Liu@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0115.apcprd03.prod.outlook.com
- (2603:1096:4:91::19) To VE1PR04MB6496.eurprd04.prod.outlook.com
- (2603:10a6:803:11c::29)
+        Fri, 19 Jun 2020 02:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgFSGCX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 02:02:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3777C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 23:02:22 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jmA6R-0000Bj-C4; Fri, 19 Jun 2020 08:02:15 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jmA6P-0003Sq-S7; Fri, 19 Jun 2020 08:02:13 +0200
+Date:   Fri, 19 Jun 2020 08:02:13 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200619060213.ldvun5y4tgnz55hh@taurus.defre.kleine-koenig.org>
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR03CA0115.apcprd03.prod.outlook.com (2603:1096:4:91::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.10 via Frontend Transport; Fri, 19 Jun 2020 05:59:38 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 280bf300-eeb4-4ce9-8a36-08d81415f7f1
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6589:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6589BE46ACA1B97608E68A5A92980@VE1PR04MB6589.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
-X-Forefront-PRVS: 0439571D1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ab+qIskTU+53IR6HxQ0R/6w2y+RY0+iPMgS7558p0pP6jpdSvF4GxYTk5ryPPmyDnIpfyMZMqV3OdGwsxTMS3kz3UpOeDrho5T+ksfI8VYx6MZX7wQ9kY0vt8GHtOta6T+ODphSEzvxZWxH4QZGaiW0sTC155MlHmMfn8kN97rPZUSzqO9Aphwv1sNDP2pYsKKH4dnO17UqKVtiHAbpKP3HsA/tniu9XFCAEDt4i8L858vsBLdu3rti09sLkQtj2jbjcR++eSPvMQE3w20K/I5MfCuzDNe1O2Ur1c/CFUMF41LKWfnSyiFiKRwi6gUb8E34vpYgIZFFgEGsY6QkxJg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(376002)(396003)(346002)(316002)(26005)(186003)(44832011)(83380400001)(8936002)(16526019)(6486002)(30864003)(6506007)(5660300002)(4326008)(6512007)(2906002)(52116002)(66556008)(66476007)(66946007)(1076003)(956004)(2616005)(478600001)(6666004)(7416002)(36756003)(8676002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B7yL8Pm3qiink9mRLMtvZXrjz04ZHzzouh4WF+HgjnmRmQCpL4aeXrXNz0xHyO36RPq0D6JAPDiIt4XxzWFodWwsd5Fms22yKamPEju22kNfuIKe+9JkPMgcHPopTzc30yP5Zs+i6rykPRSnrxGciR8v1/TIpudDe4V4c2piWx0goTnxvkCjO1g8HA2GAlrVvFRGa+Ur//LaIryEhZKv3/2vdnSg9TMxWpHbcZZ36mkQU6abOIsnuFbYSe0pz6CgOFMKlPpGvRr5MBt4/k3Rs09EYpCyZjy2T7/DyF80Y1V4yFSMykRrdjXiKnOSaXhmaVRenoR9FokKDq7vG9QyTzccvWrlNzgKTS3UOt6j3P/3oDMo2hyDdHA3V9HZgycPp2xB8/21mv2YBdyLDAJ5yqRSLiDC/CFWAaoc7DP7vShuAgQwz0mi+4FbvtVRpyDGKsW4YCZsbbhFSdIEjLYsjlKXUQBL6CPbY3ieFbpDXfs=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 280bf300-eeb4-4ce9-8a36-08d81415f7f1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 05:59:46.4433
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZVy9gADs+DgwvHe+9LWjmrN8sLI43/s8e0WxErUQX2GJr62G/I2zYRFHrgc62auz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6589
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s4q67lgek7jj2cgj"
+Content-Disposition: inline
+In-Reply-To: <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Po Liu <Po.Liu@nxp.com>
 
-This patch adds a drop frames counter to tc flower offloading.
-Reporting h/w dropped frames is necessary for some actions.
-Some actions like police action and the coming introduced stream gate
-action would produce dropped frames which is necessary for user. Status
-update shows how many filtered packets increasing and how many dropped
-in those packets.
+--s4q67lgek7jj2cgj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v2: Changes
- - Update commit comments suggest by Jiri Pirko.
+Hello Rahul,
 
-Signed-off-by: Po Liu <Po.Liu@nxp.com>
----
-This patch is continue the thread 20200324034745.30979-1-Po.Liu@nxp.com
+On Thu, Jun 18, 2020 at 08:05:13PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> This PWM controller does not have any other consumer, it is a
+> dedicated PWM controller for fan attached to the system. Add
+> driver for this PWM fan controller.
+>=20
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  drivers/pwm/Kconfig         |   9 +
+>  drivers/pwm/Makefile        |   1 +
+>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 410 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index cb8d739067d2..a3303e22d5fa 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-imx-tpm.
+> =20
+> +config PWM_INTEL_LGM
+> +	tristate "Intel LGM PWM support"
+> +	depends on X86 || COMPILE_TEST
+> +	help
+> +	  Generic PWM fan controller driver for LGM SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-intel-lgm.
+> +
+>  config PWM_IQS620A
+>  	tristate "Azoteq IQS620A PWM support"
+>  	depends on MFD_IQS62X || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index a59c710e98c7..db154a6b4f51 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+=3D pwm-img.o
+>  obj-$(CONFIG_PWM_IMX1)		+=3D pwm-imx1.o
+>  obj-$(CONFIG_PWM_IMX27)		+=3D pwm-imx27.o
+>  obj-$(CONFIG_PWM_IMX_TPM)	+=3D pwm-imx-tpm.o
+> +obj-$(CONFIG_PWM_INTEL_LGM)	+=3D pwm-intel-lgm.o
+>  obj-$(CONFIG_PWM_IQS620A)	+=3D pwm-iqs620a.o
+>  obj-$(CONFIG_PWM_JZ4740)	+=3D pwm-jz4740.o
+>  obj-$(CONFIG_PWM_LP3943)	+=3D pwm-lp3943.o
+> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+> new file mode 100644
+> index 000000000000..3c7077acb161
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-intel-lgm.c
+> @@ -0,0 +1,400 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Intel Corporation.
+> + *
+> + * Notes & Limitations:
+> + * - The hardware supports fixed period which is dependent on 2/3 or 4
+> + *   wire fan mode.
+> + * - Supports normal polarity. Does not support changing polarity.
+> + * - When PWM is disabled, output of PWM will become 0(inactive). It doe=
+sn't
+> + *   keep track of running period.
+> + * - When duty cycle is changed, PWM output may be a mix of previous set=
+ting
+> + *   and new setting for the first period. From second period, the outpu=
+t is
+> + *   based on new setting.
+> + * - Supports 100% duty cycle.
+> + * - It is a dedicated PWM fan controller. There are no other consumers =
+for
+> + *   this PWM controller.
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#define PWM_FAN_CON0		0x0
+> +#define PWM_FAN_EN_EN		BIT(0)
+> +#define PWM_FAN_EN_DIS		0x0
+> +#define PWM_FAN_EN_MSK		BIT(0)
+> +#define PWM_FAN_MODE_2WIRE	0x0
+> +#define PWM_FAN_MODE_4WIRE	0x1
+> +#define PWM_FAN_MODE_MSK	BIT(1)
+> +#define PWM_FAN_PWM_DIS_DIS	0x0
+> +#define PWM_FAN_PWM_DIS_MSK	BIT(2)
+> +#define PWM_TACH_EN_EN		0x1
+> +#define PWM_TACH_EN_MSK		BIT(4)
+> +#define PWM_TACH_PLUS_2		0x0
+> +#define PWM_TACH_PLUS_4		0x1
+> +#define PWM_TACH_PLUS_MSK	BIT(5)
+> +#define PWM_FAN_DC_MSK		GENMASK(23, 16)
+> +
+> +#define PWM_FAN_CON1		0x4
+> +#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
+> +
+> +#define PWM_FAN_STAT		0x10
+> +#define PWM_FAN_TACH_MASK	GENMASK(15, 0)
+> +
+> +#define MAX_RPM			(BIT(16) - 1)
+> +#define DFAULT_RPM		4000
+> +#define MAX_DUTY_CYCLE		(BIT(8) - 1)
+> +
+> +#define FRAC_BITS		10
+> +#define DC_BITS			8
+> +#define TWO_TENTH		204
+> +
+> +#define PERIOD_2WIRE_NSECS	40000000
+> +#define PERIOD_4WIRE_NSECS	40000
+> +
+> +#define TWO_SECONDS		2000
+> +#define IGNORE_FIRST_ERR	1
+> +#define THIRTY_SECS_WINDOW	15
+> +#define ERR_CNT_THRESHOLD	6
+> +
+> +struct lgm_pwm_chip {
+> +	struct pwm_chip chip;
+> +	struct regmap *regmap;
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	u32 tach_en;
+> +	u32 max_rpm;
+> +	u32 set_rpm;
+> +	u32 set_dc;
+> +	u32 period;
+> +	struct delayed_work work;
+> +};
+> +
+> +static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct lgm_pwm_chip, chip);
+> +}
+> +
+> +static int lgm_pwm_update_dc(struct lgm_pwm_chip *pc, u32 val)
+> +{
+> +	return regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
+> +				  FIELD_PREP(PWM_FAN_DC_MSK, val));
+> +}
+> +
+> +static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	struct regmap *regmap =3D pc->regmap;
+> +
+> +	if (enable) {
+> +		regmap_update_bits(regmap, PWM_FAN_CON0,
+> +				   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
+> +		if (pc->tach_en)
+> +			schedule_delayed_work(&pc->work, msecs_to_jiffies(10000));
+> +	} else {
+> +		if (pc->tach_en)
+> +			cancel_delayed_work_sync(&pc->work);
+> +		regmap_update_bits(regmap, PWM_FAN_CON0,
+> +			   	   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	struct pwm_state cur_state;
+> +	u32 duty_cycle, duty, val;
+> +	int ret =3D 0;
+> +
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> +	    state->period !=3D pc->period)
 
- drivers/net/dsa/sja1105/sja1105_vl.c                  |  2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c          |  2 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c  |  2 +-
- .../net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c    |  2 +-
- drivers/net/ethernet/freescale/enetc/enetc_qos.c      |  7 +++++--
- drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c    |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c       |  4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |  2 +-
- drivers/net/ethernet/mscc/ocelot_flower.c             |  2 +-
- drivers/net/ethernet/netronome/nfp/flower/offload.c   |  2 +-
- drivers/net/ethernet/netronome/nfp/flower/qos_conf.c  |  2 +-
- include/net/act_api.h                                 | 11 ++++++-----
- include/net/flow_offload.h                            |  5 ++++-
- include/net/pkt_cls.h                                 |  5 +++--
- net/sched/act_api.c                                   | 10 ++++------
- net/sched/act_ct.c                                    |  6 +++---
- net/sched/act_gact.c                                  |  7 ++++---
- net/sched/act_gate.c                                  |  6 +++---
- net/sched/act_mirred.c                                |  6 +++---
- net/sched/act_pedit.c                                 |  6 +++---
- net/sched/act_police.c                                |  4 ++--
- net/sched/act_skbedit.c                               |  5 +++--
- net/sched/act_vlan.c                                  |  6 +++---
- net/sched/cls_flower.c                                |  1 +
- net/sched/cls_matchall.c                              |  3 ++-
- 25 files changed, 60 insertions(+), 50 deletions(-)
+The period-check is too strict, please accept periods bigger than the
+resulting value. This case however isn't handled correctly yet in the
+following code and needs:
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja1105/sja1105_vl.c
-index bdfd6c4e190d..9ddc49b7eb8f 100644
---- a/drivers/net/dsa/sja1105/sja1105_vl.c
-+++ b/drivers/net/dsa/sja1105/sja1105_vl.c
-@@ -771,7 +771,7 @@ int sja1105_vl_stats(struct sja1105_private *priv, int port,
- 
- 	pkts = timingerr + unreleased + lengtherr;
- 
--	flow_stats_update(stats, 0, pkts - rule->vl.stats.pkts,
-+	flow_stats_update(stats, 0, pkts - rule->vl.stats.pkts, 0,
- 			  jiffies - rule->vl.stats.lastused,
- 			  FLOW_ACTION_HW_STATS_IMMEDIATE);
- 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-index 0eef4f5e4a46..4d482d75a20b 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-@@ -1638,7 +1638,7 @@ static int bnxt_tc_get_flow_stats(struct bnxt *bp,
- 	lastused = flow->lastused;
- 	spin_unlock(&flow->stats_lock);
- 
--	flow_stats_update(&tc_flow_cmd->stats, stats.bytes, stats.packets,
-+	flow_stats_update(&tc_flow_cmd->stats, stats.bytes, stats.packets, 0,
- 			  lastused, FLOW_ACTION_HW_STATS_DELAYED);
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-index 4a5fa9eba0b6..030de20a5d27 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-@@ -902,7 +902,7 @@ int cxgb4_tc_flower_stats(struct net_device *dev,
- 		if (ofld_stats->prev_packet_count != packets)
- 			ofld_stats->last_used = jiffies;
- 		flow_stats_update(&cls->stats, bytes - ofld_stats->byte_count,
--				  packets - ofld_stats->packet_count,
-+				  packets - ofld_stats->packet_count, 0,
- 				  ofld_stats->last_used,
- 				  FLOW_ACTION_HW_STATS_IMMEDIATE);
- 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
-index c88c47a14fbb..c439b5bce9c9 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
-@@ -346,7 +346,7 @@ int cxgb4_tc_matchall_stats(struct net_device *dev,
- 		flow_stats_update(&cls_matchall->stats,
- 				  bytes - tc_port_matchall->ingress.bytes,
- 				  packets - tc_port_matchall->ingress.packets,
--				  tc_port_matchall->ingress.last_used,
-+				  0, tc_port_matchall->ingress.last_used,
- 				  FLOW_ACTION_HW_STATS_IMMEDIATE);
- 
- 		tc_port_matchall->ingress.packets = packets;
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-index fd3df19eaa32..fb76903eca90 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-@@ -1291,12 +1291,15 @@ static int enetc_psfp_get_stats(struct enetc_ndev_priv *priv,
- 
- 	spin_lock(&epsfp.psfp_lock);
- 	stats.pkts = counters.matching_frames_count - filter->stats.pkts;
-+	stats.drops = counters.not_passing_frames_count -
-+					filter->stats.drops;
- 	stats.lastused = filter->stats.lastused;
- 	filter->stats.pkts += stats.pkts;
-+	filter->stats.drops += stats.drops;
- 	spin_unlock(&epsfp.psfp_lock);
- 
--	flow_stats_update(&f->stats, 0x0, stats.pkts, stats.lastused,
--			  FLOW_ACTION_HW_STATS_DELAYED);
-+	flow_stats_update(&f->stats, 0x0, stats.pkts, stats.drops,
-+			  stats.lastused, FLOW_ACTION_HW_STATS_DELAYED);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
-index 430025550fad..c7107da03212 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
-@@ -672,7 +672,7 @@ mlx5_tc_ct_block_flow_offload_stats(struct mlx5_ct_ft *ft,
- 		return -ENOENT;
- 
- 	mlx5_fc_query_cached(entry->counter, &bytes, &packets, &lastuse);
--	flow_stats_update(&f->stats, bytes, packets, lastuse,
-+	flow_stats_update(&f->stats, bytes, packets, 0, lastuse,
- 			  FLOW_ACTION_HW_STATS_DELAYED);
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 7fc84f58e28a..bc9c0ac15f99 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -4828,7 +4828,7 @@ int mlx5e_stats_flower(struct net_device *dev, struct mlx5e_priv *priv,
- no_peer_counter:
- 	mlx5_devcom_release_peer_data(devcom, MLX5_DEVCOM_ESW_OFFLOADS);
- out:
--	flow_stats_update(&f->stats, bytes, packets, lastuse,
-+	flow_stats_update(&f->stats, bytes, packets, 0, lastuse,
- 			  FLOW_ACTION_HW_STATS_DELAYED);
- 	trace_mlx5e_stats_flower(f);
- errout:
-@@ -4946,7 +4946,7 @@ void mlx5e_tc_stats_matchall(struct mlx5e_priv *priv,
- 	dpkts = cur_stats.rx_packets - rpriv->prev_vf_vport_stats.rx_packets;
- 	dbytes = cur_stats.rx_bytes - rpriv->prev_vf_vport_stats.rx_bytes;
- 	rpriv->prev_vf_vport_stats = cur_stats;
--	flow_stats_update(&ma->stats, dbytes, dpkts, jiffies,
-+	flow_stats_update(&ma->stats, dbytes, dpkts, 0, jiffies,
- 			  FLOW_ACTION_HW_STATS_DELAYED);
- }
- 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-index 51e1b3930c56..61d21043d83a 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-@@ -633,7 +633,7 @@ int mlxsw_sp_flower_stats(struct mlxsw_sp *mlxsw_sp,
- 	if (err)
- 		goto err_rule_get_stats;
- 
--	flow_stats_update(&f->stats, bytes, packets, lastuse, used_hw_stats);
-+	flow_stats_update(&f->stats, bytes, packets, 0, lastuse, used_hw_stats);
- 
- 	mlxsw_sp_acl_ruleset_put(mlxsw_sp, ruleset);
- 	return 0;
-diff --git a/drivers/net/ethernet/mscc/ocelot_flower.c b/drivers/net/ethernet/mscc/ocelot_flower.c
-index 5ce172e22b43..c90bafbd651f 100644
---- a/drivers/net/ethernet/mscc/ocelot_flower.c
-+++ b/drivers/net/ethernet/mscc/ocelot_flower.c
-@@ -244,7 +244,7 @@ int ocelot_cls_flower_stats(struct ocelot *ocelot, int port,
- 	if (ret)
- 		return ret;
- 
--	flow_stats_update(&f->stats, 0x0, ace.stats.pkts, 0x0,
-+	flow_stats_update(&f->stats, 0x0, ace.stats.pkts, 0, 0x0,
- 			  FLOW_ACTION_HW_STATS_IMMEDIATE);
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-index 695d24b9dd92..234c652700e1 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-@@ -1491,7 +1491,7 @@ nfp_flower_get_stats(struct nfp_app *app, struct net_device *netdev,
- 		nfp_flower_update_merge_stats(app, nfp_flow);
- 
- 	flow_stats_update(&flow->stats, priv->stats[ctx_id].bytes,
--			  priv->stats[ctx_id].pkts, priv->stats[ctx_id].used,
-+			  priv->stats[ctx_id].pkts, 0, priv->stats[ctx_id].used,
- 			  FLOW_ACTION_HW_STATS_DELAYED);
- 
- 	priv->stats[ctx_id].pkts = 0;
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
-index d18a830e4264..bb327d48d1ab 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
-@@ -319,7 +319,7 @@ nfp_flower_stats_rate_limiter(struct nfp_app *app, struct net_device *netdev,
- 	prev_stats->bytes = curr_stats->bytes;
- 	spin_unlock_bh(&fl_priv->qos_stats_lock);
- 
--	flow_stats_update(&flow->stats, diff_bytes, diff_pkts,
-+	flow_stats_update(&flow->stats, diff_bytes, diff_pkts, 0,
- 			  repr_priv->qos_table.last_update,
- 			  FLOW_ACTION_HW_STATS_DELAYED);
- 	return 0;
-diff --git a/include/net/act_api.h b/include/net/act_api.h
-index 8c3934880670..cb382a89ea58 100644
---- a/include/net/act_api.h
-+++ b/include/net/act_api.h
-@@ -106,7 +106,7 @@ struct tc_action_ops {
- 			struct netlink_callback *, int,
- 			const struct tc_action_ops *,
- 			struct netlink_ext_ack *);
--	void	(*stats_update)(struct tc_action *, u64, u32, u64, bool);
-+	void	(*stats_update)(struct tc_action *, u64, u64, u64, u64, bool);
- 	size_t  (*get_fill_size)(const struct tc_action *act);
- 	struct net_device *(*get_dev)(const struct tc_action *a,
- 				      tc_action_priv_destructor *destructor);
-@@ -232,8 +232,8 @@ static inline void tcf_action_inc_overlimit_qstats(struct tc_action *a)
- 	spin_unlock(&a->tcfa_lock);
- }
- 
--void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
--			     bool drop, bool hw);
-+void tcf_action_update_stats(struct tc_action *a, u64 bytes, u64 packets,
-+			     u64 drops, bool hw);
- int tcf_action_copy_stats(struct sk_buff *, struct tc_action *, int);
- 
- int tcf_action_check_ctrlact(int action, struct tcf_proto *tp,
-@@ -244,13 +244,14 @@ struct tcf_chain *tcf_action_set_ctrlact(struct tc_action *a, int action,
- #endif /* CONFIG_NET_CLS_ACT */
- 
- static inline void tcf_action_stats_update(struct tc_action *a, u64 bytes,
--					   u64 packets, u64 lastuse, bool hw)
-+					   u64 packets, u64 drops,
-+					   u64 lastuse, bool hw)
- {
- #ifdef CONFIG_NET_CLS_ACT
- 	if (!a->ops->stats_update)
- 		return;
- 
--	a->ops->stats_update(a, bytes, packets, lastuse, hw);
-+	a->ops->stats_update(a, bytes, packets, drops, lastuse, hw);
- #endif
- }
- 
-diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-index f2c8311a0433..00c15f14c434 100644
---- a/include/net/flow_offload.h
-+++ b/include/net/flow_offload.h
-@@ -389,17 +389,20 @@ static inline bool flow_rule_match_key(const struct flow_rule *rule,
- struct flow_stats {
- 	u64	pkts;
- 	u64	bytes;
-+	u64	drops;
- 	u64	lastused;
- 	enum flow_action_hw_stats used_hw_stats;
- 	bool used_hw_stats_valid;
- };
- 
- static inline void flow_stats_update(struct flow_stats *flow_stats,
--				     u64 bytes, u64 pkts, u64 lastused,
-+				     u64 bytes, u64 pkts,
-+				     u64 drops, u64 lastused,
- 				     enum flow_action_hw_stats used_hw_stats)
- {
- 	flow_stats->pkts	+= pkts;
- 	flow_stats->bytes	+= bytes;
-+	flow_stats->drops	+= drops;
- 	flow_stats->lastused	= max_t(u64, flow_stats->lastused, lastused);
- 
- 	/* The driver should pass value with a maximum of one bit set.
-diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
-index ed65619cbc47..ff017e5b3ea2 100644
---- a/include/net/pkt_cls.h
-+++ b/include/net/pkt_cls.h
-@@ -262,7 +262,7 @@ static inline void tcf_exts_put_net(struct tcf_exts *exts)
- 
- static inline void
- tcf_exts_stats_update(const struct tcf_exts *exts,
--		      u64 bytes, u64 packets, u64 lastuse,
-+		      u64 bytes, u64 packets, u64 drops, u64 lastuse,
- 		      u8 used_hw_stats, bool used_hw_stats_valid)
- {
- #ifdef CONFIG_NET_CLS_ACT
-@@ -273,7 +273,8 @@ tcf_exts_stats_update(const struct tcf_exts *exts,
- 	for (i = 0; i < exts->nr_actions; i++) {
- 		struct tc_action *a = exts->actions[i];
- 
--		tcf_action_stats_update(a, bytes, packets, lastuse, true);
-+		tcf_action_stats_update(a, bytes, packets, drops,
-+					lastuse, true);
- 		a->used_hw_stats = used_hw_stats;
- 		a->used_hw_stats_valid = used_hw_stats_valid;
- 	}
-diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-index 8ac7eb0a8309..4c4466f18801 100644
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -1059,14 +1059,13 @@ int tcf_action_init(struct net *net, struct tcf_proto *tp, struct nlattr *nla,
- 	return err;
- }
- 
--void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
--			     bool drop, bool hw)
-+void tcf_action_update_stats(struct tc_action *a, u64 bytes, u64 packets,
-+			     u64 drops, bool hw)
- {
- 	if (a->cpu_bstats) {
- 		_bstats_cpu_update(this_cpu_ptr(a->cpu_bstats), bytes, packets);
- 
--		if (drop)
--			this_cpu_ptr(a->cpu_qstats)->drops += packets;
-+		this_cpu_ptr(a->cpu_qstats)->drops += drops;
- 
- 		if (hw)
- 			_bstats_cpu_update(this_cpu_ptr(a->cpu_bstats_hw),
-@@ -1075,8 +1074,7 @@ void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
- 	}
- 
- 	_bstats_update(&a->tcfa_bstats, bytes, packets);
--	if (drop)
--		a->tcfa_qstats.drops += packets;
-+	a->tcfa_qstats.drops += drops;
- 	if (hw)
- 		_bstats_update(&a->tcfa_bstats_hw, bytes, packets);
- }
-diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-index e9f3576cbf71..1b9c6d4a1b6b 100644
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -1450,12 +1450,12 @@ static int tcf_ct_search(struct net *net, struct tc_action **a, u32 index)
- 	return tcf_idr_search(tn, a, index);
- }
- 
--static void tcf_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--			     u64 lastuse, bool hw)
-+static void tcf_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+			     u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_ct *c = to_ct(a);
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	c->tcf_tm.lastuse = max_t(u64, c->tcf_tm.lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_gact.c b/net/sched/act_gact.c
-index 416065772719..410e3bbfb9ca 100644
---- a/net/sched/act_gact.c
-+++ b/net/sched/act_gact.c
-@@ -171,14 +171,15 @@ static int tcf_gact_act(struct sk_buff *skb, const struct tc_action *a,
- 	return action;
- }
- 
--static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--				  u64 lastuse, bool hw)
-+static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+				  u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_gact *gact = to_gact(a);
- 	int action = READ_ONCE(gact->tcf_action);
- 	struct tcf_t *tm = &gact->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, action == TC_ACT_SHOT, hw);
-+	tcf_action_update_stats(a, bytes, packets,
-+				action == TC_ACT_SHOT ? packets : drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_gate.c b/net/sched/act_gate.c
-index 9c628591f452..c818844846b1 100644
---- a/net/sched/act_gate.c
-+++ b/net/sched/act_gate.c
-@@ -568,13 +568,13 @@ static int tcf_gate_walker(struct net *net, struct sk_buff *skb,
- 	return tcf_generic_walker(tn, skb, cb, type, ops, extack);
- }
- 
--static void tcf_gate_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--				  u64 lastuse, bool hw)
-+static void tcf_gate_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+				  u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_gate *gact = to_gate(a);
- 	struct tcf_t *tm = &gact->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-index 83dd82fc9f40..b2705318993b 100644
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -312,13 +312,13 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
- 	return retval;
- }
- 
--static void tcf_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--			     u64 lastuse, bool hw)
-+static void tcf_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+			     u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_mirred *m = to_mirred(a);
- 	struct tcf_t *tm = &m->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
-index d41d6200d9de..66986db062ed 100644
---- a/net/sched/act_pedit.c
-+++ b/net/sched/act_pedit.c
-@@ -409,13 +409,13 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
- 	return p->tcf_action;
- }
- 
--static void tcf_pedit_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--				   u64 lastuse, bool hw)
-+static void tcf_pedit_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+				   u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_pedit *d = to_pedit(a);
- 	struct tcf_t *tm = &d->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_police.c b/net/sched/act_police.c
-index 8b7a0ac96c51..0b431d493768 100644
---- a/net/sched/act_police.c
-+++ b/net/sched/act_police.c
-@@ -288,13 +288,13 @@ static void tcf_police_cleanup(struct tc_action *a)
- }
- 
- static void tcf_police_stats_update(struct tc_action *a,
--				    u64 bytes, u32 packets,
-+				    u64 bytes, u64 packets, u64 drops,
- 				    u64 lastuse, bool hw)
- {
- 	struct tcf_police *police = to_police(a);
- 	struct tcf_t *tm = &police->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_skbedit.c b/net/sched/act_skbedit.c
-index b125b2be4467..361b863e0634 100644
---- a/net/sched/act_skbedit.c
-+++ b/net/sched/act_skbedit.c
-@@ -74,12 +74,13 @@ static int tcf_skbedit_act(struct sk_buff *skb, const struct tc_action *a,
- }
- 
- static void tcf_skbedit_stats_update(struct tc_action *a, u64 bytes,
--				     u32 packets, u64 lastuse, bool hw)
-+				     u64 packets, u64 drops,
-+				     u64 lastuse, bool hw)
- {
- 	struct tcf_skbedit *d = to_skbedit(a);
- 	struct tcf_t *tm = &d->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/act_vlan.c b/net/sched/act_vlan.c
-index c91d3958fcbb..a5ff9f68ab02 100644
---- a/net/sched/act_vlan.c
-+++ b/net/sched/act_vlan.c
-@@ -302,13 +302,13 @@ static int tcf_vlan_walker(struct net *net, struct sk_buff *skb,
- 	return tcf_generic_walker(tn, skb, cb, type, ops, extack);
- }
- 
--static void tcf_vlan_stats_update(struct tc_action *a, u64 bytes, u32 packets,
--				  u64 lastuse, bool hw)
-+static void tcf_vlan_stats_update(struct tc_action *a, u64 bytes, u64 packets,
-+				  u64 drops, u64 lastuse, bool hw)
- {
- 	struct tcf_vlan *v = to_vlan(a);
- 	struct tcf_t *tm = &v->tcf_tm;
- 
--	tcf_action_update_stats(a, bytes, packets, false, hw);
-+	tcf_action_update_stats(a, bytes, packets, drops, hw);
- 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
- }
- 
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index b2da37286082..391971672d54 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -491,6 +491,7 @@ static void fl_hw_update_stats(struct tcf_proto *tp, struct cls_fl_filter *f,
- 
- 	tcf_exts_stats_update(&f->exts, cls_flower.stats.bytes,
- 			      cls_flower.stats.pkts,
-+			      cls_flower.stats.drops,
- 			      cls_flower.stats.lastused,
- 			      cls_flower.stats.used_hw_stats,
- 			      cls_flower.stats.used_hw_stats_valid);
-diff --git a/net/sched/cls_matchall.c b/net/sched/cls_matchall.c
-index 8d39dbcf1746..cafb84480bab 100644
---- a/net/sched/cls_matchall.c
-+++ b/net/sched/cls_matchall.c
-@@ -338,7 +338,8 @@ static void mall_stats_hw_filter(struct tcf_proto *tp,
- 	tc_setup_cb_call(block, TC_SETUP_CLSMATCHALL, &cls_mall, false, true);
- 
- 	tcf_exts_stats_update(&head->exts, cls_mall.stats.bytes,
--			      cls_mall.stats.pkts, cls_mall.stats.lastused,
-+			      cls_mall.stats.pkts, cls_mall.stats.drops,
-+			      cls_mall.stats.lastused,
- 			      cls_mall.stats.used_hw_stats,
- 			      cls_mall.stats.used_hw_stats_valid);
- }
--- 
-2.17.1
+	period =3D min(state->period, pc->period);
 
+	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+	    period < pc->period)
+	    	return -EINVAL;
+
+(and then use period instead of state->period in the following)
+
+> +		return -EINVAL;
+> +
+> +	cur_state =3D pwm->state;
+> +	duty_cycle =3D state->duty_cycle;
+
+This would then be:
+
+	duty_cycle =3D min(state->duty_cycle, period);
+
+> +	if (!state->enabled)
+> +		duty_cycle =3D 0;
+
+What happens if you don't set duty_cycle to 0? Is it just to prevent a
+spike in lgm_pwm_update_dc before calling lgm_pwm_enable(.., false)? If
+so, what about skipping writing (and calculating) the duty register
+value at all?
+
+> +	duty =3D duty_cycle * (1U << DC_BITS);
+> +	val =3D DIV_ROUND_CLOSEST(duty, state->period);
+
+This is equivalent to:
+
+	val =3D DIV_ROUND_CLOSEST(duty_cycle << DC_BITS, state->period);
+
+which doesn't need two variables with similar name but different
+scaling. Having said that using closest rounding is wrong here, please
+round down.
+
+> +	val =3D min_t(u32, val, MAX_DUTY_CYCLE);
+
+Hmm, this looks suspicious. Does the hardware really produce 100% when
+val =3D MAX_DUTY_CYCLE? Either it doesn't or there is a rounding error in
+your algorithm. Does the PWM support 0%? It would help to mention the
+formula from the reference manual to verify and understand your
+algorithm. Please add a comment for that.
+
+> +	if (pc->tach_en) {
+> +		pc->set_dc =3D val;
+> +		pc->set_rpm =3D val * pc->max_rpm / MAX_DUTY_CYCLE;
+> +	}
+> +
+> +	ret =3D lgm_pwm_update_dc(pc, val);
+> +
+> +	if (state->enabled !=3D cur_state.enabled)
+> +		lgm_pwm_enable(chip, state->enabled);
+
+I would prefer if you would make this call conditional on the (cached)
+state of the PWM_FAN_EN_MSK bit instead of pwm->state. This way the
+driver is more independent from pwm API internals.
+
+> +	return ret;
+> +}
+> +
+> +static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> +			      struct pwm_state *state)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	u32 duty, val;
+> +
+> +	state->enabled =3D regmap_test_bits(pc->regmap, PWM_FAN_CON0,
+> +					  PWM_FAN_EN_EN);
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +	state->period =3D pc->period; /* fixed period */
+> +
+> +	regmap_read(pc->regmap, PWM_FAN_CON0, &val);
+> +	duty =3D FIELD_GET(PWM_FAN_DC_MSK, val);
+> +	state->duty_cycle =3D duty * pc->period >> DC_BITS;
+
+The rounding here must use the inverse rounding of .apply(). So please
+round up here.
+
+> +}
+> +
+> +static const struct pwm_ops lgm_pwm_ops =3D {
+> +	.get_state =3D lgm_pwm_get_state,
+> +	.apply =3D lgm_pwm_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static void lgm_pwm_tach_work(struct work_struct *work)
+> +{
+> +	struct lgm_pwm_chip *pc =3D container_of(work, struct lgm_pwm_chip,
+> +						 work.work);
+> +	struct regmap *regmap =3D pc->regmap;
+> +	u32 fan_tach, fan_dc, val;
+> +	s32 diff;
+> +	static u32 fanspeed_err_cnt, time_window, delta_dc;
+> +
+> +	/*
+> +	 * Fan speed is tracked by reading the active duty cycle of PWM output
+> +	 * from the active duty cycle register. Some variance in the duty cycle
+> +	 * register value is expected. So we set a time window of 30 seconds and
+> +	 * if we detect inaccurate fan speed 6 times within 30 seconds then we
+> +	 * mark it as fan speed problem and fix it by readjusting the duty cycl=
+e.
+> +	 */
+> +
+> +	if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
+> +		/*
+> +		 * Ignore first time we detect inaccurate fan speed
+> +		 * because it is expected during bootup.
+> +		 */
+> +		time_window++;
+> +
+> +	if (time_window =3D=3D THIRTY_SECS_WINDOW) {
+> +		/*
+> +		 * This work is scheduled every 2 seconds i.e. each time_window
+> +		 * counter step roughly mean 2 seconds. When the time window
+> +		 * reaches 30 seconds, reset all the counters/logic.
+> +		 */
+> +		fanspeed_err_cnt =3D 0;
+> +		delta_dc =3D 0;
+> +		time_window =3D 0;
+> +	}
+> +
+> +	regmap_read(regmap, PWM_FAN_STAT, &fan_tach);
+> +	fan_tach &=3D PWM_FAN_TACH_MASK;
+> +	if (!fan_tach)
+> +		goto restart_work;
+> +
+> +	val =3D DIV_ROUND_CLOSEST(pc->set_rpm << FRAC_BITS, fan_tach);
+> +	diff =3D val - BIT(FRAC_BITS);
+> +
+> +	if (abs(diff) > TWO_TENTH) {
+> +		/* if duty cycle diff is more than two tenth, detect it as error */
+> +		if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
+> +			delta_dc +=3D val;
+> +		fanspeed_err_cnt++;
+> +	}
+> +
+> +	if (fanspeed_err_cnt =3D=3D ERR_CNT_THRESHOLD) {
+> +		/*
+> +		 * We detected fan speed errors 6 times with 30 seconds.
+> +		 * Fix the error by readjusting duty cycle and reset
+> +		 * our counters/logic.
+> +		 */
+> +		fan_dc =3D pc->set_dc * delta_dc >> (FRAC_BITS + 2);
+> +		fan_dc =3D min_t(u32, fan_dc, MAX_DUTY_CYCLE);
+> +		lgm_pwm_update_dc(pc, fan_dc);
+> +		fanspeed_err_cnt =3D 0;
+> +		delta_dc =3D 0;
+> +		time_window =3D 0;
+> +	}
+> +
+> +restart_work:
+> +	/*
+> +	 * Fan speed doesn't need continous tracking. Schedule this work
+> +	 * every two seconds so it doesn't steal too much cpu cycles.
+> +	 */
+> +	schedule_delayed_work(&pc->work, msecs_to_jiffies(TWO_SECONDS));
+
+You had concerns about my review feedback that I don't like the fan
+stuff in the PWM driver. I still think that the fan part doesn't belong
+here.
+
+> +}
+> +
+> +static void lgm_pwm_init(struct lgm_pwm_chip *pc)
+> +{
+> +	struct device *dev =3D pc->chip.dev;
+> +	struct regmap *regmap =3D pc->regmap;
+> +	u32 max_rpm, fan_wire, tach_plus, con0_val, con0_mask;
+> +
+> +	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
+> +		fan_wire =3D 2; /* default is 2 wire mode */
+> +
+> +	con0_val =3D FIELD_PREP(PWM_FAN_PWM_DIS_MSK, PWM_FAN_PWM_DIS_DIS);
+> +	con0_mask =3D PWM_FAN_PWM_DIS_MSK | PWM_FAN_MODE_MSK;
+
+Please don't disable the PWM in .probe()
+
+> +
+> +	switch (fan_wire) {
+> +	case 4:
+> +		con0_val |=3D FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE) |
+> +			    FIELD_PREP(PWM_TACH_EN_MSK, PWM_TACH_EN_EN);
+> +		con0_mask |=3D PWM_TACH_EN_MSK | PWM_TACH_PLUS_MSK;
+> +		pc->tach_en =3D 1;
+> +		pc->period =3D PERIOD_4WIRE_NSECS;
+> +		break;
+> +	default:
+> +		/* default is 2wire mode */
+> +		con0_val |=3D FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
+> +		pc->period =3D PERIOD_2WIRE_NSECS;
+> +		break;
+> +	}
+> +
+> +	if (pc->tach_en) {
+> +		if (device_property_read_u32(dev, "intel,tach-plus",
+> +					     &tach_plus))
+> +			tach_plus =3D 2;
+> +
+> +		switch (tach_plus) {
+> +		case 4:
+> +			con0_val |=3D FIELD_PREP(PWM_TACH_PLUS_MSK,
+> +					       PWM_TACH_PLUS_4);
+> +			break;
+> +		default:
+> +			con0_val |=3D FIELD_PREP(PWM_TACH_PLUS_MSK,
+> +					       PWM_TACH_PLUS_2);
+> +			break;
+> +		}
+> +
+> +		if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
+> +			max_rpm =3D DFAULT_RPM;
+> +
+> +		max_rpm =3D min_t(u32, max_rpm, MAX_RPM);
+> +		if (max_rpm =3D=3D 0)
+> +			max_rpm =3D DFAULT_RPM;
+> +
+> +		pc->max_rpm =3D max_rpm;
+> +		INIT_DEFERRABLE_WORK(&pc->work, lgm_pwm_tach_work);
+> +		regmap_update_bits(regmap, PWM_FAN_CON1,
+> +				   PWM_FAN_MAX_RPM_MSK, max_rpm);
+> +	}
+> +
+> +	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
+> +}
+> +
+> +static const struct regmap_config pwm_regmap_config =3D {
+
+Here you missed to add the lgm_ prefix.
+
+> +	.reg_bits =3D 32,
+> +	.reg_stride =3D 4,
+> +	.val_bits =3D 32,
+> +};
+> +
+> +static int lgm_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct lgm_pwm_chip *pc;
+> +	struct device *dev =3D &pdev->dev;
+> +	void __iomem *io_base;
+> +	int ret;
+> +
+> +	pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+> +	if (!pc)
+> +		return -ENOMEM;
+> +
+> +	io_base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(io_base))
+> +		return PTR_ERR(io_base);
+> +
+> +	pc->regmap =3D devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+> +	if (IS_ERR(pc->regmap)) {
+> +		ret =3D PTR_ERR(pc->regmap);
+> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+> +		return ret;
+> +	}
+> +
+> +	pc->clk =3D devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pc->clk)) {
+> +		ret =3D PTR_ERR(pc->clk);
+> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+> +		return ret;
+> +	}
+> +
+> +	pc->rst =3D devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(pc->rst)) {
+> +		ret =3D PTR_ERR(pc->rst);
+> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D reset_control_deassert(pc->rst);
+> +	if (ret) {
+> +		dev_err(dev, "cannot deassert reset control: %pe\n",
+> +			ERR_PTR(ret));
+> +		return ret;
+> +	}
+> +
+> +	ret =3D clk_prepare_enable(pc->clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	pc->chip.dev =3D dev;
+> +	pc->chip.ops =3D &lgm_pwm_ops;
+> +	pc->chip.npwm =3D 1;
+> +
+> +	lgm_pwm_init(pc);
+> +
+> +	ret =3D pwmchip_add(&pc->chip);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to add PWM chip: %d\n", ret);
+
+%pe please.
+
+> +		clk_disable_unprepare(pc->clk);
+> +		reset_control_assert(pc->rst);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pc);
+> +	return 0;
+> +}
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--s4q67lgek7jj2cgj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7sVOIACgkQwfwUeK3K
+7AnLbQf9E9/hFQg2xtnaMPMkPFQIgjq3vs8CnQd6qCqz/MgRjuPMqarqd4jty/gL
+F/+VdviP+GgaBcRKVaHO6xC/jZpySZLS1y3tl2QsraGQVZ+lpYh3ES637XIcCbjQ
+HH+BLGDV1TQ7zA5XnZE14pfKx7tzfMeX+1C8Bn8lHHwWGz/S6522/cdOZJ1WYjwh
+hbi1RLBTXGjYIkdeWyQeWeMgvWnN2gN9uLcp05ZI4YCyLo6WxSfF4SZga6kIEapc
+XNp/+eZLRqqUdzciALZcsdPOtkE/t3SqUpPxAEIPWQpKtBQYCIhYslJ6TXEG/Stl
+nD0Tw5xIt4v7nImULwuPLlEVg/aoug==
+=90Xl
+-----END PGP SIGNATURE-----
+
+--s4q67lgek7jj2cgj--
