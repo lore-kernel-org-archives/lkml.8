@@ -2,176 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03110C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD85C20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED44221556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592581147;
+	bh=ZOBjPwNTxWrUqyukv0mLvrQ62a6ylels/hEl/abfOe8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CkGNJ3emTnEI/7/0AW/y3gFiIfDdkO3zfatXkrWBMoD8mG0T0Ce8F700gC1g6zbQc
+	 IsUf91qiXuR3XUQ4fFZrbykmdXO5hIY5Fb/GcnYFLkIY5pHkBxJI2F1US7zkxaq5LR
+	 5CKtURFQrqgv3DCY2ZWcHe1H1p3v7exmvti28tiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405033AbgFSPjB (ORCPT
+        id S2404616AbgFSP3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:39:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:40230 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 11:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391845AbgFSPi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:38:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8184B101E;
-        Fri, 19 Jun 2020 08:38:55 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CC63F71F;
-        Fri, 19 Jun 2020 08:38:53 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:38:51 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Quentin Perret <qperret@google.com>, ctheegal@codeaurora.org,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200619153851.vigshoae3ahiy63x@e107158-lin.cambridge.arm.com>
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200612125250.7bwjfnxhurdf5bwj@e107158-lin.cambridge.arm.com>
- <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
+        id S2404585AbgFSP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42BE521919;
+        Fri, 19 Jun 2020 15:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580526;
+        bh=ZOBjPwNTxWrUqyukv0mLvrQ62a6ylels/hEl/abfOe8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xhS7Ex0SRQKtgw97IzQ6Np/X6MVcnf/PQs2POz7MeV8lGz1u3KeNK8Tf+yDkZi2b3
+         NBDMhQOmQ8Bh++IHPr8yiTRem7Z79CFLh666Xri1xBvXb59btsmcSiD09MrCAmTtjx
+         wZJJ2XU7eUTwd669RzERbTsB8HcJFDn13LjWY3j0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 243/376] ice: Fix inability to set channels when down
+Date:   Fri, 19 Jun 2020 16:32:41 +0200
+Message-Id: <20200619141721.832581252@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/18/20 14:18, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Jun 12, 2020 at 5:52 AM Qais Yousef <qais.yousef@arm.com> wrote:
-> >
-> > On 06/10/20 15:18, Douglas Anderson wrote:
-> > > The cros_ec_spi driver is realtime priority so that it doesn't get
-> > > preempted by other taks while it's talking to the EC but overall it
-> > > really doesn't need lots of compute power.  Unfortunately, by default,
-> > > the kernel assumes that all realtime tasks should cause the cpufreq to
-> > > jump to max and burn through power to get things done as quickly as
-> > > possible.  That's just not the correct behavior for cros_ec_spi.
-> > >
-> > > Switch to manually overriding the default.
-> > >
-> > > This won't help us if our work moves over to the SPI pump thread but
-> > > that's not the common code path.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > NOTE: This would cause a conflict if the patch
-> > > https://lore.kernel.org/r/20200422112831.870192415@infradead.org lands
-> > > first
-> > >
-> > >  drivers/platform/chrome/cros_ec_spi.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> > > index debea5c4c829..76d59d5e7efd 100644
-> > > --- a/drivers/platform/chrome/cros_ec_spi.c
-> > > +++ b/drivers/platform/chrome/cros_ec_spi.c
-> > > @@ -709,8 +709,11 @@ static void cros_ec_spi_high_pri_release(void *worker)
-> > >  static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
-> > >                                          struct cros_ec_spi *ec_spi)
-> > >  {
-> > > -     struct sched_param sched_priority = {
-> > > -             .sched_priority = MAX_RT_PRIO / 2,
-> > > +     struct sched_attr sched_attr = {
-> > > +             .sched_policy   = SCHED_FIFO,
-> > > +             .sched_priority = MAX_RT_PRIO / 2,
-> > > +             .sched_flags    = SCHED_FLAG_UTIL_CLAMP_MIN,
-> > > +             .sched_util_min = 0,
-> >
-> > Hmm I thought Peter already removed all users that change RT priority directly.
-> >
-> > https://lore.kernel.org/lkml/20200422112719.826676174@infradead.org/
-> 
-> Yeah, I mentioned that patch series "after the cut" in my patch and
-> also made sure to CC Peter on my patch.  I'm not sure what happened to
-> that series since I don't see it in linuxnext...
+From: Jesse Brandeburg <jesse.brandeburg@intel.com>
 
-Apologies I missed that.
+[ Upstream commit 765dd7a1827c687b782e6ab3dd6daf4d13a4780f ]
 
-> 
-> 
-> > >       };
-> > >       int err;
-> > >
-> > > @@ -728,8 +731,7 @@ static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
-> > >       if (err)
-> > >               return err;
-> > >
-> > > -     err = sched_setscheduler_nocheck(ec_spi->high_pri_worker->task,
-> > > -                                      SCHED_FIFO, &sched_priority);
-> > > +     err = sched_setattr_nocheck(ec_spi->high_pri_worker->task, &sched_attr);
-> > >       if (err)
-> > >               dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
-> > >       return err;
-> >
-> > If I read the code correctly, if you fail here cros_ec_spi_probe() will fail
-> > too and the whole thing will not be loaded. If you compile without uclamp then
-> > sched_setattr_nocheck() will always fail with -EOPNOTSUPP.
-> 
-> Oops, definitely need to send out a v2 for that if nothing else.  Is
-> there any good way for me to code this up or do I need a big #ifdef
-> somewhere in my code?
+Currently the driver prevents a user from doing
+modprobe ice
+ethtool -L eth0 combined 5
+ip link set eth0 up
 
-A big #ifdef. But this kind of use I don't think was anticipated. And generally
-if we want to allow that, it has to be done via a proper API. Drivers picking
-random uclamp values is as bad as them picking random RT priority.
+The ethtool command fails, because the driver is checking to see if the
+interface is down before allowing the get_channels to proceed (even for
+a set_channels).
 
-> 
-> 
-> > Why can't you manage the priority and boost value of such tasks via your init
-> > scripts instead?
-> 
-> I guess I feel like it's weird in this case.  Userspace isn't creating
-> this task and isn't the one marking it as realtime.  ...and, if we
-> ever manage to upgrade the protocol which we use to talk to the EC we
-> might fully get rid of this task the need to have something boosted up
-> to realtime.
-> 
-> Said another way: the fact that we even have this task at all and the
-> fact that it's realtime is an implementation detail of the kernel.  It
-> seems really weird to add initscripts for it.
+Remove this check and allow the user to configure the interface
+before bringing it up, which is a much better usability case.
 
-Yes this is the problem of RT for a general purpose systems. It's hard to
-reason about their priorities/importance since it's not a special purpose
-system with well defined spec of what hardware/software will be running on it
-and their precise requirements is not known before hand.
+Fixes: 87324e747fde ("ice: Implement ethtool ops for channels")
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/ice/ice_ethtool.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> 
-> 
-> > I have to admit I need to think about whether it makes sense to have a generic
-> > API that allows drivers to opt-out of the default boosting behavior for their
-> > RT tasks.
-> 
-> Seems like it would be useful.
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 593fb37bd59e..153e3565e313 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -3171,10 +3171,6 @@ ice_get_channels(struct net_device *dev, struct ethtool_channels *ch)
+ 	struct ice_vsi *vsi = np->vsi;
+ 	struct ice_pf *pf = vsi->back;
+ 
+-	/* check to see if VSI is active */
+-	if (test_bit(__ICE_DOWN, vsi->state))
+-		return;
+-
+ 	/* report maximum channels */
+ 	ch->max_rx = ice_get_max_rxq(pf);
+ 	ch->max_tx = ice_get_max_txq(pf);
+-- 
+2.25.1
 
-If you propose something that will help the discussion. I think based on the
-same approach Peter has taken to prevent random RT priorities. In uclamp case
-I think we just want to allow driver to opt RT tasks out of the default
-boosting behavior.
 
-I'm a bit wary that this extra layer of tuning might create a confusion, but
-I can't reason about why is it bad for a driver to say I don't want my RT task
-to be boosted too.
 
-Thanks
-
---
-Qais Yousef
