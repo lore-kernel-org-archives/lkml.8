@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89716C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC54621556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6463421556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582246;
-	bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
+	s=default; t=1592582253;
+	bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7R3a9I8QgKu4rKLdOMECpwHFSC75T2v7m6gdQ9DGkhz6ISblIfoZa0rbvlNGLzNT
-	 UGRjTjKrVTHjkMxqlCf+HiAP/RIkutbCKA9zT1bhF9hiIMtm6zHZ6HVghDNHPYbMo4
-	 ks/4BFCtN8MCXyKhwEmyeW/wCzXodMKNNLQI+pQc=
+	b=pFDrB3wqMuNwTNACfpe53ZyBPUn2P3pUQsQSowJZVUrM165P8Y0auPOvP1DZG/PyF
+	 drGD1u4AO4r4KVbqifwYp2348Zl06cywA2LYfO3s20T0u6b9XBMBzJiGzSBmvOAH6T
+	 7atycBX7MS5YnJLtnB0IOOeRdVsU1Ye2Fx8n75dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405459AbgFSP5Y (ORCPT
+        id S2392671AbgFSP5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392234AbgFSPUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:16 -0400
+        id S2388925AbgFSPUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5579D20706;
-        Fri, 19 Jun 2020 15:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A452206DB;
+        Fri, 19 Jun 2020 15:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580016;
-        bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
+        s=default; t=1592580010;
+        bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSxUnuSdrfSyaCQYMmY+PxkWn4+LhfVB6Bq9TMkVzEzhaxGsUFD3EQwcPxaJ6eoz8
-         yCe8gp/BonnduLhnVpQCyr9fWLpniXueZWLfaBJHGys8ijxlRkfo/QqhwsubZJCSYg
-         ArqPyI/T28DeeEBKJQse/D4YYv+kJlvV5U8CZejY=
+        b=Pf3YGu/760m0OOGABnQ6FxTQP3TdD1UO48fT4XshoHOI34Yd/dTCK46OGFtxWSJqy
+         trRIfyKfw34Q3n77FZYH8Q30qkZjXrc6Bv2N1V/f34qnA3B/VX8xtjTHERk8ZCPbNk
+         BgeXajphTCwgKGkdyfIZH1G6DqSwNfjE0Dl0afKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Mansur Alisha Shaik <mansur@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/376] brcmfmac: fix wrong location to get firmware feature
-Date:   Fri, 19 Jun 2020 16:30:09 +0200
-Message-Id: <20200619141714.650515602@linuxfoundation.org>
+Subject: [PATCH 5.7 089/376] media: venus: core: remove CNOC voting while device suspend
+Date:   Fri, 19 Jun 2020 16:30:07 +0200
+Message-Id: <20200619141714.556804588@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,42 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaehoon Chung <jh80.chung@samsung.com>
+From: Mansur Alisha Shaik <mansur@codeaurora.org>
 
-[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
+[ Upstream commit 07f8f22a33a9e3e9955e24a84e2f856dcc8c31c4 ]
 
-sup_wpa feature is getting after setting feature_disable flag.
-If firmware is supported sup_wpa feature,  it's always enabled
-regardless of feature_disable flag.
+The Venus driver is voting Configuration NoC during .probe but not clear
+voting in .suspend. Because of this NoC is up during shutdown also. As a
+consequence the whole device could leak energy while in .suspend.
 
-Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
+So correct this by moving voting in .resume and unvoting
+in .suspend
+
+Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/platform/qcom/venus/core.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 5da0dda0d899..0dcefbd0c000 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -285,13 +285,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
- 	if (!err)
- 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 194b10b98767..13fa5076314c 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -242,10 +242,6 @@ static int venus_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-+	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+-	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
+-	if (ret)
+-		return ret;
+-
+ 	ret = hfi_create(core, &venus_core_ops);
+ 	if (ret)
+ 		return ret;
+@@ -350,6 +346,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = icc_set_bw(core->cpucfg_path, 0, 0);
++	if (ret)
++		return ret;
 +
- 	if (drvr->settings->feature_disable) {
- 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
- 			  ifp->drvr->feat_flags,
- 			  drvr->settings->feature_disable);
- 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
- 	}
--	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 	if (pm_ops->core_power)
+ 		ret = pm_ops->core_power(dev, POWER_OFF);
  
- 	brcmf_feat_firmware_overrides(drvr);
+@@ -368,6 +368,10 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 			return ret;
+ 	}
+ 
++	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
++	if (ret)
++		return ret;
++
+ 	return hfi_core_resume(core, false);
+ }
  
 -- 
 2.25.1
