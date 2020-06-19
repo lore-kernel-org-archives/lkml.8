@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C866AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51911C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28F421548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A64208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732972AbgFSNjQ (ORCPT
+        id S1732907AbgFSNjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:39:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:59526 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 09:39:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:59540 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732690AbgFSNjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:39:01 -0400
+        id S1732718AbgFSNjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:39:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6725413D5;
-        Fri, 19 Jun 2020 06:39:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A57AA13FD;
+        Fri, 19 Jun 2020 06:39:01 -0700 (PDT)
 Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DF453F6CF;
-        Fri, 19 Jun 2020 06:38:59 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C5D83F6CF;
+        Fri, 19 Jun 2020 06:39:00 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [PATCH v10 5/9] firmware: arm_scmi: Add Power notifications support
-Date:   Fri, 19 Jun 2020 14:38:30 +0100
-Message-Id: <20200619133834.18497-6-cristian.marussi@arm.com>
+Subject: [PATCH v10 6/9] firmware: arm_scmi: Add Perf notifications support
+Date:   Fri, 19 Jun 2020 14:38:31 +0100
+Message-Id: <20200619133834.18497-7-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200619133834.18497-1-cristian.marussi@arm.com>
 References: <20200619133834.18497-1-cristian.marussi@arm.com>
@@ -41,18 +41,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Power protocol register with the notification core.
+Make SCMI Perf protocol register with the notification core.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
 V8 --> V9
 - moved pr_info to pr_debug
-- removed switch()
+- inlined MAP_EVT_TO_ENABLE_CMD
 - use SCMI_PROTO_QUEUE_SZ
 V6 --> V7
 - fixed report.timestamp type
-- removed POWER_STATE_CHANGE_REQUESTED motification handling (deprecated)
 - fixed max_payld_sz initialization
 - expose SCMI_EVENT_ in linux/scmi_protocol.h
 V5 --> V6
@@ -69,65 +68,92 @@ V1 --> V2
   notification core, together with proper reference counting of enables
 - switched to devres protocol-registration
 ---
- drivers/firmware/arm_scmi/power.c | 92 +++++++++++++++++++++++++++++--
- include/linux/scmi_protocol.h     | 12 ++++
- 2 files changed, 98 insertions(+), 6 deletions(-)
+ drivers/firmware/arm_scmi/perf.c | 139 +++++++++++++++++++++++++++++--
+ include/linux/scmi_protocol.h    |  17 ++++
+ 2 files changed, 151 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-index cf7f0312381b..b9714755a320 100644
---- a/drivers/firmware/arm_scmi/power.c
-+++ b/drivers/firmware/arm_scmi/power.c
-@@ -5,19 +5,18 @@
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 7b8d7cebdac9..dbcd43a3c14d 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -5,15 +5,19 @@
   * Copyright (C) 2018 ARM Ltd.
   */
  
-+#define pr_fmt(fmt) "SCMI Notifications POWER - " fmt
++#define pr_fmt(fmt) "SCMI Notifications PERF - " fmt
 +
+ #include <linux/bits.h>
+ #include <linux/of.h>
+ #include <linux/io.h>
+ #include <linux/io-64-nonatomic-hi-lo.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
 +#include <linux/scmi_protocol.h>
-+
+ #include <linux/sort.h>
+ 
  #include "common.h"
 +#include "notify.h"
  
- enum scmi_power_protocol_cmd {
- 	POWER_DOMAIN_ATTRIBUTES = 0x3,
- 	POWER_STATE_SET = 0x4,
- 	POWER_STATE_GET = 0x5,
- 	POWER_STATE_NOTIFY = 0x6,
--	POWER_STATE_CHANGE_REQUESTED_NOTIFY = 0x7,
--};
--
--enum scmi_power_protocol_notify {
--	POWER_STATE_CHANGED = 0x0,
--	POWER_STATE_CHANGE_REQUESTED = 0x1,
+ enum scmi_performance_protocol_cmd {
+ 	PERF_DOMAIN_ATTRIBUTES = 0x3,
+@@ -27,11 +31,6 @@ enum scmi_performance_protocol_cmd {
+ 	PERF_DESCRIBE_FASTCHANNEL = 0xb,
  };
  
- struct scmi_msg_resp_power_attributes {
-@@ -48,6 +47,12 @@ struct scmi_power_state_notify {
+-enum scmi_performance_protocol_notify {
+-	PERFORMANCE_LIMITS_CHANGED = 0x0,
+-	PERFORMANCE_LEVEL_CHANGED = 0x1,
+-};
+-
+ struct scmi_opp {
+ 	u32 perf;
+ 	u32 power;
+@@ -86,6 +85,19 @@ struct scmi_perf_notify_level_or_limits {
  	__le32 notify_enable;
  };
  
-+struct scmi_power_state_notify_payld {
++struct scmi_perf_limits_notify_payld {
 +	__le32 agent_id;
 +	__le32 domain_id;
-+	__le32 power_state;
++	__le32 range_max;
++	__le32 range_min;
 +};
 +
- struct power_dom_info {
- 	bool state_set_sync;
- 	bool state_set_async;
-@@ -186,6 +191,75 @@ static struct scmi_power_ops power_ops = {
- 	.state_get = scmi_power_state_get,
++struct scmi_perf_level_notify_payld {
++	__le32 agent_id;
++	__le32 domain_id;
++	__le32 performance_level;
++};
++
+ struct scmi_msg_resp_perf_describe_levels {
+ 	__le16 num_returned;
+ 	__le16 num_remaining;
+@@ -158,6 +170,11 @@ struct scmi_perf_info {
+ 	struct perf_dom_info *dom_info;
  };
  
-+static int scmi_power_request_notify(const struct scmi_handle *handle,
-+				     u32 domain, bool enable)
++static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
++	PERF_NOTIFY_LIMITS,
++	PERF_NOTIFY_LEVEL,
++};
++
+ static int scmi_perf_attributes_get(const struct scmi_handle *handle,
+ 				    struct scmi_perf_info *pi)
+ {
+@@ -488,6 +505,29 @@ static int scmi_perf_level_get(const struct scmi_handle *handle, u32 domain,
+ 	return scmi_perf_mb_level_get(handle, domain, level, poll);
+ }
+ 
++static int scmi_perf_level_limits_notify(const struct scmi_handle *handle,
++					 u32 domain, int message_id,
++					 bool enable)
 +{
 +	int ret;
 +	struct scmi_xfer *t;
-+	struct scmi_power_state_notify *notify;
++	struct scmi_perf_notify_level_or_limits *notify;
 +
-+	ret = scmi_xfer_get_init(handle, POWER_STATE_NOTIFY,
-+				 SCMI_PROTOCOL_POWER, sizeof(*notify), 0, &t);
++	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_PERF,
++				 sizeof(*notify), 0, &t);
 +	if (ret)
 +		return ret;
 +
@@ -141,87 +167,142 @@ index cf7f0312381b..b9714755a320 100644
 +	return ret;
 +}
 +
-+static bool scmi_power_set_notify_enabled(const struct scmi_handle *handle,
-+					  u8 evt_id, u32 src_id, bool enable)
+ static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size)
+ {
+ 	if ((msg == PERF_LEVEL_GET || msg == PERF_LEVEL_SET) && size == 4)
+@@ -722,6 +762,89 @@ static struct scmi_perf_ops perf_ops = {
+ 	.fast_switch_possible = scmi_fast_switch_possible,
+ };
+ 
++static bool scmi_perf_set_notify_enabled(const struct scmi_handle *handle,
++					 u8 evt_id, u32 src_id, bool enable)
 +{
-+	int ret;
++	int ret, cmd_id;
 +
-+	ret = scmi_power_request_notify(handle, src_id, enable);
++	if (unlikely(evt_id >= ARRAY_SIZE(evt_2_cmd)))
++		return false;
++
++	cmd_id = evt_2_cmd[evt_id];
++	ret = scmi_perf_level_limits_notify(handle, src_id, cmd_id, enable);
 +	if (ret)
-+		pr_debug("FAIL_ENABLE - evt[%X] dom[%d] - ret:%d\n",
++		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
 +			 evt_id, src_id, ret);
 +
 +	return !ret;
 +}
 +
-+static void *scmi_power_fill_custom_report(const struct scmi_handle *handle,
-+					   u8 evt_id, u64 timestamp,
-+					   const void *payld, size_t payld_sz,
-+					   void *report, u32 *src_id)
++static void *scmi_perf_fill_custom_report(const struct scmi_handle *handle,
++					  u8 evt_id, u64 timestamp,
++					  const void *payld, size_t payld_sz,
++					  void *report, u32 *src_id)
 +{
-+	const struct scmi_power_state_notify_payld *p = payld;
-+	struct scmi_power_state_changed_report *r = report;
++	void *rep = NULL;
 +
-+	if (evt_id != SCMI_EVENT_POWER_STATE_CHANGED || sizeof(*p) != payld_sz)
-+		return NULL;
++	switch (evt_id) {
++	case SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED:
++	{
++		const struct scmi_perf_limits_notify_payld *p = payld;
++		struct scmi_perf_limits_report *r = report;
 +
-+	r->timestamp = timestamp;
-+	r->agent_id = le32_to_cpu(p->agent_id);
-+	r->domain_id = le32_to_cpu(p->domain_id);
-+	r->power_state = le32_to_cpu(p->power_state);
-+	*src_id = r->domain_id;
++		if (sizeof(*p) != payld_sz)
++			break;
 +
-+	return r;
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->range_max = le32_to_cpu(p->range_max);
++		r->range_min = le32_to_cpu(p->range_min);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	case SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED:
++	{
++		const struct scmi_perf_level_notify_payld *p = payld;
++		struct scmi_perf_level_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->performance_level = le32_to_cpu(p->performance_level);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	default:
++		break;
++	}
++
++	return rep;
 +}
 +
-+static const struct scmi_event power_events[] = {
++static const struct scmi_event perf_events[] = {
 +	{
-+		.id = SCMI_EVENT_POWER_STATE_CHANGED,
-+		.max_payld_sz = sizeof(struct scmi_power_state_notify_payld),
-+		.max_report_sz =
-+			sizeof(struct scmi_power_state_changed_report),
++		.id = SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED,
++		.max_payld_sz = sizeof(struct scmi_perf_limits_notify_payld),
++		.max_report_sz = sizeof(struct scmi_perf_limits_report),
++	},
++	{
++		.id = SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED,
++		.max_payld_sz = sizeof(struct scmi_perf_level_notify_payld),
++		.max_report_sz = sizeof(struct scmi_perf_level_report),
 +	},
 +};
 +
-+static const struct scmi_event_ops power_event_ops = {
-+	.set_notify_enabled = scmi_power_set_notify_enabled,
-+	.fill_custom_report = scmi_power_fill_custom_report,
++static const struct scmi_event_ops perf_event_ops = {
++	.set_notify_enabled = scmi_perf_set_notify_enabled,
++	.fill_custom_report = scmi_perf_fill_custom_report,
 +};
 +
- static int scmi_power_protocol_init(struct scmi_handle *handle)
+ static int scmi_perf_protocol_init(struct scmi_handle *handle)
  {
  	int domain;
-@@ -214,6 +288,12 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
- 		scmi_power_domain_attributes_get(handle, domain, dom);
+@@ -754,6 +877,12 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ 			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
  	}
  
 +	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_POWER, SCMI_PROTO_QUEUE_SZ,
-+				      &power_event_ops, power_events,
-+				      ARRAY_SIZE(power_events),
++				      SCMI_PROTOCOL_PERF, SCMI_PROTO_QUEUE_SZ,
++				      &perf_event_ops, perf_events,
++				      ARRAY_SIZE(perf_events),
 +				      pinfo->num_domains);
 +
  	pinfo->version = version;
- 	handle->power_ops = &power_ops;
- 	handle->power_priv = pinfo;
+ 	handle->perf_ops = &perf_ops;
+ 	handle->perf_priv = pinfo;
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 26957d6872a5..81dc3b132fda 100644
+index 81dc3b132fda..65ad83ddde70 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -375,4 +375,16 @@ typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
- int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
- void scmi_protocol_unregister(int protocol_id);
+@@ -378,6 +378,8 @@ void scmi_protocol_unregister(int protocol_id);
+ /* SCMI Notification API - Custom Event Reports */
+ enum scmi_notification_events {
+ 	SCMI_EVENT_POWER_STATE_CHANGED = 0x0,
++	SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED = 0x0,
++	SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED = 0x1,
+ };
  
-+/* SCMI Notification API - Custom Event Reports */
-+enum scmi_notification_events {
-+	SCMI_EVENT_POWER_STATE_CHANGED = 0x0,
-+};
-+
-+struct scmi_power_state_changed_report {
+ struct scmi_power_state_changed_report {
+@@ -387,4 +389,19 @@ struct scmi_power_state_changed_report {
+ 	u32 power_state;
+ };
+ 
++struct scmi_perf_limits_report {
 +	u64 timestamp;
 +	u32 agent_id;
 +	u32 domain_id;
-+	u32 power_state;
++	u32 range_max;
++	u32 range_min;
++};
++
++struct scmi_perf_level_report {
++	u64 timestamp;
++	u32 agent_id;
++	u32 domain_id;
++	u32 performance_level;
 +};
 +
  #endif /* _LINUX_SCMI_PROTOCOL_H */
