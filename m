@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE41C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE1792168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46168217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583668;
-	bh=fxZGaojEJpYGKfDWhwHhEvBbr2EQND6yhWyZ18FBUqI=;
+	s=default; t=1592583671;
+	bh=JSyUSw4bTz9KQOzqWW/fuVJIcakQ6IBfFtwiMOHZIDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKgGK9Cs8ZsBQnJQBCnVsaMyfRntmnWJKqdw3Pukph34PFTG15Uqg1FQdv90WfX22
-	 5sBEnMjmPW+vta+0icIV5PoMqm2so0wHtGKW02leXIjPt6lCGz3gvAHvna/Jw2xZHK
-	 tFXKj+wQk/MVDQAqOK8qsX8/tTWIfRl2yFtrYoXY=
+	b=nSJNZz4HE3elraLPGfg/g180e/WYfLQyK5OiWttAfe4za5zuAo8LWHckpOTBRiT1I
+	 vBd/eJNU99awx0DLXWy/b++eY4Y1DIq38k2PyCBIoDz1Tul1QbUZsYv3yJl8YM9Axl
+	 USm1wN4/v57nrjQmA2MbbVUQvqKxCClhh8gwZWRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394529AbgFSQVE (ORCPT
+        id S2390333AbgFSPAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:21:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57402 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390622AbgFSPAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:55 -0400
+        id S2390622AbgFSPAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7522186A;
-        Fri, 19 Jun 2020 15:00:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D656A20734;
+        Fri, 19 Jun 2020 15:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578855;
-        bh=fxZGaojEJpYGKfDWhwHhEvBbr2EQND6yhWyZ18FBUqI=;
+        s=default; t=1592578816;
+        bh=JSyUSw4bTz9KQOzqWW/fuVJIcakQ6IBfFtwiMOHZIDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CE0KX8xD2gkO+dockJkngvO9tE7wKQYOsyjj5nDC37GGVuGWlXP2D3y2hTTGSFCyJ
-         cuT6tcsLBFPMi1w7lBXyVitR0FbSi7o8WPBS5AFe3k6a0fgkd+98Oh0Dj61yYo0iWV
-         PwdXqzace/ZX7Jp3mUuGcEiBWZ+7fo0i1j1iKT+Q=
+        b=EWHh5L0TQCJM/etecr7WJNFhGXUOKpnTG3VVUtSTy/tGAvKd0ubSQ57dI5kbSIpkk
+         yfcImJaH0uT2wD51lVUNUmte0XKpgP4sIirWzyIoEDoCWnn4ttce3IlCx4IJ1lQjJA
+         zsfBTySZpT6CpX8zSz5FWG57s3Gt0L5dHVfMxaQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Nicolas Toromanoff <nicolas.toromanoff@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/267] mmc: sdhci-esdhc-imx: fix the mask for tuning start point
-Date:   Fri, 19 Jun 2020 16:32:46 +0200
-Message-Id: <20200619141657.454047055@linuxfoundation.org>
+Subject: [PATCH 4.19 168/267] crypto: stm32/crc32 - fix multi-instance
+Date:   Fri, 19 Jun 2020 16:32:33 +0200
+Message-Id: <20200619141656.862914202@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,36 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
 
-[ Upstream commit 1194be8c949b8190b2882ad8335a5d98aa50c735 ]
+[ Upstream commit 10b89c43a64eb0d236903b79a3bc9d8f6cbfd9c7 ]
 
-According the RM, the bit[6~0] of register ESDHC_TUNING_CTRL is
-TUNING_START_TAP, bit[7] of this register is to disable the command
-CRC check for standard tuning. So fix it here.
+Ensure CRC algorithm is registered only once in crypto framework when
+there are several instances of CRC devices.
 
-Fixes: d87fc9663688 ("mmc: sdhci-esdhc-imx: support setting tuning start point")
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Link: https://lore.kernel.org/r/1590488522-9292-1-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Update the CRC device list management to avoid that only the first CRC
+instance is used.
+
+Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+
+Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/stm32/stm32_crc32.c | 48 ++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 629860f7327c..bd502f4f4704 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -82,7 +82,7 @@
- #define ESDHC_STD_TUNING_EN		(1 << 24)
- /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
- #define ESDHC_TUNING_START_TAP_DEFAULT	0x1
--#define ESDHC_TUNING_START_TAP_MASK	0xff
-+#define ESDHC_TUNING_START_TAP_MASK	0x7f
- #define ESDHC_TUNING_STEP_MASK		0x00070000
- #define ESDHC_TUNING_STEP_SHIFT		16
+diff --git a/drivers/crypto/stm32/stm32_crc32.c b/drivers/crypto/stm32/stm32_crc32.c
+index c5ad83ad2f72..47d31335c2d4 100644
+--- a/drivers/crypto/stm32/stm32_crc32.c
++++ b/drivers/crypto/stm32/stm32_crc32.c
+@@ -93,16 +93,29 @@ static int stm32_crc_setkey(struct crypto_shash *tfm, const u8 *key,
+ 	return 0;
+ }
  
+-static int stm32_crc_init(struct shash_desc *desc)
++static struct stm32_crc *stm32_crc_get_next_crc(void)
+ {
+-	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+-	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
+ 
+ 	spin_lock_bh(&crc_list.lock);
+ 	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
++	if (crc)
++		list_move_tail(&crc->list, &crc_list.dev_list);
+ 	spin_unlock_bh(&crc_list.lock);
+ 
++	return crc;
++}
++
++static int stm32_crc_init(struct shash_desc *desc)
++{
++	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
++	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
++	struct stm32_crc *crc;
++
++	crc = stm32_crc_get_next_crc();
++	if (!crc)
++		return -ENODEV;
++
+ 	pm_runtime_get_sync(crc->dev);
+ 
+ 	/* Reset, set key, poly and configure in bit reverse mode */
+@@ -127,9 +140,9 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
+ 
+-	spin_lock_bh(&crc_list.lock);
+-	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
+-	spin_unlock_bh(&crc_list.lock);
++	crc = stm32_crc_get_next_crc();
++	if (!crc)
++		return -ENODEV;
+ 
+ 	pm_runtime_get_sync(crc->dev);
+ 
+@@ -202,6 +215,8 @@ static int stm32_crc_digest(struct shash_desc *desc, const u8 *data,
+ 	return stm32_crc_init(desc) ?: stm32_crc_finup(desc, data, length, out);
+ }
+ 
++static unsigned int refcnt;
++static DEFINE_MUTEX(refcnt_lock);
+ static struct shash_alg algs[] = {
+ 	/* CRC-32 */
+ 	{
+@@ -294,12 +309,18 @@ static int stm32_crc_probe(struct platform_device *pdev)
+ 	list_add(&crc->list, &crc_list.dev_list);
+ 	spin_unlock(&crc_list.lock);
+ 
+-	ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
+-	if (ret) {
+-		dev_err(dev, "Failed to register\n");
+-		clk_disable_unprepare(crc->clk);
+-		return ret;
++	mutex_lock(&refcnt_lock);
++	if (!refcnt) {
++		ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
++		if (ret) {
++			mutex_unlock(&refcnt_lock);
++			dev_err(dev, "Failed to register\n");
++			clk_disable_unprepare(crc->clk);
++			return ret;
++		}
+ 	}
++	refcnt++;
++	mutex_unlock(&refcnt_lock);
+ 
+ 	dev_info(dev, "Initialized\n");
+ 
+@@ -320,7 +341,10 @@ static int stm32_crc_remove(struct platform_device *pdev)
+ 	list_del(&crc->list);
+ 	spin_unlock(&crc_list.lock);
+ 
+-	crypto_unregister_shashes(algs, ARRAY_SIZE(algs));
++	mutex_lock(&refcnt_lock);
++	if (!--refcnt)
++		crypto_unregister_shashes(algs, ARRAY_SIZE(algs));
++	mutex_unlock(&refcnt_lock);
+ 
+ 	pm_runtime_disable(crc->dev);
+ 	pm_runtime_put_noidle(crc->dev);
 -- 
 2.25.1
 
