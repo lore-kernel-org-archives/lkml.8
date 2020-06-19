@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A66C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6242071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B3C206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580936;
-	bh=tJeVrSk1Su6rLW8kR1sodkhPQpUas+QA2YDQF5pVEBQ=;
+	s=default; t=1592580944;
+	bh=+XUa+QkXIWQlTxrFkkvcAbe+hTh14HBih0M5FvU+b+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8HP2pyelKNVRbHaXut502g+oMuAmMeisiKyP8aF5qGGFbmb0hmfj03X7xIcUeIEb
-	 0jh1Uq4titsmD+iAyBX+0jk6zNq2cqfxUEidtKA4urbQ2i1LVSCqFA79/Zc8jZdFZj
-	 cLmCH+qH8unfDlROpm5pS/L7NobZw/0y35jcinj0=
+	b=v5xORp13iLWPRifU/QljeLShkJ0Zw+KO4V6N2d+jlkNn2yCuCQuScLt2xvsh8XHeD
+	 kgifWkdCIwBOVFQKAMSi8u5iax+MWLGMBqy8GUyvBSgDegzoPb0Vk/+RFLrrYoih4M
+	 kXi3BlzCxhQCXfL8dBzr3pN2oVs48YC8C3VDTxAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404790AbgFSPff (ORCPT
+        id S2405027AbgFSPfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404596AbgFSPbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:44 -0400
+        id S2404851AbgFSPbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3D120734;
-        Fri, 19 Jun 2020 15:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2011520734;
+        Fri, 19 Jun 2020 15:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580703;
-        bh=tJeVrSk1Su6rLW8kR1sodkhPQpUas+QA2YDQF5pVEBQ=;
+        s=default; t=1592580695;
+        bh=+XUa+QkXIWQlTxrFkkvcAbe+hTh14HBih0M5FvU+b+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FshqMaFVm1APfeajB11oOcaBXEzQxxkHAMxqkCqUitktBy1Bdy3UHI+e/fHv6WLq1
-         x6NNcylJu5GvWEQ3oH6KCwL9ZSVyS5X/xDyOuquUo5eIGyrAuAnV596QfGKPNafgxT
-         nClmxH70YOsQAQipZ3BkGCUCjtNPkkISi4b1IhPM=
+        b=UwoNEfvqaYt6hPspsPHDmpwRioGlQVLpwwhE+43OkqBCvK63Rt6mBBZrFLA16b5s0
+         EwGV6n+LcNzqauHp8XWfrz9sZUuqKGDUCyBJd4RmzOtm7j0SYCiDgLaLW6CMINSOmz
+         zBfc/75UdqnJjnuWmYX3vvY1R7DJNEmuvg/LtdRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 343/376] powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
-Date:   Fri, 19 Jun 2020 16:34:21 +0200
-Message-Id: <20200619141726.569869659@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Qiushi Wu <wu000273@umn.edu>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.7 317/376] power: supply: core: fix memory leak in HWMON error path
+Date:   Fri, 19 Jun 2020 16:33:55 +0200
+Message-Id: <20200619141725.337093073@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -58,81 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 912c0a7f2b5daa3cbb2bc10f303981e493de73bd upstream.
+commit 1d7a7128a2e9e1f137c99b0a44e94d70a77343e3 upstream.
 
-At boot the FSCR is initialised via one of two paths. On most systems
-it's set to a hard coded value in __init_FSCR().
+In function power_supply_add_hwmon_sysfs(), psyhw->props is
+allocated by bitmap_zalloc(). But this pointer is not deallocated
+when devm_add_action fail,  which lead to a memory leak bug. To fix
+this, we replace devm_add_action with devm_add_action_or_reset.
 
-On newer skiboot systems we use the device tree CPU features binding,
-where firmware can tell Linux what bits to set in FSCR (and HFSCR).
-
-In both cases the value that's configured at boot is not propagated
-into the init_task.thread.fscr value prior to the initial fork of init
-(pid 1), which means the value is not used by any processes other than
-swapper (the idle task).
-
-For the __init_FSCR() case this is OK, because the value in
-init_task.thread.fscr is initialised to something sensible. However it
-does mean that the value set in __init_FSCR() is not used other than
-for swapper, which is odd and confusing.
-
-The bigger problem is for the device tree CPU features case it
-prevents firmware from setting (or clearing) FSCR bits for use by user
-space. This means all existing kernels can not have features
-enabled/disabled by firmware if those features require
-setting/clearing FSCR bits.
-
-We can handle both cases by saving the FSCR value into
-init_task.thread.fscr after we have initialised it at boot. This fixes
-the bug for device tree CPU features, and will allow us to simplify
-the initialisation for the __init_FSCR() case in a future patch.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200527145843.2761782-3-mpe@ellerman.id.au
+Cc: stable@kernel.org
+Fixes: e67d4dfc9ff19 ("power: supply: Add HWMON compatibility layer")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/prom.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/power/supply/power_supply_hwmon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -685,6 +685,23 @@ static void __init tm_init(void)
- static void tm_init(void) { }
- #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
- 
-+#ifdef CONFIG_PPC64
-+static void __init save_fscr_to_task(void)
-+{
-+	/*
-+	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
-+	 * have configured via the device tree features or via __init_FSCR().
-+	 * That value will then be propagated to pid 1 (init) and all future
-+	 * processes.
-+	 */
-+	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
-+		init_task.thread.fscr = mfspr(SPRN_FSCR);
-+}
-+#else
-+static inline void save_fscr_to_task(void) {};
-+#endif
-+
-+
- void __init early_init_devtree(void *params)
- {
- 	phys_addr_t limit;
-@@ -773,6 +790,8 @@ void __init early_init_devtree(void *par
- 		BUG();
+--- a/drivers/power/supply/power_supply_hwmon.c
++++ b/drivers/power/supply/power_supply_hwmon.c
+@@ -304,7 +304,7 @@ int power_supply_add_hwmon_sysfs(struct
+ 		goto error;
  	}
  
-+	save_fscr_to_task();
-+
- #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
- 	/* We'll later wait for secondaries to check in; there are
- 	 * NCPUS-1 non-boot CPUs  :-)
+-	ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
++	ret = devm_add_action_or_reset(dev, power_supply_hwmon_bitmap_free,
+ 			      psyhw->props);
+ 	if (ret)
+ 		goto error;
 
 
