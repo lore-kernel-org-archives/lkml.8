@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABADC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B852C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2200E21D90
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA16206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579736;
-	bh=KGIYyD5rD/ejMxLwxaiYeAQS/wlR+d0LwFY6X29p1oE=;
+	s=default; t=1592579740;
+	bh=5iZkv0fqTgd+XreIbBWlXku76xfHX8tsVakDmB4R/f0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCcKyXbrccu0/xCftkp2MgQCS+Q79dsd9EVxEXARtQgew6fLZouE5jc8a+1GS7bAJ
-	 KzGcYVlJ8GfTqio73hh9wEKD43LSP0eQHHRv2AIaQ1F7lqz64SJzTDrMa9yFWH51Y+
-	 qoWqPzZbjsg2Tr2Y3lHdxSVWmEo8Cx0oEfeySDBg=
+	b=qWCW7vDyWmXbwq9y5f+PKtZijdM7mK1m4B/Pkas4ZkNaakKN26N2TGwRTJr30SRCS
+	 PkIKU0byjGbdDITb97ZWb8GZrn4fcu3fTyEF0od+rTi3+NRbZ8mwnO4LK+mdGpTxtI
+	 CB9v8je1t72SLMoRCJCKN2ufT70SX8qo1+4xIR2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404026AbgFSPPe (ORCPT
+        id S2404035AbgFSPPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45916 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391553AbgFSPPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:22 -0400
+        id S2404021AbgFSPP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49FF22080C;
-        Fri, 19 Jun 2020 15:15:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960B1206DB;
+        Fri, 19 Jun 2020 15:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579721;
-        bh=KGIYyD5rD/ejMxLwxaiYeAQS/wlR+d0LwFY6X29p1oE=;
+        s=default; t=1592579727;
+        bh=5iZkv0fqTgd+XreIbBWlXku76xfHX8tsVakDmB4R/f0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRAPdbhcKHfKhWADr9CWwL4NuHZ4Trh1/sjX++gcMxick8bvLMfn3M4sGa5Jt2vl9
-         Z7PT6rPdyoDAyi5vf2NZdrmDM6++pgwZ7IY2n4+AgDFdMXKUq53GdD+RERk+X2QKkR
-         AaxHdixqZEP3RqYKviTI1VRz97mR2cMBlZqc21Bs=
+        b=t8068R8xccrSr4Euac28Gas6OSj6maW8KanY4McA01qBkHPzfw0Thd6jpHVR2mR+c
+         /iavQwtT1oCh0kYXZoIqR9R/eiQ+CAeDxyNxryub1yGtgNR5e35jSDbGu5+HSyca4q
+         TuIWZbxeJnQq3nRCO9QtTtG/cygZg/raN5GZ2Uys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH 5.4 241/261] mtd: rawnand: onfi: Fix redundancy detection check
-Date:   Fri, 19 Jun 2020 16:34:12 +0200
-Message-Id: <20200619141701.433620986@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 243/261] mtd: rawnand: diskonchip: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:14 +0200
+Message-Id: <20200619141701.528026622@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,40 +60,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 1d5d08ee9b28cff907326b4ad5a2463fd2808be1 upstream.
+commit c5be12e45940f1aa1b5dfa04db5d15ad24f7c896 upstream.
 
-During ONFI detection, the CRC derived from the parameter page and the
-CRC supposed to be at the end of the parameter page are compared. If
-they do not match, the second then the third copies of the page are
-tried.
+Not sure nand_cleanup() is the right function to call here but in any
+case it is not nand_release(). Indeed, even a comment says that
+calling nand_release() is a bit of a hack as there is no MTD device to
+unregister. So switch to nand_cleanup() for now and drop this
+comment.
 
-The current implementation compares the newly derived CRC with the CRC
-contained in the first page only. So if this particular CRC area has
-been corrupted, then the detection will fail for a wrong reason.
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if it did not intruce
+any bug.
 
-Fix this issue by checking the derived CRC against the right one.
-
-Fixes: 39138c1f4a31 ("mtd: rawnand: use bit-wise majority to recover the ONFI param page")
-Cc: stable@vger.kernel.org
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://lore.kernel.org/linux-mtd/20200428094302.14624-4-miquel.raynal@bootlin.com
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-13-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/nand_onfi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/raw/diskonchip.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/drivers/mtd/nand/raw/nand_onfi.c
-+++ b/drivers/mtd/nand/raw/nand_onfi.c
-@@ -173,7 +173,7 @@ int nand_onfi_detect(struct nand_chip *c
- 		}
+--- a/drivers/mtd/nand/raw/diskonchip.c
++++ b/drivers/mtd/nand/raw/diskonchip.c
+@@ -1609,13 +1609,10 @@ static int __init doc_probe(unsigned lon
+ 		numchips = doc2001_init(mtd);
  
- 		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)&p[i], 254) ==
--				le16_to_cpu(p->crc)) {
-+		    le16_to_cpu(p[i].crc)) {
- 			if (i)
- 				memcpy(p, &p[i], sizeof(*p));
- 			break;
+ 	if ((ret = nand_scan(nand, numchips)) || (ret = doc->late_init(mtd))) {
+-		/* DBB note: i believe nand_release is necessary here, as
++		/* DBB note: i believe nand_cleanup is necessary here, as
+ 		   buffers may have been allocated in nand_base.  Check with
+ 		   Thomas. FIX ME! */
+-		/* nand_release will call mtd_device_unregister, but we
+-		   haven't yet added it.  This is handled without incident by
+-		   mtd_device_unregister, as far as I can tell. */
+-		nand_release(nand);
++		nand_cleanup(nand);
+ 		goto fail;
+ 	}
+ 
 
 
