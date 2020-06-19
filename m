@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B590C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A375C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4235D2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024FE2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584326;
-	bh=t2cAIxyNNnXqQOV78fiE2SdgXTcQRL5/mF0ku/VekEM=;
+	s=default; t=1592584329;
+	bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XTmj0J3R6OUjlEtpTTfrmBlYt2qjG3DMoGTlp5WyYMmFz5fans/JD//gdq82/Lx5f
-	 J53tplvr2UiC8ZtwmPShTAAxk/81QmjqYOHKGiEIoM7H3xU1fCm/hdXrYqeC/4z145
-	 lYwvbLnKYsVrCY1Gk/bEXV8mzmTqv/aUz8JAXVw8=
+	b=DeZwJ3VM4vNdCQiMXhSq4d56+AWmgkPDz0IGxoFTpr+7CUMnK+BbsNvukNhMNdl1M
+	 hs9TrqkoYdSTBgIoSwMrLBXMIfyn3iJQj/fSMQFu56qrwNaTdqyXf90t9OttFPod0q
+	 9CdNp8RsCwVaO1CRz05diKWgJUKql2f+mk+xbfGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbgFSOwd (ORCPT
+        id S2389546AbgFSOwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388965AbgFSOw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:28 -0400
+        id S2389152AbgFSOv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352BA21556;
-        Fri, 19 Jun 2020 14:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F64621852;
+        Fri, 19 Jun 2020 14:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578348;
-        bh=t2cAIxyNNnXqQOV78fiE2SdgXTcQRL5/mF0ku/VekEM=;
+        s=default; t=1592578316;
+        bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzH/cBfHSpbgQ2vdGQqOqqaedAmRNP52fmAB4WTdNiRKA/6glgnKGXI3u6B5GaV4s
-         gP5s7o/P+5Kt4CBS1DWrex0hkcZxZUoCA85oAjFVbOtC//2lyjMAcXIt4mXJPdhkZQ
-         ymQCojXpZe0AVWXjX3YypyNSrYvbVSgxevSDo5JY=
+        b=hVs6o9wPAcFH1EaxOYuS/cEc99+wWuzbo+B9KgzaEz4dRVIBh43IUu4I3DY/AI25J
+         Z1I1RWb5W55OM/BQ22kEsVwHaHHJmQD5jMbd2bvau7rki/M8dHUe2WPHdIiilLdM7A
+         KnMO5GFAZR+6MwTH4psUjM/LgMpdqxFMcA5l3c/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.14 178/190] ARM: tegra: Correct PL310 Auxiliary Control Register initialization
-Date:   Fri, 19 Jun 2020 16:33:43 +0200
-Message-Id: <20200619141642.682890929@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 167/190] b43legacy: Fix case where channel status is corrupted
+Date:   Fri, 19 Jun 2020 16:33:32 +0200
+Message-Id: <20200619141642.121194934@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,42 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 35509737c8f958944e059d501255a0bf18361ba0 upstream.
+commit ec4d3e3a054578de34cd0b587ab8a1ac36f629d9 upstream.
 
-The PL310 Auxiliary Control Register shouldn't have the "Full line of
-zero" optimization bit being set before L2 cache is enabled. The L2X0
-driver takes care of enabling the optimization by itself.
+This patch fixes commit 75388acd0cd8 ("add mac80211-based driver for
+legacy BCM43xx devices")
 
-This patch fixes a noisy error message on Tegra20 and Tegra30 telling
-that cache optimization is erroneously enabled without enabling it for
-the CPU:
+In https://bugzilla.kernel.org/show_bug.cgi?id=207093, a defect in
+b43legacy is reported. Upon testing, thus problem exists on PPC and
+X86 platforms, is present in the oldest kernel tested (3.2), and
+has been present in the driver since it was first added to the kernel.
 
-	L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+The problem is a corrupted channel status received from the device.
+Both the internal card in a PowerBook G4 and the PCMCIA version
+(Broadcom BCM4306 with PCI ID 14e4:4320) have the problem. Only Rev, 2
+(revision 4 of the 802.11 core) of the chip has been tested. No other
+devices using b43legacy are available for testing.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Nicolas Chauvet <kwizart@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Various sources of the problem were considered. Buffer overrun and
+other sources of corruption within the driver were rejected because
+the faulty channel status is always the same, not a random value.
+It was concluded that the faulty data is coming from the device, probably
+due to a firmware bug. As that source is not available, the driver
+must take appropriate action to recover.
+
+At present, the driver reports the error, and them continues to process
+the bad packet. This is believed that to be a mistake, and the correct
+action is to drop the correpted packet.
+
+Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx devices")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reported-and-tested by: F. Erhard <erhard_f@mailbox.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200407190043.1686-1-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-tegra/tegra.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43legacy/xmit.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/mach-tegra/tegra.c
-+++ b/arch/arm/mach-tegra/tegra.c
-@@ -108,8 +108,8 @@ static const char * const tegra_dt_board
- };
+--- a/drivers/net/wireless/broadcom/b43legacy/xmit.c
++++ b/drivers/net/wireless/broadcom/b43legacy/xmit.c
+@@ -571,6 +571,7 @@ void b43legacy_rx(struct b43legacy_wldev
+ 	default:
+ 		b43legacywarn(dev->wl, "Unexpected value for chanstat (0x%X)\n",
+ 		       chanstat);
++		goto drop;
+ 	}
  
- DT_MACHINE_START(TEGRA_DT, "NVIDIA Tegra SoC (Flattened Device Tree)")
--	.l2c_aux_val	= 0x3c400001,
--	.l2c_aux_mask	= 0xc20fc3fe,
-+	.l2c_aux_val	= 0x3c400000,
-+	.l2c_aux_mask	= 0xc20fc3ff,
- 	.smp		= smp_ops(tegra_smp_ops),
- 	.map_io		= tegra_map_common_io,
- 	.init_early	= tegra_init_early,
+ 	memcpy(IEEE80211_SKB_RXCB(skb), &status, sizeof(status));
 
 
