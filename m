@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36107C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9927AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E1820734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E877204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585161;
-	bh=iYcUc5HN59kMLG7HGWR4iAb5BV2kngmF0II5snlSSQE=;
+	s=default; t=1592585174;
+	bh=WBZd16pwTulkHYMylZodT11SrG1VWJ124t45szSRlhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iXVNw5pMBeg5uOqSOBQMsmG5wlbp365VfQv5m/2YV6x1Qlq1joSpmhArB+Gby5EOI
-	 qajvssdQhs5QqglekMZwzEX508cExlgWmr3kUyIoDL2PLKGUnUYoFYRafZMeiRgsvV
-	 2rxH7LAyKPIZpBW4xb2SptAmt3eiuQVr7ascnaQc=
+	b=hdK+B8/2NtoZ7E5APJHgEOZdEojnBZGIcqw6teuKSiMhFrmzw4u38O4rj1aMIjJZC
+	 O9ROIenw8okrPBG50zcwjroDHSRlzE8/vUL1naulT4xvS/cdgMsSp+NPWccrHiL4gz
+	 O1y3jzBjOhhpiOms3HNmFS5i36T9etGDP+IpaUvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbgFSQp7 (ORCPT
+        id S2405101AbgFSQqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388265AbgFSOln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:43 -0400
+        id S2387469AbgFSOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820D02070A;
-        Fri, 19 Jun 2020 14:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415E821527;
+        Fri, 19 Jun 2020 14:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577703;
-        bh=iYcUc5HN59kMLG7HGWR4iAb5BV2kngmF0II5snlSSQE=;
+        s=default; t=1592577700;
+        bh=WBZd16pwTulkHYMylZodT11SrG1VWJ124t45szSRlhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KB+yJbb/6PoBuEZAvRXNLZf0+D2no1H2gTM0KXW66ZuSbq3caB1PsI/VDDXTJiw0C
-         d71J0hQbxaI2xTfrkYRzQ4w1OmDEHGBvPHu4Rauxos+Wy+Pg08WnzoeN5GZiNYJhDP
-         4K3qLzrMm5p45+6GiIjvlzDAlJFNAfuKliQoDIoY=
+        b=TOrtXKeT3VHRObuh9aQl9buAOb2VDx0WX2U3Ld2oxjD0Ehz+ao6mmNSZ/bcUK6byu
+         PoCn+BmugWXDqY0J/QrsNIGxtjXyeJzzU3cxDgdwCwHeiHIkYUa4lrU9ww7zuMApge
+         i87v1hqD+H3njlaEUW/Aghl5YMnTfJBi1sT15P8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Shuah Khan <shuahkh@osg.samsung.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4.9 053/128] media: dvb_frontend: ensure that inital front end status initialized
-Date:   Fri, 19 Jun 2020 16:32:27 +0200
-Message-Id: <20200619141623.012586497@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Xiaolong Huang <butterflyhuangxx@gmail.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 052/128] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
+Date:   Fri, 19 Jun 2020 16:32:26 +0200
+Message-Id: <20200619141622.946789972@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,50 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Xiaolong Huang <butterflyhuangxx@gmail.com>
 
-commit a9e4998073d49a762a154a6b48a332ec6cb8e6b1 upstream.
+commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
 
-The fe_status variable s is not initialized meaning it can have any
-random garbage status.  This could be problematic if fe->ops.tune is
-false as s is not updated by the call to fe->ops.tune() and a
-subsequent check on the change status will using a garbage value.
-Fix this by adding FE_NONE to the enum fe_status and initializing
-s to this.
+Uninitialized Kernel memory can leak to USB devices.
 
-Detected by CoverityScan, CID#112887 ("Uninitialized scalar variable")
+Fix this by using kzalloc() instead of kmalloc().
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Shuah Khan <shuahkh@osg.samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
+Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
+Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[bwh: Backported to 4.9: adjust filename, context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/dvb-core/dvb_frontend.c |    2 +-
- include/uapi/linux/dvb/frontend.h     |    1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/can/usb/kvaser_usb.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -629,7 +629,7 @@ static int dvb_frontend_thread(void *dat
- 	struct dvb_frontend *fe = data;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
--	enum fe_status s;
-+	enum fe_status s = FE_NONE;
- 	enum dvbfe_algo algo;
- 	bool re_tune = false;
- 	bool semheld = false;
---- a/include/uapi/linux/dvb/frontend.h
-+++ b/include/uapi/linux/dvb/frontend.h
-@@ -127,6 +127,7 @@ enum fe_sec_mini_cmd {
-  *			to reset DiSEqC, tone and parameters
-  */
- enum fe_status {
-+	FE_NONE			= 0x00,
- 	FE_HAS_SIGNAL		= 0x01,
- 	FE_HAS_CARRIER		= 0x02,
- 	FE_HAS_VITERBI		= 0x04,
+--- a/drivers/net/can/usb/kvaser_usb.c
++++ b/drivers/net/can/usb/kvaser_usb.c
+@@ -791,7 +791,7 @@ static int kvaser_usb_simple_msg_async(s
+ 	if (!urb)
+ 		return -ENOMEM;
+ 
+-	buf = kmalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
++	buf = kzalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
+ 	if (!buf) {
+ 		usb_free_urb(urb);
+ 		return -ENOMEM;
+@@ -1459,7 +1459,7 @@ static int kvaser_usb_set_opt_mode(const
+ 	struct kvaser_msg *msg;
+ 	int rc;
+ 
+-	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
++	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+@@ -1592,7 +1592,7 @@ static int kvaser_usb_flush_queue(struct
+ 	struct kvaser_msg *msg;
+ 	int rc;
+ 
+-	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
++	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
 
 
