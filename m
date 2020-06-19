@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73166C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FADE20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E65206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585026;
-	bh=uFwyZt1jxmvhD48DavXd5qLHB47tEeS/Z/5wVKXfbQk=;
+	s=default; t=1592585035;
+	bh=ZXajvuiMPy9Mi1OaldQr7gj7g5z4w1MmOTv9Xeh694I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RhHDrKQYIAqmiIRtg4FALj67xZYG64aFcLoAN//+IccWRIxqBhdmEEgtghEskAdrd
-	 XTn3MSh51EdZFhsC4HDNEeQEva1lmgaI5lHedmPUfy4dWOWL1PBuotneGrkd2AgvSg
-	 EUDXjpdnqbCeEJQQrMpomxK8CqnZwjrrKbOfxfhk=
+	b=yuWomeunDuJBpF/vZMouxr7by9eurodJibpCMcDo/rmJ5bNMzc0x1a2QtWAvF5Hhp
+	 ezRZt1HQmzp2dAvPTvqkigfkj+SOiBZTApNDtcg9dOjPvziJOCjNuvXMa8TQOSGfR5
+	 3BltxWmAUyXUGI1jK1g6kkxMpcYYjbAyTUmCY3jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389341AbgFSQnn (ORCPT
+        id S2395457AbgFSQnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388476AbgFSOn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:27 -0400
+        id S2388118AbgFSOnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD022168B;
-        Fri, 19 Jun 2020 14:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4246C2166E;
+        Fri, 19 Jun 2020 14:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577807;
-        bh=uFwyZt1jxmvhD48DavXd5qLHB47tEeS/Z/5wVKXfbQk=;
+        s=default; t=1592577804;
+        bh=ZXajvuiMPy9Mi1OaldQr7gj7g5z4w1MmOTv9Xeh694I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LE6O7PhZfTgJYu1q0yHPED01VVMfSRneKL7D7e9cK1gI0UUFyWDK3MjTfAMqMmyu6
-         aBWDbo46N9XztKVs9eq7rxFCX0ZNIjmzeYVKZsBSuX6vB1A+1NVr6OHxr3ggMoA5so
-         ZMJQk13UKxav6+zMJ2AtgUwuhAw9/ZBkngYRsJXU=
+        b=OoWM4CLtzll+fbW/YGUWvRT017RGisfuRVEoeC+1OCe3MbjEhkiaUetuEfkGjX16K
+         rAUuGoNlazdpty9thDiUDEEVg9p4V+t85QS1sXPeCD59p+610hTROyCBjS6yrhq79w
+         zq6ElCcHIKn6MCt1VmY1gFuz8Il37bjvGU8yCEXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 098/128] mm: thp: make the THP mapcount atomic against __split_huge_pmd_locked()
-Date:   Fri, 19 Jun 2020 16:33:12 +0200
-Message-Id: <20200619141625.314982137@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 097/128] btrfs: send: emit file capabilities after chown
+Date:   Fri, 19 Jun 2020 16:33:11 +0200
+Message-Id: <20200619141625.263782215@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,102 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-commit c444eb564fb16645c172d550359cb3d75fe8a040 upstream.
+commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
 
-Write protect anon page faults require an accurate mapcount to decide
-if to break the COW or not. This is implemented in the THP path with
-reuse_swap_page() ->
-page_trans_huge_map_swapcount()/page_trans_huge_mapcount().
+Whenever a chown is executed, all capabilities of the file being touched
+are lost.  When doing incremental send with a file with capabilities,
+there is a situation where the capability can be lost on the receiving
+side. The sequence of actions bellow shows the problem:
 
-If the COW triggers while the other processes sharing the page are
-under a huge pmd split, to do an accurate reading, we must ensure the
-mapcount isn't computed while it's being transferred from the head
-page to the tail pages.
+  $ mount /dev/sda fs1
+  $ mount /dev/sdb fs2
 
-reuse_swap_cache() already runs serialized by the page lock, so it's
-enough to add the page lock around __split_huge_pmd_locked too, in
-order to add the missing serialization.
+  $ touch fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
+  $ btrfs send fs1/snap_init | btrfs receive fs2
 
-Note: the commit in "Fixes" is just to facilitate the backporting,
-because the code before such commit didn't try to do an accurate THP
-mapcount calculation and it instead used the page_count() to decide if
-to COW or not. Both the page_count and the pin_count are THP-wide
-refcounts, so they're inaccurate if used in
-reuse_swap_page(). Reverting such commit (besides the unrelated fix to
-the local anon_vma assignment) would have also opened the window for
-memory corruption side effects to certain workloads as documented in
-such commit header.
+  $ chgrp adm fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Suggested-by: Jann Horn <jannh@google.com>
-Reported-by: Jann Horn <jannh@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 6d0a07edd17c ("mm: thp: calculate the mapcount correctly for THP pages during WP faults")
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+
+  $ btrfs send fs1/snap_complete | btrfs receive fs2
+  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+
+At this point, only a chown was emitted by "btrfs send" since only the
+group was changed. This makes the cap_sys_nice capability to be dropped
+from fs2/snap_incremental/foo.bar
+
+To fix that, only emit capabilities after chown is emitted. The current
+code first checks for xattrs that are new/changed, emits them, and later
+emit the chown. Now, __process_new_xattr skips capabilities, letting
+only finish_inode_if_needed to emit them, if they exist, for the inode
+being processed.
+
+This behavior was being worked around in "btrfs receive" side by caching
+the capability and only applying it after chown. Now, xattrs are only
+emmited _after_ chown, making that workaround not needed anymore.
+
+Link: https://github.com/kdave/btrfs-progs/issues/202
+CC: stable@vger.kernel.org # 4.4+
+Suggested-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1755,6 +1755,8 @@ void __split_huge_pmd(struct vm_area_str
- 	spinlock_t *ptl;
- 	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long haddr = address & HPAGE_PMD_MASK;
-+	bool was_locked = false;
-+	pmd_t _pmd;
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -35,6 +35,7 @@
+ #include "btrfs_inode.h"
+ #include "transaction.h"
+ #include "compression.h"
++#include "xattr.h"
  
- 	mmu_notifier_invalidate_range_start(mm, haddr, haddr + HPAGE_PMD_SIZE);
- 	ptl = pmd_lock(mm, pmd);
-@@ -1764,11 +1766,32 @@ void __split_huge_pmd(struct vm_area_str
- 	 * pmd against. Otherwise we can end up replacing wrong page.
- 	 */
- 	VM_BUG_ON(freeze && !page);
--	if (page && page != pmd_page(*pmd))
--	        goto out;
-+	if (page) {
-+		VM_WARN_ON_ONCE(!PageLocked(page));
-+		was_locked = true;
-+		if (page != pmd_page(*pmd))
-+			goto out;
-+	}
+ /*
+  * Maximum number of references an extent can have in order for us to attempt to
+@@ -4368,6 +4369,10 @@ static int __process_new_xattr(int num,
+ 	struct fs_path *p;
+ 	struct posix_acl_xattr_header dummy_acl;
  
-+repeat:
- 	if (pmd_trans_huge(*pmd)) {
--		page = pmd_page(*pmd);
-+		if (!page) {
-+			page = pmd_page(*pmd);
-+			if (unlikely(!trylock_page(page))) {
-+				get_page(page);
-+				_pmd = *pmd;
-+				spin_unlock(ptl);
-+				lock_page(page);
-+				spin_lock(ptl);
-+				if (unlikely(!pmd_same(*pmd, _pmd))) {
-+					unlock_page(page);
-+					put_page(page);
-+					page = NULL;
-+					goto repeat;
-+				}
-+				put_page(page);
-+			}
-+		}
- 		if (PageMlocked(page))
- 			clear_page_mlock(page);
- 	} else if (!pmd_devmap(*pmd))
-@@ -1776,6 +1799,8 @@ void __split_huge_pmd(struct vm_area_str
- 	__split_huge_pmd_locked(vma, pmd, haddr, freeze);
- out:
- 	spin_unlock(ptl);
-+	if (!was_locked && page)
-+		unlock_page(page);
- 	mmu_notifier_invalidate_range_end(mm, haddr, haddr + HPAGE_PMD_SIZE);
++	/* Capabilities are emitted by finish_inode_if_needed */
++	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
++		return 0;
++
+ 	p = fs_path_alloc();
+ 	if (!p)
+ 		return -ENOMEM;
+@@ -4904,6 +4909,64 @@ static int send_extent_data(struct send_
+ 	return 0;
  }
  
++/*
++ * Search for a capability xattr related to sctx->cur_ino. If the capability is
++ * found, call send_set_xattr function to emit it.
++ *
++ * Return 0 if there isn't a capability, or when the capability was emitted
++ * successfully, or < 0 if an error occurred.
++ */
++static int send_capabilities(struct send_ctx *sctx)
++{
++	struct fs_path *fspath = NULL;
++	struct btrfs_path *path;
++	struct btrfs_dir_item *di;
++	struct extent_buffer *leaf;
++	unsigned long data_ptr;
++	char *buf = NULL;
++	int buf_len;
++	int ret = 0;
++
++	path = alloc_path_for_send();
++	if (!path)
++		return -ENOMEM;
++
++	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
++				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
++	if (!di) {
++		/* There is no xattr for this inode */
++		goto out;
++	} else if (IS_ERR(di)) {
++		ret = PTR_ERR(di);
++		goto out;
++	}
++
++	leaf = path->nodes[0];
++	buf_len = btrfs_dir_data_len(leaf, di);
++
++	fspath = fs_path_alloc();
++	buf = kmalloc(buf_len, GFP_KERNEL);
++	if (!fspath || !buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
++	if (ret < 0)
++		goto out;
++
++	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
++	read_extent_buffer(leaf, buf, data_ptr, buf_len);
++
++	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
++			strlen(XATTR_NAME_CAPS), buf, buf_len);
++out:
++	kfree(buf);
++	fs_path_free(fspath);
++	btrfs_free_path(path);
++	return ret;
++}
++
+ static int clone_range(struct send_ctx *sctx,
+ 		       struct clone_root *clone_root,
+ 		       const u64 disk_byte,
+@@ -5615,6 +5678,10 @@ static int finish_inode_if_needed(struct
+ 			goto out;
+ 	}
+ 
++	ret = send_capabilities(sctx);
++	if (ret < 0)
++		goto out;
++
+ 	/*
+ 	 * If other directory inodes depended on our current directory
+ 	 * inode's move/rename, now do their move/rename operations.
 
 
