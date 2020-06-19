@@ -2,173 +2,121 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33090C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13E2720DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD6D20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592591892;
+	bh=ZhJKyQamkAob25KyheSdbYpntbCoqJg8sUQ/+nKR09A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U0WzuvS9P9WgkYpt+iC1ZRbgoJBc/610LHC5aZJuScT2aXLJXSQI4h0POxr8MmNqj
+	 vUm5SvffJCLa+/ydR+4jcndkEE++22/mrGM8+vjav05WjYPjzogxYr+cBy6P7JeAq3
+	 TqJWQVB7gOAecob97+4tGglIzw+STrx97lX+IQQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388508AbgFSShl (ORCPT
+        id S2388808AbgFSSiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:37:41 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:40208 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgFSShl (ORCPT
+        Fri, 19 Jun 2020 14:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732498AbgFSSiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:37:41 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jmLtS-0004KO-02; Fri, 19 Jun 2020 12:37:38 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jmLtR-0001qA-4j; Fri, 19 Jun 2020 12:37:37 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>
-References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
-Date:   Fri, 19 Jun 2020 13:33:19 -0500
-In-Reply-To: <87pn9u6h8c.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Fri, 19 Jun 2020 13:30:27 -0500")
-Message-ID: <87eeqa6h3k.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 19 Jun 2020 14:38:07 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307B2C0613F0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:38:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id c17so12585285lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H3fbVijkwGqEXjgf746UVzNHZFijt5PEP/I+cIGFrOI=;
+        b=Pbi6ZcZ/j5UzKi4TuELv3vWZVoPaSRX4qHDHfjemlgk/7t9FABxdeWgh51bILfCKJ5
+         wi8F+rrtMy4gj2dpmCJd8yxSDI3bKAoHjCDk9Pmgk4ebmFXb7pgJH6u8Pl1d3HL2Cn+Y
+         CfZiRrUn8yF0xtr+Dhn2AXvWp8IgyXRWpqhQ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H3fbVijkwGqEXjgf746UVzNHZFijt5PEP/I+cIGFrOI=;
+        b=IHEKu2chD/XAmcTurrxjAFeCgrhGSt8iB8d229p4hbfu7eQp1Y2E2DcgqqxecNXPr6
+         QLN5eGXhMo+YixkntdNEX0oCQvSKbxx6XSxhgO219WC5TRbR48/X/3z9OuATjtJw16um
+         GKoUn7q1gutP9z75vjDR0oiWk52OoBLkYy8dsduZ/wxb/gh4/+Vkmrs798EO5x41pM6E
+         7LQ7UaRQ+fxtXnqzpeLz3V2GDjZTPorsONL/m2O6K3Ut66DMLhpR399a2DZzR8DIuRyr
+         OXdOpLMw0g0qFaA0QumdOcf0eLw33de4gCo1N31aTXQMeqvvBJcMSLxQULw9wJE0zGJF
+         eK6A==
+X-Gm-Message-State: AOAM531AuUZFmneG/vksUvxvd6vm9hF715q2uot4muP98WcdnDEmN9I9
+        Qe7MSNMclER4D1xDyEAlyWBEF6GKWBU=
+X-Google-Smtp-Source: ABdhPJxtj6/aAcsUNsVVrRJeISPg+EmcYrL++rr/Gr1FXB2buzlkRDv7JonTvvDXC7s11fUHKkZfNQ==
+X-Received: by 2002:a2e:9653:: with SMTP id z19mr2289969ljh.380.1592591884684;
+        Fri, 19 Jun 2020 11:38:04 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id r22sm1533071lfm.30.2020.06.19.11.38.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 11:38:04 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id d7so6107329lfi.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:38:03 -0700 (PDT)
+X-Received: by 2002:a19:ae0f:: with SMTP id f15mr2684358lfc.142.1592591883165;
+ Fri, 19 Jun 2020 11:38:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jmLtR-0001qA-4j;;;mid=<87eeqa6h3k.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18+KI2lJvwlCsNg7M5ExV7z+N31SkkoRnc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 2/2] exec: Rename group_exit_task group_exec_task and correct the Documentation
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200618210645.GB2212102@localhost.localdomain>
+In-Reply-To: <20200618210645.GB2212102@localhost.localdomain>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 19 Jun 2020 11:37:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com>
+Message-ID: <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com>
+Subject: Re: [PATCH] linux++, this: rename "struct notifier_block *this"
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 2:06 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> Rename
+>         struct notifier_block *this
+> to
+>         struct notifier_block *nb
+>
+> "nb" is arguably a better name for notifier block.
 
-Rename group_exit_task to group_exec_task to make it clear this
-field is only used during exec.
+Maybe it's a better name. But it doesn't seem worth it.
 
-Update the comments for the fields group_exec_task and notify_count as
-they are only used by exec.  Notifications to the execing task aka
-group_exec_task happen at 0 and -1.
+Because C++ reserved words are entirely irrelevant.
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c                    |  8 ++++----
- include/linux/sched/signal.h | 13 +++++--------
- kernel/exit.c                |  4 ++--
- 3 files changed, 11 insertions(+), 14 deletions(-)
+We did this same dance almost three decades ago, and the fact is, C++
+has other reserved words that make it all pointless.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..0bf8bde6edfd 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1145,7 +1145,7 @@ static int de_thread(struct task_struct *tsk)
- 		return -EAGAIN;
- 	}
- 
--	sig->group_exit_task = tsk;
-+	sig->group_exec_task = tsk;
- 	sig->notify_count = zap_other_threads(tsk);
- 	if (!thread_group_leader(tsk))
- 		sig->notify_count--;
-@@ -1173,7 +1173,7 @@ static int de_thread(struct task_struct *tsk)
- 			write_lock_irq(&tasklist_lock);
- 			/*
- 			 * Do this under tasklist_lock to ensure that
--			 * exit_notify() can't miss ->group_exit_task
-+			 * exit_notify() can't miss ->group_exec_task
- 			 */
- 			sig->notify_count = -1;
- 			if (likely(leader->exit_state))
-@@ -1240,7 +1240,7 @@ static int de_thread(struct task_struct *tsk)
- 		release_task(leader);
- 	}
- 
--	sig->group_exit_task = NULL;
-+	sig->group_exec_task = NULL;
- 	sig->notify_count = 0;
- 
- no_thread_group:
-@@ -1253,7 +1253,7 @@ static int de_thread(struct task_struct *tsk)
- killed:
- 	/* protects against exit_notify() and __exit_signal() */
- 	read_lock(&tasklist_lock);
--	sig->group_exit_task = NULL;
-+	sig->group_exec_task = NULL;
- 	sig->notify_count = 0;
- 	read_unlock(&tasklist_lock);
- 	return -EAGAIN;
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 92c72f5db111..61019d8fe86b 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -98,13 +98,10 @@ struct signal_struct {
- 
- 	/* thread group exit support */
- 	int			group_exit_code;
--	/* overloaded:
--	 * - notify group_exit_task when ->count is equal to notify_count
--	 * - everyone except group_exit_task is stopped during signal delivery
--	 *   of fatal signals, group_exit_task processes the signal.
--	 */
-+
-+	/* exec support, notify group_exec_task when notify_count is 0 or -1 */
- 	int			notify_count;
--	struct task_struct	*group_exit_task;
-+	struct task_struct	*group_exec_task;
- 
- 	/* thread group stop support, overloads group_exit_code too */
- 	int			group_stop_count;
-@@ -262,11 +259,11 @@ static inline void signal_set_stop_flags(struct signal_struct *sig,
- 	sig->flags = (sig->flags & ~SIGNAL_STOP_MASK) | flags;
- }
- 
--/* If true, all threads except ->group_exit_task have pending SIGKILL */
-+/* If true, all threads except ->group_exec_task have pending SIGKILL */
- static inline int signal_group_exit(const struct signal_struct *sig)
- {
- 	return	(sig->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP)) ||
--		(sig->group_exit_task != NULL);
-+		(sig->group_exec_task != NULL);
- }
- 
- extern void flush_signals(struct task_struct *);
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 727150f28103..4206d33b4904 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -115,7 +115,7 @@ static void __exit_signal(struct task_struct *tsk)
- 		 * then notify it:
- 		 */
- 		if (sig->notify_count > 0 && !--sig->notify_count)
--			wake_up_process(sig->group_exit_task);
-+			wake_up_process(sig->group_exec_task);
- 
- 		if (tsk == sig->curr_target)
- 			sig->curr_target = next_thread(tsk);
-@@ -672,7 +672,7 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
- 
- 	/* mt-exec, de_thread() is waiting for group leader */
- 	if (unlikely(tsk->signal->notify_count < 0))
--		wake_up_process(tsk->signal->group_exit_task);
-+		wake_up_process(tsk->signal->group_exec_task);
- 	write_unlock_irq(&tasklist_lock);
- 
- 	list_for_each_entry_safe(p, n, &dead, ptrace_entry) {
--- 
-2.20.1
+There is no way I will accept the renaming of various "new" variables.
+We did it, it was bad, we undid it, and we now have a _lot_ more uses
+of 'new' and 'old', and no, we're not changing it for a braindead
+language that isn't relevant to the kernel.
 
+The fact is, C++ chose bad identifiers to make reserved words.
+
+If you want to build the kernel with C++, you'd be a lot better off just doing
+
+   /* C++ braindamage */
+   #define this __this
+   #define new __new
+
+and deal with that instead.
+
+Because no, the 'new' renaming will never happen, and while 'this'
+isn't nearly as common or relevant a name, once you have the same
+issue with 'new', what's the point of trying to deal with 'this'?
+
+             Linus
