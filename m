@@ -2,113 +2,130 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F415C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC41C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCF321927
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88AC2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579871;
-	bh=hqTYac1zqlyJDPaAEG6Fyc+y1JupKz26eb4ITX31SLM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfdcL7MGlHeJU99Qtq7rmI3JCByFYQJA6KjVJvJX6ZD5hMvcCauBcakigBEFYVp8B
-	 MzahnENiwofIhC26x3pXgNFD59Ggxm6GItXwR/QsA2qpvEy/k/QutkcvAqnBANBT+m
-	 vI1fqfd+ZSGH8vgbDy6Ap9HTwkdxbwvaaZUnNJZc=
+	s=default; t=1592579943;
+	bh=UEOOXWngWN83R5j4Pi/o/Dcm/fqzKyyBB3Vt398Ofeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lX50yUlIjweLaqq93oMgAU2rJeZvDXAMIT2kPnsmf3QXSRu/q13lKJXLTueljtcGs
+	 sP44wLaWMhHUBFYobpTkaWNS01BPjqNlKjzn4hwVwA+WInlidorZ2khod8UY0OUMo/
+	 tc2NPo94i2zfZVWybr8B69uCODNLFsMAhWyM5TVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392553AbgFSPRt (ORCPT
+        id S2392572AbgFSPR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392519AbgFSPRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2392555AbgFSPRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC95206DB;
-        Fri, 19 Jun 2020 15:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86344218AC;
+        Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579860;
-        bh=hqTYac1zqlyJDPaAEG6Fyc+y1JupKz26eb4ITX31SLM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=leAzHyOg79VsEBrn36ZVAbjeL+th7yduoQ4LEz2gBaI3hGjg93TLqhsHSur8xs+2Q
-         k0WzeiJNqR+BFtm+H/XadjZyEkqORT28a5jjQMZSUaycJPf6MFBXfrmVgwYiOsftES
-         +g2YRFMSL3Z0Ddni8CvpcGiqVGRL93SULRQ5vUyU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 032/376] libperf evlist: Fix a refcount leak
-Date:   Fri, 19 Jun 2020 16:29:10 +0200
-Message-Id: <20200619141711.872753519@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592579869;
+        bh=UEOOXWngWN83R5j4Pi/o/Dcm/fqzKyyBB3Vt398Ofeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vXN+mD5PP3w4cOHhOURB1wp6S0pItj9Lv2MtK4xP8u/KcD/DeA76FrZ4Xux1jUVHZ
+         7bs8c8lFp4lWayAEscM4naiGN3Cm1p8hOLJwYUkKANHvLXbN09AauMtq+P7o7yoBGc
+         1WPUPT+rPAVWsTNqLXp2J01bb9664fCb8LEq4G8o=
+Date:   Fri, 19 Jun 2020 16:17:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     vigneshr@ti.com, bbrezillon@kernel.org,
+        vadivel.muruganx.ramuthevar@linux.intel.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, marex@denx.de
+Subject: Re: [RESEND PATCH v3 0/8] mtd: spi-nor: Move cadence-qaudspi to
+ spi-mem framework
+Message-ID: <20200619151746.GF5396@sirena.org.uk>
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200619105701.GD5396@sirena.org.uk>
+ <0007c019-1ecf-1913-56a7-facffe345b1f@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uTRFFR9qmiCqR05s"
+Content-Disposition: inline
+In-Reply-To: <0007c019-1ecf-1913-56a7-facffe345b1f@microchip.com>
+X-Cookie: Robot, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 4599d292128d89e4cf866a0ea9a9b047a2de8418 ]
+--uTRFFR9qmiCqR05s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Memory leaks found by applying LLVM's libfuzzer on the tools/perf
-parse_events function.
+On Fri, Jun 19, 2020 at 11:47:08AM +0000, Tudor.Ambarus@microchip.com wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20200319023101.82458-2-irogers@google.com
-[ Did a minor adjustment due to some other previous patch having already set evlist->all_cpus to NULL at perf_evlist__exit() ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/lib/perf/evlist.c | 1 +
- 1 file changed, 1 insertion(+)
+> Would you please provide an immutable tag on top of v5.8-rc1 so that I
+> can merge back in spi-nor/next?
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 5b9f2ca50591..62130d28652d 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -125,6 +125,7 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
- void perf_evlist__exit(struct perf_evlist *evlist)
- {
- 	perf_cpu_map__put(evlist->cpus);
-+	perf_cpu_map__put(evlist->all_cpus);
- 	perf_thread_map__put(evlist->threads);
- 	evlist->cpus = NULL;
- 	evlist->threads = NULL;
--- 
-2.25.1
+Here you go:
 
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/cadence-mtd-spi-move
+
+for you to fetch changes up to 31fb632b5d43ca16713095b3a4fe17e3d7331e28:
+
+  spi: Move cadence-quadspi driver to drivers/spi/ (2020-06-19 14:26:54 +0100)
+
+----------------------------------------------------------------
+mtd/spi: Move the cadence-quadspi driver to spi-mem
+
+----------------------------------------------------------------
+Ramuthevar Vadivel Murugan (2):
+      mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
+      spi: Move cadence-quadspi driver to drivers/spi/
+
+Vignesh Raghavendra (6):
+      mtd: spi-nor: cadence-quadspi: Make driver independent of flash geometry
+      mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
+      mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on failure
+      mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire reset lines
+      mtd: spi-nor: cadence-quadspi: Handle probe deferral while requesting DMA channel
+      mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
+
+ drivers/mtd/spi-nor/controllers/Kconfig            |  11 -
+ drivers/mtd/spi-nor/controllers/Makefile           |   1 -
+ drivers/spi/Kconfig                                |  11 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi-cadence-quadspi.c}                         | 541 ++++++++-------------
+ 5 files changed, 222 insertions(+), 343 deletions(-)
+ rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (74%)
+
+--uTRFFR9qmiCqR05s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7s1xkACgkQJNaLcl1U
+h9CkZwf/bn/NzkeSHpXBj+R11qSg1PNvnUXgrdmG3O2NoZyp3uimOHDbJOXGe/4Z
+9V4XQpiJRI1PPz+7mEQbbKev+mGBt4mVuZ3TlTYn9w5omw33LJhBjnTdwgA/Ik3j
+uAHE2kytqegcm30R27bLC5kiNQYT8RKm8MqkgYxwrUREapBGPHJ3LASu1c9mBjns
+2FFv7w8YpjzK0cGCE8h/PGT/kPGvnkatMOs5sOXCXfCan3ZQ9F++d6hquYRAhYEG
+T1D+GSJJAYOL0pJ2/B39g7ha+EILEhh9P9pNcKw68IM9NdbDMYjE0MJrJ4oj1q4f
+JuLI56TLnG1VpcXzRvUAbHgsIkfL4w==
+=VBZQ
+-----END PGP SIGNATURE-----
+
+--uTRFFR9qmiCqR05s--
