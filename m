@@ -2,95 +2,113 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1903C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABE92100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0382F206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKytp6cb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="f8JUjkyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbgFSTI6 (ORCPT
+        id S1732601AbgFSTLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgFSTI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:08:57 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1FCC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:08:57 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so11276126ejc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JlIKW7ZiZpRvoLiHLYzC+51bF9QJTWcSdc0O5TaA0nQ=;
-        b=GKytp6cbb10mdcTacfYVW00r/dMIDdanv+7I6Rf+lN5IXC9ZowUywqKQTkeSX2yChI
-         SlO1CjfLlVRhAn1giSRKWYt9o+THUQHA6pxb1yw7csckMG3+cynFWo+0IsTbAhO2MiJr
-         LD+P1WYvzGzPNI0FZrLpJoP6CQIh0g2mV2nh2TGDsfx4m6pDexe1zJghrUwBmalvQkv5
-         TbExIPdF3wiUvow1EmTlGBNDD4yShu2uREIJBO+KrPTGW218QHfylvR7fMjH/XUHzCvN
-         iSfesOG+XoJwJB3WffGne2vzqi7xfxH9H07h8oVrLXLB4+6OXyHzzE+OrlBaH8WDrplf
-         gl5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JlIKW7ZiZpRvoLiHLYzC+51bF9QJTWcSdc0O5TaA0nQ=;
-        b=O7WQMIIHgHaYYPkAz5kP2EMz185cHRIwmbWqIGssm6E0YbBURal/spOm7MvpaMpM0J
-         WU4ToAt1UDGdQsPuUANQXig4FW349Pz97sCBi3vplZqd3njcxC8VoO/KSXA6/Wt9qi39
-         DUs/ENpMbbYkbxxXAeLj/Ba93nXtuleXODaZnwsoy12q36d3u7iHrvak81lXr2b2psbm
-         2u423qAd3WiC3rlKRA06XzZjKqGbQnRJfGalKqLx3zHqBE9UarKKiE7XdYNIhzmAMPw9
-         X7vxDp5yKAmWr9OzG2HJrlCho+vO/nNjc0lxEAgptzMrpMpYM6IlcrRLUbh3mupyeSol
-         WdiQ==
-X-Gm-Message-State: AOAM530kcH/DPaHzsAVHK/xUz26qKeGCHhm6WcYwmPyiBaFSZxXtlmCt
-        95TcvwUZGzGOCCUXMnhfUtI=
-X-Google-Smtp-Source: ABdhPJwR6TAA0426NIFUK2deCbiT2GrebjlngFGmj0ju+RVRL6+t6gt/JKC7Axsl2Vx1PH3kh4b8XA==
-X-Received: by 2002:a17:906:7acf:: with SMTP id k15mr5197608ejo.410.1592593735812;
-        Fri, 19 Jun 2020 12:08:55 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:8cd0:5f2e:6739:a8da])
-        by smtp.gmail.com with ESMTPSA id bd19sm5259071edb.2.2020.06.19.12.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 12:08:55 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 21:08:54 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>, Borislav Petkov <bp@suse.de>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] sparse: use the _Generic() version of
- __unqual_scalar_typeof()
-Message-ID: <20200619190854.zyxcafhxsrst2imw@ltop.local>
-References: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
- <CAHk-=wg04jR4PdocoLaYE-tL1-=pAdxwaPp1n0iKhcORqYY8Dg@mail.gmail.com>
+        Fri, 19 Jun 2020 15:11:01 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:50514 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728665AbgFSTLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:11:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4cCwLXspapwlO5JNmpzGtEIMUrgS31d34ZsxIrdWjzQ=; b=f8JUjkyUOjpdYWcU3wOwZKLeVq
+        YcRssBikeytE4vec/F6hXZ+2pruDoL2NyiGM4PZwFUHMoJ0kc4WBynnqrSWxjA7skUAHqnXgGTAIV
+        q9vEt8UyzqkU6nXbbkguKZGnCu1owdHmsalTqXt04/Ztz0pvmCC3NV9gAouJe/NSW+7OvIRKJlTwF
+        pSgq29h2f3lyLyMB/uYFsP5AX/oODtSXnbaXmEHTd4iunWw0WBJK7LdbpE08/uEy0m1dn+hhCbX1W
+        UVWabBiLrNkKNzDcKO4Tllpcd4onCHVHxKFUbicbhdQIkGCHxo1JgGhsaKBE1Uk5WpBWh/0+MUksh
+        RYVIMp7g==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jmMPh-00061F-Je; Fri, 19 Jun 2020 13:10:58 -0600
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>
+Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+References: <20200619172514.GA1074@embeddedor>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <268330b2-e42b-4d62-1ff0-8462d68e498e@deltatee.com>
+Date:   Fri, 19 Jun 2020 13:10:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg04jR4PdocoLaYE-tL1-=pAdxwaPp1n0iKhcORqYY8Dg@mail.gmail.com>
+In-Reply-To: <20200619172514.GA1074@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: gustavo@embeddedor.com, linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, gustavoars@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH][next] NTB: Use struct_size() helper in devm_kzalloc()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:26:59AM -0700, Linus Torvalds wrote:
-> On Thu, Jun 18, 2020 at 3:26 PM Luc Van Oostenryck
-> <luc.vanoostenryck@gmail.com> wrote:
-> >
-> > Note: a recent version of sparse will be needed (minimum v0.6.2-rc2
-> >        or later than 2020-05-28).
-> 
-> Ok, it sounds like this turns out to be even more recent than that,
-> with the fixes for _Generic.
-> 
-> So i think I'll delay this until 5.9. Mind reminding me?
 
-Sure. No problem.
 
--- Luc
+On 2020-06-19 11:25 a.m., Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes. Also, remove unnecessary
+> variable _struct_size_.
+> 
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
+> 
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Cool, I didn't know that existed! Thanks!
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+> ---
+>  drivers/ntb/test/ntb_msi_test.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ntb/test/ntb_msi_test.c b/drivers/ntb/test/ntb_msi_test.c
+> index 99d826ed9c34..7095ecd6223a 100644
+> --- a/drivers/ntb/test/ntb_msi_test.c
+> +++ b/drivers/ntb/test/ntb_msi_test.c
+> @@ -319,7 +319,6 @@ static void ntb_msit_remove_dbgfs(struct ntb_msit_ctx *nm)
+>  static int ntb_msit_probe(struct ntb_client *client, struct ntb_dev *ntb)
+>  {
+>  	struct ntb_msit_ctx *nm;
+> -	size_t struct_size;
+>  	int peers;
+>  	int ret;
+>  
+> @@ -352,9 +351,7 @@ static int ntb_msit_probe(struct ntb_client *client, struct ntb_dev *ntb)
+>  		return ret;
+>  	}
+>  
+> -	struct_size = sizeof(*nm) + sizeof(*nm->peers) * peers;
+> -
+> -	nm = devm_kzalloc(&ntb->dev, struct_size, GFP_KERNEL);
+> +	nm = devm_kzalloc(&ntb->dev, struct_size(nm, peers, peers), GFP_KERNEL);
+>  	if (!nm)
+>  		return -ENOMEM;
+>  
+> 
