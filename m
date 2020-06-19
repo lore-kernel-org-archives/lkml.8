@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC815C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB7721973
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C7021D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578769;
-	bh=Uw9/vRLVgKmqGjw40c38O9e7lpuxn5NHt5DzieU+7Dk=;
+	s=default; t=1592578774;
+	bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlC0ke0InAMsCVVm7oQ0gvzcJ+5tJS96s+34Vn28YtZCVbq7zijscMTRv9xp05UpX
-	 Oq1H7GSX7CC0iFReiCXkvkXUN/v0NL3amvOalobsCqxF4S4WGNSUwcbTZb1Vf9Tenu
-	 4TVHvADE/c5dVnMCw4ZtZ13txo4h2CpQ5EF1sSYU=
+	b=xIIIKr1TK1PJ1ZNrswadUUm2yJjpkBvIvJsck+Hr7qHDY3OQnxMDqHTho62QJOlR1
+	 h5+oDQpsvUmBd82gHo/BVClvgueHGRbP55IQDzqAZ/EokHwY/4LBu2uI6RBXKM9nHI
+	 7xXLzrrHXqCQD8fA8ciHlk16gSGyAlG0y2AuPZww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390522AbgFSO7Z (ORCPT
+        id S2390531AbgFSO7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:59:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388231AbgFSO7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:22 -0400
+        id S2390523AbgFSO71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B67921924;
-        Fri, 19 Jun 2020 14:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B274A21924;
+        Fri, 19 Jun 2020 14:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578761;
-        bh=Uw9/vRLVgKmqGjw40c38O9e7lpuxn5NHt5DzieU+7Dk=;
+        s=default; t=1592578767;
+        bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chROSi0MVC+D1fvcMQkZoNawkPlm8D1bUeErELZhzCzJTgPSLWRQiPNIepB1mBDak
-         jJ5/LR+BZuSkPaUcyQiPlF02Gyeq9HlDjXXjZjjO0K4jl2x7o5wTf725YcKg9z3OUj
-         /WsgMaXuPt63Dtemr5aqI1XhKONhZnA4c+uF7RFI=
+        b=SQMvE+L6Bd25ZF/pph5H79B86MvJ4RmQnXNif1saVqAeEjAVZCsEbyKNxTsyT2LQ2
+         8d0W2+sxIutbuWJjkliR5CTJPhbKZe2lwI4Tr/N/+DPadcAEfgSAxWkBN2TK8RlQsT
+         9laKQmjEbe0cGFeCMTQf73BdgsY5UpZGx06l1YJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/267] kgdb: Fix spurious true from in_dbg_master()
-Date:   Fri, 19 Jun 2020 16:32:11 +0200
-Message-Id: <20200619141655.826958966@linuxfoundation.org>
+Subject: [PATCH 4.19 121/267] brcmfmac: fix wrong location to get firmware feature
+Date:   Fri, 19 Jun 2020 16:31:46 +0200
+Message-Id: <20200619141654.645801100@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit 3fec4aecb311995189217e64d725cfe84a568de3 ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-Currently there is a small window where a badly timed migration could
-cause in_dbg_master() to spuriously return true. Specifically if we
-migrate to a new core after reading the processor id and the previous
-core takes a breakpoint then we will evaluate true if we read
-kgdb_active before we get the IPI to bring us to halt.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-Fix this by checking irqs_disabled() first. Interrupts are always
-disabled when we are executing the kgdb trap so this is an acceptable
-prerequisite. This also allows us to replace raw_smp_processor_id()
-with smp_processor_id() since the short circuit logic will prevent
-warnings from PREEMPT_DEBUG.
-
-Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
-Suggested-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200506164223.2875760-1-daniel.thompson@linaro.org
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kgdb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index e465bb15912d..6be5545d3584 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -317,7 +317,7 @@ extern void gdbstub_exit(int status);
- extern int			kgdb_single_step;
- extern atomic_t			kgdb_active;
- #define in_dbg_master() \
--	(raw_smp_processor_id() == atomic_read(&kgdb_active))
-+	(irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
- extern bool dbg_is_early;
- extern void __init dbg_late_init(void);
- #else /* ! CONFIG_KGDB */
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 4c5a3995dc35..d7f41caa0b0b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -281,13 +281,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+ 
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
++
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 
+ 	brcmf_feat_firmware_overrides(drvr);
+ 
 -- 
 2.25.1
 
