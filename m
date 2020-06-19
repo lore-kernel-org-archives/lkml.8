@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A726C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C68C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1182920809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFD220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584683;
-	bh=5Ut5zBJxFdeupz17PvXk6YqK5JbTYK/gIlg5llAYHOQ=;
+	s=default; t=1592584690;
+	bh=Uh/IZUM0L/bUkrura8PqNijQXkLZGvjhnGmgcpPSTQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKBdir1COxRKu/tvucWxeWzRgfO9wJInwN0dVgHAVkYLt3uhOKIUYsiti240UXp4g
-	 mw5kuXBqUJ1u+obaT0IVBsK7JRqF10lYcU6HEFz6dHSzaR0Qu4Jeyoz1EaYZ5kSiJr
-	 tmYV12i0V1wuAnBrOFW3rcCik/gLPBwZce4yIgSE=
+	b=cLOwiwhHXrkNioWop01sv7+AOb97rX0B6NUo+t8z4k1ianZ2R0mgf7VjnZkf8UGnV
+	 hwKQVsxXA0o1LMc2+pvLBz6DL51y7JTb59COmPBT9bOnmLIgXpSahK5sowWU/w9lSa
+	 oLdxCjFF5m3aj5KCDGD83AzxEpIcuKYIZnIpEg4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbgFSOry (ORCPT
+        id S2389572AbgFSQiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39684 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388957AbgFSOri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:38 -0400
+        id S2387968AbgFSOru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618FE217BA;
-        Fri, 19 Jun 2020 14:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80FE0217D9;
+        Fri, 19 Jun 2020 14:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578057;
-        bh=5Ut5zBJxFdeupz17PvXk6YqK5JbTYK/gIlg5llAYHOQ=;
+        s=default; t=1592578070;
+        bh=Uh/IZUM0L/bUkrura8PqNijQXkLZGvjhnGmgcpPSTQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ModIzWWXEwxgQ+lBRTU0fBFBzn38oqGnSRP57zebncnZy7uUloHF5IbBX3MqbUY//
-         Yobn/sR5+DRst82xeaTN8zvKy7JfzU7EDG5sE4dUmx0uYfL642uQIkdwwsq6VbPxN4
-         rqCO7wO8KRmOayPKiVlfLAkpCOJvgFUzvxxNziRU=
+        b=DmvU7Zopv6bgWTC16nx5SYc/7IGB9bubfhvFkMr21YkWuXOS+CNPIrgyfThmOEGQ8
+         9rqHwce9RJTTzhPC4yEdPsXeZpQ7K6ErycPrvSVnNr128cDaLurgrCqbQkn7AxBhV4
+         1mzov6ThVfmVvq2RCw/GBdYT0OAZ3UtILw1wWzpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 035/190] ALSA: pcm: disallow linking stream to itself
-Date:   Fri, 19 Jun 2020 16:31:20 +0200
-Message-Id: <20200619141635.329616038@linuxfoundation.org>
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 071/190] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
+Date:   Fri, 19 Jun 2020 16:31:56 +0200
+Message-Id: <20200619141637.136935827@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,39 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-commit 951e2736f4b11b58dc44d41964fa17c3527d882a upstream.
+commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
 
-Prevent SNDRV_PCM_IOCTL_LINK linking stream to itself - the code
-can't handle it. Fixed commit is not where bug was introduced, but
-changes the context significantly.
+Clear tuning_done flag while executing tuning to ensure vendor
+specific HS400 settings are applied properly when the controller
+is re-initialized in HS400 mode.
 
+Without this, re-initialization of the qcom SDHC in HS400 mode fails
+while resuming the driver from runtime-suspend or system-suspend.
+
+Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
 Cc: stable@vger.kernel.org
-Fixes: 0888c321de70 ("pcm_native: switch to fdget()/fdput()")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/89c4a2487609a0ed6af3ecf01cc972bdc59a7a2d.1591634956.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- sound/core/pcm_native.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mmc/host/sdhci-msm.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1950,6 +1950,11 @@ static int snd_pcm_link(struct snd_pcm_s
- 	}
- 	pcm_file = f.file->private_data;
- 	substream1 = pcm_file->substream;
-+	if (substream == substream1) {
-+		res = -EINVAL;
-+		goto _badf;
-+	}
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -861,6 +861,12 @@ static int sdhci_msm_execute_tuning(stru
+ 	msm_host->use_cdr = true;
+ 
+ 	/*
++	 * Clear tuning_done flag before tuning to ensure proper
++	 * HS400 settings.
++	 */
++	msm_host->tuning_done = 0;
 +
- 	group = kmalloc(sizeof(*group), GFP_KERNEL);
- 	if (!group) {
- 		res = -ENOMEM;
++	/*
+ 	 * For HS400 tuning in HS200 timing requires:
+ 	 * - select MCLK/2 in VENDOR_SPEC
+ 	 * - program MCLK to 400MHz (or nearest supported) in GCC
 
 
