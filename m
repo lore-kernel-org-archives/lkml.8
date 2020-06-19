@@ -2,108 +2,225 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 23:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70592C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 23:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDF620706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 23:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49272221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 23:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="dj06qqFZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Choc7ppe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgFSXYd (ORCPT
+        id S1730447AbgFSX2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 19:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730379AbgFSXYc (ORCPT
+        Fri, 19 Jun 2020 19:28:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33603 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730431AbgFSX2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 19:24:32 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFC3C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 16:24:30 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so4734446pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 16:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:cc:from:to:message-id;
-        bh=X1ACXT/DA2EOrh6dthja9XGbnQySlyTnGfW8+pIJPtM=;
-        b=dj06qqFZtuuzpy1sB8T/rBBZoc5WKAo3+J1atENDZ27/hwTsmucUnjLhw6YOFHFDN4
-         R2I8hHXovIHede+nj2D2KcMq1GA9CLFl7/AbIoUMRCIlS9Ngj8OA9aVmKLJEYNqYsjSu
-         47srG9m+Uc83qk471bE3P87baa7gBRuwXOqV23PuW7xXLCDglxJc+7jb/mwS86TePdd4
-         e9KBUnduO+3OLsstPnz7h9f0X7CpUPWdH4hfsRo1A7zkmMUeP0qE/Kf0nEiM4xjQhDXs
-         15QLLU6mCMcPxJYnyCbRpoD2I/VJmqZnvbZvKShEdA9hj2soYV46UVJS+Obofm/vTH86
-         3n+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:message-id;
-        bh=X1ACXT/DA2EOrh6dthja9XGbnQySlyTnGfW8+pIJPtM=;
-        b=XCt4jpRor4F9LvYOFQR1zen+x+Ne09uewQd2YxEJ3wOtLdJIIzrvyKmIH+pPJDaL+A
-         v1ZGAe+AjIG8TsZm1RDtsbpDMv2APKkaoM7EEwZX2Wa0tN2HF+BsnRNjebEpfXQwuTmZ
-         AfzwV2rLaGSPn/fJ/sFxIBN6mLZRQRrzygPbIGTQNac66QSrSv2MyMoPT9bY8+I8sE1B
-         Fwnvcc2N63ftOPVvFU9UIJDteiO4s8Adf4HWMMl8mftx4ULEIQw1wBq6WrFTNynAp3CZ
-         elhG7kKZ+iMlVbymOcuWFzHz7r99Gg/8SK2PWRnjatkDN0puxZQ3+AGDAv1heMdWlJhT
-         MGmA==
-X-Gm-Message-State: AOAM531j61eTTMcPc7AtkoDP/nOzw/5gpKZ1JNG+QKtg/lCE11gzjvcO
-        nUcVf/ACXwFIAid3b6QWhCuAfi8/odb7zw==
-X-Google-Smtp-Source: ABdhPJxaoAdk78I9DqIuqHRbQaVPKoiDu/sqcl30wD7iBjN09aZnpoKNxT23N/LXnOHtZyrGa1gp0Q==
-X-Received: by 2002:a17:902:44:: with SMTP id 62mr10116464pla.104.1592609070126;
-        Fri, 19 Jun 2020 16:24:30 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id g29sm6737042pfr.47.2020.06.19.16.24.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 16:24:29 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:24:29 -0700 (PDT)
-X-Google-Original-Date: Fri, 19 Jun 2020 16:24:24 PDT (-0700)
-Subject: [GIT PULL] RISC-V Fixes for 5.8-rc2
-CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-ff59c9fd-a367-4804-bc35-73c8a572b016@palmerdabbelt-glaptop1>
+        Fri, 19 Jun 2020 19:28:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592609320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=a6KuP+dnQ/2eA0xYymSKw60P3LotdbYNacwkMXMs+fg=;
+        b=Choc7ppeqsHss5gtG62Q17NXjVcvgvTTKijq2yT1QFgDp5gTbkHux83KQuA19FAAWiFqo4
+        Fw3mG9QHHLv6amESYJyrIVHJB5r4gGNu/DbEjE8UkRfjuhE81Wi09s7aBnKiJPNVr7WYtD
+        ItXKQ3vw4HooFO4+pQ0txigwhkqwcuw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-5OiyHahcMMWb-fXu0JdEBw-1; Fri, 19 Jun 2020 19:28:36 -0400
+X-MC-Unique: 5OiyHahcMMWb-fXu0JdEBw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5A218015CE;
+        Fri, 19 Jun 2020 23:28:34 +0000 (UTC)
+Received: from T590 (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5CD757C1E4;
+        Fri, 19 Jun 2020 23:28:24 +0000 (UTC)
+Date:   Sat, 20 Jun 2020 07:28:20 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-ID: <20200619232820.GE353853@T590>
+References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
+ <20200618125438.GA191266@T590>
+ <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+ <20200618231901.GA196099@T590>
+ <20200619141239.56f6dda0976453b790190ff7@kernel.org>
+ <20200619072859.GA205278@T590>
+ <20200619081954.3d72a252@oasis.local.home>
+ <20200619133240.GA351476@T590>
+ <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit cd16ed33c3c618930ccda7049dcea05ee707a9c0:
+Hi Masami,
 
-  Merge tag 'riscv-for-linus-5.8-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux (2020-06-11 12:55:20 -0700)
+On Sat, Jun 20, 2020 at 12:35:09AM +0900, Masami Hiramatsu wrote:
+> Hi Ming,
+> 
+> On Fri, 19 Jun 2020 21:32:40 +0800
+> Ming Lei <ming.lei@redhat.com> wrote:
+> 
+> > On Fri, Jun 19, 2020 at 08:19:54AM -0400, Steven Rostedt wrote:
+> > > On Fri, 19 Jun 2020 15:28:59 +0800
+> > > Ming Lei <ming.lei@redhat.com> wrote:
+> > > 
+> > > > > 
+> > > > > OK, then let's make events (for sure)
+> > > > > 
+> > > > > root@devnote2:/sys/kernel/debug/tracing# echo p __blkdev_put >> kprobe_events 
+> > > > > root@devnote2:/sys/kernel/debug/tracing# echo r __blkdev_put >> kprobe_events 
+> > > > > root@devnote2:/sys/kernel/debug/tracing# echo p blkdev_put >> kprobe_events 
+> > > 
+> > > Hi Ming,
+> > > 
+> > > Do you have the kprobe_events file?
+> > > 
+> > > > > root@devnote2:/sys/kernel/debug/tracing# echo 1 > events/kprobes/enable   
+> > > > 
+> > > > I can't find 'events/kprobes' in my VM with upstream kernel, also not found
+> > > > the dir under fedora31(5.5.15-200) & rhel8(v4.18 based).
+> > > 
+> > > The events/kprobes directly will be created when you create a
+> > > kprobe_event. It wont exist until then.
+> > 
+> > Hi Steven and Masami,
+> > 
+> > Got it, thanks for your help, now I can run the test, follows the steps
+> > and results, and there is still one __blkdev_put probed.
+> 
+> Hmm, strange...
+> 
+> > And it is observed in my VM reliably with 5.7+ or Fedora kernel reliably,
+> > kernel config is attached.
+> 
+> Thanks for sharing it.
+> 
+> > 
+> > [root@ktest-01 tracing]# uname -a
+> > Linux ktest-01 5.7.0+ #1900 SMP Fri Jun 19 16:26:47 CST 2020 x86_64 x86_64 x86_64 GNU/Linux
+> > [root@ktest-01 tracing]#
+> > [root@ktest-01 tracing]# cat kprobe_events
+> > [root@ktest-01 tracing]#
+> > [root@ktest-01 tracing]# echo p blkdev_put >> kprobe_events
+> > [root@ktest-01 tracing]# echo p __blkdev_put >> kprobe_events
+> > [root@ktest-01 tracing]# echo r __blkdev_put >> kprobe_events
+> > [root@ktest-01 tracing]#
+> > [root@ktest-01 tracing]# echo 1 > events/kprobes/enable
+> > [root@ktest-01 tracing]# blockdev --getbsz /dev/sda1
+> > 4096
+> > [root@ktest-01 tracing]# echo 0 > events/kprobes/enable
+> > [root@ktest-01 tracing]# cat trace
+> > # tracer: nop
+> > #
+> > # entries-in-buffer/entries-written: 3/3   #P:8
+> > #
+> > #                              _-----=> irqs-off
+> > #                             / _----=> need-resched
+> > #                            | / _---=> hardirq/softirq
+> > #                            || / _--=> preempt-depth
+> > #                            ||| /     delay
+> > #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> > #              | |       |   ||||       |         |
+> >         blockdev-970   [005] .... 17603.447236: p_blkdev_put_0: (blkdev_put+0x0/0xb4)
+> >         blockdev-970   [005] .... 17603.447244: p___blkdev_put_0: (__blkdev_put+0x0/0x19d)
+> >         blockdev-970   [005] d... 17603.447251: r___blkdev_put_0: (blkdev_close+0x22/0x25 <- __blkdev_put)
+> 
+> This shows __blkdev_put() is a tail-call. It is possible that the
+> internal (nested) __blkdev_put() call becomes a goto inside the
+> function by the gcc optimization.
+> 
+> Ah, after all it is as expected. With your kconfig, the kernel is
+> very agressively optimized.
+> 
+> $ objdump -dS vmlinux | less
+> ...
+> ffffffff81256dc3 <__blkdev_put>:
+> {
+> ffffffff81256dc3:       e8 98 85 df ff          callq  ffffffff8104f360 <__fentry__>
+> ffffffff81256dc8:       41 57                   push   %r15
+> ffffffff81256dca:       41 56                   push   %r14
+> ffffffff81256dcc:       41 55                   push   %r13
+> ...
+> ffffffff81256f05:       75 02                   jne    ffffffff81256f09 <__blkdev_put+0x146>
+>         struct block_device *victim = NULL;
+> ffffffff81256f07:       31 db                   xor    %ebx,%ebx
+>                 bdev->bd_contains = NULL;
+> ffffffff81256f09:       48 c7 45 60 00 00 00    movq   $0x0,0x60(%rbp)
+> ffffffff81256f10:       00 
+>                 put_disk_and_module(disk);
+> ffffffff81256f11:       4c 89 f7                mov    %r14,%rdi
+> ffffffff81256f14:       e8 c6 3d 11 00          callq  ffffffff8136acdf <put_disk_and_module>
+>         mutex_unlock(&bdev->bd_mutex);
+> ffffffff81256f19:       4c 89 ff                mov    %r15,%rdi
+>                 __blkdev_put(victim, mode, 1);
+> ffffffff81256f1c:       41 bc 01 00 00 00       mov    $0x1,%r12d
+>         mutex_unlock(&bdev->bd_mutex);
+> ffffffff81256f22:       e8 8d d7 48 00          callq  ffffffff816e46b4 <mutex_unlock>
+>         bdput(bdev);
+> ffffffff81256f27:       48 89 ef                mov    %rbp,%rdi
+> ffffffff81256f2a:       e8 f0 e9 ff ff          callq  ffffffff8125591f <bdput>
+>         if (victim)
+> ffffffff81256f2f:       48 85 db                test   %rbx,%rbx
+> ffffffff81256f32:       74 08                   je     ffffffff81256f3c <__blkdev_put+0x179>
+> ffffffff81256f34:       48 89 dd                mov    %rbx,%rbp
+> ffffffff81256f37:       e9 b4 fe ff ff          jmpq   ffffffff81256df0 <__blkdev_put+0x2d> <<-----THIS!!
+> }
+> ffffffff81256f3c:       48 8b 44 24 28          mov    0x28(%rsp),%rax
+> ffffffff81256f41:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
+> ffffffff81256f48:       00 00 
+> ffffffff81256f4a:       74 05                   je     ffffffff81256f51 <__blkdev_put+0x18e>
+> ffffffff81256f4c:       e8 5a 4e 48 00          callq  ffffffff816dbdab <__stack_chk_fail>
+> ffffffff81256f51:       48 83 c4 30             add    $0x30,%rsp
+> ffffffff81256f55:       5b                      pop    %rbx
+> ffffffff81256f56:       5d                      pop    %rbp
+> ffffffff81256f57:       41 5c                   pop    %r12
+> ffffffff81256f59:       41 5d                   pop    %r13
+> ffffffff81256f5b:       41 5e                   pop    %r14
+> ffffffff81256f5d:       41 5f                   pop    %r15
+> ffffffff81256f5f:       c3                      retq   
+> 
+> 
+> As you can see, the nested __blkdev_put() is coverted to a loop.
+> If you put kprobe on __blkdev_put+0x2d, you'll see the event twice.
 
-are available in the Git repository at:
+Thanks for your investigation.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-rc2
+Some trace tools can just trace on function entry, such as bcc, and some
+user script always trace on function entry.
 
-for you to fetch changes up to 0e2c09011d4de4161f615ff860a605a9186cf62a:
+I guess the issue should belong to kprobe implementation:
 
-  RISC-V: Acquire mmap lock before invoking walk_page_range (2020-06-18 18:46:09 -0700)
+1) __blkdev_put() is capable of being kprobed, so from user view, the
+probe on entry of __blkdev_put() should be triggered
 
-----------------------------------------------------------------
-RISC-V Fixes for 5.8-rc2
+2) from implementation view, I understand exception should be trapped
+on the entry of __blkdev_put(), looks it isn't done.
 
-This contains three fixes that I'd like to target for rc2:
+Correct me if the above is wrong, and is it possible to fix it in kprobe?
 
-* A workaround for a compiler surprise related to the "r" inline assembly that
-  allows LLVM to boot.
-* A fix to avoid WX-only mappings, which the ISA does not allow.  While this
-  probably manifests in many ways, the bug was found in stress-ng.
-* A missing lock in set_direct_map_*(), which due to a recent lockdep change
-  started asserting.
 
-----------------------------------------------------------------
-Atish Patra (1):
-      RISC-V: Acquire mmap lock before invoking walk_page_range
+Thanks,
+Ming
 
-Nathan Huckleberry (1):
-      riscv/atomic: Fix sign extension for RV64I
-
-Yash Shah (1):
-      RISC-V: Don't allow write+exec only page mapping request in mmap
-
- arch/riscv/include/asm/cmpxchg.h |  8 ++++----
- arch/riscv/kernel/sys_riscv.c    |  6 ++++++
- arch/riscv/mm/pageattr.c         | 14 ++++++++++++--
- 3 files changed, 22 insertions(+), 6 deletions(-)
