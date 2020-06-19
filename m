@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D293CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31719C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC1621527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC8C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584631;
-	bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+	s=default; t=1592584636;
+	bh=saLN3d1KPLnQ2+/04KMRkgHFhsJjNTOGFsAj3gFbmXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bMMuD1tr0Vxxenr2Y/fem+1NdNuhSUePGNq0zSYjB40rjlw0z3FWYYJQGv3r/ha68
-	 Q3H7VzsSlWLwmORa7KEvX6Re0kNddNpeEoUPz5BhfQj7aLfU7gSkjkuSAG4vA9Fb7F
-	 VLDPAhltCK7ExT8mBGJ6x9mYLpZqHzU4YfMt0C2A=
+	b=Z7guYMRmw4BQKsPcXMXuVCxVaXw9UKyfuI/0g8ksTJU2TcgtwVSp+W0pgdFTV98NA
+	 G8PaLlrmHr/X8gIcivVWPcKlh3iWlH8gwkqP3piQrzpslMZA5H2oa6wnyLrzPzBaTt
+	 b9gWrb36sRBsz+LaH29+HOq4HXkbmPNAJt/f3/0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395311AbgFSQhK (ORCPT
+        id S2389119AbgFSOsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389075AbgFSOsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:46 -0400
+        id S2389048AbgFSOsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62A9217A0;
-        Fri, 19 Jun 2020 14:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4C2E2083B;
+        Fri, 19 Jun 2020 14:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578126;
-        bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+        s=default; t=1592578098;
+        bh=saLN3d1KPLnQ2+/04KMRkgHFhsJjNTOGFsAj3gFbmXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJs/0WXqpqcz3xSsRbXDUraAdQXopTC2ZRMgnCL+1zPpFe+df3P5sqj1Ac+rjtfoK
-         SnjjmOOzQy2uaBZ2luxkHfWnm6ithLz8yNxJn3lNcsnIH5A+ZK0P2CU+I4rhc7icWg
-         G58POyjj5g3lNhtUIgzDMnUsH5S4GfGXBIAb2fio=
+        b=oQvpe/AzdJy9bIZ8tCLaTnL2C0FkBphadus3AZ1Ws6bpHUy3ARaYJfKbuflq7CZmM
+         gEUZ2atslPTVWGCTmAZsIlJH9ev5yXu0sj/1sZrx4myLYeCsZ2fywID6451GXlDaGf
+         A3CqzhkUKs03Y6VltIurwWPoJnL2ahsyxrqCEUe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 063/190] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-Date:   Fri, 19 Jun 2020 16:31:48 +0200
-Message-Id: <20200619141636.727318571@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 081/190] net: ena: fix error returning in ena_com_get_hash_function()
+Date:   Fri, 19 Jun 2020 16:32:06 +0200
+Message-Id: <20200619141637.637890862@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,57 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit e4ff08a4d727146bb6717a39a8d399d834654345 upstream.
+[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
 
-Write out of slab bounds. We should check epid.
+In case the "func" parameter is NULL we now return "-EINVAL".
+This shouldn't happen in general, but when it does happen, this is the
+proper way to handle it.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
-BUG: KASAN: use-after-free in htc_process_conn_rsp
-drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
-BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
+We also check func for NULL in the beginning of the function, as there
+is no reason to do all the work and realize in the end of the function
+it was useless.
 
-Call Trace:
- htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
-[inline]
-ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -113,6 +113,9 @@ static void htc_process_conn_rsp(struct
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index dc9149a32f41..bb1710ff910a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2131,6 +2131,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 		rss->hash_key;
+ 	int rc;
  
- 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
- 		epid = svc_rspmsg->endpoint_id;
-+		if (epid < 0 || epid >= ENDPOINT_MAX)
-+			return;
++	if (unlikely(!func))
++		return -EINVAL;
 +
- 		service_id = be16_to_cpu(svc_rspmsg->service_id);
- 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
- 		endpoint = &target->endpoint[epid];
+ 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
+ 				    ENA_ADMIN_RSS_HASH_FUNCTION,
+ 				    rss->hash_key_dma_addr,
+@@ -2143,8 +2146,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (rss->hash_func)
+ 		rss->hash_func--;
+ 
+-	if (func)
+-		*func = rss->hash_func;
++	*func = rss->hash_func;
+ 
+ 	if (key)
+ 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
+-- 
+2.25.1
+
 
 
