@@ -2,140 +2,119 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF32C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58CA321852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206B121BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592579247;
+	bh=Ry7ffsonlHv7a5vi0afMmIH01N+u6fWs+CVFyp4Y7tE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bojONUZxF7o2G0spxj0EN/KQE+iwiWaiCFWNfVHlJUJgH1XPitwO7S8AFAWV4zxCu
+	 4EXl6LhDeMRUv9oulYhx/tVvIG5CNZ8CAMWsyB+gmKv2Qkov7D+uFh0OOT1JGkf9+h
+	 URC86x9yW6s2ASC4T4NwCrvAUTuK/BmlbwgaTk9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391000AbgFSPHV (ORCPT
+        id S2391577AbgFSPHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:15598 "EHLO pegase1.c-s.fr"
+        Fri, 19 Jun 2020 11:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391519AbgFSPHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:00 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49pMbN5PLxz9v09r;
-        Fri, 19 Jun 2020 17:06:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IlWeNrq_uh2L; Fri, 19 Jun 2020 17:06:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbN4dtTz9v09j;
-        Fri, 19 Jun 2020 17:06:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCB0F8B868;
-        Fri, 19 Jun 2020 17:06:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UcSE2_4GBNY0; Fri, 19 Jun 2020 17:06:58 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DC558B879;
-        Fri, 19 Jun 2020 17:06:58 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 4F55365B16; Fri, 19 Jun 2020 15:06:58 +0000 (UTC)
-Message-Id: <a98cc6787ce0fd0df8a9b01d3187b0e6f30e8755.1592578278.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-References: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 7/8] powerpc/32s: Kernel space starts at TASK_SIZE
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 19 Jun 2020 15:06:58 +0000 (UTC)
+        id S2391523AbgFSPHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4548621835;
+        Fri, 19 Jun 2020 15:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579224;
+        bh=Ry7ffsonlHv7a5vi0afMmIH01N+u6fWs+CVFyp4Y7tE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=14UOJBFBXzyfdWAyPQQ/4omCx0CJDYaIUkRMciZvAlSkCGpUu3C3B3xedhDGcqTEq
+         NNDV1D6QV6v0vtIS35ktp9zDB8yd4cJaldJt724PygROhkfRT0wo5ibVSkRNdKQ4zl
+         NSvf3z3iCTRM8EAIha0kIrkqO5JVjBPjoBujP/3w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 053/261] spi: dw: Fix Rx-only DMA transfers
+Date:   Fri, 19 Jun 2020 16:31:04 +0200
+Message-Id: <20200619141652.470882659@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel space starts at TASK_SIZE. Select kernel page table
-when address is over TASK_SIZE.
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
+
+Tx-only DMA transfers are working perfectly fine since in this case
+the code just ignores the Rx FIFO overflow interrupts. But it turns
+out the SPI Rx-only transfers are broken since nothing pushing any
+data to the shift registers, so the Rx FIFO is left empty and the
+SPI core subsystems just returns a timeout error. Since DW DMAC
+driver doesn't support something like cyclic write operations of
+a single byte to a device register, the only way to support the
+Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+This is what we intend to fix in this commit by setting the
+SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/head_32.S       | 12 ++++++------
- arch/powerpc/mm/book3s32/hash_low.S |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index 705c042309d8..bbef6ce8322b 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -474,7 +474,7 @@ InstructionTLBMiss:
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_IMISS
- #if defined(CONFIG_MODULES) || defined(CONFIG_DEBUG_PAGEALLOC)
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- #endif
- 	mfspr	r2, SPRN_SPRG_PGDIR
-@@ -484,7 +484,7 @@ InstructionTLBMiss:
- 	li	r1,_PAGE_PRESENT | _PAGE_EXEC
- #endif
- #if defined(CONFIG_MODULES) || defined(CONFIG_DEBUG_PAGEALLOC)
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- #endif
-@@ -541,7 +541,7 @@ DataLoadTLBMiss:
-  */
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_DMISS
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- 	mfspr	r2, SPRN_SPRG_PGDIR
- #ifdef CONFIG_SWAP
-@@ -549,7 +549,7 @@ DataLoadTLBMiss:
- #else
- 	li	r1, _PAGE_PRESENT
- #endif
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- 112:	rlwimi	r2,r3,12,20,29		/* insert top 10 bits of address */
-@@ -621,7 +621,7 @@ DataStoreTLBMiss:
-  */
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_DMISS
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- 	mfspr	r2, SPRN_SPRG_PGDIR
- #ifdef CONFIG_SWAP
-@@ -629,7 +629,7 @@ DataStoreTLBMiss:
- #else
- 	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT
- #endif
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- 112:	rlwimi	r2,r3,12,20,29		/* insert top 10 bits of address */
-diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
-index 923ad8f374eb..1690d369688b 100644
---- a/arch/powerpc/mm/book3s32/hash_low.S
-+++ b/arch/powerpc/mm/book3s32/hash_low.S
-@@ -62,7 +62,7 @@ _GLOBAL(hash_page)
- 	isync
- #endif
- 	/* Get PTE (linux-style) and check access */
--	lis	r0,KERNELBASE@h		/* check if kernel address */
-+	lis	r0, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r4,r0
- 	ori	r3,r3,_PAGE_USER|_PAGE_PRESENT /* test low addresses as user */
- 	mfspr	r5, SPRN_SPRG_PGDIR	/* phys page-table root */
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 82c5c027ec4c..07d1c170c657 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -529,6 +529,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 			dws->dma_inited = 0;
+ 		} else {
+ 			master->can_dma = dws->dma_ops->can_dma;
++			master->flags |= SPI_CONTROLLER_MUST_TX;
+ 		}
+ 	}
+ 
 -- 
-2.25.0
+2.25.1
+
+
 
