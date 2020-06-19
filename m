@@ -2,53 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B590C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC51C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE8920809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D41020771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582022;
-	bh=YtVlJQS36T/FGl827kIC89tbz5tIe3JW861Tai/VvyU=;
+	s=default; t=1592582031;
+	bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YaN3EL5UZlqcKSaEA0ftinHusMofHrHc7ZkEbC/UL8RtXMbt8KyoyzQJS8bvK9xLm
-	 9taTp/9F3WTq38S/k+OPb2B8hUeLNJF/cabStzxdsvscXPd30BTPvCWsqCUUQnocux
-	 MI7Sjv+LMd/zpktZ4a7kmKkjoZw6MuG7D8GyDpPY=
+	b=WKqBH3RhyFVOK0DrMEmUa9+w7f1xchgWtBhik/hu9AsnKvn0usbg8x29FI8NfNtj0
+	 h1jzFXfY4UuNxyCO78hpN8qx7WnUUXxq/iIAhuPeDk5TLEpzuimF6odEZpcfrNeWCg
+	 wupJU8Ssb1HiLVAiZmQXN7GleSbtux/Sr5p9Y1kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392988AbgFSPWU (ORCPT
+        id S2405413AbgFSPxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404042AbgFSPPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:41 -0400
+        id S2392544AbgFSPWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8731A206DB;
-        Fri, 19 Jun 2020 15:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EBD221548;
+        Fri, 19 Jun 2020 15:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579741;
-        bh=YtVlJQS36T/FGl827kIC89tbz5tIe3JW861Tai/VvyU=;
+        s=default; t=1592580135;
+        bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boXh9rGN52ac/nZbXyGwK+hwpcS6MjxSEUbrTM/k6Pbxj9GvlRf2wZK8hfaE4CGjj
-         l/4MvuX1NXaiLlUF5fbfUaY7emV3oxT/OIz5/cCGcenGuFTm9pOeaMmfvcXNSie+9s
-         XTm1RQQEyIiRFEAhJFfLd7ofP/hPNUNHSaMmH+JI=
+        b=ix0ZVMlcZbILK9unuNf+Gk69olYkxYfcP1ox7EEYgr2PvWSurhZwPV3i3p/iOV3Qa
+         VCJxQYHSQ7+c/Bd7G0W0IXpXItAmbjxvQkSZkHbhlHxsmlDZy171QV1WvuClNtBjY/
+         kmIIhS0+HbIYk6j96y3KI+RMwGjpUvqLSeTRg094=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 248/261] mtd: rawnand: socrates: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:34:19 +0200
-Message-Id: <20200619141701.774619103@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 135/376] exit: Move preemption fixup up, move blocking operations down
+Date:   Fri, 19 Jun 2020 16:30:53 +0200
+Message-Id: <20200619141716.727303755@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,40 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Jann Horn <jannh@google.com>
 
-commit 9c6c2e5cc77119ce0dacb4f9feedb73ce0354421 upstream.
+[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
+non-preemptible context look untidy; after the main oops, the kernel prints
+a "sleeping function called from invalid context" report because
+exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
+can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
+fixup.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
+It looks like the same thing applies to profile_task_exit() and
+kcov_task_exit().
 
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-51-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix it by moving the preemption fixup up and the calls to
+profile_task_exit() and kcov_task_exit() down.
 
+Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/socrates_nand.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/exit.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
---- a/drivers/mtd/nand/raw/socrates_nand.c
-+++ b/drivers/mtd/nand/raw/socrates_nand.c
-@@ -169,7 +169,7 @@ static int socrates_nand_probe(struct pl
- 	if (!res)
- 		return res;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index ce2a75bc0ade..d56fe51bdf07 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -708,8 +708,12 @@ void __noreturn do_exit(long code)
+ 	struct task_struct *tsk = current;
+ 	int group_dead;
  
--	nand_release(nand_chip);
-+	nand_cleanup(nand_chip);
+-	profile_task_exit(tsk);
+-	kcov_task_exit(tsk);
++	/*
++	 * We can get here from a kernel oops, sometimes with preemption off.
++	 * Start by checking for critical errors.
++	 * Then fix up important state like USER_DS and preemption.
++	 * Then do everything else.
++	 */
  
- out:
- 	iounmap(host->io_base);
+ 	WARN_ON(blk_needs_flush_plug(tsk));
+ 
+@@ -727,6 +731,16 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	set_fs(USER_DS);
+ 
++	if (unlikely(in_atomic())) {
++		pr_info("note: %s[%d] exited with preempt_count %d\n",
++			current->comm, task_pid_nr(current),
++			preempt_count());
++		preempt_count_set(PREEMPT_ENABLED);
++	}
++
++	profile_task_exit(tsk);
++	kcov_task_exit(tsk);
++
+ 	ptrace_event(PTRACE_EVENT_EXIT, code);
+ 
+ 	validate_creds_for_do_exit(tsk);
+@@ -744,13 +758,6 @@ void __noreturn do_exit(long code)
+ 
+ 	exit_signals(tsk);  /* sets PF_EXITING */
+ 
+-	if (unlikely(in_atomic())) {
+-		pr_info("note: %s[%d] exited with preempt_count %d\n",
+-			current->comm, task_pid_nr(current),
+-			preempt_count());
+-		preempt_count_set(PREEMPT_ENABLED);
+-	}
+-
+ 	/* sync mm's RSS info before statistics gathering */
+ 	if (tsk->mm)
+ 		sync_mm_rss(tsk->mm);
+-- 
+2.25.1
+
 
 
