@@ -2,106 +2,167 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3719DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E019F20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CEB20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="u0VcAhR6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnS0KyEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgFSG7e (ORCPT
+        id S1729779AbgFSHBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:59:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23341 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729508AbgFSG7d (ORCPT
+        Fri, 19 Jun 2020 03:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbgFSHAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 02:59:33 -0400
-X-UUID: 6f4081d96ecf474797c54671b2c65c62-20200619
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PCB8Qz7hOOk222bVQxjPpuUhXuN7LtCLPsnk9tCpO4M=;
-        b=u0VcAhR6xsyiieTIQPVcjxbHrxRLWu5wsq2BVbZwk9QtooTM2z+UaWu6ktDonHhO4E8hHvYt739v2xZmiikORHwCaVC30lt1aZsMSu5jVy74122596hMUHOMAh5FqYUN47oYmOfzrPmShJbjPHebuOXBQybOXyBEpCpnK80OJPw=;
-X-UUID: 6f4081d96ecf474797c54671b2c65c62-20200619
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1665357815; Fri, 19 Jun 2020 14:59:29 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 19 Jun 2020 14:59:11 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 19 Jun 2020 14:59:12 +0800
-Message-ID: <1592549952.23952.3.camel@mtksdaap41>
-Subject: Re: [PATCH 07/10] media: mtk-vcodec: venc: remove redundant code
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        "Pi-Hsun Shih" <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 19 Jun 2020 14:59:12 +0800
-In-Reply-To: <20200520082723.96136-8-acourbot@chromium.org>
-References: <20200520082723.96136-1-acourbot@chromium.org>
-         <20200520082723.96136-8-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 19 Jun 2020 03:00:49 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E27C06174E;
+        Fri, 19 Jun 2020 00:00:48 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id g3so8285296ilq.10;
+        Fri, 19 Jun 2020 00:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QMbAt1k2a7uyQKReEMHBWVP+e2hPp2/KEXSt2hE1Dgs=;
+        b=EnS0KyEyEIhjKeIuzeRJah7X1i1UxSV1Rc5cg+gRQzYq1q+L5/rIHmPaol264xjvv/
+         ks5u6LizmnNhGeOrdThBcxEi4lbW0gqmxdWnnXhUuae2Rndf3306vsbIaQ63dbMQHwVj
+         PIO7rL9Vuccj87q+5SInY3YfNmAQ/z7GqQ5GvXQcpTZyxTj9YAiuXDcrDxPBfjbyakre
+         umL5Z0trF2e6Cmx4ps5DBd/MDfNFe/XbV0qq2virnNtr+AwDoXIb2ZluQvKMGG9EKoA/
+         hquSIKw1J2zOjAslzI+MQ4aUxDJXd6kwq9gsYPKXY3SWWewO+m9DXb0jqYm60TaSn/c/
+         dLIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QMbAt1k2a7uyQKReEMHBWVP+e2hPp2/KEXSt2hE1Dgs=;
+        b=ko4iyFcsMiIug46MysXAr5gc6GvpAxstkMiIgvO0tAD38fuvIwPxTphFYXhoxSjYu+
+         QIkAmNqhxYWMlwEgJVVigi8xxgCrcGVCh2PnRRFVwfGmP9+8ugAUkSdIJ7FyOXgIgDQu
+         YDhRiNqWduVqT8krCa1vB6tWh3HlYrOd2WPyIi5Z4ddKwPjVEGbKxUnMT0LIKMFfB+TE
+         LQUr30Fy4BiYSJvuwxBdeWkKbAXhMUMqceikPOCgH1oi4UsRAEHtOEXSdHsO04yeH9xM
+         64S0uismSbKwSdrMbAUla2PuTBB0z4VZyqvFBe/MjYW3yvvQO33jIYlO3TudWgLGFbBj
+         Zi7Q==
+X-Gm-Message-State: AOAM532MCJp/GeUGsFQc8omO2QaV8wnYc7nlHu7toc/zZKKUlicX6j0p
+        S37NXXIiuVH0aXthuIP0rebpwLgAIwWCeZs5Ge4=
+X-Google-Smtp-Source: ABdhPJwmpb/UzzdKSIlxsufaFoBTyO0NylKvjrCptfFcs41NjlXUvcCtPjMUjTr5Ee8orMJapfBSGtIuuZAWG73cUHM=
+X-Received: by 2002:a92:2410:: with SMTP id k16mr2334391ilk.40.1592550046708;
+ Fri, 19 Jun 2020 00:00:46 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 7CCBF29C811E6FE35B861FCCF8B303D3C129E8FA0D985C43E6CCB2781D20C5BF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+ <202006160420.iatdr9ab%lkp@intel.com>
+In-Reply-To: <202006160420.iatdr9ab%lkp@intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 19 Jun 2020 12:30:35 +0530
+Message-ID: <CACG_h5qUZsR7Zd9a+BQJqyuJZBrv-en+gC-sgcV+xV+A5ZOBhA@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+To:     kernel test robot <lkp@intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTIwIGF0IDE3OjI3ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gdmlkaW9jX3RyeV9mbXQoKSBkb2VzIGNsYW1wIGhlaWdodCBhbmQgd2lkdGggd2hlbiBj
-YWxsZWQgb24gdGhlIE9VVFBVVA0KPiBxdWV1ZSwgc28gY2xhbXBpbmcgdGhlbSBwcmlvciB0byBj
-YWxsaW5nIHRoaXMgZnVuY3Rpb24gaXMgcmVkdW5kYW50LiBTZXQNCj4gdGhlIHF1ZXVlJ3MgcGFy
-YW1ldGVycyBhZnRlciBjYWxsaW5nIHZpZGlvY190cnlfZm10KCkgc28gd2UgY2FuIHVzZSB0aGUN
-Cj4gdmFsdWVzIGl0IGNvbXB1dGVkLg0KPiANCg0KdmlkaW9jX3RyeV9mbXQgY2xhbXBzIGhlaWdo
-dCBhbmQgd2lkdGggb25seSB3aGVuIGYtPnR5cGUgPT0NClY0TDJfQlVGX1RZUEVfVklERU9fT1VU
-UFVUX01QTEFORQ0KDQpEb2VzIHRoaXMgY2xlYW51cCBwYXNzIHY0bDIgY29tcGxpYW5jZSB0ZXN0
-Pw0KSSByZWNhbGwgY29tcGxpYW5jZSB0ZXN0IHdpbGwgdHJ5IGRpZmZlcmVudCBmbXQgYW5kIG1h
-a2Ugc3VyZSBkcml2ZXINCnJlc3BvbnNlIGVub3VnaCBpbmZvcm1hdGlvbj8NCg0KDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0t
-LQ0KPiAgLi4uL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYyAgIHwg
-MTYgKysrKy0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwg
-MTIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210
-ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0KPiBpbmRleCAwNTc0M2E3NDVhMTEuLmYwYWY3OGYx
-MTJkYiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210
-a192Y29kZWNfZW5jLmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVj
-L210a192Y29kZWNfZW5jLmMNCj4gQEAgLTQ0OSw3ICs0NDksNiBAQCBzdGF0aWMgaW50IHZpZGlv
-Y192ZW5jX3NfZm10X291dChzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCj4gIAlzdHJ1
-Y3QgbXRrX3FfZGF0YSAqcV9kYXRhOw0KPiAgCWludCByZXQsIGk7DQo+ICAJY29uc3Qgc3RydWN0
-IG10a192aWRlb19mbXQgKmZtdDsNCj4gLQlzdHJ1Y3QgdjRsMl9waXhfZm9ybWF0X21wbGFuZSAq
-cGl4X2ZtdF9tcCA9ICZmLT5mbXQucGl4X21wOw0KPiAgDQo+ICAJdnEgPSB2NGwyX20ybV9nZXRf
-dnEoY3R4LT5tMm1fY3R4LCBmLT50eXBlKTsNCj4gIAlpZiAoIXZxKSB7DQo+IEBAIC00NzQsMjAg
-KzQ3MywxMyBAQCBzdGF0aWMgaW50IHZpZGlvY192ZW5jX3NfZm10X291dChzdHJ1Y3QgZmlsZSAq
-ZmlsZSwgdm9pZCAqcHJpdiwNCj4gIAkJZi0+Zm10LnBpeC5waXhlbGZvcm1hdCA9IGZtdC0+Zm91
-cmNjOw0KPiAgCX0NCj4gIA0KPiAtCXBpeF9mbXRfbXAtPmhlaWdodCA9IGNsYW1wKHBpeF9mbXRf
-bXAtPmhlaWdodCwNCj4gLQkJCQlNVEtfVkVOQ19NSU5fSCwNCj4gLQkJCQlNVEtfVkVOQ19NQVhf
-SCk7DQo+IC0JcGl4X2ZtdF9tcC0+d2lkdGggPSBjbGFtcChwaXhfZm10X21wLT53aWR0aCwNCj4g
-LQkJCQlNVEtfVkVOQ19NSU5fVywNCj4gLQkJCQlNVEtfVkVOQ19NQVhfVyk7DQo+IC0NCj4gLQlx
-X2RhdGEtPnZpc2libGVfd2lkdGggPSBmLT5mbXQucGl4X21wLndpZHRoOw0KPiAtCXFfZGF0YS0+
-dmlzaWJsZV9oZWlnaHQgPSBmLT5mbXQucGl4X21wLmhlaWdodDsNCj4gLQlxX2RhdGEtPmZtdCA9
-IGZtdDsNCj4gLQlyZXQgPSB2aWRpb2NfdHJ5X2ZtdChmLCBxX2RhdGEtPmZtdCk7DQo+ICsJcmV0
-ID0gdmlkaW9jX3RyeV9mbXQoZiwgZm10KTsNCj4gIAlpZiAocmV0KQ0KPiAgCQlyZXR1cm4gcmV0
-Ow0KPiAgDQo+ICsJcV9kYXRhLT5mbXQgPSBmbXQ7DQo+ICsJcV9kYXRhLT52aXNpYmxlX3dpZHRo
-ID0gZi0+Zm10LnBpeF9tcC53aWR0aDsNCj4gKwlxX2RhdGEtPnZpc2libGVfaGVpZ2h0ID0gZi0+
-Zm10LnBpeF9tcC5oZWlnaHQ7DQo+ICAJcV9kYXRhLT5jb2RlZF93aWR0aCA9IGYtPmZtdC5waXhf
-bXAud2lkdGg7DQo+ICAJcV9kYXRhLT5jb2RlZF9oZWlnaHQgPSBmLT5mbXQucGl4X21wLmhlaWdo
-dDsNCj4gIA0KDQo=
+>
+> Hi Syed,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on 444fc5cde64330661bf59944c43844e7d4c2ccd8]
+>
+> url:    https://github.com/0day-ci/linux/commits/Syed-Nayyar-Waris/Introduce-the-for_each_set_clump-macro/20200615-205729
+> base:    444fc5cde64330661bf59944c43844e7d4c2ccd8
+> config: sparc64-randconfig-s032-20200615 (attached as .config)
+> compiler: sparc64-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-rc1-3-g55607964-dirty
+>         # save the attached .config to linux build tree
+>         make W=1 C=1 ARCH=sparc64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>
 
+>
+>
+> sparse warnings: (new ones prefixed by >>)
+>
+> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+>    include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
+> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> >> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
+>
+
+Hi All,
+
+It seems to me that to reproduce this warning, I have to use the
+sparc64 compiler. I have installed 'sparc64-linux-gnu-gcc' on my
+computer.
+I have to specify that this compiler needs to be used for build
+process. How/ Where do I specify this?
+
+I have downloaded the config.gz (has config file) and placed it at the
+root of the linux kernel project tree. But the Makefile STILL has
+'gcc' as the compiler. When I build, it is the 'gcc' compiler being
+used and not 'sparc64-linux-gnu-gcc'. I know I can manually change the
+Makefile to use sparc64 compiler, but I think there must be some more
+elegant way to do this, perhaps using make menuconfig?
+
+Kindly illuminate as to how shall I reproduce the compiler warning.
+
+Regards
+Syed Nayyar Waris
+
+> vim +639 include/linux/bitmap.h
+>
+> 169c474fb22d8a William Breathitt Gray 2019-12-04  613
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  614  /**
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  615   * bitmap_set_value - set n-bit value within a memory region
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  616   * @map: address to the bitmap memory region
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  617   * @value: value of nbits
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  618   * @start: bit offset of the n-bit value
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  619   * @nbits: size of value in bits
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  620   */
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  621  static inline void bitmap_set_value(unsigned long *map,
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  622                               unsigned long value,
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  623                               unsigned long start, unsigned long nbits)
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  624  {
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  625   const size_t index = BIT_WORD(start);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  626   const unsigned long offset = start % BITS_PER_LONG;
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  627   const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  628   const unsigned long space = ceiling - start;
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  629
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  630   value &= GENMASK(nbits - 1, 0);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  631
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  632   if (space >= nbits) {
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  633           map[index] &= ~(GENMASK(nbits + offset - 1, offset));
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  634           map[index] |= value << offset;
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  635   } else {
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  636           map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  637           map[index] |= value << offset;
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @638           map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @639           map[index + 1] |= (value >> space);
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  640   }
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  641  }
+> 803024b6c8a375 Syed Nayyar Waris      2020-06-15  642
+>
+> :::::: The code at line 639 was first introduced by commit
+> :::::: 803024b6c8a375ba9e9e9467595d7d52d4f6a38e bitops: Introduce the for_each_set_clump macro
+>
+> :::::: TO: Syed Nayyar Waris <syednwaris@gmail.com>
