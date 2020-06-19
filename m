@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC04C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECD421532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFD221532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582937;
-	bh=gJnEIUMosMfO28LKrdnPOmXGxL4XDkNaNUGnHu7aZ6k=;
+	s=default; t=1592582950;
+	bh=IBWiwPwLUea/IAkdYlSc0QA59befBZ0jBLmaSoGozls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1HeloQ5QF3NkqyOw4E8YAUIS8HNDhqk3uPs/INfY5eOUPxsQrzJAZdT9GA02Hq0br
-	 u2Ls3F2WDRSj8djuHiUlGjuSpLomW4qvBlfxC1GjVYA5qKSDQsSRCmqvy6JuL8d2NV
-	 hXeGV2TQa6bdkmeUTSow5W2c6reointfnahLxFkg=
+	b=lLtfEiA3ps45CTuFp9ZEW69h4Sa1wh4hAIP/fCzskrUeHDhYMIxk6OodR7beWZaGk
+	 GpisOrMsSWxCAI48P81k+fU+LswWv5BeC34SsAYarS3Ea+A/KLZPc8eO7pemE/7KvG
+	 QmwLI62dOmRxqwQKrZI/Y62LTDjxgO+bTqZ1ppUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393069AbgFSQIz (ORCPT
+        id S2392134AbgFSQJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391571AbgFSPHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:22 -0400
+        id S2391557AbgFSPHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D34D021835;
-        Fri, 19 Jun 2020 15:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3791721835;
+        Fri, 19 Jun 2020 15:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579242;
-        bh=gJnEIUMosMfO28LKrdnPOmXGxL4XDkNaNUGnHu7aZ6k=;
+        s=default; t=1592579234;
+        bh=IBWiwPwLUea/IAkdYlSc0QA59befBZ0jBLmaSoGozls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQsQ8dQuUZZkwU54svzPCwel2ETYUUqZ3PF9i6NlDFS4K8t1sRiBRQthZKDUHWQbk
-         ti04VOh49GKf0UC+iTrwpe1fmWp77yCCzdycrUghKZaK+jsVAWCh2Cs0TH5PMbdchB
-         Bo8egSirXppbNkUojle9Kxaz1aXkey7uX9em0K14=
+        b=LQtkXQvie6eHE0nyOGJdW0cPreGes/Xj0vKvgve9MgjWit5EYxRZAo4jls6QARoG4
+         0Q5BdrIlb2MX/h+WkbTgImUHRG7Y6rAn4Y67v7HypWtxtJl6BmHSuU8Z9Siy3NXdRU
+         nc6OWL5AYasIN/OfL/EbWwsrrD7q+6QT+4ezw01E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Frank Ch. Eigler" <fche@redhat.com>,
-        Jeremy Cline <jcline@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/261] lockdown: Allow unprivileged users to see lockdown status
-Date:   Fri, 19 Jun 2020 16:30:42 +0200
-Message-Id: <20200619141651.403840598@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 028/261] arm64: insn: Fix two bugs in encoding 32-bit logical immediates
+Date:   Fri, 19 Jun 2020 16:30:39 +0200
+Message-Id: <20200619141651.269559089@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,38 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c ]
+[ Upstream commit 579d1b3faa3735e781ff74aac0afd598515dbc63 ]
 
-A number of userspace tools, such as systemtap, need a way to see the
-current lockdown state so they can gracefully deal with the kernel being
-locked down. The state is already exposed in
-/sys/kernel/security/lockdown, but is only readable by root. Adjust the
-permissions so unprivileged users can read the state.
+This patch fixes two issues present in the current function for encoding
+arm64 logical immediates when using the 32-bit variants of instructions.
 
-Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
-Cc: Frank Ch. Eigler <fche@redhat.com>
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: James Morris <jmorris@namei.org>
+First, the code does not correctly reject an all-ones 32-bit immediate,
+and returns an undefined instruction encoding.
+
+Second, the code incorrectly rejects some 32-bit immediates that are
+actually encodable as logical immediates. The root cause is that the code
+uses a default mask of 64-bit all-ones, even for 32-bit immediates.
+This causes an issue later on when the default mask is used to fill the
+top bits of the immediate with ones, shown here:
+
+  /*
+   * Pattern: 0..01..10..01..1
+   *
+   * Fill the unused top bits with ones, and check if
+   * the result is a valid immediate (all ones with a
+   * contiguous ranges of zeroes).
+   */
+  imm |= ~mask;
+  if (!range_of_ones(~imm))
+          return AARCH64_BREAK_FAULT;
+
+To see the problem, consider an immediate of the form 0..01..10..01..1,
+where the upper 32 bits are zero, such as 0x80000001. The code checks
+if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
+1..10..01..10..0, which fails the check; the correct mask yields
+0..01..10..0, which succeeds.
+
+The fix for both issues is to generate a correct mask based on the
+instruction immediate size, and use the mask to check for all-ones,
+all-zeroes, and values wider than the mask.
+
+Currently, arch/arm64/kvm/va_layout.c is the only user of this function,
+which uses 64-bit immediates and therefore won't trigger these bugs.
+
+We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+logical immediates and all 5,334 encodable 64-bit logical immediates.
+
+Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
+Suggested-by: Will Deacon <will@kernel.org>
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200508181547.24783-2-luke.r.nels@gmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/lockdown/lockdown.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/insn.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index b2f87015d6e9..3f38583bed06 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -177,7 +177,7 @@ static int __init lockdown_secfs_init(void)
+diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+index d801a7094076..a612da533ea2 100644
+--- a/arch/arm64/kernel/insn.c
++++ b/arch/arm64/kernel/insn.c
+@@ -1508,16 +1508,10 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 				    u32 insn)
  {
- 	struct dentry *dentry;
+ 	unsigned int immr, imms, n, ones, ror, esz, tmp;
+-	u64 mask = ~0UL;
+-
+-	/* Can't encode full zeroes or full ones */
+-	if (!imm || !~imm)
+-		return AARCH64_BREAK_FAULT;
++	u64 mask;
  
--	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
-+	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
- 					&lockdown_ops);
- 	return PTR_ERR_OR_ZERO(dentry);
- }
+ 	switch (variant) {
+ 	case AARCH64_INSN_VARIANT_32BIT:
+-		if (upper_32_bits(imm))
+-			return AARCH64_BREAK_FAULT;
+ 		esz = 32;
+ 		break;
+ 	case AARCH64_INSN_VARIANT_64BIT:
+@@ -1529,6 +1523,12 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 		return AARCH64_BREAK_FAULT;
+ 	}
+ 
++	mask = GENMASK(esz - 1, 0);
++
++	/* Can't encode full zeroes, full ones, or value wider than the mask */
++	if (!imm || imm == mask || imm & ~mask)
++		return AARCH64_BREAK_FAULT;
++
+ 	/*
+ 	 * Inverse of Replicate(). Try to spot a repeating pattern
+ 	 * with a pow2 stride.
 -- 
 2.25.1
 
