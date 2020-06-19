@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF89C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E98207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701AD20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582532;
-	bh=7MEs8mH5lq7ukU7R4BgPgqm8mW6mI4J84W5oXclRFJI=;
+	s=default; t=1592582539;
+	bh=XyxooGzy8AMblJssvPD5OPR+1XIsIJH6f3B0ES9u9eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2d2ra0WG6AKWFdEICQSuo9Vkiu5G20Rsa9bHGXXE9tEFdd/grPxBtlZL40PJj1MN
-	 jXh9XIxoW2kUa8nd6g37IouQ/Dtrb26KvcAHPiJbgd8676CIA8LRGbq4Gk5qe+Pc0A
-	 olfVus8JkfV4+GNiKGE2Zl7WuJRDPkVE63z+UCSA=
+	b=V+EtqI/Vl/Ob3Pop02wOEsyutGEjuaaRl2bBHPcXcXRnuon7MCaE2vr6jJGbpqGyf
+	 7gEtOq52sEugedZ41CQQrUCOygOF5ms9tKdKRptmrEaK4Aig/pZFrq/bK99f8kUeYK
+	 3W5F/u8+/+StLtK9Xq6k2ZV015XcvNt8j298Q08E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392576AbgFSQCK (ORCPT
+        id S2392205AbgFSQCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43454 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392205AbgFSPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:00 -0400
+        id S2392178AbgFSPMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A159E20776;
-        Fri, 19 Jun 2020 15:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95B5720776;
+        Fri, 19 Jun 2020 15:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579579;
-        bh=7MEs8mH5lq7ukU7R4BgPgqm8mW6mI4J84W5oXclRFJI=;
+        s=default; t=1592579574;
+        bh=XyxooGzy8AMblJssvPD5OPR+1XIsIJH6f3B0ES9u9eY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbGMrpXPP8ZYITjCjc6/25VLZcWEG+YZI+ti4GUkTfCHu7oErl4C18AvwfU3KTtSy
-         B0jU6R9Vzcz7FOL7ag4wdrSy19QdYD3qYJ+YwmmzdFgvEjYb9wjH5V6xmnU1GAO7Jk
-         dtey/LxiJA2rUb6MEqr1fmX1diEpMguQdvPPaFB8=
+        b=OWz3niSPS/WEwWcUC3i7/CGNTdNX0x+Dlss3V/3zUk+A3AzGaiUJ02//1FCVES79q
+         pqnPz+oAZvEv4+y4raCnG6LXBDSabT/cHCNoTooU1M0JWtC6ejOB38b0psHxW5huco
+         90pGrtwUUSOj71iTMREcYp4lO0P3RAkvx8/K5zsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gow <davidgow@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Marcos Scriven <marcos@scriven.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 158/261] kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
-Date:   Fri, 19 Jun 2020 16:32:49 +0200
-Message-Id: <20200619141657.456032182@linuxfoundation.org>
+Subject: [PATCH 5.4 185/261] PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
+Date:   Fri, 19 Jun 2020 16:33:16 +0200
+Message-Id: <20200619141658.779836675@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -66,178 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Marcos Scriven <marcos@scriven.org>
 
-[ Upstream commit adb72ae1915db28f934e9e02c18bfcea2f3ed3b7 ]
+[ Upstream commit 0d14f06cd6657ba3446a5eb780672da487b068e7 ]
 
-Patch series "Fix some incompatibilites between KASAN and FORTIFY_SOURCE", v4.
+The AMD Matisse HD Audio & USB 3.0 devices advertise Function Level Reset
+support, but hang when an FLR is triggered.
 
-3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE:
-memchr, memcmp and strlen.
+To reproduce the problem, attach the device to a VM, then detach and try to
+attach again.
 
-When FORTIFY_SOURCE is on, a number of functions are replaced with
-fortified versions, which attempt to check the sizes of the operands.
-However, these functions often directly invoke __builtin_foo() once they
-have performed the fortify check.  The compiler can detect that the
-results of these functions are not used, and knows that they have no other
-side effects, and so can eliminate them as dead code.
+Rename the existing quirk_intel_no_flr(), which was not Intel-specific, to
+quirk_no_flr(), and apply it to prevent the use of FLR on these AMD
+devices.
 
-Why are only memchr, memcmp and strlen affected?
-================================================
-
-Of string and string-like functions, kasan_test tests:
-
- * strchr  ->  not affected, no fortified version
- * strrchr ->  likewise
- * strcmp  ->  likewise
- * strncmp ->  likewise
-
- * strnlen ->  not affected, the fortify source implementation calls the
-               underlying strnlen implementation which is instrumented, not
-               a builtin
-
- * strlen  ->  affected, the fortify souce implementation calls a __builtin
-               version which the compiler can determine is dead.
-
- * memchr  ->  likewise
- * memcmp  ->  likewise
-
- * memset ->   not affected, the compiler knows that memset writes to its
-	       first argument and therefore is not dead.
-
-Why does this not affect the functions normally?
-================================================
-
-In string.h, these functions are not marked as __pure, so the compiler
-cannot know that they do not have side effects.  If relevant functions are
-marked as __pure in string.h, we see the following warnings and the
-functions are elided:
-
-lib/test_kasan.c: In function `kasan_memchr':
-lib/test_kasan.c:606:2: warning: statement with no effect [-Wunused-value]
-  memchr(ptr, '1', size + 1);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_kasan.c: In function `kasan_memcmp':
-lib/test_kasan.c:622:2: warning: statement with no effect [-Wunused-value]
-  memcmp(ptr, arr, size+1);
-  ^~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_kasan.c: In function `kasan_strings':
-lib/test_kasan.c:645:2: warning: statement with no effect [-Wunused-value]
-  strchr(ptr, '1');
-  ^~~~~~~~~~~~~~~~
-...
-
-This annotation would make sense to add and could be added at any point,
-so the behaviour of test_kasan.c should change.
-
-The fix
-=======
-
-Make all the functions that are pure write their results to a global,
-which makes them live.  The strlen and memchr tests now pass.
-
-The memcmp test still fails to trigger, which is addressed in the next
-patch.
-
-[dja@axtens.net: drop patch 3]
-  Link: http://lkml.kernel.org/r/20200424145521.8203-2-dja@axtens.net
-Fixes: 0c96350a2d2f ("lib/test_kasan.c: add tests for several string/memory API functions")
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: David Gow <davidgow@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Daniel Micay <danielmicay@gmail.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Link: http://lkml.kernel.org/r/20200423154503.5103-1-dja@axtens.net
-Link: http://lkml.kernel.org/r/20200423154503.5103-2-dja@axtens.net
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com
+Signed-off-by: Marcos Scriven <marcos@scriven.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kasan.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/pci/quirks.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index bd3d9ef7d39e..83344c9c38f4 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -22,6 +22,14 @@
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 2e50eec41dc4..ba3b114dcfa9 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5130,13 +5130,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
  
- #include <asm/page.h>
- 
+-/* FLR may cause some 82579 devices to hang */
+-static void quirk_intel_no_flr(struct pci_dev *dev)
 +/*
-+ * We assign some test results to these globals to make sure the tests
-+ * are not eliminated as dead code.
++ * FLR may cause the following to devices to hang:
++ *
++ * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Matisse USB 3.0 Host Controller 0x149c
++ * Intel 82579LM Gigabit Ethernet Controller 0x1502
++ * Intel 82579V Gigabit Ethernet Controller 0x1503
++ *
 + */
-+
-+int kasan_int_result;
-+void *kasan_ptr_result;
-+
- /*
-  * Note: test functions are marked noinline so that their names appear in
-  * reports.
-@@ -603,7 +611,7 @@ static noinline void __init kasan_memchr(void)
- 	if (!ptr)
- 		return;
- 
--	memchr(ptr, '1', size + 1);
-+	kasan_ptr_result = memchr(ptr, '1', size + 1);
- 	kfree(ptr);
++static void quirk_no_flr(struct pci_dev *dev)
+ {
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
  }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
  
-@@ -619,7 +627,7 @@ static noinline void __init kasan_memcmp(void)
- 		return;
- 
- 	memset(arr, 0, sizeof(arr));
--	memcmp(ptr, arr, size+1);
-+	kasan_int_result = memcmp(ptr, arr, size + 1);
- 	kfree(ptr);
- }
- 
-@@ -642,22 +650,22 @@ static noinline void __init kasan_strings(void)
- 	 * will likely point to zeroed byte.
- 	 */
- 	ptr += 16;
--	strchr(ptr, '1');
-+	kasan_ptr_result = strchr(ptr, '1');
- 
- 	pr_info("use-after-free in strrchr\n");
--	strrchr(ptr, '1');
-+	kasan_ptr_result = strrchr(ptr, '1');
- 
- 	pr_info("use-after-free in strcmp\n");
--	strcmp(ptr, "2");
-+	kasan_int_result = strcmp(ptr, "2");
- 
- 	pr_info("use-after-free in strncmp\n");
--	strncmp(ptr, "2", 1);
-+	kasan_int_result = strncmp(ptr, "2", 1);
- 
- 	pr_info("use-after-free in strlen\n");
--	strlen(ptr);
-+	kasan_int_result = strlen(ptr);
- 
- 	pr_info("use-after-free in strnlen\n");
--	strnlen(ptr, 1);
-+	kasan_int_result = strnlen(ptr, 1);
- }
- 
- static noinline void __init kasan_bitops(void)
-@@ -724,11 +732,12 @@ static noinline void __init kasan_bitops(void)
- 	__test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
- 
- 	pr_info("out-of-bounds in test_bit\n");
--	(void)test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	kasan_int_result = test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
- 
- #if defined(clear_bit_unlock_is_negative_byte)
- 	pr_info("out-of-bounds in clear_bit_unlock_is_negative_byte\n");
--	clear_bit_unlock_is_negative_byte(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	kasan_int_result = clear_bit_unlock_is_negative_byte(BITS_PER_LONG +
-+		BITS_PER_BYTE, bits);
- #endif
- 	kfree(bits);
- }
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
 -- 
 2.25.1
 
