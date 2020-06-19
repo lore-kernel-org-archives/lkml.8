@@ -2,152 +2,221 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE11120720
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB54720734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731632AbgFSIjf (ORCPT
+        id S1731288AbgFSIqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:39:35 -0400
-Received: from regular1.263xmail.com ([211.150.70.195]:60738 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731559AbgFSIjX (ORCPT
+        Fri, 19 Jun 2020 04:46:03 -0400
+Received: from mail.wingtech.com ([180.166.216.14]:49695 "EHLO
+        mail.wingtech.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730924AbgFSIp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:39:23 -0400
-Received: from localhost (unknown [192.168.167.70])
-        by regular1.263xmail.com (Postfix) with ESMTP id 5FCE413DD;
-        Fri, 19 Jun 2020 16:39:10 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.76] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P7896T140607601231616S1592555948689939_;
-        Fri, 19 Jun 2020 16:39:09 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <a251438a6d703a40437df80de2a62cbd>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: hjc@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH] drm/rockchip: vop: fix vop full rgb24 r/b color error
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        andy.yan@rock-chips.com, huangtao@rock-chips.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200619021251.22991-1-hjc@rock-chips.com>
- <2786595.VspqIdsi2r@phil>
-From:   Huang Jiachai <hjc@rock-chips.com>
-Message-ID: <0fe318e7-2f35-d311-ff3a-b67cc527cc87@rock-chips.com>
-Date:   Fri, 19 Jun 2020 16:39:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <2786595.VspqIdsi2r@phil>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 19 Jun 2020 04:45:58 -0400
+Received: from mx.wingtech.com ([192.168.2.43])
+        by mail.wingtech.com  with SMTP id 05J8jr84032183-05J8jr85032183
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 16:45:53 +0800
+Received: from 192.168.51.143 (HELO ZHAOWUYUN.WINGTECH.COM); Fri, 19 Jun 2020 16:45:50 +0800
+From:   zhaowuyun@wingtech.com
+To:     yuchao0@huawei.com, jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, zhaowuyun@wingtech.com
+Subject: [PATCH v3] f2fs-tools: introduce set_node_footer to initialize node footer
+Date:   Fri, 19 Jun 2020 16:45:44 +0800
+Message-Id: <1592556344-2301-1-git-send-email-zhaowuyun@wingtech.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi heiko,
+From: Wuyun Zhao <zhaowuyun@wingtech.com>
 
-在 2020/6/19 15:02, Heiko Stuebner 写道:
-> Hi Sandy,
->
-> Am Freitag, 19. Juni 2020, 04:12:51 CEST schrieb Sandy Huang:
->> RGB888 format msb is red component and the lsb is blue component,
->> at vop full platform this is swapped, and this is different from vop
->> lite and vop next, so add this patch to fix it.
-> just me struggling with color formats ... and wondering why this never
-> came up so far - with Version 3 being all major SoCs of the last years.
->
-> So I guess the reason that nobody noticed so far is, that most things
-> will use ARGB888 instead of RGB888?
-yes, most gpu output format is ARGB888, so we didn't noticed it before.
-> One implementation nit below as well.
->
->> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
->> ---
->>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->> index c80f7d9fd13f..1c17048ad737 100644
->> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->> @@ -132,6 +132,7 @@ struct vop_win {
->>   
->>   struct rockchip_rgb;
->>   struct vop {
->> +	uint32_t version;
->>   	struct drm_crtc crtc;
->>   	struct device *dev;
->>   	struct drm_device *drm_dev;
->> @@ -989,6 +990,12 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
->>   	VOP_WIN_SET(vop, win, dsp_st, dsp_st);
->>   
->>   	rb_swap = has_rb_swapped(fb->format->format);
->> +	/*
->> +	 * VOP full need to do rb swap to show rgb888/bgr888 format color correctly
->> +	 */
-> one-line-comment?
-> 	/* VOP-full needs rb_swap for correctly showing rgb888/bgr888 */
->
->> +	if ((fb->format->format == DRM_FORMAT_RGB888 || fb->format->format == DRM_FORMAT_BGR888) &&
->> +	    VOP_MAJOR(vop->version) == 3)
->> +		rb_swap = !rb_swap;
-> can we move this into the existing has_rb_swapped() function?
-> Like doing
-> 	rb_swap = has_rb_swapped(vop, fb->format->format)
-> and adding your conditional to the end there?
->
-OK, update at v2.
-> Thanks
-> Heiko
->
->
->>   	VOP_WIN_SET(vop, win, rb_swap, rb_swap);
->>   
->>   	/*
->> @@ -2091,6 +2098,7 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->>   	vop->dev = dev;
->>   	vop->data = vop_data;
->>   	vop->drm_dev = drm_dev;
->> +	vop->version = vop_data->version;
->>   	dev_set_drvdata(dev, vop);
->>   
->>   	vop_win_init(vop);
->>
->
->
->
->
->
+the filesystem will use the cold flag, so deal with it to avoid
+potential issue of inconsistency
+
+Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+---
+ fsck/dir.c         |  7 ++-----
+ fsck/node.c        | 12 +++++-------
+ include/f2fs_fs.h  | 23 +++++++++++++++++++++++
+ mkfs/f2fs_format.c | 34 +++++++++++++---------------------
+ 4 files changed, 43 insertions(+), 33 deletions(-)
+
+diff --git a/fsck/dir.c b/fsck/dir.c
+index 5f4f75e..b067aec 100644
+--- a/fsck/dir.c
++++ b/fsck/dir.c
+@@ -517,11 +517,8 @@ static void init_inode_block(struct f2fs_sb_info *sbi,
+ 	}
+ 
+ 	set_file_temperature(sbi, node_blk, de->name);
+-
+-	node_blk->footer.ino = cpu_to_le32(de->ino);
+-	node_blk->footer.nid = cpu_to_le32(de->ino);
+-	node_blk->footer.flag = 0;
+-	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
++	set_node_footer(node_blk, de->ino, de->ino, 0,
++			le64_to_cpu(ckpt->checkpoint_ver), 0, S_ISDIR(mode));
+ 
+ 	if (S_ISDIR(mode)) {
+ 		make_empty_dir(sbi, node_blk);
+diff --git a/fsck/node.c b/fsck/node.c
+index 229a99c..ef7ed0b 100644
+--- a/fsck/node.c
++++ b/fsck/node.c
+@@ -61,7 +61,7 @@ void set_data_blkaddr(struct dnode_of_data *dn)
+ block_t new_node_block(struct f2fs_sb_info *sbi,
+ 				struct dnode_of_data *dn, unsigned int ofs)
+ {
+-	struct f2fs_node *f2fs_inode;
++	struct f2fs_node *f2fs_inode = dn->inode_blk;
+ 	struct f2fs_node *node_blk;
+ 	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
+ 	struct f2fs_summary sum;
+@@ -69,16 +69,14 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
+ 	block_t blkaddr = NULL_ADDR;
+ 	int type;
+ 	int ret;
+-
+-	f2fs_inode = dn->inode_blk;
++	nid_t ino = le32_to_cpu(f2fs_inode->footer.ino);
++	u64 cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
+ 
+ 	node_blk = calloc(BLOCK_SZ, 1);
+ 	ASSERT(node_blk);
+ 
+-	node_blk->footer.nid = cpu_to_le32(dn->nid);
+-	node_blk->footer.ino = f2fs_inode->footer.ino;
+-	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+-	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
++	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver, 0,
++			S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+ 
+ 	type = CURSEG_COLD_NODE;
+ 	if (IS_DNODE(node_blk)) {
+diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
+index 709bfd8..ab19eb7 100644
+--- a/include/f2fs_fs.h
++++ b/include/f2fs_fs.h
+@@ -923,6 +923,29 @@ struct f2fs_node {
+ 	struct node_footer footer;
+ } __attribute__((packed));
+ 
++static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
++{
++	unsigned int flag = le32_to_cpu(rn->footer.flag);
++
++	if (is_dir)
++		flag &= ~(0x1 << COLD_BIT_SHIFT);
++	else
++		flag |= (0x1 << COLD_BIT_SHIFT);
++	rn->footer.flag = cpu_to_le32(flag);
++}
++
++static inline void set_node_footer(struct f2fs_node *rn, nid_t nid, nid_t ino,
++					u32 ofs, u64 ver, block_t blkaddr,
++					bool is_dir)
++{
++	rn->footer.nid = cpu_to_le32(nid);
++	rn->footer.ino = cpu_to_le32(ino);
++	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
++	rn->footer.cp_ver = cpu_to_le64(ver);
++	rn->footer.next_blkaddr = cpu_to_le32(blkaddr);
++	set_cold_node(rn, is_dir);
++}
++
+ /*
+  * For NAT entries
+  */
+diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
+index 44575e0..656023a 100644
+--- a/mkfs/f2fs_format.c
++++ b/mkfs/f2fs_format.c
+@@ -1094,6 +1094,9 @@ static int f2fs_write_root_inode(void)
+ 	struct f2fs_node *raw_node = NULL;
+ 	u_int64_t blk_size_bytes, data_blk_nor;
+ 	u_int64_t main_area_node_seg_blk_offset = 0;
++	nid_t nid = le32_to_cpu(sb->root_ino);
++	block_t blkaddr = get_sb(main_blkaddr) +
++				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg + 1;
+ 
+ 	raw_node = calloc(F2FS_BLKSIZE, 1);
+ 	if (raw_node == NULL) {
+@@ -1101,13 +1104,7 @@ static int f2fs_write_root_inode(void)
+ 		return -1;
+ 	}
+ 
+-	raw_node->footer.nid = sb->root_ino;
+-	raw_node->footer.ino = sb->root_ino;
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] *
+-			c.blks_per_seg + 1);
++	set_node_footer(raw_node, nid, nid, 0, 1, blkaddr, 1);
+ 
+ 	raw_node->i.i_mode = cpu_to_le16(0x41ed);
+ 	if (c.lpf_ino)
+@@ -1256,6 +1253,10 @@ static int f2fs_write_qf_inode(int qtype)
+ 	u_int64_t main_area_node_seg_blk_offset = 0;
+ 	__le32 raw_id;
+ 	int i;
++	nid_t qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
++	block_t blkaddr = get_sb(main_blkaddr) +
++					c.cur_seg[CURSEG_HOT_NODE] *
++					c.blks_per_seg + 1 + qtype + 1;
+ 
+ 	raw_node = calloc(F2FS_BLKSIZE, 1);
+ 	if (raw_node == NULL) {
+@@ -1263,13 +1264,7 @@ static int f2fs_write_qf_inode(int qtype)
+ 		return -1;
+ 	}
+ 
+-	raw_node->footer.nid = sb->qf_ino[qtype];
+-	raw_node->footer.ino = sb->qf_ino[qtype];
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] *
+-			c.blks_per_seg + 1 + qtype + 1);
++	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, blkaddr, 0);
+ 
+ 	raw_node->i.i_mode = cpu_to_le16(0x8180);
+ 	raw_node->i.i_links = cpu_to_le32(1);
+@@ -1447,6 +1442,9 @@ static int f2fs_write_lpf_inode(void)
+ 	struct f2fs_node *raw_node;
+ 	u_int64_t blk_size_bytes, main_area_node_seg_blk_offset;
+ 	block_t data_blk_nor;
++	block_t blkaddr = get_sb(main_blkaddr) +
++				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
++				1 + c.quota_inum + 1;
+ 	int err = 0;
+ 
+ 	ASSERT(c.lpf_ino);
+@@ -1457,13 +1455,7 @@ static int f2fs_write_lpf_inode(void)
+ 		return -1;
+ 	}
+ 
+-	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
+-	raw_node->footer.ino = raw_node->footer.nid;
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
+-			1 + c.quota_inum + 1);
++	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, blkaddr, 1);
+ 
+ 	raw_node->i.i_mode = cpu_to_le16(0x41c0); /* 0700 */
+ 	raw_node->i.i_links = cpu_to_le32(2);
 -- 
-Best Regard
-
-黄家钗
-Sandy Huang
-Addr: 福州市鼓楼区铜盘路软件大道89号福州软件园A区21号楼(350003)
-       No. 21 Building, A District, No.89,software Boulevard Fuzhou,Fujian,PRC
-Tel：+86 0591-87884919  8690
-E-mail：hjc@rock-chips.com
-
-
+2.7.4
 
