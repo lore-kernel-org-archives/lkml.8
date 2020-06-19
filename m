@@ -2,206 +2,481 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D66C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD37C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F942206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC267206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="P4zvyX3C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fW9yDAv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390529AbgFSTs4 (ORCPT
+        id S2390581AbgFSTtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:48:56 -0400
-Received: from mail-bn7nam10on2047.outbound.protection.outlook.com ([40.107.92.47]:14642
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390375AbgFSTsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:48:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KjqRvSqGbXssnrzhqaOQDhYCY+axUg8FIuBlcPhVcb+BioKprfeBQtnnawr6bhMG4ISvmM4GyjOX6bXg6cUVPPnySMhkdUZ+IDdG2KXOH4vOrhr6gvVVE2GIMvqSYy5yjpG83HLLx+ONsvtjTRePqtHd9NgQmF2RNq4xKsfFfi2d+E7/VowCsZlbFljnXEKiP6u1CjufCN0EAZrsK0gLv/29OR2Q5wtTQm3HAk13wwdqio69KZapJSzfoOW//jsX6DddkGoF3u2n1xHXvw8gi+/8vlmKXlEep7rbJ+Kedl1gQq9l+1R4kUyraQgvTcivy0Z1CwR/SWpuXvWBfRjZtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY2s5Ok5u8FVj8sjo2EsGqQ5oy1A54oDL4muzRtBbzU=;
- b=aT5SQMqmrviLIslpS5xLjP+X+GGPrqCC05m8oRsW0orwbHMmv2fFPtPIlgwA0dfN9mSqGHriosZva/uRSeb8UTq6I4fKsVagsjOvlvgU69gNIJN+F8UCTRT3Za92iCJazGjWAI1aZ+p7dOVxDp+Dhz8AwAdStAzFHqLMQVVn9vxQ2vobU7VQ69/8xhYrAczJiP3idPSjccfQNBWm+YzJRIj2QR+kojB/4lVti7TAZdHyIwwczDrpGPXrHtsSmEeKRYFabaFmA5wMvy4npQICTK7eXY4xrik4z+ltAJftOuPALMyInxu/44lYgWNuqyopPrF175s8gVQqzChWUCLIeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 19 Jun 2020 15:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390270AbgFSTtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:49:08 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBC2C06174E;
+        Fri, 19 Jun 2020 12:49:07 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id q198so2281155qka.2;
+        Fri, 19 Jun 2020 12:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY2s5Ok5u8FVj8sjo2EsGqQ5oy1A54oDL4muzRtBbzU=;
- b=P4zvyX3CeWE/8rrxv8TjIoY83At7/msQJE08cKhbgHIhaJQD0cxbCYOPCTjm0ad+3c0puk6462+0Ocn6qiUyDViXAuFiCvfFzqB0Dz8Av9FFVf6GBjLy3hIWpmYel0koc9ZjQxfK4WGtde79fTelL8OEJsdwkvZDgQdaNmGPRqg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN1PR12MB2366.namprd12.prod.outlook.com (2603:10b6:802:25::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
- 2020 19:48:51 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
- 19:48:51 +0000
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-References: <20200617152835.GF6578@ziepe.ca>
- <20200618150051.GS20149@phenom.ffwll.local> <20200618172338.GM6578@ziepe.ca>
- <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca> <20200619180935.GA10009@redhat.com>
- <20200619181849.GR6578@ziepe.ca>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
-Date:   Fri, 19 Jun 2020 15:48:49 -0400
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6UU3semgSfmE4cT8/An3pAGMSXCzQAx1R9TLWqf3Z/U=;
+        b=fW9yDAv8iK+gHJd3qRnrysXyhHN5IFYe+2rHqBkxufdkPKyTWQzNaonEgO51K4vQJZ
+         2LzMapB2faj7jJcaM98wuSan0n49TAL3sDjvy0NdXhCoZ+UcHPfdFJ/LgANbxN05Mba5
+         hzg/flOCTJy0xx5GnZZhS6QEL38fw5TUnKXZCLICUMuZv8SjVyA3xj9StfbI/EF9yA7/
+         LIOOy1mNsUK5yzeLJsDqx3NUzgLkTG+E+23EZ0ASiDZtIgz2FvjpFl5w0tVLFXaT7Cll
+         pShHpBjFkN5uuXtxqhM6fN0JfJ6sD64A4w1E/qFH6c0GT9ncxZmGiYQbCskqjY9bX4Z4
+         h/NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6UU3semgSfmE4cT8/An3pAGMSXCzQAx1R9TLWqf3Z/U=;
+        b=nX2DyXCPhvY07pOcq9Bah5LhNzPegJHqy12DEOxBct8TNGD+Y8xxOHTPJNnCs0XmfT
+         DDJNsOq6VAF6okPWqSaXF45ahIOuDsqkjsAmDXn3lbq9Yw2assJ91U8YwPV0+UceRKEB
+         RxUXQidmXNX8+drOphs7Ic/XqB4vxfF/PxVub3LTXudO9NPJdjJ2yTmM//TuhvRIsMUt
+         4uNo0SuEZNIk9vuVPVgfv7V2CGfeEGAIJ35PflO+f6YM+Ap5FFKTisAoffzcJUHiFBKB
+         CEOGDJk13cDIjfThNXEejWGBeyhsvsb3GtqMcuDHlw5bf6gDn629xIIaB3WTQtuYc7eG
+         lS/g==
+X-Gm-Message-State: AOAM531X0e3BwQ9rK/Gz9+ljve+c3QFdw1UPFkaQm+PyM2+Bic+Bsblu
+        5cgy2kR0YBboZvaiHptzmXU=
+X-Google-Smtp-Source: ABdhPJz/czwlZ8ht+b83Ri+dcsp2qwPJlaDD+vC8cYdIocRmkLaci47EHHB4TM7sM7H1dSMwMudoNA==
+X-Received: by 2002:a37:a589:: with SMTP id o131mr5308807qke.102.1592596146186;
+        Fri, 19 Jun 2020 12:49:06 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id t65sm7214284qke.83.2020.06.19.12.49.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 12:49:05 -0700 (PDT)
+Subject: Re: RFC - kernel selftest result documentation (KTAP)
+To:     "Bird, Tim" <Tim.Bird@sony.com>, Kees Cook <keescook@chromium.org>
+Cc:     "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>
+References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006141120.96FF8C5@keescook>
+ <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f27565bd-fd3d-def5-15ac-ec46950f2d9c@gmail.com>
+Date:   Fri, 19 Jun 2020 14:49:04 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
-In-Reply-To: <20200619181849.GR6578@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YTOPR0101CA0028.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::41) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.63.128) by YTOPR0101CA0028.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 19:48:50 +0000
-X-Originating-IP: [142.116.63.128]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6b31f8f3-21d1-47e8-e8b4-08d81489ca69
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2366:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB23666F033A1C836299F9904592980@SN1PR12MB2366.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0439571D1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BFaPyrdjkcHTiVW5mxRZ1bAm2sGkOtkPfbaFXp49135XROOYLmzA96AOnxTN9GNzwWG3GCh5Wu8l914CpTgMTuPhjoOGC0uYCWGJV4WvseEQgZjX+ecl5kXBuSpnMd6QOU7XpZFUZCI0Jg+mAp0LBUB/edxPaMhCwpFHM3Ay5ZZYfZGVwosQi5sOevHwaXIVSpJX344TK5JuWlw2o3Ou2YwoD/uIq6bA1ie3tic51ipxs5n9HKlpz3PSS0C7lvass9a9fV1h1rePUOnIu3Gf1tbu//8o7OyTPvkpqAtfR2rpXnSFEQjAtgpsfunLmmVIZInaeTvT3Lc6xFYWT2W5d1k0c+lmXHaVLhzTnEuuGCafFrH9L9MVp0cXKanNKCPMRXMCcXbzxN+yQKaRswJUjSszL6LwB5c8uTD2+poPWZo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(83380400001)(66476007)(66556008)(966005)(66946007)(7416002)(16526019)(2616005)(4326008)(36756003)(110136005)(31696002)(8936002)(956004)(6486002)(86362001)(2906002)(54906003)(478600001)(8676002)(316002)(186003)(16576012)(26005)(31686004)(52116002)(5660300002)(44832011)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: pr3VWPwyk0cvydYqAZZkmQvEYteaGvklT7Gh18MyvmWsg8Zcw8I4d6CWtr8wh7IXTVVV1ZJg+pBGZaAarHjbdA+yu6r0boX4CaNJDnx0B5JOjdPO6Pp8NsBJb8UwV3Xr5hc83zTGXljN2VtsZKACVSUS8M5fepya1uRZEAnFNr29c6FTiZisq8lKbQ4c2Jd/P3Yk6FoV47lS+yoDrtPxPl/+bqs7svDLxQm/uJXpUzWzFNEMQzTiUO8pYEoNqv9D5fS4upsd7Y+ibQgAYdrQOW/mSpj+IzWGbmLEFF2yDWF9X0a0NWWQeDGev2HAEEM6J5/pekIinRD2w4XceS6ZBrrdYChruDLZWFamr7q6tQR97kIM0d95RYjaO35576F5xvaLrcpYa0nGZiXYwm1UeD0Fx2ww4I6wMjgP/rdgCB1fAsz1Hn73Vpq8MyMAZPdHrppKxF4a5sAjhYsGCKu/pR68zoas5vs29ryIbM9LR3qAo9WCN2XGpKNnmKnyeyat
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b31f8f3-21d1-47e8-e8b4-08d81489ca69
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 19:48:51.5066
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EIMlq/N4DeJBMh4B2sfOovlW4tV4ECy4iXIEbqcQZIBq+Abw0vKvoE6uCcsQ6qB0GrjMDD+gLzSqBIugPf1KUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2366
+In-Reply-To: <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-06-19 um 2:18 p.m. schrieb Jason Gunthorpe:
-> On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
->> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
->>> On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+On 2020-06-15 14:07, Bird, Tim wrote:
+> Kees,
+> 
+> Thanks for the great feedback.  See comments inline below.
+> 
+>> -----Original Message-----
+>> From: Kees Cook <keescook@chromium.org>
+>>
+>> On Wed, Jun 10, 2020 at 06:11:06PM +0000, Bird, Tim wrote:
+>>> The kernel test result format consists of 5 major elements,
+>>> 4 of which are line-based:
+>>>  * the output version line
+>>>  * the plan line
+>>
+>> Note: making the plan line required differs from TAP13 and TAP14. I
+>> think it's the right choice, but we should be clear.
+> 
+> Noted.  In re-reading my doc, I've conflated my sections.  The first
+> section is "single-line", and the next section is "optional".  ???
+> I'll fix that.
+> 
+> With regards to making it optional or not, I don't have a strong
+> preference.  The extra info seems helpful in some circumstances.
+> I don't know if it's too onerous to make it a requirement or not.
+> I'd prefer if it was always there (either at the beginning or the end),
+> but if there is some situation where it's quite difficult to calculate,
+> then it would be best not to mandate it. I can't think of any impossible
+> situations at the moment.
+> 
+>>
+>>>  * one or more test result lines (also called test result lines)
+>>>  * a possible "Bail out!" line
+>>
+>> "Bail out!" to be moved to "optional" elements, since it may not appear.
+>> And we should clarify TAP13 and TAP14's language to say it should only
+>> appear when the test is aborting without running later tests -- for this
+>> reason, I think the optional "description" following "Bail out!" should
+>> be made required. I.e. it must be: "Bail out! $reason"
+> 
+> I'll make sure this is listed as optional.
+> I like adding a mandatory reason.
+>>
+>>> optional elements:
+>>>  * diagnostic data
+>>
+>> nit: diagnostic lines (not data)
+> OK.
+> 
+>>
+>>> The 5th element is diagnostic information, which is used to describe
+>>> items running in the test, and possibly to explain test results.
+>>> A sample test result is show below:
 >>>
->>>> The madness is only that device B's mmu notifier might need to wait
->>>> for fence_B so that the dma operation finishes. Which in turn has to
->>>> wait for device A to finish first.
->>> So, it sound, fundamentally you've got this graph of operations across
->>> an unknown set of drivers and the kernel cannot insert itself in
->>> dma_fence hand offs to re-validate any of the buffers involved?
->>> Buffers which by definition cannot be touched by the hardware yet.
+>>> Some other lines may be placed the test harness, and are not emitted
+>>> by individual test programs:
+>>>  * one or more test identification lines
+>>>  * a possible results summary line
 >>>
->>> That really is a pretty horrible place to end up..
+>>> Here is an example:
 >>>
->>> Pinning really is right answer for this kind of work flow. I think
->>> converting pinning to notifers should not be done unless notifier
->>> invalidation is relatively bounded. 
+>>> 	TAP version 13
+>>> 	1..1
+>>> 	# selftests: cpufreq: main.sh
+>>> 	# pid 8101's current affinity mask: fff
+>>> 	# pid 8101's new affinity mask: 1
+>>> 	ok 1 selftests: cpufreq: main.sh
+>>
+>> Nit: for examples, I this should should show more than one test.
+>> (Preferably, it should show all the possible cases, ok, not ok, SKIP,
+>> etc.)
+> Agree.  I will expand this.
+> 
+>>
+>>> The output version line is: "TAP version 13"
 >>>
->>> I know people like notifiers because they give a bit nicer performance
->>> in some happy cases, but this cripples all the bad cases..
+>>> The test plan is "1..1".
 >>>
->>> If pinning doesn't work for some reason maybe we should address that?
->> Note that the dma fence is only true for user ptr buffer which predate
->> any HMM work and thus were using mmu notifier already. You need the
->> mmu notifier there because of fork and other corner cases.
-> I wonder if we should try to fix the fork case more directly - RDMA
-> has this same problem and added MADV_DONTFORK a long time ago as a
-> hacky way to deal with it.
->
-> Some crazy page pin that resolved COW in a way that always kept the
-> physical memory with the mm that initiated the pin?
->
-> (isn't this broken for O_DIRECT as well anyhow?)
->
-> How does mmu_notifiers help the fork case anyhow? Block fork from
-> progressing?
+>>> Element details
+>>> ===============
+>>>
+>>> Output version line
+>>> -------------------
+>>> The output version line is always "TAP version 13".
+>>>
+>>> Although the kernel test result format has some additions
+>>> to the TAP13 format, the version line reported by kselftest tests
+>>> is (currently) always the exact string "TAP version 13"
+>>>
+>>> This is always the first line of test output.
+>>>
+>>> Test plan line
+>>> --------------
+>>> The test plan indicates the number of individual test cases intended to
+>>> be executed by the test. It always starts with "1.." and is followed
+>>> by the number of tests cases.  In the example above, 1..1", indicates
+>>> that this test reports only 1 test case.
+>>>
+>>> The test plan line can be placed in two locations:
+>>>  * the second line of test output, when the number of test cases is known
+>>>    in advance
+>>>  * as the last line of test output, when the number of test cases is not
+>>>    known in advance.
+>>>
+>>> Most often, the number of test cases is known in advance, and the test plan
+>>> line appears as the second line of test output, immediately following
+>>> the output version line.  The number of test cases might not be known
+>>> in advance if the number of tests is calculated from runtime data.
+>>> In this case, the test plan line is emitted as the last line of test
+>>> output.
+>>
+>> "... must be ..." ?
+>>
+>>>
+>>> Test result lines
+>>> -----------------
+>>> The test output consists of one or more test result lines that indicate
+>>> the actual results for the test.  These have the format:
+>>>
+>>>   <result> <number> <description> [<directive>] [<diagnostic data>]
+>>
+>> This should be:
+>>
+>> <result> <number> <description> [# [<directive> ][<diagnostic data>]]
+>>
+>>>
+>>> The ''result'' must appear at the start of a line (except for when a
+>>> test is nested, see below), and must consist of one of the following
+>>> two phrases:
+>>>   * ok
+>>>   * not ok
+>>>
+>>> If the test passed, then the result is reported as "ok".  If the test
+>>> failed, then the result is reported as "not ok".  These must be in
+>>> lower case, exactly as shown.
+>>>
+>>> The ''number'' in the test result line represents the number of the
+>>> test case being performed by the test program.  This is often used by
+>>> test harnesses as a unique identifier for each test case.  The test
+>>> number is a base-10 number, starting with 1.  It should increase by
+>>> one for each new test result line emitted.  If possible the number
+>>> for a test case should be kept the same over the lifetime of the test.
+>>>
+>>> The ''description'' is a short description of the test case.
+>>> This can be any string of words, but should avoid using colons (':')
+>>
+>> Must also avoid "#".
+> ok.
+>>
+>>> except as part of a fully qualifed test case name (see below).
+>>
+>> TAP13/14 makes description optional, are we making it required (I think
+>> we should). There seems to be a TAP13/14 "convention" of starting
+>> <description> with "- ", which I'm on the fence about it. It does make
+>> parsing maybe a little easier.
+> 
+> I would like the description to be required.
 
-How much the mmu_notifier blocks fork progress depends, on quickly we
-can preempt GPU jobs accessing affected memory. If we don't have
-fine-grained preemption capability (graphics), the best we can do is
-wait for the GPU jobs to complete. We can also delay submission of new
-GPU jobs to the same memory until the MMU notifier is done. Future jobs
-would use the new page addresses.
+Agree, description should be required.
 
-With fine-grained preemption (ROCm compute), we can preempt GPU work on
-the affected adders space to minimize the delay seen by fork.
+-Frank
 
-With recoverable device page faults, we can invalidate GPU page table
-entries, so device access to the affected pages stops immediately.
+> I don't have a strong opinion on the dash.  I'm OK with either one (dash
+> or no dash), but we should make kselftest and KUnit consistent.
+> 
+>>
+>>> Finally, it is possible to use a test directive to indicate another
+>>> possible outcome for a test: that it was skipped.  To report that
+>>> a test case was skipped, the result line should start with the
+>>> result "not ok", and the directive "# SKIP" should be placed after
+>>> the test description. (Note that this deviates from the TAP13
+>>> specification).
+>>
+>> This is what TAP14 changed, I think (i.e. directive follows description
+>> now).
+>>
+>>>
+>>> A test may be skipped for a variety of reasons, ranging for
+>>> insufficient privileges to missing features or resources required
+>>> to execute that test case.
+>>>
+>>> It is usually helpful if a diagnostic message is emitted to explain
+>>> the reasons for the skip.  If the message is a single line and is
+>>> short, the diagnostic message may be placed after the '# SKIP'
+>>> directive on the same line as the test result.  However, if it is
+>>> not on the test result line, it should precede the test line (see
+>>> diagnostic data, next).
+>>>
+>>> Diagnostic data
+>>> ---------------
+>>> Diagnostic data is text that reports on test conditions or test
+>>> operations, or that explains test results.  In the kernel test
+>>> result format, diagnostic data is placed on lines that start with a
+>>> hash sign, followed by a space ('# ').
+>>>
+>>> One special format of diagnostic data is a test identification line,
+>>> that has the fully qualified name of a test case.  Such a test
+>>> identification line marks the start of test output for a test case.
+>>>
+>>> In the example above, there are three lines that start with '#'
+>>> which precede the test result line:
+>>> 	# selftests: cpufreq: main.sh
+>>> 	# pid 8101's current affinity mask: fff
+>>> 	# pid 8101's new affinity mask: 1
+>>> These are used to indicate diagnostic data for the test case
+>>> 'selftests: cpufreq: main.sh'
+>>>
+>>> Material in comments between the identification line and the test
+>>> result line are diagnostic data that can help to interpret the
+>>> results of the test.
+>>>
+>>> The TAP specification indicates that automated test harnesses may
+>>> ignore any line that is not one of the mandatory prescribed lines
+>>> (that is, the output format version line, the plan line, a test
+>>> result line, or a "Bail out!" line.)
+>>>
+>>> Bail out!
+>>> ---------
+>>> If a line in the test output starts with 'Bail out!', it indicates
+>>> that the test was aborted for some reason.  It indicates that
+>>> the test is unable to proceed, and no additional tests will be
+>>> performed.
+>>>
+>>> This can be used at the very beginning of a test, or anywhere in the
+>>> middle of the test, to indicate that the test can not continue.
+>>
+>> I think the required syntax should be:
+>>
+>> Bail out! <reason>
+>>
+>> And to make it clear that this is optionally used to indicate an early
+>> abort. (Though with a leading plan line, a parser should be able to
+>> determine this on its own.)
+>>
+>>> --- from here on is not-yet-organized material
+>>>
+>>> Tip:
+>>>  - don't change the test plan based on skipped tests.
+>>>    - it is better to report that a test case was skipped, than to
+>>>      not report it
+>>>    - that is, don't adjust the number of test cases based on skipped
+>>>      tests
+>>
+>> Yes, totally.
+>>
+>>> Other things to mention:
+>>> TAP13 elements not used:
+>>>  - yaml for diagnostic messages
+>>>    - reason: try to keep things line-based, since output from other things
+>>>    may be interspersed with messages from the test itself
+>>
+>> Agreed: the yaml extension is not sensible for our use.
+>>
+>>>  - TODO directive
+>>
+>> Agreed: SKIP should cover everything TODO does.
+>>
+>>> KTAP Extensions beyond TAP13:
+>>>  - nesting
+>>
+>> (I would call this 'subtests')
+> Sounds good.  Will do.
+> 
+>>
+>>>    - via indentation
+>>>      - indentation makes it easier for humans to read
+>>
+>> And allows for separable parsing of subtests.
+> Agree.  I'll try to work that into the doc.
+> 
+>>
+>>>  - test identifier
+>>>     - multiple parts, separated by ':'
+>>
+>> This is interesting... is the goal to be able to report test status over
+>> time by name?
+> Yes.  KernelCI and Fuego have the notions of a testcase namespace
+> hierarchy.  As the number of tests expands it is helpful to have
+> the name-space for a sub-test be limited, just like a filesystem hierarchy
+> provides scope for the names of objects (directories and files) that
+> it contains.
+> 
+>>
+>>>  - summary lines
+>>>    - can be skipped by CI systems that do their own calculations
+>>
+>> Right -- I think per-test summary line should be included for the humans
+>> reading a single test (which may scroll off the screen).
+>>
+>>> Other notes:
+>>>  - automatic assignment of result status based on exit code
+>>
+>> This is, I think, a matter for the kselftest running infrastructure, not
+>> the KTAP output?
+> Agreed.  This doesn't have anything to do with the API between
+> the tests and the results processor.  I'll take it out.
+>>
+>>> Tips:
+>>>  - do NOT describe the result in the test line
+>>>    - the test case description should be the same whether the test
+>>>      succeeds or fails
+>>>    - use diagnostic lines to describe or explain results, if this is
+>>>      desirable
+>>
+>> Right.
+>>
+>>>  - test numbers are considered harmful
+>>>    - test harnesses should use the test description as the identifier
+>>>    - test numbers change when testcases are added or removed
+>>>      - which means that results can't be compared between different
+>>>        versions of the test
+>>
+>> Right.
+>>
+>>>  - recommendations for diagnostic messages:
+>>>    - reason for failure
+>>>    - reason for skip
+>>>    - diagnostic data should always preceding the result line
+>>>      - problem: harness may emit result before test can do assessment
+>>>        to determine reason for result
+>>>      - this is what the kernel uses
+>>
+>> Right.
+>>
+>>> Differences between kernel test result format and TAP13:
+>>>  - in KTAP the "# SKIP" directive is placed after the description on
+>>>    the test result line
+>>
+>> Right, this is the same as TAP14, IIRC. KTAP's big deltas are the "#"
+>> diagnostic lines and the subtest handling.
+>>
+>>> ====== start of ktap-doc-rfc.txt ======
+>>> OK - that's the end of the RFC doc.
+>>>
+>>> Here are a few questions:
+>>>  - is this document desired or not?
+>>
+>> Yes.
+> Great.  I'll make this a priority to work on.
+> 
+>>
+>>>     - is it too long or too short?
+>>
+>> Should be slightly longer: more examples.
+>>
+>>>  - if the document is desired, where should it be placed?
+>>>    I assume somewhere under Documentation, and put into
+>>>    .rst format. Suggestions for a name and location are welcome.
+>>
+>> Yes Documentation/*.rst Not sure on name yet, but where do kselftest
+>> docs live? :)
+> Documentation/dev-tools/kselftest.rst
+> 
+> I'll put this at: Documentation/dev-tools/test-results-format.rst
+> 
+>>
+>>>  - is this document accurate?
+>>>    I think KUNIT does a few things differently than this description.
+>>
+>> Let's fix it. :)
+>>
+>>>    - is the intent to have kunit and kselftest have the same output format?
+>>>       if so, then these should be rationalized.
+>>
+>> Yes please.
+>>
+>>> Finally,
+>>>   - Should a SKIP result be 'ok' (TAP13 spec) or 'not ok' (current kselftest practice)?
+>>> See https://testanything.org/tap-version-13-specification.html
+>>
+>> Oh! I totally missed this. Uhm. I think "not ok" makes sense to me "it
+>> did not run successfully". ... but ... Uhhh ... how do XFAIL and SKIP
+>> relate? Neither SKIP nor XFAIL count toward failure, though, so both
+>> should be "ok"? I guess we should change it to "ok".
+> 
+> I have the same initial impression.  In my mind, a skip is "not ok", since
+> the test didn't run. However, a SKIP and should be treated differently
+> from either "ok" or "not ok" by the results interpreter, so I don't think it
+> matters.  Originally I was averse to changing the SKIP result to "ok"
+> (as suggested by Paulo Bonzini [1]), but I checked and it's pretty trivial to
+> change the parser in Fuego, and it would make the kernel results format
+> match the TAP13 spec.  I don't see a strong reason for us to be different
+> from TAP13 here.
+> 
+> I raised this issue on our automated testing conference call last week
+> (which includes people from the CKI, Fuego, KernelCI and LKFT projects), and
+> so people should be chiming in if their parser will have a problem with this change.)
+> 
+> [1]  https://lkml.kernel.org/lkml/20200610154447.15826-1-pbonzini@redhat.com/T/
+> 
+> Thanks very much for the feedback.
+>  -- Tim
+> 
 
-In all cases, the end result is, that the device page table gets updated
-with the address of the copied pages before the GPU accesses the COW
-memory again.Without the MMU notifier, we'd end up with the GPU
-corrupting memory of the other process.
-
-Regards,
-  Felix
-
-
->
->> I probably need to warn AMD folks again that using HMM means that you
->> must be able to update the GPU page table asynchronously without
->> fence wait.
-> It is kind of unrelated to HMM, it just shouldn't be using mmu
-> notifiers to replace page pinning..
->
->> The issue for AMD is that they already update their GPU page table
->> using DMA engine. I believe this is still doable if they use a
->> kernel only DMA engine context, where only kernel can queue up jobs
->> so that you do not need to wait for unrelated things and you can
->> prioritize GPU page table update which should translate in fast GPU
->> page table update without DMA fence.
-> Make sense
->
-> I'm not sure I saw this in the AMD hmm stuff - it would be good if
-> someone would look at that. Every time I do it looks like the locking
-> is wrong.
->
-> Jason
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
