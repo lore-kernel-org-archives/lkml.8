@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E695C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F33C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36C0207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D462B21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582464;
-	bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
+	s=default; t=1592582467;
+	bh=eCK/xj4hbKqq01/VVQSl0jOGuyqqRgI06S7nEiPHvTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wd30DullAxUedRAIF2Q7HfLXlMwbpF2GvbyEegjQAdtPnyctL6qaGSGr4Z9Jhd8Ck
-	 5gsCukq0th8LGtdRApPXyHbn/pay0Ua6c+XoBcF6NG3vwFyNGBuLjH+l/kSLRtgAG1
-	 djWKsKJs9oJBIE2ydQXHUoktpKI88nzNyE8z/Zqc=
+	b=MXcY8gxJQ7R9O0BPnviBV3W2F+4DRYBjSMobm4diAdkVOu2rI0k+JnZL7LjZ5lcJ9
+	 bj8hmT06WYAW2H8cD+PPiM9s7HiARxF3JAvXRZxDh9OZmNycgifA7Ub5s0cr6cdsgy
+	 YcI7G7w2gOf9I+GgZJgo+WraxOIoKrpDMcYGPbEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392818AbgFSQBB (ORCPT
+        id S2394153AbgFSQBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392279AbgFSPNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:51 -0400
+        id S2392019AbgFSPNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1BC020776;
-        Fri, 19 Jun 2020 15:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17FF72158C;
+        Fri, 19 Jun 2020 15:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579630;
-        bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
+        s=default; t=1592579627;
+        bh=eCK/xj4hbKqq01/VVQSl0jOGuyqqRgI06S7nEiPHvTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTduBa1DUriGPtqRTJm8I5hMdFYRn/X7MNPJoJgy1xKaup8mckkDxR8OtP6SaiHXh
-         us564OGSGZ0y6gYSOThDm3sEtnrZVtFrlsnFLxz+H378hLsKpNcCmGzbZdY6vgIGLZ
-         9Xjf4LgjyiLp+6/I10RIEdYL5EbfQLSPazzGz3Sc=
+        b=mmSckPvZ1GeVTgiCTorj3/X8U17aHIrepcvq354C3k+2G7uod5yjqf6RIP3YxOVSg
+         Hv1pa7K34Ks7WvD3AwxFBzRlsgBw5Hdm/QJB5fkM+SwXWKCE4C3lwwOGaLJ9sh8MeH
+         1R3QlHYIMM5fRzCXVTEP/SE7gigmP4HM1PAYusd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 207/261] clk: mediatek: assign the initial value to clk_init_data of mtk_mux
-Date:   Fri, 19 Jun 2020 16:33:38 +0200
-Message-Id: <20200619141659.823383120@linuxfoundation.org>
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 206/261] media: ov5640: fix use of destroyed mutex
+Date:   Fri, 19 Jun 2020 16:33:37 +0200
+Message-Id: <20200619141659.773726947@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,40 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiyi Lu <weiyi.lu@mediatek.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-commit 571cfadcc628dd5591444f7289e27445ea732f4c upstream.
+commit bfcba38d95a0aed146a958a84a2177af1459eddc upstream.
 
-When some new clock supports are introduced, e.g. [1]
-it might lead to an error although it should be NULL because
-clk_init_data is on the stack and it might have random values
-if using without initialization.
-Add the missing initial value to clk_init_data.
+v4l2_ctrl_handler_free() uses hdl->lock, which in ov5640 driver is set
+to sensor's own sensor->lock. In ov5640_remove(), the driver destroys the
+sensor->lock first, and then calls v4l2_ctrl_handler_free(), resulting
+in the use of the destroyed mutex.
 
-[1] https://android-review.googlesource.com/c/kernel/common/+/1278046
+Fix this by calling moving the mutex_destroy() to the end of the cleanup
+sequence, as there's no need to destroy the mutex as early as possible.
 
-Fixes: a3ae549917f1 ("clk: mediatek: Add new clkmux register API")
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1590560749-29136-1-git-send-email-weiyi.lu@mediatek.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: stable@vger.kernel.org # v4.14+
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/mediatek/clk-mux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/mediatek/clk-mux.c
-+++ b/drivers/clk/mediatek/clk-mux.c
-@@ -160,7 +160,7 @@ struct clk *mtk_clk_register_mux(const s
- 				 spinlock_t *lock)
- {
- 	struct mtk_clk_mux *clk_mux;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	struct clk *clk;
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -3068,8 +3068,8 @@ static int ov5640_probe(struct i2c_clien
+ free_ctrls:
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+ entity_cleanup:
+-	mutex_destroy(&sensor->lock);
+ 	media_entity_cleanup(&sensor->sd.entity);
++	mutex_destroy(&sensor->lock);
+ 	return ret;
+ }
  
- 	clk_mux = kzalloc(sizeof(*clk_mux), GFP_KERNEL);
+@@ -3079,9 +3079,9 @@ static int ov5640_remove(struct i2c_clie
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+ 
+ 	v4l2_async_unregister_subdev(&sensor->sd);
+-	mutex_destroy(&sensor->lock);
+ 	media_entity_cleanup(&sensor->sd.entity);
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
++	mutex_destroy(&sensor->lock);
+ 
+ 	return 0;
+ }
 
 
