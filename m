@@ -2,54 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4829EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E43C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C3E2193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59F921852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578696;
-	bh=jYmhetrVkNgZTNo37SbeiWGjdac6A+k42aQczdxV2LA=;
+	s=default; t=1592578699;
+	bh=5StiBJX239xbQ2TBSQhispyxs0136n1QRkV2NzneILo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0CwrJ+B6v0eg2S8sR6lo3ejfRC7+nn9FH8EXs2xfojBTIPa2AMvnbg+007AyYhHu
-	 h4/U902S0M0dkfYzYFUYwCa+ijEKvP3WyfWlh9ST8tS8NSj0ezj4Aajkx5r7ZBTprN
-	 fnwGZs7frkZxXU/IClyd2BmWzc6HXCHPhoyyIi1s=
+	b=aXzHgrht0+0lrvN9vaE6AiqPNrRlhxqEcWb/Evb7EunWOAOeOAvSb/wGgthIU73Rk
+	 1qY2ugt5eBfMcQaFI++9vOw41PLM5GsVh8i9jQYioM1s7IZ0zpC38LRT7quRtDAYgt
+	 YfMk/+wpoMIrWd8eYo3IOXL28yj3EzTHv5O9Tic8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390363AbgFSO6O (ORCPT
+        id S2390370AbgFSO6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53696 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390321AbgFSO6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:06 -0400
+        id S2390361AbgFSO6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED4A21919;
-        Fri, 19 Jun 2020 14:58:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82BC621919;
+        Fri, 19 Jun 2020 14:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578686;
-        bh=jYmhetrVkNgZTNo37SbeiWGjdac6A+k42aQczdxV2LA=;
+        s=default; t=1592578694;
+        bh=5StiBJX239xbQ2TBSQhispyxs0136n1QRkV2NzneILo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aoYwnO35gd6pd+0BhF+JrxIkft1D+QyATeUrxVrur7aK+S2nIRShIdAynLL9+cGle
-         MYo9U+p42EPm+q/xUJMSfBHDOswTUhLuMFzMw4L7+4xeYdXoDOBzGmK9l8uzyZtGos
-         O42zFJ71lBguHHIXXnuOfrjI77v3g8lwSbtzJ7O0=
+        b=GGqvF10m1kJS0uI0o+p4+B9LDHt3/N0fFDbNyVO4YcKjKu0h/ktqwwYpkoEVUooW0
+         DM0nDYRoZCsTKfAKjgbzs96Beof0Fti3N7jNO72gqZgkaYUXwdL8K7QS9f8bh2Km8k
+         lH4enfCoSfOPA2aQPn4oC0C0evqJnMxcFE4oir/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Tobias Baumann <017623705678@o2online.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/267] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
-Date:   Fri, 19 Jun 2020 16:31:41 +0200
-Message-Id: <20200619141654.404095240@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 090/267] mmc: sdio: Fix potential NULL pointer error in mmc_sdio_init_card()
+Date:   Fri, 19 Jun 2020 16:31:15 +0200
+Message-Id: <20200619141653.187262591@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,79 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 91995b904ec2e44b5c159ac6a5d3f154345a4de7 ]
+commit f04086c225da11ad16d7f9a2fbca6483ab16dded upstream.
 
-The vendor driver (from the 3.10 kernel) triggers a soft reset every
-time before starting a new command. While this fixes a problem where
-SDIO cards are not detected at all (because all commands simply
-timed out) this hurts SD card read performance a bit (in my tests
-between 10% to 20%).
+During some scenarios mmc_sdio_init_card() runs a retry path for the UHS-I
+specific initialization, which leads to removal of the previously allocated
+card. A new card is then re-allocated while retrying.
 
-Trigger a soft reset after we got a CRC error or if the previous command
-timed out (just like the vendor driver from the same 3.10 kernel for the
-newer SDHC controller IP does). This fixes detection of SDIO cards and
-doesn't hurt SD card read performance at the same time.
+However, in one of the corresponding error paths we may end up to remove an
+already removed card, which likely leads to a NULL pointer exception. So,
+let's fix this.
 
-With this patch the initialization of an RTL8723BS SDIO card looks like
-this:
-  req done (CMD52): -110: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
-  starting CMD0 arg 00000000 flags 000000c0
-  req done (CMD0): 0: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
-  starting CMD8 arg 000001aa flags 000002f5
-  req done (CMD8): -110: 00000000 00000000 00000000 00000000
-  starting CMD5 arg 00000000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD5 arg 00200000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD3 arg 00000000 flags 00000075
-  req done (CMD3): 0: 00010000 00000000 00000000 00000000
-  starting CMD7 arg 00010000 flags 00000015
-  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
-  starting CMD52 arg 00000000 flags 00000195
-  req done (CMD52): 0: 00001032 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  starting CMD52 arg 00000e00 flags 00000195
-  req done (CMD52): 0: 00001000 00000000 00000000 00000000
-  starting CMD52 arg 80000e02 flags 00000195
-  req done (CMD52): 0: 00001002 00000000 00000000 00000000
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
-  starting CMD52 arg 00020000 flags 00000195
-  req done (CMD52): 0: 00001007 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  new high speed SDIO card at address 0001
-
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Link: https://lore.kernel.org/r/20200503222805.2668941-1-martin.blumenstingl@googlemail.com
-Tested-by: Tobias Baumann <017623705678@o2online.de>
+Fixes: 5fc3d80ef496 ("mmc: sdio: don't use rocr to check if the card could support UHS mode")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lore.kernel.org/r/20200430091640.455-2-ulf.hansson@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/meson-mx-sdio.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/core/sdio.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index 1c062473b1c2..27837a794e7b 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -249,6 +249,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -720,9 +720,8 @@ try_again:
+ 			/* Retry init sequence, but without R4_18V_PRESENT. */
+ 			retries = 0;
+ 			goto try_again;
+-		} else {
+-			goto remove;
+ 		}
++		return err;
+ 	}
  
- 	mrq = host->mrq;
- 
-+	if (host->cmd->error)
-+		meson_mx_mmc_soft_reset(host);
-+
- 	host->mrq = NULL;
- 	host->cmd = NULL;
- 
--- 
-2.25.1
-
+ 	/*
 
 
