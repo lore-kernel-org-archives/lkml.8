@@ -2,222 +2,185 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7842AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4081C21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581838;
-	bh=aEP02lQk8Eppzu1tPNyW3ofaAG76xRvKQ1rxZav90zY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLztOR+PDRNttLNc+Xlz8a0PxNYEGiryC1ElzNpb6+ao2wjNzlUiGvuhfaIW78nha
-	 EvUHGn2ogvTP/UdeTB6vARvBJMXbNMXMvBnHXDwLb3ok+IDtqhDLREppB3ke10JYB7
-	 /kGiCIbe2GZWBPiyhoJSHCdUK04N1SFcoInMWKNM=
+	by mail.kernel.org (Postfix) with ESMTP id 5556C20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FUNxybH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394130AbgFSPuf (ORCPT
+        id S2394141AbgFSPuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393283AbgFSPYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B57021548;
-        Fri, 19 Jun 2020 15:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580271;
-        bh=aEP02lQk8Eppzu1tPNyW3ofaAG76xRvKQ1rxZav90zY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDazRkcb+Nl0M4QVXxtZ3RzX0cGZweiZAl3IrMsNJlOWwX6FTejuNq/HVKXmZeRjX
-         aLBTMEnjsMPGNM3W7eLRkZDUsh8PhKF/doenfNtWN6V9WyRaVwHbnpY4onAPULqqle
-         Zv4MOUgYYM9WPmTZ0NxF/Qo5WQ8xBtyDIlXcSpME=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 187/376] md: dont flush workqueue unconditionally in md_open
-Date:   Fri, 19 Jun 2020 16:31:45 +0200
-Message-Id: <20200619141719.200855856@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394132AbgFSPuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:50:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F93C06174E;
+        Fri, 19 Jun 2020 08:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=gqRrOSjrTbnmLixbeSJjNyufrKjbx8bQ0hoWXFgHbbA=; b=FUNxybH2BQdZYCAyU9DCQsfcFT
+        milNvBpSYbFN9uggxqVw0KSSDEG8nnbG+ql3mVjPp7AGcKj7l66qo7y2pl6Hsv7KKr6kCa51ScPTA
+        EWwUCzuL0G+vNeMOviK7AWZvLfdFPi8VUhljOifHnmuFJUfXW3CJKbQ1H2c5PTeuGieu8SbXAa1Dp
+        YrWnLx/3z4T6G+ocOe4jNVdXNTaCsztfIZqLGclRIelAdmBMlLEo5XKpVhrctiNhazPND5Tcu3MFM
+        mJb5LKpxVvyhwWPmmJKuO6DX/PwVz4UKmTlTElCrFBDQmypl5AUn9Db+94F3puc3J3a2YbmpFPz9Q
+        NxC1wcFg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmJHo-0005rh-J2; Fri, 19 Jun 2020 15:50:36 +0000
+Date:   Fri, 19 Jun 2020 08:50:36 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        agruenba@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [RFC] Bypass filesystems for reading cached pages
+Message-ID: <20200619155036.GZ8681@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit f6766ff6afff70e2aaf39e1511e16d471de7c3ae ]
+This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
+The advantage of this patch is that we can avoid taking any filesystem
+lock, as long as the pages being accessed are in the cache (and we don't
+need to readahead any pages into the cache).  We also avoid an indirect
+function call in these cases.
 
-We need to check mddev->del_work before flush workqueu since the purpose
-of flush is to ensure the previous md is disappeared. Otherwise the similar
-deadlock appeared if LOCKDEP is enabled, it is due to md_open holds the
-bdev->bd_mutex before flush workqueue.
+I'm sure reusing the name call_read_iter() is the wrong way to go about
+this, but renaming all the callers would make this a larger patch.
+I'm happy to do it if something like this stands a chance of being
+accepted.
 
-kernel: [  154.522645] ======================================================
-kernel: [  154.522647] WARNING: possible circular locking dependency detected
-kernel: [  154.522650] 5.6.0-rc7-lp151.27-default #25 Tainted: G           O
-kernel: [  154.522651] ------------------------------------------------------
-kernel: [  154.522653] mdadm/2482 is trying to acquire lock:
-kernel: [  154.522655] ffff888078529128 ((wq_completion)md_misc){+.+.}, at: flush_workqueue+0x84/0x4b0
-kernel: [  154.522673]
-kernel: [  154.522673] but task is already holding lock:
-kernel: [  154.522675] ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522691]
-kernel: [  154.522691] which lock already depends on the new lock.
-kernel: [  154.522691]
-kernel: [  154.522694]
-kernel: [  154.522694] the existing dependency chain (in reverse order) is:
-kernel: [  154.522696]
-kernel: [  154.522696] -> #4 (&bdev->bd_mutex){+.+.}:
-kernel: [  154.522704]        __mutex_lock+0x87/0x950
-kernel: [  154.522706]        __blkdev_get+0x79/0x590
-kernel: [  154.522708]        blkdev_get+0x65/0x140
-kernel: [  154.522709]        blkdev_get_by_dev+0x2f/0x40
-kernel: [  154.522716]        lock_rdev+0x3d/0x90 [md_mod]
-kernel: [  154.522719]        md_import_device+0xd6/0x1b0 [md_mod]
-kernel: [  154.522723]        new_dev_store+0x15e/0x210 [md_mod]
-kernel: [  154.522728]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522732]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522735]        vfs_write+0xad/0x1a0
-kernel: [  154.522737]        ksys_write+0xa4/0xe0
-kernel: [  154.522745]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522748]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522749]
-kernel: [  154.522749] -> #3 (&mddev->reconfig_mutex){+.+.}:
-kernel: [  154.522752]        __mutex_lock+0x87/0x950
-kernel: [  154.522756]        new_dev_store+0xc9/0x210 [md_mod]
-kernel: [  154.522759]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522761]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522763]        vfs_write+0xad/0x1a0
-kernel: [  154.522765]        ksys_write+0xa4/0xe0
-kernel: [  154.522767]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522769]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522770]
-kernel: [  154.522770] -> #2 (kn->count#253){++++}:
-kernel: [  154.522775]        __kernfs_remove+0x253/0x2c0
-kernel: [  154.522778]        kernfs_remove+0x1f/0x30
-kernel: [  154.522780]        kobject_del+0x28/0x60
-kernel: [  154.522783]        mddev_delayed_delete+0x24/0x30 [md_mod]
-kernel: [  154.522786]        process_one_work+0x2a7/0x5f0
-kernel: [  154.522788]        worker_thread+0x2d/0x3d0
-kernel: [  154.522793]        kthread+0x117/0x130
-kernel: [  154.522795]        ret_from_fork+0x3a/0x50
-kernel: [  154.522796]
-kernel: [  154.522796] -> #1 ((work_completion)(&mddev->del_work)){+.+.}:
-kernel: [  154.522800]        process_one_work+0x27e/0x5f0
-kernel: [  154.522802]        worker_thread+0x2d/0x3d0
-kernel: [  154.522804]        kthread+0x117/0x130
-kernel: [  154.522806]        ret_from_fork+0x3a/0x50
-kernel: [  154.522807]
-kernel: [  154.522807] -> #0 ((wq_completion)md_misc){+.+.}:
-kernel: [  154.522813]        __lock_acquire+0x1392/0x1690
-kernel: [  154.522816]        lock_acquire+0xb4/0x1a0
-kernel: [  154.522818]        flush_workqueue+0xab/0x4b0
-kernel: [  154.522821]        md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522823]        __blkdev_get+0xea/0x590
-kernel: [  154.522825]        blkdev_get+0x65/0x140
-kernel: [  154.522828]        do_dentry_open+0x1d1/0x380
-kernel: [  154.522831]        path_openat+0x567/0xcc0
-kernel: [  154.522834]        do_filp_open+0x9b/0x110
-kernel: [  154.522836]        do_sys_openat2+0x201/0x2a0
-kernel: [  154.522838]        do_sys_open+0x57/0x80
-kernel: [  154.522840]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522842]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522844]
-kernel: [  154.522844] other info that might help us debug this:
-kernel: [  154.522844]
-kernel: [  154.522846] Chain exists of:
-kernel: [  154.522846]   (wq_completion)md_misc --> &mddev->reconfig_mutex --> &bdev->bd_mutex
-kernel: [  154.522846]
-kernel: [  154.522850]  Possible unsafe locking scenario:
-kernel: [  154.522850]
-kernel: [  154.522852]        CPU0                    CPU1
-kernel: [  154.522853]        ----                    ----
-kernel: [  154.522854]   lock(&bdev->bd_mutex);
-kernel: [  154.522856]                                lock(&mddev->reconfig_mutex);
-kernel: [  154.522858]                                lock(&bdev->bd_mutex);
-kernel: [  154.522860]   lock((wq_completion)md_misc);
-kernel: [  154.522861]
-kernel: [  154.522861]  *** DEADLOCK ***
-kernel: [  154.522861]
-kernel: [  154.522864] 1 lock held by mdadm/2482:
-kernel: [  154.522865]  #0: ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522868]
-kernel: [  154.522868] stack backtrace:
-kernel: [  154.522873] CPU: 1 PID: 2482 Comm: mdadm Tainted: G           O      5.6.0-rc7-lp151.27-default #25
-kernel: [  154.522875] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-kernel: [  154.522878] Call Trace:
-kernel: [  154.522881]  dump_stack+0x8f/0xcb
-kernel: [  154.522884]  check_noncircular+0x194/0x1b0
-kernel: [  154.522888]  ? __lock_acquire+0x1392/0x1690
-kernel: [  154.522890]  __lock_acquire+0x1392/0x1690
-kernel: [  154.522893]  lock_acquire+0xb4/0x1a0
-kernel: [  154.522895]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522898]  flush_workqueue+0xab/0x4b0
-kernel: [  154.522900]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522905]  ? md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522908]  md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522910]  __blkdev_get+0xea/0x590
-kernel: [  154.522912]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522914]  blkdev_get+0x65/0x140
-kernel: [  154.522916]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522918]  do_dentry_open+0x1d1/0x380
-kernel: [  154.522921]  path_openat+0x567/0xcc0
-kernel: [  154.522923]  ? __lock_acquire+0x380/0x1690
-kernel: [  154.522926]  do_filp_open+0x9b/0x110
-kernel: [  154.522929]  ? __alloc_fd+0xe5/0x1f0
-kernel: [  154.522935]  ? kmem_cache_alloc+0x28c/0x630
-kernel: [  154.522939]  ? do_sys_openat2+0x201/0x2a0
-kernel: [  154.522941]  do_sys_openat2+0x201/0x2a0
-kernel: [  154.522944]  do_sys_open+0x57/0x80
-kernel: [  154.522946]  do_syscall_64+0x64/0x2b0
-kernel: [  154.522948]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522951] RIP: 0033:0x7f98d279d9ae
+Compared to Andreas' patch, I removed the -ECANCELED return value.
+We can happily return 0 from generic_file_buffered_read() and it's less
+code to handle that.  I bypass the attempt to read from the page cache
+for O_DIRECT reads, and for inodes which have no cached pages.  Hopefully
+this will avoid calling generic_file_buffered_read() for drivers which
+implement read_iter() (although I haven't audited them all to check that
 
-And md_alloc also flushed the same workqueue, but the thing is different
-here. Because all the paths call md_alloc don't hold bdev->bd_mutex, and
-the flush is necessary to avoid race condition, so leave it as it is.
+This could go horribly wrong if filesystems rely on doing work in their
+->read_iter implementation (eg checking i_size after acquiring their
+lock) instead of keeping the page cache uptodate.  On the other hand,
+the ->map_pages() method is already called without locks, so filesystems
+should already be prepared for this.
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Arguably we could do something similar for writes.  I'm a little more
+scared of that patch since filesystems are more likely to want to do
+things to keep their fies in sync for writes.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 271e8a587354..41eead9cbee9 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7752,7 +7752,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
- 		 */
- 		mddev_put(mddev);
- 		/* Wait until bdev->bd_disk is definitely gone */
--		flush_workqueue(md_misc_wq);
-+		if (work_pending(&mddev->del_work))
-+			flush_workqueue(md_misc_wq);
- 		/* Then retry the open from the top */
- 		return -ERESTARTSYS;
- 	}
--- 
-2.25.1
-
-
+diff --git a/fs/read_write.c b/fs/read_write.c
+index bbfa9b12b15e..7b899538d3c0 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -401,6 +401,41 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
+ 				read_write == READ ? MAY_READ : MAY_WRITE);
+ }
+ 
++ssize_t call_read_iter(struct file *file, struct kiocb *iocb,
++				     struct iov_iter *iter)
++{
++	ssize_t written, ret = 0;
++
++	if (iocb->ki_flags & IOCB_DIRECT)
++		goto uncached;
++	if (!file->f_mapping->nrpages)
++		goto uncached;
++
++	iocb->ki_flags |= IOCB_CACHED;
++	ret = generic_file_buffered_read(iocb, iter, 0);
++	iocb->ki_flags &= ~IOCB_CACHED;
++
++	if (likely(!iov_iter_count(iter)))
++		return ret;
++
++	if (ret == -EAGAIN) {
++		if (iocb->ki_flags & IOCB_NOWAIT)
++			return ret;
++		ret = 0;
++	} else if (ret < 0) {
++		return ret;
++	}
++
++uncached:
++	written = ret;
++
++	ret = file->f_op->read_iter(iocb, iter);
++	if (ret > 0)
++		written += ret;
++
++	return written ? written : ret;
++}
++
+ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
+ {
+ 	struct iovec iov = { .iov_base = buf, .iov_len = len };
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 6c4ab4dc1cd7..0985773feffd 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -315,6 +315,7 @@ enum rw_hint {
+ #define IOCB_SYNC		(1 << 5)
+ #define IOCB_WRITE		(1 << 6)
+ #define IOCB_NOWAIT		(1 << 7)
++#define IOCB_CACHED		(1 << 8)
+ 
+ struct kiocb {
+ 	struct file		*ki_filp;
+@@ -1895,11 +1896,7 @@ struct inode_operations {
+ 	int (*set_acl)(struct inode *, struct posix_acl *, int);
+ } ____cacheline_aligned;
+ 
+-static inline ssize_t call_read_iter(struct file *file, struct kiocb *kio,
+-				     struct iov_iter *iter)
+-{
+-	return file->f_op->read_iter(kio, iter);
+-}
++ssize_t call_read_iter(struct file *, struct kiocb *, struct iov_iter *);
+ 
+ static inline ssize_t call_write_iter(struct file *file, struct kiocb *kio,
+ 				      struct iov_iter *iter)
+diff --git a/mm/filemap.c b/mm/filemap.c
+index f0ae9a6308cb..4ee97941a1f2 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2028,7 +2028,7 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 
+ 		page = find_get_page(mapping, index);
+ 		if (!page) {
+-			if (iocb->ki_flags & IOCB_NOWAIT)
++			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_CACHED))
+ 				goto would_block;
+ 			page_cache_sync_readahead(mapping,
+ 					ra, filp,
+@@ -2038,12 +2038,16 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 				goto no_cached_page;
+ 		}
+ 		if (PageReadahead(page)) {
++			if (iocb->ki_flags & IOCB_CACHED) {
++				put_page(page);
++				goto out;
++			}
+ 			page_cache_async_readahead(mapping,
+ 					ra, filp, page,
+ 					index, last_index - index);
+ 		}
+ 		if (!PageUptodate(page)) {
+-			if (iocb->ki_flags & IOCB_NOWAIT) {
++			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_CACHED)) {
+ 				put_page(page);
+ 				goto would_block;
+ 			}
 
