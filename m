@@ -2,161 +2,138 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03675204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22264204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585387;
-	bh=iZlanTZ3hDfaOIjivh2KFVLaFqpJCYaQSMincLpUqoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeZtU20KOdOoxJbb5v//R9YZFZjDXcHvPTKEQAXFW+22e6tGQ2+5jC4lc9VS5id2r
-	 e1mLkPzBth+RsHDbLk6My/qeGAy7DeqghUQqZ2ChUqdf5PWcH5pn18tq73pHyObjlK
-	 +P+UBxOOgI6KFaCGFk5r6v59LYTRzK1Ec0KTuGVY=
+	s=default; t=1592585400;
+	bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WDCDwIFjNmfc9cYZZ1K1OE+YMPpiI3sSMc8oYM+sb6XQXCgvjVtHPVzq75irpz9ne
+	 zvSLtn/V5krtOin5QL9vlc3BXKEOdEZ4m47zAx3XiF0tIN+Ri3CaDkfwvYNX0FkfEM
+	 xJMisFrD/WKlQglJmnFk/Ty9m6SrWaH2iOlL4D1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405042AbgFSQtp (ORCPT
+        id S2405701AbgFSQt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56836 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388022AbgFSOjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2387986AbgFSOjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:09 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D08208B8;
-        Fri, 19 Jun 2020 14:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673B320DD4;
+        Fri, 19 Jun 2020 14:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577564;
-        bh=iZlanTZ3hDfaOIjivh2KFVLaFqpJCYaQSMincLpUqoc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nv+bF7WTkYOSe4VzPyMBiLgnl151/krywTi1BdNvbrN9LM0oWIhr53YWVUdmR35VK
-         tpNcGsHNQ/bbDvflHzTM2c5AGnkuQIGp+pUMprmygXrs/DpzLfBEwPosrOqyhxYjQ4
-         maY3KaT8j43RA+a55Ftvt8Vaoqg78iOzSbknu+Q0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 070/101] macvlan: Skip loopback packets in RX handler
-Date:   Fri, 19 Jun 2020 16:32:59 +0200
-Message-Id: <20200619141617.711217650@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
-References: <20200619141614.001544111@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592577548;
+        bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b6Q4n+E5Dk+L+BUYxW++OziNU6+ncxzIZSDlPwNkoW0CxkAggKh8nfcXgFXLzxuDx
+         EJ/7nNdgDgcw81Mjo+PHn4VfVxOsxOopZmTnRo56r2nc44BOoraHqojrIopiFOUiUt
+         vAjcvxaaljitJIN4Mfu9h37y+E93LduiyX1ThH3Q=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C348B3C08CD; Fri, 19 Jun 2020 16:39:06 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 16:39:06 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@intel.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: power: supply: bq25890: Document
+ required interrupt
+Message-ID: <20200619143906.33twapu6mgyay4yr@earth.universe>
+References: <20200617102305.14241-1-krzk@kernel.org>
+ <20200617102305.14241-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gyqjsa47ulgkpkl2"
+Content-Disposition: inline
+In-Reply-To: <20200617102305.14241-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit 81f3dc9349ce0bf7b8447f147f45e70f0a5b36a6 ]
+--gyqjsa47ulgkpkl2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ignore loopback-originatig packets soon enough and don't try to process L2
-header where it doesn't exist. The very similar br_handle_frame() in bridge
-code performs exactly the same check.
+Hi,
 
-This is an example of such ICMPv6 packet:
+On Wed, Jun 17, 2020 at 12:23:05PM +0200, Krzysztof Kozlowski wrote:
+> The driver requires interrupts (fails probe if it is not provided) so
+> document this requirement in bindings.
+>=20
+> Fixes: 4aeae9cb0dad ("power_supply: Add support for TI BQ25890 charger ch=
+ip")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-skb len=96 headroom=40 headlen=96 tailroom=56
-mac=(40,0) net=(40,40) trans=80
-shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
-csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
-hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
-dev name=etha01.212 feat=0x0x0000000040005000
-skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
-skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
-skb headroom: 00000020: 02 40 43 80 00 00 86 dd
-skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
-skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
-skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
-skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
-skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
-skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
-skb tailroom: 00000000: ...
-skb tailroom: 00000010: ...
-skb tailroom: 00000020: ...
-skb tailroom: 00000030: ...
+Thanks, queued.
 
-Call Trace, how it happens exactly:
- ...
- macvlan_handle_frame+0x321/0x425 [macvlan]
- ? macvlan_forward_source+0x110/0x110 [macvlan]
- __netif_receive_skb_core+0x545/0xda0
- ? enqueue_task_fair+0xe5/0x8e0
- ? __netif_receive_skb_one_core+0x36/0x70
- __netif_receive_skb_one_core+0x36/0x70
- process_backlog+0x97/0x140
- net_rx_action+0x1eb/0x350
- ? __hrtimer_run_queues+0x136/0x2e0
- __do_softirq+0xe3/0x383
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.4+0x4e/0x50
- netif_rx_ni+0x60/0xd0
- dev_loopback_xmit+0x83/0xf0
- ip6_finish_output2+0x575/0x590 [ipv6]
- ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
- ? __ip6_make_skb+0x38d/0x680 [ipv6]
- ? ip6_output+0x6c/0x140 [ipv6]
- ip6_output+0x6c/0x140 [ipv6]
- ip6_send_skb+0x1e/0x60 [ipv6]
- rawv6_sendmsg+0xc4b/0xe10 [ipv6]
- ? proc_put_long+0xd0/0xd0
- ? rw_copy_check_uvector+0x4e/0x110
- ? sock_sendmsg+0x36/0x40
- sock_sendmsg+0x36/0x40
- ___sys_sendmsg+0x2b6/0x2d0
- ? proc_dointvec+0x23/0x30
- ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
- ? dev_forward_change+0x130/0x130 [ipv6]
- ? _raw_spin_unlock+0x12/0x30
- ? proc_sys_call_handler.isra.14+0x9f/0x110
- ? __call_rcu+0x213/0x510
- ? get_max_files+0x10/0x10
- ? trace_hardirqs_on+0x2c/0xe0
- ? __sys_sendmsg+0x63/0xa0
- __sys_sendmsg+0x63/0xa0
- do_syscall_64+0x6c/0x1e0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+-- Sebastian
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/macvlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b=
+/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> index 51ecc756521f..3b4c69a7fa70 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>      * "ti,bq25895"
+>      * "ti,bq25896"
+>  - reg: integer, i2c address of the device.
+> +- interrupts: interrupt line;
+>  - ti,battery-regulation-voltage: integer, maximum charging voltage (in u=
+V);
+>  - ti,charge-current: integer, maximum charging current (in uA);
+>  - ti,termination-current: integer, charge will be terminated when curren=
+t in
+> @@ -39,6 +40,9 @@ bq25890 {
+>  	compatible =3D "ti,bq25890";
+>  	reg =3D <0x6a>;
+> =20
+> +	interrupt-parent =3D <&gpio1>;
+> +	interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;
+> +
+>  	ti,battery-regulation-voltage =3D <4200000>;
+>  	ti,charge-current =3D <1000000>;
+>  	ti,termination-current =3D <50000>;
+> --=20
+> 2.17.1
+>=20
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 0c4e1ef80355..73061bee35cd 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -420,6 +420,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
- 	int ret;
- 	rx_handler_result_t handle_res;
- 
-+	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
-+	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
-+		return RX_HANDLER_PASS;
-+
- 	port = macvlan_port_get_rcu(skb->dev);
- 	if (is_multicast_ether_addr(eth->h_dest)) {
- 		skb = ip_check_defrag(dev_net(skb->dev), skb, IP_DEFRAG_MACVLAN);
--- 
-2.25.1
+--gyqjsa47ulgkpkl2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7szgoACgkQ2O7X88g7
++pobjw/8Cpw1OzyHiGjyxlvzVKNvp4LndLYSD4J8cdqGPeSNEAHae4sCqmae3G89
+ZCd2Zohd2LwXXire9sQtIXJb96o+1ocWQIzR3wMIypCO8dy83IZqqy+SfZW4ivGW
+K2KmQChB/8os3O74Jw9DSPc4UfK0ISy+7HR4Ot8kyfhg1Dvm9z4NVnId2dHohXoL
+EOn4KYAvjSrevUfXSRwIadCxLxLW7dA1IV1+AS13p0XHdjq4OGQ5dsxNoqYd/X1Q
+MyF3f01Dfic0PDQE3StBTYKW8sYaXI73IftAxZ3gPTcPjS7AzFj+3wpXVEKjfxqR
+e7G40IJYwKtXiyIBg0aQhXOvC3/32LQV4c7suPNmNez4tSn6BkrnFvBOPiVeNZRq
+PLrFNdtatoX3otvbuJEoULD7jLIgSg3Oi8Fkbxu3zmpeCO8yNDPGTmZdhHyxfk7s
+xxUTNlOr7f5rbxYGVe2q0Vz7o5H6s5ukgjSsiqCSMZrNkJd2DYfnvPsSL6Ymd+jP
+SCdfiauLIwrXOzoX/lJXHj/fGzmJGUnU7ogW7OWqclWIGoTxAjIuen+lEWXNIjOH
+L/sAxLp/Sp1gS4rTRFJSite5x8A6h4QGxmsCN1mxuiKgeu9Lyrw4JmKEo40hYa8S
+Ayr385VFbX//luhm435eFe27tMPikUC1GdQwu/tFJk+mkoq5XVs=
+=XIWY
+-----END PGP SIGNATURE-----
 
+--gyqjsa47ulgkpkl2--
