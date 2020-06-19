@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2895D217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B69B217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578160;
-	bh=Q1MnH9RZEWmo/MLTr/txxuhrn1OC1QQbfLP0JeFzoCs=;
+	s=default; t=1592578167;
+	bh=2qLyoYM5uT2rMeb6vdKw9v73BZGzqv06q+5YAIglqCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQf8S9B35dxWcHxvzcVdN5/6RFWVGCXOGy3K5UHqvLxVvUZ+Kpq8DLom9PkX1G+Qq
-	 dKQ3+hPhkNT/hcMrwH3BVZx50060uErX6OSLcae83zue28RXABACPRjtKMN2Khr8XI
-	 W8GUjlDGmhktXWQjrljAJSxYkUXDAZ+h9Zbj8tKk=
+	b=d393MG6ZZcTU6cZzgiDhLeuuiyWcJuY5P0+8CISnIG2ZaLef8b7ZaPBb02Z+9VWC3
+	 CagWVBC2WDu8v0iQ14+EAaQy7yFFQt5cxS/eeKRpkRFTDE3x9ZBuNn/hp7Z5LrrBtY
+	 CilDXRdMFi2E5f66/dGvHp1J3SqnuPcUrwi/rOFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389200AbgFSOtS (ORCPT
+        id S2389188AbgFSOtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389184AbgFSOtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:06 -0400
+        id S2388503AbgFSOtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E4F320DD4;
-        Fri, 19 Jun 2020 14:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A8E217A0;
+        Fri, 19 Jun 2020 14:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578146;
-        bh=Q1MnH9RZEWmo/MLTr/txxuhrn1OC1QQbfLP0JeFzoCs=;
+        s=default; t=1592578152;
+        bh=2qLyoYM5uT2rMeb6vdKw9v73BZGzqv06q+5YAIglqCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yazjZmAdjeYr4+27YrGRSrHx7S5uBxRN7fCSs4ceoU4HNL95IFea8uADQV5vvrBGd
-         GpZEnZcExdKVgsDERpATu2Crc1fGSPPfivmguWjkRyZkGV0FaaucOVRJeuez2DxVpC
-         aYUC+RjHVo53OPoNNwOls5brBsWeL3hjfrioLzbw=
+        b=GbNaxdcGxUFqtZDrHID7QZvFqF4y86N+kjNbW5OlzLNfR5fBxB1VL09CYruGTdupY
+         jGqkCnuDD3gGz3am1nu/vZ+T2g131WipMapfMi3A61Mju25yN+arDz6K87po2+QY3j
+         ix89sKVXnA2PwhYh5XbJhIhWxtNgnynKdggZDoZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Juxin Gao <gaojuxin@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/190] media: dvb: return -EREMOTEIO on i2c transfer failure.
-Date:   Fri, 19 Jun 2020 16:32:26 +0200
-Message-Id: <20200619141638.628883701@linuxfoundation.org>
+Subject: [PATCH 4.14 103/190] MIPS: Make sparse_init() using top-down allocation
+Date:   Fri, 19 Jun 2020 16:32:28 +0200
+Message-Id: <20200619141638.727271292@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,41 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 96f3a9392799dd0f6472648a7366622ffd0989f3 ]
+[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
 
-Currently when i2c transfers fail the error return -EREMOTEIO
-is assigned to err but then later overwritten when the tuner
-attach call is made.  Fix this by returning early with the
-error return code -EREMOTEIO on i2c transfer failure errors.
+In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
+memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
+process failed with kernel panic.
 
-If the transfer fails, an uninitialized value will be read from b2.
+(1) On the Loongson and SiByte platform
+arch/mips/loongson64/dma.c
+arch/mips/sibyte/common/dma.c
+void __init plat_swiotlb_setup(void)
+{
+	swiotlb_init(1);
+}
 
-Addresses-Coverity: ("Unused value")
+kernel/dma/swiotlb.c
+void  __init
+swiotlb_init(int verbose)
+{
+...
+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+		return;
+...
+	pr_warn("Cannot allocate buffer");
+	no_iotlb_memory = true;
+}
 
-Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+phys_addr_t swiotlb_tbl_map_single()
+{
+...
+	if (no_iotlb_memory)
+		panic("Can not allocate SWIOTLB buffer earlier ...");
+...
+}
+
+(2) On the Cavium OCTEON platform
+arch/mips/cavium-octeon/dma-octeon.c
+void __init plat_swiotlb_setup(void)
+{
+...
+	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+	if (!octeon_swiotlb)
+		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+		      __func__, swiotlbsize, PAGE_SIZE);
+...
+}
+
+Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
+than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
+case.
+
+In order to reduce the possibility of kernel panic when failed to get IO
+TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
+small as possible before plat_swiotlb_setup(), so make sparse_init() using
+top-down allocation.
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/setup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
-index a0057641cc86..c55180912c3a 100644
---- a/drivers/media/usb/dvb-usb/dibusb-mb.c
-+++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
-@@ -84,7 +84,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 05ed4ed411c7..abd7ee9e90ab 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -911,7 +911,17 @@ static void __init arch_mem_init(char **cmdline_p)
+ 				BOOTMEM_DEFAULT);
+ #endif
+ 	device_tree_init();
++
++	/*
++	 * In order to reduce the possibility of kernel panic when failed to
++	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
++	 * low memory as small as possible before plat_swiotlb_setup(), so
++	 * make sparse_init() using top-down allocation.
++	 */
++	memblock_set_bottom_up(false);
+ 	sparse_init();
++	memblock_set_bottom_up(true);
++
+ 	plat_swiotlb_setup();
  
- 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
- 		err("tuner i2c write failed.");
--		ret = -EREMOTEIO;
-+		return -EREMOTEIO;
- 	}
- 
- 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
 -- 
 2.25.1
 
