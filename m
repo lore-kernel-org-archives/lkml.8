@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C34C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22932083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C1B2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OaAhax4t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H7zJqw4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732736AbgFSM6m (ORCPT
+        id S1732771AbgFSM6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:58:42 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35030 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732660AbgFSM6f (ORCPT
+        Fri, 19 Jun 2020 08:58:47 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55424 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732660AbgFSM6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:58:35 -0400
+        Fri, 19 Jun 2020 08:58:43 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JCwJen076832;
-        Fri, 19 Jun 2020 07:58:19 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JCwZSv058358;
+        Fri, 19 Jun 2020 07:58:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592571499;
-        bh=PwbBrS5/93qfz/ERIiFrMFJ9ufsq6vvpld5u8B1rVWw=;
+        s=ti-com-17Q1; t=1592571515;
+        bh=VgzXtbEPK3BZf4YNOTbshjleKAPVz3hmnBNiNTgI/zo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OaAhax4tGjxQR/5gRuR3ZACaUwao+J3cPA03IImLNm1YndigT5RpiG4soy/Yhh2//
-         RjWaqVqnOBC/4zrN4jVl1GUaydtoduXTq1y2YbISCyhFaJ3VoQWApN/H1x7EM3HcVU
-         8a6Qxv8CBIFNPKRQOm+rSteo/v+l5rn5D23sMDQk=
+        b=H7zJqw4J394jESjLoLpCTIRcxQ3THnu16UGGA0JLjWpKvYH6W2FJh49k8LBlgF4yC
+         Jbujo8GyR9XPxL5FSTrtz5W1ng/UW2fuZ/dSZHVvt8VBLKfvxlXHSIWnHJk1K6GH9K
+         0dw8poqah9BCNbsk6JtFNvGZMDqc0vlmdjn8DJxc=
 Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JCwI94081089
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JCwZ8b081271
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 07:58:19 -0500
+        Fri, 19 Jun 2020 07:58:35 -0500
 Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
- Jun 2020 07:58:18 -0500
+ Jun 2020 07:58:35 -0500
 Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 19 Jun 2020 07:58:18 -0500
+ Frontend Transport; Fri, 19 Jun 2020 07:58:35 -0500
 Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JCw2Hn015675;
-        Fri, 19 Jun 2020 07:58:15 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JCw2Hr015675;
+        Fri, 19 Jun 2020 07:58:31 -0500
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -56,9 +55,9 @@ To:     <linux-arm-kernel@lists.infradead.org>,
         <will@kernel.org>, <catalin.marinas@arm.com>, <robh+dt@kernel.org>,
         <ulf.hansson@linaro.org>
 CC:     <faiz_abbas@ti.com>
-Subject: [PATCH 3/7] mmc: sdhci_am654: Add Support for SR2.0
-Date:   Fri, 19 Jun 2020 18:27:57 +0530
-Message-ID: <20200619125801.9530-4-faiz_abbas@ti.com>
+Subject: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
+Date:   Fri, 19 Jun 2020 18:28:01 +0530
+Message-ID: <20200619125801.9530-8-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200619125801.9530-1-faiz_abbas@ti.com>
 References: <20200619125801.9530-1-faiz_abbas@ti.com>
@@ -70,81 +69,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Support for AM65x PG2.0. Use the SoC bus framework to fixup
-the driver data and skip do DLL calibration if the revision is 1.0
+Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
 
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- drivers/mmc/host/sdhci_am654.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index 85a05344f825..365eb2819dd9 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -11,6 +11,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
- #include <linux/regmap.h>
-+#include <linux/sys_soc.h>
- 
- #include "cqhci.h"
- #include "sdhci-pltfm.h"
-@@ -324,12 +325,17 @@ static const struct sdhci_pltfm_data sdhci_am654_pdata = {
- 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- };
- 
--static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
-+static const struct sdhci_am654_driver_data sdhci_am654_sr1_drvdata = {
- 	.pdata = &sdhci_am654_pdata,
- 	.flags = IOMUX_PRESENT | FREQSEL_2_BIT | STRBSEL_4_BIT | DLL_PRESENT |
- 		 DLL_CALIB,
- };
- 
-+static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
-+	.pdata = &sdhci_am654_pdata,
-+	.flags = IOMUX_PRESENT | FREQSEL_2_BIT | STRBSEL_4_BIT | DLL_PRESENT,
-+};
-+
- static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-@@ -376,6 +382,14 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
- 	.flags = IOMUX_PRESENT,
- };
- 
-+static const struct soc_device_attribute sdhci_am654_devices[] = {
-+	{ .family = "AM65X",
-+	  .revision = "SR1.0",
-+	  .data = &sdhci_am654_sr1_drvdata
-+	},
-+	{/* sentinel */}
-+};
-+
- static void sdhci_am654_dumpregs(struct mmc_host *mmc)
- {
- 	sdhci_dumpregs(mmc_priv(mmc));
-@@ -587,6 +601,7 @@ static const struct of_device_id sdhci_am654_of_match[] = {
- static int sdhci_am654_probe(struct platform_device *pdev)
- {
- 	const struct sdhci_am654_driver_data *drvdata;
-+	const struct soc_device_attribute *soc;
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct sdhci_am654_data *sdhci_am654;
- 	const struct of_device_id *match;
-@@ -598,6 +613,12 @@ static int sdhci_am654_probe(struct platform_device *pdev)
- 
- 	match = of_match_node(sdhci_am654_of_match, pdev->dev.of_node);
- 	drvdata = match->data;
-+
-+	/* Update drvdata based on SoC revision */
-+	soc = soc_device_match(sdhci_am654_devices);
-+	if (soc && soc->data)
-+		drvdata = soc->data;
-+
- 	host = sdhci_pltfm_init(pdev, drvdata->pdata, sizeof(*sdhci_am654));
- 	if (IS_ERR(host))
- 		return PTR_ERR(host);
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 883e8bace3ed..40dd13e0adc5 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
+ CONFIG_MMC_SUNXI=y
+ CONFIG_MMC_BCM2835=y
+ CONFIG_MMC_SDHCI_XENON=y
++CONFIG_MMC_SDHCI_AM654=y
+ CONFIG_MMC_OWL=y
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
 -- 
 2.17.1
 
