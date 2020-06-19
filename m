@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5480F206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D056D206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581535;
-	bh=FSSEj0I+Qs96LnMPO/9ObpRwOVHhKyOHosCzGUsdNQk=;
+	s=default; t=1592581542;
+	bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OR4ZiPj5L4REU8KpnWP1Ye22gRj4PAKGeBVI7DurzhVoCC5VRsxjzOpnOccuJTzif
-	 eKqNEOlrG2t5a7+r52uchUUp94V+AwzWrZuQubqRLiy6usMdMwDuIf5ZU734Nbh1m4
-	 IZ+f4gO8viUVtILsTLZMJGcDleeNKSh64b1I8fGs=
+	b=DeeRmUyAGsR6lwukruQo3gvtVuIkAUnTTywifAZwih/QDZnvS4ecFScau+RKt0u+g
+	 kV+mRPIeqt+aq3ntky1nrFQOOguie23A1tMCDHk/nRrXjg9L511FZFuTfg8op2+fkI
+	 R/HZGiOoczdsatHdkwhTuqFNAdu7QYblSUXpkm9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405215AbgFSPpd (ORCPT
+        id S2405226AbgFSPpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:45:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59112 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392586AbgFSP1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:23 -0400
+        id S2404087AbgFSP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81A221919;
-        Fri, 19 Jun 2020 15:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BAAB217D8;
+        Fri, 19 Jun 2020 15:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580442;
-        bh=FSSEj0I+Qs96LnMPO/9ObpRwOVHhKyOHosCzGUsdNQk=;
+        s=default; t=1592580431;
+        bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvLsEXspx4Q1UBRJIgHlYGPoLpgB6P6QohpbkvaKRmBUDPAgHYFTLadjL3+2kI6dZ
-         4rhkwFTCOQ+5rogWUnGS7PF6Jpe724ysJ+0ORvah2TK+jtyq6r49bFT2ESeTg7mY3p
-         I0FQQGnym9zuDstDeeA0NCCLkyk2nUtoWqVkF8uA=
+        b=rwZnKFjENYdHJhfrS5n26fM68FDY4WXOx4zK/8wZbG6Vm4t6LBim8GcsKNLC8HbBV
+         gghkX8NJP0hQZ68bu7St7ufR3lT7xh7fxRwyk8Bt1kZA9uJY+mjUx/KWvn6/G18aiJ
+         8noW8AwvUkd2fhcjHwDWm4hok0DSd2lStnIkN+d8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Cornwall <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Kaige Li <likaige@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 210/376] drm/amdgpu: Sync with VM root BO when switching VM to CPU update mode
-Date:   Fri, 19 Jun 2020 16:32:08 +0200
-Message-Id: <20200619141720.275695401@linuxfoundation.org>
+Subject: [PATCH 5.7 216/376] MIPS: tools: Fix resource leak in elf-entry.c
+Date:   Fri, 19 Jun 2020 16:32:14 +0200
+Message-Id: <20200619141720.552774693@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,49 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Kaige Li <likaige@loongson.cn>
 
-[ Upstream commit 90ca78deb004abe75b5024968a199acb96bb70f9 ]
+[ Upstream commit f33a0b941017b9cb5a4e975af198b855b2f2b455 ]
 
-This fixes an intermittent bug where a root PD clear operation still in
-progress could overwrite a PDE update done by the CPU, resulting in a
-VM fault.
+There is a file descriptor resource leak in elf-entry.c, fix this
+by adding fclose() before return and die.
 
-Fixes: 108b4d928c03 ("drm/amd/amdgpu: Update VM function pointer")
-Reported-by: Jay Cornwall <Jay.Cornwall@amd.com>
-Tested-by: Jay Cornwall <Jay.Cornwall@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kaige Li <likaige@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/mips/tools/elf-entry.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 6d9252a27916..06242096973c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -2996,10 +2996,17 @@ int amdgpu_vm_make_compute(struct amdgpu_device *adev, struct amdgpu_vm *vm,
- 		   !amdgpu_gmc_vram_full_visible(&adev->gmc)),
- 		  "CPU update of VM recommended only for large BAR system\n");
+diff --git a/arch/mips/tools/elf-entry.c b/arch/mips/tools/elf-entry.c
+index adde79ce7fc0..dbd14ff05b4c 100644
+--- a/arch/mips/tools/elf-entry.c
++++ b/arch/mips/tools/elf-entry.c
+@@ -51,11 +51,14 @@ int main(int argc, const char *argv[])
+ 	nread = fread(&hdr, 1, sizeof(hdr), file);
+ 	if (nread != sizeof(hdr)) {
+ 		perror("Unable to read input file");
++		fclose(file);
+ 		return EXIT_FAILURE;
+ 	}
  
--	if (vm->use_cpu_for_update)
-+	if (vm->use_cpu_for_update) {
-+		/* Sync with last SDMA update/clear before switching to CPU */
-+		r = amdgpu_bo_sync_wait(vm->root.base.bo,
-+					AMDGPU_FENCE_OWNER_UNDEFINED, true);
-+		if (r)
-+			goto free_idr;
-+
- 		vm->update_funcs = &amdgpu_vm_cpu_funcs;
--	else
-+	} else {
- 		vm->update_funcs = &amdgpu_vm_sdma_funcs;
+-	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG))
++	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG)) {
++		fclose(file);
+ 		die("Input is not an ELF\n");
 +	}
- 	dma_fence_put(vm->last_update);
- 	vm->last_update = NULL;
- 	vm->is_compute_context = true;
+ 
+ 	switch (hdr.ehdr32.e_ident[EI_CLASS]) {
+ 	case ELFCLASS32:
+@@ -67,6 +70,7 @@ int main(int argc, const char *argv[])
+ 			entry = be32toh(hdr.ehdr32.e_entry);
+ 			break;
+ 		default:
++			fclose(file);
+ 			die("Invalid ELF encoding\n");
+ 		}
+ 
+@@ -83,14 +87,17 @@ int main(int argc, const char *argv[])
+ 			entry = be64toh(hdr.ehdr64.e_entry);
+ 			break;
+ 		default:
++			fclose(file);
+ 			die("Invalid ELF encoding\n");
+ 		}
+ 		break;
+ 
+ 	default:
++		fclose(file);
+ 		die("Invalid ELF class\n");
+ 	}
+ 
+ 	printf("0x%016" PRIx64 "\n", entry);
++	fclose(file);
+ 	return EXIT_SUCCESS;
+ }
 -- 
 2.25.1
 
