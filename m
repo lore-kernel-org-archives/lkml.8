@@ -2,127 +2,116 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526D8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E3420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3265920771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582133;
-	bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzT3/ksZ30jfmgXSynDT/AyU1HvT2pl7Ius1mpMGPP4EzRf2w3zgHFRDj0OkogEBc
-	 Drb3x0aMyt/gENB++Uq+X6en3RmM2eQMPNqBDIt9o698SDFxXcOSS3Krm1hyxGxX7g
-	 uJtGgkGRrP8N+vG73je5V35HZkeSn7+8VALg0TCY=
+	s=default; t=1592582136;
+	bh=Ex6skR9YdgJtGYQMG45wy7W10lh2P9b//LxuoOro6ag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fdUwrj6o1iYSp/k+glIsVX1K5efli7DSFHV1sAIhIWAWUXqgZYGYWVBmtyzMhAjUS
+	 sy/b/SFo6n97kNVbQ9Dy4UP6CudpsLJdvxXv4JO523NdYjl5YZrf1PG0tgkWL4SyL/
+	 hT4VKP/A3Hv0ste63caozLM0oYrNRPTdSMM4JZkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392073AbgFSPzc (ORCPT
+        id S2405222AbgFSPzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 19 Jun 2020 11:55:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37479 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392508AbgFSPzc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392848AbgFSPV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D1321582;
-        Fri, 19 Jun 2020 15:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580085;
-        bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aYRsr6y89jsF1oA/X3Utv4ut4L6wOdTn3dkejmbI7cOlH1+q/oLwzfdDtzSZEdEB9
-         H33UiqN/WiVsd1MWm8lMUWmNGYJlSMDmQ2tAWiaBx3J8009FwPV7ke1Ry1un0lXjng
-         9ufEw5hmfusDQIqeuF6cO9Ui4GoG+D72DC9g4fkU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 086/376] ath10k: fix kernel null pointer dereference
-Date:   Fri, 19 Jun 2020 16:30:04 +0200
-Message-Id: <20200619141714.414954120@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ot1-f65.google.com with SMTP id v13so7646330otp.4;
+        Fri, 19 Jun 2020 08:55:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sKylRjNEpAqnQ+WaZirKknI5bexwPLrj3iuq9vdD0CA=;
+        b=X/TKFmBJ0UPo7r4Ys16Gep89hMzFRiip4ieBT+C7dIZtCM16II3nJagzP6F5FL05Gb
+         yJhTWgEKqoQHICjp2DA92Svl7pVT4L5ZhHdDVQ80H9ZkWJHCMTqPKTw4V3hbGDmZWrU6
+         8SVUSuGyDexnwTyrSBKcscCrHlPGcYxjxq+S42RO6vxN90+dYWVd+mwuoc7zhAPJ4RYZ
+         uU8Perr8d6ecpqhQa7q9WxCKsrA4sTMPIlbQcA3GTOJJNKvKBh8u0zBcvoLJWwXe6DNN
+         MmZwXFOSVT74aY1584rV93g29RnpapT1pmsfWfxiRJCeDoTIgxHLBEnlq/5EGAne4Zrh
+         HrkQ==
+X-Gm-Message-State: AOAM530AH5zlRgi+iGSZzUVyBrMfcQh30YH2iN/MzW086JPeMW2foesn
+        dZMJc5YDV4PaaJ0CB7d8N0MJQUqkULtKaEiKFA8KeQ==
+X-Google-Smtp-Source: ABdhPJyhSqxeDfqtJxbOwrEXIFkN5IH/piua+hwM2UpE8o4bHRdGgkaqYQt5l8gSyJB6dHPW44SLsjC9Q+fprChYt5U=
+X-Received: by 2002:a9d:7d15:: with SMTP id v21mr3480467otn.118.1592582131467;
+ Fri, 19 Jun 2020 08:55:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
+ <20200401083729.GD17325@linux.intel.com> <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
+ <20200402192145.GB10314@linux.intel.com> <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
+In-Reply-To: <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 19 Jun 2020 17:55:19 +0200
+Message-ID: <CAJZ5v0isZCK8o6hopUV3SP25P5+BwZGSSRFtGQrunQ0n45t68g@mail.gmail.com>
+Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
+To:     Stefan Berger <stefanb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-integrity@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+On Fri, Jun 19, 2020 at 5:14 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
+>
+> On 4/2/20 3:21 PM, Jarkko Sakkinen wrote:
+> > On Wed, Apr 01, 2020 at 11:05:36AM +0200, Rafael J. Wysocki wrote:
+> >> On Wed, Apr 1, 2020 at 10:37 AM Jarkko Sakkinen
+> >> <jarkko.sakkinen@linux.intel.com> wrote:
+> >>> On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
+> >>>> From: Stefan Berger <stefanb@linux.ibm.com>
+> >>>>
+> >>>> Recent extensions of the TPM2 ACPI table added 3 more fields
+> >>>> including 12 bytes of start method specific parameters and Log Area
+> >>>> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+> >>>> the existing structure with these fields to allow non-UEFI systems
+> >>>> to access the TPM2's log.
+> >>>>
+> >>>> The specification that has the new fields is the following:
+> >>>>    TCG ACPI Specification
+> >>>>    Family "1.2" and "2.0"
+> >>>>    Version 1.2, Revision 8
+> >>>>
+> >>>> Adapt all existing table size calculations to use
+> >>>> offsetof(struct acpi_table_tpm2, start_method_specific)
+> >>>> [where start_method_specific is a newly added field]
+> >>>> rather than sizeof(struct acpi_table_tpm2) so that the addition
+> >>>> of the new fields does not affect current systems that may not
+> >>>> have them.
+> >>>>
+> >>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> >>>> Cc: linux-acpi@vger.kernel.org
+> >>> I think I'm cool with this but needs an ack from ACPI maintainer.
+> >>>
+> >>> Rafael, given that this not an intrusive change in any possible means,
+> >>> can I pick this patch and put it to my next pull request?
+> >> Yes, please.
+> >>
+> >> Thanks!
+> > Great, thanks Rafael.
+> >
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >
+> > Do you mind if I add your ack to the commit?
+>
 
-[ Upstream commit acb31476adc9ff271140cdd4d3c707ff0c97f5a4 ]
+It looks like I missed the previous message from Jarkko.
 
-Currently sta airtime is updated without any lock in case of
-host based airtime calculation. Which may result in accessing the
-invalid sta pointer in case of continuous station connect/disconnect.
-
-This patch fix the kernel null pointer dereference by updating the
-station airtime with proper RCU lock in case of host based airtime
-calculation.
-
-Proceeding with the analysis of "ARM Kernel Panic".
-The APSS crash happened due to OOPS on CPU 0.
-Crash Signature : Unable to handle kernel NULL pointer dereference
-at virtual address 00000300
-During the crash,
-PC points to "ieee80211_sta_register_airtime+0x1c/0x448 [mac80211]"
-LR points to "ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core]".
-The Backtrace obtained is as follows:
-[<bf880238>] (ieee80211_sta_register_airtime [mac80211]) from
-[<bf945a38>] (ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core])
-[<bf945a38>] (ath10k_txrx_tx_unref [ath10k_core]) from
-[<bf9428e4>] (ath10k_htt_txrx_compl_task+0xa50/0xfc0 [ath10k_core])
-[<bf9428e4>] (ath10k_htt_txrx_compl_task [ath10k_core]) from
-[<bf9b9bc8>] (ath10k_pci_napi_poll+0x50/0xf8 [ath10k_pci])
-[<bf9b9bc8>] (ath10k_pci_napi_poll [ath10k_pci]) from
-[<c059e3b0>] (net_rx_action+0xac/0x160)
-[<c059e3b0>] (net_rx_action) from [<c02329a4>] (__do_softirq+0x104/0x294)
-[<c02329a4>] (__do_softirq) from [<c0232b64>] (run_ksoftirqd+0x30/0x90)
-[<c0232b64>] (run_ksoftirqd) from [<c024e358>] (smpboot_thread_fn+0x25c/0x274)
-[<c024e358>] (smpboot_thread_fn) from [<c02482fc>] (kthread+0xd8/0xec)
-
-Tested HW: QCA9888
-Tested FW: 10.4-3.10-00047
-
-Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585736290-17661-1-git-send-email-vnaralas@codeaurora.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index 39abf8b12903..f46b9083bbf1 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -84,9 +84,11 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
- 		wake_up(&htt->empty_tx_wq);
- 	spin_unlock_bh(&htt->tx_lock);
- 
-+	rcu_read_lock();
- 	if (txq && txq->sta && skb_cb->airtime_est)
- 		ieee80211_sta_register_airtime(txq->sta, txq->tid,
- 					       skb_cb->airtime_est, 0);
-+	rcu_read_unlock();
- 
- 	if (ar->bus_param.dev_type != ATH10K_DEV_TYPE_HL)
- 		dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
--- 
-2.25.1
-
-
-
+Yes, please, feel free to add my ACK to the patch, thanks!
