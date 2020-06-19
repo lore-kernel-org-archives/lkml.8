@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9151C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40665C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9A820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0272067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584729;
-	bh=VKCm5b39uj//IkGFhLqHby24TJz9sv73pICBDYT9Vhg=;
+	s=default; t=1592584737;
+	bh=kIU1GCkQJrmZFCdDbLhvIX7ErBnoyiO8O8nd1wmRA/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1M7TB5bxnzRzNnYOKFEFs0xq8V4r5qOeIbPRTQwK05g6kFfBSirxTajPByx/i/ax
-	 FZ3VpcBnXvlKcd70wH+JXeI3tHoekcd1rvtnEFofNN2LRC5RVGxKA7ZVgccrGB4sSD
-	 wFy2lisZHaxROPVzkER9+ZdWiTRJBka1g6J8ynx4=
+	b=wbV/vjvKXviYlaPSSEydSHHf2FvTobggmOaH/EXe6wnfGPgzOLpQpTTrW65+azYXR
+	 vNAJ+pGfJ2tFJR0Qyo4boHYHH0ZHMqACWpeXRTowUDTLZh0C6UywT0ayNICGQKTowj
+	 dbfoIWMyiQ7OBKq+Uu2BG5SBvLw02yIA9VrsXeMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395357AbgFSQir (ORCPT
+        id S2395370AbgFSQiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39326 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388931AbgFSOrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:15 -0400
+        id S2388920AbgFSOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9672083B;
-        Fri, 19 Jun 2020 14:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52EFB2168B;
+        Fri, 19 Jun 2020 14:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578035;
-        bh=VKCm5b39uj//IkGFhLqHby24TJz9sv73pICBDYT9Vhg=;
+        s=default; t=1592578029;
+        bh=kIU1GCkQJrmZFCdDbLhvIX7ErBnoyiO8O8nd1wmRA/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ky4cNRliyZ2/3l9O7iASGlStrAUKy7jyWXr7XTKc2KSPgXrU+YK6y9TOT3sDtuChW
-         KdTdGlgBmXfTonTdjpkYVUuXOoZvfmrLnlQ9/WjmMlbSawr1EiDPrY5kxQ5FZOZZm0
-         4U5hp6caDKhPnOq0oAB9LW6oVS48oyCyMtHtMowc=
+        b=p7CJYAMWrPRb9DvaKzBAAS5S44RwhRONXXpkCk34l3Hq5H6DzydnC/aBlWH60QMqr
+         oZidS9685P/NdGBpXPPis4iPfyNzUOcgKmWmQd87Uklee5/cEuZW4eDcai6f1MOYtu
+         HanUa/0S/202/j8Rb0V2Xew+/JFGAKNvxoRFE/CQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        youling257@gmail.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 029/190] ACPI: PM: Avoid using power resources if there are none for D0
-Date:   Fri, 19 Jun 2020 16:31:14 +0200
-Message-Id: <20200619141634.987322265@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 4.14 054/190] proc: Use new_inode not new_inode_pseudo
+Date:   Fri, 19 Jun 2020 16:31:39 +0200
+Message-Id: <20200619141636.284305699@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,121 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 956ad9d98b73f59e442cc119c98ba1e04e94fe6d upstream.
+commit ef1548adada51a2f32ed7faef50aa465e1b4c5da upstream.
 
-As recently reported, some platforms provide a list of power
-resources for device power state D3hot, through the _PR3 object,
-but they do not provide a list of power resources for device power
-state D0.
+Recently syzbot reported that unmounting proc when there is an ongoing
+inotify watch on the root directory of proc could result in a use
+after free when the watch is removed after the unmount of proc
+when the watcher exits.
 
-Among other things, this causes acpi_device_get_power() to return
-D3hot as the current state of the device in question if all of the
-D3hot power resources are "on", because it sees the power_resources
-flag set and calls acpi_power_get_inferred_state() which finds that
-D3hot is the shallowest power state with all of the associated power
-resources turned "on", so that's what it returns.  Moreover, that
-value takes precedence over the acpi_dev_pm_explicit_get() return
-value, because it means a deeper power state.  The device may very
-well be in D0 physically at that point, however.
+Commit 69879c01a0c3 ("proc: Remove the now unnecessary internal mount
+of proc") made it easier to unmount proc and allowed syzbot to see the
+problem, but looking at the code it has been around for a long time.
 
-Moreover, the presence of _PR3 without _PR0 for a given device
-means that only one D3-level power state can be supported by it.
-Namely, because there are no power resources to turn "off" when
-transitioning the device from D0 into D3cold (which should be
-supported since _PR3 is present), the evaluation of _PS3 should
-be sufficient to put it straight into D3cold, but this means that
-the effect of turning "on" the _PR3 power resources is unclear,
-so it is better to avoid doing that altogether.  Consequently,
-there is no practical way do distinguish D3cold from D3hot for
-the device in question and the power states of it can be labeled
-so that D3hot is the deepest supported one (and Linux assumes
-that putting a device into D3hot via ACPI may cause power to be
-removed from it anyway, for legacy reasons).
+Looking at the code the fsnotify watch should have been removed by
+fsnotify_sb_delete in generic_shutdown_super.  Unfortunately the inode
+was allocated with new_inode_pseudo instead of new_inode so the inode
+was not on the sb->s_inodes list.  Which prevented
+fsnotify_unmount_inodes from finding the inode and removing the watch
+as well as made it so the "VFS: Busy inodes after unmount" warning
+could not find the inodes to warn about them.
 
-To work around the problem described above modify the ACPI
-enumeration of devices so that power resources are only used
-for device power management if the list of D0 power resources
-is not empty and make it mart D3cold as supported only if that
-is the case and the D3hot list of power resources is not empty
-too.
+Make all of the inodes in proc visible to generic_shutdown_super,
+and fsnotify_sb_delete by using new_inode instead of new_inode_pseudo.
+The only functional difference is that new_inode places the inodes
+on the sb->s_inodes list.
 
-Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
-Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: youling257@gmail.com
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I wrote a small test program and I can verify that without changes it
+can trigger this issue, and by replacing new_inode_pseudo with
+new_inode the issues goes away.
+
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/000000000000d788c905a7dfa3f4@google.com
+Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
+Fixes: 0097875bd415 ("proc: Implement /proc/thread-self to point at the directory of the current thread")
+Fixes: 021ada7dff22 ("procfs: switch /proc/self away from proc_dir_entry")
+Fixes: 51f0885e5415 ("vfs,proc: guarantee unique inodes in /proc")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_pm.c |    2 +-
- drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
- 2 files changed, 20 insertions(+), 10 deletions(-)
+ fs/proc/inode.c       |    2 +-
+ fs/proc/self.c        |    2 +-
+ fs/proc/thread_self.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -172,7 +172,7 @@ int acpi_device_set_power(struct acpi_de
- 		 * possibly drop references to the power resources in use.
- 		 */
- 		state = ACPI_STATE_D3_HOT;
--		/* If _PR3 is not available, use D3hot as the target state. */
-+		/* If D3cold is not supported, use D3hot as the target state. */
- 		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
- 			target_state = state;
- 	} else if (!device->power.states[state].flags.valid) {
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -920,12 +920,9 @@ static void acpi_bus_init_power_state(st
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -432,7 +432,7 @@ const struct inode_operations proc_link_
  
- 		if (buffer.length && package
- 		    && package->type == ACPI_TYPE_PACKAGE
--		    && package->package.count) {
--			int err = acpi_extract_power_resources(package, 0,
--							       &ps->resources);
--			if (!err)
--				device->power.flags.power_resources = 1;
--		}
-+		    && package->package.count)
-+			acpi_extract_power_resources(package, 0, &ps->resources);
-+
- 		ACPI_FREE(buffer.pointer);
- 	}
+ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
+ {
+-	struct inode *inode = new_inode_pseudo(sb);
++	struct inode *inode = new_inode(sb);
  
-@@ -972,14 +969,27 @@ static void acpi_bus_get_power_flags(str
- 		acpi_bus_init_power_state(device, i);
- 
- 	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
--	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
--		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
- 
--	/* Set defaults for D0 and D3hot states (always valid) */
-+	/* Set the defaults for D0 and D3hot (always supported). */
- 	device->power.states[ACPI_STATE_D0].flags.valid = 1;
- 	device->power.states[ACPI_STATE_D0].power = 100;
- 	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
- 
-+	/*
-+	 * Use power resources only if the D0 list of them is populated, because
-+	 * some platforms may provide _PR3 only to indicate D3cold support and
-+	 * in those cases the power resources list returned by it may be bogus.
-+	 */
-+	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
-+		device->power.flags.power_resources = 1;
-+		/*
-+		 * D3cold is supported if the D3hot list of power resources is
-+		 * not empty.
-+		 */
-+		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
-+			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
-+	}
-+
- 	if (acpi_bus_init_power(device))
- 		device->flags.power_manageable = 0;
- }
+ 	if (inode) {
+ 		inode->i_ino = de->low_ino;
+--- a/fs/proc/self.c
++++ b/fs/proc/self.c
+@@ -41,7 +41,7 @@ int proc_setup_self(struct super_block *
+ 	inode_lock(root_inode);
+ 	self = d_alloc_name(s->s_root, "self");
+ 	if (self) {
+-		struct inode *inode = new_inode_pseudo(s);
++		struct inode *inode = new_inode(s);
+ 		if (inode) {
+ 			inode->i_ino = self_inum;
+ 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+--- a/fs/proc/thread_self.c
++++ b/fs/proc/thread_self.c
+@@ -42,7 +42,7 @@ int proc_setup_thread_self(struct super_
+ 	inode_lock(root_inode);
+ 	thread_self = d_alloc_name(s->s_root, "thread-self");
+ 	if (thread_self) {
+-		struct inode *inode = new_inode_pseudo(s);
++		struct inode *inode = new_inode(s);
+ 		if (inode) {
+ 			inode->i_ino = thread_self_inum;
+ 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 
 
