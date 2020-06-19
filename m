@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D502186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A8D218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580434;
-	bh=mS6E5KdtOU9+7cFz8Yn3gX2S53udT9uaNWpGg0utQBc=;
+	s=default; t=1592580436;
+	bh=GgNbKupob62BqUCj27AYN8DGZuT/nucfLviwTiGLsBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uf9zmFaTNEdEKXHw4kBvVbbl07Meugz8lRoCRObUaf4zK4qYzBRks13mQUHfqmpJk
-	 p5QSuaKjUDOQSdYifRavaAfHl+B2AUOzFnDKnJ2+mk6U7+4qXB4IPcMxSHYqQIfCS6
-	 JejHMk//2YVfVRYBdNcDn2FTwDNTxyqEyaQxDIjY=
+	b=n1L0bPu3TIqM9xuE6b6gzZSCP25+W1kQ1jOXCu2Tgg4ZCcCbyeoz9K0cXSiiYzinm
+	 gQAhBcNqtZEjQuZsB6Nyd+YoSxLUty0QYa2mYH0KoTUZgm+7egIKIMhYXdObOde133
+	 2hRGeHU1UU036MAZLq6l9TImlKqC8aZn7i+Pf24I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404410AbgFSP1N (ORCPT
+        id S2404420AbgFSP1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57480 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393459AbgFSPZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:44 -0400
+        id S2393466AbgFSPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DF1A20734;
-        Fri, 19 Jun 2020 15:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93F7120734;
+        Fri, 19 Jun 2020 15:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580343;
-        bh=mS6E5KdtOU9+7cFz8Yn3gX2S53udT9uaNWpGg0utQBc=;
+        s=default; t=1592580349;
+        bh=GgNbKupob62BqUCj27AYN8DGZuT/nucfLviwTiGLsBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbyZWvVN9PbiT5EJUcHtxFOCGoAyhYxB4fLl1vS4n1/VhxvQelLOyaFqkeD1jEMPI
-         fVC1lhOFljEt8S8/MhJuC1G2RpSHyGRBaPModWzjC3Fdwz28d7JJUjdJ3+plLX1RZ+
-         d6i8xk9SUaWSkc6a+SSetlx07AJu1iBB2B07y6TY=
+        b=g7z0Y696SYCKfq8wEMuwozsPfDVO+d+3887WzF/YTpRfmwWtD1lEhwSbxO35FHOWG
+         FwCWcrjc7XgwWMpCh2nJS0wxjb2L7TqRZbr8OMj0TXzLXsaBkKrUhVTnrdAqcLCJ/6
+         ButQPIrHxXYCwg5aRJgNpIz9OTVpHPmAShzzvJFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 183/376] mt76: mt7615: fix mt7615_driver_own routine
-Date:   Fri, 19 Jun 2020 16:31:41 +0200
-Message-Id: <20200619141719.013730779@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 185/376] selftests/bpf: Install generated test progs
+Date:   Fri, 19 Jun 2020 16:31:43 +0200
+Message-Id: <20200619141719.108539085@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,60 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 
-[ Upstream commit 338061619185133f56ac17365deb1e75eaecc604 ]
+[ Upstream commit 309b81f0fdc4209d998bc63f0da52c2e96340d4e ]
 
-Introduce MT_PCIE_DOORBELL_PUSH register to fix mt7615_driver_own
-routine for mt7663e
+Before commit 74b5a5968fe8 ("selftests/bpf: Replace test_progs and
+test_maps w/ general rule") selftests/bpf used generic install
+target from selftests/lib.mk to install generated bpf test progs
+by mentioning them in TEST_GEN_FILES variable.
 
-Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Take that functionality back.
+
+Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
+Signed-off-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200513021722.7787-1-yauheni.kaliuta@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 6 +++++-
- drivers/net/wireless/mediatek/mt76/mt7615/regs.h | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index 0d56e0834bde..29a7aaabb6da 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -1526,16 +1526,20 @@ static void mt7622_trigger_hif_int(struct mt7615_dev *dev, bool en)
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 01c95f8278c7..af139d0e2e0c 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -264,6 +264,7 @@ TRUNNER_BPF_OBJS := $$(patsubst %.c,$$(TRUNNER_OUTPUT)/%.o, $$(TRUNNER_BPF_SRCS)
+ TRUNNER_BPF_SKELS := $$(patsubst %.c,$$(TRUNNER_OUTPUT)/%.skel.h,	\
+ 				 $$(filter-out $(SKEL_BLACKLIST),	\
+ 					       $$(TRUNNER_BPF_SRCS)))
++TEST_GEN_FILES += $$(TRUNNER_BPF_OBJS)
  
- static int mt7615_driver_own(struct mt7615_dev *dev)
- {
-+	struct mt76_dev *mdev = &dev->mt76;
- 	u32 addr;
- 
--	addr = is_mt7663(&dev->mt76) ? MT_CONN_HIF_ON_LPCTL : MT_CFG_LPCR_HOST;
-+	addr = is_mt7663(mdev) ? MT_PCIE_DOORBELL_PUSH : MT_CFG_LPCR_HOST;
- 	mt76_wr(dev, addr, MT_CFG_LPCR_HOST_DRV_OWN);
- 
- 	mt7622_trigger_hif_int(dev, true);
-+
-+	addr = is_mt7663(mdev) ? MT_CONN_HIF_ON_LPCTL : MT_CFG_LPCR_HOST;
- 	if (!mt76_poll_msec(dev, addr, MT_CFG_LPCR_HOST_FW_OWN, 0, 3000)) {
- 		dev_err(dev->mt76.dev, "Timeout for driver own\n");
- 		return -EIO;
- 	}
-+
- 	mt7622_trigger_hif_int(dev, false);
- 
- 	return 0;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-index f7c2a633841c..de0ef165c0ba 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-@@ -65,6 +65,7 @@ enum mt7615_reg_base {
- #define MT_HIF2_BASE			0xf0000
- #define MT_HIF2(ofs)			(MT_HIF2_BASE + (ofs))
- #define MT_PCIE_IRQ_ENABLE		MT_HIF2(0x188)
-+#define MT_PCIE_DOORBELL_PUSH		MT_HIF2(0x1484)
- 
- #define MT_CFG_LPCR_HOST		MT_HIF(0x1f0)
- #define MT_CFG_LPCR_HOST_FW_OWN		BIT(0)
+ # Evaluate rules now with extra TRUNNER_XXX variables above already defined
+ $$(eval $$(call DEFINE_TEST_RUNNER_RULES,$1,$2))
 -- 
 2.25.1
 
