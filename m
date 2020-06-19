@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F65C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76141C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD7221556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EFD217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578441;
-	bh=Q5lsYS7fZAa4bA6lReP4Ek3N3GMs/7klMA+r8Ds98CU=;
+	s=default; t=1592578444;
+	bh=I/FX85UfBT6U9jsKybhzIC8feHyD/YdXxNXkjkWwris=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXau4APG9Q5LoQ798n11fJ5dje1PiDB3ojTkqxNBhb8Ijja9b7MlV034Y0fA2uO1J
-	 ALoMGdkh3H6THjAiZTjElgucHV78KIM+nxdn0C48GwTITIIgNcUBfKirDb/1+r6/5Z
-	 vMwSfnjDPiCaG89RQWfEEuOuqh9uLeXXGF3pL+zw=
+	b=E8RddU7VcIVQtalH5Kt/1m/Nl1u/TI/TUSKSaghZrK19vaP2ftdHFPZHpFA9IqLP4
+	 AK83vpKLE/RCCuqAjDJNQjmpQwymRJXfiRm6xw1XgSAaHvqPJ7ER1lkfBT0taZwIb/
+	 3WIP0M5H93zhBX2Pih2ZywTki1ZtkSJKq7UD54c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389801AbgFSOyA (ORCPT
+        id S2389809AbgFSOyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48258 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:54:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389767AbgFSOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:49 -0400
+        id S2389773AbgFSOxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF96E21556;
-        Fri, 19 Jun 2020 14:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758FB21556;
+        Fri, 19 Jun 2020 14:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578429;
-        bh=Q5lsYS7fZAa4bA6lReP4Ek3N3GMs/7klMA+r8Ds98CU=;
+        s=default; t=1592578432;
+        bh=I/FX85UfBT6U9jsKybhzIC8feHyD/YdXxNXkjkWwris=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRO7bFb6BJ6s2TtF7fwuIw55mOV7LM+JIPYuVWGo/wBufkvulxtdYXgnKFlpoinry
-         kr5AHiL6YM5jb6Rkw1//Vgljzss0ECQ3yOf6CEotRidVWwWarl0GG33lpQoEF1zEib
-         RFmI+mqNFmocnMHYJRuIwu4uFIcK24epKmsNKD0w=
+        b=iXBfCku4viqp4H2f7qT5/xEqQ0TK6LN0Q15k0HClUZ/D4bVHuP+HCRGTEp3V2X8Z+
+         2pXN5fNQqw5nO+cuEbMqnd8Aa5Q4gSOkw+/xLeZaFoUajark5uibt+/icB26O6gfDU
+         Di3vS6QTfUlSHkYSczowsIefryZ/nMd6irJw8RHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alla Segal <allas@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 002/267] net_failover: fixed rollback in net_failover_open()
-Date:   Fri, 19 Jun 2020 16:29:47 +0200
-Message-Id: <20200619141648.970529459@linuxfoundation.org>
+Subject: [PATCH 4.19 003/267] bridge: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Fri, 19 Jun 2020 16:29:48 +0200
+Message-Id: <20200619141649.014094153@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,33 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit e8224bfe77293494626f6eec1884fee7b87d0ced ]
+[ Upstream commit 53fc685243bd6fb90d90305cea54598b78d3cbfc ]
 
-found by smatch:
-drivers/net/net_failover.c:65 net_failover_open() error:
- we previously assumed 'primary_dev' could be null (see line 43)
+When neighbor suppression is enabled the bridge device might reply to
+Neighbor Solicitation (NS) messages on behalf of remote hosts.
 
-Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+In case the NS message includes the "Source link-layer address" option
+[1], the bridge device will use the specified address as the link-layer
+destination address in its reply.
+
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
+
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: ed842faeb2bd ("bridge: suppress nd pkts on BR_NEIGH_SUPPRESS ports")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alla Segal <allas@mellanox.com>
+Tested-by: Alla Segal <allas@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/net_failover.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/bridge/br_arp_nd_proxy.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/net_failover.c
-+++ b/drivers/net/net_failover.c
-@@ -62,7 +62,8 @@ static int net_failover_open(struct net_
- 	return 0;
- 
- err_standby_open:
--	dev_close(primary_dev);
-+	if (primary_dev)
-+		dev_close(primary_dev);
- err_primary_open:
- 	netif_tx_disable(dev);
- 	return err;
+--- a/net/bridge/br_arp_nd_proxy.c
++++ b/net/bridge/br_arp_nd_proxy.c
+@@ -277,6 +277,10 @@ static void br_nd_send(struct net_bridge
+ 	ns_olen = request->len - (skb_network_offset(request) +
+ 				  sizeof(struct ipv6hdr)) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen - 1; i += (ns->opt[i + 1] << 3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
