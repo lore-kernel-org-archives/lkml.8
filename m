@@ -2,80 +2,128 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4A7E221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FCB221F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Czjl8mUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgFSVkB (ORCPT
+        id S1728071AbgFSVos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:40:01 -0400
-Received: from v6.sk ([167.172.42.174]:55398 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgFSVkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:40:01 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id EC8AA61635;
-        Fri, 19 Jun 2020 21:39:29 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 23:39:26 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: fix incorrect directory reference
-Message-ID: <20200619213926.GA1105134@furthur.local>
-References: <20200618195527.162034-1-ralf.ramsauer@oth-regensburg.de>
+        Fri, 19 Jun 2020 17:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgFSVor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:44:47 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A571DC06174E;
+        Fri, 19 Jun 2020 14:44:45 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id i27so13098042ljb.12;
+        Fri, 19 Jun 2020 14:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1sgAegVrY9blSblu1TZdk7ru84pddJSX7s1mWVjCFHY=;
+        b=Czjl8mUsGQTc1lSxSGKZDq2qIkoZ6c0YedfwqNeO9/0T7FCtDoH+6WQFrBv2cBzdn+
+         cTlij+NcIB4hw/sztztKsjOJucRgSFPXQMIUqc4n5vKPHw/RW79ubQomSySgo+NcLgV7
+         aYSd0pWD9fM9pHvWiGDu/X2JWn10thzLPJ/ywt4Kr5xfTicjCy4EfEOfJ4l7T2s+12WR
+         7DYdsRHaleYRTMnzSDkHx2Bd4WaYvBuGAuHV07pIZjiBZXqrzVJ6JcamAqWj61NbgJth
+         RuR6z4fvyJrc606GLz6XhDXvx6iQY1LjQnPQEz6Ey8+H4RHrG+VTDCXPBvL8d1MtdJ49
+         53Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1sgAegVrY9blSblu1TZdk7ru84pddJSX7s1mWVjCFHY=;
+        b=K39MV9qmMKF1ccHbxT16/RB4ZiEvMljQVWsb45xBRkWHkZZHyuMsviyjWPUZa94PRD
+         aDxin7mlOjvOGVqbmfV/K8t6PNpYm0KjZv8jAFomtC+qRRrE+ritLJrn3pjisfrTiHqJ
+         hFFwwiDXlBdiA4vNRX5/YxI9AHGqTsbCKysod7UDJjDEgJMlQcQ6DueTwzQb2MvWy9qX
+         W3itnaRL2mFe+lyai1ODfFaOpVfiZxaNhAuKEIVi18wEqq9lqK1QdfkUaR/m6RBm9B2p
+         /1uuALQIMX5epuZr14ribK+LHn6JMJsPW8/0u976xve0p13bwrTRGOxLDhOK4Qbt3Zjt
+         jsdg==
+X-Gm-Message-State: AOAM532OLzB5vuYk+ghKFvcUMlUd53/JyiQzSaerB1Hmta06Qw50slpR
+        FaOUgwSgOqPS6v2Znh5MrlrAvfF0N/KKN0euvKg=
+X-Google-Smtp-Source: ABdhPJzth0b/GB5i9sTZrVdEB33+r8JFn7mOeJFab1oUENjMBKqhM+AUuD9N/PknddsJzKwtRM4C3kCreusmjXDymdk=
+X-Received: by 2002:a05:651c:2050:: with SMTP id t16mr2568936ljo.178.1592603083925;
+ Fri, 19 Jun 2020 14:44:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618195527.162034-1-ralf.ramsauer@oth-regensburg.de>
+References: <20200619213347.27826-1-horia.geanta@nxp.com> <20200619213347.27826-2-horia.geanta@nxp.com>
+In-Reply-To: <20200619213347.27826-2-horia.geanta@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 19 Jun 2020 18:44:32 -0300
+Message-ID: <CAOMZO5AMe-nDdaP+jVeUHEGn_FXiN9x29PsvDGzUmd9bRD3T6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: imx6sl: fix rng node
+To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 09:55:27PM +0200, Ralf Ramsauer wrote:
-> the below-mentioned commit moved headers to inlucde/linux/soc/mmp. MAINTAINERS
-> was updated, but include/ was omitted.
-> 
-> Fixes: 32adcaa010 ("ARM: mmp: move cputype.h to include/linux/soc/")
-> Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Hi Horia,
 
-Thanks for the patch. This duplicates a patch that Lukas has sent [1] out to be
-applied via the trivial fix tree, but it never made it in.
+On Fri, Jun 19, 2020 at 6:34 PM Horia Geant=C4=83 <horia.geanta@nxp.com> wr=
+ote:
+>
+> rng DT node was added without a compatible string.
+>
+> i.MX driver for RNGC (drivers/char/hw_random/imx-rngc.c) also claims
+> support for RNGB, and is currently used for i.MX25.
+>
+> Let's used this driver also for RNGB block in i.MX6SL.
 
-[1] https://lore.kernel.org/lkml/20200506053431.7464-1-lukas.bulwahn@gmail.com/
+"Let's use"
 
-I've followed up on the original one.
-
-Lubo
-
+>
+> Fixes: e29fe21cff96 ("ARM: dts: add device tree source for imx6sl SoC")
+> Signed-off-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 68f21d46614c..20d897b5be4b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11492,7 +11492,7 @@ S:	Odd Fixes
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp.git
->  F:	arch/arm/boot/dts/mmp*
->  F:	arch/arm/mach-mmp/
-> -F:	linux/soc/mmp/
-> +F:	include/linux/soc/mmp/
->  
->  MMP USB PHY DRIVERS
->  R:	Lubomir Rintel <lkundrak@v3.sk>
-> -- 
-> 2.27.0
-> 
+>  arch/arm/boot/dts/imx6sl.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dts=
+i
+> index 911d8cf77f2c..1f0f250ee175 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -939,8 +939,10 @@
+>                         };
+>
+>                         rngb: rngb@21b4000 {
+> +                               compatible =3D "fsl,imx25-rngb";
+
+Better to use:
+
+ compatible =3D "fsl,imx6sl-rngb","fsl,imx25-rngb";
+
+and document fsl,imx6sl-rngb
