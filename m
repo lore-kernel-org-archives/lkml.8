@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC815C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69006C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C7021D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4071921BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578774;
-	bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
+	s=default; t=1592578780;
+	bh=nPdV4t7L8LJ5km4yZ5iFxKLzj/Qptp1g8r/Ljh9YXK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIIIKr1TK1PJ1ZNrswadUUm2yJjpkBvIvJsck+Hr7qHDY3OQnxMDqHTho62QJOlR1
-	 h5+oDQpsvUmBd82gHo/BVClvgueHGRbP55IQDzqAZ/EokHwY/4LBu2uI6RBXKM9nHI
-	 7xXLzrrHXqCQD8fA8ciHlk16gSGyAlG0y2AuPZww=
+	b=MdcdT/DwCMLZdWnChkN+DuNeUdyNkv4+UYIgoLuUf0rHWDEzyD3VOI98ir4RyusB0
+	 AaT4A3TpyLuOaE4iHe3zJgAOqTna95CBKXC8hKzWOg+gW23mBxbpBj6AEIconjn+8v
+	 Fqd4DLpraGIaKMFqpzsV8LkNtKq4HwAnniOybd/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390531AbgFSO7b (ORCPT
+        id S2390543AbgFSO7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390523AbgFSO71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:27 -0400
+        id S2388828AbgFSO7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B274A21924;
-        Fri, 19 Jun 2020 14:59:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3833C21D79;
+        Fri, 19 Jun 2020 14:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578767;
-        bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
+        s=default; t=1592578769;
+        bh=nPdV4t7L8LJ5km4yZ5iFxKLzj/Qptp1g8r/Ljh9YXK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQMvE+L6Bd25ZF/pph5H79B86MvJ4RmQnXNif1saVqAeEjAVZCsEbyKNxTsyT2LQ2
-         8d0W2+sxIutbuWJjkliR5CTJPhbKZe2lwI4Tr/N/+DPadcAEfgSAxWkBN2TK8RlQsT
-         9laKQmjEbe0cGFeCMTQf73BdgsY5UpZGx06l1YJs=
+        b=UF7yEZ33LSp1DKpppIbj2n6oAdHzsfhe04CVoEhKABSb6TkszCObX+E7zgEwAZE1q
+         2IeK0aQNz7zvyfUQaeO+0trr0lz7SCzopxQ2Hd3fz8/mgVZJfPq3VQDSsebTtbfy6M
+         8K+8WVqTjc/eTUYJkroLtGTG8Mj+X9cyZiiinhv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/267] brcmfmac: fix wrong location to get firmware feature
-Date:   Fri, 19 Jun 2020 16:31:46 +0200
-Message-Id: <20200619141654.645801100@linuxfoundation.org>
+Subject: [PATCH 4.19 148/267] xfs: fix duplicate verification from xfs_qm_dqflush()
+Date:   Fri, 19 Jun 2020 16:32:13 +0200
+Message-Id: <20200619141655.938511967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,43 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaehoon Chung <jh80.chung@samsung.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
+[ Upstream commit 629dcb38dc351947ed6a26a997d4b587f3bd5c7e ]
 
-sup_wpa feature is getting after setting feature_disable flag.
-If firmware is supported sup_wpa feature,  it's always enabled
-regardless of feature_disable flag.
+The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
+read verifier by checking the dquot in the on-disk buffer. Instead,
+verify the in-core variant before it is flushed to the buffer.
 
-Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
+Fixes: 7224fa482a6d ("xfs: add full xfs_dqblk verifier")
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_dquot.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 4c5a3995dc35..d7f41caa0b0b 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -281,13 +281,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
- 	if (!err)
- 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index a1af984e4913..59b2b29542f4 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -1120,13 +1120,12 @@ xfs_qm_dqflush(
+ 	dqb = bp->b_addr + dqp->q_bufoffset;
+ 	ddqp = &dqb->dd_diskdq;
  
-+	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
-+
- 	if (drvr->settings->feature_disable) {
- 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
- 			  ifp->drvr->feat_flags,
- 			  drvr->settings->feature_disable);
- 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
- 	}
--	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
- 
- 	brcmf_feat_firmware_overrides(drvr);
- 
+-	/*
+-	 * A simple sanity check in case we got a corrupted dquot.
+-	 */
+-	fa = xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
++	/* sanity check the in-core structure before we flush */
++	fa = xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id),
++			      0);
+ 	if (fa) {
+ 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
+-				be32_to_cpu(ddqp->d_id), fa);
++				be32_to_cpu(dqp->q_core.d_id), fa);
+ 		xfs_buf_relse(bp);
+ 		xfs_dqfunlock(dqp);
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
 -- 
 2.25.1
 
