@@ -2,51 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90434C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB10C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 757F72078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B8D207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgFSFqV (ORCPT
+        id S1728949AbgFSFsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:46:21 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:38288 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgFSFqR (ORCPT
+        Fri, 19 Jun 2020 01:48:15 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44794 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgFSFsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:46:17 -0400
-Received: by mail-il1-f200.google.com with SMTP id c8so5717903ilm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:46:14 -0700 (PDT)
+        Fri, 19 Jun 2020 01:48:14 -0400
+Received: by mail-io1-f72.google.com with SMTP id v14so5939501iob.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:48:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wuVUV4cc/ccHGna9Tj+MB0CaAsOMVLHI+AmlYUkKH6o=;
-        b=TTI0BqlwPmshW1iVKTJ1X05wO7CfjveqKC1O9K6sef7pGdGx7lEq5fGRn6MtveqaS5
-         vqXHQ8XS3JZ01cd8B+HJUe2NrT1LJ3Yvq9oGxuo2ZRSw+nD5eW/LXp9OqeqrwLaJCkAC
-         3Kb+KeE7oZHjC5LG5z4Hx1Xr8nToaqPBpFvL5ImaJCyWyN7JaOt2dTdgmptxYd4uwSqy
-         qMrqk7x9V5wE1Z9mraoa5xZhMcW60rY7AkLnGJunTSOBKSPBhASCJ+9XTF+LY9hj7oMq
-         9prDUOIp5HU/tyHpn4yFtgXJ9E8NPUgJAWprHqoBPLOotKxXoSUcxB57vg7zsP0wvbEk
-         4PXA==
-X-Gm-Message-State: AOAM530qbR6+ZDXYCAD8aMw4b/tqhG5Bw4slmwwj8rNHwMPZaBNaQzzK
-        PxoNMeux8gMPjd+RDqRIt5A8CYNz0TQ13uPfdrQBXMKBW1Fn
-X-Google-Smtp-Source: ABdhPJwK4P0qOhMl4bxSyUe8fZgMOly9ZFX+lbfvbTfKDqawyld93VL9OuagDewsOqFcP6RgioUJ0ZLpfiwl/T6wbUf1jyTTlIzv
+        bh=F1iFEVTnJM7VtnU/WKTFvYYYzihsyhayjjFqm4xQ7sw=;
+        b=o3MqxKzH1zuRnqfmOUQ2Q+jMw8UW1/PDz4WxtqDP/zwT6DRt1qJXui+Cpr0IHkF1yi
+         EKsZgOG/GLOBl/Uwo1P+yQ/tpkSwbaElcNPIVvlyvxCWBrH7E4+ovoJqjtEv8AFP/AeC
+         KE2hsF/Rvcltq4fh2TEdomzs90FtBRy6E33c0W/5b1jCBO7sge4bzsVz5qDzsq3pnabw
+         AANKhQNhzVu0EGbJACjUpXXppJb+YcnYtx8v9pVfVVuRBDxz6RCTHq2vvhWBNUdMJUvl
+         KOOr6CYNf0CFYvCBm6d/Vh0Dfg+g2MvZ0X8ri/HXChnllex14DPGOYf1mtHPBz7W8+5u
+         Om2Q==
+X-Gm-Message-State: AOAM530/YZi5xnUVwc7dtXolmEd28xY8G28p7mNSaqkavjofBff3tK/B
+        0XDTMaEzsOnLqI6zxY9VctwaoRvM0beKXpRQOZRMpUB1StdK
+X-Google-Smtp-Source: ABdhPJz6LP9cAsji3gkOO9GMUnWOu94LW1rdoit8FT329hoB2ZPcfd8E050slkxRsHbotexpbnZWl24KBfJqR2rJAEwH6T+X/wV9
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c910:: with SMTP id z16mr2489288iof.199.1592545574580;
- Thu, 18 Jun 2020 22:46:14 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 22:46:14 -0700
+X-Received: by 2002:a05:6602:2295:: with SMTP id d21mr2616123iod.0.1592545693570;
+ Thu, 18 Jun 2020 22:48:13 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 22:48:13 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000042f7b405a86969e4@google.com>
-Subject: bpf test error: KASAN: use-after-free Write in afs_wake_up_async_call
-From:   syzbot <syzbot+0710b20f5412c027fefb@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000005a991a05a86970bb@google.com>
+Subject: KASAN: use-after-free Read in dev_uevent
+From:   syzbot <syzbot+348b571beb5eeb70a582@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,107 +57,110 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    ef7232da ionic: export features for vlans to use
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=173214d1100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8ad29058cb749bc
-dashboard link: https://syzkaller.appspot.com/bug?extid=0710b20f5412c027fefb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169fa049100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=348b571beb5eeb70a582
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0710b20f5412c027fefb@syzkaller.appspotmail.com
+Reported-by: syzbot+348b571beb5eeb70a582@syzkaller.appspotmail.com
 
-tipc: TX() has been purged, node left!
 ==================================================================
-BUG: KASAN: use-after-free in afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
-Write of size 1 at addr ffff88809a0449e4 by task kworker/u4:0/7
+BUG: KASAN: use-after-free in dev_uevent+0x30a/0x580 drivers/base/core.c:1486
+Read of size 8 at addr ffff888098662098 by task systemd-udevd/29958
 
-CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.8.0-rc1-syzkaller #0
+CPU: 0 PID: 29958 Comm: systemd-udevd Not tainted 5.7.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
  __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
- rxrpc_notify_socket+0x1db/0x5d0 net/rxrpc/recvmsg.c:40
- __rxrpc_set_call_completion.part.0+0x172/0x410 net/rxrpc/recvmsg.c:76
- __rxrpc_call_completed net/rxrpc/recvmsg.c:112 [inline]
- rxrpc_call_completed+0xca/0xf0 net/rxrpc/recvmsg.c:111
- rxrpc_discard_prealloc+0x781/0xab0 net/rxrpc/call_accept.c:233
- rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
- afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
- afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ dev_uevent+0x30a/0x580 drivers/base/core.c:1486
+ uevent_show+0x1b2/0x2f0 drivers/base/core.c:1557
+ dev_attr_show+0x50/0xc0 drivers/base/core.c:1261
+ sysfs_kf_seq_show+0x30e/0x4e0 fs/sysfs/file.c:60
+ seq_read+0x41a/0xce0 fs/seq_file.c:208
+ __vfs_read+0x9c/0x6d0 fs/read_write.c:426
+ vfs_read+0x1c4/0x400 fs/read_write.c:462
+ ksys_read+0x11b/0x220 fs/read_write.c:588
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7f28fc677910
+Code: b6 fe ff ff 48 8d 3d 0f be 08 00 48 83 ec 08 e8 06 db 01 00 66 0f 1f 44 00 00 83 3d f9 2d 2c 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 de 9b 01 00 48 89 04 24
+RSP: 002b:00007ffe3053dd18 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00005562a17eb920 RCX: 00007f28fc677910
+RDX: 0000000000001000 RSI: 00005562a17fe8c0 RDI: 0000000000000007
+RBP: 00007f28fc932440 R08: 00007f28fc9361e8 R09: 0000000000001010
+R10: 00005562a17eb920 R11: 0000000000000246 R12: 0000000000001000
+R13: 0000000000000d68 R14: 00005562a17fe8c0 R15: 00007f28fc931900
 
-Allocated by task 6807:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
+Allocated by task 29904:
+ save_stack mm/kasan/common.c:48 [inline]
  set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
  kmalloc include/linux/slab.h:555 [inline]
  kzalloc include/linux/slab.h:669 [inline]
- afs_alloc_call+0x55/0x630 fs/afs/rxrpc.c:141
- afs_charge_preallocation+0xe9/0x2d0 fs/afs/rxrpc.c:757
- afs_open_socket+0x292/0x360 fs/afs/rxrpc.c:92
- afs_net_init+0xa6c/0xe30 fs/afs/main.c:125
- ops_init+0xaf/0x420 net/core/net_namespace.c:151
- setup_net+0x2de/0x860 net/core/net_namespace.c:341
- copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
- create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
- ksys_unshare+0x43d/0x8e0 kernel/fork.c:2983
- __do_sys_unshare kernel/fork.c:3051 [inline]
- __se_sys_unshare kernel/fork.c:3049 [inline]
- __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3049
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ dev_new drivers/usb/gadget/legacy/raw_gadget.c:182 [inline]
+ raw_open+0x87/0x500 drivers/usb/gadget/legacy/raw_gadget.c:372
+ misc_open+0x346/0x3c0 drivers/char/misc.c:141
+ chrdev_open+0x498/0x580 fs/char_dev.c:414
+ do_dentry_open+0x808/0x1020 fs/open.c:828
+ do_open fs/namei.c:3229 [inline]
+ path_openat+0x2790/0x38b0 fs/namei.c:3346
+ do_filp_open+0x191/0x3a0 fs/namei.c:3373
+ do_sys_openat2+0x463/0x770 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1388 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x1af/0x1e0 fs/open.c:1199
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-Freed by task 7:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
+Freed by task 29956:
+ save_stack mm/kasan/common.c:48 [inline]
  set_track mm/kasan/common.c:56 [inline]
  kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
  __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- afs_put_call+0x585/0xa40 fs/afs/rxrpc.c:190
- rxrpc_discard_prealloc+0x764/0xab0 net/rxrpc/call_accept.c:230
- rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
- afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
- afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+ kfree+0x10a/0x220 mm/slab.c:3757
+ raw_release+0x130/0x1e0 drivers/usb/gadget/legacy/raw_gadget.c:411
+ __fput+0x2ed/0x750 fs/file_table.c:281
+ task_work_run+0x147/0x1d0 kernel/task_work.c:123
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0x5ef/0x1f80 kernel/exit.c:806
+ do_group_exit+0x15e/0x2c0 kernel/exit.c:904
+ get_signal+0x13cf/0x1d60 kernel/signal.c:2739
+ do_signal+0x33/0x610 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop arch/x86/entry/common.c:161 [inline]
+ prepare_exit_to_usermode+0x32a/0x600 arch/x86/entry/common.c:196
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-The buggy address belongs to the object at ffff88809a044800
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 484 bytes inside of
- 1024-byte region [ffff88809a044800, ffff88809a044c00)
+The buggy address belongs to the object at ffff888098662000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 152 bytes inside of
+ 4096-byte region [ffff888098662000, ffff888098663000)
 The buggy address belongs to the page:
-page:ffffea0002681100 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000291db08 ffffea00028c27c8 ffff8880aa000c40
-raw: 0000000000000000 ffff88809a044000 0000000100000002 0000000000000000
+page:ffffea0002619880 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002619880 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea00021d0908 ffffea0002a5a808 ffff8880aa402000
+raw: 0000000000000000 ffff888098662000 0000000100000001 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
- ffff88809a044880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809a044900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88809a044980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                       ^
- ffff88809a044a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809a044a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888098661f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888098662000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888098662080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff888098662100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888098662180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 ==================================================================
 
 
