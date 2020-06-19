@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C529FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8362521527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68342168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583075;
-	bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
+	s=default; t=1592583080;
+	bh=Ie2mvIvkGQbdrF3H2i6PnpLXDR6Dmda2raGGfUvNt4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSY6Z9KYjNwE9TxIdlFVmiL/FHFhYaXxQivOqDxkOwvrLqdnyhwCzPFxxoFa93Eqb
-	 GCeml/DkhstmSsyMhWOLtoRKwx/LGJhWLPxpL9Pd8s2UMpPx3R9HpIsbTJztlGOnfu
-	 x2/BSKObTeo7eiIdQe/7bDGUe2WxylvT1QB+HXuo=
+	b=OcRPnUmcC2vonqo8pAgEj1FQrODKPk8oIPErMxNln2Y2mInsOjQHFxFqHdG2PNl2i
+	 iJrZAxbgxLsKPDjGi8FE2hZh56+GlIJGoTbJSCPa/NeAU0rTn1xOWHDwQOfD5ayhyO
+	 PAkv1e1Kbxs0oF0M6dx5aT4xPmAvFNdV3J+VeS7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394343AbgFSQLN (ORCPT
+        id S2394345AbgFSQLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389003AbgFSPGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:07 -0400
+        id S2391383AbgFSPGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608FD21852;
-        Fri, 19 Jun 2020 15:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A980821835;
+        Fri, 19 Jun 2020 15:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579167;
-        bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
+        s=default; t=1592579164;
+        bh=Ie2mvIvkGQbdrF3H2i6PnpLXDR6Dmda2raGGfUvNt4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMfujynhnOtjC6DaT+FGJb09taWrw1sLY4oabdVqgPBVsepgE7U0xNC8ujfyF/O5M
-         hVQp6BJCThz62Wq48Gsoy/5qomiqVs3fWWg5TOrdCBPItzLAhTqX6Keipc6UForjRa
-         91SO7xhTFXpEQGZBI3synVKu2cjYv0B96iJbLdrk=
+        b=qkC54sCSNu15kAvjnppSAzJeWU5oju+kGe+4euyjYwQt9BDl+GBLImbwcavTS7Wgl
+         LHfJGDkdQjwUKj7pRmoHpj1aGmJwRK958djl0A8EF/yp/WWU9GUZyaMg1rvyjSV1et
+         c9X7zcNwUsJJ6piDwrrtyXlrWUeLnCf1s7vBVvRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Koba Ko <koba.ko@canonical.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/261] platform/x86: dell-laptop: dont register micmute LED if there is no token
-Date:   Fri, 19 Jun 2020 16:30:44 +0200
-Message-Id: <20200619141651.497700068@linuxfoundation.org>
+Subject: [PATCH 5.4 024/261] rtw88: fix an issue about leak system resources
+Date:   Fri, 19 Jun 2020 16:30:35 +0200
+Message-Id: <20200619141651.082531499@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,52 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koba Ko <koba.ko@canonical.com>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
+[ Upstream commit 191f6b08bfef24e1a9641eaac96ed030a7be4599 ]
 
-On Dell G3-3590, error message is issued during boot up,
-"platform::micmute: Setting an LED's brightness failed (-19)",
-but there's no micmute led on the machine.
+the related system resources were not released when pci_iomap() return
+error in the rtw_pci_io_mapping() function. add pci_release_regions() to
+fix it.
 
-Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-If one of two tokens doesn't exist,
-don't call led_classdev_register() for platform::micmute.
-After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-and the error message wouldn't see in dmesg.
-
-Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: e3037485c68ec1a ("rtw88: new Realtek 802.11ac driver")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200504083442.3033-1-zhengdejin5@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 74e988f839e8..4c1dd1d4e60b 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
- 
- 	dell_laptop_register_notifier(&dell_laptop_notifier);
- 
--	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
--	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
--	if (ret < 0)
--		goto fail_led;
-+	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-+	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-+		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-+		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-+		if (ret < 0)
-+			goto fail_led;
-+	}
- 
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		return 0;
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index 77a2bdee50fa..4a43c4fa716d 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -974,6 +974,7 @@ static int rtw_pci_io_mapping(struct rtw_dev *rtwdev,
+ 	len = pci_resource_len(pdev, bar_id);
+ 	rtwpci->mmap = pci_iomap(pdev, bar_id, len);
+ 	if (!rtwpci->mmap) {
++		pci_release_regions(pdev);
+ 		rtw_err(rtwdev, "failed to map pci memory\n");
+ 		return -ENOMEM;
+ 	}
 -- 
 2.25.1
 
