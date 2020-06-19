@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2792168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC642168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583906;
-	bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
+	s=default; t=1592583911;
+	bh=QD2dczz6KPktnBNPu/65B4VsW2BARSxk7kPZm1opUus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLc5z5uiQ9/2IqByijVc/O8j4BkaINAb/3/SxkGF1L1j2N+t4EvXeZ2ghlJAUDGhx
-	 tvJ1Gx0+haSpS/4LjuAXW3C/mf81r7HZrtix2M26Y/qv/BNLh/3yxsu/qoN9DQOx6G
-	 aIY3biqKM5m1VQAmOBWQfEioNPyKr06+FoRHXF4Y=
+	b=c2STtdXF3pyOb8I0f09/ZXPXHtO2vtIENNRzzq/KzIxbeXiBo+uHkpOEswLyO10tv
+	 X/gZlBc1q85z6BGbqtvoie7nYkR3nD5+yqHlALcV3XEVqhkYpqrQBluVTFhsAQ3EEO
+	 hRaqlZHTZcu/VZa2n9FwDtI1ZlO6F03d45DUTYU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394808AbgFSQZF (ORCPT
+        id S2393900AbgFSQZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390294AbgFSO5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:49 -0400
+        id S2390285AbgFSO5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 667A2217D8;
-        Fri, 19 Jun 2020 14:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307D321852;
+        Fri, 19 Jun 2020 14:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578668;
-        bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
+        s=default; t=1592578663;
+        bh=QD2dczz6KPktnBNPu/65B4VsW2BARSxk7kPZm1opUus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLGpzBM1wh/53WuyyNhjs+xjAthjBGhWvKzhr0bRLyDRbKBnfA3Mnf83rLQ6+KlZ+
-         nrGC+WAGeFKPNrT+BPkKr/FiHW/Mfwzfk8XWZ+r/RLTwTrFLM+EPQv9Gw1BGxR5UZx
-         v9OMAz2Zf0ENba/H7ghyhzm/q6c54MVpyowZxQuc=
+        b=M0cYLASW/M88F+WRo5/BeUe6CZRBtwiGMyrCn6SdXZXOkKmEe9HI5sEOPsfY6rPrk
+         kkqk2WLjXM1T67yP276qn6td4CTUqaHIuhPkOCjDfZ0X5RE/EOjpW9gKKNICFxPnUi
+         7P0RShFiIT5Qj3+drK8IcmDPy/SYuyTBJSCmV3mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/267] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Fri, 19 Jun 2020 16:31:35 +0200
-Message-Id: <20200619141654.134104301@linuxfoundation.org>
+Subject: [PATCH 4.19 108/267] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
+Date:   Fri, 19 Jun 2020 16:31:33 +0200
+Message-Id: <20200619141654.039649405@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -70,68 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+[ Upstream commit 202164fbfa2b2ffa3e66b504e0f126ba9a745006 ]
 
-It's pointless to track the Tx overrun interrupts if Rx-only SPI
-transfer is issued. Similarly there is no need in handling the Rx
-overrun/underrun interrupts if Tx-only SPI transfer is executed.
-So lets unmask the interrupts only if corresponding SPI
-transactions are implied.
+In commit 81eaadcae81b ("kgdboc: disable the console lock when in
+kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
+kgdboc.  That still works fine, but it turns out that we get a similar
+yell when using other I/O drivers.  One example is the "I/O driver"
+for the kgdb test suite (kgdbts).  When I enabled that I again got the
+same yells.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Even though "kgdbts" doesn't actually interact with the user over the
+console, using it still causes kgdb to print to the consoles.  That
+trips the same warning:
+  con_is_visible+0x60/0x68
+  con_scroll+0x110/0x1b8
+  lf+0x4c/0xc8
+  vt_console_print+0x1b8/0x348
+  vkdb_printf+0x320/0x89c
+  kdb_printf+0x68/0x90
+  kdb_main_loop+0x190/0x860
+  kdb_stub+0x2cc/0x3ec
+  kgdb_cpu_enter+0x268/0x744
+  kgdb_handle_exception+0x1a4/0x200
+  kgdb_compiled_brk_fn+0x34/0x44
+  brk_handler+0x7c/0xb8
+  do_debug_exception+0x1b4/0x228
+
+Let's increment/decrement the "ignore_console_lock_warning" variable
+all the time when we enter the debugger.
+
+This will allow us to later revert commit 81eaadcae81b ("kgdboc:
+disable the console lock when in kgdb").
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index f7ec8b98e6db..e1b34ef9a31c 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 94aa9ae0007a..d2799767aab8 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -577,6 +577,8 @@ return_normal:
+ 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
+ 		goto kgdb_restore;
  
- static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
--	u16 dma_ctrl = 0;
-+	u16 imr = 0, dma_ctrl = 0;
++	atomic_inc(&ignore_console_lock_warning);
++
+ 	/* Call the I/O driver's pre_exception routine */
+ 	if (dbg_io_ops->pre_exception)
+ 		dbg_io_ops->pre_exception();
+@@ -649,6 +651,8 @@ cpu_master_loop:
+ 	if (dbg_io_ops->post_exception)
+ 		dbg_io_ops->post_exception();
  
- 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
- 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
- 
--	if (xfer->tx_buf)
-+	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
--	if (xfer->rx_buf)
-+		imr |= SPI_INT_TXOI;
-+	}
-+	if (xfer->rx_buf) {
- 		dma_ctrl |= SPI_DMA_RDMAE;
-+		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
-+	}
- 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
- 
- 	/* Set the interrupt mask */
--	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-+	spi_umask_intr(dws, imr);
- 
- 	dws->transfer_handler = dma_transfer;
- 
++	atomic_dec(&ignore_console_lock_warning);
++
+ 	if (!kgdb_single_step) {
+ 		raw_spin_unlock(&dbg_slave_lock);
+ 		/* Wait till all the CPUs have quit from the debugger. */
 -- 
 2.25.1
 
