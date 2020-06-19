@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70201C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29747C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 507C2206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40B6206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585098;
-	bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
+	s=default; t=1592585108;
+	bh=84hFvqnIv9RWd0djDh3w5bOVOFisJWS+WGdyjLQ/ADg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ez8w5APRzfZbciwNUEs/xEjQT4hGFcnSm0JatQ9n/doP+T7ksVOyHnjIH9NoU2xuW
-	 fuNAUrrzVQBqVnmas1Mb4VpQKBZE+C93D+7q8kgCcPVE7BZ5cS8Cq9wfjwEH3XPDE7
-	 PpDjPmq1CMJxIGtegN1QEGCMkRJfiAjqeR9PoK5s=
+	b=rioa8uBQofFKq2ICPpm1vk6cwCCIN3UHGk7Q2W0WNVOsOTEaQ8C3oWEWN08VOEKyN
+	 r7aKu7XrVtCmh8XtH053FpPwMfuSXt4iwgRd5xDh2Ohfy9jQ3GYBFlhfDlHPalnhP3
+	 MeCBr9Wh9Obd9VNii8SQPrBOMe4gvSsbHqi3mLlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404669AbgFSQo5 (ORCPT
+        id S2395416AbgFSQpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388390AbgFSOmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:39 -0400
+        id S2387762AbgFSOme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8625F20CC7;
-        Fri, 19 Jun 2020 14:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743E021582;
+        Fri, 19 Jun 2020 14:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577759;
-        bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
+        s=default; t=1592577754;
+        bh=84hFvqnIv9RWd0djDh3w5bOVOFisJWS+WGdyjLQ/ADg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+BOkUFEAhtrjnqiUh+PL5lTr7XE6nAyP9EE451tJFQLvpea1jJ4F5msklfMhp3BH
-         GV980X+XKKRcXoir4Gjbs8D6HRaQnYN9jMMW67OtJMFzW34ozZUmsWqKQ7z1xjTp03
-         xibHvmB+lHruIJg2oAV8vbiG0joQDzfVyFH010bs=
+        b=unGurp6r1kRIHKOViGARdvEiZu/5l5NNlp9D9gk6Yt6tIoekyQBYWsyBUccL/Elra
+         xNO46SIeogixEbmVfLKSnCQ3GYguiN6w7HE7cYFWyO3QTBTMjPwTXGFkp22P2d2G1I
+         ViNDSRFvBM5pnS2sUDvRBlIN0a3B5zZOmwMikZfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/128] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Fri, 19 Jun 2020 16:32:51 +0200
-Message-Id: <20200619141624.256867958@linuxfoundation.org>
+Subject: [PATCH 4.9 075/128] exit: Move preemption fixup up, move blocking operations down
+Date:   Fri, 19 Jun 2020 16:32:49 +0200
+Message-Id: <20200619141624.152006079@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,43 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
+non-preemptible context look untidy; after the main oops, the kernel prints
+a "sleeping function called from invalid context" report because
+exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
+can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
+fixup.
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It looks like the same thing applies to profile_task_exit() and
+kcov_task_exit().
+
+Fix it by moving the preemption fixup up and the calls to
+profile_task_exit() and kcov_task_exit() down.
+
+Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/exit.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 6ffdff68bfc4..672a8212c8d9 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -412,7 +412,7 @@ static void emac_timeout(struct net_device *dev)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -420,7 +420,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d9394fcd0e2c..27f4168eaeb1 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -739,8 +739,12 @@ void __noreturn do_exit(long code)
+ 	int group_dead;
+ 	TASKS_RCU(int tasks_rcu_i);
  
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
+-	profile_task_exit(tsk);
+-	kcov_task_exit(tsk);
++	/*
++	 * We can get here from a kernel oops, sometimes with preemption off.
++	 * Start by checking for critical errors.
++	 * Then fix up important state like USER_DS and preemption.
++	 * Then do everything else.
++	 */
  
- 	channel = (channel == 1 ? 1 : 0);
+ 	WARN_ON(blk_needs_flush_plug(tsk));
  
+@@ -758,6 +762,16 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	set_fs(USER_DS);
+ 
++	if (unlikely(in_atomic())) {
++		pr_info("note: %s[%d] exited with preempt_count %d\n",
++			current->comm, task_pid_nr(current),
++			preempt_count());
++		preempt_count_set(PREEMPT_ENABLED);
++	}
++
++	profile_task_exit(tsk);
++	kcov_task_exit(tsk);
++
+ 	ptrace_event(PTRACE_EVENT_EXIT, code);
+ 
+ 	validate_creds_for_do_exit(tsk);
+@@ -794,13 +808,6 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	raw_spin_unlock_wait(&tsk->pi_lock);
+ 
+-	if (unlikely(in_atomic())) {
+-		pr_info("note: %s[%d] exited with preempt_count %d\n",
+-			current->comm, task_pid_nr(current),
+-			preempt_count());
+-		preempt_count_set(PREEMPT_ENABLED);
+-	}
+-
+ 	/* sync mm's RSS info before statistics gathering */
+ 	if (tsk->mm)
+ 		sync_mm_rss(tsk->mm);
 -- 
 2.25.1
 
