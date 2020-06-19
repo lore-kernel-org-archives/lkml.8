@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0204D217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2836217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584023;
-	bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
+	s=default; t=1592584025;
+	bh=wA/z1Zo8HdXoPQpYnhLsBY8h2ygok12Fbcuw5q4Zky8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CT9GOSNe8f819z5R5xVedmT8exUSeuVUoiZS6KxRpzaSCK1OKouZi4CuLfl8CpCi+
-	 uuEmBUNNasdh8fWVJpaMz98vQOInO7EJ7y95sc4KefOtcaNQcaGRZoz7YpaLnnPxVQ
-	 iPXFKLLblJkaYCiX/qDuppxCYH7Utd/evhnetX5g=
+	b=Q85zXo3LMxsPNjXYwHcm54yc6p/x3W1IhxSDDozSQM5UNEchxZQD5IUbGXmvkSsBh
+	 KqdifIOzWL+CTFlxVa7agWP3+/TYP/WCA7gdW2IQBHCvYWncHKI1kaZo2LBHYuoU5u
+	 GtFowkxGLkwwRVMfdmz6U9m02kWsxkXXAl3oRndA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390091AbgFSO4f (ORCPT
+        id S2390081AbgFSO4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388367AbgFSO4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:56:15 -0400
+        id S2389374AbgFSO4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AA312184D;
-        Fri, 19 Jun 2020 14:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7405F2158C;
+        Fri, 19 Jun 2020 14:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578575;
-        bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
+        s=default; t=1592578573;
+        bh=wA/z1Zo8HdXoPQpYnhLsBY8h2ygok12Fbcuw5q4Zky8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12pTsV446s1zvte6AZqNuNzBwTosGkyTGTqYaQykyYhO5yKrxqaNawy8h8l53jHve
-         TSx4v9sUnvI/qGW4PiTzr1yhudL58Oas45GLIIDvz2RWs1yRGD+RHPGRXl42ah25op
-         l02wjHKCFM10YAjEJ6Virn+h+nEsO6eXFjx3Yaew=
+        b=PyMl4UMK0ALnm7oHo3Tg7oJ+m5fepqHpSHihi3SdQ337t4mPR4Ce8TScUMbyf2ijA
+         ANQJqF/Flb2YJJTRS1XdCZPSPGzbS1NBeSy04CoPIbxCgUATuaK3sy0EJ072Pw1Yub
+         IVckkkdqsJkTQpuHKQND70JBbeuCKbP533ZY3f1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 074/267] KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
-Date:   Fri, 19 Jun 2020 16:30:59 +0200
-Message-Id: <20200619141652.447597897@linuxfoundation.org>
+Subject: [PATCH 4.19 073/267] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
+Date:   Fri, 19 Jun 2020 16:30:58 +0200
+Message-Id: <20200619141652.399461563@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,45 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xing Li <lixing@loongson.cn>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit fe2b73dba47fb6d6922df1ad44e83b1754d5ed4d upstream.
+commit 2ebac8bb3c2d35f5135466490fc8eeaf3f3e2d37 upstream.
 
-The code in decode_config4() of arch/mips/kernel/cpu-probe.c
+Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+when determining whether a nested VM-Exit should be reflected into L1 or
+handled by KVM in L0.
 
-        asid_mask = MIPS_ENTRYHI_ASID;
-        if (config4 & MIPS_CONF4_AE)
-                asid_mask |= MIPS_ENTRYHI_ASIDX;
-        set_cpu_asid_mask(c, asid_mask);
+For better or worse, the switch statement in nested_vmx_exit_reflected()
+currently defaults to "true", i.e. reflects any nested VM-Exit without
+dedicated logic.  Because the case statements only contain the basic
+exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+even if KVM intended to handle it in L0.
 
-set asid_mask to cpuinfo->asid_mask.
+Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+L1, as "failed VM-Entry" is the only modifier that KVM can currently
+encounter.  The SMM modifiers will never be generated as KVM doesn't
+support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+enter an enclave in a KVM guest (L1 or L2).
 
-So in order to support variable ASID_MASK, KVM_ENTRYHI_ASID should also
-be changed to cpu_asid_mask(&boot_cpu_data).
-
-Cc: Stable <stable@vger.kernel.org>  #4.9+
-Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-[Huacai: Change current_cpu_data to boot_cpu_data for optimization]
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1590220602-3547-2-git-send-email-chenhc@lemote.com>
+Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/kvm_host.h |    2 +-
+ arch/x86/kvm/vmx.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -275,7 +275,7 @@ enum emulation_result {
- #define MIPS3_PG_FRAME		0x3fffffc0
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -9683,7 +9683,7 @@ static bool nested_vmx_exit_reflected(st
+ 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+ 				KVM_ISA_VMX);
  
- #define VPN2_MASK		0xffffe000
--#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
-+#define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
- #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
- #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
- #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
+-	switch (exit_reason) {
++	switch ((u16)exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		if (is_nmi(intr_info))
+ 			return false;
 
 
