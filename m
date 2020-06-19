@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC12C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4F320734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCBF20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580882;
-	bh=LRtF0ol0E5xrY/TP7vBKd8wccCxYeetSbp8974+YILI=;
+	s=default; t=1592580892;
+	bh=59NqwUWWhjfYF1vPj0tVIAxyPg99f5wPdqso9o8QcF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udig3TISGXQjih0M+HWKfbY54LuFRPl8YqV/hUTnhB5W/3hMRqQ77m+70Ge6Q6llV
-	 A18uavAMVdyznM1fq0t4yFVWylg6s+liQfBw2B+7L/a3Is02bmKJj2J7LgNlCPONH5
-	 tNYXxcfmGwFw6XBIcwGzgYjccH+1rD/k/IQ57vrA=
+	b=aExScEWwUUcGQFRHBaNFiAtoNKJfUYk6zMzGYDDOMZl6opILCjt4AIX/nAqNlTfrz
+	 UchRW1yoVI+KecdcSO5/Jc761G8m7+pC/8+KvPoggZbbX5FhzKcNG7DOZyz6aQHV3a
+	 Fn4PDINqanSpTQhycEauL/7u+02r+Uq9cy5BI21A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391606AbgFSPel (ORCPT
+        id S2404678AbgFSPeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393903AbgFSPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:37 -0400
+        id S2393882AbgFSPcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A4720734;
-        Fri, 19 Jun 2020 15:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFC4220757;
+        Fri, 19 Jun 2020 15:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580756;
-        bh=LRtF0ol0E5xrY/TP7vBKd8wccCxYeetSbp8974+YILI=;
+        s=default; t=1592580734;
+        bh=59NqwUWWhjfYF1vPj0tVIAxyPg99f5wPdqso9o8QcF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yogwpQfVZ6/d0t9WCLVnplyXMzeCJyU2oCT2xMVUi+FsmyGW8dvGYYefOVVDcvq1H
-         LwsFYw7mhrTTMobjLvlJfoewqm03vNRdmkOR/SwoCeofEn/cjGc0w4q6aAmJCtyJbR
-         t039jqbM0fz2t4hJzBWwAFgIE9C4EXRMFnyy6Ekc=
+        b=IUYewPCxIzHCt+IwlqupnEXQakbcAjEsOndMe10wG7QJzbMx+1euln0dEuVWHAprk
+         oD87Ol+tMI4d0GbRuJXKXbTPBWNqp9H4ShYqTlqv7yau5YLK+v2Z96RBL/iRWP717z
+         txm/u30R0an3RFV7K3ODd4wAZnpQDx0GtAJjdhCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.7 371/376] f2fs: fix checkpoint=disable:%u%%
-Date:   Fri, 19 Jun 2020 16:34:49 +0200
-Message-Id: <20200619141727.854313296@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 362/376] mtd: rawnand: sunxi: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:40 +0200
+Message-Id: <20200619141727.450683000@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,87 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 1ae18f71cb522684bac1718f5c188fb5e30eb23d upstream.
+commit 3d84515ffd8fb657e10fa5b1215e9f095fa7efca upstream.
 
-When parsing the mount option, we don't have sbi->user_block_count.
-Should do it after getting it.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 1fef62c1423b ("mtd: nand: add sunxi NAND flash controller support")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-54-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/f2fs.h  |    1 +
- fs/f2fs/super.c |   25 +++++++++++++++++++------
- 2 files changed, 20 insertions(+), 6 deletions(-)
+ drivers/mtd/nand/raw/sunxi_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -139,6 +139,7 @@ struct f2fs_mount_info {
- 	int fs_mode;			/* fs mode: LFS or ADAPTIVE */
- 	int bggc_mode;			/* bggc mode: off, on or sync */
- 	bool test_dummy_encryption;	/* test dummy encryption */
-+	block_t unusable_cap_perc;	/* percentage for cap */
- 	block_t unusable_cap;		/* Amount of space allowed to be
- 					 * unusable when disabling checkpoint
- 					 */
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -284,6 +284,22 @@ static inline void limit_reserve_root(st
- 					   F2FS_OPTION(sbi).s_resgid));
- }
+--- a/drivers/mtd/nand/raw/sunxi_nand.c
++++ b/drivers/mtd/nand/raw/sunxi_nand.c
+@@ -2003,7 +2003,7 @@ static int sunxi_nand_chip_init(struct d
+ 	ret = mtd_device_register(mtd, NULL, 0);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register mtd device: %d\n", ret);
+-		nand_release(nand);
++		nand_cleanup(nand);
+ 		return ret;
+ 	}
  
-+static inline void adjust_unusable_cap_perc(struct f2fs_sb_info *sbi)
-+{
-+	if (!F2FS_OPTION(sbi).unusable_cap_perc)
-+		return;
-+
-+	if (F2FS_OPTION(sbi).unusable_cap_perc == 100)
-+		F2FS_OPTION(sbi).unusable_cap = sbi->user_block_count;
-+	else
-+		F2FS_OPTION(sbi).unusable_cap = (sbi->user_block_count / 100) *
-+					F2FS_OPTION(sbi).unusable_cap_perc;
-+
-+	f2fs_info(sbi, "Adjust unusable cap for checkpoint=disable = %u / %u%%",
-+			F2FS_OPTION(sbi).unusable_cap,
-+			F2FS_OPTION(sbi).unusable_cap_perc);
-+}
-+
- static void init_once(void *foo)
- {
- 	struct f2fs_inode_info *fi = (struct f2fs_inode_info *) foo;
-@@ -795,12 +811,7 @@ static int parse_options(struct super_bl
- 				return -EINVAL;
- 			if (arg < 0 || arg > 100)
- 				return -EINVAL;
--			if (arg == 100)
--				F2FS_OPTION(sbi).unusable_cap =
--					sbi->user_block_count;
--			else
--				F2FS_OPTION(sbi).unusable_cap =
--					(sbi->user_block_count / 100) *	arg;
-+			F2FS_OPTION(sbi).unusable_cap_perc = arg;
- 			set_opt(sbi, DISABLE_CHECKPOINT);
- 			break;
- 		case Opt_checkpoint_disable_cap:
-@@ -1845,6 +1856,7 @@ skip:
- 		(test_opt(sbi, POSIX_ACL) ? SB_POSIXACL : 0);
- 
- 	limit_reserve_root(sbi);
-+	adjust_unusable_cap_perc(sbi);
- 	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
- 	return 0;
- restore_gc:
-@@ -3521,6 +3533,7 @@ try_onemore:
- 	sbi->reserved_blocks = 0;
- 	sbi->current_reserved_blocks = 0;
- 	limit_reserve_root(sbi);
-+	adjust_unusable_cap_perc(sbi);
- 
- 	for (i = 0; i < NR_INODE_TYPE; i++) {
- 		INIT_LIST_HEAD(&sbi->inode_list[i]);
 
 
