@@ -2,208 +2,72 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E321CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F99C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B032168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583326;
-	bh=ujyQJqUvgdZO7Pb1fTZntoKYQuPFQt9RaNQCCADeNPI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F60AJbTiE18Sv4G7EnHlFMlzgOgqLc6hzh4RPkdq12fhGbhKOvf14EwofjUOEURMA
-	 NQAFMIZVFDeqIwX3k6R1hAUCDjPojcnnW4wiMw7CkwagCyKEwAhoCaJTiUd8eCUOfO
-	 umHETqr/OuRorZjvf3bsQoCVeWQL1PE7inRK68+k=
+	by mail.kernel.org (Postfix) with ESMTP id A3B13217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405592AbgFSQPZ (ORCPT
+        id S2391190AbgFSQP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:15:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:37096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391027AbgFSPDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4EFA206DB;
-        Fri, 19 Jun 2020 15:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579015;
-        bh=ujyQJqUvgdZO7Pb1fTZntoKYQuPFQt9RaNQCCADeNPI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znFphclSTC/RnsigomHrMzKCZAGYcG9FGJcfuba+CSqh4UwHxxjGZBhggYpLeSXAs
-         Os46JRKzggCuk2Vmh4lsgOekdQzd01O8vFGqmmQPkxRSx7NLr8igAimzRotbLFQzdn
-         t3PGEnxOoQB6YO0Ykjt9BFFksIMUhqyf/hbHVOx4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.19 243/267] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
-Date:   Fri, 19 Jun 2020 16:33:48 +0200
-Message-Id: <20200619141700.350958958@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2391026AbgFSPDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D11762B;
+        Fri, 19 Jun 2020 08:03:34 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA6E93F71F;
+        Fri, 19 Jun 2020 08:03:33 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 16:03:31 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: qrtr: Migrate nameservice to kernel from
+ userspace
+Message-ID: <20200619150331.kk2gocn2jifwgxif@e107158-lin.cambridge.arm.com>
+References: <20200213091427.13435-1-manivannan.sadhasivam@linaro.org>
+ <20200213091427.13435-2-manivannan.sadhasivam@linaro.org>
+ <20200616184805.k7eowfhdevasqite@e107158-lin.cambridge.arm.com>
+ <9184F012-1FDC-4F6B-8B3E-5D2B87F5DACA@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <9184F012-1FDC-4F6B-8B3E-5D2B87F5DACA@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+On 06/19/20 20:16, Manivannan Sadhasivam wrote:
+> Hi, 
+> 
+> On 17 June 2020 12:18:06 AM IST, Qais Yousef <qais.yousef@arm.com> wrote:
+> >Hi Manivannan, David
+> >
+> >On 02/13/20 14:44, Manivannan Sadhasivam wrote:
+> >
+> >[...]
+> >
+> >> +	trace_printk("advertising new server [%d:%x]@[%d:%d]\n",
+> >> +		     srv->service, srv->instance, srv->node, srv->port);
+> >
+> >I can't tell exactly from the discussion whether this is the version
+> >that got
+> >merged into 5.7 or not, but it does match the commit message.
+> >
+> 
+> This got merged and there was a follow up patch to replace trace_printk() with tracepoints got merged as well. 
 
-commit b577a279914085c6b657c33e9f39ef56d96a3302 upstream.
+Cool. Thanks!
 
-Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
-mask") started writing the eint wakeup mask from the pinctrl driver.
-Unfortunately, it made the assumption that the private retention data
-was always a regmap while in the case of s5pv210 it is a raw pointer
-to the clock base (as the eint wakeup mask not in the PMU as with newer
-Exynos platforms).
-
-Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/pinctrl/samsung/pinctrl-exynos.c |   73 ++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
-
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -40,6 +40,8 @@ struct exynos_irq_chip {
- 	u32 eint_pend;
- 	u32 eint_wake_mask_value;
- 	u32 eint_wake_mask_reg;
-+	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
-+				     struct exynos_irq_chip *irq_chip);
- };
- 
- static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
-@@ -350,6 +352,47 @@ static int exynos_wkup_irq_set_wake(stru
- 	return 0;
- }
- 
-+static void
-+exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+{
-+	struct regmap *pmu_regs;
-+
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+	pmu_regs = drvdata->retention_ctrl->priv;
-+	dev_info(drvdata->dev,
-+		 "Setting external wakeup interrupt mask: 0x%x\n",
-+		 irq_chip->eint_wake_mask_value);
-+
-+	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
-+		     irq_chip->eint_wake_mask_value);
-+}
-+
-+static void
-+s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+
-+{
-+	void __iomem *clk_base;
-+
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+
-+	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
-+
-+	__raw_writel(irq_chip->eint_wake_mask_value,
-+		     clk_base + irq_chip->eint_wake_mask_reg);
-+}
-+
- /*
-  * irq_chip for wakeup interrupts
-  */
-@@ -368,8 +411,9 @@ static const struct exynos_irq_chip s5pv
- 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
--	/* Only difference with exynos4210_wkup_irq_chip: */
-+	/* Only differences with exynos4210_wkup_irq_chip: */
- 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
- };
- 
- static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
-@@ -388,6 +432,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
-@@ -406,6 +451,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- /* list of external wakeup controllers supported */
-@@ -582,27 +628,6 @@ int exynos_eint_wkup_init(struct samsung
- 	return 0;
- }
- 
--static void
--exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
--				    struct exynos_irq_chip *irq_chip)
--{
--	struct regmap *pmu_regs;
--
--	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
--		dev_warn(drvdata->dev,
--			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
--		return;
--	}
--
--	pmu_regs = drvdata->retention_ctrl->priv;
--	dev_info(drvdata->dev,
--		 "Setting external wakeup interrupt mask: 0x%x\n",
--		 irq_chip->eint_wake_mask_value);
--
--	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
--		     irq_chip->eint_wake_mask_value);
--}
--
- static void exynos_pinctrl_suspend_bank(
- 				struct samsung_pinctrl_drv_data *drvdata,
- 				struct samsung_pin_bank *bank)
-@@ -634,8 +659,8 @@ void exynos_pinctrl_suspend(struct samsu
- 		else if (bank->eint_type == EINT_TYPE_WKUP) {
- 			if (!irq_chip) {
- 				irq_chip = bank->irq_chip;
--				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
--								    irq_chip);
-+				irq_chip->set_eint_wakeup_mask(drvdata,
-+							       irq_chip);
- 			} else if (bank->irq_chip != irq_chip) {
- 				dev_warn(drvdata->dev,
- 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
-
-
+--
+Qais Yousef
