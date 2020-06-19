@@ -2,89 +2,154 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3148CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B170FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA102073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5B320786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IpzTVX3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgFSFU0 (ORCPT
+        id S1727060AbgFSFbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:20:26 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:40340 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725290AbgFSFUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:20:25 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx32oIS+xejLpGAA--.8501S2;
-        Fri, 19 Jun 2020 13:20:08 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] um: vector: Use GFP_ATOMIC under spin lock
-Date:   Fri, 19 Jun 2020 13:20:07 +0800
-Message-Id: <1592544007-2751-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx32oIS+xejLpGAA--.8501S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJry7Xw1UuryDXFWUAr15CFg_yoW8JF43pF
-        4rA3W7tw1UXa18X34DXrWkZFWYva97tFy8CrZ29a4rur9YgF1kuFWjqFyUZr1xZFWfAF4I
-        vwnFvryxWa1DJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4r
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYPEfDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 19 Jun 2020 01:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgFSFbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 01:31:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6848C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:31:33 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id h185so3938751pfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mhcti4xi7gWs/72FZs9Ehs/eVsh06RolbwHz/6MmSNE=;
+        b=IpzTVX3zxsyeSj4nCfy3gWzchcFjlFzOzjeKEmtT3pOOY9LZ2vGGrc4b+NscZ73mmA
+         QA7cjS5dINpChAjEBH/szEqtgMKVyVrYhShoKTNM5mLxF7KX4x+3VGOM3e6vcvTfeWoe
+         QTrAAwF7HhINHWjbHfGd9gRUeP8sAckBmUW2FfCuVj1OSE8SxL9BYM2tW8EjBcxUFcQK
+         Ok5yI/ClbOX/CvPSn3gMqbFHT+NN74L4JApL60ezBv93WCagaGA6KstBnLGUp7WUpOmQ
+         brdeWgHnyA0ge5U7R8u+MLQ7YWL0w+uKE33yoO5gAfCzWeiHEPY0lhcFVK9H+ta1IoFY
+         9aUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mhcti4xi7gWs/72FZs9Ehs/eVsh06RolbwHz/6MmSNE=;
+        b=SwK03yhagTBZhaUYpywfrHqk3FlxPo9997l2KSWUoSV+OFRJckgBHHr/dPZZfbdbHW
+         AnY95D79mItsCANXTRuRJ3D/pkVlGcRrZWS/zpltLRuLGtCfdcF0LEyousxULqPWd0w3
+         g8YMkGP1Z5dk1TxhRG6yaj9Vml2tT9gZ6tr+66tgk7S7roQG8VWvXYIK0u/bGE7MGPuj
+         9Ldcqj0kddtLjI7BUGFN/RR1KssR/WyTO+m06+Z/2VOGraOmNpIgIVV7SMZBc4KSlic5
+         3FTvYnXDooxOiF+J00SRfc7Qd8lBy+bCzFc1r6sl2LeoV2IP5RoOo61TCVotMqrl4LcY
+         ROxg==
+X-Gm-Message-State: AOAM533wFQJjbEHCWbm8M9ELPXl4MK2ifsO3JQlt+tGnoJLrdchkMFpk
+        fHr27sYNKtVK1daMcJdaN6/1
+X-Google-Smtp-Source: ABdhPJx/OOkxSyQhyygnCOZXnfq3yt/RvC1SMadep0wmUghMUQaer5u1aUK11GYClQg3dB4n9JE7xg==
+X-Received: by 2002:a63:d148:: with SMTP id c8mr1670278pgj.51.1592544693006;
+        Thu, 18 Jun 2020 22:31:33 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:59f:c065:651a:bc24:a9bb:ff41])
+        by smtp.gmail.com with ESMTPSA id w11sm4432653pfi.93.2020.06.18.22.31.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jun 2020 22:31:32 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 11:01:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v3 1/4] bus: mhi: core: Add helper API to return number
+ of free TREs
+Message-ID: <20200619053125.GA3245@Mani-XPS-13-9360>
+References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+ <1591899224-3403-2-git-send-email-hemantk@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591899224-3403-2-git-send-email-hemantk@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use GFP_ATOMIC instead of GFP_KERNEL under spin lock to fix possible
-sleep-in-atomic-context bugs.
+On Thu, Jun 11, 2020 at 11:13:41AM -0700, Hemant Kumar wrote:
+> Introduce mhi_get_no_free_descriptors() API to return number
+> of TREs available to queue buffer. MHI clients can use this
+> API to know before hand if ring is full without calling queue
+> API.
+> 
+> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> ---
+>  drivers/bus/mhi/core/main.c | 12 ++++++++++++
+>  include/linux/mhi.h         |  9 +++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index d25f321..1bd3b1e 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -258,6 +258,18 @@ int mhi_destroy_device(struct device *dev, void *data)
+>  	return 0;
+>  }
+>  
+> +int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
+> +				enum dma_data_direction dir)
 
-Fixes: 9807019a62dc ("um: Loadable BPF "Firmware" for vector drivers")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/um/drivers/vector_kern.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+How about "mhi_get_nr_free_descriptors"? Also align with '('
 
-diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-index 8735c46..555203e 100644
---- a/arch/um/drivers/vector_kern.c
-+++ b/arch/um/drivers/vector_kern.c
-@@ -1403,7 +1403,7 @@ static int vector_net_load_bpf_flash(struct net_device *dev,
- 		kfree(vp->bpf->filter);
- 		vp->bpf->filter = NULL;
- 	} else {
--		vp->bpf = kmalloc(sizeof(struct sock_fprog), GFP_KERNEL);
-+		vp->bpf = kmalloc(sizeof(struct sock_fprog), GFP_ATOMIC);
- 		if (vp->bpf == NULL) {
- 			netdev_err(dev, "failed to allocate memory for firmware\n");
- 			goto flash_fail;
-@@ -1415,7 +1415,7 @@ static int vector_net_load_bpf_flash(struct net_device *dev,
- 	if (request_firmware(&fw, efl->data, &vdevice->pdev.dev))
- 		goto flash_fail;
- 
--	vp->bpf->filter = kmemdup(fw->data, fw->size, GFP_KERNEL);
-+	vp->bpf->filter = kmemdup(fw->data, fw->size, GFP_ATOMIC);
- 	if (!vp->bpf->filter)
- 		goto free_buffer;
- 
--- 
-2.1.0
+> +{
+> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> +	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ?
+> +		mhi_dev->ul_chan : mhi_dev->dl_chan;
+> +	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+> +
+> +	return get_nr_avail_ring_elements(mhi_cntrl, tre_ring);
+> +}
+> +EXPORT_SYMBOL_GPL(mhi_get_no_free_descriptors);
+> +
+>  void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+>  {
+>  	struct mhi_driver *mhi_drv;
+> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+> index 6af6bd6..a39b77d 100644
+> --- a/include/linux/mhi.h
+> +++ b/include/linux/mhi.h
+> @@ -602,6 +602,15 @@ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
+>  void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
+>  
+>  /**
+> + * mhi_get_no_free_descriptors - Get transfer ring length
 
+Is the description correct? I'd suggest to just use the below one.
+
+> + * Get # of TD available to queue buffers
+
+How about, "Get # of available TREs to queue buffers"?
+
+> + * @mhi_dev: Device associated with the channels
+> + * @dir: Direction of the channel
+> + */
+> +int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
+> +				enum dma_data_direction dir);
+
+Align this with '('
+
+Thanks,
+Mani
+
+> +
+> +/**
+>   * mhi_prepare_for_power_up - Do pre-initialization before power up.
+>   *                            This is optional, call this before power up if
+>   *                            the controller does not want bus framework to
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
