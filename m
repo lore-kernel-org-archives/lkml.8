@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A956C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE80F218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5396421527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584470;
-	bh=Di2MMUfV9E4W+mJymjb01swf4edgnWzTp3VZ5Zc+FhY=;
+	s=default; t=1592584474;
+	bh=REYmcY8cxaI9Sz3+PaxzgBVhHq/qpIHIa00Ix67ORNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqfePHABGjU17pkvwkYjVdE4X6VbC07ExI6urG6r8+oFinX2jWGrzvXMosoxc7ENd
-	 tuK+inFnPZFcApXq4SL46YtlhO2WNo7syRmavMkN6EZ2QqnwKJqLueS0n+0zE+IqrW
-	 bQThNYxetL8Va0BzkBoGKdlsFbBdKgfEC1mhlUcc=
+	b=ZPe1iQ73PebUF3xih9K1J8CDkTZfwsgKfNNMaXlonG6H/gjEFyDuNZDwFCMjrCX23
+	 dCiWAxuC1uKQt40elQ9JX3qfX+Cia9b38qRU07V51EbcQejArEIzSdtoxUPfRvQW4T
+	 urt9GFtHu9EpnoSe+pLoiB7WsW0H4PRaVP7SYL7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395174AbgFSQe2 (ORCPT
+        id S2389357AbgFSOuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388565AbgFSOuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:52 -0400
+        id S2389301AbgFSOuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C922166E;
-        Fri, 19 Jun 2020 14:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27ACA20DD4;
+        Fri, 19 Jun 2020 14:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578251;
-        bh=Di2MMUfV9E4W+mJymjb01swf4edgnWzTp3VZ5Zc+FhY=;
+        s=default; t=1592578222;
+        bh=REYmcY8cxaI9Sz3+PaxzgBVhHq/qpIHIa00Ix67ORNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rIXAEZC8zfNC9xABERLxMl6JK1WaXZuKVWGz1E4p4A7slXQZ3VRHiUPvTTPrBssgw
-         Z03Bgs6y1Tb+XLCiQ12W8EH7xLs+eAVC8JyE9iDPXW6FyVokTUWfEbOmA6+9B/7qE9
-         I3bhjFEW2vhWOMapmIOuljBi14LaNADd1d9oxHwM=
+        b=oOVjpNgKKwxxarverJJXvTHgLgF7dOX/cdG7tr/E7lEi4pzmpKmtZ21cyW3YXEGZe
+         QKObfRkLNKcd80krbT9U245JpYv/feupIzCOt/rJTWqwuR66c6RtxpmsWlMc+dPtE9
+         t8HduK2ls/zF+0IZh96UHOFWm8wMoloUzD+Y08U0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        David.Laight@aculab.com (big endian system concerns),
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 4.14 142/190] ima: Fix ima digest hash table key calculation
-Date:   Fri, 19 Jun 2020 16:33:07 +0200
-Message-Id: <20200619141640.753748779@linuxfoundation.org>
+        stable@vger.kernel.org, teroincn@gmail.com,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 100/190] audit: fix a net reference leak in audit_send_reply()
+Date:   Fri, 19 Jun 2020 16:32:25 +0200
+Message-Id: <20200619141638.582021944@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,54 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Paul Moore <paul@paul-moore.com>
 
-commit 1129d31b55d509f15e72dc68e4b5c3a4d7b4da8d upstream.
+[ Upstream commit a48b284b403a4a073d8beb72d2bb33e54df67fb6 ]
 
-Function hash_long() accepts unsigned long, while currently only one byte
-is passed from ima_hash_key(), which calculates a key for ima_htable.
+If audit_send_reply() fails when trying to create a new thread to
+send the reply it also fails to cleanup properly, leaking a reference
+to a net structure.  This patch fixes the error path and makes a
+handful of other cleanups that came up while fixing the code.
 
-Given that hashing the digest does not give clear benefits compared to
-using the digest itself, remove hash_long() and return the modulus
-calculated on the first two bytes of the digest with the number of slots.
-Also reduce the depth of the hash table by doubling the number of slots.
-
-Cc: stable@vger.kernel.org
-Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Acked-by: David.Laight@aculab.com (big endian system concerns)
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: teroincn@gmail.com
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima.h |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/audit.c | 50 +++++++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
 
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -40,7 +40,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 =
- #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
- #define IMA_EVENT_NAME_LEN_MAX	255
- 
--#define IMA_HASH_BITS 9
-+#define IMA_HASH_BITS 10
- #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
- 
- #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
-@@ -167,9 +167,10 @@ struct ima_h_table {
- };
- extern struct ima_h_table ima_htable;
- 
--static inline unsigned long ima_hash_key(u8 *digest)
-+static inline unsigned int ima_hash_key(u8 *digest)
- {
--	return hash_long(*digest, IMA_HASH_BITS);
-+	/* there is no point in taking a hash of part of a digest */
-+	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
+diff --git a/kernel/audit.c b/kernel/audit.c
+index aa6d5e39526b..53224f399038 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -897,19 +897,30 @@ out_kfree_skb:
+ 	return NULL;
  }
  
- #define __ima_hooks(hook)		\
++static void audit_free_reply(struct audit_reply *reply)
++{
++	if (!reply)
++		return;
++
++	if (reply->skb)
++		kfree_skb(reply->skb);
++	if (reply->net)
++		put_net(reply->net);
++	kfree(reply);
++}
++
+ static int audit_send_reply_thread(void *arg)
+ {
+ 	struct audit_reply *reply = (struct audit_reply *)arg;
+-	struct sock *sk = audit_get_sk(reply->net);
+ 
+ 	mutex_lock(&audit_cmd_mutex);
+ 	mutex_unlock(&audit_cmd_mutex);
+ 
+ 	/* Ignore failure. It'll only happen if the sender goes away,
+ 	   because our timeout is set to infinite. */
+-	netlink_unicast(sk, reply->skb, reply->portid, 0);
+-	put_net(reply->net);
+-	kfree(reply);
++	netlink_unicast(audit_get_sk(reply->net), reply->skb, reply->portid, 0);
++	reply->skb = NULL;
++	audit_free_reply(reply);
+ 	return 0;
+ }
+ 
+@@ -923,35 +934,32 @@ static int audit_send_reply_thread(void *arg)
+  * @payload: payload data
+  * @size: payload size
+  *
+- * Allocates an skb, builds the netlink message, and sends it to the port id.
+- * No failure notifications.
++ * Allocates a skb, builds the netlink message, and sends it to the port id.
+  */
+ static void audit_send_reply(struct sk_buff *request_skb, int seq, int type, int done,
+ 			     int multi, const void *payload, int size)
+ {
+-	struct net *net = sock_net(NETLINK_CB(request_skb).sk);
+-	struct sk_buff *skb;
+ 	struct task_struct *tsk;
+-	struct audit_reply *reply = kmalloc(sizeof(struct audit_reply),
+-					    GFP_KERNEL);
++	struct audit_reply *reply;
+ 
++	reply = kzalloc(sizeof(*reply), GFP_KERNEL);
+ 	if (!reply)
+ 		return;
+ 
+-	skb = audit_make_reply(seq, type, done, multi, payload, size);
+-	if (!skb)
+-		goto out;
+-
+-	reply->net = get_net(net);
++	reply->skb = audit_make_reply(seq, type, done, multi, payload, size);
++	if (!reply->skb)
++		goto err;
++	reply->net = get_net(sock_net(NETLINK_CB(request_skb).sk));
+ 	reply->portid = NETLINK_CB(request_skb).portid;
+-	reply->skb = skb;
+ 
+ 	tsk = kthread_run(audit_send_reply_thread, reply, "audit_send_reply");
+-	if (!IS_ERR(tsk))
+-		return;
+-	kfree_skb(skb);
+-out:
+-	kfree(reply);
++	if (IS_ERR(tsk))
++		goto err;
++
++	return;
++
++err:
++	audit_free_reply(reply);
+ }
+ 
+ /*
+-- 
+2.25.1
+
 
 
