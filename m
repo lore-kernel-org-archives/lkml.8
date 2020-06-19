@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB83C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE6120DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD14B217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578149;
-	bh=H5xDzHKG9GRHH4R47pWgDEYLAYfTowtEAnmIXJQZqIg=;
+	s=default; t=1592578153;
+	bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulkZEnxwz6kVBdld5sxphaiDvmQOvvzWJcUwL1xeCHQBJu5xBxRX2hAjmtn4WuFzn
-	 v186jvhOKTbOd5wbN6E7SdBGROekdRpvytOsTGoGOH1RI7wj9qXvzddeC07msZPhTD
-	 +itrVhq0Y6o2wiC+91gC78CAoFivnw23uyas7bdo=
+	b=RDIqC7s3AdC9bHKG0YQb6H0+34YmC7YAu/sOEeiL+0BmfCfgun/wHNN61T8WtGYTj
+	 SgwbnVtUA+RCS4kRr+VmBXiTA9KvlAA+UAoorsJICaXkjysRml0flayrm0/5ir9mPv
+	 cmtUFMZ/3RuLuh7BHCxYGejuRhuLlqbMEaoX2kGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389186AbgFSOtH (ORCPT
+        id S2389196AbgFSOtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41494 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389156AbgFSOs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:59 -0400
+        id S2389158AbgFSOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC386217A0;
-        Fri, 19 Jun 2020 14:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41531217BA;
+        Fri, 19 Jun 2020 14:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578139;
-        bh=H5xDzHKG9GRHH4R47pWgDEYLAYfTowtEAnmIXJQZqIg=;
+        s=default; t=1592578141;
+        bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JByso0eGxXsO4iVU/qmNpMFBZhLXtpU6vZAyowKT6WN7QI2vZve3obxijZ1ni/Mam
-         SRWvkF9ymjwmnOcHMlvqRVQeqpi52keV8sVHUaG97avg550AKQGYqi1riatJirbp5S
-         1bV3wSWJJaC+aHI/PyT5urjl43jrGmDTEY55sNKw=
+        b=Jas6y154a2hUTKH1K1SLFoVhKeWFJ02O70dOk8CmJdp6llcxzZs5pt4MpNQh3ycSf
+         PzjQGmDh4z5aB4UfT2zEgJRxtJrvT1O4Wl2HXmpBl7GwL6VvjmJBYvh6g79pOsmH5w
+         fAzo4qtmLkkKGRINhpvavV1ckBvSR5YIaWsbQp3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 068/190] fat: dont allow to mount if the FAT length == 0
-Date:   Fri, 19 Jun 2020 16:31:53 +0200
-Message-Id: <20200619141636.978715334@linuxfoundation.org>
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 059/190] KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
+Date:   Fri, 19 Jun 2020 16:31:44 +0200
+Message-Id: <20200619141636.525966091@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -64,42 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Xing Li <lixing@loongson.cn>
 
-commit b1b65750b8db67834482f758fc385bfa7560d228 upstream.
+commit fe2b73dba47fb6d6922df1ad44e83b1754d5ed4d upstream.
 
-If FAT length == 0, the image doesn't have any data. And it can be the
-cause of overlapping the root dir and FAT entries.
+The code in decode_config4() of arch/mips/kernel/cpu-probe.c
 
-Also Windows treats it as invalid format.
+        asid_mask = MIPS_ENTRYHI_ASID;
+        if (config4 & MIPS_CONF4_AE)
+                asid_mask |= MIPS_ENTRYHI_ASIDX;
+        set_cpu_asid_mask(c, asid_mask);
 
-Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+set asid_mask to cpuinfo->asid_mask.
+
+So in order to support variable ASID_MASK, KVM_ENTRYHI_ASID should also
+be changed to cpu_asid_mask(&boot_cpu_data).
+
+Cc: Stable <stable@vger.kernel.org>  #4.9+
+Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Signed-off-by: Xing Li <lixing@loongson.cn>
+[Huacai: Change current_cpu_data to boot_cpu_data for optimization]
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Message-Id: <1590220602-3547-2-git-send-email-chenhc@lemote.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fat/inode.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/include/asm/kvm_host.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -1512,6 +1512,12 @@ static int fat_read_bpb(struct super_blo
- 		goto out;
- 	}
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -275,7 +275,7 @@ enum emulation_result {
+ #define MIPS3_PG_FRAME		0x3fffffc0
  
-+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
-+		if (!silent)
-+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
-+		goto out;
-+	}
-+
- 	error = 0;
- 
- out:
+ #define VPN2_MASK		0xffffe000
+-#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
++#define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
+ #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
+ #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
+ #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
 
 
