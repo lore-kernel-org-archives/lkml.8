@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F00C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D16B20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8935020809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584944;
-	bh=YGuNbxnOFdGZn9xhW1g0YbhvMFNUM6o6VtQi5BCwJ9E=;
+	s=default; t=1592584946;
+	bh=zg1MY30pWLAJyYYeXVGxxC6IoKKFWbAWqtBif7+QwTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+GLueORE8Ib7SHcuheMsC++XM5VH9xmAMRtmWqXgFNKcnSoDFGOvgNzLHdzb/EUq
-	 SKxB2J6MpcgGMOpe0Hvdv2FCrZpdpaqWDzdf2QTQRtgPP3FOSzkh6L8PB0/trONbPr
-	 R9oyzO2X2d4MThXzA4DrWyKwKd1mpOZdg+4mywgA=
+	b=KMh+7uLYN6O/j4GeFW4SmP/U9JHwvnC3uWur2OhzMyeMCJKwuO/M1V6YJVE5PbnYC
+	 jcfkVc4sa7o2cWZz5HcIlWNnfPC8hXc/q8Kordtv567Kalr8Z+1T4n86ej3iObUgCj
+	 pCUFj422U6Fww8rHatKiy9rdBs6x3r82vTCsr8S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395242AbgFSQmW (ORCPT
+        id S2389077AbgFSQmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35782 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388575AbgFSOob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:31 -0400
+        id S2387441AbgFSOo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B99221582;
-        Fri, 19 Jun 2020 14:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 986B620A8B;
+        Fri, 19 Jun 2020 14:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577871;
-        bh=YGuNbxnOFdGZn9xhW1g0YbhvMFNUM6o6VtQi5BCwJ9E=;
+        s=default; t=1592577869;
+        bh=zg1MY30pWLAJyYYeXVGxxC6IoKKFWbAWqtBif7+QwTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSsDTDBET3liFYEMD199Nm3AKO5cSwOUJYmtQB8gp/rWAMRfpFM8gHzkClKYty+Da
-         ZXkKGgGbEZXB7H2vc6xJydCywYfC5PLk3y27THT/K5wZGh4GwGIwGgP7wJ9GWF9r7e
-         C2FX26xZgPoJhl0mJNfhCJXCwH7gkSuNaQLoS0RQ=
+        b=bSFkCABMwfMmvXqADKJcDM/tSxQSf/8i5ZBBQq0yb9NCvwgR2YJ5r8Hgi/mmvEzav
+         RRX08WaNFL/gt2IxY7A3BINIGXd+rTeesxCYQsjlJQiJcC1V/RghSQJnFCehyiWYpz
+         zrb3P4VY7ADGntWez0XvTnbsT5tQRFzYin3Sgby8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        greybus-dev@lists.linaro.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 093/128] ixgbe: fix signed-integer-overflow warning
-Date:   Fri, 19 Jun 2020 16:33:07 +0200
-Message-Id: <20200619141625.060048318@linuxfoundation.org>
+Subject: [PATCH 4.9 092/128] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
+Date:   Fri, 19 Jun 2020 16:33:06 +0200
+Message-Id: <20200619141625.005365358@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,53 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
+[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
 
-ubsan report this warning, fix it by adding a unsigned suffix.
+Using a fixed 1s timeout for all commands is a bit problematic.
 
-UBSAN: signed-integer-overflow in
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
-65535 * 65537 cannot be represented in type 'int'
-CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
-Workqueue: ixgbe ixgbe_service_task [ixgbe]
-Call trace:
- dump_backtrace+0x0/0x3f0
- show_stack+0x28/0x38
- dump_stack+0x154/0x1e4
- ubsan_epilogue+0x18/0x60
- handle_overflow+0xf8/0x148
- __ubsan_handle_mul_overflow+0x34/0x48
- ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
- ixgbe_service_task+0xc20/0x1f78 [ixgbe]
- process_one_work+0x8f0/0xf18
- worker_thread+0x430/0x6d0
- kthread+0x218/0x238
- ret_from_fork+0x10/0x18
+For some commands it means waiting longer than needed for the timeout to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+1s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
+
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/greybus/sdio.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index 0d2baec546e1..c17135b7fca7 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -2219,7 +2219,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
+diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
+index 5649ef1e379d..82a1c2cf6687 100644
+--- a/drivers/staging/greybus/sdio.c
++++ b/drivers/staging/greybus/sdio.c
+@@ -413,6 +413,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 	struct gb_sdio_command_request request = {0};
+ 	struct gb_sdio_command_response response;
+ 	struct mmc_data *data = host->mrq->data;
++	unsigned int timeout_ms;
+ 	u8 cmd_flags;
+ 	u8 cmd_type;
+ 	int i;
+@@ -471,9 +472,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 		request.data_blksz = cpu_to_le16(data->blksz);
  	}
  
- 	/* Configure pause time (2 TCs per register) */
--	reg = hw->fc.pause_time * 0x00010001;
-+	reg = hw->fc.pause_time * 0x00010001U;
- 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
- 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
+-	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
+-				&request, sizeof(request), &response,
+-				sizeof(response));
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
++		GB_OPERATION_TIMEOUT_DEFAULT;
++
++	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
++					&request, sizeof(request), &response,
++					sizeof(response), timeout_ms);
+ 	if (ret < 0)
+ 		goto out;
  
 -- 
 2.25.1
