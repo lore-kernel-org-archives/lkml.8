@@ -2,121 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A997DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D064D21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CCF217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578661;
-	bh=CT9r71MK/Ydp6dwbrEa6O5/PjRwxLbVniRQATszwRQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VJsGAu0GGQ6RdJ7rJgVMqC3gclCD/B8EQHKLKWFzHnrkH1utNqFlMTbv5J4pUGSWL
-	 7MSVY+fEpNBHSPRDAyuv00dy0weA0OkKkvsNy9p4x/SOdxaiJg7DkIE8zD0t2kpWT8
-	 bLLgUcJy/bz55lkfElGm7NS8a+uTSZ96b9zqb7Rg=
+	s=default; t=1592578665;
+	bh=T3peY554NwlALNIfveCqi8a67Cv2Pt7s4h5T++96M/A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e1t0xeRPUkFjwnGnfn7FW1RhUcyCp4oUzhElnPQpjMeGssQ40rr1ZexVtTAtDbwhN
+	 KPMFyG1KMmmJ436Kn9FUkHb/j/npZ3DlR5ySXyA3tcW2y9qrTDZKkbS+u4NRT8zy+t
+	 3O4UIqUjC6pdb4Kmrsm5Pg7VGxUJIkocWkb1Q1uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388614AbgFSO5i (ORCPT
+        id S2390284AbgFSO5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390224AbgFSO5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:20 -0400
-Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
+        id S2390237AbgFSO52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0836C2158C;
-        Fri, 19 Jun 2020 14:57:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6750217D8;
+        Fri, 19 Jun 2020 14:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578640;
-        bh=CT9r71MK/Ydp6dwbrEa6O5/PjRwxLbVniRQATszwRQw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PiOsvkir4Os/TLSff6ns8HfTYTo0f/91c/A/OMpAc86PfpoZeZCUwDxBP0bLnO8rS
-         DBzOKGLvrTsWDiaWSnNTOSY7PDGCuNbIwJCr9lEG4Ljvha6FEZrWZP6I6aeZ3LxNsW
-         0nlV8/2Jm+cCcDHQPUI7/wOUnenYIe/kVduz3Ipo=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 69E193C08CD; Fri, 19 Jun 2020 16:57:18 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 16:57:18 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Wang Qing <wangqing@vivo.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers\power\supply: use kobj_to_dev
-Message-ID: <20200619145718.72ginjzx2inkzelv@earth.universe>
-References: <1591944954-14411-1-git-send-email-wangqing@vivo.com>
+        s=default; t=1592578648;
+        bh=T3peY554NwlALNIfveCqi8a67Cv2Pt7s4h5T++96M/A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jLwCwLLgcSVLQhngVeLuBEtkg6sr6FBlvWFS/2M8RZNy5z0EM1lE84UvIXwgP+GsI
+         kgbDzfbfpEBsGyBhpRygudgljoEMk4lthKP2wVi4OKmz+6U92s0rIERkCP9glPXY8f
+         2Z5UvuB4l4kA+LHK0JK6FuDrSrmVyp+OG8VWuW/c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 103/267] spi: dw: Zero DMA Tx and Rx configurations on stack
+Date:   Fri, 19 Jun 2020 16:31:28 +0200
+Message-Id: <20200619141653.798594279@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pmji5uxywuwhyrf6"
-Content-Disposition: inline
-In-Reply-To: <1591944954-14411-1-git-send-email-wangqing@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
---pmji5uxywuwhyrf6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
 
-Hi,
+Some DMA controller drivers do not tolerate non-zero values in
+the DMA configuration structures. Zero them to avoid issues with
+such DMA controller drivers. Even despite above this is a good
+practice per se.
 
-On Fri, Jun 12, 2020 at 02:55:54PM +0800, Wang Qing wrote:
-> Use kobj_to_dev() API instead of container_of().
->=20
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
-> ---
+Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Feng Tang <feng.tang@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-dw-mid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks, queued.
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 3db905f5f345..f7ec8b98e6db 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -155,6 +155,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	if (!xfer->tx_buf)
+ 		return NULL;
+ 
++	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+ 	txconf.dst_maxburst = 16;
+@@ -201,6 +202,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	if (!xfer->rx_buf)
+ 		return NULL;
+ 
++	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+ 	rxconf.src_maxburst = 16;
+-- 
+2.25.1
 
--- Sebastian
 
->  drivers/power/supply/power_supply_sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  mode change 100644 =3D> 100755 drivers/power/supply/power_supply_sysfs.c
->=20
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index bc79560..af0cad2
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -343,7 +343,7 @@ static umode_t power_supply_attr_is_visible(struct ko=
-bject *kobj,
->  					   struct attribute *attr,
->  					   int attrno)
->  {
-> -	struct device *dev =3D container_of(kobj, struct device, kobj);
-> +	struct device *dev =3D kobj_to_dev(kobj);
->  	struct power_supply *psy =3D dev_get_drvdata(dev);
->  	umode_t mode =3D S_IRUSR | S_IRGRP | S_IROTH;
->  	int i;
-> --=20
-> 2.7.4
->=20
 
---pmji5uxywuwhyrf6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s0k4ACgkQ2O7X88g7
-+pouAxAAol0mBNNBXhOkXgK+gNZN2w/ZvBouoVzRqOXniMeAjKhDYUVNCxjN2RRf
-+5qYt0cYGrSVR/FMmY40IGzGPKnO/0cAasVP5CVy8Rkf+Ji0Sy2P40LfFlJe/ZZO
-n/o1dD/m76uremaWPnFJ7St9v1HspoPBQxHC7QEvjvb5zNdvg/OuT9v1XmcwHn+F
-4ab4U9NnAAzDRZz+IzU+xBO6jRm3eVrjPv6f+YUGi4idKNqKZ03g/2u8MRGy5LUg
-fRaO3v/UCW+IQBbPOKbgta2ak9ZqeHTOlYCFivbgvQu/aYEuco4fA6o0cQynLZVV
-06mPloIA5xtPuvJlDBogWzkWjJ3lsXk7femaRnZ1Ra6+I13eMSPCS44diDiEjIUF
-obU9vJmcQmwtTHvHOdaiYjKUXq1pQyLJtEmKoLDvilR+XTw+L4EfnyjGdnMveQsM
-CsgxEFG5mBNh6Xra91D8tzT6lqJW4cL1Ae66DqNTmPUYRY4ex2A6OyLi/c5ivvED
-akGfVU3o2MHE9ZSKlE+b3TapTre1FoFw2M+ZpOIauv9WniVcVsKPmoLASYgL9Y9e
-NT05Zy1OVDZlUKI+6reMvsxzFu4UF9cTzB8vmGOrYfs2y51v70zKdNrBduP9obBt
-fWoCydVn9P3aK4LsUIVMd/DKHT06h5RXdkOQKZNMzavAn08Mkfg=
-=YjtU
------END PGP SIGNATURE-----
-
---pmji5uxywuwhyrf6--
