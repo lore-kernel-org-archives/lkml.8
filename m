@@ -7,47 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5090FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F098A21BE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3125320786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580634;
-	bh=QN44B5NjpaGuNWBUkEo8AlBVX8FksItPDzsjMKTnT0k=;
+	s=default; t=1592580637;
+	bh=tW3rzovhW68qsjJSZ/Gwv429qUv1aDsTkra+6kgU6Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjKcbDbdf4PoB1Ypok1qYIuwUgFMrMGgNwY8CPrUKXu21x6E/SMVzmpFAIWh3Wg5G
-	 pwyMv99KdAcmZSMd9FqJdcjp1kMraOkZ3CjtTXPEWo+LM7xYfyaCXAVf7XV1B/iqot
-	 nRjPJk6tZWfKrSF5Mi+Dfz+6v1mUSxiAl5wjbSu0=
+	b=LM2Bk6QDcN/hl2vbgpA5yMBhUisr8THHfidia4WvJGN+BH0CBWTG5Re4Rpu3w4CDd
+	 y1K6sU3FHb6tQsrVN6cBhOflvSozREKdmpink51mBpD4mH+0KyuzpIzHVdLj/P6iYR
+	 Ksdwl47GM8bAiYWL8KPruQsEfGFsLKqYTy5p4VlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393716AbgFSPa2 (ORCPT
+        id S2393738AbgFSPag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404788AbgFSPaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:22 -0400
+        id S2393727AbgFSPab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F4C820771;
-        Fri, 19 Jun 2020 15:30:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB812193E;
+        Fri, 19 Jun 2020 15:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580621;
-        bh=QN44B5NjpaGuNWBUkEo8AlBVX8FksItPDzsjMKTnT0k=;
+        s=default; t=1592580629;
+        bh=tW3rzovhW68qsjJSZ/Gwv429qUv1aDsTkra+6kgU6Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4fJThrZdc+kjJN364J93WPJgrJXlnqqKDTopOR66Z2TtusuHru6XVCTkQthEjTCO
-         e/4JJ931TpSle6jQDw1qrdU+DzQZE9s2OkutfpjEzcXK+UxdQmg4z1rrktUo+sZlXl
-         zSpI83G2Iw9kThbNo4IwrYzXtE2/y3nSh/TGY1u4=
+        b=iYat2lR1+m0LKV7cNNL5S1qc6DBQgUgsrPBNFYEQIiwMSkSGPIGV5mO8DhrUgFwQr
+         KXPMF4LZlrTB2Q3v6PiJCQ+7pb4ML6jbb22RHJoLd4yDFOimPUV2mfc6wkwLSzvzpH
+         GfzbEKA9qdekmqjaCUW4i0gbI0hkYbF58fvj67LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 320/376] gnss: sirf: fix error return code in sirf_probe()
-Date:   Fri, 19 Jun 2020 16:33:58 +0200
-Message-Id: <20200619141725.479947044@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 5.7 323/376] software node: implement software_node_unregister()
+Date:   Fri, 19 Jun 2020 16:34:01 +0200
+Message-Id: <20200619141725.619042745@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,49 +72,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 43d7ce70ae43dd8523754b17f567417e0e75dbce upstream.
+commit 46d26819a5056f4831649c5887ad5c71a16d86f7 upstream.
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+Sometimes it is better to unregister individual nodes instead of trying
+to do them all at once with software_node_unregister_nodes(), so create
+software_node_unregister() so that you can unregister them one at a
+time.
 
-This avoids a use-after-free in case the driver is later unbound.
+This is especially important when creating nodes in a hierarchy, with
+parent -> children representations.  Children always need to be removed
+before a parent is, as the swnode logic assumes this is going to be the
+case.
 
-Fixes: d2efbbd18b1e ("gnss: add driver for sirfstar-based receivers")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-[ johan: amend commit message; mention potential use-after-free ]
-Cc: stable <stable@vger.kernel.org>	# 4.19
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fix up the lib/test_printf.c fwnode_pointer() test which to use this new
+function as it had the problem of tearing things down in the backwards
+order.
+
+Fixes: f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
+Cc: stable <stable@vger.kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20200524153041.2361-1-gregkh@linuxfoundation.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gnss/sirf.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/base/swnode.c    |   27 +++++++++++++++++++++------
+ include/linux/property.h |    1 +
+ lib/test_printf.c        |    4 +++-
+ 3 files changed, 25 insertions(+), 7 deletions(-)
 
---- a/drivers/gnss/sirf.c
-+++ b/drivers/gnss/sirf.c
-@@ -439,14 +439,18 @@ static int sirf_probe(struct serdev_devi
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -712,17 +712,18 @@ EXPORT_SYMBOL_GPL(software_node_register
+  * @nodes: Zero terminated array of software nodes to be unregistered
+  *
+  * Unregister multiple software nodes at once.
++ *
++ * NOTE: Be careful using this call if the nodes had parent pointers set up in
++ * them before registering.  If so, it is wiser to remove the nodes
++ * individually, in the correct order (child before parent) instead of relying
++ * on the sequential order of the list of nodes in the array.
+  */
+ void software_node_unregister_nodes(const struct software_node *nodes)
+ {
+-	struct swnode *swnode;
+ 	int i;
  
- 	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
- 			GPIOD_OUT_LOW);
--	if (IS_ERR(data->on_off))
-+	if (IS_ERR(data->on_off)) {
-+		ret = PTR_ERR(data->on_off);
- 		goto err_put_device;
-+	}
+-	for (i = 0; nodes[i].name; i++) {
+-		swnode = software_node_to_swnode(&nodes[i]);
+-		if (swnode)
+-			fwnode_remove_software_node(&swnode->fwnode);
+-	}
++	for (i = 0; nodes[i].name; i++)
++		software_node_unregister(&nodes[i]);
+ }
+ EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
  
- 	if (data->on_off) {
- 		data->wakeup = devm_gpiod_get_optional(dev, "sirf,wakeup",
- 				GPIOD_IN);
--		if (IS_ERR(data->wakeup))
-+		if (IS_ERR(data->wakeup)) {
-+			ret = PTR_ERR(data->wakeup);
- 			goto err_put_device;
-+		}
+@@ -741,6 +742,20 @@ int software_node_register(const struct
+ }
+ EXPORT_SYMBOL_GPL(software_node_register);
  
- 		ret = regulator_enable(data->vcc);
- 		if (ret)
++/**
++ * software_node_unregister - Unregister static software node
++ * @node: The software node to be unregistered
++ */
++void software_node_unregister(const struct software_node *node)
++{
++	struct swnode *swnode;
++
++	swnode = software_node_to_swnode(node);
++	if (swnode)
++		fwnode_remove_software_node(&swnode->fwnode);
++}
++EXPORT_SYMBOL_GPL(software_node_unregister);
++
+ struct fwnode_handle *
+ fwnode_create_software_node(const struct property_entry *properties,
+ 			    const struct fwnode_handle *parent)
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -441,6 +441,7 @@ int software_node_register_nodes(const s
+ void software_node_unregister_nodes(const struct software_node *nodes);
+ 
+ int software_node_register(const struct software_node *node);
++void software_node_unregister(const struct software_node *node);
+ 
+ int software_node_notify(struct device *dev, unsigned long action);
+ 
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -637,7 +637,9 @@ static void __init fwnode_pointer(void)
+ 	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
+ 	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
+ 
+-	software_node_unregister_nodes(softnodes);
++	software_node_unregister(&softnodes[2]);
++	software_node_unregister(&softnodes[1]);
++	software_node_unregister(&softnodes[0]);
+ }
+ 
+ static void __init
 
 
