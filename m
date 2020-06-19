@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE32EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE49520771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FC520771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581994;
-	bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
+	s=default; t=1592582008;
+	bh=gIPMWsm4ABPCize5QULWOmfap6esL9krjFHVmOk7eLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpmTiPXGgmI/ZUJdk3dLqvQhal/cZdZBfLUrvVMhl3vTjTYPrKhhCdGH6tJR5OmUw
-	 J7PfgF21qhHpZ7Pamsg42TRjZgHtnzwBlkiMQJ0FZB61tNIDXCe6DjDvjSVSjt4QhR
-	 maNgeqDIHf83CNpIZpLWQTdI8rY2RZ1dQJyaceug=
+	b=JkTKsGhCuzyfR5KXGuoplcLRUTdH+uhXH0jNAqxpzclFhw4hVFI6KZQ079KwBgiY0
+	 wC0d/D43VL9jTUXKGzh5ryXDGzsagDVb1+gD7CeGI44G6pKrdH80cAbvhdxvbqVlpA
+	 daMs5cqk8Wf3HNfCy+d8/x8gsAo/X2MySJITxuUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393038AbgFSPxN (ORCPT
+        id S2393129AbgFSPx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393051AbgFSPWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:45 -0400
+        id S2393026AbgFSPWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FD420B80;
-        Fri, 19 Jun 2020 15:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1721720B80;
+        Fri, 19 Jun 2020 15:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580164;
-        bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
+        s=default; t=1592580156;
+        bh=gIPMWsm4ABPCize5QULWOmfap6esL9krjFHVmOk7eLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2ZezLABiEW8jKqJ5utLA/sOACf9GLdH4o6fMoCOaCGHOAOQ5KShtl18IH3322Qec
-         iRgbLIlQriiC5DhZQpAGxiko6KIVtuGiIm89bKDeFiXg6H8PNWOp5kCyaKkravRsO5
-         7zvglfnIelCgfa1Ep+PiHs0cfeegvw4UcF4GAQAU=
+        b=05ayz8jT4vdfng7a/A/46tb3GgjNZTm3LcpJ+H2niPPkO87FJAe6VsvfaN9WZt++6
+         GihE5US4yjR6FiDOtq0qYRqwZ79m5DAabEA2aRLEKlGCmcAmA7lVPJkx4Pa10qEhWp
+         WMoN3/PDsVrbyoNMXlQsU650Bm2Vw0Plw3xf6zMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 116/376] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Fri, 19 Jun 2020 16:30:34 +0200
-Message-Id: <20200619141715.837156202@linuxfoundation.org>
+Subject: [PATCH 5.7 142/376] ice: Fix error return code in ice_add_prof()
+Date:   Fri, 19 Jun 2020 16:31:00 +0200
+Message-Id: <20200619141717.055532750@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,41 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit f8d530ac29fe9248f5e58ca5bcf4c368f8393ccf ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+Fix to return a error code from the error handling case
+instead of 0, as done elsewhere in this function.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 31ad4e4ee1e4 ("ice: Allocate flow profile")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_flex_pipe.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index 8b44a4de5329..bb49a217635e 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -129,7 +129,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+index 42bac3ec5526..e7a2671222d2 100644
+--- a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
++++ b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+@@ -2962,8 +2962,10 @@ ice_add_prof(struct ice_hw *hw, enum ice_block blk, u64 id, u8 ptypes[],
  
- 	if (tb[NFTA_NAT_FAMILY] == NULL)
-@@ -196,7 +196,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
+ 	/* add profile info */
+ 	prof = devm_kzalloc(ice_hw_to_dev(hw), sizeof(*prof), GFP_KERNEL);
+-	if (!prof)
++	if (!prof) {
++		status = ICE_ERR_NO_MEMORY;
+ 		goto err_ice_add_prof;
++	}
  
- 	return nf_ct_netns_get(ctx->net, family);
+ 	prof->profile_cookie = id;
+ 	prof->prof_id = prof_id;
 -- 
 2.25.1
 
