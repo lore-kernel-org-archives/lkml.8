@@ -2,120 +2,181 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C00C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E051C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0E121532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC3221532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583001;
+	bh=vRp6B92yGsvVsoLIK4jYcAB3SaiF9BPcAde1IxtLjbg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g+/tKIHb/qxbyMz78p+klfgcFhZ4bYDzTbj6Bonkop9uscUXNa4tVOtOQJ/1e9Xpk
+	 jaRazK7fDVIiPnbGv7yzXGmTA/1H0DO/k7R35Tc9qwQcCWq/I8q1qoXqBXVE2JptpF
+	 oXBkzRnulpKtdVAUpmLNCXkVuxfiI2FiwS7WZyM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394294AbgFSQJt (ORCPT
+        id S2394295AbgFSQKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:09:49 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40200 "EHLO pegase1.c-s.fr"
+        Fri, 19 Jun 2020 12:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391500AbgFSPG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49pMbJ5SR2z9v09n;
-        Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HWsNtuMNdH_C; Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbJ4gGDz9v09j;
-        Fri, 19 Jun 2020 17:06:52 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1ECC8B87B;
-        Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9KI_eDtvs7VY; Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E0178B879;
-        Fri, 19 Jun 2020 17:06:54 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2FD8265AF4; Fri, 19 Jun 2020 15:06:54 +0000 (UTC)
-Message-Id: <c634cadd3ef2c9667838c4fe2bd425a72c8fcbd5.1592578278.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-References: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 3/8] powerpc: Set user/kernel boundary at TASK_SIZE instead
- of PAGE_OFFSET
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 19 Jun 2020 15:06:54 +0000 (UTC)
+        id S2391058AbgFSPGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE3B21835;
+        Fri, 19 Jun 2020 15:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579213;
+        bh=vRp6B92yGsvVsoLIK4jYcAB3SaiF9BPcAde1IxtLjbg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VApTaeyPhCxpdDxVFy+u3LHgljx+7zH5wynE6t5uBwVcYvo/uSMTlZrAfCxiQmaBz
+         nNfUhLnzjRKoAlRDsC9tKwM1wXlrtejDhsgqwjtIz63Rok6iHvPZqQcSv0rME/Qvlh
+         4hw72bRjD/AXFs3yi6CeS+RsEeemuScqjQAWhRZI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Surabhi Boob <surabhi.boob@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 050/261] ice: Fix for memory leaks and modify ICE_FREE_CQ_BUFS
+Date:   Fri, 19 Jun 2020 16:31:01 +0200
+Message-Id: <20200619141652.329063051@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User space stops at TASK_SIZE. At the moment, kernel space starts
-at PAGE_OFFSET.
+From: Surabhi Boob <surabhi.boob@intel.com>
 
-In order to use space between TASK_SIZE and PAGE_OFFSET for modules,
-make TASK_SIZE the limit between user and kernel space.
+[ Upstream commit 68d270783742783f96e89ef92ac24ab3c7fb1d31 ]
 
-Note that fault.c already considers TASK_SIZE as the boundary between
-user and kernel space.
+Handle memory leaks during control queue initialization and
+buffer allocation failures. The macro ICE_FREE_CQ_BUFS is modified to
+re-use for this fix.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Surabhi Boob <surabhi.boob@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/page.h | 2 +-
- arch/powerpc/mm/ptdump/ptdump.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_controlq.c | 49 +++++++++++--------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index a63fe6f3a0ff..352a2b80d505 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -256,7 +256,7 @@ static inline bool pfn_valid(unsigned long pfn)
- #ifdef CONFIG_PPC_BOOK3E_64
- #define is_kernel_addr(x)	((x) >= 0x8000000000000000ul)
- #else
--#define is_kernel_addr(x)	((x) >= PAGE_OFFSET)
-+#define is_kernel_addr(x)	((x) >= TASK_SIZE)
- #endif
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.c b/drivers/net/ethernet/intel/ice/ice_controlq.c
+index c68709c7ef81..2e9c97bad3c3 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.c
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.c
+@@ -199,7 +199,9 @@ unwind_alloc_rq_bufs:
+ 		cq->rq.r.rq_bi[i].pa = 0;
+ 		cq->rq.r.rq_bi[i].size = 0;
+ 	}
++	cq->rq.r.rq_bi = NULL;
+ 	devm_kfree(ice_hw_to_dev(hw), cq->rq.dma_head);
++	cq->rq.dma_head = NULL;
  
- #ifndef CONFIG_PPC_BOOK3S_64
-diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-index b71cc628facd..e995f2e9e9f7 100644
---- a/arch/powerpc/mm/ptdump/ptdump.c
-+++ b/arch/powerpc/mm/ptdump/ptdump.c
-@@ -351,7 +351,7 @@ static void populate_markers(void)
- {
- 	int i = 0;
+ 	return ICE_ERR_NO_MEMORY;
+ }
+@@ -245,7 +247,9 @@ unwind_alloc_sq_bufs:
+ 		cq->sq.r.sq_bi[i].pa = 0;
+ 		cq->sq.r.sq_bi[i].size = 0;
+ 	}
++	cq->sq.r.sq_bi = NULL;
+ 	devm_kfree(ice_hw_to_dev(hw), cq->sq.dma_head);
++	cq->sq.dma_head = NULL;
  
--	address_markers[i++].start_address = PAGE_OFFSET;
-+	address_markers[i++].start_address = TASK_SIZE;
- 	address_markers[i++].start_address = VMALLOC_START;
- 	address_markers[i++].start_address = VMALLOC_END;
- #ifdef CONFIG_PPC64
-@@ -388,7 +388,7 @@ static int ptdump_show(struct seq_file *m, void *v)
- 	struct pg_state st = {
- 		.seq = m,
- 		.marker = address_markers,
--		.start_address = PAGE_OFFSET,
-+		.start_address = TASK_SIZE,
- 	};
+ 	return ICE_ERR_NO_MEMORY;
+ }
+@@ -304,6 +308,28 @@ ice_cfg_rq_regs(struct ice_hw *hw, struct ice_ctl_q_info *cq)
+ 	return 0;
+ }
  
- #ifdef CONFIG_PPC64
-@@ -432,7 +432,7 @@ void ptdump_check_wx(void)
- 		.seq = NULL,
- 		.marker = address_markers,
- 		.check_wx = true,
--		.start_address = PAGE_OFFSET,
-+		.start_address = TASK_SIZE,
- 	};
++#define ICE_FREE_CQ_BUFS(hw, qi, ring)					\
++do {									\
++	int i;								\
++	/* free descriptors */						\
++	if ((qi)->ring.r.ring##_bi)					\
++		for (i = 0; i < (qi)->num_##ring##_entries; i++)	\
++			if ((qi)->ring.r.ring##_bi[i].pa) {		\
++				dmam_free_coherent(ice_hw_to_dev(hw),	\
++					(qi)->ring.r.ring##_bi[i].size,	\
++					(qi)->ring.r.ring##_bi[i].va,	\
++					(qi)->ring.r.ring##_bi[i].pa);	\
++					(qi)->ring.r.ring##_bi[i].va = NULL;\
++					(qi)->ring.r.ring##_bi[i].pa = 0;\
++					(qi)->ring.r.ring##_bi[i].size = 0;\
++		}							\
++	/* free the buffer info list */					\
++	if ((qi)->ring.cmd_buf)						\
++		devm_kfree(ice_hw_to_dev(hw), (qi)->ring.cmd_buf);	\
++	/* free DMA head */						\
++	devm_kfree(ice_hw_to_dev(hw), (qi)->ring.dma_head);		\
++} while (0)
++
+ /**
+  * ice_init_sq - main initialization routine for Control ATQ
+  * @hw: pointer to the hardware structure
+@@ -357,6 +383,7 @@ static enum ice_status ice_init_sq(struct ice_hw *hw, struct ice_ctl_q_info *cq)
+ 	goto init_ctrlq_exit;
  
- #ifdef CONFIG_PPC64
+ init_ctrlq_free_rings:
++	ICE_FREE_CQ_BUFS(hw, cq, sq);
+ 	ice_free_cq_ring(hw, &cq->sq);
+ 
+ init_ctrlq_exit:
+@@ -416,33 +443,13 @@ static enum ice_status ice_init_rq(struct ice_hw *hw, struct ice_ctl_q_info *cq)
+ 	goto init_ctrlq_exit;
+ 
+ init_ctrlq_free_rings:
++	ICE_FREE_CQ_BUFS(hw, cq, rq);
+ 	ice_free_cq_ring(hw, &cq->rq);
+ 
+ init_ctrlq_exit:
+ 	return ret_code;
+ }
+ 
+-#define ICE_FREE_CQ_BUFS(hw, qi, ring)					\
+-do {									\
+-	int i;								\
+-	/* free descriptors */						\
+-	for (i = 0; i < (qi)->num_##ring##_entries; i++)		\
+-		if ((qi)->ring.r.ring##_bi[i].pa) {			\
+-			dmam_free_coherent(ice_hw_to_dev(hw),		\
+-					   (qi)->ring.r.ring##_bi[i].size,\
+-					   (qi)->ring.r.ring##_bi[i].va,\
+-					   (qi)->ring.r.ring##_bi[i].pa);\
+-			(qi)->ring.r.ring##_bi[i].va = NULL;		\
+-			(qi)->ring.r.ring##_bi[i].pa = 0;		\
+-			(qi)->ring.r.ring##_bi[i].size = 0;		\
+-		}							\
+-	/* free the buffer info list */					\
+-	if ((qi)->ring.cmd_buf)						\
+-		devm_kfree(ice_hw_to_dev(hw), (qi)->ring.cmd_buf);	\
+-	/* free DMA head */						\
+-	devm_kfree(ice_hw_to_dev(hw), (qi)->ring.dma_head);		\
+-} while (0)
+-
+ /**
+  * ice_shutdown_sq - shutdown the Control ATQ
+  * @hw: pointer to the hardware structure
 -- 
-2.25.0
+2.25.1
+
+
 
