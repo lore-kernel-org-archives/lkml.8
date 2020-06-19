@@ -2,230 +2,319 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62398C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDEAC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EA720EDD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87708208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SQmjtNLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732392AbgFSKgy (ORCPT
+        id S1732452AbgFSKhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:36:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:51208 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbgFSKgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:36:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3160D6E;
-        Fri, 19 Jun 2020 03:36:50 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 338343F71F;
-        Fri, 19 Jun 2020 03:36:49 -0700 (PDT)
-References: <20200618195525.7889-1-qais.yousef@arm.com> <20200618195525.7889-3-qais.yousef@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with static key
-In-reply-to: <20200618195525.7889-3-qais.yousef@arm.com>
-Date:   Fri, 19 Jun 2020 11:36:46 +0100
-Message-ID: <jhjwo43cpfl.mognet@arm.com>
+        Fri, 19 Jun 2020 06:37:08 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:38578 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729195AbgFSKg4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:36:56 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200619103653euoutp01680c11b9d8a1efde1e69e191faca78bd~Z65_L8p191836418364euoutp01L
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:36:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200619103653euoutp01680c11b9d8a1efde1e69e191faca78bd~Z65_L8p191836418364euoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592563013;
+        bh=SKmcGUCViOC20fHTGIMMJj/oBeMFgbmVpPgDVEHrvrs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=SQmjtNLJB6wzAmOZt0C464LUZhO/TfBmCXW6rJ4GZpBKEMV2AaSYkI+HiUSzQOj+Q
+         MvYcqoN6OPs4ZDAifqY8i3BXCdecXr9dCXwOZfsFjmHaax9MclsQ3p37CSofnghhjK
+         5eUq8U99uAd/xIPFp3oNJ94XZotTmyk20BsZkw5E=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200619103653eucas1p15e2da5fba6245c7cb0aed4b4ed2aade8~Z659wd_KI0550605506eucas1p1h;
+        Fri, 19 Jun 2020 10:36:53 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 18.9C.06456.5459CEE5; Fri, 19
+        Jun 2020 11:36:53 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23~Z659cTudX1674116741eucas1p2-;
+        Fri, 19 Jun 2020 10:36:52 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200619103652eusmtrp16b89551ec49170119b569cbd10702833~Z659blL8v0949709497eusmtrp10;
+        Fri, 19 Jun 2020 10:36:52 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-31-5eec9545484b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 68.DA.06314.4459CEE5; Fri, 19
+        Jun 2020 11:36:52 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200619103652eusmtip288440462357bc10b314b7e4863160759~Z6585twsR0244902449eusmtip2j;
+        Fri, 19 Jun 2020 10:36:52 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v7 00/36] DRM: fix struct sg_table nents vs. orig_nents
+ misuse
+Date:   Fri, 19 Jun 2020 12:36:00 +0200
+Message-Id: <20200619103636.11974-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b3brqtr1yn4YGk1UFJLG/rjgmVmFhfpQyEIDGdTL2q5abtq
+        KYGSKLU0KtFshkkFzqn5kR+hWTn8WtYMv7JclGmiqRXNJIus5tXy33nOc857zgMvgUl7hC5E
+        gjqF1aiViTKRBG/qWuzbsb9wVrHzQp89nW82Cei64hoh/bvpKkYPfvssoisqOwV02eMAen5w
+        TEDXjw8L6YGWmyK6uuONmG7/MiEMWsdUlVYhpm2hDGeaF94JmbeXugXM/buZzOjSOMYUjJQj
+        pvVVloi53GBAjLXeLUwSIdkVyyYmpLEa38ATknj9qCTZeuTsUN9TQRay7NEiOwIofxg3VeJa
+        JCGklB6BxagX88M8gpyXhSsbK4LGsULhqkU//XpFVY5g7vsaS8lULW5TiSg5aOe0Iht2onIQ
+        9OSvt2GMKhZA50yqDTtSYXCruWVZj1Pu0KUzYlpEECS1G/qeufJhm6Gy9glmwyTlAKYbEzj/
+        zGbIbizBbLlAmcXQMzmF84YQmMgfEPPYET52N6zgTdBbkIfzhmwEY+ZqMT/kIRg4X4x4VQBY
+        zD9EthYY5Qk1Lb48vRcK339YpoGyh5E5B76EPVxruo7xNAkXcqW82gN03ff+xba/6F+RMDB6
+        MdJGS6lIGDYUC66gLbo1l+nWXKb7X6EMYQbkzKZyqjiWk6vZMz6cUsWlquN8YpJU9ejv/+pd
+        6v76AH3rjzYiikCy9WTQsRmFVKhM49JVRgQEJnMig5/3KqRkrDI9g9UkRWlSE1nOiDYSuMyZ
+        9Ls9HSml4pQp7CmWTWY1q1sBYeeShYK39iz9UmyPNx1Qz7p5Hg4nxdE+HQ/dTB1YdsmPTaHu
+        RxeIR0Vyc6j59OJQZSupsbZ5FDlIw7yavPUx/vkR5zhXs98Ggphs7PDeZlFnaNpmSMXBuop6
+        i9vPO/LMUkMu+nS8pDo8XVxxReEcFHhor8+tEFUdFWU9aT/imLjPSYZz8Uq5F6bhlH8AZ5Mi
+        IVsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xe7ouU9/EGfz4aGbRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgc/PGF14PZYM28N
+        o8febwtYPLZ/e8Dqcb/7OJPH5iX1Hrf/PWb2mHxjOaPH7psNbB59W1YxenzeJBfAFaVnU5Rf
+        WpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXseI2V8Fn/4qr
+        508xNTDese9i5OSQEDCRWPHyFnsXIxeHkMBSRokjU26wQSRkJE5Oa2CFsIUl/lzrYoMo+sQo
+        0TvvLRNIgk3AUKLrLURCRKCTUWJa90ewUcwC85gkFj08xA5SJSzgJ/H+814WEJtFQFXi2KxD
+        zF2MHBy8ArYS58/IQmyQl1i94QAziM0rIChxcuYTFpASZgF1ifXzhEDCzEAlzVtnM09g5J+F
+        pGoWQtUsJFULGJlXMYqklhbnpucWG+oVJ+YWl+al6yXn525iBMbZtmM/N+9gvLQx+BCjAAej
+        Eg/vi5DXcUKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK9MFEZinR5Hxg
+        CsgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cBovHGh2peHl+V3
+        xeZej0lgzM+QEDLvaP/AkiDtskXM7kqUQfz2ydu32LH0rZxgU3t2ftJ/jkr/kNbjFosPOAiW
+        7Fjl8v/ftHKrl5fffeMJmnZwmve0MI7LhS7dC14wzX+36vvxF7E3NecwpESeDIo4OTd4rebi
+        G97LWUwU7dxtGBr3NC+qOs2uxFKckWioxVxUnAgAOKjywckCAAA=
+X-CMS-MailID: 20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23
+References: <CGME20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dear All,
 
-On 18/06/20 20:55, Qais Yousef wrote:
-> There is a report that when uclamp is enabled, a netperf UDP test
-> regresses compared to a kernel compiled without uclamp.
->
-> https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
->
+During the Exynos DRM GEM rework and fixing the issues in the.
+drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
+drivers in DRM framework incorrectly use nents and orig_nents entries of
+the struct sg_table.
 
-ISTR the perennial form for those is: https://lkml.kernel.org/r/<message-id>
+In case of the most DMA-mapping implementations exchanging those two
+entries or using nents for all loops on the scatterlist is harmless,
+because they both have the same value. There exists however a DMA-mapping
+implementations, for which such incorrect usage breaks things. The nents
+returned by dma_map_sg() might be lower than the nents passed as its
+parameter and this is perfectly fine. DMA framework or IOMMU is allowed
+to join consecutive chunks while mapping if such operation is supported
+by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
+where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
+is described here [2]
 
-> While investigating the root cause, there were no sign that the uclamp
-> code is doing anything particularly expensive but could suffer from bad
-> cache behavior under certain circumstances that are yet to be
-> understood.
->
-> https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+The DMA-mapping framework documentation [3] states that dma_map_sg()
+returns the numer of the created entries in the DMA address space.
+However the subsequent calls to dma_sync_sg_for_{device,cpu} and
+dma_unmap_sg must be called with the original number of entries passed to
+dma_map_sg. The common pattern in DRM drivers were to assign the
+dma_map_sg() return value to sg_table->nents and use that value for
+the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
+the code iterated over nents times to access the pages stored in the
+processed scatterlist, while it should use orig_nents as the numer of
+the page entries.
 
-Ditto on the URL
+I've tried to identify all such incorrect usage of sg_table->nents and
+this is a result of my research. It looks that the incorrect pattern has
+been copied over the many drivers mainly in the DRM subsystem. Too bad in
+most cases it even worked correctly if the system used a simple, linear
+DMA-mapping implementation, for which swapping nents and orig_nents
+doesn't make any difference. To avoid similar issues in the future, I've
+introduced a common wrappers for DMA-mapping calls, which operate directly
+on the sg_table objects. I've also added wrappers for iterating over the
+scatterlists stored in the sg_table objects and applied them where
+possible. This, together with some common DRM prime helpers, allowed me
+to almost get rid of all nents/orig_nents usage in the drivers. I hope
+that such change makes the code robust, easier to follow and copy/paste
+safe.
 
->
-> To reduce the pressure on the fast path anyway, add a static key that is
-                                                                        ^^
-                                                                     s/is//
+The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
+it fully. The driver creatively uses sg_table->orig_nents to store the
+size of the allocate scatterlist and ignores the number of the entries
+returned by dma_map_sg function. In this patchset I only fixed the
+sg_table objects exported by dmabuf related functions. I hope that I
+didn't break anything there.
 
-> by default will skip executing uclamp logic in the
-> enqueue/dequeue_task() fast path in the until it's needed.
-                                   ^^^^^^
-                                 s/in the//
+Patches are based on top of Linux next-20200618. The required changes to
+DMA-mapping framework has been already merged to v5.8-rc1.
 
-> As soon as the user start using util clamp by:
->
->       1. Changing uclamp value of a task with sched_setattr()
->       2. Modifying the default sysctl_sched_util_clamp_{min, max}
->       3. Modifying the default cpu.uclamp.{min, max} value in cgroup
->
-> We flip the static key now that the user has opted to use util clamp.
-> Effectively re-introducing uclamp logic in the enqueue/dequeue_task()
-> fast path. It stays on from that point forward until the next reboot.
->
-> This should help minimize the effect of util clamp on workloads that
-> don't need it but still allow distros to ship their kernels with uclamp
-> compiled in by default.
->
-> SCHED_WARN_ON() in uclamp_rq_dec_id() was removed since now we can end
-> up with unbalanced call to uclamp_rq_dec_id() if we flip the key while
-> a task is running in the rq. Since we know it is harmless we just
-> quietly return if we attempt a uclamp_rq_dec_id() when
-> rq->uclamp[].bucket[].tasks is 0.
->
+If possible I would like ask for merging most of the patches via DRM
+tree.
 
-I have an extra comment about that down in the diff.
+Best regards,
+Marek Szyprowski
 
-Also, I think it would be worth mentioning in the changelog why we use the
-same static key with different likelihoods - unlikely in unfrequent paths,
-and likely in the eq/dq hotpath.
 
-> The following results demonstrates how this helps on 2 Sockets Xeon E5
-> 2x10-Cores system.
->
->                                    nouclamp                 uclamp      uclamp-static-key
-> Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
-> Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
-> Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
-> Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
-> Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
-> Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
-> Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
-> Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
-> Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
->
+References:
 
-Am I reading this correctly in that compiling in uclamp but having the
-static key enabled gives a slight improvement compared to not compiling in
-uclamp? I suppose the important bit is that we're not seeing regressions
-anymore, but still.
+[1] https://lkml.org/lkml/2020/3/27/555
+[2] https://lkml.org/lkml/2020/3/29/65
+[3] Documentation/DMA-API-HOWTO.txt
+[4] https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/#ma18c958a48c3b241d5409517fa7d192eef87459b
 
-> Reported-by: Mel Gorman <mgorman@suse.de>
-> Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> Cc: Chris Redpath <chrid.redpath@arm.com>
-> Cc: Lukasz Luba <lukasz.luba@arm.com>
-> Cc: linux-kernel@vger.kernel.org
->
->  kernel/sched/core.c | 56 +++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index e19d2b915406..0824e1bfb484 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -993,9 +1012,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
->       lockdep_assert_held(&rq->lock);
->
->       bucket = &uc_rq->bucket[uc_se->bucket_id];
-> -	SCHED_WARN_ON(!bucket->tasks);
-> -	if (likely(bucket->tasks))
-> -		bucket->tasks--;
-> +
-> +	/*
-> +	 * This could happen if sched_uclamp_unused was disabled while the
-> +	 * current task was running, hence we could end up with unbalanced call
-> +	 * to uclamp_rq_dec_id().
-> +	 */
-> +	if (unlikely(!bucket->tasks))
-> +		return;
+Changelog:
 
-I'm slightly worried about silent returns for cases like these, can we try
-to cook something up to preserve the previous SCHED_WARN_ON()? Say,
-something like the horrendous below - alternatively might be feasible with
-with some clever p->on_rq flag.
+v7:
+- changed DMA page interators to standard DMA SG iterators in drm/prim and
+  videobuf2-dma-contig as suggested by Robin Murphy
+- fixed build issues
 
----
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..09a7891eb481 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -695,6 +695,9 @@ struct task_struct {
-        struct uclamp_se		uclamp_req[UCLAMP_CNT];
-        /* Effective clamp values used for a scheduling entity */
-        struct uclamp_se		uclamp[UCLAMP_CNT];
-+#ifdef CONFIG_SCHED_DEBUG
-+	int                             uclamp_unused_enqueue;
-+#endif
- #endif
+v6: https://lore.kernel.org/linux-iommu/20200618153956.29558-1-m.szyprowski@samsung.com/T/
+- rebased onto Linux next-20200618, which is based on v5.8-rc1; fixed conflicts
 
- #ifdef CONFIG_PREEMPT_NOTIFIERS
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2a712dcb682b..2a723e9d5219 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1018,8 +1018,10 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-         * current task was running, hence we could end up with unbalanced call
-         * to uclamp_rq_dec_id().
-         */
--	if (unlikely(!bucket->tasks))
-+	if (unlikely(!bucket->tasks)) {
-+		SCHED_WARN_ON(!p->uclamp_unused_enqueue);
-                return;
-+	}
+v5: https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+- fixed some minor style issues and typos
+- fixed lack of the attrs argument in ion, dmabuf, rapidio, fastrpc and
+  vfio patches
 
-        bucket->tasks--;
-        uc_se->active = false;
-@@ -1049,8 +1051,16 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- {
-        enum uclamp_id clamp_id;
+v4: https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/
+- added for_each_sgtable_* wrappers and applied where possible
+- added drm_prime_get_contiguous_size() and applied where possible
+- applied drm_prime_sg_to_page_addr_arrays() where possible to remove page
+  extraction from sg_table objects
+- added documentation for the introduced wrappers
+- improved patches description a bit
 
--	if (static_branch_likely(&sched_uclamp_unused))
-+#ifdef CONFIG_SCHED_DEBUG
-+	p->uclamp_unused_enqueue = 0;
-+#endif
-+
-+	if (static_branch_likely(&sched_uclamp_unused)) {
-+#ifdef CONFIG_SCHED_DEBUG
-+		p->uclamp_unused_enqueue = 1;
-+#endif
-                return;
-+	}
+v3: https://lore.kernel.org/dri-devel/20200505083926.28503-1-m.szyprowski@samsung.com/
+- introduce dma_*_sgtable_* wrappers and use them in all patches
 
-        if (unlikely(!p->sched_class->uclamp_enabled))
-                return;
-@@ -1075,6 +1085,10 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+v2: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- dropped most of the changes to drm/i915
+- added fixes for rcar-du, xen, media and ion
+- fixed a few issues pointed by kbuild test robot
+- added wide cc: list for each patch
 
-        for_each_clamp_id(clamp_id)
-                uclamp_rq_dec_id(rq, p, clamp_id);
-+
-+#ifdef CONFIG_SCHED_DEBUG
-+	p->uclamp_unused_enqueue = 0;
-+#endif
- }
+v1: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- initial version
 
- static inline void
----
+
+Patch summary:
+
+Marek Szyprowski (36):
+  drm: prime: add common helper to check scatterlist contiguity
+  drm: prime: use sgtable iterators in
+    drm_prime_sg_to_page_addr_arrays()
+  drm: core: fix common struct sg_table related issues
+  drm: amdgpu: fix common struct sg_table related issues
+  drm: armada: fix common struct sg_table related issues
+  drm: etnaviv: fix common struct sg_table related issues
+  drm: exynos: use common helper for a scatterlist contiguity check
+  drm: exynos: fix common struct sg_table related issues
+  drm: i915: fix common struct sg_table related issues
+  drm: lima: fix common struct sg_table related issues
+  drm: mediatek: use common helper for a scatterlist contiguity check
+  drm: mediatek: use common helper for extracting pages array
+  drm: msm: fix common struct sg_table related issues
+  drm: omapdrm: use common helper for extracting pages array
+  drm: omapdrm: fix common struct sg_table related issues
+  drm: panfrost: fix common struct sg_table related issues
+  drm: radeon: fix common struct sg_table related issues
+  drm: rockchip: use common helper for a scatterlist contiguity check
+  drm: rockchip: fix common struct sg_table related issues
+  drm: tegra: fix common struct sg_table related issues
+  drm: v3d: fix common struct sg_table related issues
+  drm: virtio: fix common struct sg_table related issues
+  drm: vmwgfx: fix common struct sg_table related issues
+  drm: xen: fix common struct sg_table related issues
+  xen: gntdev: fix common struct sg_table related issues
+  drm: host1x: fix common struct sg_table related issues
+  drm: rcar-du: fix common struct sg_table related issues
+  dmabuf: fix common struct sg_table related issues
+  staging: ion: remove dead code
+  staging: ion: fix common struct sg_table related issues
+  staging: tegra-vde: fix common struct sg_table related issues
+  misc: fastrpc: fix common struct sg_table related issues
+  rapidio: fix common struct sg_table related issues
+  samples: vfio-mdev/mbochs: fix common struct sg_table related issues
+  media: pci: fix common ALSA DMA-mapping related codes
+  videobuf2: use sgtable-based scatterlist wrappers
+
+ drivers/dma-buf/heaps/heap-helpers.c          | 13 ++-
+ drivers/dma-buf/udmabuf.c                     |  7 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c   |  6 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |  9 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c  |  8 +-
+ drivers/gpu/drm/armada/armada_gem.c           | 12 +--
+ drivers/gpu/drm/drm_cache.c                   |  2 +-
+ drivers/gpu/drm/drm_gem_cma_helper.c          | 23 +----
+ drivers/gpu/drm/drm_gem_shmem_helper.c        | 14 ++-
+ drivers/gpu/drm/drm_prime.c                   | 91 +++++++++++--------
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c         | 12 +--
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c         | 13 +--
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c       | 10 +-
+ drivers/gpu/drm/exynos/exynos_drm_gem.c       | 23 +----
+ drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c    | 11 +--
+ .../gpu/drm/i915/gem/selftests/mock_dmabuf.c  |  7 +-
+ drivers/gpu/drm/lima/lima_gem.c               | 11 ++-
+ drivers/gpu/drm/lima/lima_vm.c                |  5 +-
+ drivers/gpu/drm/mediatek/mtk_drm_gem.c        | 37 ++------
+ drivers/gpu/drm/msm/msm_gem.c                 | 13 +--
+ drivers/gpu/drm/msm/msm_gpummu.c              | 14 ++-
+ drivers/gpu/drm/msm/msm_iommu.c               |  2 +-
+ drivers/gpu/drm/omapdrm/omap_gem.c            | 20 ++--
+ drivers/gpu/drm/panfrost/panfrost_gem.c       |  4 +-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c       |  7 +-
+ drivers/gpu/drm/radeon/radeon_ttm.c           | 11 +--
+ drivers/gpu/drm/rcar-du/rcar_du_vsp.c         |  3 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c   | 42 +++------
+ drivers/gpu/drm/tegra/gem.c                   | 27 ++----
+ drivers/gpu/drm/tegra/plane.c                 | 15 +--
+ drivers/gpu/drm/v3d/v3d_mmu.c                 | 13 ++-
+ drivers/gpu/drm/virtio/virtgpu_object.c       | 36 +++++---
+ drivers/gpu/drm/virtio/virtgpu_vq.c           | 12 +--
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c    | 17 +---
+ drivers/gpu/drm/xen/xen_drm_front_gem.c       |  2 +-
+ drivers/gpu/host1x/job.c                      | 22 ++---
+ .../common/videobuf2/videobuf2-dma-contig.c   | 34 +++----
+ .../media/common/videobuf2/videobuf2-dma-sg.c | 32 +++----
+ .../common/videobuf2/videobuf2-vmalloc.c      | 12 +--
+ drivers/media/pci/cx23885/cx23885-alsa.c      |  2 +-
+ drivers/media/pci/cx25821/cx25821-alsa.c      |  2 +-
+ drivers/media/pci/cx88/cx88-alsa.c            |  2 +-
+ drivers/media/pci/saa7134/saa7134-alsa.c      |  2 +-
+ drivers/media/platform/vsp1/vsp1_drm.c        |  8 +-
+ drivers/misc/fastrpc.c                        |  4 +-
+ drivers/rapidio/devices/rio_mport_cdev.c      |  8 +-
+ drivers/staging/android/ion/ion.c             | 25 +++--
+ drivers/staging/android/ion/ion.h             |  1 -
+ drivers/staging/android/ion/ion_heap.c        | 53 +++--------
+ drivers/staging/android/ion/ion_system_heap.c |  2 +-
+ drivers/staging/media/tegra-vde/iommu.c       |  4 +-
+ drivers/xen/gntdev-dmabuf.c                   | 13 ++-
+ include/drm/drm_prime.h                       |  2 +
+ samples/vfio-mdev/mbochs.c                    |  3 +-
+ 54 files changed, 312 insertions(+), 471 deletions(-)
+
+-- 
+2.17.1
+
