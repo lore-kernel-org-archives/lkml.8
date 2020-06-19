@@ -2,204 +2,165 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B04C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7298CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3EB52073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507E420DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1MTzq5p"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oKJaPgv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394897AbgFSSRl (ORCPT
+        id S1732557AbgFSSSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:17:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57946 "EHLO
+        Fri, 19 Jun 2020 14:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389232AbgFSSRf (ORCPT
+        with ESMTP id S1731907AbgFSSSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:17:35 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB8BC06174E;
-        Fri, 19 Jun 2020 11:17:35 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id p15so4891810qvr.9;
-        Fri, 19 Jun 2020 11:17:35 -0700 (PDT)
+        Fri, 19 Jun 2020 14:18:52 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C4BC0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:18:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id k18so702399qke.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:18:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3uZCoM2AWA6/XtPvpJamTOlHYSrROKfn1hw8fNerrOg=;
-        b=f1MTzq5px1ZySmzMqwu8CBDsMcxnBOYGuyxhP7gnhUomFLUDKg0ESORk9IVOIyvxMV
-         6CAuFtQa/yKhdEZwRrwn9VgZfDyHPq01i8x+574sPCEbXnyKbH/SJ5NF5E36EvtnfMKz
-         eNGL8G7uZ/nCucgPYOpmJpeejDtvzyiyaRD+MmIb6LWZAavDBnE/J16UjPL5TB/rxVUQ
-         DVIbMgEubdkd1b4/km22idxq9bWhB+uwCEuVBoNlirINAfXmsn3rPUZsHMS7IIgt7FCx
-         eDe9r+JB9c5Q8N2Fxzeenlyl8PIfTZGy9UrluWwVlm/MoJHZHtqjLBvfNSOaoCQCPE8H
-         vRTw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1/Hgy08bto/uuUKyMYyyKuV+V6dnJEVWt8WI7nf113M=;
+        b=oKJaPgv8wNzRDCQM/lbllCSa8UopWR/4B3ZObmEr8TAf1+Rds44pV9VzNub4sQdhc2
+         bjSNRQFpC1WEcAOQoeY8RSETmivCfaJ304Nt+yFVJOJ3EAJPutPkzAstPxgxWTthm32r
+         lAh5yy5JF9Zclqktay5+zs6zAs4qsPCMyyTnmAlKngaG1QbMRQj5/aW32rxFtirPl7SN
+         HF7NEkxn7w4GPh8ayZInrb8FNVuIMujbguuDEsHpUspaixZEf7pYVjnwEs3vjnveMg0N
+         FydqN5NJ5K9LZc5hUEs32llHDaDYk5KrqnBUzpPC9LHlhF+AF1cEaShjq0uYpfPfAwu+
+         i2ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3uZCoM2AWA6/XtPvpJamTOlHYSrROKfn1hw8fNerrOg=;
-        b=KT3nLm1YKD3SrikmRyzkyZja7A6cPvfN48c+bRMl40CYLxBsxhrdANodntC1Jre1Ol
-         6wIMUZNKa5zVl2c7vgxlZ7Dd8rLGXSoO3UTwKmtCl8pt/7SMssvGNcIrX+GB3xYK53Qb
-         JeoWbzSKqTUixr351qKyLtxxCXgZ6GUvi21Ti6wej9+kQTJEHbnfcy3zgjAFP3/DO0ox
-         +naX7hvB9VUGPRj3uVRSdeOat8WZ2hY7e2bu16wtTZZBVGboYNaxusoDdGCwxOqpr4Xk
-         t/KXX4flexWRnDpLVyUXVksHyX6/BdTlL7AO/V49ncN0dW4B35/q68+qOFjys+OrySfi
-         /6lg==
-X-Gm-Message-State: AOAM533HY3wbAzt0zLAGS10E7tiBgnjOcLbGdIOABrOx9pXiu0ND+TBI
-        PvFb+jZctg1s3P0aMMuJXftN0xQcQAo=
-X-Google-Smtp-Source: ABdhPJypDjUGC4ELUXzah3KfvqRPnDFmNebIAcKuobBGd0JRNhy9gTlVawM4bflVC2fHItXQAqIoaw==
-X-Received: by 2002:ad4:4d04:: with SMTP id l4mr10316591qvl.88.1592590654677;
-        Fri, 19 Jun 2020 11:17:34 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id u14sm6467749qkj.18.2020.06.19.11.17.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 11:17:34 -0700 (PDT)
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     David Gow <davidgow@google.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <CABVgOSkrKHs_uWLZ++_fBC_mfe3RgDxmCvnkcyn1P_wjXTV9Og@mail.gmail.com>
- <CY4PR13MB11756803217A9D20456E826FFD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <CAFd5g458XTDftQAOm-K4Squ5-ZuZnZcFdVUG0JtUWF56cODOVg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <f5554a01-0862-f7c3-5c6d-f77c9ee8c8f9@gmail.com>
-Date:   Fri, 19 Jun 2020 13:17:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1/Hgy08bto/uuUKyMYyyKuV+V6dnJEVWt8WI7nf113M=;
+        b=tLQSWf2O46qyLxJ6V/Hvm7Vtu21dIFmfKajdNIX6K9u87fKTp36/6Frou+0hJgaand
+         SZkNdkCpvaxpqurwuOt8iVebIZ9jBG4ARO5GzLIe2lTePuwaanQPGqG2h9r4zgNO/yvb
+         oN00vJzlEM2gPaug6TjjskQeECVtFY3p06tiTAAIq3RnUs9RRzMbn4HDCwACYNzxNAuU
+         ebd5RPPlhGZUH4lJroVAHmdRjGIzPyzGaVfUVT2p90pYOxPusZXe+J+Ww77/SnEQL50V
+         uMgJGDxA7GpsMLZAVMT0Fj9quzKontOdnCrzLRbO9dfa83O1qQ6d0Gj2gupXRfiziXkE
+         VN9w==
+X-Gm-Message-State: AOAM5329mjHNMJRK1fWCRv3zNVcuWM99cf7NYr0iAi7ZMeHZJItR4TAS
+        Bz3TYr1YkIvxAU86doKRpC5yyg==
+X-Google-Smtp-Source: ABdhPJwp/bC67muLlOI/xSpEwuzExrlyozorQFAY/Wts3lymB2t5b6BHCjSgETZH9nZLtDVxeUxvJg==
+X-Received: by 2002:a37:4e4a:: with SMTP id c71mr4652759qkb.61.1592590730926;
+        Fri, 19 Jun 2020 11:18:50 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id f203sm815339qke.135.2020.06.19.11.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 11:18:50 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmLbF-00AyFH-UW; Fri, 19 Jun 2020 15:18:49 -0300
+Date:   Fri, 19 Jun 2020 15:18:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619181849.GR6578@ziepe.ca>
+References: <20200617152835.GF6578@ziepe.ca>
+ <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g458XTDftQAOm-K4Squ5-ZuZnZcFdVUG0JtUWF56cODOVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619180935.GA10009@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 15:03, Brendan Higgins wrote:
-> On Mon, Jun 15, 2020 at 10:34 AM Bird, Tim <Tim.Bird@sony.com> wrote:
->>
->>> -----Original Message-----
->>> From: David Gow <davidgow@google.com>
->>>
->>> On Thu, Jun 11, 2020 at 2:11 AM Bird, Tim <Tim.Bird@sony.com> wrote:
-> [...]
->>> KUnit is currently outputting "TAP version 14", as we were hoping some
->>> of our changes would get into the TAP14 spec. (Any comments, Brendan?)
->>> Maybe this should end up saying "KTAP version 1" or something?
->>
->> I don't know if this will break any existing results parsers or not.
->> I hesitate to use "TAP version 14", as TAP appears to be a dormant
->> initiative at the moment, and there's no guarantee that the kernel's
->> changes will get adopted into an official spec.
+On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
+> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+> > On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+> > 
+> > > The madness is only that device B's mmu notifier might need to wait
+> > > for fence_B so that the dma operation finishes. Which in turn has to
+> > > wait for device A to finish first.
+> > 
+> > So, it sound, fundamentally you've got this graph of operations across
+> > an unknown set of drivers and the kernel cannot insert itself in
+> > dma_fence hand offs to re-validate any of the buffers involved?
+> > Buffers which by definition cannot be touched by the hardware yet.
+> > 
+> > That really is a pretty horrible place to end up..
+> > 
+> > Pinning really is right answer for this kind of work flow. I think
+> > converting pinning to notifers should not be done unless notifier
+> > invalidation is relatively bounded. 
+> > 
+> > I know people like notifiers because they give a bit nicer performance
+> > in some happy cases, but this cripples all the bad cases..
+> > 
+> > If pinning doesn't work for some reason maybe we should address that?
 > 
-> We were using "TAP version 14" since the "extensions" we are using
-> were all proposed among the TAP people to go into the next version of
-> TAP. Based on discussions among them they seem to like the subtest
-> stuff:
-> 
-> https://github.com/TestAnything/testanything.github.io/pull/36
-> 
-> Anyway, I can still appreciate that they might change their minds.
-> 
->> If we are a strict super-set of TAP, then I suppose we could just
->> start using TAP version 14, and unilaterally declare that our changes
->> make a new spec.  But since we don't control the web site this feels
->> like a hostile takeover.
-> 
-> I just thought it was okay because it was already in their proposed
-> TAP14 spec, but yeah, if we just decide amongst ourselves to use it,
-> we should probably do something else.
-> 
->> I'm most comfortable with calling our thing KTAP, and just
->> referencing TAP as inspiration.  I don't have a strong opinion on
-> 
-> I am cool with that.
+> Note that the dma fence is only true for user ptr buffer which predate
+> any HMM work and thus were using mmu notifier already. You need the
+> mmu notifier there because of fork and other corner cases.
 
-I like a KTAP specification, based on the proposed TAP 14, but with a
-good edit, and with the extensions and changes that are coming out
-of this conversation.
+I wonder if we should try to fix the fork case more directly - RDMA
+has this same problem and added MADV_DONTFORK a long time ago as a
+hacky way to deal with it.
 
-It would be great if we could just have a finished TAP 14, but my
-understanding is that efforts to move that forward are not making
-any progress.  And if we fork to make KTAP, maybe that will be
-the incentive for TAP to move forward, and maybe KTAP could be
-merged back into TAP.
+Some crazy page pin that resolved COW in a way that always kept the
+physical memory with the mm that initiated the pin?
 
--Frank
+(isn't this broken for O_DIRECT as well anyhow?)
 
-> 
->> KTAP vs TAP, but I do feel strongly that kselftest and kunit should use the
->> same version line (if we can get them to use the same conventions).
-> 
-> Yeah, I agree: it would be better if there was just one version of
-> (K)TAP in the kernel.
-> 
->>>> Test plan line
->>>> --------------
->>>> The test plan indicates the number of individual test cases intended to
->>>> be executed by the test. It always starts with "1.." and is followed
->>>> by the number of tests cases.  In the example above, 1..1", indicates
->>>> that this test reports only 1 test case.
->>>>
->>>> The test plan line can be placed in two locations:
->>>>  * the second line of test output, when the number of test cases is known
->>>>    in advance
->>>>  * as the last line of test output, when the number of test cases is not
->>>>    known in advance.
->>>>
->>>> Most often, the number of test cases is known in advance, and the test plan
->>>> line appears as the second line of test output, immediately following
->>>> the output version line.  The number of test cases might not be known
->>>> in advance if the number of tests is calculated from runtime data.
->>>> In this case, the test plan line is emitted as the last line of test
->>>> output.
->>>
->>> KUnit is currently including the test plan line only for subtests, as
->>> the current version doesn't actually know how many test suites will
->>> run in advance.
->>> This is something there's work underway to fix, though.
->> Sounds good.  You can just put the line at the bottom if it's
->> obnoxious to calculate ahead of time.
-> 
-> I thought that is not in the TAP spec?
-> 
-> I kind of like printing out ahead of time how many tests we expect to
-> run, so if we crash we know how many tests weren't run.
-> 
-> In any case, until we get the change in that David is referencing, we
-> cannot print out the test plan for the "super test" before or after
-> because KUnit doesn't know when it is "done". So moving it to the
-> bottom doesn't really help us.
-> 
->> Does this mean that KUnit treats each sub-test as an individual test case
->> of the "super-test"?
-> 
-> Yes.
-> 
-> At the top level, we have all test suites. Each subtest in TAP is a
-> test suite in KUnit. Each case in each subtest in TAP is a test case
-> in KUnit.
-> 
->> In results summaries for a super-test, are all sub-test cases counted,
->> or just the list of sub-tests?
-> 
-> Just the sub-tests. Each subtest is responsible for counting it's own cases:
-> 
-> https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#subtests
-> 
-> Cheers
-> 
+How does mmu_notifiers help the fork case anyhow? Block fork from
+progressing?
 
+> I probably need to warn AMD folks again that using HMM means that you
+> must be able to update the GPU page table asynchronously without
+> fence wait.
+
+It is kind of unrelated to HMM, it just shouldn't be using mmu
+notifiers to replace page pinning..
+
+> The issue for AMD is that they already update their GPU page table
+> using DMA engine. I believe this is still doable if they use a
+> kernel only DMA engine context, where only kernel can queue up jobs
+> so that you do not need to wait for unrelated things and you can
+> prioritize GPU page table update which should translate in fast GPU
+> page table update without DMA fence.
+
+Make sense
+
+I'm not sure I saw this in the AMD hmm stuff - it would be good if
+someone would look at that. Every time I do it looks like the locking
+is wrong.
+
+Jason
