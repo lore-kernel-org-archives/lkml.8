@@ -2,174 +2,261 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08C2A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A83C2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="ErWRNWuZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpreWgqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404126AbgFSQKX (ORCPT
+        id S2390400AbgFSQKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
+        Fri, 19 Jun 2020 12:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392921AbgFSQKR (ORCPT
+        with ESMTP id S2391837AbgFSQKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:10:17 -0400
-Received: from mx0b-00190b01.pphosted.com (mx0b-00190b01.pphosted.com [IPv6:2620:100:9005:57f::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF1EC06174E;
-        Fri, 19 Jun 2020 09:10:17 -0700 (PDT)
-Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
-        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JG2QZa021248;
-        Fri, 19 Jun 2020 17:07:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=7CxRloMUzMzHtMYCAIVGIDg2K8kW9NS7Ez3DjXqAktk=;
- b=ErWRNWuZtlY60K2Le5us949BReegtvr7yjcy84NTOJPVRJ/s0ap065bNIvCItRkefDNG
- F4RVJ/PR/ZGPa06n/h+eeIzg9MVN3Bd8rZdhA3TEe2QqE+MAf4hJmYTevF0dcQpljAUt
- diHMpTzK/GzZlA7EclyixCNnPJ89oEQ+C6rBgystmYM2exlZFlA+G3o6fLnhNxs+RzUC
- 0Ulhuwch+yr1M2Q5dlWpsYCTJfSfKDv91f+LSVJxmZVQeFZFu6rh8IfU9biM9Rkiagxj
- Sn7gYn1j3wzhyzP7El+TgZowv9WXe2BLfLad9ldYTFcB4V2Mxh0O/cCM72tGdRx2zU3d BA== 
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-        by mx0b-00190b01.pphosted.com with ESMTP id 31qrebsgw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 17:07:54 +0100
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 05JG5VvO011524;
-        Fri, 19 Jun 2020 12:07:54 -0400
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 31qjmbvqx3-1;
-        Fri, 19 Jun 2020 12:07:54 -0400
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id AE3853A60B;
-        Fri, 19 Jun 2020 16:07:53 +0000 (GMT)
-Subject: Re: [PATCH v3 20/21] dyndbg: add user-flag, negating-flags, and
- filtering on flags
-To:     jim.cromie@gmail.com,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-References: <20200617162536.611386-1-jim.cromie@gmail.com>
- <20200617162536.611386-23-jim.cromie@gmail.com> <20200618161912.GD3617@alley>
- <20200618174058.GE3617@alley>
- <746984fb-00ee-9079-efac-50167f3c3e40@akamai.com>
- <CAJfuBxwLKDSx6RA_ZOk=eEHw0P3FeAcT=PCr-aHjUFKDS2p8cQ@mail.gmail.com>
- <172c0580-279f-aa3e-817a-4216067bea10@akamai.com>
- <23396523-28c3-74e6-3e62-be68e5a5465a@linaro.org>
- <CAJfuBxx2KDBLX9H6N-79VPOXBwbdzSQse41azTCk0SZs7PtQuA@mail.gmail.com>
-From:   Jason Baron <jbaron@akamai.com>
-Message-ID: <f61b184b-054e-4dd1-04e0-9d045265d9e0@akamai.com>
-Date:   Fri, 19 Jun 2020 12:07:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 12:10:18 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7085C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:10:18 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id v11so4678090pgb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tTASVTiSXZsyhNQTM1i/jl+TLSbZb4AaMfa8Navk19E=;
+        b=vpreWgqaEL0hY65uQHwXkrI1bw0hlhvKUMRBvVleOAPt8JQ/GitPept7T9GRzNywIs
+         W2dOqIazGiiOvoSWqv3PycaYBGGtaFnJmikOwKlvx81VV+NIT06c4NueHo7lVGbRfmbu
+         J6MoX7JUIiQvfadTANBttCsI/2mNjQTAv/5q3SdAO5DDbq+e0drMP9VA+auz2XoRNtjT
+         sM6ssTKbWM/e88hJTaU5GgGrph/M5FFDili9NvLvjTOVefjwpFaOCSLr3Yqsi9zvo3lE
+         N3LB4jN44AMOn+eVgs34fWKsbIr46QT1ejTAZsUDJw1+U2f8C9b/miIubc6K86Jtj02I
+         pcoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tTASVTiSXZsyhNQTM1i/jl+TLSbZb4AaMfa8Navk19E=;
+        b=hrVQG0FDuDJjlJ/w5zZt1mN5DX0OPRMCjmdPle/0tv27Sy7mpX42cOn0Ta+I7vaK3z
+         naJZHmB4cSQnnvTMIxgbNPyrzS5ZkcngJmZHcXCHGocXeHymjOMWt+mBBLx/3YIWOiBE
+         XhvGRzNub5dlBxwkQSV2GfJwC2tmE96uEHm72E2O5Q8xU1yLGLU1HMbzgsWoldjCp7ym
+         /Mrix7wVelB7g9k+H5gX/77UsmXQzOpofYVQY+TNX49fNpg1Gp+nDp1dfm4uB9S2T0o7
+         f4GLR4K1Lu9gjG17yINa/8KRS2MU8+rsdqjIysYRCcBtxcPngF6zlZRDw83Cy8QGC/gv
+         J2aQ==
+X-Gm-Message-State: AOAM530EyGM45cD2fBmNn0M3zDrImG6jLVEE+Ucw/Z7Weywg4xDslKM4
+        X3VZr+Q71D/99cxVKwu3iLEiChAeCLaWVyZHHK2+Pg==
+X-Google-Smtp-Source: ABdhPJxyC2UuE0NNmrY1qY4W7Z++jdlGfsPJt0+ldEi7tHtlwWMxYsJpYJCnjas5qPET4m31FTa/mR9QYlrakCnyz38=
+X-Received: by 2002:a62:25c5:: with SMTP id l188mr8813970pfl.178.1592583017934;
+ Fri, 19 Jun 2020 09:10:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJfuBxx2KDBLX9H6N-79VPOXBwbdzSQse41azTCk0SZs7PtQuA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_16:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006190118
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_16:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 adultscore=0
- spamscore=0 cotscore=-2147483648 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006190117
+References: <000000000000780999059c048dfc@google.com>
+In-Reply-To: <000000000000780999059c048dfc@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 19 Jun 2020 18:10:07 +0200
+Message-ID: <CAAeHK+xT12YpnLYw78RVS5PAFK=yFnYNhq0vny7C2O+zUsFwdg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in uvc_probe
+To:     syzbot <syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 1:24 PM syzbot
+<syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    ae179410 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=132223fee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ad1d751a3a72ae57
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9a48339b077c5a80b869
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16857325e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142e069ee00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com
+>
+> usb 1-1: New USB device found, idVendor=0bd3, idProduct=0555,
+> bcdDevice=69.6a
+> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> usb 1-1: config 0 descriptor??
+> usb 1-1: string descriptor 0 read error: -71
+> uvcvideo: Found UVC 0.00 device <unnamed> (0bd3:0555)
+> ==================================================================
+> BUG: KASAN: use-after-free in uvc_register_terms
+> drivers/media/usb/uvc/uvc_driver.c:2038 [inline]
+> BUG: KASAN: use-after-free in uvc_register_chains
+> drivers/media/usb/uvc/uvc_driver.c:2070 [inline]
+> BUG: KASAN: use-after-free in uvc_probe.cold+0x2193/0x29de
+> drivers/media/usb/uvc/uvc_driver.c:2201
+> Read of size 2 at addr ffff8881d4f1bc2e by task kworker/1:2/94
+>
+> CPU: 1 PID: 94 Comm: kworker/1:2 Not tainted 5.5.0-rc3-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xef/0x16e lib/dump_stack.c:118
+>   print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+>   __kasan_report.cold+0x37/0x85 mm/kasan/report.c:506
+>   kasan_report+0xe/0x20 mm/kasan/common.c:639
+>   uvc_register_terms drivers/media/usb/uvc/uvc_driver.c:2038 [inline]
+>   uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2070 [inline]
+>   uvc_probe.cold+0x2193/0x29de drivers/media/usb/uvc/uvc_driver.c:2201
+>   usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+>   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+>   port_event drivers/usb/core/hub.c:5470 [inline]
+>   hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+>   process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Allocated by task 94:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:72
+>   set_track mm/kasan/common.c:80 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:513 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
+>   kmalloc include/linux/slab.h:556 [inline]
+>   kzalloc include/linux/slab.h:670 [inline]
+>   uvc_alloc_chain+0x48/0xfa drivers/media/usb/uvc/uvc_driver.c:1692
+>   uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1818 [inline]
+>   uvc_probe.cold+0x15f0/0x29de drivers/media/usb/uvc/uvc_driver.c:2197
+>   usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+>   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+>   port_event drivers/usb/core/hub.c:5470 [inline]
+>   hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+>   process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 94:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:72
+>   set_track mm/kasan/common.c:80 [inline]
+>   kasan_set_free_info mm/kasan/common.c:335 [inline]
+>   __kasan_slab_free+0x117/0x160 mm/kasan/common.c:474
+>   slab_free_hook mm/slub.c:1425 [inline]
+>   slab_free_freelist_hook mm/slub.c:1458 [inline]
+>   slab_free mm/slub.c:3005 [inline]
+>   kfree+0xd5/0x300 mm/slub.c:3957
+>   uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1825 [inline]
+>   uvc_probe.cold+0x16fd/0x29de drivers/media/usb/uvc/uvc_driver.c:2197
+>   usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+>   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+>   port_event drivers/usb/core/hub.c:5470 [inline]
+>   hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+>   process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d4f1bc00
+>   which belongs to the cache kmalloc-256 of size 256
+> The buggy address is located 46 bytes inside of
+>   256-byte region [ffff8881d4f1bc00, ffff8881d4f1bd00)
+> The buggy address belongs to the page:
+> page:ffffea000753c680 refcount:1 mapcount:0 mapping:ffff8881da002780
+> index:0x0 compound_mapcount: 0
+> raw: 0200000000010200 ffffea000753c600 0000000300000003 ffff8881da002780
+> raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d4f1bb00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   ffff8881d4f1bb80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > ffff8881d4f1bc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                    ^
+>   ffff8881d4f1bc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d4f1bd00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
+Fixed by something.
 
-On 6/18/20 6:48 PM, jim.cromie@gmail.com wrote:
-> On Thu, Jun 18, 2020 at 4:34 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Jason, Jim,
->>
-> 
-> 
-> 
->>> I would be curious to see what Stanimir thinks of this proposal
->>> and whether it would work for his venus driver, which is what
->>> prompted this module group discussion.
->>
->> Hmm, we spin in a circle :)
->>
->> Infact this was my first way of implementing the groups in Venus driver,
->> you can see it at [1].
->>
->>  +#define VDBGL(fmt, args...)   pr_debug("VENUSL: " fmt, ##args)
->>  +#define VDBGM(fmt, args...)   pr_debug("VENUSM: " fmt, ##args)
->>  +#define VDBGH(fmt, args...)   pr_debug("VENUSH: " fmt, ##args)
->>  +#define VDBGFW(fmt, args...)  pr_debug("VENUSFW: " fmt, ##args)
->>
-> 
-> I recall :-)
-> 
-> I think Greg K-Hs   distaste for those defines was for using them,
-> as it tosses the utility of grep pr_debug
-> 
-> pr_debug("VENUSM:"
-> is barely longer than
-> VDBGM
-> 
-> with ddebug_exec_queries, you can leverage the existing format.
-> 
->>
-
-Ok, yes, I like this approach because its simple (just exports
-ddebug_exec_queries()), and it seems to be quite flexible. Module
-authors can 'tag' their queries any way they want.
-
-We could provide some structure, if desired, something like:
-
-#define DYNAMIC_DEBUG_LOW "-V "
-#define DYNAMIC_DEBUG_MED "-VV "
-#define DYNAMIC_DEBUG_HIGH "-VVV "
-#define DYNAMIC_DEBUG_REALLY_HIGH "-VVVV "
-
-And then these could be added to the pr_debug() so:
-
-#define VDBGL(fmt, args...)   pr_debug("VENUSL: "  DYNAMIC_DEBUG_LOW fmt, ##args)
-or
-#define VDBGL(fmt, args...)   pr_debug(DYNAMIC_DEBUG_LOW fmt, ##args)
-or just:
-pr_debug(DYNAMIC_DEBUG_LOW "ERROR HERE: %d", err)
-
-Thanks,
-
--Jason
-
-
->> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_5_21_668&d=DwIBaQ&c=96ZbZZcaMF4w0F4jpN6LZg&r=1fLh1mlLqbfetnnGsbwXfpwmGlG4m83mXgtV4vZ1B1A&m=29UzIGELhVL1znJsgyjGDKGIEdSkSlCsmAh0jpbWHVQ&s=_szr6DQOsbdQ-oYCR9-fs4b-XG_fotTiObUfG3z6UtY&e= 
->>
->> --
->> regards,
->> Stan
-> 
-> thanks
-> Jim
-> 
+#syz invalid
