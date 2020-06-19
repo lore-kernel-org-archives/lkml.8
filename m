@@ -2,198 +2,84 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67889C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE5B2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YmQH+Tq3"
+	by mail.kernel.org (Postfix) with ESMTP id 4B83D2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbgFSL4M (ORCPT
+        id S1732839AbgFSL5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 07:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732225AbgFSL4B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 07:56:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E19C06174E;
-        Fri, 19 Jun 2020 04:56:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qkiSuMBHq1jJPg79H69BLQzOTNgh3NSXy1sjSUD7sso=; b=YmQH+Tq34JCOA4Fpp+Ct6KEZnt
-        8L0h3XQhFTfcl+EZx9PD/QmFfjIZnpy4HoPgNnfBqHv64Iq5KfuRrtvHpLcfBtAlvvzZLZIa6wd8f
-        WBdUMayWL2szYgJzuQAOr0qIZuM5ocftxFPIzNGVjJSWVMSlvpoZeOYI4S4AGQO8Nb0yis8YPFDTs
-        gFrJkRAnXtTDuea5wOUzzuns5noEUpSfRbZfvMS0JhmrqudLco3NaWgMJzebBPpoOvVOvwgRaFW3F
-        NclEHximP3q4U57rebPA25c4PcGKBj5TM+IBkvwcGuWphYM+ITP6Po2I7wixaC/wuvOd6BghDK1It
-        5dgYN/wg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmFcc-0002c8-O0; Fri, 19 Jun 2020 11:55:50 +0000
-Date:   Fri, 19 Jun 2020 04:55:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] gfs2: Rework read and page fault locking
-Message-ID: <20200619115550.GY8681@bombadil.infradead.org>
-References: <20200619093916.1081129-1-agruenba@redhat.com>
- <20200619093916.1081129-3-agruenba@redhat.com>
+        Fri, 19 Jun 2020 07:57:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54298 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732448AbgFSL5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 07:57:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8A98BB5AF;
+        Fri, 19 Jun 2020 11:57:26 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 12:57:23 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619115723.GF3129@suse.de>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-3-qais.yousef@arm.com>
+ <jhjwo43cpfl.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200619093916.1081129-3-agruenba@redhat.com>
+In-Reply-To: <jhjwo43cpfl.mognet@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:39:16AM +0200, Andreas Gruenbacher wrote:
->  static int gfs2_readpage(struct file *file, struct page *page)
->  {
-> -	struct address_space *mapping = page->mapping;
-> -	struct gfs2_inode *ip = GFS2_I(mapping->host);
-> -	struct gfs2_holder gh;
->  	int error;
->  
-> -	unlock_page(page);
-> -	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-> -	error = gfs2_glock_nq(&gh);
-> -	if (unlikely(error))
-> -		goto out;
-> -	error = AOP_TRUNCATED_PAGE;
-> -	lock_page(page);
-> -	if (page->mapping == mapping && !PageUptodate(page))
-> -		error = __gfs2_readpage(file, page);
-> -	else
-> -		unlock_page(page);
-> -	gfs2_glock_dq(&gh);
-> -out:
-> -	gfs2_holder_uninit(&gh);
-> -	if (error && error != AOP_TRUNCATED_PAGE)
-> +	error = __gfs2_readpage(file, page);
-> +	if (error)
->  		lock_page(page);
->  	return error;
+On Fri, Jun 19, 2020 at 11:36:46AM +0100, Valentin Schneider wrote:
+> >                                    nouclamp                 uclamp      uclamp-static-key
+> > Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
+> > Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
+> > Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
+> > Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
+> > Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
+> > Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
+> > Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
+> > Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
+> > Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
+> >
+> 
+> Am I reading this correctly in that compiling in uclamp but having the
+> static key enabled gives a slight improvement compared to not compiling in
+> uclamp? I suppose the important bit is that we're not seeing regressions
+> anymore, but still.
+> 
 
-I don't think this is right.  If you return an error from ->readpage, I'm
-pretty sure you're supposed to unlock that page.  Looking at
-generic_file_buffered_read():
+I haven't reviewed the series in depth because from your review, another
+version is likely in the works. However, it is not that unusual to
+see small fluctuations like this that are counter-intuitive. The report
+indicates the difference is likely outside of the noise with * around the
+percentage difference instead of () but it could be small boot-to-boot
+variance, differences in code layout, slight differences in slab usage
+patterns etc. The definitive evidence that uclamp overhead is no there
+is whether the uclamp functions show up in annotated profiles or not.
 
-                error = mapping->a_ops->readpage(filp, page);
-                if (unlikely(error)) {
-                        if (error == AOP_TRUNCATED_PAGE) {
-                                put_page(page);
-                                error = 0;
-                                goto find_page;
-                        }
-                        goto readpage_error;
-                }
-...
-readpage_error:
-                put_page(page);
-                goto out;
-...
-out:
-        ra->prev_pos = prev_index;
-        ra->prev_pos <<= PAGE_SHIFT;
-        ra->prev_pos |= prev_offset;
-
-        *ppos = ((loff_t)index << PAGE_SHIFT) + offset;
-        file_accessed(filp);
-        return written ? written : error;
-
-so we don't call unlock_page() in generic code, which means the next time
-we try to get this page, we'll do ...
-
-                page = find_get_page(mapping, index);
-...
-                if (!PageUptodate(page)) {
-                        error = wait_on_page_locked_killable(page);
-and presumably we'll wait forever because nobody is going to unlock this
-page?
-
-> @@ -598,16 +582,9 @@ static void gfs2_readahead(struct readahead_control *rac)
->  {
->  	struct inode *inode = rac->mapping->host;
->  	struct gfs2_inode *ip = GFS2_I(inode);
-> -	struct gfs2_holder gh;
->  
-> -	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-> -	if (gfs2_glock_nq(&gh))
-> -		goto out_uninit;
->  	if (!gfs2_is_stuffed(ip))
->  		mpage_readahead(rac, gfs2_block_map);
-> -	gfs2_glock_dq(&gh);
-> -out_uninit:
-> -	gfs2_holder_uninit(&gh);
->  }
-
-Not for this patch, obviously, but why do you go to the effort of using
-iomap_readpage() to implement gfs2_readpage(), but don't use iomap for
-gfs2_readahead()?  Far more pages are brought in through ->readahead
-than are brought in through ->readpage.
-
->  static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
->  {
-> +	struct gfs2_inode *ip;
-> +	struct gfs2_holder gh;
-> +	size_t written = 0;
->  	ssize_t ret;
->  
-> +	gfs2_holder_mark_uninitialized(&gh);
->  	if (iocb->ki_flags & IOCB_DIRECT) {
->  		ret = gfs2_file_direct_read(iocb, to);
-
-Again, future work, but you probably want to pass in &gh here so you
-don't have to eat up another 32 bytes or so of stack space on an unused
-gfs2_holder.
-
->  		if (likely(ret != -ENOTBLK))
->  			return ret;
->  		iocb->ki_flags &= ~IOCB_DIRECT;
->  	}
-> -	return generic_file_read_iter(iocb, to);
-> +	iocb->ki_flags |= IOCB_CACHED;
-> +	ret = generic_file_read_iter(iocb, to);
-> +	iocb->ki_flags &= ~IOCB_CACHED;
-> +	if (ret >= 0) {
-> +		if (!iov_iter_count(to))
-> +			return ret;
-> +		written = ret;
-> +	} else {
-> +		switch(ret) {
-> +		case -EAGAIN:
-> +			if (iocb->ki_flags & IOCB_NOWAIT)
-> +				return ret;
-> +			break;
-> +		case -ECANCELED:
-> +			break;
-> +		default:
-> +			return ret;
-> +		}
-> +	}
-
-I'm wondering if we want to do this in common code rather than making it
-something special only a few filesystems do (either because they care
-about workloads with many threads accessing the same file, or because
-their per-file locks are very heavy-weight).
-
+-- 
+Mel Gorman
+SUSE Labs
