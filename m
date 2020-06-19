@@ -2,150 +2,130 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE582080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F902080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725826AbgFSELR (ORCPT
+        id S1726667AbgFSEN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:11:17 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59966 "EHLO mga14.intel.com"
+        Fri, 19 Jun 2020 00:13:29 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34092 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFSELQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:11:16 -0400
-IronPort-SDR: KjJDAL7SjhyJdgqvO3VaWVVUDWV6fADej+9RWWsxCaXUGlXsdw9m8nsdJ+k5DnflnThySLU46U
- mEkfuXLdOqeQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="141893226"
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="141893226"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 21:11:16 -0700
-IronPort-SDR: ijoVSOFsEpcPf/krIe/BqzPpbVKnwovBMe1HczWyovo2POeLgy2eyVzHd/0Ldx53QBSqo8ncwy
- gTIJDE6QnsSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="318010626"
-Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Jun 2020 21:11:14 -0700
-Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jm8N0-0000eh-8k; Fri, 19 Jun 2020 04:11:14 +0000
-Date:   Fri, 19 Jun 2020 12:10:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 2cb3e01520e4c6cd28ac8301e4616c62c313a833
-Message-ID: <5eec3ac8.cCoUw8kOva85LYPL%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726094AbgFSEN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 00:13:29 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jm8Oo-0007ct-8B; Fri, 19 Jun 2020 14:13:07 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 19 Jun 2020 14:13:06 +1000
+Date:   Fri, 19 Jun 2020 14:13:06 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Subject: Re: [kbuild-all] security/integrity/ima/ima_crypto.c:575:12:
+ warning: stack frame size of 1152 bytes in function
+ 'ima_calc_field_array_hash_tfm'
+Message-ID: <20200619041306.GA22098@gondor.apana.org.au>
+References: <202006172132.iBj7mjDX%lkp@intel.com>
+ <932f46e1-3ea9-e0cd-218a-db163c146a0e@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <932f46e1-3ea9-e0cd-218a-db163c146a0e@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 2cb3e01520e4c6cd28ac8301e4616c62c313a833  lib/test_vmalloc.c: Add test cases for kvfree_rcu()
+On Fri, Jun 19, 2020 at 10:43:22AM +0800, Rong Chen wrote:
+> 
+> Could you take a look at this warning? Roberto mentioned you in previous
+> report:
+> https://lore.kernel.org/linux-integrity/9dbec9465bda4f8995a42593eb0db010@huawei.com/
 
-elapsed time: 721m
+Well having a shash descriptor on the stack is always pushing
+the envelope.  Doing it when you put another 256-byte string is
+obviously not a good idea.  The good thing is that the string
+isn't necessary, so how about:
 
-configs tested: 80
-configs skipped: 1
+---8<---
+The function ima_calc_field_array_hash_tfm uses a stack descriptor
+for shash.  As hashing requires a large amount of space this means
+that you shouldn't put any other large data on the stack at the same
+time, for example, you definitely shouldn't put a 256-byte string
+which you're going to hash on the stack.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Luckily this string is mostly composed of zeroes so we could just
+use ZERO_PAGE instead.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                             allyesconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nios2                            allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-h8300                            allyesconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 220b14920c37..0a925d1a1bf7 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <linux/kernel.h>
++#include <linux/mm.h>
+ #include <linux/moduleparam.h>
+ #include <linux/ratelimit.h>
+ #include <linux/file.h>
+@@ -605,11 +606,11 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 		return rc;
+ 
+ 	for (i = 0; i < num_fields; i++) {
+-		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
+ 		u8 *data_to_hash = field_data[i].data;
+ 		u32 datalen = field_data[i].len;
+ 		u32 datalen_to_hash =
+ 		    !ima_canonical_fmt ? datalen : cpu_to_le32(datalen);
++		u32 padlen = 0;
+ 
+ 		if (strcmp(td->name, IMA_TEMPLATE_IMA_NAME) != 0) {
+ 			rc = crypto_shash_update(shash,
+@@ -617,14 +618,21 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 						sizeof(datalen_to_hash));
+ 			if (rc)
+ 				break;
+-		} else if (strcmp(td->fields[i]->field_id, "n") == 0) {
+-			memcpy(buffer, data_to_hash, datalen);
+-			data_to_hash = buffer;
+-			datalen = IMA_EVENT_NAME_LEN_MAX + 1;
+-		}
++		} else if (strcmp(td->fields[i]->field_id, "n") == 0 &&
++			   datalen < IMA_EVENT_NAME_LEN_MAX + 1)
++			padlen = IMA_EVENT_NAME_LEN_MAX + 1 - datalen;
++
+ 		rc = crypto_shash_update(shash, data_to_hash, datalen);
+ 		if (rc)
+ 			break;
++
++		if (padlen) {
++			const u8 *zero = page_address(ZERO_PAGE(0));
++
++			rc = crypto_shash_update(shash, zero, padlen);
++			if (rc)
++				break;
++		}
+ 	}
+ 
+ 	if (!rc)
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
