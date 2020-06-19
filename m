@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF775C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C372186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129F520734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580488;
-	bh=V3MnRuuz7AkVJDRxqE0QST2YbXIz7es6hOmB/PD7LhA=;
+	s=default; t=1592580504;
+	bh=I+5PxFlAec6ZbIZDVLDUQQfmz13yYiWv4RHLnKQLQQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2faQSkwdicsIGGQMR/2x7xXRPOAs4Ga5jMQoAjVu8A7slJcP+ANe/l6tTpP+EN665
-	 etOsYS9kJYE+YqPSZ4s6NoR5+Yz5swjYEFRDEUN9IgoPG6Ph2m3dJZy6MNUyWscxSd
-	 IRvUkHrAWlv3xxvquAXF2ncaLtwa9P91pXFAp1Lk=
+	b=Wqmkmea10NQEbZg6hRREA9htTI1lWeryJD8aAT2PG9a1Qc2mX91pNefY9yLUnvVWW
+	 kskWiGnAEzv97IDcRiAcTqYeCzsEN75ieliG+fEgN8PucZmH5t6y0zr9ngPNVBwaIg
+	 g8pY088cUifVknUCnai85FGgtKPssoO7AjPMoGI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404524AbgFSP2I (ORCPT
+        id S2404555AbgFSP2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404401AbgFSP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:10 -0400
+        id S2393594AbgFSP1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6EDC21582;
-        Fri, 19 Jun 2020 15:27:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF1CA20734;
+        Fri, 19 Jun 2020 15:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580429;
-        bh=V3MnRuuz7AkVJDRxqE0QST2YbXIz7es6hOmB/PD7LhA=;
+        s=default; t=1592580463;
+        bh=I+5PxFlAec6ZbIZDVLDUQQfmz13yYiWv4RHLnKQLQQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZAJOpoiW44K4uHF8cZImncUnr8RMENbdtLb4bmsiA7UOiTrskiEm+9Pedu77lLLA
-         UlDoBpZ1ID2xZufBJLnmGo/YidgmoI0YYDkU1ptBwJEq8Fcuh2VThN5jk1vxCTiG4e
-         +3YWBGInK9wwdjyIycs8kkhDRSNtKr4Y+3svj2io=
+        b=FxbDjr3N9SgUB3pZXErHrBrXTHz6ciEmvCsyua9Ief4ebTb2Xx8qnRP/4QGJjP7lp
+         jgmKJvM0TQzyYDJcjLh8qqvOEJkbfPjzmDGVhY16KrvvHrdS1wQtT1NpP8njsb/usN
+         uFSThNNyD9y9jw0aPOKvdiB6nZ9SUpuvyylHm3zU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        YunQiang Su <syq@debian.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 215/376] MIPS: Fix exception handler memcpy()
-Date:   Fri, 19 Jun 2020 16:32:13 +0200
-Message-Id: <20200619141720.509212248@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 259/376] btrfs: send: emit file capabilities after chown
+Date:   Fri, 19 Jun 2020 16:32:57 +0200
+Message-Id: <20200619141722.586851130@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,139 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-[ Upstream commit f39293fd37fff74c531b7a52d0459cc77db85e7f ]
+commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
 
-The exception handler subroutines are declared as a single char, but
-when copied to the required addresses the copy length is 0x80.
+Whenever a chown is executed, all capabilities of the file being touched
+are lost.  When doing incremental send with a file with capabilities,
+there is a situation where the capability can be lost on the receiving
+side. The sequence of actions bellow shows the problem:
 
-When range checks are enabled for memcpy() this results in a build
-failure, with error messages such as:
+  $ mount /dev/sda fs1
+  $ mount /dev/sdb fs2
 
-In file included from arch/mips/mti-malta/malta-init.c:15:
-In function 'memcpy',
-    inlined from 'mips_nmi_setup' at arch/mips/mti-malta/malta-init.c:98:2:
-include/linux/string.h:376:4: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
-  376 |    __read_overflow2();
-      |    ^~~~~~~~~~~~~~~~~~
+  $ touch fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
+  $ btrfs send fs1/snap_init | btrfs receive fs2
 
-Change the declarations to use type char[].
+  $ chgrp adm fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
 
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: YunQiang Su <syq@debian.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+
+  $ btrfs send fs1/snap_complete | btrfs receive fs2
+  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+
+At this point, only a chown was emitted by "btrfs send" since only the
+group was changed. This makes the cap_sys_nice capability to be dropped
+from fs2/snap_incremental/foo.bar
+
+To fix that, only emit capabilities after chown is emitted. The current
+code first checks for xattrs that are new/changed, emits them, and later
+emit the chown. Now, __process_new_xattr skips capabilities, letting
+only finish_inode_if_needed to emit them, if they exist, for the inode
+being processed.
+
+This behavior was being worked around in "btrfs receive" side by caching
+the capability and only applying it after chown. Now, xattrs are only
+emmited _after_ chown, making that workaround not needed anymore.
+
+Link: https://github.com/kdave/btrfs-progs/issues/202
+CC: stable@vger.kernel.org # 4.4+
+Suggested-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/loongson2ef/common/init.c | 4 ++--
- arch/mips/loongson64/init.c         | 4 ++--
- arch/mips/mti-malta/malta-init.c    | 8 ++++----
- arch/mips/pistachio/init.c          | 8 ++++----
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/arch/mips/loongson2ef/common/init.c b/arch/mips/loongson2ef/common/init.c
-index 45512178be77..ce3f02f75e2a 100644
---- a/arch/mips/loongson2ef/common/init.c
-+++ b/arch/mips/loongson2ef/common/init.c
-@@ -19,10 +19,10 @@ unsigned long __maybe_unused _loongson_addrwincfg_base;
- static void __init mips_nmi_setup(void)
- {
- 	void *base;
--	extern char except_vec_nmi;
-+	extern char except_vec_nmi[];
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -23,6 +23,7 @@
+ #include "btrfs_inode.h"
+ #include "transaction.h"
+ #include "compression.h"
++#include "xattr.h"
  
- 	base = (void *)(CAC_BASE + 0x380);
--	memcpy(base, &except_vec_nmi, 0x80);
-+	memcpy(base, except_vec_nmi, 0x80);
- 	flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
+ /*
+  * Maximum number of references an extent can have in order for us to attempt to
+@@ -4545,6 +4546,10 @@ static int __process_new_xattr(int num,
+ 	struct fs_path *p;
+ 	struct posix_acl_xattr_header dummy_acl;
+ 
++	/* Capabilities are emitted by finish_inode_if_needed */
++	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
++		return 0;
++
+ 	p = fs_path_alloc();
+ 	if (!p)
+ 		return -ENOMEM;
+@@ -5107,6 +5112,64 @@ static int send_extent_data(struct send_
+ 	return 0;
  }
  
-diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-index da38944471f4..86c5e93258ce 100644
---- a/arch/mips/loongson64/init.c
-+++ b/arch/mips/loongson64/init.c
-@@ -17,10 +17,10 @@
- static void __init mips_nmi_setup(void)
- {
- 	void *base;
--	extern char except_vec_nmi;
-+	extern char except_vec_nmi[];
++/*
++ * Search for a capability xattr related to sctx->cur_ino. If the capability is
++ * found, call send_set_xattr function to emit it.
++ *
++ * Return 0 if there isn't a capability, or when the capability was emitted
++ * successfully, or < 0 if an error occurred.
++ */
++static int send_capabilities(struct send_ctx *sctx)
++{
++	struct fs_path *fspath = NULL;
++	struct btrfs_path *path;
++	struct btrfs_dir_item *di;
++	struct extent_buffer *leaf;
++	unsigned long data_ptr;
++	char *buf = NULL;
++	int buf_len;
++	int ret = 0;
++
++	path = alloc_path_for_send();
++	if (!path)
++		return -ENOMEM;
++
++	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
++				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
++	if (!di) {
++		/* There is no xattr for this inode */
++		goto out;
++	} else if (IS_ERR(di)) {
++		ret = PTR_ERR(di);
++		goto out;
++	}
++
++	leaf = path->nodes[0];
++	buf_len = btrfs_dir_data_len(leaf, di);
++
++	fspath = fs_path_alloc();
++	buf = kmalloc(buf_len, GFP_KERNEL);
++	if (!fspath || !buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
++	if (ret < 0)
++		goto out;
++
++	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
++	read_extent_buffer(leaf, buf, data_ptr, buf_len);
++
++	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
++			strlen(XATTR_NAME_CAPS), buf, buf_len);
++out:
++	kfree(buf);
++	fs_path_free(fspath);
++	btrfs_free_path(path);
++	return ret;
++}
++
+ static int clone_range(struct send_ctx *sctx,
+ 		       struct clone_root *clone_root,
+ 		       const u64 disk_byte,
+@@ -5972,6 +6035,10 @@ static int finish_inode_if_needed(struct
+ 			goto out;
+ 	}
  
- 	base = (void *)(CAC_BASE + 0x380);
--	memcpy(base, &except_vec_nmi, 0x80);
-+	memcpy(base, except_vec_nmi, 0x80);
- 	flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
- }
- 
-diff --git a/arch/mips/mti-malta/malta-init.c b/arch/mips/mti-malta/malta-init.c
-index ff2c1d809538..893af377aacc 100644
---- a/arch/mips/mti-malta/malta-init.c
-+++ b/arch/mips/mti-malta/malta-init.c
-@@ -90,24 +90,24 @@ static void __init console_config(void)
- static void __init mips_nmi_setup(void)
- {
- 	void *base;
--	extern char except_vec_nmi;
-+	extern char except_vec_nmi[];
- 
- 	base = cpu_has_veic ?
- 		(void *)(CAC_BASE + 0xa80) :
- 		(void *)(CAC_BASE + 0x380);
--	memcpy(base, &except_vec_nmi, 0x80);
-+	memcpy(base, except_vec_nmi, 0x80);
- 	flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
- }
- 
- static void __init mips_ejtag_setup(void)
- {
- 	void *base;
--	extern char except_vec_ejtag_debug;
-+	extern char except_vec_ejtag_debug[];
- 
- 	base = cpu_has_veic ?
- 		(void *)(CAC_BASE + 0xa00) :
- 		(void *)(CAC_BASE + 0x300);
--	memcpy(base, &except_vec_ejtag_debug, 0x80);
-+	memcpy(base, except_vec_ejtag_debug, 0x80);
- 	flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
- }
- 
-diff --git a/arch/mips/pistachio/init.c b/arch/mips/pistachio/init.c
-index a09a5da38e6b..558995ed6fe8 100644
---- a/arch/mips/pistachio/init.c
-+++ b/arch/mips/pistachio/init.c
-@@ -83,12 +83,12 @@ phys_addr_t mips_cdmm_phys_base(void)
- static void __init mips_nmi_setup(void)
- {
- 	void *base;
--	extern char except_vec_nmi;
-+	extern char except_vec_nmi[];
- 
- 	base = cpu_has_veic ?
- 		(void *)(CAC_BASE + 0xa80) :
- 		(void *)(CAC_BASE + 0x380);
--	memcpy(base, &except_vec_nmi, 0x80);
-+	memcpy(base, except_vec_nmi, 0x80);
- 	flush_icache_range((unsigned long)base,
- 			   (unsigned long)base + 0x80);
- }
-@@ -96,12 +96,12 @@ static void __init mips_nmi_setup(void)
- static void __init mips_ejtag_setup(void)
- {
- 	void *base;
--	extern char except_vec_ejtag_debug;
-+	extern char except_vec_ejtag_debug[];
- 
- 	base = cpu_has_veic ?
- 		(void *)(CAC_BASE + 0xa00) :
- 		(void *)(CAC_BASE + 0x300);
--	memcpy(base, &except_vec_ejtag_debug, 0x80);
-+	memcpy(base, except_vec_ejtag_debug, 0x80);
- 	flush_icache_range((unsigned long)base,
- 			   (unsigned long)base + 0x80);
- }
--- 
-2.25.1
-
++	ret = send_capabilities(sctx);
++	if (ret < 0)
++		goto out;
++
+ 	/*
+ 	 * If other directory inodes depended on our current directory
+ 	 * inode's move/rename, now do their move/rename operations.
 
 
