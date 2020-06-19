@@ -2,111 +2,117 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27019C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC95C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55C921707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0955821707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583961;
-	bh=8VsisCMdQB7FOqcUK+LQADDqxVzfGHy233uyzs+RPE0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlyjFJl9GDOL+zgWVBQhOL6I3hoEEDrpRtLBLXii6KF+dNU1b1+50ygAITl3fewpJ
-	 d0p7IFmU4oEAWTr/qII778ScmeBZTvcvjqJEl089j8yA4mwt5WdYyqdSsSCKmFca2f
-	 5rS40vhQhw/DDeZL1zKpjyEIeqMIhy8M0QCkYLOU=
+	s=default; t=1592583970;
+	bh=4cT/7aBJ0gbHHMfWq2GsMKBGTtJ30AaC0CtyyiFC1Q0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jpnt3KIEwfGiOTSDVO5VGWTHz0vw684tJNzXNu0jycRrrFTc/8mLx/QWPTuzZUmsW
+	 hcl5YoQhHutE1rjci3UUg738s6lHs5xf3TUXUUPjj+8CWGORCZvzR1xHriss6SD/FC
+	 DQTO3PIO/yPzQcELd3AmzAKeitc4ABnhLlJqMFEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394859AbgFSQZ6 (ORCPT
+        id S2394862AbgFSQ0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390226AbgFSO5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2394842AbgFSQZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:25:55 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2AC217D8;
-        Fri, 19 Jun 2020 14:57:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 439A821707;
+        Fri, 19 Jun 2020 16:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578640;
-        bh=8VsisCMdQB7FOqcUK+LQADDqxVzfGHy233uyzs+RPE0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9dlgHhcKqFZOUE+K8mL7ve/7HtdP88UVDZoTVUnjhHTSyTkRXcq9N2LCC4ZPCCJy
-         IX2FHgJHw9NyP1shS8rai79EGGph4ryIbcLu7uAqV1rbZ2RL3bKYHxcsy1kNeksPL0
-         PG+pWeSffG2Ojnmh9qCsuTfdlG2gUGIBB3EkJ68k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/267] net: ena: fix error returning in ena_com_get_hash_function()
-Date:   Fri, 19 Jun 2020 16:31:25 +0200
-Message-Id: <20200619141653.669694587@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592583955;
+        bh=4cT/7aBJ0gbHHMfWq2GsMKBGTtJ30AaC0CtyyiFC1Q0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=gLEfZuWqzaxnPGvf75NZyqxBXjjXQQvHJzhyKqiNePeBOR8dv1VioaTBtwNe6LEEA
+         k6L2pLHcTkkNutWKZKL9Jsbv+/6Q8l5bIbLsFS7AdeRtfT1dPhgTWjZYHSxm2BSxFk
+         1OzbXraodv4bk9zyLgE58LlbC8kLLSSgwo2mbc80=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 248AE35229B4; Fri, 19 Jun 2020 09:25:55 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 09:25:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200619162555.GJ2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618031823.GQ2723@paulmck-ThinkPad-P72>
+ <20200618173520.GC14613@pc636>
+ <20200618175719.GT2723@paulmck-ThinkPad-P72>
+ <20200618183448.GA15136@pc636>
+ <20200618190359.GU2723@paulmck-ThinkPad-P72>
+ <20200618203557.GB16976@pc636>
+ <20200618203821.GU8681@bombadil.infradead.org>
+ <20200618211709.GA17263@pc636>
+ <20200618213427.GV2723@paulmck-ThinkPad-P72>
+ <20200619154652.GA19990@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619154652.GA19990@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+On Fri, Jun 19, 2020 at 05:46:52PM +0200, Uladzislau Rezki wrote:
+> On Thu, Jun 18, 2020 at 02:34:27PM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 18, 2020 at 11:17:09PM +0200, Uladzislau Rezki wrote:
+> > > > > <snip>
+> > > > >     trace_rcu_invoke_kfree_bulk_callback(
+> > > > >         rcu_state.name, bkvhead[i]->nr_records,
+> > > > >             bkvhead[i]->records);
+> > > > >     if (i == 0)
+> > > > >         kfree_bulk(bkvhead[i]->nr_records,
+> > > > >             bkvhead[i]->records);
+> > > > >     else
+> > > > >         vfree_bulk(bkvhead[i]->nr_records,
+> > > > >             bkvhead[i]->records);
+> > > > > <snip>
+> > > > > 
+> > > > > Matthew, what is your thought?
+> > > > 
+> > > > That was my thinking too.  If we had a kvfree_bulk(), I would expect it to
+> > > > handle a mixture of vfree and kfree, but you've segregated them already.
+> > > > So I think this is better.
+> > > >
+> > > Yes, the segregation is done. Having vfree_bulk() is enough then.
+> > > We are on the same page :)
+> > 
+> > Very good.  When does kfree_rcu() and friends move out of kernel/rcu?
+> > 
+> Do you mean to move the whole logic of kfree_rcu() from top to down to mm/?
 
-[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
+I do mean exactly that.
 
-In case the "func" parameter is NULL we now return "-EINVAL".
-This shouldn't happen in general, but when it does happen, this is the
-proper way to handle it.
+That was my goal some years back when Rao Shoaib was making the first
+attempt along these lines, and it remains my goal.  After all, if this
+effort is at all successful, the coupling between kfree_rcu() with
+slab/slob/slub will become much tighter than that between kfree_rcu()
+and RCU.
 
-We also check func for NULL in the beginning of the function, as there
-is no reason to do all the work and realize in the end of the function
-it was useless.
+There will need to be some additional RCU APIs used by kfree_rcu(),
+for example, something to tell RCU how many blocks are awaiting a
+grace period.  But these are narrow and easily defined APIs.
 
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 3afc0e59a2bd..d07f7f65169a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2137,6 +2137,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 		rss->hash_key;
- 	int rc;
- 
-+	if (unlikely(!func))
-+		return -EINVAL;
-+
- 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
- 				    ENA_ADMIN_RSS_HASH_FUNCTION,
- 				    rss->hash_key_dma_addr,
-@@ -2149,8 +2152,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 	if (rss->hash_func)
- 		rss->hash_func--;
- 
--	if (func)
--		*func = rss->hash_func;
-+	*func = rss->hash_func;
- 
- 	if (key)
- 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
--- 
-2.25.1
-
-
-
+							Thanx, Paul
