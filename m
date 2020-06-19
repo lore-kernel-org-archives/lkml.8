@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A45BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA53217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94E32158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579781;
-	bh=efE9qh+gRAoqSgGMofKgX7fsB1wxtB4Sw4lVk2loedU=;
+	s=default; t=1592579784;
+	bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EP/kDbah8e36yH/Xa3bsYpKIgPKWbhTt0TBeYYt5V1shTOoXGTO5l767zf9xHapF
-	 kx4cVLBoFwPrhYpXXj/5bMTWzCmJEYpNxlbDLJPioZz0sjZ1kqJitBteHaTAbbCky+
-	 bDMJsii+Y9w8vaGKFu8ErlHOTwWj1TxBTDmQ+0Uo=
+	b=gSMlPMFxw16hbwx1VhnEtuGyuWlxBQ7pH4+csqixMFLahooyaSpnCSb/Xs+NQ33iq
+	 /Sdy572MUJ8Vcv+epzV8I0tIDZoLleUcJz2xTudIGz98j+KIy0A302/3yfPOvctDD+
+	 BizHazuigKjiUo9M4b6fhqhiBTy9e8Ipky4aBFF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404049AbgFSPQU (ORCPT
+        id S2404056AbgFSPQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46610 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:16:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392456AbgFSPQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:05 -0400
+        id S2391953AbgFSPQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:16:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C422080C;
-        Fri, 19 Jun 2020 15:16:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1BD206DB;
+        Fri, 19 Jun 2020 15:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579764;
-        bh=efE9qh+gRAoqSgGMofKgX7fsB1wxtB4Sw4lVk2loedU=;
+        s=default; t=1592579767;
+        bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDd9UBnui2EIV3Ni9Y/0wdvg8YKWK3frcc7DTokGjm4T3EhM+KXQ+Zbu4KB24pGXs
-         E6fxBszNaBDSyqJBjwGX3pofklpQMKtN869mhVcKuPc9V4r7vogTz97B/J7p8Rbk6u
-         pUKMT8aLZhOu117KZv4i1PQtIXWCgN+ErgC3uRoY=
+        b=2XVfqKiLg2gY7ZGRhaYl/B9FVQbTt4ugi/+ek0lwPcuTdyBKOt7lZo60EG7/DqQ8Q
+         rI2OTXmI/BLqZbFCbqoaM2r3J6PcXE3JUADRcGDNGveQ7Z/VQ0iTNnQryUvVPVVHg+
+         l4AHeK903Kw3cVUtN8kA/KKdXuoI29bmH5L09qAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 227/261] ARM: dts: exynos: Fix GPIO polarity for thr GalaxyS3 CM36651 sensors bus
-Date:   Fri, 19 Jun 2020 16:33:58 +0200
-Message-Id: <20200619141700.738834102@linuxfoundation.org>
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.4 228/261] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
+Date:   Fri, 19 Jun 2020 16:33:59 +0200
+Message-Id: <20200619141700.787277817@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,40 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-commit 8807d356bfea92b0a8f04ce421800ed83400cd22 upstream.
+commit baa998aecb75c04d62be0a4ab6b724af6d73a0f9 upstream.
 
-GPIO lines for the CM36651 sensor I2C bus use the normal not the inverted
-polarity. This bug has been there since adding the CM36651 sensor by
-commit 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node
-for exynos4412-trats2"), but went unnoticed because the "i2c-gpio"
-driver ignored the GPIO polarity specified in the device-tree.
+The gpio property for the vbus pin doesn't match the pinctrl and is
+not correct.
 
-The recent conversion of "i2c-gpio" driver to the new, descriptor based
-GPIO API, automatically made it the DT-specified polarity aware, what
-broke the CM36651 sensor operation.
-
-Fixes: 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node for exynos4412-trats2")
-CC: stable@vger.kernel.org # 4.16+
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
+Link: https://lore.kernel.org/r/20200401221947.41502-1-ludovic.desroches@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi |    2 +-
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
-@@ -68,7 +68,7 @@
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -40,7 +40,7 @@
  
- 	i2c_cm36651: i2c-gpio-2 {
- 		compatible = "i2c-gpio";
--		gpios = <&gpf0 0 GPIO_ACTIVE_LOW>, <&gpf0 1 GPIO_ACTIVE_LOW>;
-+		gpios = <&gpf0 0 GPIO_ACTIVE_HIGH>, <&gpf0 1 GPIO_ACTIVE_HIGH>;
- 		i2c-gpio,delay-us = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ 	ahb {
+ 		usb0: gadget@300000 {
+-			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
++			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usba_vbus>;
+ 			status = "okay";
 
 
