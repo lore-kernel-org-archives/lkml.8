@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF58C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB9221527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A8C21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584390;
-	bh=GPwglkMMRGPvGth9jFBh/6oBrS8f6pyUQs+nbjvD0JA=;
+	s=default; t=1592584397;
+	bh=dA8deVe8Oc5xCiWh0RcR44ajduoZk4p5UPFlT99UIfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CurZYonBUcNI2gV1HryjdW5zP4/FhKHvnhpldtUTKLhAiyd0v9hyWtqiWh2FE9R3f
-	 MVd7EhkRAWcLbPBLabPDO1sxCIcGq1vD+e3T7nuSN3lnN/EWj+6Kyyuq/1SytnGYUm
-	 FAqrUMqW+BJh51es9JZXM096X/VNOFRgDFFy2rbI=
+	b=C0W/PsSuGhPGsMfG+mc44Ujjf1P/E6eeKl4HRVJDwcS+HYTahpGB5X7C9FXhVko0y
+	 hM1nnX3uHlV3XKHsQxEA5PbqCTq7QRuRt5VNxZXCbpE+ouiVe5n1/syi0qDMO+aTdM
+	 7N9gt2AlVXQslDw3T2dgxNdlyMEZfhUL0iIyhhc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389813AbgFSQdF (ORCPT
+        id S2389940AbgFSQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389502AbgFSOvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:51 -0400
+        id S2389500AbgFSOvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2DA218AC;
-        Fri, 19 Jun 2020 14:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AF2521556;
+        Fri, 19 Jun 2020 14:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578311;
-        bh=GPwglkMMRGPvGth9jFBh/6oBrS8f6pyUQs+nbjvD0JA=;
+        s=default; t=1592578308;
+        bh=dA8deVe8Oc5xCiWh0RcR44ajduoZk4p5UPFlT99UIfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=li6hydE4fynpNZpuodtm3ExaliJcRzaABInzEUJxvhFALSuFmrRM4e5RDLWFj6jJ7
-         AJ6KVUS8jY/RVVMmrcOhYeMjnwz9ljG/saZ7xL31d3fIhA6H7tts6Ju2JZkKJn4ELX
-         VHJ5g0JZ29yiCQo+uAYgKM9hKCylrW0n92q24zzQ=
+        b=rrATLhzR8YKbxn+eb4qJDtLixNX7bV01PAWjiTQAfJLIpE0y/ZQNp8+hhZpEYkj0d
+         HUmA/EFOQUSaP+Vfp9bBPCwhonp9BuA5L6YgFVQX6LH5drBjVRL65/5Iwr8RR9oZXT
+         X4MjFoqQH/ofW/1tfa7iWQ50+dI+rZJWwngpB9j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, Bruce Chang <brucechang@via.com.tw>,
+        Harald Welte <HaraldWelte@viatech.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 124/190] mips: MAAR: Use more precise address mask
-Date:   Fri, 19 Jun 2020 16:32:49 +0200
-Message-Id: <20200619141639.817516579@linuxfoundation.org>
+Subject: [PATCH 4.14 133/190] mmc: via-sdmmc: Respect the cmd->busy_timeout from the mmc core
+Date:   Fri, 19 Jun 2020 16:32:58 +0200
+Message-Id: <20200619141640.275240310@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -66,48 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit bbb5946eb545fab8ad8f46bce8a803e1c0c39d47 ]
+[ Upstream commit 966244ccd2919e28f25555a77f204cd1c109cad8 ]
 
-Indeed according to the MIPS32 Privileged Resource Architecgture the MAAR
-pair register address field either takes [12:31] bits for non-XPA systems
-and [12:55] otherwise. In any case the current address mask is just
-wrong for 64-bit and 32-bits XPA chips. So lets extend it to 59-bits
-of physical address value. This shall cover the 64-bits architecture and
-systems with XPA enabled, and won't cause any problem for non-XPA 32-bit
-systems, since address values exceeding the architecture specific MAAR
-mask will be just truncated with setting zeros in the unsupported upper
-bits.
+Using a fixed 1s timeout for all commands (and data transfers) is a bit
+problematic.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+For some commands it means waiting longer than needed for the timer to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+1s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
+
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
+
+Cc: Bruce Chang <brucechang@via.com.tw>
+Cc: Harald Welte <HaraldWelte@viatech.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-17-ulf.hansson@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mipsregs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/via-sdmmc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index a6810923b3f0..a7f9acb42034 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -737,7 +737,7 @@
+diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
+index a838bf5480d8..a863a345fc59 100644
+--- a/drivers/mmc/host/via-sdmmc.c
++++ b/drivers/mmc/host/via-sdmmc.c
+@@ -323,6 +323,8 @@ struct via_crdr_mmc_host {
+ /* some devices need a very long delay for power to stabilize */
+ #define VIA_CRDR_QUIRK_300MS_PWRDELAY	0x0001
  
- /* MAAR bit definitions */
- #define MIPS_MAAR_VH		(_U64CAST_(1) << 63)
--#define MIPS_MAAR_ADDR		((BIT_ULL(BITS_PER_LONG - 12) - 1) << 12)
-+#define MIPS_MAAR_ADDR		GENMASK_ULL(55, 12)
- #define MIPS_MAAR_ADDR_SHIFT	12
- #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
- #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
++#define VIA_CMD_TIMEOUT_MS		1000
++
+ static const struct pci_device_id via_ids[] = {
+ 	{PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_9530,
+ 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0,},
+@@ -555,14 +557,17 @@ static void via_sdc_send_command(struct via_crdr_mmc_host *host,
+ {
+ 	void __iomem *addrbase;
+ 	struct mmc_data *data;
++	unsigned int timeout_ms;
+ 	u32 cmdctrl = 0;
+ 
+ 	WARN_ON(host->cmd);
+ 
+ 	data = cmd->data;
+-	mod_timer(&host->timer, jiffies + HZ);
+ 	host->cmd = cmd;
+ 
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout : VIA_CMD_TIMEOUT_MS;
++	mod_timer(&host->timer, jiffies + msecs_to_jiffies(timeout_ms));
++
+ 	/*Command index*/
+ 	cmdctrl = cmd->opcode << 8;
+ 
 -- 
 2.25.1
 
