@@ -5,50 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC06C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC58F217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFBB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583827;
-	bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
+	s=default; t=1592583831;
+	bh=rHjVZTd1mawyjbz8HvdWyUUjPGnbs9l55z2DfxfWYaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avyd52zzLKNBhoqvTPcyVO9IQuKPefn0GhNWAEOhsOj+R7GbTux45irVl7aemLEko
-	 kIBh2VEGmsiAVCl8AcZCnWwjmkvysX9NRGMrnjMH5EPku97+hItd7Tbx7EPfjaQTNy
-	 tZPwrE+qeazcBnxjaUg0dRMO/B7bn3DHUlqih3nA=
+	b=GZ4RPiKZSYdT2zO/auDVYgudqJuUdlvT/FHsj6EBvAOMQZLHVtqODku5Kf7mkLmIZ
+	 BxEi40M3gukLznD2ENJrCkWo0dBZ0CwdNkAV1c6Y1dey/zVw1fEiEIEJ7i9CFmsf4L
+	 flSMzkbk7q71p49nE8w0K6Jpo/k5NrydYeVZVQxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394768AbgFSQXp (ORCPT
+        id S2390440AbgFSQXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:23:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390455AbgFSO7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:00 -0400
+        id S2390450AbgFSO66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C9821924;
-        Fri, 19 Jun 2020 14:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D7321852;
+        Fri, 19 Jun 2020 14:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578740;
-        bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
+        s=default; t=1592578738;
+        bh=rHjVZTd1mawyjbz8HvdWyUUjPGnbs9l55z2DfxfWYaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=In8tmNc5cnBjRog76ulYeJmZ+xvKcDcsRf21BImZBVTtIIH74sc1xlS1h2cYEnkuV
-         CUDWWELq4x9YUqEasrzBcmfcjW28I4WCY8dnl3WqXK0QEF9jcIr1hz0bHJNaUoUn6Q
-         v6fxAFDKYWQZcXTvRPcNp3dW2R3TDBeuRqiMB594=
+        b=1tXkIQVRfKLkNMCe0W9rUNDZwHFc1F1HLb/bEwz4GrOSaHNCjD+PZtvxRluHrsl7k
+         3Ym7f8VNY+fXvxiJZvojijXTaSViwLBxn/QXCk7ufnQzaER9kfe9vleT4v5aDTjAXN
+         hXDlzm3ClNKqmqxp/qCtQAl4SiHgu8zg554dS4Og=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 138/267] net: lpc-enet: fix error return code in lpc_mii_init()
-Date:   Fri, 19 Jun 2020 16:32:03 +0200
-Message-Id: <20200619141655.448321027@linuxfoundation.org>
+Subject: [PATCH 4.19 120/267] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Fri, 19 Jun 2020 16:31:45 +0200
+Message-Id: <20200619141654.598626581@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,36 +85,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
+[ Upstream commit 5bf9917452112694b2c774465ee4dbe441c84b77 ]
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200414131348.444715-4-hch@lst.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 41d30f55c946..6bd6c261f2ba 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -845,7 +845,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
- 	if (mdiobus_register(pldat->mii_bus))
- 		goto err_out_unregister_bus;
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 31db510018a9..6babcdb4d7d2 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -97,12 +97,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
  
--	if (lpc_mii_probe(pldat->ndev) != 0)
-+	err = lpc_mii_probe(pldat->ndev);
-+	if (err)
- 		goto err_out_unregister_bus;
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP, pgprot);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
  
  	return 0;
+ }
 -- 
 2.25.1
 
