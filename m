@@ -2,52 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1676CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF2EB206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DAD206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584981;
-	bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
+	s=default; t=1592584982;
+	bh=4+YLrJjEjRgkQhhkBuQT0yHkcuSYyIbSyxuHpnzWm4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIfAmkrTVBmDConBiihHOLo0wpwQIGCwXdH9nR0PnP8ADmHTxaN4tWY69WFoWxKsa
-	 MQbWjeqfNGZ/ZqRs5TJKHsX4t9Anij2IZz/GpT2heAjn9JHJZ12/Yakl+86NqNomrF
-	 wSqXu5RvgoOvyr6AmmxKTK6XOEiZWRZVYB2WeoYw=
+	b=DPmS2k/8+Fh5oQCaJQKSH18gp8MD2NPLZAC7V9vfDAVUyKCDGAfXDUkokr3k8tH9L
+	 sA7JwYw86yxgsbj1Qog5MSatwQWOBU9AvD+er0lYdSFpaJmpsAUe2Om90q16nYw+mq
+	 bc0NkdsRDXdapJ1vjfTWFQnmuyy/CkobXBdom0U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388847AbgFSQm6 (ORCPT
+        id S2388532AbgFSOn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388125AbgFSOoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:02 -0400
+        id S2388497AbgFSOnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7BAA21556;
-        Fri, 19 Jun 2020 14:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3857D21556;
+        Fri, 19 Jun 2020 14:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577842;
-        bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
+        s=default; t=1592577822;
+        bh=4+YLrJjEjRgkQhhkBuQT0yHkcuSYyIbSyxuHpnzWm4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZVf+bBlGZZ0/VCpgTy+feixkRUIzZvm/RUPmHboaNME8FoGiG8KMbkCNy4Yl/Vid
-         hXALxtbu5cOt9HXx+OyDKRP8/oT/FT82nN4P9nuR7lFYEqKKuES4M2oC6XfmWfKU95
-         P1aNTQaI9NFxLErWLseKqFWyDvcGjwy5ldCdnLyU=
+        b=QOQY0U8wcmk0QJ8W3RmvLpm4r3EoClhC6Gc3k1DW5vCTA5VmMnU5KiT+22oHJBOsr
+         4hHdEafI00AzzAUAjZZRxZxHCUoC/xjXcm4am+5KsiKDz3p+hM/ggcZWRKI1vbNSFj
+         73i7ibiYq9qOsKj7sExXPVt42v2it6XxRe1d5ONM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Rui Salvaterra <rsalvaterra@gmail.com>
-Subject: [PATCH 4.9 111/128] b43: Fix connection problem with WPA3
-Date:   Fri, 19 Jun 2020 16:33:25 +0200
-Message-Id: <20200619141626.006783310@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 104/128] btrfs: fix error handling when submitting direct I/O bio
+Date:   Fri, 19 Jun 2020 16:33:18 +0200
+Message-Id: <20200619141625.620331889@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,44 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Omar Sandoval <osandov@fb.com>
 
-commit 75d057bda1fbca6ade21378aa45db712e5f7d962 upstream.
+[ Upstream commit 6d3113a193e3385c72240096fe397618ecab6e43 ]
 
-Since the driver was first introduced into the kernel, it has only
-handled the ciphers associated with WEP, WPA, and WPA2. It fails with
-WPA3 even though mac80211 can handle those additional ciphers in software,
-b43 did not report that it could handle them. By setting MFP_CAPABLE using
-ieee80211_set_hw(), the problem is fixed.
+In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
+stripe or chunk, we submit orig_bio without cloning it. In this case, we
+don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
+decrement pending_bios to -1, and we never complete orig_bio. Fix it by
+initializing pending_bios to 1 instead of incrementing later.
 
-With this change, b43 will handle the ciphers it knows in hardware,
-and let mac80211 handle the others in software. It is not necessary to
-use the module parameter NOHWCRYPT to turn hardware encryption off.
-Although this change essentially eliminates that module parameter,
-I am choosing to keep it for cases where the hardware is broken,
-and software encryption is required for all ciphers.
+Fixing this exposes another bug: we put orig_bio prematurely and then
+put it again from end_io. Fix it by not putting orig_bio.
 
-Reported-and-tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526155909.5807-2-Larry.Finger@lwfinger.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+After this change, pending_bios is really more of a reference count, but
+I'll leave that cleanup separate to keep the fix small.
 
+Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -5596,7 +5596,7 @@ static struct b43_wl *b43_wireless_init(
- 	/* fill hw info */
- 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(hw, SIGNAL_DBM);
--
-+	ieee80211_hw_set(hw, MFP_CAPABLE);
- 	hw->wiphy->interface_modes =
- 		BIT(NL80211_IFTYPE_AP) |
- 		BIT(NL80211_IFTYPE_MESH_POINT) |
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 250c8403ec67..c425443c31fe 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -8494,7 +8494,6 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip,
+ 	bio->bi_private = dip;
+ 	bio->bi_end_io = btrfs_end_dio_bio;
+ 	btrfs_io_bio(bio)->logical = file_offset;
+-	atomic_inc(&dip->pending_bios);
+ 
+ 	while (bvec <= (orig_bio->bi_io_vec + orig_bio->bi_vcnt - 1)) {
+ 		nr_sectors = BTRFS_BYTES_TO_BLKS(root->fs_info, bvec->bv_len);
+@@ -8560,7 +8559,8 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip,
+ 	if (!ret)
+ 		return 0;
+ 
+-	bio_put(bio);
++	if (bio != orig_bio)
++		bio_put(bio);
+ out_err:
+ 	dip->errors = 1;
+ 	/*
+@@ -8607,7 +8607,7 @@ static void btrfs_submit_direct(struct bio *dio_bio, struct inode *inode,
+ 	io_bio->bi_private = dip;
+ 	dip->orig_bio = io_bio;
+ 	dip->dio_bio = dio_bio;
+-	atomic_set(&dip->pending_bios, 0);
++	atomic_set(&dip->pending_bios, 1);
+ 	btrfs_bio = btrfs_io_bio(io_bio);
+ 	btrfs_bio->logical = file_offset;
+ 
+-- 
+2.25.1
+
 
 
