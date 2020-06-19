@@ -2,56 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B56EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF63AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE2420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB9720809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581975;
-	bh=0KyO+5mrWMuKtoyYwUv5HIPOy5RHKWqUa3tEeT5t9Q4=;
+	s=default; t=1592581982;
+	bh=84y+gW41dURSJi/gdvoDOb2sY4x5qag2jIQ+OeQgv8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGmSv1ZDk2RarASVOXdIqYe+UTkwUsZLObyU+tu8ZjafANQbOupt3LAfbcAqWxAlY
-	 2d98rRN/ySHdDYod3B1UpKZXwyoQrY8JNYL88wrM7hqKd07nodwCKNxaeKam8AaEDe
-	 h581lXY1gLrLfNI3ExGOwtSV3qrUcyvbPDLABc9M=
+	b=ErRjMqG7Le3nigbavUC4mY6qGTUI4ZfOZWpHzKiHpJdgrOdiF3Ix5Zkms7KBU56qR
+	 5J96vzgEJGPnu6OA72iO7ppgU6sqf6Tm6c0LVKqlJyssFXGe7FizlXfevavNSkdmY5
+	 F19tWD1+5jkuKPgUxIKtKe9zW0CaraTO+whDs6BU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393086AbgFSPWy (ORCPT
+        id S2405388AbgFSPxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403877AbgFSPPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:20 -0400
+        id S2393069AbgFSPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE92A206DB;
-        Fri, 19 Jun 2020 15:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FB920B80;
+        Fri, 19 Jun 2020 15:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579719;
-        bh=0KyO+5mrWMuKtoyYwUv5HIPOy5RHKWqUa3tEeT5t9Q4=;
+        s=default; t=1592580169;
+        bh=84y+gW41dURSJi/gdvoDOb2sY4x5qag2jIQ+OeQgv8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UarD7/46nNEYucoKFi+4LUU4x8fYivAdKZjwIT8VLf9xAxh4G9CvY0g0/KhFiA+vJ
-         JaJrpYOvtYmYrWPJh35Y+psjaFk5tZpO+gNcrukUeGJRD6iL4K3Ds7zdxOmUHEhU/W
-         Wl2C1wKMFBE9xMTUgT/bxBfsRapFeTt2qsWbBkKg=
+        b=z29a/qUgLLSuq9nG9n02tIhvD6vqASzPXrOAkKedbrAYWDpY876pV4T3xCiCv++3r
+         5qJDhOPRsO9ru13U9fhMNe0g+0B0bHin0BM+cM3rd5lXQkr3k8nX2MNBMebS7a0GbU
+         xH6o+q0XreYYCJUwMn9Y1Gz/cqrYNE1mFVfNtwcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 240/261] mtd: rawnand: Fix nand_gpio_waitrdy()
-Date:   Fri, 19 Jun 2020 16:34:11 +0200
-Message-Id: <20200619141701.384262685@linuxfoundation.org>
+        stable@vger.kernel.org, Alain Michaud <alainm@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 118/376] Bluetooth: Adding driver and quirk defs for multi-role LE
+Date:   Fri, 19 Jun 2020 16:30:36 +0200
+Message-Id: <20200619141715.931612587@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,44 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+From: Alain Michaud <alainm@chromium.org>
 
-commit e45a4b652dbd2f8b5a3b8e97e89f602a58cb28aa upstream.
+[ Upstream commit 220915857e29795ae5ba4222806268b4a99c19c1 ]
 
-Mimic what's done in nand_soft_waitrdy() and add one to the jiffies
-timeout so we don't end up waiting less than actually required.
+This change adds the relevant driver and quirk to allow drivers to
+report the le_states as being trustworthy.
 
-Reported-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Fixes: b0e137ad24b6c ("mtd: rawnand: Provide helper for polling GPIO R/B pin")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200518155237.297549-1-boris.brezillon@collabora.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This has historically been disabled as controllers did not reliably
+support this. In particular, this will be used to relax this condition
+for controllers that have been well tested and reliable.
 
+	/* Most controller will fail if we try to create new connections
+	 * while we have an existing one in slave role.
+	 */
+	if (hdev->conn_hash.le_num_slave > 0)
+		return NULL;
+
+Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/nand_base.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btusb.c   | 1 +
+ include/net/bluetooth/hci.h | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -731,8 +731,14 @@ EXPORT_SYMBOL_GPL(nand_soft_waitrdy);
- int nand_gpio_waitrdy(struct nand_chip *chip, struct gpio_desc *gpiod,
- 		      unsigned long timeout_ms)
- {
--	/* Wait until R/B pin indicates chip is ready or timeout occurs */
--	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 3bdec42c9612..3d9313c746f3 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -58,6 +58,7 @@ static struct usb_driver btusb_driver;
+ #define BTUSB_CW6622		0x100000
+ #define BTUSB_MEDIATEK		0x200000
+ #define BTUSB_WIDEBAND_SPEECH	0x400000
++#define BTUSB_VALID_LE_STATES   0x800000
+ 
+ static const struct usb_device_id btusb_table[] = {
+ 	/* Generic Bluetooth USB device */
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 5f60e135aeb6..25c2e5ee81dc 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -214,6 +214,15 @@ enum {
+ 	 * This quirk must be set before hci_register_dev is called.
+ 	 */
+ 	HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED,
 +
-+	/*
-+	 * Wait until R/B pin indicates chip is ready or timeout occurs.
-+	 * +1 below is necessary because if we are now in the last fraction
-+	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
-+	 * small jiffy fraction - possibly leading to false timeout.
++	/* When this quirk is set, the controller has validated that
++	 * LE states reported through the HCI_LE_READ_SUPPORTED_STATES are
++	 * valid.  This mechanism is necessary as many controllers have
++	 * been seen has having trouble initiating a connectable
++	 * advertisement despite the state combination being reported as
++	 * supported.
 +	 */
-+	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
- 	do {
- 		if (gpiod_get_value_cansleep(gpiod))
- 			return 0;
++	HCI_QUIRK_VALID_LE_STATES,
+ };
+ 
+ /* HCI device flags */
+-- 
+2.25.1
+
 
 
