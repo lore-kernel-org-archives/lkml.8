@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF014C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48906C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40D8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E6E207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582614;
-	bh=0Ktykwqwil8lCZg6fRrUCHkXXfMVDtYuXk1cdxUXoQk=;
+	s=default; t=1592582618;
+	bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgApUlRd5zxzvoJEAlB78A/CnE6zlj7urRVAaaa3JaFmsLDB7H/8+NNDqJ6gTKjis
-	 yNIydd/sz8pu9H3PQzAR4rEyuUwc8z/jsDMaJEMtoBX2PKDseuLyeT3noS/x3Uciqw
-	 d8s3rsoClsO6Nl4mbmPwIfW1r4Wba7n3mMotV2eI=
+	b=vXl/ZFoR7N1PdzXrGKwDyd0lVFpZhypWguF5yqCHt6pNTSmI/N1ZMxHzeoTyJSqJk
+	 /hp1P47v9h7Yn9KaAzKmUJjOCs+GM2bjI5sOtKh2/FrxdyKfy371/t/lB3+U5tIrPj
+	 RhEUzpileKwU/G94kb4BqaQDqvu04IVsBEEfuD2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389737AbgFSQDd (ORCPT
+        id S2392108AbgFSPL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:11:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392118AbgFSPLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:32 -0400
+        id S2392092AbgFSPLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3311920776;
-        Fri, 19 Jun 2020 15:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3679206FA;
+        Fri, 19 Jun 2020 15:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579491;
-        bh=0Ktykwqwil8lCZg6fRrUCHkXXfMVDtYuXk1cdxUXoQk=;
+        s=default; t=1592579476;
+        bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz8/LIw/qNUNFQmM1J8lV6fywo2CTtJgr+GH0uZn1bKMVqhCWjn3J0McCUsleykga
-         DBat/E/ifGkVj3PCTqnB9dYkOIRGC2VkOXJNrKl9z0qzKk+Ae9VqqllDC96awqgDKK
-         MemjtVZcWnUcix4NtxNKFNiWMSABZjFcDJ6kogZI=
+        b=OHXDf9zrxlukoRnDxNZjOHmvF4ynvsQTjA5gRcRQV3wmLOI0jS3fZsXAEG6mZQP1J
+         eST6owpPfVe56U3RMNDALtJIbhqQ1nlWSo8uI4urEfrOPOLFGKW6qddd1UOcfcumLi
+         2k9jJ5k72aZjv5vu91ai4uC4NNssr3JzrU9fhrv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Toromanoff <nicolas.toromanoff@st.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 125/261] crypto: stm32/crc32 - fix run-time self test issue.
-Date:   Fri, 19 Jun 2020 16:32:16 +0200
-Message-Id: <20200619141655.850225498@linuxfoundation.org>
+Subject: [PATCH 5.4 149/261] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
+Date:   Fri, 19 Jun 2020 16:32:40 +0200
+Message-Id: <20200619141657.010538317@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,59 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit a8cc3128bf2c01c4d448fe17149e87132113b445 ]
+[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
 
-Fix wrong crc32 initialisation value:
-"alg: shash: stm32_crc32 test failed (wrong result) on test vector 0,
-cfg="init+update+final aligned buffer"
-cra_name="crc32c" expects an init value of 0XFFFFFFFF,
-cra_name="crc32" expects an init value of 0.
+First of all, unsigned long can overflow u32 value on 64-bit machine.
+Second, simple_strtoul() doesn't check for overflow in the input.
 
-Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+Convert simple_strtoul() to kstrtou32() to eliminate above issues.
 
-Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/stm32/stm32-crc32.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
-index 17b371eacd57..93969d23a4a8 100644
---- a/drivers/crypto/stm32/stm32-crc32.c
-+++ b/drivers/crypto/stm32/stm32-crc32.c
-@@ -28,10 +28,10 @@
- 
- /* Registers values */
- #define CRC_CR_RESET            BIT(0)
--#define CRC_INIT_DEFAULT        0xFFFFFFFF
- #define CRC_CR_REV_IN_WORD      (BIT(6) | BIT(5))
- #define CRC_CR_REV_IN_BYTE      BIT(5)
- #define CRC_CR_REV_OUT          BIT(7)
-+#define CRC32C_INIT_DEFAULT     0xFFFFFFFF
- 
- #define CRC_AUTOSUSPEND_DELAY	50
- 
-@@ -65,7 +65,7 @@ static int stm32_crc32_cra_init(struct crypto_tfm *tfm)
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index a881b709af25..a44a2ec33287 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -461,8 +461,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+ 			 const char *buf, size_t count)
  {
- 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
- 
--	mctx->key = CRC_INIT_DEFAULT;
-+	mctx->key = 0;
- 	mctx->poly = CRC32_POLY_LE;
- 	return 0;
- }
-@@ -74,7 +74,7 @@ static int stm32_crc32c_cra_init(struct crypto_tfm *tfm)
- {
- 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
- 
--	mctx->key = CRC_INIT_DEFAULT;
-+	mctx->key = CRC32C_INIT_DEFAULT;
- 	mctx->poly = CRC32C_POLY_LE;
- 	return 0;
- }
+-	u32 tmp = simple_strtoul(buf, NULL, 10);
+-	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
++	u32 tmp;
++	int ret;
++
++	ret = kstrtou32(buf, 10, &tmp);
++	if (ret)
++		return ret;
++
++	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
+ 				       sizeof(tmp), sizeof(tmp));
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
 -- 
 2.25.1
 
