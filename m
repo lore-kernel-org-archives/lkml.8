@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A12C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B20C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111F820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDC220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582303;
-	bh=3YAXEK4s/GPg8WqzWmTln3TcNkCmuYxwrw8nQ+1yss8=;
+	s=default; t=1592582315;
+	bh=gaxOcen6Q9dN8HfcwwrP4yk5frKodCMa00mJuEccJdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L/DtaBTfCy2UfqQ6+et4+smCoOSlUEohXis8Dr8w+1CsDak3NaDcI6KqhkUzmuNo4
-	 uRIXRuQi3of4cTcQtI3IE+yHAC2fBeC+bYKQX/kAJilxHOsVQmRkYhBmpMmI3RWwNt
-	 Ac1qKZfDX+eM2WfY1NQ59kpas4V+ZFuZw4UhYpK4=
+	b=LbOCXaJWRgBZFyinztDTW/Ag04+VQNHskLv3FNFd3YFrpbZGmP/8avY3CQaWN4HAO
+	 Wvz1+/P+XDv/wBhueo2cmPFfX99GHLF+IAFUtwlHJmTcgbpG+4jueVaw2uFRnKYMA2
+	 Grt9B2JVJ3Orw+Ztio032udrNpgEMLfoNcHJDdOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405473AbgFSP6V (ORCPT
+        id S2405477AbgFSP6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404209AbgFSPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:40 -0400
+        id S2390488AbgFSPTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8D9E206DB;
-        Fri, 19 Jun 2020 15:19:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479CD2184D;
+        Fri, 19 Jun 2020 15:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579979;
-        bh=3YAXEK4s/GPg8WqzWmTln3TcNkCmuYxwrw8nQ+1yss8=;
+        s=default; t=1592579968;
+        bh=gaxOcen6Q9dN8HfcwwrP4yk5frKodCMa00mJuEccJdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2FCsCzLyLQOVZRe0Pl0ic9nc3oaAtsl770fvdBVBTRa9X0J1NOBrUckLVjIYJuR60
-         n/tD1CH1ZCm9j3Pb+KBJVontlRz8kro/x1zHXJ3Aylikh8hCaBpDMQcv8UKGYvRDqN
-         pcOpUdz8ySNszKDhHS53wqNWg3lmcEylwX06j0T8=
+        b=akCErn432cBghn8ieEtmWS8wal+1phcMjROpcM4XKXL6sn7K6+lykud8B/6MUNwzX
+         D7Cq9/L5prRwmYr5R4KZEjrgKB2oXkx6Eesj8dQE9wO4dTpsUBPR2NpyUasm4mRNuy
+         3bJswm3YbjqYyoCLFJsMcdehA+TjUuMOIsI4dC4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Tobias Baumann <017623705678@o2online.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 049/376] media: i2c: imx219: Fix a bug in imx219_enum_frame_size
-Date:   Fri, 19 Jun 2020 16:29:27 +0200
-Message-Id: <20200619141712.675319974@linuxfoundation.org>
+Subject: [PATCH 5.7 072/376] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
+Date:   Fri, 19 Jun 2020 16:29:50 +0200
+Message-Id: <20200619141713.761559667@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -65,40 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit b2bbf1aac61186ef904fd28079e847d3feadb89e ]
+[ Upstream commit 91995b904ec2e44b5c159ac6a5d3f154345a4de7 ]
 
-When enumerating the frame sizes, the value sent to
-imx219_get_format_code should be fse->code
-(the code from the ioctl) and not imx219->fmt.code
-which is the code set currently in the driver.
+The vendor driver (from the 3.10 kernel) triggers a soft reset every
+time before starting a new command. While this fixes a problem where
+SDIO cards are not detected at all (because all commands simply
+timed out) this hurts SD card read performance a bit (in my tests
+between 10% to 20%).
 
-Fixes: 22da1d56e982 ("media: i2c: imx219: Add support for RAW8 bit bayer format")
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Trigger a soft reset after we got a CRC error or if the previous command
+timed out (just like the vendor driver from the same 3.10 kernel for the
+newer SDHC controller IP does). This fixes detection of SDIO cards and
+doesn't hurt SD card read performance at the same time.
+
+With this patch the initialization of an RTL8723BS SDIO card looks like
+this:
+  req done (CMD52): -110: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
+  starting CMD0 arg 00000000 flags 000000c0
+  req done (CMD0): 0: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
+  starting CMD8 arg 000001aa flags 000002f5
+  req done (CMD8): -110: 00000000 00000000 00000000 00000000
+  starting CMD5 arg 00000000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD5 arg 00200000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD3 arg 00000000 flags 00000075
+  req done (CMD3): 0: 00010000 00000000 00000000 00000000
+  starting CMD7 arg 00010000 flags 00000015
+  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
+  starting CMD52 arg 00000000 flags 00000195
+  req done (CMD52): 0: 00001032 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  starting CMD52 arg 00000e00 flags 00000195
+  req done (CMD52): 0: 00001000 00000000 00000000 00000000
+  starting CMD52 arg 80000e02 flags 00000195
+  req done (CMD52): 0: 00001002 00000000 00000000 00000000
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
+  starting CMD52 arg 00020000 flags 00000195
+  req done (CMD52): 0: 00001007 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  new high speed SDIO card at address 0001
+
+Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200503222805.2668941-1-martin.blumenstingl@googlemail.com
+Tested-by: Tobias Baumann <017623705678@o2online.de>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/imx219.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/meson-mx-sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index cb03bdec1f9c..86e0564bfb4f 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -781,7 +781,7 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
- 	if (fse->index >= ARRAY_SIZE(supported_modes))
- 		return -EINVAL;
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 2e58743d83bb..3813b544f571 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -246,6 +246,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
  
--	if (fse->code != imx219_get_format_code(imx219, imx219->fmt.code))
-+	if (fse->code != imx219_get_format_code(imx219, fse->code))
- 		return -EINVAL;
+ 	mrq = host->mrq;
  
- 	fse->min_width = supported_modes[fse->index].width;
++	if (host->cmd->error)
++		meson_mx_mmc_soft_reset(host);
++
+ 	host->mrq = NULL;
+ 	host->cmd = NULL;
+ 
 -- 
 2.25.1
 
