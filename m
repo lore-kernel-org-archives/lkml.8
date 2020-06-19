@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78555C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A0521D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E67021D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579261;
-	bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
+	s=default; t=1592579264;
+	bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KMZH/6nxQjSCSQzWAzSRhwe+eUNqwqAeAD8ZRy6CrdPtRB4JJTRDXnL7JahVjRiFP
-	 qokwJUTCepxbExDhhQDhpwyz7zDaMlO+mWg4wgBWiD+W1dHyGjDx+pjM0dPbVqpCz9
-	 dsff3W4Ipl+9DXVgTqP6QT00j+IO/x07PBcla23E=
+	b=ZrOpeTrdUeouXfl4ZMsgl6GC/13JfXJKhzpf6ossg4kQTZT/33SVkUdaUSWPXBEOz
+	 WVw5YriDba327aNtCfqJPCYdk09DTjN6E3cgzjbjQOV+32BMpBSMAvtHkZQGazgjp4
+	 CKLbXy4nztFly9BR9jX7Xr/FxWwQRguUqm+CKbqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391614AbgFSPHk (ORCPT
+        id S2391180AbgFSPHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36592 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391568AbgFSPHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:20 -0400
+        id S2391575AbgFSPHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5502B21852;
-        Fri, 19 Jun 2020 15:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 738EB21852;
+        Fri, 19 Jun 2020 15:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579239;
-        bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
+        s=default; t=1592579245;
+        bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8TNzrjbMaWqigsHg47Z5cFmeyEwue9i/GIl3KHkNJiRtiSdEJtAP8jsiBrGrrp1E
-         W577vesSiFZIEgjHElqIAADz1xYa/7x7H4zbTfubsE9sAeO9wGxjfoEBLoAR19ma1E
-         7RXyHMw8P8sow0JjX+VrANc947I5/LoppImyZfDQ=
+        b=LnpDFzY3aT+wH8PuSvv9jj2FaCn+usjjgFEvFyy4WZWVfGV751Iazf1oyTZHxkRap
+         wnFt/OQd0jUoOBwcrsLKwwnTE/+xfvDOjBGuXIEp5geN5bXb2rzW6kAGth/Puigj6t
+         acXHn9g4P+ZG23LjUkeXzey1GKYhiKCt79L8+Vp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
-        Tomohito Esaki <etom@igel.co.jp>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Daniel Stone <daniels@collabora.com>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 030/261] drm: rcar-du: Set primary plane zpos immutably at initializing
-Date:   Fri, 19 Jun 2020 16:30:41 +0200
-Message-Id: <20200619141651.356834624@linuxfoundation.org>
+Subject: [PATCH 5.4 032/261] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
+Date:   Fri, 19 Jun 2020 16:30:43 +0200
+Message-Id: <20200619141651.445535142@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -64,80 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomohito Esaki <etom@igel.co.jp>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 7982471d01aac33994276bf567c8f1f3a137648a ]
+[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
 
-According to drm_plane_create_zpos_property() function documentation,
-all planes zpos range should be set if zpos property is supported.
-However, the rcar-du driver didn't set primary plane zpos range. Since
-the primary plane's zpos is fixed, set it immutably.
+The ixgbe driver have another memory model when compiled on archs with
+PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
+two halves, but instead increment rx_buffer->page_offset by truesize of
+packet (which include headroom and tailroom for skb_shared_info).
 
-Reported-by: Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>
-Reported-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Signed-off-by: Tomohito Esaki <etom@igel.co.jp>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Daniel Stone <daniels@collabora.com>
-[Turn continue into if ... else ...]
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
+which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
+to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
+veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
+
+Maintainers notice: This fix have been queued to Jeff.
+
+Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_plane.c | 16 +++++++++-------
- drivers/gpu/drm/rcar-du/rcar_du_vsp.c   | 14 ++++++++------
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_plane.c b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-index c6430027169f..a0021fc25b27 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-@@ -785,13 +785,15 @@ int rcar_du_planes_init(struct rcar_du_group *rgrp)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index a26f9fb95ac0..edaa0bffa5c3 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2254,7 +2254,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
+ 	rx_buffer->page_offset ^= truesize;
+ #else
+ 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
+-				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
++				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
++				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
+ 				SKB_DATA_ALIGN(size);
  
- 		drm_plane_create_alpha_property(&plane->plane);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY)
--			continue;
--
--		drm_object_attach_property(&plane->plane.base,
--					   rcdu->props.colorkey,
--					   RCAR_DU_COLORKEY_NONE);
--		drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
-+		if (type == DRM_PLANE_TYPE_PRIMARY) {
-+			drm_plane_create_zpos_immutable_property(&plane->plane,
-+								 0);
-+		} else {
-+			drm_object_attach_property(&plane->plane.base,
-+						   rcdu->props.colorkey,
-+						   RCAR_DU_COLORKEY_NONE);
-+			drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-index 5e4faf258c31..f1a81c9b184d 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-@@ -392,12 +392,14 @@ int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
- 		drm_plane_helper_add(&plane->plane,
- 				     &rcar_du_vsp_plane_helper_funcs);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY)
--			continue;
--
--		drm_plane_create_alpha_property(&plane->plane);
--		drm_plane_create_zpos_property(&plane->plane, 1, 1,
--					       vsp->num_planes - 1);
-+		if (type == DRM_PLANE_TYPE_PRIMARY) {
-+			drm_plane_create_zpos_immutable_property(&plane->plane,
-+								 0);
-+		} else {
-+			drm_plane_create_alpha_property(&plane->plane);
-+			drm_plane_create_zpos_property(&plane->plane, 1, 1,
-+						       vsp->num_planes - 1);
-+		}
- 	}
- 
- 	return 0;
+ 	rx_buffer->page_offset += truesize;
 -- 
 2.25.1
 
