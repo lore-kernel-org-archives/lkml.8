@@ -2,130 +2,206 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D44C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F902080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9B720890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgFSEN3 (ORCPT
+        id S1727808AbgFSEQ5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:13:29 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34092 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgFSEN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:13:29 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jm8Oo-0007ct-8B; Fri, 19 Jun 2020 14:13:07 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 19 Jun 2020 14:13:06 +1000
-Date:   Fri, 19 Jun 2020 14:13:06 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Subject: Re: [kbuild-all] security/integrity/ima/ima_crypto.c:575:12:
- warning: stack frame size of 1152 bytes in function
- 'ima_calc_field_array_hash_tfm'
-Message-ID: <20200619041306.GA22098@gondor.apana.org.au>
-References: <202006172132.iBj7mjDX%lkp@intel.com>
- <932f46e1-3ea9-e0cd-218a-db163c146a0e@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <932f46e1-3ea9-e0cd-218a-db163c146a0e@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 19 Jun 2020 00:16:57 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45916 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgFSEQ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 00:16:56 -0400
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jm8ST-0003Bg-LU
+        for linux-kernel@vger.kernel.org; Fri, 19 Jun 2020 04:16:53 +0000
+Received: by mail-pl1-f198.google.com with SMTP id x8so5458321pll.19
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:16:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xPGhMsH5BAJY2SnMB4S7uPRyLNT6K14xlqaxOAZv3to=;
+        b=Y/jkdm/DVYrfaxcgT1EW9tsl8/kl6NN1Ac3RuJl6RPFSmh0EUpUXPJKemmJh+Cyz4r
+         I0fk5buEamxXuqDQo/hZUMNT1DGNHfaxJtZggd6xreB+roVpPmZcwpBY7kr3b+v4mrjs
+         0X30jRbyXcaalvD8shpvlFlVVyWLBUOYsejPfeoIGiliKYIQmyUT/aNgA2pBY6e99QtY
+         TWhnPG7o4FSWvxc5jy29hvVQO+yGXPcJJuNvipKK+YApWNxxghLzRhi2fyACMiIJIFvp
+         TOaRTCp7DdrqQ12YOXE0NtnlqoSh5UsUsdeSul2fWtoO75Z1ezX0e5HUD3rgSRMEMPA1
+         ud5A==
+X-Gm-Message-State: AOAM530hdE5C1nK4bEyzLiKU6uNgmRR8I2dBrGFo0mafkbhrEGoyoSKh
+        YbKeYaNleAhqxoF/Djm9cpRsCumxOiPkozRVnF1D+ddoLqC2SRA3lkfUPTg1XQsjiua9O7ppltT
+        IbdioVEmFBZbmTMAxtD6Bi/oy5dDf7tPWqM/mgcZV3A==
+X-Received: by 2002:a65:4c8a:: with SMTP id m10mr1507709pgt.138.1592540212093;
+        Thu, 18 Jun 2020 21:16:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyFWyjdmQuBq3Tq7NpYQ2+kssm4u29Qa/b3v33nhK4iOvAtAidX052gjfmchPjC6b9FtGhrEg==
+X-Received: by 2002:a65:4c8a:: with SMTP id m10mr1507679pgt.138.1592540211604;
+        Thu, 18 Jun 2020 21:16:51 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id gm11sm3834302pjb.9.2020.06.18.21.16.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jun 2020 21:16:51 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3] HID: i2c-hid: Enable touchpad wakeup from
+ Suspend-to-Idle
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
+Date:   Fri, 19 Jun 2020 12:16:47 +0800
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        Pavel Balan <admin@kryma.net>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <FAF68BF5-FCBC-4D08-AF0F-98EEA209BB86@canonical.com>
+References: <20200618145515.5055-1-kai.heng.feng@canonical.com>
+ <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:43:22AM +0800, Rong Chen wrote:
+Hi,
+
+> On Jun 18, 2020, at 23:28, Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> Could you take a look at this warning? Roberto mentioned you in previous
-> report:
-> https://lore.kernel.org/linux-integrity/9dbec9465bda4f8995a42593eb0db010@huawei.com/
+> Hi,
+> 
+> On 6/18/20 4:55 PM, Kai-Heng Feng wrote:
+>> Many laptops can be woken up from Suspend-to-Idle by touchpad. This is
+>> also the default behavior on other OSes.
+>> So let's enable the wakeup support if the system defaults to
+>> Suspend-to-Idle.
+> 
+> I have been debugging a spurious wakeup issue on an Asus T101HA,
+> where the system would not stay suspended when the lid was closed.
+> 
+> The issue turns out to be that the touchpad is generating touch
+> events when the lid/display gets close to the touchpad. In this case
+> wakeup is already enabled by default because it is an USB device.
 
-Well having a shash descriptor on the stack is always pushing
-the envelope.  Doing it when you put another 256-byte string is
-obviously not a good idea.  The good thing is that the string
-isn't necessary, so how about:
+Sounds like a mechanical/hardware issue to me.
+I've seen some old laptops have the same issue.
 
----8<---
-The function ima_calc_field_array_hash_tfm uses a stack descriptor
-for shash.  As hashing requires a large amount of space this means
-that you shouldn't put any other large data on the stack at the same
-time, for example, you definitely shouldn't put a 256-byte string
-which you're going to hash on the stack.
+Swollen battery can push up the touchpad, makes it contact to touchscreen, and wakes up the system.
 
-Luckily this string is mostly composed of zeroes so we could just
-use ZERO_PAGE instead.
+> 
+> So I do not believe that this is a good idea, most current devices
+> with a HID multi-touch touchpad use i2c-hid and also use S2idle,
+> so this will basically enable wakeup by touchpad on almost all
+> current devices.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+However, it's really handy to wake up the system from touchpad.
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 220b14920c37..0a925d1a1bf7 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <linux/kernel.h>
-+#include <linux/mm.h>
- #include <linux/moduleparam.h>
- #include <linux/ratelimit.h>
- #include <linux/file.h>
-@@ -605,11 +606,11 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 		return rc;
- 
- 	for (i = 0; i < num_fields; i++) {
--		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
- 		u8 *data_to_hash = field_data[i].data;
- 		u32 datalen = field_data[i].len;
- 		u32 datalen_to_hash =
- 		    !ima_canonical_fmt ? datalen : cpu_to_le32(datalen);
-+		u32 padlen = 0;
- 
- 		if (strcmp(td->name, IMA_TEMPLATE_IMA_NAME) != 0) {
- 			rc = crypto_shash_update(shash,
-@@ -617,14 +618,21 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 						sizeof(datalen_to_hash));
- 			if (rc)
- 				break;
--		} else if (strcmp(td->fields[i]->field_id, "n") == 0) {
--			memcpy(buffer, data_to_hash, datalen);
--			data_to_hash = buffer;
--			datalen = IMA_EVENT_NAME_LEN_MAX + 1;
--		}
-+		} else if (strcmp(td->fields[i]->field_id, "n") == 0 &&
-+			   datalen < IMA_EVENT_NAME_LEN_MAX + 1)
-+			padlen = IMA_EVENT_NAME_LEN_MAX + 1 - datalen;
-+
- 		rc = crypto_shash_update(shash, data_to_hash, datalen);
- 		if (rc)
- 			break;
-+
-+		if (padlen) {
-+			const u8 *zero = page_address(ZERO_PAGE(0));
-+
-+			rc = crypto_shash_update(shash, zero, padlen);
-+			if (rc)
-+				break;
-+		}
- 	}
- 
- 	if (!rc)
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
+> There will likely be other devices with the same issue as the T101HA,
+> but currently we are not seeing this issue because by default i2c-hid
+> devices do not have wakeup enabled. This change will thus likely cause
+> new spurious wakeup issues on more devices. So this seems like a
+> bad idea.
+
+But only under lid is closed?
+
+I wonder if it's okay to handle the case in s2idle_loop() or in userspace?
+Lid close -> Wakeup event from touchpad -> Found the lid is closed 
+-> Turn off touchpad wakeup -> continue suspend.
+
+> 
+> Also your commit message mentions touchpads, but the change
+> will also enable wakeup on most touchscreens out there, meaning
+> that just picking up a device in tablet mode and accidentally
+> touching the screen will wake it up.
+
+I tried touch and i2c-hid touchscreen and it doesn't wake up the system.
+However we should still handle the two different cases, probably differentiate touchpad and touchscreen in hid-multitouch.
+
+> 
+> Also hid multi-touch devices have 3 modes, see the diagrams
+> in Microsoft hw design guides for win8/10 touch devices:
+> 1. Reporting events with low latency (high power mode)
+> 2. Reporting events with high latency (lower power mode)
+> 3. Not reporting events (lowest power mode)
+> 
+> I actually still need to write some patches for hid-multitouch.c
+> to set the mode to 2 or 3 on suspend depending on the device_may_wakeup
+> setting of the parent. Once that patch is written, it should
+> put most i2c-hid mt devices in mode 3, hopefully also helping
+> with Linux' relative high power consumption when a device is
+> suspended. With your change instead my to-be-written patch
+> would put the device in mode 2, which would still be an
+> improvement but less so.
+
+IIRC, touchpad and touchscreen connect to different parents on all laptops I worked on.
+So I think it's possible to enable mode 2 for touchpad, and mode 3 for touchscreen.
+
+Touchpad wake is really handy, let's figure out how to enable it while covering all potential regression risks.
+
+Kai-Heng
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> v3:
+>>  - Use device_init_wakeup().
+>>  - Wording change.
+>> v2:
+>>  - Fix compile error when ACPI is not enabled.
+>>  drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+>> index 294c84e136d7..dae1d072daf6 100644
+>> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+>> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+>> @@ -931,6 +931,12 @@ static void i2c_hid_acpi_fix_up_power(struct device *dev)
+>>  		acpi_device_fix_up_power(adev);
+>>  }
+>>  +static void i2c_hid_acpi_enable_wakeup(struct device *dev)
+>> +{
+>> +	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+>> +		device_init_wakeup(dev, true);
+>> +}
+>> +
+>>  static const struct acpi_device_id i2c_hid_acpi_match[] = {
+>>  	{"ACPI0C50", 0 },
+>>  	{"PNP0C50", 0 },
+>> @@ -945,6 +951,8 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
+>>  }
+>>    static inline void i2c_hid_acpi_fix_up_power(struct device *dev) {}
+>> +
+>> +static inline void i2c_hid_acpi_enable_wakeup(struct device *dev) {}
+>>  #endif
+>>    #ifdef CONFIG_OF
+>> @@ -1072,6 +1080,8 @@ static int i2c_hid_probe(struct i2c_client *client,
+>>    	i2c_hid_acpi_fix_up_power(&client->dev);
+>>  +	i2c_hid_acpi_enable_wakeup(&client->dev);
+>> +
+>>  	device_enable_async_suspend(&client->dev);
+>>    	/* Make sure there is something at this address */
+> 
+
