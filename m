@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD65C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36EDE206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC89206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581069;
-	bh=Bu+NPimlJpWa6hgqy91S1oh2Af6/PWbtnMCu6p7EQos=;
+	s=default; t=1592581073;
+	bh=QpqFatomJNIZinxVMriLwhh76eQ5JXxDrrQ4EMDUW1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19joTJ4PakOcZ6gIuXEyvaq/wulyJGBRcPdUHu9rABPPfxMji6UkC+C5fy1CF9A/B
-	 NbDPjmnUwj8eYbwo6t9rLY+i0oTc1IhG9KdMejyg9ZhR1ZJQ9CCUJ9PU101hU0YJkw
-	 l+mbqP0vz6vGmEV4CejUOyrf25+eL5ZBkBEPtVus=
+	b=O8yi9LrLE0fbf3EJ1qIQqYdvn87X3izmYMKKblo48BhO7VyHQ/ocJ9OviYyNKFkgz
+	 Q5RHXcsIiqAwdtoXZFRZRAGxlkiZ8ZXnGVLj/LzkttzZ2LkeUdw+gmfd/c/D8okfFl
+	 ojz5kw4vtlWDzaDrh35LtCLEat+KF0PnkCYHQX6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391738AbgFSPhs (ORCPT
+        id S2405157AbgFSPhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33532 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:37:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404686AbgFSP3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:54 -0400
+        id S2393518AbgFSP3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E05020734;
-        Fri, 19 Jun 2020 15:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 894A620734;
+        Fri, 19 Jun 2020 15:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580592;
-        bh=Bu+NPimlJpWa6hgqy91S1oh2Af6/PWbtnMCu6p7EQos=;
+        s=default; t=1592580590;
+        bh=QpqFatomJNIZinxVMriLwhh76eQ5JXxDrrQ4EMDUW1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vor9HJnpg+Z7kFuQ3MAIYFfPdbCbH65qU58zV/FuVYgKAKKkc+sl4fhqn4xeJZ8eW
-         7CMwFkthHAwNHf/nS0EsiXJIvRapJK7cw82nbE6fewW0ulqstSrsGGlZSsr0hr+E/6
-         fyi819Vz3HYY4WH/s2YYNg6wPKRJt37+5NnaVkec=
+        b=FumfSQbrslIZNZ9Ns/a118exq6/UGKIn5MPxYnNj5top1JNNLLIvD1bDPfMwg2D/L
+         +vKB1zwR55tPflZoBczvz7sCqBCnaA2XqAikycJXKJIZzOVhJKK87Gub6ardVr7csk
+         bFPfHFn4olMOnmKPF1N4KGbB+DX+WBsC1g/CURnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.7 307/376] media: ov5640: fix use of destroyed mutex
-Date:   Fri, 19 Jun 2020 16:33:45 +0200
-Message-Id: <20200619141724.868498090@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.7 306/376] b43_legacy: Fix connection problem with WPA3
+Date:   Fri, 19 Jun 2020 16:33:44 +0200
+Message-Id: <20200619141724.823110674@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,52 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit bfcba38d95a0aed146a958a84a2177af1459eddc upstream.
+commit 6a29d134c04a8acebb7a95251acea7ad7abba106 upstream.
 
-v4l2_ctrl_handler_free() uses hdl->lock, which in ov5640 driver is set
-to sensor's own sensor->lock. In ov5640_remove(), the driver destroys the
-sensor->lock first, and then calls v4l2_ctrl_handler_free(), resulting
-in the use of the destroyed mutex.
+Since the driver was first introduced into the kernel, it has only
+handled the ciphers associated with WEP, WPA, and WPA2. It fails with
+WPA3 even though mac80211 can handle those additional ciphers in software,
+b43legacy did not report that it could handle them. By setting MFP_CAPABLE using
+ieee80211_set_hw(), the problem is fixed.
 
-Fix this by calling moving the mutex_destroy() to the end of the cleanup
-sequence, as there's no need to destroy the mutex as early as possible.
+With this change, b43legacy will handle the ciphers it knows in hardware,
+and let mac80211 handle the others in software. It is not necessary to
+use the module parameter NOHWCRYPT to turn hardware encryption off.
+Although this change essentially eliminates that module parameter,
+I am choosing to keep it for cases where the hardware is broken,
+and software encryption is required for all ciphers.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: stable@vger.kernel.org # v4.14+
-Reviewed-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200526155909.5807-3-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov5640.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43legacy/main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -3093,8 +3093,8 @@ static int ov5640_probe(struct i2c_clien
- free_ctrls:
- 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
- entity_cleanup:
--	mutex_destroy(&sensor->lock);
- 	media_entity_cleanup(&sensor->sd.entity);
-+	mutex_destroy(&sensor->lock);
- 	return ret;
- }
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -3801,6 +3801,7 @@ static int b43legacy_wireless_init(struc
+ 	/* fill hw info */
+ 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
+ 	ieee80211_hw_set(hw, SIGNAL_DBM);
++	ieee80211_hw_set(hw, MFP_CAPABLE); /* Allow WPA3 in software */
  
-@@ -3104,9 +3104,9 @@ static int ov5640_remove(struct i2c_clie
- 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
- 
- 	v4l2_async_unregister_subdev(&sensor->sd);
--	mutex_destroy(&sensor->lock);
- 	media_entity_cleanup(&sensor->sd.entity);
- 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
-+	mutex_destroy(&sensor->lock);
- 
- 	return 0;
- }
+ 	hw->wiphy->interface_modes =
+ 		BIT(NL80211_IFTYPE_AP) |
 
 
