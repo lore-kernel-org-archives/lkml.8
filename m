@@ -2,52 +2,61 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1707EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA002206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05BE206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581410;
-	bh=D5B3I4QanqLAhfpP8hGr+kfAiOpGXsdGgNYIrPcUAac=;
+	s=default; t=1592581414;
+	bh=6Y2Sf4KfwSJ0PZY+hF3AuAGRTWsd6ebeXMRKaNta7O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHBbMvd7KDT4NnnafopFCDa33iyveah2QGKD7XUWRhHTDgWF0MFwZyvfMfZQ+OUgl
-	 fd+mKzmZVnPQAigeHeqPnsyxJ8u/wb6URD2gFZ4+y+5aX6303Z8KWmm+tYWIojxqib
-	 qcL4g54EIauJ8tmTSCMZVKw0UVj0sDbUD8ueUDSU=
+	b=RXH9Eh2/I/mY70h4zq+heZ/NXTn9rzoccS1BuOFuhZiR90A/e5ja3QG6deSYAnZb3
+	 Dkl6AaMcmoaWUk+00YIzITl12KTwcLB4llya63mpdzQuoPlgIRKT7p7N0swioDHaOU
+	 hsiCcrzbuZU4bkUPflgeQEIiohuCQMJ6Zby9ioMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393619AbgFSP2P (ORCPT
+        id S2394069AbgFSPnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393536AbgFSP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:20 -0400
+        id S2393625AbgFSP2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2132A218AC;
-        Fri, 19 Jun 2020 15:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01232186A;
+        Fri, 19 Jun 2020 15:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580439;
-        bh=D5B3I4QanqLAhfpP8hGr+kfAiOpGXsdGgNYIrPcUAac=;
+        s=default; t=1592580496;
+        bh=6Y2Sf4KfwSJ0PZY+hF3AuAGRTWsd6ebeXMRKaNta7O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tvs+aW/psEo0fAVd2c89e7GYBuf2RUgcP6izm05C86GzQTKX5CAoZK8921kl66erE
-         GmkAd9phSKMv/qnhYyvcFwq4zmZA3pUSs11Xdw7UmNUx/GDLdzifzN9J1p7hq//H0U
-         1erhYBuZrdHLxhLcnOvAGeKOmxJ5kv+bSnxXUpiI=
+        b=dS7MEq4x/w0vrvxbi1nhaMuX5kxC4y9mmN+2N2HBaDK0vGtGmtyYUuFmRMsKgspiF
+         2AR73WwZ58trV5jmAXMpvGVJ2d61uzBZGy7XAb6opWALogEvBpL/NZsvIz/JdWeyHW
+         PFqrZ+sw2HsYfk/HEs/iPAmq2wk90F8d9cULOmP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 219/376] btrfs: qgroup: mark qgroup inconsistent if were inherting snapshot to a new qgroup
-Date:   Fri, 19 Jun 2020 16:32:17 +0200
-Message-Id: <20200619141720.694732569@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>, Yiqian Wei <yiwei@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 271/376] mm/pagealloc.c: call touch_nmi_watchdog() on max order boundaries in deferred init
+Date:   Fri, 19 Jun 2020 16:33:09 +0200
+Message-Id: <20200619141723.156969519@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,123 +69,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit cbab8ade585a18c4334b085564d9d046e01a3f70 ]
+commit 117003c32771df617acf66e140fbdbdeb0ac71f5 upstream.
 
-[BUG]
-For the following operation, qgroup is guaranteed to be screwed up due
-to snapshot adding to a new qgroup:
+Patch series "initialize deferred pages with interrupts enabled", v4.
 
-  # mkfs.btrfs -f $dev
-  # mount $dev $mnt
-  # btrfs qgroup en $mnt
-  # btrfs subv create $mnt/src
-  # xfs_io -f -c "pwrite 0 1m" $mnt/src/file
-  # sync
-  # btrfs qgroup create 1/0 $mnt/src
-  # btrfs subv snapshot -i 1/0 $mnt/src $mnt/snapshot
-  # btrfs qgroup show -prce $mnt/src
-  qgroupid         rfer         excl     max_rfer     max_excl parent  child
-  --------         ----         ----     --------     -------- ------  -----
-  0/5          16.00KiB     16.00KiB         none         none ---     ---
-  0/257         1.02MiB     16.00KiB         none         none ---     ---
-  0/258         1.02MiB     16.00KiB         none         none 1/0     ---
-  1/0             0.00B        0.00B         none         none ---     0/258
-	        ^^^^^^^^^^^^^^^^^^^^
+Keep interrupts enabled during deferred page initialization in order to
+make code more modular and allow jiffies to update.
 
-[CAUSE]
-The problem is in btrfs_qgroup_inherit(), we don't have good enough
-check to determine if the new relation would break the existing
-accounting.
+Original approach, and discussion can be found here:
+ http://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
 
-Unlike btrfs_add_qgroup_relation(), which has proper check to determine
-if we can do quick update without a rescan, in btrfs_qgroup_inherit() we
-can even assign a snapshot to multiple qgroups.
+This patch (of 3):
 
-[FIX]
-Fix it by manually marking qgroup inconsistent for snapshot inheritance.
+deferred_init_memmap() disables interrupts the entire time, so it calls
+touch_nmi_watchdog() periodically to avoid soft lockup splats.  Soon it
+will run with interrupts enabled, at which point cond_resched() should be
+used instead.
 
-For subvolume creation, since all its extents are exclusively owned, we
-don't need to rescan.
+deferred_grow_zone() makes the same watchdog calls through code shared
+with deferred init but will continue to run with interrupts disabled, so
+it can't call cond_resched().
 
-In theory, we should call relation check like quick_update_accounting()
-when doing qgroup inheritance and inform user about qgroup accounting
-inconsistency.
+Pull the watchdog calls up to these two places to allow the first to be
+changed later, independently of the second.  The frequency reduces from
+twice per pageblock (init and free) to once per max order block.
 
-But we don't have good mechanism to relay that back to the user in the
-snapshot creation context, thus we can only silently mark the qgroup
-inconsistent.
+Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Yiqian Wei <yiwei@redhat.com>
+Cc: <stable@vger.kernel.org>	[4.17+]
+Link: http://lkml.kernel.org/r/20200403140952.17177-2-pasha.tatashin@soleen.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Anyway, user shouldn't use qgroup inheritance during snapshot creation,
-and should add qgroup relationship after snapshot creation by 'btrfs
-qgroup assign', which has a much better UI to inform user about qgroup
-inconsistent and kick in rescan automatically.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ mm/page_alloc.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index c3888fb367e7..5bd4089ad0e1 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2622,6 +2622,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 	struct btrfs_root *quota_root;
- 	struct btrfs_qgroup *srcgroup;
- 	struct btrfs_qgroup *dstgroup;
-+	bool need_rescan = false;
- 	u32 level_size = 0;
- 	u64 nums;
- 
-@@ -2765,6 +2766,13 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 				goto unlock;
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1692,7 +1692,6 @@ static void __init deferred_free_pages(u
+ 		} else if (!(pfn & nr_pgmask)) {
+ 			deferred_free_range(pfn - nr_free, nr_free);
+ 			nr_free = 1;
+-			touch_nmi_watchdog();
+ 		} else {
+ 			nr_free++;
  		}
- 		++i_qgroups;
-+
-+		/*
-+		 * If we're doing a snapshot, and adding the snapshot to a new
-+		 * qgroup, the numbers are guaranteed to be incorrect.
-+		 */
-+		if (srcid)
-+			need_rescan = true;
- 	}
+@@ -1722,7 +1721,6 @@ static unsigned long  __init deferred_in
+ 			continue;
+ 		} else if (!page || !(pfn & nr_pgmask)) {
+ 			page = pfn_to_page(pfn);
+-			touch_nmi_watchdog();
+ 		} else {
+ 			page++;
+ 		}
+@@ -1869,8 +1867,10 @@ static int __init deferred_init_memmap(v
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn)
++	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		touch_nmi_watchdog();
++	}
+ zone_empty:
+ 	/* Sanity check that the next zone really is unpopulated */
+ 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+@@ -1941,6 +1941,7 @@ deferred_grow_zone(struct zone *zone, un
+ 		first_deferred_pfn = spfn;
  
- 	for (i = 0; i <  inherit->num_ref_copies; ++i, i_qgroups += 2) {
-@@ -2784,6 +2792,9 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		touch_nmi_watchdog();
  
- 		dst->rfer = src->rfer - level_size;
- 		dst->rfer_cmpr = src->rfer_cmpr - level_size;
-+
-+		/* Manually tweaking numbers certainly needs a rescan */
-+		need_rescan = true;
- 	}
- 	for (i = 0; i <  inherit->num_excl_copies; ++i, i_qgroups += 2) {
- 		struct btrfs_qgroup *src;
-@@ -2802,6 +2813,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 
- 		dst->excl = src->excl + level_size;
- 		dst->excl_cmpr = src->excl_cmpr + level_size;
-+		need_rescan = true;
- 	}
- 
- unlock:
-@@ -2809,6 +2821,8 @@ unlock:
- out:
- 	if (!committing)
- 		mutex_unlock(&fs_info->qgroup_ioctl_lock);
-+	if (need_rescan)
-+		fs_info->qgroup_flags |= BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
- 	return ret;
- }
- 
--- 
-2.25.1
-
+ 		/* We should only stop along section boundaries */
+ 		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
 
 
