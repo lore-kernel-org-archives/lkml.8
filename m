@@ -2,116 +2,82 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9004C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A50C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B6420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582654;
-	bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cM50RucuDdtTJpRmFvw4D/YJy+Ce5cnbdKajgQpf5GAkeptyjNCl4xD4VejD/I3jX
-	 W3B9tB00lGIb8s6+3rVRjkPmZ28pzep/9z98nvt6F2PmsvblYaQl0bNuXtl7mTQef8
-	 fcUhV0VV11hf/2ZeWm/StxxwaEiAb6Evbk6BqHFE=
+	by mail.kernel.org (Postfix) with ESMTP id 0359220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394230AbgFSQEM (ORCPT
+        id S2405482AbgFSQEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392050AbgFSPLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3823520776;
-        Fri, 19 Jun 2020 15:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579462;
-        bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMb4ipfEWj+Z8e2JOTAKMVWlegYYj5Cev8XXz3P9xsW4LjMpiZ0dO7FU44Xrim4pT
-         pjRKz0Whmoq4Bxkd4Jerqbf3irINA7gmLCi4Pne6K+JxXjQD1aIEMq7ZziIr+/vkvz
-         qzpIT3FfjKJQK4TV+sDnKS+OkepxYJoMJDW/wO9w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 144/261] ixgbe: fix signed-integer-overflow warning
-Date:   Fri, 19 Jun 2020 16:32:35 +0200
-Message-Id: <20200619141656.779383367@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:04:15 -0400
+Received: from outbound-smtp31.blacknight.com ([81.17.249.62]:51798 "EHLO
+        outbound-smtp31.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394225AbgFSQEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:04:11 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp31.blacknight.com (Postfix) with ESMTPS id 2A7C0C0ABA
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:04:10 +0100 (IST)
+Received: (qmail 28271 invoked from network); 19 Jun 2020 16:04:10 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Jun 2020 16:04:09 -0000
+Date:   Fri, 19 Jun 2020 17:04:07 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs, pseudo: Do not update atime for pseudo inodes
+Message-ID: <20200619160407.GL3183@techsingularity.net>
+References: <20200617145310.GK3183@techsingularity.net>
+ <CAOQ4uxjdTUnA2ACQtyZ95QkTtH_zaKZEYLyok73yjrhuUyXmtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjdTUnA2ACQtyZ95QkTtH_zaKZEYLyok73yjrhuUyXmtg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+On Fri, Jun 19, 2020 at 04:45:09PM +0300, Amir Goldstein wrote:
+> > proxy measure is the proc fd representations of such inodes which do not
+> > appear to change once they are created. This patch sets the S_NOATIME
+> > on inode->i_flags for inodes created by new_inode_pseudo() so that atime
+> > will not be updated.
+> >
+> 
+> new_inode() calls new_inode_pseudo() ...
+> You need to factor out a new helper.
+> 
 
-[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
+You're right, it's broken as it stands. Even though I don't think direct
+users of alloc_file_pseudo use simple_getattr, it doesn't matter.
 
-ubsan report this warning, fix it by adding a unsigned suffix.
+> Either you can provide callers analysis of all new_inode_pseudo() users
+> or use a new helper to set S_NOATIME and call it from the relevant users
+> (pipe, socket).
+> 
 
-UBSAN: signed-integer-overflow in
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
-65535 * 65537 cannot be represented in type 'int'
-CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
-Workqueue: ixgbe ixgbe_service_task [ixgbe]
-Call trace:
- dump_backtrace+0x0/0x3f0
- show_stack+0x28/0x38
- dump_stack+0x154/0x1e4
- ubsan_epilogue+0x18/0x60
- handle_overflow+0xf8/0x148
- __ubsan_handle_mul_overflow+0x34/0x48
- ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
- ixgbe_service_task+0xc20/0x1f78 [ixgbe]
- process_one_work+0x8f0/0xf18
- worker_thread+0x430/0x6d0
- kthread+0x218/0x238
- ret_from_fork+0x10/0x18
+Relevant users makes sense as it's less likely to cause surprises.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> How about S_NOCMTIME while you are at it?
+> Doesn't file_update_time() show in profiling?
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index 0bd1294ba517..39c5e6fdb72c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -2243,7 +2243,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
- 	}
- 
- 	/* Configure pause time (2 TCs per register) */
--	reg = hw->fc.pause_time * 0x00010001;
-+	reg = hw->fc.pause_time * 0x00010001U;
- 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
- 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
- 
+I can look into it, I don't recall seeing file_update_time() in the
+profile but maybe it was just too small.
+
+> Is there a valid use case for updating c/mtime of anonymous socket/pipe?
+> 
+
+Not that I can think of but that could be a failure of imagination.
+
 -- 
-2.25.1
-
-
-
+Mel Gorman
+SUSE Labs
