@@ -2,103 +2,79 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88558C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42C520B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PySG8fTH"
+	by mail.kernel.org (Postfix) with ESMTP id 72E3920B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390993AbgFSUvN (ORCPT
+        id S2391091AbgFSUvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:51:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389446AbgFSUvM (ORCPT
+        Fri, 19 Jun 2020 16:51:39 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34436 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388929AbgFSUvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:51:12 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A118CC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:51:12 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id z2so6196866qts.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zN53ocDKgPo4aU+Lx16idVT7HiHaxgZRqdMOPyg8GnY=;
-        b=PySG8fTHWaISqWyr5B+UmFnKxEU2vQoohGNc/yiUsQA1bnJ7RZrJh1hgPIL2qqCV2i
-         5udW0uLFRbw4SECK3DY6FquCVCab6hXNsSK/N3ZW8/d9OdsornNnbYl8ueMABCKIVOGS
-         hbMVJNtRVk4yMkPuNoZeoArru9j9dloLBxlpkqh5RWImG152eN9l54Exg9KAXIa8T6rO
-         hO4X9xHtS/cfN8DqWN8L8r0jWN4s1GsyWQhg2nLeKsSMgTpTAAzDc+55QuqoNozvSruj
-         73R+LaRW6jjnighY1YNUAxe3/Kuqi2Bsp2dMqUMr4J0/sgjlklAGFhbUC15BuUrRhPL3
-         QObA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zN53ocDKgPo4aU+Lx16idVT7HiHaxgZRqdMOPyg8GnY=;
-        b=IfgkYVAegb+0uUKRRakp+R+d3oFr2N75oIKt0DzD4lQDixH08kmalU0S9KUJnOO/Uy
-         Rl2QjgbAKSfBISqZOQtDvPHQaU+9eQatAt54fvY+gtOyDlV5BSUzhEmN7a9ROhR/6ES4
-         5dYyUGMSIS78twoPKGsfTKmm1M3RC9qK+RRlpoBxhwehAgI/zNLoSpvn/kxv6WSjLKGq
-         oQb49wJD5PgWvcPX/tOCVrYzpvK09dDeLtNZl6Yo013Rt82BXvAzXNsmTfbaI6bHm2uI
-         dR9SKmIZ1a4FrHQ8COyBHial1c2NuBIAxWQ9CjTUjuR0CX+kX81msfvR7mCdulnHKHWU
-         8i9w==
-X-Gm-Message-State: AOAM530QXLNjI7F7WgPWEPcbu4XmBvU8SrnidqLENtaVRa5STvri5/cf
-        P9JesVy+0FMSJXV1Gz8wWmY=
-X-Google-Smtp-Source: ABdhPJwVMsALt+fpbzh3SghydU/aJYCZXsjL49YBTXK6SUrlg0EKQEdTdU9sN5WTA8Csf9DnigC9zA==
-X-Received: by 2002:ac8:24e8:: with SMTP id t37mr5375278qtt.319.1592599871829;
-        Fri, 19 Jun 2020 13:51:11 -0700 (PDT)
-Received: from shine.lan ([2001:470:8:67e:7035:d058:65bb:d314])
-        by smtp.gmail.com with ESMTPSA id k188sm6212448qkb.23.2020.06.19.13.51.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 13:51:10 -0700 (PDT)
-From:   Jason Andryuk <jandryuk@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jason Andryuk <jandryuk@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/idt: Make idt_descr static
-Date:   Fri, 19 Jun 2020 16:51:02 -0400
-Message-Id: <20200619205103.30873-1-jandryuk@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 19 Jun 2020 16:51:38 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id E94AB2A0564
+Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
+To:     Jens Axboe <axboe@kernel.dk>, Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com
+References: <20200605175536.19681-1-andrealmeid@collabora.com>
+ <20200619134503.60ab689b@lwn.net>
+ <cdab3be8-0d39-5085-34b5-7bf11cc7fb60@infradead.org>
+ <a9b6447f-1b24-5f71-3661-c6ea5fe8ba6e@kernel.dk>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <d99e90ae-27b8-163e-c90f-53778116ac10@collabora.com>
+Date:   Fri, 19 Jun 2020 17:51:30 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <a9b6447f-1b24-5f71-3661-c6ea5fe8ba6e@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3e77abda65b1 ("x86/idt: Consolidate idt functionality")'s commit
-message stated idt_descr could be made static, but it did not actually
-make the change.  Make it static now.
+On 6/19/20 5:49 PM, Jens Axboe wrote:
+> On 6/19/20 1:47 PM, Randy Dunlap wrote:
+>> On 6/19/20 12:45 PM, Jonathan Corbet wrote:
+>>> On Fri,  5 Jun 2020 14:55:36 -0300
+>>> André Almeida <andrealmeid@collabora.com> wrote:
+>>>
+>>>> Create a documentation providing a background and explanation around the
+>>>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+>>>>
+>>>> The reference for writing this documentation was the source code and
+>>>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+>>>> Systems", by Axboe et al.
+>>>>
+>>>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+>>>> ---
+>>>> Changes from v1:
+>>>> - Fixed typos
+>>>> - Reworked blk_mq_hw_ctx
+>>>
+>>> Jens, what's your pleasure on this one?  Should I take it, or do you want
+>>> it...?
+>>
+>> I wouldn't mind seeing a v3.
+> 
+> Agree - Jon, I'd be happy with you taking it once a v3 is posted with the
+> remaining issues ironed out.
+> 
 
-Fixes: 3e77abda65b1 ("x86/idt: Consolidate idt functionality")
-Signed-off-by: Jason Andryuk <jandryuk@gmail.com>
----
- arch/x86/kernel/idt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 0db21206f2f3..7ecf9babf0cb 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -160,7 +160,7 @@ static const __initconst struct idt_data apic_idts[] = {
- /* Must be page-aligned because the real IDT is used in the cpu entry area */
- static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
- 
--struct desc_ptr idt_descr __ro_after_init = {
-+static struct desc_ptr idt_descr __ro_after_init = {
- 	.size		= IDT_TABLE_SIZE - 1,
- 	.address	= (unsigned long) idt_table,
- };
--- 
-2.25.1
-
+Just sent a v3 some minutes ago, please check it out :)
