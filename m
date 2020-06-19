@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A632C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4688E21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA7521527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584490;
-	bh=ZYWXVLDRpMx6fjTzG3pCvWzbfAZaCq5fQaiK1q3eva8=;
+	s=default; t=1592584494;
+	bh=b+1XwEzr+DhqZxYeCU1uBZSVUHjkJ8suceoDvYlayho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i+Y8nvr9IPgKtFhCtpRFXokbxPRS06Ck4EsR+9eva2yq+Tln7QFvO9VCTfQEcMIP/
-	 ps0fKUGjMAXkP93QgXI376rzRjhY9hPzFwADdhrHxxS2SrSEL948UVZ0e+3YQMnH2r
-	 v3hpvqsWoPBR00KCdMmCxBRVqy9ZMxpuVPl1CXEo=
+	b=yC/Gvj7KiU6yVcqupcbB9ggsMN7CBmpIzfLcfgnEndoAyWv2/AU36pH6B6Moh/qVV
+	 qLlVvziiizM6MGkiYI8kqUXjxnzPwmZr8ia45ONuois/wDO/mS8/UqZspDSQ7gUCfD
+	 gZ4NVCcfo1+qnnLyhpCLGvTutcm5ApHS2uFogLpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbgFSOuk (ORCPT
+        id S2395191AbgFSQey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389295AbgFSOuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:17 -0400
+        id S2389313AbgFSOub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAD420776;
-        Fri, 19 Jun 2020 14:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA8B20776;
+        Fri, 19 Jun 2020 14:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578217;
-        bh=ZYWXVLDRpMx6fjTzG3pCvWzbfAZaCq5fQaiK1q3eva8=;
+        s=default; t=1592578230;
+        bh=b+1XwEzr+DhqZxYeCU1uBZSVUHjkJ8suceoDvYlayho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQRYiEHHu/MBEe66SrLxUNn0pqlAV8rOo8lmVlPJA1hFyIS36Vyu9KjZTwfXNd5QS
-         67i8U4sn/yeZXtg9tzHxuzAbhfNxG00fXLW3Qb3GR5wtDRPBlh7hRWyTb8i8yhDMfI
-         7IhE+EOOKrpMVQkgrsHiTQ8AE8TBIOxIgZUCQ/JM=
+        b=PTxUum1YJPbp+z6awfKWv59Jfts9l5+zHtSwfzbWlgFrgGUoXbyd0fhUUOFMrOScY
+         bhjeWFIGaIEgfMZriwY/LaGDD1jj/ItrGn3VZOIaStDy+YcYvQn3kpyF5lA0NWEMjM
+         VX5aUROElJThS2mp/QC4I1NZrs2QEBoGlf8MQ5tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/190] e1000: Distribute switch variables for initialization
-Date:   Fri, 19 Jun 2020 16:32:23 +0200
-Message-Id: <20200619141638.488881713@linuxfoundation.org>
+Subject: [PATCH 4.14 134/190] ixgbe: fix signed-integer-overflow warning
+Date:   Fri, 19 Jun 2020 16:32:59 +0200
+Message-Id: <20200619141640.325409368@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,62 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+ubsan report this warning, fix it by adding a unsigned suffix.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
+UBSAN: signed-integer-overflow in
+drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
+65535 * 65537 cannot be represented in type 'int'
+CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
+Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
+Workqueue: ixgbe ixgbe_service_task [ixgbe]
+Call trace:
+ dump_backtrace+0x0/0x3f0
+ show_stack+0x28/0x38
+ dump_stack+0x154/0x1e4
+ ubsan_epilogue+0x18/0x60
+ handle_overflow+0xf8/0x148
+ __ubsan_handle_mul_overflow+0x34/0x48
+ ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
+ ixgbe_service_task+0xc20/0x1f78 [ixgbe]
+ process_one_work+0x8f0/0xf18
+ worker_thread+0x430/0x6d0
+ kthread+0x218/0x238
+ ret_from_fork+0x10/0x18
 
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 3dd4aeb2706d..175681aa5260 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3169,8 +3169,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
-+
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3191,6 +3192,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+index 815284fe9324..6b5662674c75 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+@@ -2267,7 +2267,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
+ 	}
+ 
+ 	/* Configure pause time (2 TCs per register) */
+-	reg = hw->fc.pause_time * 0x00010001;
++	reg = hw->fc.pause_time * 0x00010001U;
+ 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
+ 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
+ 
 -- 
 2.25.1
 
