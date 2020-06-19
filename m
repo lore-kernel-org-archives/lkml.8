@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA19C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1989FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5B9421D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96982193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580590;
-	bh=61pORohPiWeZyY+dHqg22TWv4zbtArNyLSuNKbDcWpU=;
+	s=default; t=1592580593;
+	bh=XNFn8BeRvyNMWixzmdvmz60YP1TqS0AsqFPdxRnlbQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d13TbRSt9yyTFUXGW9SHSMPmSxOgH1MIZTQ17LOHMRGT6gPVz6mASfrL3Oe+Hl65+
-	 1+/OkLela+lTibAgNjG1fEiN3fv2FkSBlE2w0imNkr7YUs8piVS7YrWtg8EZYmenen
-	 mm68pt5WpuNNGxwU/jlk7yRrtf+786U9IxozPBuo=
+	b=rAuSYftNE/2p1Vg/S3E7VTzQS1l8hVGf79COjDJ6x+Pg+lzxmNmGv6EwyYTs+erhU
+	 wMezJQC936g8Vf7HbRODhon1bZBYagV7r0fjGVc1UW0wpozMx/tzFgBLWuyuN8/Izf
+	 kHxCV0VimY4YkxMaB7t2uIRR5ClV7D9Be0Hrkwqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392861AbgFSP3s (ORCPT
+        id S2393698AbgFSP3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33230 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404686AbgFSP3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:37 -0400
+        id S2404694AbgFSP3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 544E220734;
-        Fri, 19 Jun 2020 15:29:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1C62193E;
+        Fri, 19 Jun 2020 15:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580576;
-        bh=61pORohPiWeZyY+dHqg22TWv4zbtArNyLSuNKbDcWpU=;
+        s=default; t=1592580579;
+        bh=XNFn8BeRvyNMWixzmdvmz60YP1TqS0AsqFPdxRnlbQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ER9F1OMmg0uvzrCTLY1uWDurKepXv7RxzZNMyVNy5jQ5VB0kj8AcJ1oO21P/5e6EO
-         GxlvGE2nPTzCqwbDUSUckbeE160enHBTiK3TWw/c5w+7RDAzoum15kPdzDKxC4944e
-         eWqrnvKTGy5MOUbCx+PwlsSwxOFtvGYLK3+RCcLQ=
+        b=AYeu40VS7qQ8SNKuwJxGyrbFxklAS4xM9JwO3kqtk9NmgQIWAVxOmFOcfIN+9tnbP
+         S9ZP/zagksJXrBV/lCprzNg5lJg8Er++S4vdz+cBGZMy+ZKL3+bi/i2hZnmF+HxOYD
+         DOgsJF7PLE16dGeQRd/aX9nvQ53Wc+JZOusyd+M4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.7 302/376] Bluetooth: hci_bcm: respect IRQ polarity from DT
-Date:   Fri, 19 Jun 2020 16:33:40 +0200
-Message-Id: <20200619141724.636538661@linuxfoundation.org>
+Subject: [PATCH 5.7 303/376] Bluetooth: hci_bcm: fix freeing not-requested IRQ
+Date:   Fri, 19 Jun 2020 16:33:41 +0200
+Message-Id: <20200619141724.682769105@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,32 +62,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit b25e4df4a83e516efbdeeefb5b2d3e259639a56e upstream.
+commit 81bd5d0c62437c02caac6b3f942fcda874063cb0 upstream.
 
-The IRQ polarity is be configured in bcm_setup_sleep(). Make the
-configured value match what is in the DeviceTree.
+When BT module can't be initialized, but it has an IRQ, unloading
+the driver WARNs when trying to free not-yet-requested IRQ. Fix it by
+noting whether the IRQ was requested.
+
+WARNING: CPU: 2 PID: 214 at kernel/irq/devres.c:144 devm_free_irq+0x49/0x4ca
+[...]
+WARNING: CPU: 2 PID: 214 at kernel/irq/manage.c:1746 __free_irq+0x8b/0x27c
+Trying to free already-free IRQ 264
+Modules linked in: hci_uart(-) btbcm bluetooth ecdh_generic ecc libaes
+CPU: 2 PID: 214 Comm: rmmod Tainted: G        W         5.6.1mq-00044-ga5f9ea098318-dirty #928
+[...]
+[<b016aefb>] (devm_free_irq) from [<af8ba1ff>] (bcm_close+0x97/0x118 [hci_uart])
+[<af8ba1ff>] (bcm_close [hci_uart]) from [<af8b736f>] (hci_uart_unregister_device+0x33/0x3c [hci_uart])
+[<af8b736f>] (hci_uart_unregister_device [hci_uart]) from [<b035930b>] (serdev_drv_remove+0x13/0x20)
+[<b035930b>] (serdev_drv_remove) from [<b037093b>] (device_release_driver_internal+0x97/0x118)
+[<b037093b>] (device_release_driver_internal) from [<b0370a0b>] (driver_detach+0x2f/0x58)
+[<b0370a0b>] (driver_detach) from [<b036f855>] (bus_remove_driver+0x41/0x94)
+[<b036f855>] (bus_remove_driver) from [<af8ba8db>] (bcm_deinit+0x1b/0x740 [hci_uart])
+[<af8ba8db>] (bcm_deinit [hci_uart]) from [<af8ba86f>] (hci_uart_exit+0x13/0x30 [hci_uart])
+[<af8ba86f>] (hci_uart_exit [hci_uart]) from [<b01900bd>] (sys_delete_module+0x109/0x1d0)
+[<b01900bd>] (sys_delete_module) from [<b0101001>] (ret_fast_syscall+0x1/0x5a)
+[...]
 
 Cc: stable@vger.kernel.org
-Fixes: f25a96c8eb46 ("Bluetooth: hci_bcm: enable IRQ capability from devicetree")
+Fixes: 6cc4396c8829 ("Bluetooth: hci_bcm: Add wake-up capability")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_bcm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_bcm.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 --- a/drivers/bluetooth/hci_bcm.c
 +++ b/drivers/bluetooth/hci_bcm.c
-@@ -1153,7 +1153,8 @@ static int bcm_of_probe(struct bcm_devic
- 	device_property_read_u8_array(bdev->dev, "brcm,bt-pcm-int-params",
- 				      bdev->pcm_int_params, 5);
- 	bdev->irq = of_irq_get_byname(bdev->dev->of_node, "host-wakeup");
--
-+	bdev->irq_active_low = irq_get_trigger_type(bdev->irq)
-+			     & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW);
- 	return 0;
- }
+@@ -118,6 +118,7 @@ struct bcm_device {
+ 	u32			oper_speed;
+ 	int			irq;
+ 	bool			irq_active_low;
++	bool			irq_acquired;
  
+ #ifdef CONFIG_PM
+ 	struct hci_uart		*hu;
+@@ -333,6 +334,8 @@ static int bcm_request_irq(struct bcm_da
+ 		goto unlock;
+ 	}
+ 
++	bdev->irq_acquired = true;
++
+ 	device_init_wakeup(bdev->dev, true);
+ 
+ 	pm_runtime_set_autosuspend_delay(bdev->dev,
+@@ -514,7 +517,7 @@ static int bcm_close(struct hci_uart *hu
+ 	}
+ 
+ 	if (bdev) {
+-		if (IS_ENABLED(CONFIG_PM) && bdev->irq > 0) {
++		if (IS_ENABLED(CONFIG_PM) && bdev->irq_acquired) {
+ 			devm_free_irq(bdev->dev, bdev->irq, bdev);
+ 			device_init_wakeup(bdev->dev, false);
+ 			pm_runtime_disable(bdev->dev);
 
 
