@@ -2,54 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F840C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D56DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF7C206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DB2206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581374;
-	bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
+	s=default; t=1592581384;
+	bh=EQv2A5Jl/pzcPPyAuhgmkuD78WKg5fOVmfqx20R4vFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIK9YuGFu9sBJe4SU786ZDNlbAF6AOvEDzG+lgwBbv8I5PpfeYe2qMJN6Vs5k5NJw
-	 upz+l0jSoLOP9k6S+0hTLHlrQNNdS+P9Y/fOzB4shVSLVBGThBvn2dvou9mLMatO56
-	 3j6/zwjEpX0zOsWyDKMMP39L1wbGS/0EA2qPbuV4=
+	b=0iqLKO+ths7V3WtYLQi6unK6jJ4DXKLiNAkHR8U/SRUdER4M2zzjb7UwYcEotKFgO
+	 l6lg8JI1jXE941SMfkEkf4K/HuGVnrys9Pk+86aADKHH3gTXOY+sNSjKSYDAjK7XiX
+	 RF76VIVjXf/2QI/E4w4XuyCMNC8dhN47aj0C1LSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394044AbgFSPmv (ORCPT
+        id S2405053AbgFSPnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60334 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393579AbgFSP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:32 -0400
+        id S2404571AbgFSP21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 783442186A;
-        Fri, 19 Jun 2020 15:28:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27FA22186A;
+        Fri, 19 Jun 2020 15:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580511;
-        bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
+        s=default; t=1592580505;
+        bh=EQv2A5Jl/pzcPPyAuhgmkuD78WKg5fOVmfqx20R4vFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odg/lCIhUe5L5CLumN7w/4ZsN4mSBc0wHUbTJ+ozrb95D2j904b5PDQW1zNcHpApB
-         O4UVMx5W/AADhNIhAfxjlBQyO6quocDI1jXcO7O04MoSr5pE9ZMwe6tIt+ZT7ttD6W
-         MdaEFQpmiduYxqduufRpFgoox6gdtZxfkFRig/KY=
+        b=gT6b7DdA+8rI/y8LRNfO3VCrQR4tq6mpuXVPvO3OFTlFhp66b9Tw8x4fg8xjILSus
+         yl73vr++3IdgiFzbCoqXx/xzcqoiGwP3JJ6xYycEoRHkSSmAMNcxN/ficM/HgA9Y33
+         8GO7ZCwNcs6HuMBL8dV/V9liJHRXU5Ui01gm1E5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eelco Chaudron <echaudro@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 247/376] libbpf: Fix perf_buffer__free() API for sparse allocs
-Date:   Fri, 19 Jun 2020 16:32:45 +0200
-Message-Id: <20200619141722.017192577@linuxfoundation.org>
+        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.7 274/376] ima: Switch to ima_hash_algo for boot aggregate
+Date:   Fri, 19 Jun 2020 16:33:12 +0200
+Message-Id: <20200619141723.302859070@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,44 +61,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eelco Chaudron <echaudro@redhat.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-[ Upstream commit 601b05ca6edb0422bf6ce313fbfd55ec7bbbc0fd ]
+commit 6f1a1d103b48b1533a9c804e7a069e2c8e937ce7 upstream.
 
-In case the cpu_bufs are sparsely allocated they are not all
-free'ed. These changes will fix this.
+boot_aggregate is the first entry of IMA measurement list. Its purpose is
+to link pre-boot measurements to IMA measurements. As IMA was designed to
+work with a TPM 1.2, the SHA1 PCR bank was always selected even if a
+TPM 2.0 with support for stronger hash algorithms is available.
 
-Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159056888305.330763.9684536967379110349.stgit@ebuild
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch first tries to find a PCR bank with the IMA default hash
+algorithm. If it does not find it, it selects the SHA256 PCR bank for
+TPM 2.0 and SHA1 for TPM 1.2. Ultimately, it selects SHA1 also for TPM 2.0
+if the SHA256 PCR bank is not found.
+
+If none of the PCR banks above can be found, boot_aggregate file digest is
+filled with zeros, as for TPM bypass, making it impossible to perform a
+remote attestation of the system.
+
+Cc: stable@vger.kernel.org # 5.1.x
+Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
+Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/lib/bpf/libbpf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ security/integrity/ima/ima_crypto.c |   47 +++++++++++++++++++++++++++++++-----
+ security/integrity/ima/ima_init.c   |   20 ++++++++++++---
+ 2 files changed, 57 insertions(+), 10 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index cd53204d33f0..0c5b4fb553fb 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -7809,9 +7809,12 @@ void perf_buffer__free(struct perf_buffer *pb)
- 	if (!pb)
- 		return;
- 	if (pb->cpu_bufs) {
--		for (i = 0; i < pb->cpu_cnt && pb->cpu_bufs[i]; i++) {
-+		for (i = 0; i < pb->cpu_cnt; i++) {
- 			struct perf_cpu_buf *cpu_buf = pb->cpu_bufs[i];
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -655,18 +655,29 @@ static void __init ima_pcrread(u32 idx,
+ }
  
-+			if (!cpu_buf)
-+				continue;
+ /*
+- * Calculate the boot aggregate hash
++ * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
++ * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but with
++ * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
++ * allowing firmware to configure and enable different banks.
++ *
++ * Knowing which TPM bank is read to calculate the boot_aggregate digest
++ * needs to be conveyed to a verifier.  For this reason, use the same
++ * hash algorithm for reading the TPM PCRs as for calculating the boot
++ * aggregate digest as stored in the measurement list.
+  */
+-static int __init ima_calc_boot_aggregate_tfm(char *digest,
++static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 					      struct crypto_shash *tfm)
+ {
+-	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
++	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
+ 	int rc;
+ 	u32 i;
+ 	SHASH_DESC_ON_STACK(shash, tfm);
+ 
+ 	shash->tfm = tfm;
+ 
++	pr_devel("calculating the boot-aggregate based on TPM bank: %04x\n",
++		 d.alg_id);
 +
- 			bpf_map_delete_elem(pb->map_fd, &cpu_buf->map_key);
- 			perf_buffer__free_cpu_buf(pb, cpu_buf);
- 		}
--- 
-2.25.1
-
+ 	rc = crypto_shash_init(shash);
+ 	if (rc != 0)
+ 		return rc;
+@@ -675,7 +686,8 @@ static int __init ima_calc_boot_aggregat
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+-		rc = crypto_shash_update(shash, d.digest, TPM_DIGEST_SIZE);
++		rc = crypto_shash_update(shash, d.digest,
++					 crypto_shash_digestsize(tfm));
+ 	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+@@ -685,14 +697,37 @@ static int __init ima_calc_boot_aggregat
+ int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
+ {
+ 	struct crypto_shash *tfm;
+-	int rc;
++	u16 crypto_id, alg_id;
++	int rc, i, bank_idx = -1;
++
++	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
++		crypto_id = ima_tpm_chip->allocated_banks[i].crypto_id;
++		if (crypto_id == hash->algo) {
++			bank_idx = i;
++			break;
++		}
++
++		if (crypto_id == HASH_ALGO_SHA256)
++			bank_idx = i;
++
++		if (bank_idx == -1 && crypto_id == HASH_ALGO_SHA1)
++			bank_idx = i;
++	}
++
++	if (bank_idx == -1) {
++		pr_err("No suitable TPM algorithm for boot aggregate\n");
++		return 0;
++	}
++
++	hash->algo = ima_tpm_chip->allocated_banks[bank_idx].crypto_id;
+ 
+ 	tfm = ima_alloc_tfm(hash->algo);
+ 	if (IS_ERR(tfm))
+ 		return PTR_ERR(tfm);
+ 
+ 	hash->length = crypto_shash_digestsize(tfm);
+-	rc = ima_calc_boot_aggregate_tfm(hash->digest, tfm);
++	alg_id = ima_tpm_chip->allocated_banks[bank_idx].alg_id;
++	rc = ima_calc_boot_aggregate_tfm(hash->digest, alg_id, tfm);
+ 
+ 	ima_free_tfm(tfm);
+ 
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -25,7 +25,7 @@ struct tpm_chip *ima_tpm_chip;
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+  *
+- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
++ * Calculate the boot aggregate, a hash over tpm registers 0-7,
+  * assuming a TPM chip exists, and zeroes if the TPM chip does not
+  * exist.  Add the boot aggregate measurement to the measurement
+  * list and extend the PCR register.
+@@ -49,15 +49,27 @@ static int __init ima_add_boot_aggregate
+ 	int violation = 0;
+ 	struct {
+ 		struct ima_digest_data hdr;
+-		char digest[TPM_DIGEST_SIZE];
++		char digest[TPM_MAX_DIGEST_SIZE];
+ 	} hash;
+ 
+ 	memset(iint, 0, sizeof(*iint));
+ 	memset(&hash, 0, sizeof(hash));
+ 	iint->ima_hash = &hash.hdr;
+-	iint->ima_hash->algo = HASH_ALGO_SHA1;
+-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
++	iint->ima_hash->algo = ima_hash_algo;
++	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+ 
++	/*
++	 * With TPM 2.0 hash agility, TPM chips could support multiple TPM
++	 * PCR banks, allowing firmware to configure and enable different
++	 * banks.  The SHA1 bank is not necessarily enabled.
++	 *
++	 * Use the same hash algorithm for reading the TPM PCRs as for
++	 * calculating the boot aggregate digest.  Preference is given to
++	 * the configured IMA default hash algorithm.  Otherwise, use the
++	 * TCG required banks - SHA256 for TPM 2.0, SHA1 for TPM 1.2.
++	 * Ultimately select SHA1 also for TPM 2.0 if the SHA256 PCR bank
++	 * is not found.
++	 */
+ 	if (ima_tpm_chip) {
+ 		result = ima_calc_boot_aggregate(&hash.hdr);
+ 		if (result < 0) {
 
 
