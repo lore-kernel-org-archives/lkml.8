@@ -2,177 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E2BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C608920885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF03D20890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592555058;
+	bh=Xq8Ij+6u/8JcNOjy40zqn86PaaYBeksc+X+qt6XzZ20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=12kATwtkPeHQrMZwNDPs0r7QmT1YqoQ75c+tjqet3yugFApEbE0j2qDg/IgpniRKo
+	 uMyN33uibXuMCaC1sn+QJ2MeT78M5Yi7Fxo1Dp2KwnUGaPPbe7J9trGUcDgRJz8qRc
+	 CT9LNi6Dr7Zl+/g3hWoK6y1iwMZyqDJC7Eiop2N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgFSIXw convert rfc822-to-8bit (ORCPT
+        id S1730983AbgFSIYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:23:52 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43333 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731290AbgFSIVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:21:07 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-78-mkYMfPweOkGnJdWf_Vspzw-1; Fri, 19 Jun 2020 09:20:56 +0100
-X-MC-Unique: mkYMfPweOkGnJdWf_Vspzw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 19 Jun 2020 09:20:55 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 19 Jun 2020 09:20:55 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        Sargun Dhillon <sargun@sargun.me>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Christian Brauner" <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH v5 3/7] fs: Add fd_install_received() wrapper for
- __fd_install_received()
-Thread-Topic: [PATCH v5 3/7] fs: Add fd_install_received() wrapper for
- __fd_install_received()
-Thread-Index: AQHWRazi5O9oFyX6VkOfXGvu43vXPajfldBw
-Date:   Fri, 19 Jun 2020 08:20:55 +0000
-Message-ID: <c7d9f68d5dff4c54b4da0d96b03de2a0@AcuMS.aculab.com>
-References: <20200617220327.3731559-1-keescook@chromium.org>
- <20200617220327.3731559-4-keescook@chromium.org>
- <20200618054918.GB18669@ircssh-2.c.rugged-nimbus-611.internal>
- <202006181305.01F1B08@keescook>
-In-Reply-To: <202006181305.01F1B08@keescook>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 19 Jun 2020 04:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731409AbgFSIXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:23:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1073420885;
+        Fri, 19 Jun 2020 08:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592555027;
+        bh=Xq8Ij+6u/8JcNOjy40zqn86PaaYBeksc+X+qt6XzZ20=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AfgV0lJ2fHFvPVxGGuZ+7j/177k2Mky+486OBxfmyr1AAGJ/PMXA5REDOX6ZK99HU
+         tKOmH3YvDyaHBCs08GCikPVixPptsSMtpYJDH1iUffNGKunsN0fi+9aACn4agfMGrG
+         c5HUWQGzE6tc0RGt5v1tNIETy5rEKIQEAcCf/lJE=
+Date:   Fri, 19 Jun 2020 09:23:43 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Marco Elver <elver@google.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH] sparse: use the _Generic() version of
+ __unqual_scalar_typeof()
+Message-ID: <20200619082342.GB6500@willie-the-truck>
+References: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook
-> Sent: 18 June 2020 21:13
-> On Thu, Jun 18, 2020 at 05:49:19AM +0000, Sargun Dhillon wrote:
-> > On Wed, Jun 17, 2020 at 03:03:23PM -0700, Kees Cook wrote:
-> > > [...]
-> > >  static inline int fd_install_received_user(struct file *file, int __user *ufd,
-> > >  					   unsigned int o_flags)
-> > >  {
-> > > +	if (ufd == NULL)
-> > > +		return -EFAULT;
-> > Isn't this *technically* a behvaiour change? Nonetheless, I think this is a much better
-> > approach than forcing everyone to do null checking, and avoids at least one error case
-> > where the kernel installs FDs for SCM_RIGHTS, and they're not actualy usable.
+On Fri, Jun 19, 2020 at 12:26:20AM +0200, Luc Van Oostenryck wrote:
+> If the file is being checked with sparse, use the version of
+> __unqual_scalar_typeof() using _Generic(), leaving the unoptimized
+> version only for the oldest versions of GCC.
 > 
-> So, the only behavior change I see is that the order of sanity checks is
-> changed.
+> This reverts commit
+>   b398ace5d2ea ("compiler_types.h: Use unoptimized __unqual_scalar_typeof for sparse")
 > 
-> The loop in scm_detach_fds() is:
+> Note: a recent version of sparse will be needed (minimum v0.6.2-rc2
+>        or later than 2020-05-28).
 > 
+> Cc: Marco Elver <elver@google.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Link: https://marc.info/?l=linux-sparse&m=159233481816454
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> ---
+>  include/linux/compiler_types.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->         for (i = 0; i < fdmax; i++) {
->                 err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
->                 if (err < 0)
->                         break;
->         }
-> 
-> Before, __scm_install_fd() does:
-> 
->         error = security_file_receive(file);
->         if (error)
->                 return error;
-> 
->         new_fd = get_unused_fd_flags(o_flags);
->         if (new_fd < 0)
->                 return new_fd;
-> 
->         error = put_user(new_fd, ufd);
->         if (error) {
->                 put_unused_fd(new_fd);
->                 return error;
->         }
-> 	...
-> 
-> After, fd_install_received_user() and __fd_install_received() does:
-> 
->         if (ufd == NULL)
->                 return -EFAULT;
-> 	...
->         error = security_file_receive(file);
->         if (error)
->                 return error;
-> 	...
->                 new_fd = get_unused_fd_flags(o_flags);
->                 if (new_fd < 0)
->                         return new_fd;
-> 	...
->                 error = put_user(new_fd, ufd);
->                 if (error) {
->                         put_unused_fd(new_fd);
->                         return error;
->                 }
-> 
-> i.e. if a caller attempts a receive that is rejected by LSM *and*
-> includes a NULL userpointer destination, they will get an EFAULT now
-> instead of an EPERM.
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index e368384445b6..e34a1080f36b 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -254,7 +254,7 @@ struct ftrace_likely_data {
+>   * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
+>   *			       non-scalar types unchanged.
+>   */
+> -#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900) || defined(__CHECKER__)
+> +#if defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900
+>  /*
+>   * We build this out of a couple of helper macros in a vain attempt to
+>   * help you keep your lunch down while reading it.
 
-The 'user' pointer the fd is written to is in the middle of
-the 'cmsg' buffer.
-So to hit 'ufd == NULL' the program would have to pass a small
-negative integer!
+If you don't mind forcing people to update sparse, then:
 
-The error paths are strange if there are multiple fd in the message.
-A quick look at the old code seems to imply that if the user doesn't
-supply a big enough buffer then the extra 'file *' just get closed.
-OTOH if there is an error processing one of the files the request
-fails with the earlier file allocated fd numbers.
+Acked-by: Will Deacon <will@kernel.org>
 
-In addition most of the userspace buffer is written after the
-loop - any errors there return -EFAULT (SIGSEGV) without
-even trying to tidy up the allocated fd.
-
-ISTM that the put_user(new_fd, ufd) could be done in __scm_install_fd()
-after __fd_install_received() returns.
-
-scm_detach_fds() could do the put_user(SOL_SOCKET,...) before actually
-processing the first file - so that the state can be left unchanged
-when a naff buffer is passed.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Will
