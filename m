@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E967BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C237921841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677ED21941
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578976;
-	bh=aeDfgNSdKYjQeKp8W8Kt7VzTAn+DN+6nYPZRvYxhDpg=;
+	s=default; t=1592578981;
+	bh=dP1InMCGNeI/kuoSR71LipecR7uDIc8gA1I6IprzfXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTFqJzkVMB/9ph5aX4Znk27lToskwfpfIIcJ4p7AYwSMp7NA6jNjZeNj1zSzFalt3
-	 xzccRFlEidEzy//WmqmghQHkSlCG6iXj9ALt5mv2SZ20g2Ki9EEYolT6vFNSeH35S7
-	 wcJWtYTyXMEe53DBytqcCOuvHxpyKfg0/6HD0DOs=
+	b=IjXXMLXmOJwiSE1iypVvTWf+8scRaqi3CqE5OHYEZEOxQ7h/1Y43IehAbeh0W7a6q
+	 z6HKHuHtIZ30rBLlYuXXtD98M21VyBj2zdXiOI/g8L48XSnYFtUzE0ATH3833l27zN
+	 ip9/1mObkccnjg5T2BDoZJzquZtVzAw9Jqd5uMOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390908AbgFSPCz (ORCPT
+        id S2390535AbgFSPC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390824AbgFSPCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:21 -0400
+        id S2390849AbgFSPCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E04720776;
-        Fri, 19 Jun 2020 15:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1B7520776;
+        Fri, 19 Jun 2020 15:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578941;
-        bh=aeDfgNSdKYjQeKp8W8Kt7VzTAn+DN+6nYPZRvYxhDpg=;
+        s=default; t=1592578955;
+        bh=dP1InMCGNeI/kuoSR71LipecR7uDIc8gA1I6IprzfXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqk9PXXRCitQKpLw4TztSaS5Axu399+hAmadeSahER3hmhemNVUFvNYr5CUidLmcX
-         P7gEt9Mptf7VQ+2eFeoVOc/yC/7gT4DDa2u6kge7zTK7x7AbwN36Hv4AalIZ/d2RAu
-         vYfYRHcs0RJndwydf8Kx6MqgYpIS4LTkkrW/a6h8=
+        b=iPmQL2eU5PyjNGsu5xx8ZA0Qop8voxUzG1OozdX2ptTg2edsV5hjOarVtonSpuxi3
+         KxCZNlk/gWsJp31lDdK+7P8wdnC0tui9WgSOt32vKLa/ZnNiK7tYwfi+8SqMzNZREl
+         aC4kr+SEK0Qa/GEp5WzpeZmZ3/AYO5AP2lEHzamM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Sahu <abhsahu@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 214/267] PCI: Add NVIDIA GPU multi-function power dependencies
-Date:   Fri, 19 Jun 2020 16:33:19 +0200
-Message-Id: <20200619141658.994953070@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 190/267] mm: thp: make the THP mapcount atomic against __split_huge_pmd_locked()
+Date:   Fri, 19 Jun 2020 16:32:55 +0200
+Message-Id: <20200619141657.855794321@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,88 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <abhsahu@nvidia.com>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-[ Upstream commit 6d2e369f0d4c3e6125c886847c04106b03d2609e ]
+commit c444eb564fb16645c172d550359cb3d75fe8a040 upstream.
 
-The NVIDIA Turing GPU is a multi-function PCI device with the following
-functions:
+Write protect anon page faults require an accurate mapcount to decide
+if to break the COW or not. This is implemented in the THP path with
+reuse_swap_page() ->
+page_trans_huge_map_swapcount()/page_trans_huge_mapcount().
 
-  - Function 0: VGA display controller
-  - Function 1: Audio controller
-  - Function 2: USB xHCI Host controller
-  - Function 3: USB Type-C UCSI controller
+If the COW triggers while the other processes sharing the page are
+under a huge pmd split, to do an accurate reading, we must ensure the
+mapcount isn't computed while it's being transferred from the head
+page to the tail pages.
 
-Function 0 is tightly coupled with other functions in the hardware.  When
-function 0 is in D3, it gates power for hardware blocks used by other
-functions, which means those functions only work when function 0 is in D0.
-If any of these functions (1/2/3) are in D0, then function 0 should also be
-in D0.
+reuse_swap_cache() already runs serialized by the page lock, so it's
+enough to add the page lock around __split_huge_pmd_locked too, in
+order to add the missing serialization.
 
-Commit 07f4f97d7b4b ("vga_switcheroo: Use device link for HDA controller")
-already creates a device link to show the dependency of function 1 on
-function 0 of this GPU.  Create additional device links to express the
-dependencies of functions 2 and 3 on function 0.  This means function 0
-will be in D0 if any other function is in D0.
+Note: the commit in "Fixes" is just to facilitate the backporting,
+because the code before such commit didn't try to do an accurate THP
+mapcount calculation and it instead used the page_count() to decide if
+to COW or not. Both the page_count and the pin_count are THP-wide
+refcounts, so they're inaccurate if used in
+reuse_swap_page(). Reverting such commit (besides the unrelated fix to
+the local anon_vma assignment) would have also opened the window for
+memory corruption side effects to certain workloads as documented in
+such commit header.
 
-[bhelgaas: I think the PCI spec expectation is that functions can be
-power-managed independently, so I don't think this device is technically
-compliant.  For example, the PCIe r5.0 spec, sec 1.4, says "the PCI/PCIe
-hardware/software model includes architectural constructs necessary to
-discover, configure, and use a Function, without needing Function-specific
-knowledge" and sec 5.1 says "D states are associated with a particular
-Function" and "PM provides ... a mechanism to identify power management
-capabilities of a given Function [and] the ability to transition a Function
-into a certain power management state."]
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Suggested-by: Jann Horn <jannh@google.com>
+Reported-by: Jann Horn <jannh@google.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 6d0a07edd17c ("mm: thp: calculate the mapcount correctly for THP pages during WP faults")
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://lore.kernel.org/lkml/20190606092225.17960-3-abhsahu@nvidia.com
-Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-[bhelgaas: commit log]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ mm/huge_memory.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d6236bb26950..8ac2d5a4a224 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5094,6 +5094,32 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
- 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2273,6 +2273,8 @@ void __split_huge_pmd(struct vm_area_str
+ 	spinlock_t *ptl;
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	unsigned long haddr = address & HPAGE_PMD_MASK;
++	bool was_locked = false;
++	pmd_t _pmd;
  
-+/*
-+ * Create device link for NVIDIA GPU with integrated USB xHCI Host
-+ * controller to VGA.
-+ */
-+static void quirk_gpu_usb(struct pci_dev *usb)
-+{
-+	pci_create_device_link(usb, 2, 0, PCI_BASE_CLASS_DISPLAY, 16);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
-+
-+/*
-+ * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
-+ * to VGA. Currently there is no class code defined for UCSI device over PCI
-+ * so using UNKNOWN class for now and it will be updated when UCSI
-+ * over PCI gets a class code.
-+ */
-+#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
-+static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
-+{
-+	pci_create_device_link(ucsi, 3, 0, PCI_BASE_CLASS_DISPLAY, 16);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_UNKNOWN, 8,
-+			      quirk_gpu_usb_typec_ucsi);
-+
- /*
-  * Some IDT switches incorrectly flag an ACS Source Validation error on
-  * completions for config read requests even though PCIe r4.0, sec
--- 
-2.25.1
-
+ 	mmu_notifier_invalidate_range_start(mm, haddr, haddr + HPAGE_PMD_SIZE);
+ 	ptl = pmd_lock(mm, pmd);
+@@ -2282,11 +2284,32 @@ void __split_huge_pmd(struct vm_area_str
+ 	 * pmd against. Otherwise we can end up replacing wrong page.
+ 	 */
+ 	VM_BUG_ON(freeze && !page);
+-	if (page && page != pmd_page(*pmd))
+-	        goto out;
++	if (page) {
++		VM_WARN_ON_ONCE(!PageLocked(page));
++		was_locked = true;
++		if (page != pmd_page(*pmd))
++			goto out;
++	}
+ 
++repeat:
+ 	if (pmd_trans_huge(*pmd)) {
+-		page = pmd_page(*pmd);
++		if (!page) {
++			page = pmd_page(*pmd);
++			if (unlikely(!trylock_page(page))) {
++				get_page(page);
++				_pmd = *pmd;
++				spin_unlock(ptl);
++				lock_page(page);
++				spin_lock(ptl);
++				if (unlikely(!pmd_same(*pmd, _pmd))) {
++					unlock_page(page);
++					put_page(page);
++					page = NULL;
++					goto repeat;
++				}
++				put_page(page);
++			}
++		}
+ 		if (PageMlocked(page))
+ 			clear_page_mlock(page);
+ 	} else if (!(pmd_devmap(*pmd) || is_pmd_migration_entry(*pmd)))
+@@ -2294,6 +2317,8 @@ void __split_huge_pmd(struct vm_area_str
+ 	__split_huge_pmd_locked(vma, pmd, haddr, freeze);
+ out:
+ 	spin_unlock(ptl);
++	if (!was_locked && page)
++		unlock_page(page);
+ 	/*
+ 	 * No need to double call mmu_notifier->invalidate_range() callback.
+ 	 * They are 3 cases to consider inside __split_huge_pmd_locked():
 
 
