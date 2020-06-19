@@ -2,88 +2,106 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F60FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14236206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7CA206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PoYjnYeb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="toRtjS2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390363AbgFSTrt (ORCPT
+        id S2390434AbgFSTsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43856 "EHLO
+        Fri, 19 Jun 2020 15:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389005AbgFSTrt (ORCPT
+        with ESMTP id S2390375AbgFSTsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:47:49 -0400
+        Fri, 19 Jun 2020 15:48:09 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 070FCC06174E;
-        Fri, 19 Jun 2020 12:47:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE12DC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=SC1wNgoq67qHHn/xTU7CmL82fHBZ9cfNf2rA2nn1B+Q=; b=PoYjnYebg4s9hk8wFqcmkRDZ6n
-        aXFObGvBlgZXDhKPKcGgTd4fwftb7LXQskFi27OYS08CIYy/GnncokgCJNSOA8AUIeD9j2FOe3vE3
-        +i49h9ZTU1wi2BGAn7zKQdM1XSoeRStDA4G3WepfQgLh/6Jk5EvLXUdHZBPDAB3Ffpq0nMPnz3nNY
-        8AfVCzt1GJgdu6HchR0KugMRz72imx+zpGgpxYgGXgh0OaRA4A7M1h63oVr6gvAj5EARtb4WXzym5
-        CAdies/e+NOvKlWQ7QQk/ujr+SWRSCL5w3HgkE4f+DfUyrepsBt+4obneWJZQWoJY4BcrC2z/wEL6
-        N/d6A1rw==;
-Received: from [2601:1c0:6280:3f0::19c2]
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JyoFHOysemYMV4OtT/Cn9dnH7GbrwqvQTPVUggspfwk=; b=toRtjS2dGGLS+laiL9DUPLTG5U
+        4kn3stmgbaPlkbIxHqDIRuugIMeZLwsCZI1WCCrzU7ReoJCWrQ64ST4Q2HH7HKkFVFWKKab/mMTcc
+        uUjRImaYUhSoFkF15DWx14nOlIuf054AjW2DsjyzAejKAuXeO0Jrap4cn1SxMqZc/krJB3TZp9pad
+        BHP2ltr64PgCXxrOVjzoCbOxTT9vAEOR3mf+SX9ngHVZBmomQ6I0mpb3M6gtGpnmL0rkH1wSxHWqx
+        Nqk6IOo8Z819g1rN/2x9t+KbdQx4v5fmvKIMFKlsTQ2GvqkAbkjH6aW7BYY09A5dC4VwNQ7Bgw/jM
+        MI99CQnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmMzM-0005YI-HM; Fri, 19 Jun 2020 19:47:48 +0000
-Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
-To:     Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, krisman@collabora.com
-References: <20200605175536.19681-1-andrealmeid@collabora.com>
- <20200619134503.60ab689b@lwn.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cdab3be8-0d39-5085-34b5-7bf11cc7fb60@infradead.org>
-Date:   Fri, 19 Jun 2020 12:47:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id 1jmMzP-0005Yk-WC; Fri, 19 Jun 2020 19:47:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 060B03003E5;
+        Fri, 19 Jun 2020 21:47:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E135F2C36DD88; Fri, 19 Jun 2020 21:47:49 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 21:47:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619194749.GK576888@hirez.programming.kicks-ass.net>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-3-qais.yousef@arm.com>
+ <jhjwo43cpfl.mognet@arm.com>
+ <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
+ <jhjsgerchmn.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619134503.60ab689b@lwn.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhjsgerchmn.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 12:45 PM, Jonathan Corbet wrote:
-> On Fri,  5 Jun 2020 14:55:36 -0300
-> André Almeida <andrealmeid@collabora.com> wrote:
+On Fri, Jun 19, 2020 at 02:25:20PM +0100, Valentin Schneider wrote:
 > 
->> Create a documentation providing a background and explanation around the
->> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
->>
->> The reference for writing this documentation was the source code and
->> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
->> Systems", by Axboe et al.
->>
->> Signed-off-by: André Almeida <andrealmeid@collabora.com>
->> ---
->> Changes from v1:
->> - Fixed typos
->> - Reworked blk_mq_hw_ctx
+> On 19/06/20 13:51, Qais Yousef wrote:
+> > On 06/19/20 11:36, Valentin Schneider wrote:
+> >>
+> >> On 18/06/20 20:55, Qais Yousef wrote:
+> >> > There is a report that when uclamp is enabled, a netperf UDP test
+> >> > regresses compared to a kernel compiled without uclamp.
+> >> >
+> >> > https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
+> >> >
+> >>
+> >> ISTR the perennial form for those is: https://lkml.kernel.org/r/<message-id>
+> >
+> > The link is correct permalinnk from lore and contains the message-id as Peter
+> > likes and he has accepted this form before.
+> >
 > 
-> Jens, what's your pleasure on this one?  Should I take it, or do you want
-> it...?
+> I think the objections I remember were on using lkml.org rather than
+> lkml.kernel.org. Sorry!
 
-I wouldn't mind seeing a v3.
+:-) Yeah, lkml.org is bad.
 
--- 
-~Randy
+That said, I prefer the lkml.kernel.org/r/ variant over
+lore.kernel.org/lkml/ in part because it existed first and I'm lazy, in
+part because it's shorter and in part because lkml.kernel.org/r/ is an
+explicit redirect and lore is 'just' an archive it can redirect to
+(although admittedly, it looks rather unlikely lore is going to die).
 
+I'll not make a big point of it though and will in all likelyhood accept
+lore links. The important point is that it has the MessageID in.
