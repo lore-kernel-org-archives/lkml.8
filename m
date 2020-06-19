@@ -2,237 +2,94 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A832CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 347D821852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7705B217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584166;
-	bh=+hZ55DPcpNoe52JJX6SzFUdt7Nq2feraIFoTBJOUbCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=huWWT0C8ohPGFQ1kYRKKiQxPCrH0TeTgJ2P5EuyobcsTy/jrytrOiFwdOuuG7OyjC
-	 H4tGI7cPli6nEY0OWgwaxmTtrlCiLMiF7f68TGQ+k3EYdakjoL4NMZCGS/wOODzeeX
-	 Iw3tVNkpmAP1GVg674XjLj9wcvqegrZi+rH9o2o0=
+	s=default; t=1592584175;
+	bh=bxcjDPu7LuqRjHCweOM9LMQWJan+q+nNWni1LRISz/Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FankeYrRmQPASQuTCBqE4ZkShrELqAQi3RUntC4XPEj7SC4Y49NRX2EsNeVdoVtur
+	 8jM31E6wVCIbKD3QcactbrnpoamGJ96mvo6pY0xpphlGcZ8TxnzKhi6srY1bAevcVE
+	 J6GZ4NYzDaRbeAelzmDCASRms7gAhiXqnnZYCB/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394982AbgFSQ3Z (ORCPT
+        id S2394991AbgFSQ3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394969AbgFSQ3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:29:21 -0400
-Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
+        id S2389869AbgFSOyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD02D21835;
-        Fri, 19 Jun 2020 16:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFE52184D;
+        Fri, 19 Jun 2020 14:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592584160;
-        bh=+hZ55DPcpNoe52JJX6SzFUdt7Nq2feraIFoTBJOUbCU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UWwui6c5uOLurxZ2rO/Zj3m9E2ST+yPpr76ryz+TxSu58kiKc/85Wfn1tJhEizMyG
-         69jShU+ohV3/fNvbbYb0jW77y0mzAsbXIF63Uvh7iCzYioNBAPqB/uy0uMpiM39yy0
-         koYgCjdhd3RyIVFFv7cGCowuxiXEDpHjkBNzsxMw=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 2AA2A3C08CD; Fri, 19 Jun 2020 18:29:19 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 18:29:19 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 2/6] power: supply: gpio-charger: Make gpios optional
-Message-ID: <20200619162919.kcdnx5lkdawlvrdn@earth.universe>
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
- <20200605224403.181015-3-sebastian.reichel@collabora.com>
+        s=default; t=1592578476;
+        bh=bxcjDPu7LuqRjHCweOM9LMQWJan+q+nNWni1LRISz/Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xCvB6J8GITRryZ7ikQChvAISajv5ozvRZ9N0m8z0wTednS2bIHIAhId8QJNrDsfTi
+         OR1i3cjav9A/YRvfcVVqfyp1YcZ+cbsNGvI4BkDn+nvdHz/vh3w4ZZMDc+yzoly5J4
+         2Kc7w4zZoEwzI7DQev5gGIJ9iVQ3M2/RMw12m1v4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 037/267] ACPI: sysfs: Fix reference count leak in acpi_sysfs_add_hotplug_profile()
+Date:   Fri, 19 Jun 2020 16:30:22 +0200
+Message-Id: <20200619141650.618131064@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ch2a4gbxhtptsn53"
-Content-Disposition: inline
-In-Reply-To: <20200605224403.181015-3-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiushi Wu <wu000273@umn.edu>
 
---ch2a4gbxhtptsn53
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 6e6c25283dff866308c87b49434c7dbad4774cc0 upstream.
 
-Hi,
+kobject_init_and_add() takes reference even when it fails.
+Thus, when kobject_init_and_add() returns an error,
+kobject_put() must be called to properly clean up the kobject.
 
-On Sat, Jun 06, 2020 at 12:43:59AM +0200, Sebastian Reichel wrote:
-> While strongly recommended, not all devices have a gpio to
-> detect if the charger is connected. This moves the 'gpios'
-> from required to optional section.
->=20
-> This also modifies error handling for the GPIO a bit: We
-> no longer fallback to pdata, if a GPIO is specified using
-> GPIO descriptor tables. This is a bit cleaner and does
-> not have any real impact: There are only two mainline pdata
-> users (arm/mach-sa1100/collie.c, arm/mach-pxa/tosa.c) and
-> none of them specify the GPIO via gpiod descriptor tables.
-> Once both have been converted the driver's support for
-> specifying GPIOs numbers in pdata will be dropped.
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
+Fixes: 3f8055c35836 ("ACPI / hotplug: Introduce user space interface for hotplug profiles")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks, queued.
+---
+ drivers/acpi/sysfs.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
--- Sebastian
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -990,8 +990,10 @@ void acpi_sysfs_add_hotplug_profile(stru
+ 
+ 	error = kobject_init_and_add(&hotplug->kobj,
+ 		&acpi_hotplug_profile_ktype, hotplug_kobj, "%s", name);
+-	if (error)
++	if (error) {
++		kobject_put(&hotplug->kobj);
+ 		goto err_out;
++	}
+ 
+ 	kobject_uevent(&hotplug->kobj, KOBJ_ADD);
+ 	return;
 
->  .../bindings/power/supply/gpio-charger.yaml   |  7 +++-
->  drivers/power/supply/gpio-charger.c           | 38 ++++++++++++-------
->  2 files changed, 31 insertions(+), 14 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
-yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> index 78b167c62ab1..30eabbb14ef3 100644
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> @@ -41,7 +41,12 @@ properties:
-> =20
->  required:
->    - compatible
-> -  - gpios
-> +
-> +anyOf:
-> +  - required:
-> +    - gpios
-> +  - required:
-> +    - charge-status-gpios
-> =20
->  additionalProperties: false
-> =20
-> diff --git a/drivers/power/supply/gpio-charger.c b/drivers/power/supply/g=
-pio-charger.c
-> index 1b959c7f8b0e..875735d50716 100644
-> --- a/drivers/power/supply/gpio-charger.c
-> +++ b/drivers/power/supply/gpio-charger.c
-> @@ -112,9 +112,14 @@ static int gpio_charger_get_irq(struct device *dev, =
-void *dev_id,
->  	return irq;
->  }
-> =20
-> +/*
-> + * The entries will be overwritten by driver's probe routine depending
-> + * on the available features. This list ensures, that the array is big
-> + * enough for all optional features.
-> + */
->  static enum power_supply_property gpio_charger_properties[] =3D {
->  	POWER_SUPPLY_PROP_ONLINE,
-> -	POWER_SUPPLY_PROP_STATUS /* Must always be last in the array. */
-> +	POWER_SUPPLY_PROP_STATUS,
->  };
-> =20
->  static int gpio_charger_probe(struct platform_device *pdev)
-> @@ -128,6 +133,7 @@ static int gpio_charger_probe(struct platform_device =
-*pdev)
->  	int charge_status_irq;
->  	unsigned long flags;
->  	int ret;
-> +	int num_props =3D 0;
-> =20
->  	if (!pdata && !dev->of_node) {
->  		dev_err(dev, "No platform data\n");
-> @@ -142,13 +148,13 @@ static int gpio_charger_probe(struct platform_devic=
-e *pdev)
->  	 * This will fetch a GPIO descriptor from device tree, ACPI or
->  	 * boardfile descriptor tables. It's good to try this first.
->  	 */
-> -	gpio_charger->gpiod =3D devm_gpiod_get(dev, NULL, GPIOD_IN);
-> +	gpio_charger->gpiod =3D devm_gpiod_get_optional(dev, NULL, GPIOD_IN);
-> =20
->  	/*
-> -	 * If this fails and we're not using device tree, try the
-> -	 * legacy platform data method.
-> +	 * Fallback to legacy platform data method, if no GPIO is specified
-> +	 * using boardfile descriptor tables.
->  	 */
-> -	if (IS_ERR(gpio_charger->gpiod) && !dev->of_node) {
-> +	if (!gpio_charger->gpiod && pdata) {
->  		/* Non-DT: use legacy GPIO numbers */
->  		if (!gpio_is_valid(pdata->gpio)) {
->  			dev_err(dev, "Invalid gpio pin in pdata\n");
-> @@ -173,17 +179,23 @@ static int gpio_charger_probe(struct platform_devic=
-e *pdev)
->  		return PTR_ERR(gpio_charger->gpiod);
->  	}
-> =20
-> +	if (gpio_charger->gpiod) {
-> +		gpio_charger_properties[num_props] =3D POWER_SUPPLY_PROP_ONLINE;
-> +		num_props++;
-> +	}
-> +
->  	charge_status =3D devm_gpiod_get_optional(dev, "charge-status", GPIOD_I=
-N);
-> -	gpio_charger->charge_status =3D charge_status;
-> -	if (IS_ERR(gpio_charger->charge_status))
-> -		return PTR_ERR(gpio_charger->charge_status);
-> +	if (IS_ERR(charge_status))
-> +		return PTR_ERR(charge_status);
-> +	if (charge_status) {
-> +		gpio_charger->charge_status =3D charge_status;
-> +		gpio_charger_properties[num_props] =3D POWER_SUPPLY_PROP_STATUS;
-> +		num_props++;
-> +	}
-> =20
->  	charger_desc =3D &gpio_charger->charger_desc;
->  	charger_desc->properties =3D gpio_charger_properties;
-> -	charger_desc->num_properties =3D ARRAY_SIZE(gpio_charger_properties);
-> -	/* Remove POWER_SUPPLY_PROP_STATUS from the supported properties. */
-> -	if (!gpio_charger->charge_status)
-> -		charger_desc->num_properties -=3D 1;
-> +	charger_desc->num_properties =3D num_props;
->  	charger_desc->get_property =3D gpio_charger_get_property;
-> =20
->  	psy_cfg.of_node =3D dev->of_node;
-> @@ -269,6 +281,6 @@ static struct platform_driver gpio_charger_driver =3D=
- {
->  module_platform_driver(gpio_charger_driver);
-> =20
->  MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
-> -MODULE_DESCRIPTION("Driver for chargers which report their online status=
- through a GPIO");
-> +MODULE_DESCRIPTION("Driver for chargers only communicating via GPIO(s)");
->  MODULE_LICENSE("GPL");
->  MODULE_ALIAS("platform:gpio-charger");
-> --=20
-> 2.26.2
->=20
 
---ch2a4gbxhtptsn53
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s598ACgkQ2O7X88g7
-+pqlcA//eh1hM9zdzgi/BDDgC54rL2USVv09NqBaZVjWDfBhrln5gb329f+LslHJ
-uMDHwzWTWpu0O0QDzqNRuubFv8HQegjqjg85qp4nSy8V7ebC2+3OQ9KT5UgnwpQg
-HUUco84g90g+i2egkcvUacZhtAkD5PTNoED3wsYHWKzDoOUwPRuVACT9skhbaZyH
-t4dIUAr9neLpitjIrS66jyHqs3sKHMVHLYVDCAhgOpwf304IIKfZ+6j9Jwgzog9f
-Nt2CaiuZsOjDO7zlVe/6KVtGBkRRz6ZVGfGhPvPKDmQAKVUG88eYAXWkjhMfJ+Kg
-U0b0s5xZKM7RCT9U5av0xhUrfo75hsQ8Ral6MmjSh3t44Cdb5HnToPjYjeNrU0AK
-2pPH7z3DSQVb+hKH96EExpoqPFLHRETc05R8vGn9JbKFK+q/ECgCvnh7BaDuCSLG
-5PR9cgP3xK4/yy8WrhAa8MggMc/R77lax4ZUOYN0HJazEbFWpKQnm4xoY9nMZDCF
-7/Hqkemsbcce6x6LQnxFnw5BGAGPAOIG5Wtc9hZn1/bpUCBIOLu+rScPi28wZKiq
-C6gCi5iBYVHHd2JtW2eZB13zNJgGGY1n4wYDFy4Rqg8Hys5QvJYFl4pd6+84ZyIF
-mqD73WqwRxYQCkPiJkjusFy208U6Gz8GYOm0+izqSFzbV6i80No=
-=Gp21
------END PGP SIGNATURE-----
-
---ch2a4gbxhtptsn53--
