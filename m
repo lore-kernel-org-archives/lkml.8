@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4872DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170342193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5DE206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578933;
-	bh=nhdA2eKYfMl7sV28TAxAvdtbNIZX1h14G52W58rGGUc=;
+	s=default; t=1592578940;
+	bh=B+cmbHFOmMyhWcPA1RyCrjMSWpK7g2VM2sqPv92N5Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=130fGSSeIwXxIQRisOd1ZkCsCrdeMLbLA0jxKm9T/EjDHnoAoeOFa1vn9IuNJfZYy
-	 cyA+KgE6JTh9X9MlBAwsw+PB5fq9osp3rb3ElJQjT6Wyul/ntOvabgaz0wmqci4zzR
-	 kbX7x8TG6iqrPdDsaMoLFiOfDkccqru9G0q9whCI=
+	b=Q6wdeOMhZV62Qo+iPaN4TyGbnugke0cVQqK1j3VnpRg4dGogn2q+wVBn7ekcrvgmE
+	 kOG4dtUvS0MGqUdIulaO1ELtZVFKYnrFI7ozmzg7zq6nJFczohbrrmz3hu2FIqArWg
+	 2HvNNbqs/PpTxE4NygLsWx6HsKGue2oKk+VXTtoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390794AbgFSPCK (ORCPT
+        id S2390818AbgFSPCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57876 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390710AbgFSPB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:27 -0400
+        id S2390726AbgFSPBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AFE206DB;
-        Fri, 19 Jun 2020 15:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9118321841;
+        Fri, 19 Jun 2020 15:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578887;
-        bh=nhdA2eKYfMl7sV28TAxAvdtbNIZX1h14G52W58rGGUc=;
+        s=default; t=1592578898;
+        bh=B+cmbHFOmMyhWcPA1RyCrjMSWpK7g2VM2sqPv92N5Bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yq/9foRv1tEC82VFHB7xXZn4yV6lmZ4C6iZNpLLoFNOpWGkbI+RafUiJe9aB0bdPV
-         RczKP6tK4HLuWbGyMP0Mhfz02eAcnkqCt5MHgylY2ORiMyDq8x5ENbUAVabXbqSevI
-         bqDzqcS/LnWn4E8P/7SBOA3CTd14G2hMjAy/61mM=
+        b=cBMRFm/1jOvbWLxwmyinuUJxbZna4/eov5JbcK+5rl03KY84N/5e4j0EY0gFe1vvr
+         imIB+s33UVlkhDiafLndkMm4xyeJzeLeL/7hC+UjFChYzlufi33equ0+G5+exTLfIm
+         ikIkyCugqptIinKQdLPJA6cgaUQlhAsNe0ugzLvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 4.19 195/267] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
-Date:   Fri, 19 Jun 2020 16:33:00 +0200
-Message-Id: <20200619141658.107810737@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 199/267] PCI: Avoid Pericom USB controller OHCI/EHCI PME# defect
+Date:   Fri, 19 Jun 2020 16:33:04 +0200
+Message-Id: <20200619141658.289071610@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,34 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 0c4395fb2aa77341269ea619c5419ea48171883f upstream.
+[ Upstream commit 68f5fc4ea9ddf9f77720d568144219c4e6452cde ]
 
-Don't immediately return if the signature is portable and security.ima is
-not present. Just set error so that memory allocated is freed before
-returning from evm_calc_hmac_or_hash().
+Both Pericom OHCI and EHCI devices advertise PME# support from all power
+states:
 
-Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+  06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
+    Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
+    Capabilities: [80] Power Management version 3
+      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+
+  06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
+    Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
+    Capabilities: [80] Power Management version 3
+      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+
+But testing shows that it's unreliable: there is a 20% chance PME# won't be
+asserted when a USB device is plugged.
+
+Remove PME support for both devices to make USB plugging work reliably.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+Link: https://lore.kernel.org/r/20200508065343.32751-2-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/evm/evm_crypto.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -249,7 +249,7 @@ static int evm_calc_hmac_or_hash(struct
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca41cff2e68c..fb061e1bc084 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5294,6 +5294,19 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
  
- 	/* Portable EVM signatures must include an IMA hash */
- 	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
--		return -EPERM;
-+		error = -EPERM;
- out:
- 	kfree(xattr_value);
- 	kfree(desc);
++/*
++ * Device [12d8:0x400e] and [12d8:0x400f]
++ * These devices advertise PME# support in all power states but don't
++ * reliably assert it.
++ */
++static void pci_fixup_no_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# is unreliable, disabling it\n");
++	dev->pme_support = 0;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
++
+ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ {
+ 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
+-- 
+2.25.1
+
 
 
