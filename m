@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2615EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E665C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06BA20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48A120757
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580707;
-	bh=833kXZhkHWjAmy2q4N3E99e/5HVlUHcfQIWFmZ+wuUc=;
+	s=default; t=1592580713;
+	bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2QI9Lt608UeN4wyzVtJEgvMLwnUZtyhrp4mY5ml2BkY8a2OHDfoBRSmzl+HG+wPg/
-	 LiXL/EWlCUlMCUoOJoSkUD+V7g/thmzCjPIC+9A7LlRkGraeKdFxiyUsJb2kaQn5tn
-	 U9s5gn1fCJT11vo6eAocC3nPu0rxPy3igLIPTIwI=
+	b=xWT+46/vpgxETcPbiz9tb8PMLZfxH5GXNUw04WLzh27qh8sX3erEVJx48RTl5wRkD
+	 7Xi0gVdMWutzwL7/jS6aDMHG2+ljExbFTvBE/zr8pwrU1xEBjjTV/wFbUSkde++Ke/
+	 qJt8mSJw4DHmosWoqCrkISTdJPSXVufTAqqcsz+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404866AbgFSPbn (ORCPT
+        id S2404885AbgFSPbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35480 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393831AbgFSPb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:27 -0400
+        id S2393647AbgFSPbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC0520734;
-        Fri, 19 Jun 2020 15:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C162166E;
+        Fri, 19 Jun 2020 15:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580687;
-        bh=833kXZhkHWjAmy2q4N3E99e/5HVlUHcfQIWFmZ+wuUc=;
+        s=default; t=1592580698;
+        bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3Uz6LR4fuD1qs/alyYWWisK62yBnTEkXoRiH0Pia4jYmgGDwOGRGsnJ2Ppi32IVY
-         fMsJs0eqRlLdNu3O071q8zAFDthXQaBSP222fRNGCwiZwgEv2LQwCEjTbM9gHoABeG
-         oiuPbLUthS9qCxWxVmcGZOBiMVrc5P8nIc3Vgegw=
+        b=jWyqPydTiY2TD10gMqiO+d6WZYeE0Ehg4CkJ8lUPazsPak3REMZPklHChtahHUx4l
+         RToPCbKSpr5y1BcDt5woyFK4Ro0r4L/PgoQsT+DvrZSWCHNBKQMQypTi5d6LmH5PvO
+         jVZQfFIZgntY3k1lDbDXAMTdzhRS5KHXJ1rrG870=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.7 314/376] iommu/vt-d: Allocate domain info for real DMA sub-devices
-Date:   Fri, 19 Jun 2020 16:33:52 +0200
-Message-Id: <20200619141725.201170207@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.7 318/376] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
+Date:   Fri, 19 Jun 2020 16:33:56 +0200
+Message-Id: <20200619141725.384183554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,83 +59,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-commit 4fda230ecddc2573ed88632e98b69b0b9b68c0ad upstream.
+commit b577a279914085c6b657c33e9f39ef56d96a3302 upstream.
 
-Sub-devices of a real DMA device might exist on a separate segment than
-the real DMA device and its IOMMU. These devices should still have a
-valid device_domain_info, but the current dma alias model won't
-allocate info for the subdevice.
+Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
+mask") started writing the eint wakeup mask from the pinctrl driver.
+Unfortunately, it made the assumption that the private retention data
+was always a regmap while in the case of s5pv210 it is a raw pointer
+to the clock base (as the eint wakeup mask not in the PMU as with newer
+Exynos platforms).
 
-This patch adds a segment member to struct device_domain_info and uses
-the sub-device's BDF so that these sub-devices won't alias to other
-devices.
-
-Fixes: 2b0140c69637e ("iommu/vt-d: Use pci_real_dma_dev() for mapping")
-Cc: stable@vger.kernel.org # v5.6+
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20200527165617.297470-3-jonathan.derrick@intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |   19 +++++++++++++++----
- include/linux/intel-iommu.h |    1 +
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-exynos.c |   73 ++++++++++++++++++++-----------
+ 1 file changed, 49 insertions(+), 24 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2545,7 +2545,7 @@ dmar_search_domain_by_dev_info(int segme
- 	struct device_domain_info *info;
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -40,6 +40,8 @@ struct exynos_irq_chip {
+ 	u32 eint_pend;
+ 	u32 eint_wake_mask_value;
+ 	u32 eint_wake_mask_reg;
++	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
++				     struct exynos_irq_chip *irq_chip);
+ };
  
- 	list_for_each_entry(info, &device_domain_list, global)
--		if (info->iommu->segment == segment && info->bus == bus &&
-+		if (info->segment == segment && info->bus == bus &&
- 		    info->devfn == devfn)
- 			return info;
+ static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
+@@ -342,6 +344,47 @@ static int exynos_wkup_irq_set_wake(stru
+ 	return 0;
+ }
  
-@@ -2602,8 +2602,18 @@ static struct dmar_domain *dmar_insert_o
- 	if (!info)
- 		return NULL;
- 
--	info->bus = bus;
--	info->devfn = devfn;
-+	if (!dev_is_real_dma_subdevice(dev)) {
-+		info->bus = bus;
-+		info->devfn = devfn;
-+		info->segment = iommu->segment;
-+	} else {
-+		struct pci_dev *pdev = to_pci_dev(dev);
++static void
++exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++{
++	struct regmap *pmu_regs;
 +
-+		info->bus = pdev->bus->number;
-+		info->devfn = pdev->devfn;
-+		info->segment = pci_domain_nr(pdev->bus);
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
 +	}
 +
- 	info->ats_supported = info->pasid_supported = info->pri_supported = 0;
- 	info->ats_enabled = info->pasid_enabled = info->pri_enabled = 0;
- 	info->ats_qdep = 0;
-@@ -2643,7 +2653,8 @@ static struct dmar_domain *dmar_insert_o
++	pmu_regs = drvdata->retention_ctrl->priv;
++	dev_info(drvdata->dev,
++		 "Setting external wakeup interrupt mask: 0x%x\n",
++		 irq_chip->eint_wake_mask_value);
++
++	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
++		     irq_chip->eint_wake_mask_value);
++}
++
++static void
++s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++
++{
++	void __iomem *clk_base;
++
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
++	}
++
++
++	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
++
++	__raw_writel(irq_chip->eint_wake_mask_value,
++		     clk_base + irq_chip->eint_wake_mask_reg);
++}
++
+ /*
+  * irq_chip for wakeup interrupts
+  */
+@@ -360,8 +403,9 @@ static const struct exynos_irq_chip s5pv
+ 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+-	/* Only difference with exynos4210_wkup_irq_chip: */
++	/* Only differences with exynos4210_wkup_irq_chip: */
+ 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
+ };
  
- 	if (!found) {
- 		struct device_domain_info *info2;
--		info2 = dmar_search_domain_by_dev_info(iommu->segment, bus, devfn);
-+		info2 = dmar_search_domain_by_dev_info(info->segment, info->bus,
-+						       info->devfn);
- 		if (info2) {
- 			found      = info2->domain;
- 			info2->dev = dev;
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -571,6 +571,7 @@ struct device_domain_info {
- 	struct list_head auxiliary_domains; /* auxiliary domains
- 					     * attached to this device
- 					     */
-+	u32 segment;		/* PCI segment number */
- 	u8 bus;			/* PCI bus number */
- 	u8 devfn;		/* PCI devfn number */
- 	u16 pfsid;		/* SRIOV physical function source ID */
+ static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
+@@ -380,6 +424,7 @@ static const struct exynos_irq_chip exyn
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
+@@ -398,6 +443,7 @@ static const struct exynos_irq_chip exyn
+ 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ /* list of external wakeup controllers supported */
+@@ -574,27 +620,6 @@ int exynos_eint_wkup_init(struct samsung
+ 	return 0;
+ }
+ 
+-static void
+-exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
+-				    struct exynos_irq_chip *irq_chip)
+-{
+-	struct regmap *pmu_regs;
+-
+-	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
+-		dev_warn(drvdata->dev,
+-			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
+-		return;
+-	}
+-
+-	pmu_regs = drvdata->retention_ctrl->priv;
+-	dev_info(drvdata->dev,
+-		 "Setting external wakeup interrupt mask: 0x%x\n",
+-		 irq_chip->eint_wake_mask_value);
+-
+-	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
+-		     irq_chip->eint_wake_mask_value);
+-}
+-
+ static void exynos_pinctrl_suspend_bank(
+ 				struct samsung_pinctrl_drv_data *drvdata,
+ 				struct samsung_pin_bank *bank)
+@@ -626,8 +651,8 @@ void exynos_pinctrl_suspend(struct samsu
+ 		else if (bank->eint_type == EINT_TYPE_WKUP) {
+ 			if (!irq_chip) {
+ 				irq_chip = bank->irq_chip;
+-				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
+-								    irq_chip);
++				irq_chip->set_eint_wakeup_mask(drvdata,
++							       irq_chip);
+ 			} else if (bank->irq_chip != irq_chip) {
+ 				dev_warn(drvdata->dev,
+ 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
 
 
