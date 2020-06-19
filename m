@@ -2,93 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD741207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3723207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592573325;
+	bh=Zlz05WKmcUJTYXlIz5yl2H2syQ5FgQ4vwLVGbolffuk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=kRX3ejZ8czyQWzTBS+pTGkfhGA3inScKD/zepN3DuTIt5Kg4EYkqTjNNRuh0uAtaR
+	 +OAlar9FRSXn80z2N/nsjmtLzzfXmZQQu8GlIg1WuDWN9RhepHhVjCgvupcHt/uGTJ
+	 ifr6EMkypz6QtBo1EjTOyIdvVxwp2ezP/Pg9fZwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbgFSN2m (ORCPT
+        id S1732876AbgFSN2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:28:42 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42988 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732695AbgFSN2Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732847AbgFSN2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 09:28:25 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 863BA1C0BD2; Fri, 19 Jun 2020 15:28:10 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 15:28:10 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Pavel Machek (CIP)" <pavel@denx.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 4.19 047/172] ASoC: meson: add missing free_irq()
- in error path
-Message-ID: <20200619132810.GA1345@amd>
-References: <20200618012218.607130-1-sashal@kernel.org>
- <20200618012218.607130-47-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20200618012218.607130-47-sashal@kernel.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55A62166E;
+        Fri, 19 Jun 2020 13:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592573296;
+        bh=Zlz05WKmcUJTYXlIz5yl2H2syQ5FgQ4vwLVGbolffuk=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=KPk1NJwhF3h9BXiQXEbwEs/ZhjAPrfR3osy0dtW+Jpygxkl+kyMBz6EiRUiZ3IZuT
+         KiwGpZBrx5Rp3NwBP6xwTrJJn311rfVhw0HcI/0hsnbUrh/WHeWs9w4/QFdmJFyVxW
+         fhvT+vIF6jzKSqu5k6uW6u40NbS3zLc15j75Fms4=
+Date:   Fri, 19 Jun 2020 14:28:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc:     dinguyen@kernel.org, Boris Brezillon <bbrezillon@kernel.org>,
+        linux-spi@vger.kernel.org,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        simon.k.r.goldschmidt@gmail.com, linux-kernel@vger.kernel.org,
+        marex@denx.de, linux-mtd@lists.infradead.org
+In-Reply-To: <20200526093604.11846-1-vigneshr@ti.com>
+References: <20200526093604.11846-1-vigneshr@ti.com>
+Subject: Re: [PATCH v2 0/6] mtd: spi-nor: Move cadence-qaudspi to spi-mem framework
+Message-Id: <159257327821.5984.8587819746986520265.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 26 May 2020 15:05:58 +0530, Vignesh Raghavendra wrote:
+> This series is a subset of "[PATCH v12 0/4] spi: cadence-quadspi: Add
+> support for the Cadence QSPI controller" by Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> that intended to move
+> cadence-quadspi driver to spi-mem framework
+> 
+> Those patches were trying to accomplish too many things in a single set
+> of patches and need to split into smaller patches. This is reduced
+> version of above series.
+> 
+> [...]
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-Hi!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-> From: "Pavel Machek (CIP)" <pavel@denx.de>
->=20
-> [ Upstream commit 3b8a299a58b2afce464ae11324b59dcf0f1d10a7 ]
->=20
-> free_irq() is missing in case of error, fix that.
->=20
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
->=20
-> Link: https://lore.kernel.org/r/20200606153103.GA17905@amd
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+Thanks!
 
-Notice that the bug this fixes is theoretical (found by code review)
-and the fix itself was not tested by me as I don't have the hardware.
+[1/6] mtd: spi-nor: cadence-quadspi: Make driver independent of flash geometry
+      commit: 834b4e8d344139ba64cda22099b2b2ef6c9a542d
+[2/6] mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
+      commit: a99705079a91e6373122bd0ca2fc129b688fc5b3
+[3/6] mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on failure
+      commit: 48aae57f0f9f57797772bd462b4d64902b1b4ae1
+[4/6] mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire reset lines
+      commit: c61088d1f9932940af780b674f028140eda09a94
+[5/6] mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
+      commit: a314f6367787ee1d767df9a2120f17e4511144d0
+[6/6] spi: Move cadence-quadspi driver to drivers/spi/
+      commit: 31fb632b5d43ca16713095b3a4fe17e3d7331e28
 
-It may be good idea to for mainline to test the change a bit...
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Best regards,
-							Pavel
-						=09
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iEYEARECAAYFAl7svWoACgkQMOfwapXb+vKgPwCfatdZSXBo7eyLKEUcWoN1nKrh
-K8kAn2+x3sAUwlj/zrlpo9y3mh1nlBDY
-=nSQo
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+Thanks,
+Mark
