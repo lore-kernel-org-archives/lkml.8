@@ -2,189 +2,163 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14326C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2985F21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF811208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g6pABK2b"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FHU640Pi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgFSOWB (ORCPT
+        id S1733074AbgFSOWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:22:01 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:61286 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgFSOV7 (ORCPT
+        Fri, 19 Jun 2020 10:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgFSOWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:21:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592576518; x=1624112518;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PKnFoxqQrAiroEcrPnCd5Y5Np27cClJYN9tqUhIZ/Xg=;
-  b=g6pABK2bTmeUGYQioMYvtnpOcijPerN1f9fQS0CZ0AWHb9V8iw2W64Rl
-   1kStikK+l9a9Xpc8c/MI3sm1BDafqYOiwMlmkIN1Wqr0x8JeUkriXoSLD
-   NrIwVHCoYBWG4fZ7Q2a+DMZFzTO3/FTKnFJ85LkfEOQCRNeGtvjTYmWXh
-   KatlAU7H7dKWjDL4xt579gTGWQkPCF8qW0zOSfj+recB1Z2CmppsZ+9Ve
-   Ps5hn1bYqBY361cT4+AaRXVgFaSfoq8LE+XHNB00ivRbswMG8PVEDwhNM
-   loYdEYsXufcLKy9D3DPGmpxhPhCcGlTCU4IZGOLXcTpwI5bjDFYE03vWU
-   w==;
-IronPort-SDR: llHCWxN4hggFAoPTbkYOKYaHtktya/T9B2Ag/hDD9VvHmE45igm4SL5Wkay8pEygalATBbfRia
- cf9ZVVjlfNqm6T9xsjEM6csv7gMMK3cLgdWRHvNYw2n1b4t9yJYUZbPywym4Kj5KaiO0E9R2Sz
- FI40TCihRLFDN/PABW8XPZl+VFigcLrEq7H/mg7aG/obRlcV8Uly+sucLK/hw/r7sv23kyD3NL
- pJXrrO4tvsORWA9PBkLW+VHxXwnL6VqasUQF90ysINxOvLi0f50qsEkDy3cLUN9FzHvO5WdVmW
- iMg=
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="79101137"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2020 07:21:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 19 Jun 2020 07:21:49 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 19 Jun 2020 07:21:24 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <wsa@kernel.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Date:   Fri, 19 Jun 2020 17:19:04 +0300
-Message-ID: <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+        Fri, 19 Jun 2020 10:22:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE012C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l24so4560685pgb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vxtHFfxRa6J52mPRG6jvgbvliKZllqWnNgXrzGwwQhE=;
+        b=FHU640PiXW0xLyp6AL1PCI7tRK5wZ06ZcDtLoY1aP2MLtQLYA/U8l9u+b9wpPYqO6A
+         rKlg/ouC1alQwarF28E0DQZ1SJXWsrDrDUYLSjHv95gzOTS88oBzZ0IP7kYuLRe4dEpU
+         K51/lr0hGhn6/egk9YmTp7T1VdLVAlWt3OFSjyKaAMn7Ld7iL3gdHOiFXMm/AJFzUHfu
+         wfMLS9RtdrGdqp76or0DL9iuXL2SBwqm/1H76EveVh8A5a/g6wllP0xfgCSEi5teRCjP
+         SPRU9LwxkuNVMzFCC3C33qwzViJCT+14F747rhVJ9n+i2CVu4EK2i39GuuwIMefZN7za
+         ESGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vxtHFfxRa6J52mPRG6jvgbvliKZllqWnNgXrzGwwQhE=;
+        b=EN0ULgPD9bTaXl78R/ztFjMs9OS9DrtJTOS+PsPoLQ7UaqowT38lu69Q2OCtIG+W1x
+         Xq7nSuI9EcEo4f1pQLFsNwgge99gYZ555OIwzs1Ts3GAWU2xachCLhD7L/Y6u626ioB0
+         FIs3H1YK69v//BWrFP5NsrsabtUuxCMF1ayG8xTmEUt7XNezEz6Vdx0oIpr0aS3dxfgA
+         wsEnukIDlSXssLllKsxZcem4dMEjN08KQaj9vBj4GL01yk6pWLIaGvohaP3+gR1TpEU5
+         wL6Yd//cV7u3/POJSyjhfSoq77ocBirRv4dp5815LmkNJ/N4gJO3aZ46P1g7+EGVEemj
+         XrZw==
+X-Gm-Message-State: AOAM530q+EqxTs+0VCGYQ2zUQgdDcgGYWhCTAbBV65h/PlMSSQ2aSrXx
+        BXLnRo6zSQAFn1O/iQGdMdYvcA==
+X-Google-Smtp-Source: ABdhPJxRONpeZFjGL6amyDVA55vSKIbY4ULoW+nnBgRLPw2fISt14O88Or5B2Im6nt4e2+NiD0KsNQ==
+X-Received: by 2002:a65:43cb:: with SMTP id n11mr3240011pgp.160.1592576544118;
+        Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id p11sm6265486pfq.10.2020.06.19.07.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:22:23 -0700 (PDT)
+Subject: Re: [PATCH 04/15] io_uring: re-issue block requests that failed
+ because of resources
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-5-axboe@kernel.dk>
+ <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <da21ba82-c027-0c15-93e3-a372283d7030@kernel.dk>
+Date:   Fri, 19 Jun 2020 08:22:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the Microchip at91 driver the first to use the generic GPIO bus
-recovery support from the I2C core and discard the driver implementation.
+On 6/19/20 8:12 AM, Pavel Begunkov wrote:
+> On 18/06/2020 17:43, Jens Axboe wrote:
+>> Mark the plug with nowait == true, which will cause requests to avoid
+>> blocking on request allocation. If they do, we catch them and reissue
+>> them from a task_work based handler.
+>>
+>> Normally we can catch -EAGAIN directly, but the hard case is for split
+>> requests. As an example, the application issues a 512KB request. The
+>> block core will split this into 128KB if that's the max size for the
+>> device. The first request issues just fine, but we run into -EAGAIN for
+>> some latter splits for the same request. As the bio is split, we don't
+>> get to see the -EAGAIN until one of the actual reads complete, and hence
+>> we cannot handle it inline as part of submission.
+>>
+>> This does potentially cause re-reads of parts of the range, as the whole
+>> request is reissued. There's currently no better way to handle this.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  fs/io_uring.c | 148 ++++++++++++++++++++++++++++++++++++++++++--------
+>>  1 file changed, 124 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index 2e257c5a1866..40413fb9d07b 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -900,6 +900,13 @@ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
+>>  static void __io_queue_sqe(struct io_kiocb *req,
+>>  			   const struct io_uring_sqe *sqe);
+>>  
+> ...> +
+>> +static void io_rw_resubmit(struct callback_head *cb)
+>> +{
+>> +	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+>> +	struct io_ring_ctx *ctx = req->ctx;
+>> +	int err;
+>> +
+>> +	__set_current_state(TASK_RUNNING);
+>> +
+>> +	err = io_sq_thread_acquire_mm(ctx, req);
+>> +
+>> +	if (io_resubmit_prep(req, err)) {
+>> +		refcount_inc(&req->refs);
+>> +		io_queue_async_work(req);
+>> +	}
+> 
+> Hmm, I have similar stuff but for iopoll. On top removing grab_env* for
+> linked reqs and some extra. I think I'll rebase on top of this.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
- drivers/i2c/busses/i2c-at91.h        |  3 --
- 2 files changed, 3 insertions(+), 69 deletions(-)
+Yes, there's certainly overlap there. I consider this series basically
+wrapped up, so feel free to just base on top of it.
 
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 363d540a8345..66864f9cf7ac 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -816,79 +816,16 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
- 	return ret;
- }
- 
--static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
--{
--	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
--
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
--}
--
--static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
--{
--	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
--
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--}
--
- static int at91_init_twi_recovery_gpio(struct platform_device *pdev,
- 				       struct at91_twi_dev *dev)
- {
- 	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
- 
--	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
--	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-+	rinfo->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (!rinfo->pinctrl || IS_ERR(rinfo->pinctrl)) {
- 		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
--		return PTR_ERR(dev->pinctrl);
-+		return PTR_ERR(rinfo->pinctrl);
- 	}
--
--	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
--							 PINCTRL_STATE_DEFAULT);
--	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
--						      "gpio");
--	if (IS_ERR(dev->pinctrl_pins_default) ||
--	    IS_ERR(dev->pinctrl_pins_gpio)) {
--		dev_info(&pdev->dev, "pinctrl states incomplete for recovery\n");
--		return -EINVAL;
--	}
--
--	/*
--	 * pins will be taken as GPIO, so we might as well inform pinctrl about
--	 * this and move the state to GPIO
--	 */
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
--
--	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
--	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
--
--	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
--					  GPIOD_OUT_HIGH_OPEN_DRAIN);
--	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
--
--	if (IS_ERR(rinfo->sda_gpiod) ||
--	    IS_ERR(rinfo->scl_gpiod)) {
--		dev_info(&pdev->dev, "recovery information incomplete\n");
--		if (!IS_ERR(rinfo->sda_gpiod)) {
--			gpiod_put(rinfo->sda_gpiod);
--			rinfo->sda_gpiod = NULL;
--		}
--		if (!IS_ERR(rinfo->scl_gpiod)) {
--			gpiod_put(rinfo->scl_gpiod);
--			rinfo->scl_gpiod = NULL;
--		}
--		pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--		return -EINVAL;
--	}
--
--	/* change the state of the pins back to their default state */
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--
--	dev_info(&pdev->dev, "using scl, sda for recovery\n");
--
--	rinfo->prepare_recovery = at91_prepare_twi_recovery;
--	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
--	rinfo->recover_bus = i2c_generic_scl_recovery;
- 	dev->adapter.bus_recovery_info = rinfo;
- 
- 	return 0;
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 7e7b4955ca7f..eae673ae786c 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -157,9 +157,6 @@ struct at91_twi_dev {
- 	struct at91_twi_dma dma;
- 	bool slave_detected;
- 	struct i2c_bus_recovery_info rinfo;
--	struct pinctrl *pinctrl;
--	struct pinctrl_state *pinctrl_pins_default;
--	struct pinctrl_state *pinctrl_pins_gpio;
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- 	unsigned smr;
- 	struct i2c_client *slave;
+>> +static bool io_rw_reissue(struct io_kiocb *req, long res)
+>> +{
+>> +#ifdef CONFIG_BLOCK
+>> +	struct task_struct *tsk;
+>> +	int ret;
+>> +
+>> +	if ((res != -EAGAIN && res != -EOPNOTSUPP) || io_wq_current_is_worker())
+>> +		return false;
+>> +
+>> +	tsk = req->task;
+>> +	init_task_work(&req->task_work, io_rw_resubmit);
+>> +	ret = task_work_add(tsk, &req->task_work, true);
+> 
+> I don't like that the request becomes un-discoverable for cancellation
+> awhile sitting in the task_work list. Poll stuff at least have hash_node
+> for that.
+
+Async buffered IO was never cancelable, so it doesn't really matter.
+It's tied to the task, so we know it'll get executed - either run, or
+canceled if the task is going away. This is really not that different
+from having the work discoverable through io-wq queueing before, since
+the latter could never be canceled anyway as it sits there
+uninterruptibly waiting for IO completion.
+
 -- 
-2.25.1
+Jens Axboe
 
