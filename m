@@ -2,29 +2,30 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5063D2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3788D2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbgFSNCQ (ORCPT
+        id S1732922AbgFSNCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:02:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:57414 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 09:02:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:57514 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732861AbgFSNBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:01:54 -0400
+        id S1732663AbgFSNCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:02:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F1A3101E;
-        Fri, 19 Jun 2020 06:01:53 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F80E1396;
+        Fri, 19 Jun 2020 06:02:13 -0700 (PDT)
 Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E605C3F6CF;
-        Fri, 19 Jun 2020 06:01:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11C923F6CF;
+        Fri, 19 Jun 2020 06:02:06 -0700 (PDT)
 From:   Jianyong Wu <jianyong.wu@arm.com>
 To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
         tglx@linutronix.de, pbonzini@redhat.com,
@@ -35,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
         Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
         Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
-Subject: [PATCH v13 2/9] arm/arm64: KVM: Advertise KVM UID to guests via SMCCC
-Date:   Fri, 19 Jun 2020 21:01:13 +0800
-Message-Id: <20200619130120.40556-3-jianyong.wu@arm.com>
+Subject: [PATCH v13 5/9] time: Add mechanism to recognize clocksource in time_get_snapshot
+Date:   Fri, 19 Jun 2020 21:01:16 +0800
+Message-Id: <20200619130120.40556-6-jianyong.wu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200619130120.40556-1-jianyong.wu@arm.com>
 References: <20200619130120.40556-1-jianyong.wu@arm.com>
@@ -46,98 +47,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-We can advertise ourselves to guests as KVM and provide a basic features
-bitmap for discoverability of future hypervisor services.
+System time snapshots are not conveying information about the current
+clocksource which was used, but callers like the PTP KVM guest
+implementation have the requirement to evaluate the clocksource type to
+select the appropriate mechanism.
 
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Introduce a clocksource id field in struct clocksource which is by default
+set to CSID_GENERIC (0). Clocksource implementations can set that field to
+a value which allows to identify the clocksource.
+
+Store the clocksource id of the current clocksource in the
+system_time_snapshot so callers can evaluate which clocksource was used to
+take the snapshot and act accordingly.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
 ---
- arch/arm64/kvm/hypercalls.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ include/linux/clocksource.h     |  6 ++++++
+ include/linux/clocksource_ids.h | 11 +++++++++++
+ include/linux/timekeeping.h     | 12 +++++++-----
+ kernel/time/clocksource.c       |  3 +++
+ kernel/time/timekeeping.c       |  1 +
+ 5 files changed, 28 insertions(+), 5 deletions(-)
+ create mode 100644 include/linux/clocksource_ids.h
 
-diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
-index 550dfa3e53cd..db6dce3d0e23 100644
---- a/arch/arm64/kvm/hypercalls.c
-+++ b/arch/arm64/kvm/hypercalls.c
-@@ -12,13 +12,13 @@
- int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- {
- 	u32 func_id = smccc_get_function(vcpu);
--	long val = SMCCC_RET_NOT_SUPPORTED;
-+	u32 val[4] = {SMCCC_RET_NOT_SUPPORTED};
- 	u32 feature;
- 	gpa_t gpa;
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 86d143db6523..1290d0dce840 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -17,6 +17,7 @@
+ #include <linux/timer.h>
+ #include <linux/init.h>
+ #include <linux/of.h>
++#include <linux/clocksource_ids.h>
+ #include <asm/div64.h>
+ #include <asm/io.h>
  
- 	switch (func_id) {
- 	case ARM_SMCCC_VERSION_FUNC_ID:
--		val = ARM_SMCCC_VERSION_1_1;
-+		val[0] = ARM_SMCCC_VERSION_1_1;
- 		break;
- 	case ARM_SMCCC_ARCH_FEATURES_FUNC_ID:
- 		feature = smccc_get_arg1(vcpu);
-@@ -28,10 +28,10 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 			case KVM_BP_HARDEN_UNKNOWN:
- 				break;
- 			case KVM_BP_HARDEN_WA_NEEDED:
--				val = SMCCC_RET_SUCCESS;
-+				val[0] = SMCCC_RET_SUCCESS;
- 				break;
- 			case KVM_BP_HARDEN_NOT_REQUIRED:
--				val = SMCCC_RET_NOT_REQUIRED;
-+				val[0] = SMCCC_RET_NOT_REQUIRED;
- 				break;
- 			}
- 			break;
-@@ -41,31 +41,40 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 			case KVM_SSBD_UNKNOWN:
- 				break;
- 			case KVM_SSBD_KERNEL:
--				val = SMCCC_RET_SUCCESS;
-+				val[0] = SMCCC_RET_SUCCESS;
- 				break;
- 			case KVM_SSBD_FORCE_ENABLE:
- 			case KVM_SSBD_MITIGATED:
--				val = SMCCC_RET_NOT_REQUIRED;
-+				val[0] = SMCCC_RET_NOT_REQUIRED;
- 				break;
- 			}
- 			break;
- 		case ARM_SMCCC_HV_PV_TIME_FEATURES:
--			val = SMCCC_RET_SUCCESS;
-+			val[0] = SMCCC_RET_SUCCESS;
- 			break;
- 		}
- 		break;
- 	case ARM_SMCCC_HV_PV_TIME_FEATURES:
--		val = kvm_hypercall_pv_features(vcpu);
-+		val[0] = kvm_hypercall_pv_features(vcpu);
- 		break;
- 	case ARM_SMCCC_HV_PV_TIME_ST:
- 		gpa = kvm_init_stolen_time(vcpu);
- 		if (gpa != GPA_INVALID)
--			val = gpa;
-+			val[0] = gpa;
-+		break;
-+	case ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID:
-+		val[0] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0;
-+		val[1] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1;
-+		val[2] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2;
-+		val[3] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3;
-+		break;
-+	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
-+		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
- 		break;
- 	default:
- 		return kvm_psci_call(vcpu);
- 	}
+@@ -62,6 +63,10 @@ struct module;
+  *			400-499: Perfect
+  *				The ideal clocksource. A must-use where
+  *				available.
++ * @id:			Defaults to CSID_GENERIC. The id value is captured
++ *			in certain snapshot functions to allow callers to
++ *			validate the clocksource from which the snapshot was
++ *			taken.
+  * @flags:		Flags describing special properties
+  * @enable:		Optional function to enable the clocksource
+  * @disable:		Optional function to disable the clocksource
+@@ -100,6 +105,7 @@ struct clocksource {
+ 	const char		*name;
+ 	struct list_head	list;
+ 	int			rating;
++	enum clocksource_ids	id;
+ 	enum vdso_clock_mode	vdso_clock_mode;
+ 	unsigned long		flags;
  
--	smccc_set_retval(vcpu, val, 0, 0, 0);
-+	smccc_set_retval(vcpu, val[0], val[1], val[2], val[3]);
- 	return 1;
- }
+diff --git a/include/linux/clocksource_ids.h b/include/linux/clocksource_ids.h
+new file mode 100644
+index 000000000000..4d8e19e05328
+--- /dev/null
++++ b/include/linux/clocksource_ids.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_CLOCKSOURCE_IDS_H
++#define _LINUX_CLOCKSOURCE_IDS_H
++
++/* Enum to give clocksources a unique identifier */
++enum clocksource_ids {
++	CSID_GENERIC		= 0,
++	CSID_MAX,
++};
++
++#endif
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index b27e2ffa96c1..70e771862d20 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_TIMEKEEPING_H
+ 
+ #include <linux/errno.h>
++#include <linux/clocksource_ids.h>
+ 
+ /* Included from linux/ktime.h */
+ 
+@@ -232,11 +233,12 @@ extern void timekeeping_inject_sleeptime64(const struct timespec64 *delta);
+  * @cs_was_changed_seq:	The sequence number of clocksource change events
+  */
+ struct system_time_snapshot {
+-	u64		cycles;
+-	ktime_t		real;
+-	ktime_t		raw;
+-	unsigned int	clock_was_set_seq;
+-	u8		cs_was_changed_seq;
++	u64			cycles;
++	ktime_t			real;
++	ktime_t			raw;
++	enum clocksource_ids	cs_id;
++	unsigned int		clock_was_set_seq;
++	u8			cs_was_changed_seq;
+ };
+ 
+ /*
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 02441ead3c3b..9fe148734fb3 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -928,6 +928,9 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
+ 
+ 	clocksource_arch_init(cs);
+ 
++	if (WARN_ON_ONCE((unsigned int)cs->id >= CSID_MAX))
++		cs->id = CSID_GENERIC;
++
+ 	if (cs->vdso_clock_mode < 0 ||
+ 	    cs->vdso_clock_mode >= VDSO_CLOCKMODE_MAX) {
+ 		pr_warn("clocksource %s registered with invalid VDSO mode %d. Disabling VDSO support.\n",
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index d20d489841c8..2cf85d81e4ed 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -979,6 +979,7 @@ void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 		now = tk_clock_read(&tk->tkr_mono);
++		systime_snapshot->cs_id = tk->tkr_mono.clock->id;
+ 		systime_snapshot->cs_was_changed_seq = tk->cs_was_changed_seq;
+ 		systime_snapshot->clock_was_set_seq = tk->clock_was_set_seq;
+ 		base_real = ktime_add(tk->tkr_mono.base,
 -- 
 2.17.1
 
