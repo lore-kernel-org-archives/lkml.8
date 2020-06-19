@@ -5,52 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C02C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FBE20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBD420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581936;
-	bh=5TvpbYkiQw9NZ9edJDaOVOmu8yyAmlourZTRXxSr9R0=;
+	s=default; t=1592581942;
+	bh=8M0BVirU0WrdSQ2GntXLcUZw8QqQhLkv8Jmputer5H8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/85a1CIU5hgTcPCPP4rvkAufX44JJkDAq04E36iye6n0tffXrY6GC546Ns5w442E
-	 Vr0KIkMM3vtFYzUzbw4/MzBKfB8Si0KLGuNpQ9cNTa8tsdK8w7YEHIc+XuUGbl8S6o
-	 Jr/ATtokN6Hl/9jXRnEu4mcJE92FA02gp3zcFhPA=
+	b=1PWKs88by3bZQO8NOVgu/unnp9Kr1EF06F30vTuP2UqGh6jlJVyvjA6Ia26TtYPeo
+	 5UhlloDCEEpXkrCrBCqdS0ABG9mDkudTVSobGOZ+dqP6bxUyyCinVuyS6hpnnFMzbj
+	 i1ooJrdZlARpVFdzLuE7x3r07AN5tgtyxlJWfAvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405356AbgFSPwO (ORCPT
+        id S2405369AbgFSPwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393178AbgFSPX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:27 -0400
+        id S2390743AbgFSPXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7460D21548;
-        Fri, 19 Jun 2020 15:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D9C821548;
+        Fri, 19 Jun 2020 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580206;
-        bh=5TvpbYkiQw9NZ9edJDaOVOmu8yyAmlourZTRXxSr9R0=;
+        s=default; t=1592580198;
+        bh=8M0BVirU0WrdSQ2GntXLcUZw8QqQhLkv8Jmputer5H8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PcakEWAuD9eCBECSjmFBW4CvgANHBsHRpUpcmPJHLr5aRmxFLsr3ElTVBC/9AjLpw
-         P2M4IrrdKUNhAQg7JYyiM6fd+8YBWdJQgbd0J6F68nsylOZCkOcX+FtmSzC9du6Zyu
-         ddsLZIh3hi6X4/mipbqa0ihMB4JCUbYz7MPNS9CM=
+        b=t5VXTrw9/mrY45p7vrxed5/7Gw737AweFHxTOEiYCaQKR3YengPZa/btCkP/Z+KWo
+         s5/jH6n0ui3AxFKHnSxNVMmgyMJ63hOVwDofuuAWo00I+yf6ZmycdV5Fd3hi18E00Q
+         1VP3euFRHsTnJwQRgrSqoVAFPT8UoJ15bWRxeRu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 163/376] xfs: fix duplicate verification from xfs_qm_dqflush()
-Date:   Fri, 19 Jun 2020 16:31:21 +0200
-Message-Id: <20200619141718.038795724@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 160/376] mips: cm: Fix an invalid error code of INTVN_*_ERR
+Date:   Fri, 19 Jun 2020 16:31:18 +0200
+Message-Id: <20200619141717.895785728@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,48 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 629dcb38dc351947ed6a26a997d4b587f3bd5c7e ]
+[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
 
-The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
-read verifier by checking the dquot in the on-disk buffer. Instead,
-verify the in-core variant before it is flushed to the buffer.
+Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
+errors") adds cm2_causes[] array with map of error type ID and
+pointers to the short description string. There is a mistake in
+the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
+correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
+claims they have {0x17,0x18} codes. This is obviously hex-dec
+copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
 
-Fixes: 7224fa482a6d ("xfs: add full xfs_dqblk verifier")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_dquot.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/mips/kernel/mips-cm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index af2c8e5ceea0..265feb62290d 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1116,13 +1116,12 @@ xfs_qm_dqflush(
- 	dqb = bp->b_addr + dqp->q_bufoffset;
- 	ddqp = &dqb->dd_diskdq;
+diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
+index cdb93ed91cde..361bfc91a0e6 100644
+--- a/arch/mips/kernel/mips-cm.c
++++ b/arch/mips/kernel/mips-cm.c
+@@ -119,9 +119,9 @@ static char *cm2_causes[32] = {
+ 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
+ 	"0x08", "0x09", "0x0a", "0x0b",
+ 	"0x0c", "0x0d", "0x0e", "0x0f",
+-	"0x10", "0x11", "0x12", "0x13",
+-	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
+-	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
++	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
++	"0x14", "0x15", "0x16", "0x17",
++	"0x18", "0x19", "0x1a", "0x1b",
+ 	"0x1c", "0x1d", "0x1e", "0x1f"
+ };
  
--	/*
--	 * A simple sanity check in case we got a corrupted dquot.
--	 */
--	fa = xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
-+	/* sanity check the in-core structure before we flush */
-+	fa = xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id),
-+			      0);
- 	if (fa) {
- 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
--				be32_to_cpu(ddqp->d_id), fa);
-+				be32_to_cpu(dqp->q_core.d_id), fa);
- 		xfs_buf_relse(bp);
- 		xfs_dqfunlock(dqp);
- 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
 -- 
 2.25.1
 
