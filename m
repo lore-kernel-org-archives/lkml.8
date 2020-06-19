@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0452C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EDD21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539C8217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578411;
-	bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
+	s=default; t=1592578416;
+	bh=AfBtStXJXaYPmnT+dTRLZ/pe4//6x1OcubtVyz9z2Gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAElFSFUbsQYlniKADXy9b/C/6nB2NMaRW17bYLMXbTnDU6hrniwb5uLa7xR0lhaz
-	 +hH5y1pl61I3byiRIc2kYrpvpJ3VEqIh/eHYVgyPHrHbUSE1TRStqggFq7t4wIj9E7
-	 Ai2yD3jZotbmumTzlSH9BwxsWkl8/N8xY8KTzIv0=
+	b=wvVmX1mUr3I9A9p1pB6ZGsQmJo0RfOUgfQUlxypVn2W5O66K2n0fTr942xgnU/L70
+	 /LKpXsVSoUS/8lE4r5NOAnQDjyhYBvml5pf6kvJTAAQh16kQRkEkKKGZerEXo5TPOX
+	 Wl6wvYBmqBjsIcfL8NQepM9/qmg5X0tNo/HfWKP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389676AbgFSOx3 (ORCPT
+        id S2389734AbgFSOxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47558 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389727AbgFSOxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:17 -0400
+        id S2389730AbgFSOx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41729217D8;
-        Fri, 19 Jun 2020 14:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2902184D;
+        Fri, 19 Jun 2020 14:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578397;
-        bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
+        s=default; t=1592578408;
+        bh=AfBtStXJXaYPmnT+dTRLZ/pe4//6x1OcubtVyz9z2Gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lrHuFXmhdt4jgyDA4a5zN98g/nz9U/n0TuHhdwb/fY9pnaO9mJYL2le8R3maFTowu
-         0k+bAxHExciLYVDFJPIIz58aR70iuHWjZcWQt0M2FVLsryKRyO9L8GOB0w12nWKe0J
-         nd6b5TYo1D95ebvbxjhJ3MlxCBo5QOm44pQFsMyI=
+        b=uzhrAP52BZT0dxWbaPREWEo1AFhE09erOEOHCwpPpocvh+OG9xKMkgxxnEz3tvzdC
+         XO9iLSfbnfRO+PkWG7SGUQKcqXcpURDQVV3hZwiuap42qwXUguGnCNkGV+YsV5WAIP
+         tpMPEIW3giLkcVGGZjKePktzbe9gJEAI2e+RBZ0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 4.14 166/190] media: go7007: fix a miss of snd_card_free
-Date:   Fri, 19 Jun 2020 16:33:31 +0200
-Message-Id: <20200619141642.063117885@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH 4.19 011/267] lib: Reduce user_access_begin() boundaries in strncpy_from_user() and strnlen_user()
+Date:   Fri, 19 Jun 2020 16:29:56 +0200
+Message-Id: <20200619141649.402695278@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,86 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 9453264ef58638ce8976121ac44c07a3ef375983 upstream.
+commit ab10ae1c3bef56c29bac61e1201c752221b87b41 upstream.
 
-go7007_snd_init() misses a snd_card_free() in an error path.
-Add the missed call to fix it.
+The range passed to user_access_begin() by strncpy_from_user() and
+strnlen_user() starts at 'src' and goes up to the limit of userspace
+although reads will be limited by the 'count' param.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-[Salvatore Bonaccorso: Adjust context for backport to versions which do
-not contain c0decac19da3 ("media: use strscpy() instead of strlcpy()")
-and ba78170ef153 ("media: go7007: Fix misuse of strscpy")]
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+On 32 bits powerpc (book3s/32) access has to be granted for each
+256Mbytes segment and the cost increases with the number of segments to
+unlock.
+
+Limit the range with 'count' param.
+
+Fixes: 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/media/usb/go7007/snd-go7007.c |   35 ++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+ lib/strncpy_from_user.c |   14 +++++++-------
+ lib/strnlen_user.c      |   14 +++++++-------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
---- a/drivers/media/usb/go7007/snd-go7007.c
-+++ b/drivers/media/usb/go7007/snd-go7007.c
-@@ -243,22 +243,18 @@ int go7007_snd_init(struct go7007 *go)
- 	gosnd->capturing = 0;
- 	ret = snd_card_new(go->dev, index[dev], id[dev], THIS_MODULE, 0,
- 			   &gosnd->card);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_snd;
-+
- 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
- 			&go7007_snd_device_ops);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	ret = snd_pcm_new(gosnd->card, "go7007", 0, 0, 1, &gosnd->pcm);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	strlcpy(gosnd->card->driver, "go7007", sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->shortname, go->name, sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->longname, gosnd->card->shortname,
-@@ -269,11 +265,8 @@ int go7007_snd_init(struct go7007 *go)
- 			&go7007_snd_capture_ops);
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -29,13 +29,6 @@ static inline long do_strncpy_from_user(
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+ 	unsigned long res = 0;
  
- 	ret = snd_card_register(gosnd->card);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
+-	/*
+-	 * Truncate 'max' to the user-specified limit, so that
+-	 * we only have one limit we need to check in the loop
+-	 */
+-	if (max > count)
+-		max = count;
+-
+ 	if (IS_UNALIGNED(src, dst))
+ 		goto byte_at_a_time;
  
- 	gosnd->substream = NULL;
- 	go->snd_context = gosnd;
-@@ -281,6 +274,12 @@ int go7007_snd_init(struct go7007 *go)
- 	++dev;
+@@ -113,6 +106,13 @@ long strncpy_from_user(char *dst, const
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
  
- 	return 0;
++		/*
++		 * Truncate 'max' to the user-specified limit, so that
++		 * we only have one limit we need to check in the loop
++		 */
++		if (max > count)
++			max = count;
 +
-+free_card:
-+	snd_card_free(gosnd->card);
-+free_snd:
-+	kfree(gosnd);
-+	return ret;
- }
- EXPORT_SYMBOL(go7007_snd_init);
+ 		kasan_check_write(dst, count);
+ 		check_object_size(dst, count, false);
+ 		if (user_access_begin(VERIFY_READ, src, max)) {
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -32,13 +32,6 @@ static inline long do_strnlen_user(const
+ 	unsigned long c;
  
+ 	/*
+-	 * Truncate 'max' to the user-specified limit, so that
+-	 * we only have one limit we need to check in the loop
+-	 */
+-	if (max > count)
+-		max = count;
+-
+-	/*
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+@@ -114,6 +107,13 @@ long strnlen_user(const char __user *str
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
+ 
++		/*
++		 * Truncate 'max' to the user-specified limit, so that
++		 * we only have one limit we need to check in the loop
++		 */
++		if (max > count)
++			max = count;
++
+ 		if (user_access_begin(VERIFY_READ, str, max)) {
+ 			retval = do_strnlen_user(str, count, max);
+ 			user_access_end();
 
 
