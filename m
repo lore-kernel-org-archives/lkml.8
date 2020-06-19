@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F00C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B976C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8935020809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62024206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584946;
-	bh=zg1MY30pWLAJyYYeXVGxxC6IoKKFWbAWqtBif7+QwTA=;
+	s=default; t=1592584952;
+	bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KMh+7uLYN6O/j4GeFW4SmP/U9JHwvnC3uWur2OhzMyeMCJKwuO/M1V6YJVE5PbnYC
-	 jcfkVc4sa7o2cWZz5HcIlWNnfPC8hXc/q8Kordtv567Kalr8Z+1T4n86ej3iObUgCj
-	 pCUFj422U6Fww8rHatKiy9rdBs6x3r82vTCsr8S0=
+	b=FK/2zWgp8pxtqgl29c6KtxyzPeNe+byLOKhqUQIwEXmn5qpYNc0hK9SMPchYu+9y2
+	 pXJWItqcO3fdr5gMrh9YaiaTCRKx9zFaenJIHTiUXSK1sZnF1Bq/7HqFqBXAvNg7fz
+	 B1rrgcHUoVo27Ok47B5VS1OA4aV5yXwG1+ws2oaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389077AbgFSQmZ (ORCPT
+        id S2388553AbgFSOoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35744 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387441AbgFSOo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:29 -0400
+        id S2388520AbgFSOn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 986B620A8B;
-        Fri, 19 Jun 2020 14:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E339421582;
+        Fri, 19 Jun 2020 14:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577869;
-        bh=zg1MY30pWLAJyYYeXVGxxC6IoKKFWbAWqtBif7+QwTA=;
+        s=default; t=1592577837;
+        bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSFkCABMwfMmvXqADKJcDM/tSxQSf/8i5ZBBQq0yb9NCvwgR2YJ5r8Hgi/mmvEzav
-         RRX08WaNFL/gt2IxY7A3BINIGXd+rTeesxCYQsjlJQiJcC1V/RghSQJnFCehyiWYpz
-         zrb3P4VY7ADGntWez0XvTnbsT5tQRFzYin3Sgby8=
+        b=wLm9kP9L31WTUDebeUaLYcg+TbL/TIeFkitWqlY9YeA8Ry+UpwVGa7PU1hsfmVSkA
+         9/eZlyqkmx1+yhbo8rl/vtQz763wGWvgqdH6xcrGV2OYWFqPNuZ+6KvOTb9DEbSRVN
+         JkmBcZdz2Vnrg8vJuFDYfTlKEhXNa80XwZqhIZmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        greybus-dev@lists.linaro.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 092/128] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
-Date:   Fri, 19 Jun 2020 16:33:06 +0200
-Message-Id: <20200619141625.005365358@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH 4.9 109/128] media: go7007: fix a miss of snd_card_free
+Date:   Fri, 19 Jun 2020 16:33:23 +0200
+Message-Id: <20200619141625.913854675@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,66 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
+commit 9453264ef58638ce8976121ac44c07a3ef375983 upstream.
 
-Using a fixed 1s timeout for all commands is a bit problematic.
+go7007_snd_init() misses a snd_card_free() in an error path.
+Add the missed call to fix it.
 
-For some commands it means waiting longer than needed for the timeout to
-expire, which may not a big issue, but still. For other commands, like for
-an erase (CMD38) that uses a R1B response, may require longer timeouts than
-1s. In these cases, we may end up treating the command as it failed, while
-it just needed some more time to complete successfully.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+[Salvatore Bonaccorso: Adjust context for backport to versions which do
+not contain c0decac19da3 ("media: use strscpy() instead of strlcpy()")
+and ba78170ef153 ("media: go7007: Fix misuse of strscpy")]
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix the problem by respecting the cmd->busy_timeout, which is provided by
-the mmc core.
-
-Cc: Rui Miguel Silva <rmfrfs@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Alex Elder <elder@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greybus-dev@lists.linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/sdio.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/usb/go7007/snd-go7007.c |   35 ++++++++++++++++------------------
+ 1 file changed, 17 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
-index 5649ef1e379d..82a1c2cf6687 100644
---- a/drivers/staging/greybus/sdio.c
-+++ b/drivers/staging/greybus/sdio.c
-@@ -413,6 +413,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
- 	struct gb_sdio_command_request request = {0};
- 	struct gb_sdio_command_response response;
- 	struct mmc_data *data = host->mrq->data;
-+	unsigned int timeout_ms;
- 	u8 cmd_flags;
- 	u8 cmd_type;
- 	int i;
-@@ -471,9 +472,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
- 		request.data_blksz = cpu_to_le16(data->blksz);
- 	}
- 
--	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
--				&request, sizeof(request), &response,
--				sizeof(response));
-+	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
-+		GB_OPERATION_TIMEOUT_DEFAULT;
+--- a/drivers/media/usb/go7007/snd-go7007.c
++++ b/drivers/media/usb/go7007/snd-go7007.c
+@@ -243,22 +243,18 @@ int go7007_snd_init(struct go7007 *go)
+ 	gosnd->capturing = 0;
+ 	ret = snd_card_new(go->dev, index[dev], id[dev], THIS_MODULE, 0,
+ 			   &gosnd->card);
+-	if (ret < 0) {
+-		kfree(gosnd);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto free_snd;
 +
-+	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
-+					&request, sizeof(request), &response,
-+					sizeof(response), timeout_ms);
- 	if (ret < 0)
- 		goto out;
+ 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
+ 			&go7007_snd_device_ops);
+-	if (ret < 0) {
+-		kfree(gosnd);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto free_card;
++
+ 	ret = snd_pcm_new(gosnd->card, "go7007", 0, 0, 1, &gosnd->pcm);
+-	if (ret < 0) {
+-		snd_card_free(gosnd->card);
+-		kfree(gosnd);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto free_card;
++
+ 	strlcpy(gosnd->card->driver, "go7007", sizeof(gosnd->card->driver));
+ 	strlcpy(gosnd->card->shortname, go->name, sizeof(gosnd->card->driver));
+ 	strlcpy(gosnd->card->longname, gosnd->card->shortname,
+@@ -269,11 +265,8 @@ int go7007_snd_init(struct go7007 *go)
+ 			&go7007_snd_capture_ops);
  
--- 
-2.25.1
-
+ 	ret = snd_card_register(gosnd->card);
+-	if (ret < 0) {
+-		snd_card_free(gosnd->card);
+-		kfree(gosnd);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto free_card;
+ 
+ 	gosnd->substream = NULL;
+ 	go->snd_context = gosnd;
+@@ -281,6 +274,12 @@ int go7007_snd_init(struct go7007 *go)
+ 	++dev;
+ 
+ 	return 0;
++
++free_card:
++	snd_card_free(gosnd->card);
++free_snd:
++	kfree(gosnd);
++	return ret;
+ }
+ EXPORT_SYMBOL(go7007_snd_init);
+ 
 
 
