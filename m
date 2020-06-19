@@ -2,135 +2,105 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D87AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C531208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CF0208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jQ8P3pnI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APfopFZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392240AbgFSRXM (ORCPT
+        id S2392251AbgFSRZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
+        Fri, 19 Jun 2020 13:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731175AbgFSRXL (ORCPT
+        with ESMTP id S1731175AbgFSRZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:23:11 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6345EC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:23:10 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id q8so9618382qkm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:23:10 -0700 (PDT)
+        Fri, 19 Jun 2020 13:25:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D3AC06174E;
+        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u8so4323723pje.4;
+        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=rta7XgSy0ckbOhf+G5R08zHN2raoo0kZf2xw2Sh0l/k=;
-        b=jQ8P3pnIGa3vZkblMbXH41QZ61fe/Sb9vA5uPOR3SMNdZKsu0blkPtrxpS3aWVoNKr
-         DxLMI5S5juOldxRe7+RlT3GajySSEpNFCHak6ENUR11aQ3nJENjJ+AjGwVIg3GcU1gtL
-         AFg4tJnhN/LzdKUCOPE+zScs2pSCySWCm6gLf1r8dvVDgTF8uLAu4b0cSB8SVQcBr9IO
-         hvo365OipT4dztwxdexoBi2dZXF91j/xcy5DKKz/ErbusQM/iZVWPTDKzHQRUnZ5G+PQ
-         1Vw552gg3QCopo/fc6PBC9ArUokmC/IBfhMuddzwZFS3/FrWylp92kucX6mn/XCcEkQF
-         2/SQ==
+        bh=OIGAZSabrhFgy3X+4oVeL5X78+6UeCl/BmE8pXuAxYE=;
+        b=APfopFZRKxDNenAFDX8N8y2gNRPGw63S9Fo/wxCush+BUzDCx1IsYOrIsmlnqJWvJf
+         6PffcoyW55FLPoI1OHOTtVUBhFyOM1a1W560fFXsqOBMKt6tw7TNy4p/icfX3+N0AUcX
+         7r7VMuiH274BHevz78l03bSfVMo+1EboLjY/ijqHAWgoQqF8mjvVgmjDugT9aURnz0A5
+         WD0NvDsoiuhN9U6jK6xcmhRiVwlAvurpkxUADyLJrHaY/IolKPkjVBgmYICQqqHG6Udq
+         Gso4xXl+fyOm7goGcaLhQSXw1NVVbAsOuw+FaL5jc+ABVZ1A18xMC8vJ5u8E/3g/Mj7Q
+         0pBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rta7XgSy0ckbOhf+G5R08zHN2raoo0kZf2xw2Sh0l/k=;
-        b=H8H8IeVdwlRgMdI70ZjYLbuaW0eSIFd4E0Qg5gRfDO20G7XLRNykcWhZ9rzMXU6pVg
-         x5q+ZlMzKx093+jMuDosj3UISCVNT5o6woBKh6Vv7Ova0WCu50hHb9NjT1yN6oYdSyvl
-         vn0uXosJlrIMsXXoMRuqS3fISuVw1ah0UOKEIh3LfY+yuCpTkMUfcebloTQnjClrBlb4
-         Lke0D1BzKBmiZ54RqqrhYadCw37/BU/f6sF0/GEusdxtm6hVL+bP8algqN3lfBR6d7F9
-         /JHHVyBNUG+OmDcyJUm0xiN8D+v+qHfJZgtrkyVrUd2oZVhVD8HAR2sf6YDhxeWtcjoY
-         KHbg==
-X-Gm-Message-State: AOAM531PuA56kVxk+boNqAMR6R539Tho6ltY1+2tGTwt5j1gMbDyrqCG
-        OYdWmUQlZkC6WrL9H71Ohx1l5JG0M2jl5g==
-X-Google-Smtp-Source: ABdhPJzDMW9WT5FfWlenUCjhHpgpjiA2TJ2PiIGS5w9RkI8RANL7HnmArRn+HLKwhDBh+PaKr6DrLw==
-X-Received: by 2002:ae9:ed0d:: with SMTP id c13mr4076677qkg.181.1592587389664;
-        Fri, 19 Jun 2020 10:23:09 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id z77sm7263705qka.59.2020.06.19.10.23.08
+        bh=OIGAZSabrhFgy3X+4oVeL5X78+6UeCl/BmE8pXuAxYE=;
+        b=SKBO9uMifl55JJ9SWconDXRP6A95Voh/D7x3a3Nsj8YN/BEDr5yQ16VyNjYtdomQv+
+         vCU+2fRqDzs3X7FXKojxYZQpC3JCwnYhdQbm/igIBlWzFngWCTpDRoy57WtXs9DKk9NM
+         fyvcZJMMZgqQnBqKXFxTPUP9ReV8kBJRlVSC7TBuZ7Ic2h7lLDniHpMuoOGGZfnzE49h
+         1sAWL37xoHy8k6LyFNZKB6qzxwcJsRyhitzXBTWOx+1oVm28Zu0gsVOhL47eCKb2wQGI
+         DZb9zpDQeqkPZ8nop3U0ELO4JCIlnL2MwJoxHPAQQ+wza/XFVNbVx3sLg8t+EVH3Ib1g
+         cGbA==
+X-Gm-Message-State: AOAM532b7klLByyaqkD3irSVHIHpbUtgPIMFAv6Og5mt+9B1NWZU/L7F
+        RxPljbRBAieoruexbqZDHz8=
+X-Google-Smtp-Source: ABdhPJxM2HsJThgQl1f7W+yXmwyvSlEtgzAVT2RQk+OmiyMzQieee/yq9elAEyvDireL8vfQwQ77uw==
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr9332975pll.18.1592587522468;
+        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id m16sm6319376pfh.187.2020.06.19.10.25.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 10:23:08 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jmKjM-00ArZ4-2Z; Fri, 19 Jun 2020 14:23:08 -0300
-Date:   Fri, 19 Jun 2020 14:23:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200619172308.GQ6578@ziepe.ca>
-References: <20200616120719.GL20149@phenom.ffwll.local>
- <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
- <20200617152835.GF6578@ziepe.ca>
- <20200618150051.GS20149@phenom.ffwll.local>
- <20200618172338.GM6578@ziepe.ca>
- <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+        Fri, 19 Jun 2020 10:25:21 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Sat, 20 Jun 2020 02:25:19 +0900
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v1 0/6] console: unify return codes from ->setup() hook
+Message-ID: <20200619172519.GC310968@jagdpanzerIV.localdomain>
+References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
+ <20200619093917.GK3617@alley>
+ <20200619094726.GD2428291@smile.fi.intel.com>
+ <20200619102132.GB310968@jagdpanzerIV.localdomain>
+ <20200619112638.GL3617@alley>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+In-Reply-To: <20200619112638.GL3617@alley>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+On (20/06/19 13:26), Petr Mladek wrote:
+> On Fri 2020-06-19 19:21:32, Sergey Senozhatsky wrote:
+> > On (20/06/19 12:47), Andy Shevchenko wrote:
+> > > On Fri, Jun 19, 2020 at 11:39:18AM +0200, Petr Mladek wrote:
+> > > > On Thu 2020-06-18 19:47:45, Andy Shevchenko wrote:
+> > [..]
+> > > > I am going to push it the following week via printk tree unless
+> > > > anybody complains.
+> > > 
+> > > Thanks, Petr, I guess you may also incorporate Sergey's patch
+> > > he proposed. Sergey, are you going to submit it officially?
+> > 
+> > I can send a patch, unless Petr has objections.
+> 
+> Go ahead :-)
 
-> The madness is only that device B's mmu notifier might need to wait
-> for fence_B so that the dma operation finishes. Which in turn has to
-> wait for device A to finish first.
+Oops, I just sent it, but I forgot to specify in-reply-to message-id :(
 
-So, it sound, fundamentally you've got this graph of operations across
-an unknown set of drivers and the kernel cannot insert itself in
-dma_fence hand offs to re-validate any of the buffers involved?
-Buffers which by definition cannot be touched by the hardware yet.
-
-That really is a pretty horrible place to end up..
-
-Pinning really is right answer for this kind of work flow. I think
-converting pinning to notifers should not be done unless notifier
-invalidation is relatively bounded. 
-
-I know people like notifiers because they give a bit nicer performance
-in some happy cases, but this cripples all the bad cases..
-
-If pinning doesn't work for some reason maybe we should address that?
-
-> Full disclosure: We are aware that we've designed ourselves into an
-> impressive corner here, and there's lots of talks going on about
-> untangling the dma synchronization from the memory management
-> completely. But
-
-I think the documenting is really important: only GPU should be using
-this stuff and driving notifiers this way. Complete NO for any
-totally-not-a-GPU things in drivers/accel for sure.
-
-Jason
+	-ss
