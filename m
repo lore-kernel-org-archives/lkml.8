@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4337820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2806B20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581786;
-	bh=IAEmTo8r0QTBrTT1aCXKT7SMUHR0JX6FwVOf55EPqtY=;
+	s=default; t=1592581792;
+	bh=+6kXrgQ4NVOvyd8KUFY2r+iOtJb5sRwbTKszCOGlshU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZulvOR4XHQa9eP8HVmULbE8l3ilR/FZ+s5lVPug9+sbZmp3b4IV+WlY4ivGkCb6Q
-	 lbIRRWZI3wvH96MKNzXDFkSu5oHuOzPZLnOz5/b+u/4qObVoE+crkSUIGmGFfm2yEk
-	 sZN4nnAgO6/ca1ic9IJ2E7rcFBlgmRVT7wG/5X6A=
+	b=L0HsQmjCDRWZYhrI5ci/J1bhPo9zhgbZteZ2eipIRNneCOeUHVg48FSyIcfhhJZfe
+	 SkJt7n4sGodI5F1EvXjSq2QPtnG3JlYpQBOuPZ6hly1YzhRteQxlE2lj+aqALOzwNU
+	 r54kVdJIwBJ2XNiwHO5SfTM6NMzmdGDY9zNtpaWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393143AbgFSPto (ORCPT
+        id S2392237AbgFSPtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:49:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404147AbgFSPZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:02 -0400
+        id S2393359AbgFSPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EDC20B80;
-        Fri, 19 Jun 2020 15:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF7A921548;
+        Fri, 19 Jun 2020 15:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580300;
-        bh=IAEmTo8r0QTBrTT1aCXKT7SMUHR0JX6FwVOf55EPqtY=;
+        s=default; t=1592580298;
+        bh=+6kXrgQ4NVOvyd8KUFY2r+iOtJb5sRwbTKszCOGlshU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYlxZx/Ck1sljtuBRfgkwyw/0/VUIIuc5RGDXWwWDnzGHH2kw19tNl57tw8MtmUk0
-         t5Q/j5JSV8S+UessU3S45iAjAalFWl2erRNzBuohsXC1uKlu0H23XZH9qSZL/P5pQB
-         QDBGYhGQohgkIVQdRMykkqflUFGRDzWFk96FjGpo=
+        b=i0u3FSHFE7hcGBsYK/FeygP+WklbmbSSx+tK54w+5A1YDaN9INDX/1WjHSIKAnb18
+         o/NBqr8AYKbBII0/nc9L3fZ7Nsxsftti1DebRDjsx/wnB1Ku/czlv8WeODAU6cWZdN
+         TOnr8bZ4OiEGjyBI+xzensJmVF5a2ZMkM9gDrMRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 197/376] mwifiex: Fix memory corruption in dump_station
-Date:   Fri, 19 Jun 2020 16:31:55 +0200
-Message-Id: <20200619141719.669207725@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 179/376] mt76: mt7615: do not always reset the dfs state setting the channel
+Date:   Fri, 19 Jun 2020 16:31:37 +0200
+Message-Id: <20200619141718.830907647@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,87 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 3aa42bae9c4d1641aeb36f1a8585cd1d506cf471 ]
+[ Upstream commit fdb786cce0ef3615dcbb30d8baf06a1d4cb7a344 ]
 
-The mwifiex_cfg80211_dump_station() uses static variable for iterating
-over a linked list of all associated stations (when the driver is in UAP
-role). This has a race condition if .dump_station is called in parallel
-for multiple interfaces. This corruption can be triggered by registering
-multiple SSIDs and calling, in parallel for multiple interfaces
-    iw dev <iface> station dump
+mac80211/hostapd runs mt7615_set_channel with the same channel
+parameters sending multiple rdd commands overwriting the previous ones.
+This behaviour is causing tpt issues on dfs channels.
+Fix the issue checking new channel freq/width with the running one.
 
-[16750.719775] Unable to handle kernel paging request at virtual address dead000000000110
-...
-[16750.899173] Call trace:
-[16750.901696]  mwifiex_cfg80211_dump_station+0x94/0x100 [mwifiex]
-[16750.907824]  nl80211_dump_station+0xbc/0x278 [cfg80211]
-[16750.913160]  netlink_dump+0xe8/0x320
-[16750.916827]  netlink_recvmsg+0x1b4/0x338
-[16750.920861]  ____sys_recvmsg+0x7c/0x2b0
-[16750.924801]  ___sys_recvmsg+0x70/0x98
-[16750.928564]  __sys_recvmsg+0x58/0xa0
-[16750.932238]  __arm64_sys_recvmsg+0x28/0x30
-[16750.936453]  el0_svc_common.constprop.3+0x90/0x158
-[16750.941378]  do_el0_svc+0x74/0x90
-[16750.944784]  el0_sync_handler+0x12c/0x1a8
-[16750.948903]  el0_sync+0x114/0x140
-[16750.952312] Code: f9400003 f907f423 eb02007f 54fffd60 (b9401060)
-[16750.958583] ---[ end trace c8ad181c2f4b8576 ]---
-
-This patch drops the use of the static iterator, and instead every time
-the function is called iterates to the idx-th position of the
-linked-list.
-
-It would be better to convert the code not to use linked list for
-associated stations storage (since the chip has a limited number of
-associated stations anyway - it could just be an array). Such a change
-may be proposed in the future. In the meantime this patch can backported
-into stable kernels in this simple form.
-
-Fixes: 8baca1a34d4c ("mwifiex: dump station support in uap mode")
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200515075924.13841-1-pali@kernel.org
+Fixes: 5dabdf71e94e ("mt76: mt7615: add multiple wiphy support to the dfs support code")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ .../net/wireless/mediatek/mt76/mt7615/main.c  | 21 ++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 1566d2197906..12bfd653a405 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -1496,7 +1496,8 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
- 			      int idx, u8 *mac, struct station_info *sinfo)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+index 6586176c29af..f92ac9a916fc 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+@@ -218,6 +218,25 @@ static void mt7615_remove_interface(struct ieee80211_hw *hw,
+ 	spin_unlock_bh(&dev->sta_poll_lock);
+ }
+ 
++static void mt7615_init_dfs_state(struct mt7615_phy *phy)
++{
++	struct mt76_phy *mphy = phy->mt76;
++	struct ieee80211_hw *hw = mphy->hw;
++	struct cfg80211_chan_def *chandef = &hw->conf.chandef;
++
++	if (hw->conf.flags & IEEE80211_CONF_OFFCHANNEL)
++		return;
++
++	if (!(chandef->chan->flags & IEEE80211_CHAN_RADAR))
++		return;
++
++	if (mphy->chandef.chan->center_freq == chandef->chan->center_freq &&
++	    mphy->chandef.width == chandef->width)
++		return;
++
++	phy->dfs_state = -1;
++}
++
+ static int mt7615_set_channel(struct mt7615_phy *phy)
  {
- 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
--	static struct mwifiex_sta_node *node;
-+	struct mwifiex_sta_node *node;
-+	int i;
+ 	struct mt7615_dev *dev = phy->dev;
+@@ -229,7 +248,7 @@ static int mt7615_set_channel(struct mt7615_phy *phy)
+ 	mutex_lock(&dev->mt76.mutex);
+ 	set_bit(MT76_RESET, &phy->mt76->state);
  
- 	if ((GET_BSS_ROLE(priv) == MWIFIEX_BSS_ROLE_STA) &&
- 	    priv->media_connected && idx == 0) {
-@@ -1506,13 +1507,10 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
- 		mwifiex_send_cmd(priv, HOST_CMD_APCMD_STA_LIST,
- 				 HostCmd_ACT_GEN_GET, 0, NULL, true);
+-	phy->dfs_state = -1;
++	mt7615_init_dfs_state(phy);
+ 	mt76_set_channel(phy->mt76);
  
--		if (node && (&node->list == &priv->sta_list)) {
--			node = NULL;
--			return -ENOENT;
--		}
--
--		node = list_prepare_entry(node, &priv->sta_list, list);
--		list_for_each_entry_continue(node, &priv->sta_list, list) {
-+		i = 0;
-+		list_for_each_entry(node, &priv->sta_list, list) {
-+			if (i++ != idx)
-+				continue;
- 			ether_addr_copy(mac, node->mac_addr);
- 			return mwifiex_dump_station_info(priv, node, sinfo);
- 		}
+ 	ret = mt7615_mcu_set_chan_info(phy, MCU_EXT_CMD_CHANNEL_SWITCH);
 -- 
 2.25.1
 
