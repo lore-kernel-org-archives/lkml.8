@@ -2,116 +2,102 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1676CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084F8206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2EB206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584981;
+	bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gIfAmkrTVBmDConBiihHOLo0wpwQIGCwXdH9nR0PnP8ADmHTxaN4tWY69WFoWxKsa
+	 MQbWjeqfNGZ/ZqRs5TJKHsX4t9Anij2IZz/GpT2heAjn9JHJZ12/Yakl+86NqNomrF
+	 wSqXu5RvgoOvyr6AmmxKTK6XOEiZWRZVYB2WeoYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395535AbgFSQms (ORCPT
+        id S2388847AbgFSQm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:42:48 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60866 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387672AbgFSQmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:42:45 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id C0CE72A163A
-Received: by earth.universe (Postfix, from userid 1000)
-        id 86D403C08CD; Fri, 19 Jun 2020 18:42:41 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 18:42:41 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Emil Velikov <emil.velikov@collabora.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv2 0/2] SBS battery PEC support
-Message-ID: <20200619164241.yuwiflgopyqocux6@earth.universe>
-References: <CGME20200605230641eucas1p199386d808ad8ce83006092da23e48bb5@eucas1p1.samsung.com>
- <20200605230625.192427-1-sebastian.reichel@collabora.com>
- <be2a9fd5-9646-5e13-209a-6072a00d1b08@samsung.com>
+        Fri, 19 Jun 2020 12:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388125AbgFSOoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7BAA21556;
+        Fri, 19 Jun 2020 14:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577842;
+        bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KZVf+bBlGZZ0/VCpgTy+feixkRUIzZvm/RUPmHboaNME8FoGiG8KMbkCNy4Yl/Vid
+         hXALxtbu5cOt9HXx+OyDKRP8/oT/FT82nN4P9nuR7lFYEqKKuES4M2oC6XfmWfKU95
+         P1aNTQaI9NFxLErWLseKqFWyDvcGjwy5ldCdnLyU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Rui Salvaterra <rsalvaterra@gmail.com>
+Subject: [PATCH 4.9 111/128] b43: Fix connection problem with WPA3
+Date:   Fri, 19 Jun 2020 16:33:25 +0200
+Message-Id: <20200619141626.006783310@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
+References: <20200619141620.148019466@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mq7fdbym2zztfgad"
-Content-Disposition: inline
-In-Reply-To: <be2a9fd5-9646-5e13-209a-6072a00d1b08@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
---mq7fdbym2zztfgad
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 75d057bda1fbca6ade21378aa45db712e5f7d962 upstream.
 
-Hi,
+Since the driver was first introduced into the kernel, it has only
+handled the ciphers associated with WEP, WPA, and WPA2. It fails with
+WPA3 even though mac80211 can handle those additional ciphers in software,
+b43 did not report that it could handle them. By setting MFP_CAPABLE using
+ieee80211_set_hw(), the problem is fixed.
 
-On Mon, Jun 08, 2020 at 08:23:05AM +0200, Marek Szyprowski wrote:
-> Hi Sebastian,
->=20
-> On 06.06.2020 01:06, Sebastian Reichel wrote:
-> > Second try to enable PEC for SBS battery. Mainline currently
-> > has 3 different platforms using sbs-battery with an I2C driver
-> > not implementing I2C_M_RECV_LEN:
-> >
-> >   * i2c-exynos5
-> >   * i2c-rk3x
-> >   * i2c-tegra
-> >
-> > On those platforms PEC will be temporarly disabled for SBS
-> > functions requesting strings. I considered moving the emulation
-> > to I2C core, but it's specific to the SBS battery. The hack
-> > only works because the strings are constant.
->=20
-> Thanks for the update. Works fine on Samsung Exynos-based Chromebooks:=20
-> Snow, Peach-Pit and Peach-Pi.
->=20
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+With this change, b43 will handle the ciphers it knows in hardware,
+and let mac80211 handle the others in software. It is not necessary to
+use the module parameter NOHWCRYPT to turn hardware encryption off.
+Although this change essentially eliminates that module parameter,
+I am choosing to keep it for cases where the hardware is broken,
+and software encryption is required for all ciphers.
 
-Thanks, queued.
+Reported-and-tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200526155909.5807-2-Larry.Finger@lwfinger.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- Sebastian
+---
+ drivers/net/wireless/broadcom/b43/main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Changes since PATCHv1:
-> >   * dropped all applied changes
-> >   * rebased on top of power-supply's for-next branch
-> >   * keep existing string reading method as fallback
-> >
-> > -- Sebastian
-> >
-> > Sebastian Reichel (2):
-> >    power: supply: sbs-battery: use i2c_smbus_read_block_data()
-> >    power: supply: sbs-battery: add PEC support"
-> >
-> >   drivers/power/supply/sbs-battery.c | 89 +++++++++++++++++++++++++++++-
-> >   1 file changed, 87 insertions(+), 2 deletions(-)
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -5596,7 +5596,7 @@ static struct b43_wl *b43_wireless_init(
+ 	/* fill hw info */
+ 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
+ 	ieee80211_hw_set(hw, SIGNAL_DBM);
+-
++	ieee80211_hw_set(hw, MFP_CAPABLE);
+ 	hw->wiphy->interface_modes =
+ 		BIT(NL80211_IFTYPE_AP) |
+ 		BIT(NL80211_IFTYPE_MESH_POINT) |
 
---mq7fdbym2zztfgad
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s6vQACgkQ2O7X88g7
-+pps2BAAjWxgPSAyRL5qwOniGJbTCLlaIKJBJMivyNAxhw8TNK6tl8qDXa9KFDlW
-TJ+U62PfqoPid1zXwnqao3HXm6ppaE3G0aiy1SqtTsHDcLFvlQiwRB7XgHAXYyol
-5iYLbCrSv097WgeoqOMPAWiV0yXVDG7euZvxfONVpP6MfxoUy4Ddih70oxwYqt8m
-J1IKIVWTm6MgPMYjvqknEMgN317232Er+X27xSlzDwDgZFiiQVv8YzZCok3X97Wf
-ZfmgLZIgIVDc0CK+jMqnonw8bfuJO3K9vPA3FWnvIEEjoqIvt+9okTD5N1Uh4cVC
-PG1orCBUHqbytdkWa+eFI6YOZXvDGutu9L7yC1LYJ/nZlGzMZHLPZVh5bNwR7/Oz
-78sqpIdrFgOM5SExbMSmg1qUq2vdgDs+k5m5ED1NyQAQLx5ci0Mqhbx4CHTCB/C9
-AMdveLwaEFiA9Q16jpJ/SD9Hz5XxGOMtB8fE0FVS9cSPGr3cFSDyx/siavGAg2+b
-P6vph31EjXAGd9sgQVYkopCcgayAB82onY7+LljZN9+6vwP7mdeFiYF0UaXgrQXy
-S0uHPXToc0Dd2q5UWM1rUbuNJmwEByWwLE8Ae5hdufg3UU/y61WEHYTPL4q7TL85
-boemBk+UZuGk3dJVull1n80ADdPdzl0nC4aDzlROvj5YVO2Rp4k=
-=AGyu
------END PGP SIGNATURE-----
-
---mq7fdbym2zztfgad--
