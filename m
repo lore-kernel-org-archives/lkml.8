@@ -2,54 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5153CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2005520786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94204206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581177;
-	bh=8FPgag9J9+4OfyBfUdpPAoFnxdEGZSeY+hr69ytXUSM=;
+	s=default; t=1592581181;
+	bh=xwksin7kz1AKu1fmQXMrhEaDDAygzDT86oLp9iMnLtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xqfAUQxQHqWgyjV1c66ubFOsrlEdFyciAdTXwiaBNnIHDSGDhyujjHfVbzjxQ3OOf
-	 XYQYVo3QS3wb4s3QIYggxpaG5QllJZLOvZtdHQfuIByfSvBULKM3/xl281caA/xmvF
-	 AJMesnjcbqXBHeYpjE7gQsdTQW0kZHzhOOeVtLac=
+	b=RNKgvZ99LF7RdxEpylWbjXeJttP+9nwtRsi3giwXUeSv8DtBqwkSbOuRVGAWsLLDA
+	 fbVSvS5yV/OQ/+StwTR892YJRmPYdFuqkk+O50EgsJH5o/oaQozvWI9P+iZKq+sCpk
+	 XCQWXrp4ACB2FaQQYlP3meJYa9skGfz2L5XDDsPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405174AbgFSPjZ (ORCPT
+        id S2393335AbgFSPjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391210AbgFSP3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:14 -0400
+        id S2393674AbgFSP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D7C21D6C;
-        Fri, 19 Jun 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D8521941;
+        Fri, 19 Jun 2020 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580552;
-        bh=8FPgag9J9+4OfyBfUdpPAoFnxdEGZSeY+hr69ytXUSM=;
+        s=default; t=1592580544;
+        bh=xwksin7kz1AKu1fmQXMrhEaDDAygzDT86oLp9iMnLtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fk6uMWs8iyvSWaksI7mBe6ZYy7DlogSadmdjyaHTNNtagskiDwV4H+YkvqPQ5TmdH
-         lJiQEXqTc06IcIxVnDPtmZoMjimRVxmT6MhYlIEnf0g6AZD4fdOaHtUU6UcY38UP0j
-         zwi56bsL2aLjq8LsUZOSoxEsON6uC3nUeEh4+f0I=
+        b=TrwAiAqf4IpIH/LVcvO3KLJO4HNpnNr6pmgz6WcxNLt3Nk8jt4AameNz4MZYeM7oO
+         FKV6geR/UI7coEQdpIshbRxLYlNIexWikp47PCClynfNAmYJBRDm6GgpwXgo5kmVro
+         5zXWAiPv9PCwt1qg4GnRG7TOT1mFC7rEKjm2Joyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.7 294/376] e1000e: Relax condition to trigger reset for ME workaround
-Date:   Fri, 19 Jun 2020 16:33:32 +0200
-Message-Id: <20200619141724.258128166@linuxfoundation.org>
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 291/376] ima: Set again build_ima_appraise variable
+Date:   Fri, 19 Jun 2020 16:33:29 +0200
+Message-Id: <20200619141724.115890770@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,89 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
+[ Upstream commit b59fda449cf07f2db3be3a67142e6c000f5e8d79 ]
 
-It's an error if the value of the RX/TX tail descriptor does not match
-what was written. The error condition is true regardless the duration
-of the interference from ME. But the driver only performs the reset if
-E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
-transpired. The extra condition can lead to inconsistency between the
-state of hardware as expected by the driver.
+After adding the new add_rule() function in commit c52657d93b05
+("ima: refactor ima_init_policy()"), all appraisal flags are added to the
+temp_ima_appraise variable. Revert to the previous behavior instead of
+removing build_ima_appraise, to benefit from the protection offered by
+__ro_after_init.
 
-Fix this by dropping the check for number of delay iterations.
+The mentioned commit introduced a bug, as it makes all the flags
+modifiable, while build_ima_appraise flags can be protected with
+__ro_after_init.
 
-While at it, also make __ew32_prepare() static as it's not used
-anywhere else.
-
-CC: stable <stable@vger.kernel.org>
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org # 5.0.x
+Fixes: c52657d93b05 ("ima: refactor ima_init_policy()")
+Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
- drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ security/integrity/ima/ima_policy.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -576,7 +576,6 @@ static inline u32 __er32(struct e1000_hw
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 7414443c19bf..e493063a3c34 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -643,8 +643,14 @@ static void add_rules(struct ima_rule_entry *entries, int count,
  
- #define er32(reg)	__er32(hw, E1000_##reg)
- 
--s32 __ew32_prepare(struct e1000_hw *hw);
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
- 
- #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -119,14 +119,12 @@ static const struct e1000_reg_info e1000
-  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
-  * and try again a number of times.
-  **/
--s32 __ew32_prepare(struct e1000_hw *hw)
-+static void __ew32_prepare(struct e1000_hw *hw)
- {
- 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
- 
- 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
- 		udelay(50);
--
--	return i;
+ 			list_add_tail(&entry->list, &ima_policy_rules);
+ 		}
+-		if (entries[i].action == APPRAISE)
+-			temp_ima_appraise |= ima_appraise_flag(entries[i].func);
++		if (entries[i].action == APPRAISE) {
++			if (entries != build_appraise_rules)
++				temp_ima_appraise |=
++					ima_appraise_flag(entries[i].func);
++			else
++				build_ima_appraise |=
++					ima_appraise_flag(entries[i].func);
++		}
+ 	}
  }
  
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
-@@ -607,11 +605,11 @@ static void e1000e_update_rdt_wa(struct
- {
- 	struct e1000_adapter *adapter = rx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, rx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
-+	if (unlikely(i != readl(rx_ring->tail))) {
- 		u32 rctl = er32(RCTL);
- 
- 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
-@@ -624,11 +622,11 @@ static void e1000e_update_tdt_wa(struct
- {
- 	struct e1000_adapter *adapter = tx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, tx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
-+	if (unlikely(i != readl(tx_ring->tail))) {
- 		u32 tctl = er32(TCTL);
- 
- 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
+-- 
+2.25.1
+
 
 
