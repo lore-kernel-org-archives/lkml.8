@@ -2,156 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5259C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3243A2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hDYBK+hJ"
+	by mail.kernel.org (Postfix) with ESMTP id 98A8E2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584792;
+	bh=0OKIr2uFeL+aPj9HYYJ5A7Jy8u310+7d7c2yOooviI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EThgblLxo9GuWcHqd2o7NWu00dccVFI20FNqZ3NHxIRLJLFL9p1bsZcFHqaeJlFFl
+	 67P6N9aMoR+23ffz8VEYvfWyJCKYiftU+rtrsfww1BmG3MzHNs3g46a2GE0fj0CUtZ
+	 Ivin27ZZKjGfKoLOMN08YkwAcd17MBZptmNmVlAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395414AbgFSQjt (ORCPT
+        id S2395290AbgFSQjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388044AbgFSOqN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:13 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9087C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:13 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x207so4524351pfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=A0SEVOpcHsuNLyVpfZPRTNP6bN8WLwpJrFGg1Si+7zc=;
-        b=hDYBK+hJsTswP+AygfR6OvIsJOwgnE+LcdcWgjBF9CzDe3hFVVAtCDCkErHcOiADYL
-         AHu0OWSQR8kChAvNiBY0zFmcKPIDpNw4bn8z4xV9Fja3qdadw3vXaDE4k+fFTfPuwIDL
-         dc9/jnOjBWaO1NYjOVvnGoiFtsBBYd5PDo4iHwPOiq5+w2LaFwN9J9JY2m4EbAY27dxa
-         DpJq0oSQ9WmOuoRbUYUEg13RJQpt0EspYcWir8FdwXaa9gcMZqa953V81eaYSt8QBijH
-         48ezNOcuapVYBaz5Bm/dAlEFskuIL51gNsqEcurnIag8R+ICKObpVkV/atNqiGY/+BP8
-         DxGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=A0SEVOpcHsuNLyVpfZPRTNP6bN8WLwpJrFGg1Si+7zc=;
-        b=bB2qdUskQQ6sjlEOeG83NJu4+wJVI5omU7XqmYR8d0uupAyK9uo7z14BRFcBWR3Fsj
-         Qa3VrRJODhhSa3AUIYFsHBxnSWPgl/KuxgZevbP5+9R29GSmpQGy1eWQExYMV4P9ibVD
-         zxquIgmTnIzRrmstgeb3DUKlSTxMIukTcZycapFQs9GqtOI4LAltj8LkZTYePbtFWHuN
-         chWDXODQpxs37RdapxuOi7a1oLB/XLI7JDl7HoGsq/TzpqIa+/1tRd9iQSdlecj0ODei
-         fmZuFgV5UTO8hYmQDBF6MDzI72JsWlRRCKpp1CGBybfJYGe/GUoJOGcSkSsE1Q8dkcB0
-         R9tQ==
-X-Gm-Message-State: AOAM5331+//SQlvudUiJqokpVFKAb3UCQzDSp3MtFua3OBYxSD9fpu7y
-        v5ghg7nUqFUohJpiWE/4V/qw
-X-Google-Smtp-Source: ABdhPJzVlezxuG+CQ9cITtvILzSkjISRO1w39LFc9MyW0u6lJuN2Z7NwBMQ3JY/UrrlMKImkm/3V2w==
-X-Received: by 2002:a62:1c5:: with SMTP id 188mr8395366pfb.213.1592577973213;
-        Fri, 19 Jun 2020 07:46:13 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6e9c:5ed9:4574:ef47:f924:dba6? ([2409:4072:6e9c:5ed9:4574:ef47:f924:dba6])
-        by smtp.gmail.com with ESMTPSA id w17sm6742233pff.27.2020.06.19.07.46.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 07:46:12 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 20:16:03 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200616184805.k7eowfhdevasqite@e107158-lin.cambridge.arm.com>
-References: <20200213091427.13435-1-manivannan.sadhasivam@linaro.org> <20200213091427.13435-2-manivannan.sadhasivam@linaro.org> <20200616184805.k7eowfhdevasqite@e107158-lin.cambridge.arm.com>
+        Fri, 19 Jun 2020 12:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388820AbgFSOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A15C20A8B;
+        Fri, 19 Jun 2020 14:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577975;
+        bh=0OKIr2uFeL+aPj9HYYJ5A7Jy8u310+7d7c2yOooviI0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nhFkWvMuRfolml6aARdQWCDXVJIhHio+BAsbv1YVRj9QpLkj4jQW7kQdOrD6VOzvN
+         48hHZXK+zenthOPORC/iTiwBBBQf8DvVLKkVvwUjKc7N2l2ZS2mPR0D3VcQ8gPDK1/
+         Cokx4P2r6J8cupaXe2jHnwwCJ+w6Ew2OC5qCpe0I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 027/190] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
+Date:   Fri, 19 Jun 2020 16:31:12 +0200
+Message-Id: <20200619141634.882070177@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] net: qrtr: Migrate nameservice to kernel from userspace
-To:     Qais Yousef <qais.yousef@arm.com>
-CC:     davem@davemloft.net, kuba@kernel.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <9184F012-1FDC-4F6B-8B3E-5D2B87F5DACA@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,=20
+From: Qiushi Wu <wu000273@umn.edu>
 
-On 17 June 2020 12:18:06 AM IST, Qais Yousef <qais=2Eyousef@arm=2Ecom> wro=
-te:
->Hi Manivannan, David
->
->On 02/13/20 14:44, Manivannan Sadhasivam wrote:
->
->[=2E=2E=2E]
->
->> +	trace_printk("advertising new server [%d:%x]@[%d:%d]\n",
->> +		     srv->service, srv->instance, srv->node, srv->port);
->
->I can't tell exactly from the discussion whether this is the version
->that got
->merged into 5=2E7 or not, but it does match the commit message=2E
->
+commit 4d8be4bc94f74bb7d096e1c2e44457b530d5a170 upstream.
 
-This got merged and there was a follow up patch to replace trace_printk() =
-with tracepoints got merged as well=2E=20
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-Thanks,=20
-Mani
+Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
->This patch introduces several trace_printk() which AFAIK is intended
->for
->debugging only and shouldn't make it into mainline kernels=2E
->
->It causes this big message to be printed to the log too
->
->[    0=2E000000]
->**********************************************************
->[    0=2E000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE =
-=20
->**
->[    0=2E000000] **                                                    =
-=20
->**
->[    0=2E000000] ** trace_printk() being used=2E Allocating extra memory=
-=2E=20
->**
->[    0=2E000000] **                                                    =
-=20
->**
->[    0=2E000000] ** This means that this is a DEBUG kernel and it is   =
-=20
->**
->[    0=2E000000] ** unsafe for production use=2E                         =
-=20
->**
->[    0=2E000000] **                                                    =
-=20
->**
->[    0=2E000000] ** If you see this message and you are not debugging  =
-=20
->**
->[    0=2E000000] ** the kernel, report this immediately to your vendor!=
-=20
->**
->[    0=2E000000] **                                                    =
-=20
->**
->[    0=2E000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE =
-=20
->**
->[    0=2E000000]
->**********************************************************
->
->Shouldn't this be replaced with one of pr_*() variants instead?
->
->Thanks
->
->--
->Qais Yousef
+---
+ drivers/acpi/cppc_acpi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -800,6 +800,7 @@ int acpi_cppc_processor_probe(struct acp
+ 			"acpi_cppc");
+ 	if (ret) {
+ 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
++		kobject_put(&cpc_ptr->kobj);
+ 		goto out_free;
+ 	}
+ 
+
+
