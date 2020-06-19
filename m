@@ -2,56 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515222158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193C21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580177;
-	bh=P9JcKZNM/8l/scsQa6x9Ys0iK7XhzU3x66U2UwdZeQk=;
+	s=default; t=1592580182;
+	bh=tJeVrSk1Su6rLW8kR1sodkhPQpUas+QA2YDQF5pVEBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPWDpf2u12MkKJOmUnY/LAycdgIEcR7xWF2DOpz/LsqmQipnQ2oQMGZOmJquaM3+t
-	 a2Xu0N9drJIh3pBMkevVrgeALQbElus2zlF5yKwmOZdjobAPkVemAQpAtxTSJ7xC49
-	 /UzDYySuRyOtJsIBTVqyFCP9fqWo/WXL1GOix4ns=
+	b=Tpk3SZzzst3vNZxYvy8j+wOqgvFQFufP0buxrkN3I9VBUtCJhGLD89+IvnpeSClqB
+	 dKaFcjUw3+gMdJHw+iLpYw899OzESsUJv1xXR75KhsNyj8ey7q6Wb+6wVgJfYPGcJF
+	 YuvhHU6LAZWRsDPKSUkVgLVwFvZ1sOMPcyh3+Ja4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393094AbgFSPWz (ORCPT
+        id S2393104AbgFSPXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:23:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403903AbgFSPTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:00 -0400
+        id S2391970AbgFSPPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87472184D;
-        Fri, 19 Jun 2020 15:18:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B485A21582;
+        Fri, 19 Jun 2020 15:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579939;
-        bh=P9JcKZNM/8l/scsQa6x9Ys0iK7XhzU3x66U2UwdZeQk=;
+        s=default; t=1592579706;
+        bh=tJeVrSk1Su6rLW8kR1sodkhPQpUas+QA2YDQF5pVEBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPgWiUoB3A84rz2VvIf831tWXtZKyXyqbSF8lZFdSji5OMBZdDioic+2a6Ly7B6tx
-         nByrM41F8pKMYGoad1CHWleJhKQoJyv3Du5CzCtzSHaVDNUpd2KQIO15CqtCrMb8JC
-         m3QUtdsUpGoi/xzc198Z5KAa0LpY8JuuC661AtT4=
+        b=QItGKk+WND4cn4K25R6+uLAvqSKFX/mneAmf5oOoG8RisdYS7zz1dHt3rPqcPScdZ
+         UnVgSn1Oj9/2Foa6iWi28YdbuCw4ZWjkgvu21WnS+YHdFKT4TVtV+lHUn0JsCLCsdH
+         mTfq9ZCyRMhRTHHlIz9iFwqa23s3wsPHosPyDQ+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 062/376] btrfs: account for trans_block_rsv in may_commit_transaction
-Date:   Fri, 19 Jun 2020 16:29:40 +0200
-Message-Id: <20200619141713.292497147@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 236/261] powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
+Date:   Fri, 19 Jun 2020 16:34:07 +0200
+Message-Id: <20200619141701.180352123@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,55 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit bb4f58a747f0421b10645fbf75a6acc88da0de50 ]
+commit 912c0a7f2b5daa3cbb2bc10f303981e493de73bd upstream.
 
-On ppc64le with 64k page size (respectively 64k block size) generic/320
-was failing and debug output showed we were getting a premature ENOSPC
-with a bunch of space in btrfs_fs_info::trans_block_rsv.
+At boot the FSCR is initialised via one of two paths. On most systems
+it's set to a hard coded value in __init_FSCR().
 
-This meant there were still open transaction handles holding space, yet
-the flusher didn't commit the transaction because it deemed the freed
-space won't be enough to satisfy the current reserve ticket. Fix this
-by accounting for space in trans_block_rsv when deciding whether the
-current transaction should be committed or not.
+On newer skiboot systems we use the device tree CPU features binding,
+where firmware can tell Linux what bits to set in FSCR (and HFSCR).
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Tested-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In both cases the value that's configured at boot is not propagated
+into the init_task.thread.fscr value prior to the initial fork of init
+(pid 1), which means the value is not used by any processes other than
+swapper (the idle task).
+
+For the __init_FSCR() case this is OK, because the value in
+init_task.thread.fscr is initialised to something sensible. However it
+does mean that the value set in __init_FSCR() is not used other than
+for swapper, which is odd and confusing.
+
+The bigger problem is for the device tree CPU features case it
+prevents firmware from setting (or clearing) FSCR bits for use by user
+space. This means all existing kernels can not have features
+enabled/disabled by firmware if those features require
+setting/clearing FSCR bits.
+
+We can handle both cases by saving the FSCR value into
+init_task.thread.fscr after we have initialised it at boot. This fixes
+the bug for device tree CPU features, and will allow us to simplify
+the initialisation for the __init_FSCR() case in a future patch.
+
+Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200527145843.2761782-3-mpe@ellerman.id.au
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/space-info.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/kernel/prom.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
-index ff17a4420358..3c0e9999bfd7 100644
---- a/fs/btrfs/space-info.c
-+++ b/fs/btrfs/space-info.c
-@@ -626,6 +626,7 @@ static int may_commit_transaction(struct btrfs_fs_info *fs_info,
- 	struct reserve_ticket *ticket = NULL;
- 	struct btrfs_block_rsv *delayed_rsv = &fs_info->delayed_block_rsv;
- 	struct btrfs_block_rsv *delayed_refs_rsv = &fs_info->delayed_refs_rsv;
-+	struct btrfs_block_rsv *trans_rsv = &fs_info->trans_block_rsv;
- 	struct btrfs_trans_handle *trans;
- 	u64 bytes_needed;
- 	u64 reclaim_bytes = 0;
-@@ -688,6 +689,11 @@ static int may_commit_transaction(struct btrfs_fs_info *fs_info,
- 	spin_lock(&delayed_refs_rsv->lock);
- 	reclaim_bytes += delayed_refs_rsv->reserved;
- 	spin_unlock(&delayed_refs_rsv->lock);
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -685,6 +685,23 @@ static void __init tm_init(void)
+ static void tm_init(void) { }
+ #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+ 
++#ifdef CONFIG_PPC64
++static void __init save_fscr_to_task(void)
++{
++	/*
++	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
++	 * have configured via the device tree features or via __init_FSCR().
++	 * That value will then be propagated to pid 1 (init) and all future
++	 * processes.
++	 */
++	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
++		init_task.thread.fscr = mfspr(SPRN_FSCR);
++}
++#else
++static inline void save_fscr_to_task(void) {};
++#endif
 +
-+	spin_lock(&trans_rsv->lock);
-+	reclaim_bytes += trans_rsv->reserved;
-+	spin_unlock(&trans_rsv->lock);
 +
- 	if (reclaim_bytes >= bytes_needed)
- 		goto commit;
- 	bytes_needed -= reclaim_bytes;
--- 
-2.25.1
-
+ void __init early_init_devtree(void *params)
+ {
+ 	phys_addr_t limit;
+@@ -773,6 +790,8 @@ void __init early_init_devtree(void *par
+ 		BUG();
+ 	}
+ 
++	save_fscr_to_task();
++
+ #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
+ 	/* We'll later wait for secondaries to check in; there are
+ 	 * NCPUS-1 non-boot CPUs  :-)
 
 
