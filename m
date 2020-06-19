@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8435F2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C378217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583350;
-	bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
+	s=default; t=1592583355;
+	bh=UXODAnyXH2Tc+R2Su4d7FG46pp0SS5cd9xx6upBrECw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tK+K3vFcnb5t7Vh69sCo7paiNGP69TAWAVfOP8snNLrTxqqinJL49/KrXw1rJUJSH
-	 dfXmj+5KIgQyc99pXnkuTCO6Ca5Xu4FKQqa9Pnp4pV/VE+u+/5jsl2MKZqG4k6EEvj
-	 G/T6e8xjf6ZDNdOobhOnw1EvE2bx2ZcxCRuYcG60=
+	b=JTPqe4e3CXKulmLY4lJ79UhAM0lzZHZDrgmv6PuuCLAorXixxrsg2d1kQnrSnt5op
+	 Gg++Xzq2Z4BS7asPLeBxn527nDfJwQcg0tNGz9tVu2UeyRBYz5CforCF+N8SaPzkng
+	 ml+Zrd9m0EeZPfZdzEqCce3ag5D5oI4ZQqZfLpLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391166AbgFSQPs (ORCPT
+        id S2394483AbgFSQPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389254AbgFSPD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:29 -0400
+        id S2391002AbgFSPD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C6B2206DB;
-        Fri, 19 Jun 2020 15:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E4021841;
+        Fri, 19 Jun 2020 15:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579009;
-        bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
+        s=default; t=1592579007;
+        bh=UXODAnyXH2Tc+R2Su4d7FG46pp0SS5cd9xx6upBrECw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1x0h04PACZJe82gth7XV45WmgIHiKn2v33Oc8x6QVyvuffWC7mp7rT78ow5+3Gth
-         b/9ecOZrcX2jAE+09889RMOM98OKPEteVY99/BSEfIVj7qRexvS6X69cONbKEufEOB
-         ZNiRyNxftswWGHH4ppkxgMcZ5KIc4mnXdyNKkjik=
+        b=hl3z1WCdzEtyNxVWYYApOJ7ipS6W8bZwaJU302jzGyCxKKHzrYJkCnwOYRfrNIZjh
+         uBQ9tSm1sc8HuAZt9r4/KF1orvRng6TfSsH7I923dchuCwIj9ZOscSCKieV8awAEEz
+         Oc+QeD5zK3ysIgNfzeMBAQncprabguCL7aedeH80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.19 241/267] igb: Report speed and duplex as unknown when device is runtime suspended
-Date:   Fri, 19 Jun 2020 16:33:46 +0200
-Message-Id: <20200619141700.258235248@linuxfoundation.org>
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.19 240/267] media: ov5640: fix use of destroyed mutex
+Date:   Fri, 19 Jun 2020 16:33:45 +0200
+Message-Id: <20200619141700.208218465@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,52 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
+commit bfcba38d95a0aed146a958a84a2177af1459eddc upstream.
 
-igb device gets runtime suspended when there's no link partner. We can't
-get correct speed under that state:
-$ cat /sys/class/net/enp3s0/speed
-1000
+v4l2_ctrl_handler_free() uses hdl->lock, which in ov5640 driver is set
+to sensor's own sensor->lock. In ov5640_remove(), the driver destroys the
+sensor->lock first, and then calls v4l2_ctrl_handler_free(), resulting
+in the use of the destroyed mutex.
 
-In addition to that, an error can also be spotted in dmesg:
-[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+Fix this by calling moving the mutex_destroy() to the end of the cleanup
+sequence, as there's no need to destroy the mutex as early as possible.
 
-Since device can only be runtime suspended when there's no link partner,
-we can skip reading register and let the following logic set speed and
-duplex with correct status.
-
-The more generic approach will be wrap get_link_ksettings() with begin()
-and complete() callbacks. However, for this particular issue, begin()
-calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
-is already hold by upper ethtool layer.
-
-So let's take this approach until the igb_runtime_resume() no longer
-needs to hold rtnl_lock.
-
-CC: stable <stable@vger.kernel.org>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: stable@vger.kernel.org # v4.14+
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -143,7 +143,8 @@ static int igb_get_link_ksettings(struct
- 	u32 speed;
- 	u32 supported, advertising;
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -2829,8 +2829,8 @@ static int ov5640_probe(struct i2c_clien
+ free_ctrls:
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+ entity_cleanup:
+-	mutex_destroy(&sensor->lock);
+ 	media_entity_cleanup(&sensor->sd.entity);
++	mutex_destroy(&sensor->lock);
+ 	return ret;
+ }
  
--	status = rd32(E1000_STATUS);
-+	status = pm_runtime_suspended(&adapter->pdev->dev) ?
-+		 0 : rd32(E1000_STATUS);
- 	if (hw->phy.media_type == e1000_media_type_copper) {
+@@ -2840,9 +2840,9 @@ static int ov5640_remove(struct i2c_clie
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
  
- 		supported = (SUPPORTED_10baseT_Half |
+ 	v4l2_async_unregister_subdev(&sensor->sd);
+-	mutex_destroy(&sensor->lock);
+ 	media_entity_cleanup(&sensor->sd.entity);
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
++	mutex_destroy(&sensor->lock);
+ 
+ 	return 0;
+ }
 
 
