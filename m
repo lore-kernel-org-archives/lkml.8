@@ -2,285 +2,79 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6751A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A650207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VMtoT5tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgFSIGE (ORCPT
+        id S1731195AbgFSIG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:06:04 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:38536 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgFSIF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:05:58 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B62A9200FB1;
-        Fri, 19 Jun 2020 10:05:50 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E779200FA6;
-        Fri, 19 Jun 2020 10:05:46 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E2F67402B1;
-        Fri, 19 Jun 2020 16:05:40 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: fsl_spdif: Add pm runtime function
-Date:   Fri, 19 Jun 2020 15:54:33 +0800
-Message-Id: <579c0d71e976f34f23f40daa9f1aa06c4baca2f1.1592552389.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 19 Jun 2020 04:06:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56863 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731182AbgFSIGK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:06:10 -0400
+X-UUID: 0ab067a9cefc4a51ace661c1274da56a-20200619
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=W1LOndusl+hI8qr6PnjPnMVG0Xt0LgOh2kjlUuxSIlM=;
+        b=VMtoT5tr4JljExfIqY2eJH5+25Btl9MG9FUYvhtEhuBgPZ8oKVoN8pR1qzbQRvwK9MxB4I1pkv6433pUgRsVpZdqWcKLSvgRWWVPuUiyM5EC9hmVEyy1oVTGcuAoMwZ8PbUYu6rV7CeNi1QI8oTSD/7a61AZLo7m0kdVysoZBDA=;
+X-UUID: 0ab067a9cefc4a51ace661c1274da56a-20200619
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 477579277; Fri, 19 Jun 2020 16:06:06 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 19 Jun 2020 16:05:08 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 19 Jun 2020 16:05:09 +0800
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
+CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, EastL <EastL.Lee@mediatek.com>
+Subject: [PATCH v5 4/4] dmaengine: mediatek-cqdma: fix compatible
+Date:   Fri, 19 Jun 2020 16:05:02 +0800
+Message-ID: <1592553902-30592-5-git-send-email-EastL.Lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
+References: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 58ED8B8D4A56CF4C1ECAA6613447FE08CC9F96345E443B1B0F182794823BBC192000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pm runtime support and move clock handling there.
-Close the clocks at suspend to reduce the power consumption.
-
-fsl_spdif_suspend is replaced by pm_runtime_force_suspend.
-fsl_spdif_resume is replaced by pm_runtime_force_resume.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-changes in v2
-- remove goto in startup()
-- remove goto disable_spba_clk
-- Add Acked-by: Nicolin Chen
-
- sound/soc/fsl/fsl_spdif.c | 117 ++++++++++++++++++++++----------------
- 1 file changed, 67 insertions(+), 50 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 5bc0e4729341..5b2689ae63d4 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -16,6 +16,7 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/regmap.h>
-+#include <linux/pm_runtime.h>
- 
- #include <sound/asoundef.h>
- #include <sound/dmaengine_pcm.h>
-@@ -495,29 +496,14 @@ static int fsl_spdif_startup(struct snd_pcm_substream *substream,
- 	struct platform_device *pdev = spdif_priv->pdev;
- 	struct regmap *regmap = spdif_priv->regmap;
- 	u32 scr, mask;
--	int i;
- 	int ret;
- 
- 	/* Reset module and interrupts only for first initialization */
- 	if (!snd_soc_dai_active(cpu_dai)) {
--		ret = clk_prepare_enable(spdif_priv->coreclk);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to enable core clock\n");
--			return ret;
--		}
--
--		if (!IS_ERR(spdif_priv->spbaclk)) {
--			ret = clk_prepare_enable(spdif_priv->spbaclk);
--			if (ret) {
--				dev_err(&pdev->dev, "failed to enable spba clock\n");
--				goto err_spbaclk;
--			}
--		}
--
- 		ret = spdif_softreset(spdif_priv);
- 		if (ret) {
- 			dev_err(&pdev->dev, "failed to soft reset\n");
--			goto err;
-+			return ret;
- 		}
- 
- 		/* Disable all the interrupts */
-@@ -531,18 +517,10 @@ static int fsl_spdif_startup(struct snd_pcm_substream *substream,
- 		mask = SCR_TXFIFO_AUTOSYNC_MASK | SCR_TXFIFO_CTRL_MASK |
- 			SCR_TXSEL_MASK | SCR_USRC_SEL_MASK |
- 			SCR_TXFIFO_FSEL_MASK;
--		for (i = 0; i < SPDIF_TXRATE_MAX; i++) {
--			ret = clk_prepare_enable(spdif_priv->txclk[i]);
--			if (ret)
--				goto disable_txclk;
--		}
- 	} else {
- 		scr = SCR_RXFIFO_FSEL_IF8 | SCR_RXFIFO_AUTOSYNC;
- 		mask = SCR_RXFIFO_FSEL_MASK | SCR_RXFIFO_AUTOSYNC_MASK|
- 			SCR_RXFIFO_CTL_MASK | SCR_RXFIFO_OFF_MASK;
--		ret = clk_prepare_enable(spdif_priv->rxclk);
--		if (ret)
--			goto err;
- 	}
- 	regmap_update_bits(regmap, REG_SPDIF_SCR, mask, scr);
- 
-@@ -550,17 +528,6 @@ static int fsl_spdif_startup(struct snd_pcm_substream *substream,
- 	regmap_update_bits(regmap, REG_SPDIF_SCR, SCR_LOW_POWER, 0);
- 
- 	return 0;
--
--disable_txclk:
--	for (i--; i >= 0; i--)
--		clk_disable_unprepare(spdif_priv->txclk[i]);
--err:
--	if (!IS_ERR(spdif_priv->spbaclk))
--		clk_disable_unprepare(spdif_priv->spbaclk);
--err_spbaclk:
--	clk_disable_unprepare(spdif_priv->coreclk);
--
--	return ret;
- }
- 
- static void fsl_spdif_shutdown(struct snd_pcm_substream *substream,
-@@ -569,20 +536,17 @@ static void fsl_spdif_shutdown(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct fsl_spdif_priv *spdif_priv = snd_soc_dai_get_drvdata(asoc_rtd_to_cpu(rtd, 0));
- 	struct regmap *regmap = spdif_priv->regmap;
--	u32 scr, mask, i;
-+	u32 scr, mask;
- 
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		scr = 0;
- 		mask = SCR_TXFIFO_AUTOSYNC_MASK | SCR_TXFIFO_CTRL_MASK |
- 			SCR_TXSEL_MASK | SCR_USRC_SEL_MASK |
- 			SCR_TXFIFO_FSEL_MASK;
--		for (i = 0; i < SPDIF_TXRATE_MAX; i++)
--			clk_disable_unprepare(spdif_priv->txclk[i]);
- 	} else {
- 		scr = SCR_RXFIFO_OFF | SCR_RXFIFO_CTL_ZERO;
- 		mask = SCR_RXFIFO_FSEL_MASK | SCR_RXFIFO_AUTOSYNC_MASK|
- 			SCR_RXFIFO_CTL_MASK | SCR_RXFIFO_OFF_MASK;
--		clk_disable_unprepare(spdif_priv->rxclk);
- 	}
- 	regmap_update_bits(regmap, REG_SPDIF_SCR, mask, scr);
- 
-@@ -591,9 +555,6 @@ static void fsl_spdif_shutdown(struct snd_pcm_substream *substream,
- 		spdif_intr_status_clear(spdif_priv);
- 		regmap_update_bits(regmap, REG_SPDIF_SCR,
- 				SCR_LOW_POWER, SCR_LOW_POWER);
--		if (!IS_ERR(spdif_priv->spbaclk))
--			clk_disable_unprepare(spdif_priv->spbaclk);
--		clk_disable_unprepare(spdif_priv->coreclk);
- 	}
- }
- 
-@@ -1350,6 +1311,8 @@ static int fsl_spdif_probe(struct platform_device *pdev)
- 
- 	/* Register with ASoC */
- 	dev_set_drvdata(&pdev->dev, spdif_priv);
-+	pm_runtime_enable(&pdev->dev);
-+	regcache_cache_only(spdif_priv->regmap, true);
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_spdif_component,
- 					      &spdif_priv->cpu_dai_drv, 1);
-@@ -1365,36 +1328,90 @@ static int fsl_spdif_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int fsl_spdif_suspend(struct device *dev)
-+#ifdef CONFIG_PM
-+static int fsl_spdif_runtime_suspend(struct device *dev)
- {
- 	struct fsl_spdif_priv *spdif_priv = dev_get_drvdata(dev);
-+	int i;
- 
- 	regmap_read(spdif_priv->regmap, REG_SPDIF_SRPC,
- 			&spdif_priv->regcache_srpc);
--
- 	regcache_cache_only(spdif_priv->regmap, true);
--	regcache_mark_dirty(spdif_priv->regmap);
-+
-+	clk_disable_unprepare(spdif_priv->rxclk);
-+
-+	for (i = 0; i < SPDIF_TXRATE_MAX; i++)
-+		clk_disable_unprepare(spdif_priv->txclk[i]);
-+
-+	if (!IS_ERR(spdif_priv->spbaclk))
-+		clk_disable_unprepare(spdif_priv->spbaclk);
-+	clk_disable_unprepare(spdif_priv->coreclk);
- 
- 	return 0;
- }
- 
--static int fsl_spdif_resume(struct device *dev)
-+static int fsl_spdif_runtime_resume(struct device *dev)
- {
- 	struct fsl_spdif_priv *spdif_priv = dev_get_drvdata(dev);
-+	int ret;
-+	int i;
-+
-+	ret = clk_prepare_enable(spdif_priv->coreclk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable core clock\n");
-+		return ret;
-+	}
-+
-+	if (!IS_ERR(spdif_priv->spbaclk)) {
-+		ret = clk_prepare_enable(spdif_priv->spbaclk);
-+		if (ret) {
-+			dev_err(dev, "failed to enable spba clock\n");
-+			goto disable_core_clk;
-+		}
-+	}
-+
-+	for (i = 0; i < SPDIF_TXRATE_MAX; i++) {
-+		ret = clk_prepare_enable(spdif_priv->txclk[i]);
-+		if (ret)
-+			goto disable_tx_clk;
-+	}
-+
-+	ret = clk_prepare_enable(spdif_priv->rxclk);
-+	if (ret)
-+		goto disable_tx_clk;
- 
- 	regcache_cache_only(spdif_priv->regmap, false);
-+	regcache_mark_dirty(spdif_priv->regmap);
- 
- 	regmap_update_bits(spdif_priv->regmap, REG_SPDIF_SRPC,
- 			SRPC_CLKSRC_SEL_MASK | SRPC_GAINSEL_MASK,
- 			spdif_priv->regcache_srpc);
- 
--	return regcache_sync(spdif_priv->regmap);
-+	ret = regcache_sync(spdif_priv->regmap);
-+	if (ret)
-+		goto disable_rx_clk;
-+
-+	return 0;
-+
-+disable_rx_clk:
-+	clk_disable_unprepare(spdif_priv->rxclk);
-+disable_tx_clk:
-+	for (i--; i >= 0; i--)
-+		clk_disable_unprepare(spdif_priv->txclk[i]);
-+	if (!IS_ERR(spdif_priv->spbaclk))
-+		clk_disable_unprepare(spdif_priv->spbaclk);
-+disable_core_clk:
-+	clk_disable_unprepare(spdif_priv->coreclk);
-+
-+	return ret;
- }
--#endif /* CONFIG_PM_SLEEP */
-+#endif /* CONFIG_PM */
- 
- static const struct dev_pm_ops fsl_spdif_pm = {
--	SET_SYSTEM_SLEEP_PM_OPS(fsl_spdif_suspend, fsl_spdif_resume)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(fsl_spdif_runtime_suspend, fsl_spdif_runtime_resume,
-+			   NULL)
- };
- 
- static const struct of_device_id fsl_spdif_dt_ids[] = {
--- 
-2.21.0
+VGhpcyBwYXRjaCBhZGRzIGNvbW1vbiBjb21wYXRpYmxlICYgcGxhdGZvcm0gY29tcGF0aWFibGUu
+DQoNClNpZ25lZC1vZmYtYnk6IEVhc3RMIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KLS0tDQog
+ZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMgfCAyICsrDQogMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRr
+LWNxZG1hLmMgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KaW5kZXggZWQzM2M2
+NC4uZDcwMWViZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5j
+DQorKysgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KQEAgLTU0Niw3ICs1NDYs
+OSBAQCBzdGF0aWMgdm9pZCBtdGtfY3FkbWFfaHdfZGVpbml0KHN0cnVjdCBtdGtfY3FkbWFfZGV2
+aWNlICpjcWRtYSkNCiB9DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRr
+X2NxZG1hX21hdGNoW10gPSB7DQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssY29tbW9uLWNx
+ZG1hIiB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc2NS1jcWRtYSIgfSwNCisJ
+eyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktY3FkbWEiIH0sDQogCXsgLyogc2VudGlu
+ZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX2NxZG1hX21hdGNoKTsN
+Ci0tIA0KMS45LjENCg==
 
