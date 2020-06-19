@@ -2,135 +2,216 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2981C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD62C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA6D20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="W+x4CClX"
+	by mail.kernel.org (Postfix) with ESMTP id 5044B20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733270AbgFSTQc (ORCPT
+        id S1733308AbgFSTRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733115AbgFSTQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:16:31 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F124C0613EF
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so4440532pju.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
-        b=W+x4CClX3BaHnLSt/1xtF5HA5oIJlM8A+EGmUOOouefvbHiG6YC0Wsg8b7CB6Pp8f5
-         pEyFrNb9aZk1QdlliapBCUCIem9PZnRIF1pNDG541eEWKTNagxIBWk/a5ThEjdUHubXI
-         O2fstgpGQQrTlufuHR2nutPWOwG7k0KKO0UPw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
-        b=iKcQrYHXKbTcyiW1UGnw0TCTunO11qNzuQIO8pGEtJNG8dtj8ZJ1YzmvhgJ+Ejw+sc
-         p+XbbJBIBX+mgmKAoIXq/W63nDEBWhLhFOMrOdS+uegVSoQ9qAiDAptDeXfUtT68DbvJ
-         D1DDQ7zhtpW/BpHBUY7/I3g94aJnEipkR1aocZ/C9matNh7SlJR6GX4GTMkzDVt29xd6
-         0+KdSHyRN93YDoPysMBTvB7t5TB/aBMZrW2OxJYeooNtw8dzgSVbGjKHzHnY2Yi7S1GU
-         4DetCV92VbL1Ljz/yF7VfgzZy1RS7qm/tNmpL2OaGwY4HAnXOcR+Y8krXH7oWwOioJq7
-         sW2w==
-X-Gm-Message-State: AOAM53239meZoPWF9uxs9OkeHAJavGIlKBqDX8PKbYzy7VD9I2bdXxfA
-        rbDQ/xz1MBv2tRM8GV9viZ36cw==
-X-Google-Smtp-Source: ABdhPJwNurzM+LygEC0YiX0wuysnxgJPszpw0mtEo9Y7176XsIpQNBKYeTFSdYlDE/YRvgnE/WhMHg==
-X-Received: by 2002:a17:90b:50d:: with SMTP id r13mr4895894pjz.94.1592594190698;
-        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
-Received: from localhost.localdomain ([42.111.138.30])
-        by smtp.gmail.com with ESMTPSA id 12sm6482743pfj.149.2020.06.19.12.16.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
-From:   Suniel Mahesh <sunil@amarulasolutions.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        gregkh@linuxfoundation.org, sashal@kernel.org
-Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] arch: arm: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Sat, 20 Jun 2020 00:46:13 +0530
-Message-Id: <1592594173-13497-1-git-send-email-sunil@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Jun 2020 15:17:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:58360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733272AbgFSTRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:17:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7CEB2B;
+        Fri, 19 Jun 2020 12:17:07 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49DD33F73C;
+        Fri, 19 Jun 2020 12:17:06 -0700 (PDT)
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>, linus.walleij@linaro.org,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vilhelm.gray@gmail.com, michal.simek@xilinx.com,
+        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1592224128.git.syednwaris@gmail.com>
+ <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7c0bcc9e-ab76-b356-7da6-6eb8b3868610@arm.com>
+Date:   Fri, 19 Jun 2020 20:17:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+On 2020-06-15 13:54, Syed Nayyar Waris wrote:
+> This patch reimplements the xgpio_set_multiple function in
+> drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
+> Instead of looping for each bit in xgpio_set_multiple
+> function, now we can check each channel at a time and save cycles.
+> 
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+> Changes in v8:
+>   - No change.
+> 
+> Changes in v7:
+>   - No change.
+> 
+> Changes in v6:
+>   - No change.
+> 
+> Changes in v5:
+>   - Minor change: Inline values '32' and '64' in code for better
+>     code readability.
+> 
+> Changes in v4:
+>   - Minor change: Inline values '32' and '64' in code for better
+>     code readability.
+> 
+> Changes in v3:
+>   - No change.
+> 
+> Changes in v2:
+>   - No change.
+> 
+>   drivers/gpio/gpio-xilinx.c | 62 ++++++++++++++++++++------------------
+>   1 file changed, 32 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 67f9f82e0db0..e81092dea27e 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -136,39 +136,41 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>   			       unsigned long *bits)
+>   {
+> -	unsigned long flags;
+> +	unsigned long flags[2];
+>   	struct xgpio_instance *chip = gpiochip_get_data(gc);
+> -	int index = xgpio_index(chip, 0);
+> -	int offset, i;
+> -
+> -	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -
+> -	/* Write to GPIO signals */
+> -	for (i = 0; i < gc->ngpio; i++) {
+> -		if (*mask == 0)
+> -			break;
+> -		/* Once finished with an index write it out to the register */
+> -		if (index !=  xgpio_index(chip, i)) {
+> -			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -				       index * XGPIO_CHANNEL_OFFSET,
+> -				       chip->gpio_state[index]);
+> -			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> -			index =  xgpio_index(chip, i);
+> -			spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -		}
+> -		if (__test_and_clear_bit(i, mask)) {
+> -			offset =  xgpio_offset(chip, i);
+> -			if (test_bit(i, bits))
+> -				chip->gpio_state[index] |= BIT(offset);
+> -			else
+> -				chip->gpio_state[index] &= ~BIT(offset);
+> -		}
+> +	u32 *const state = chip->gpio_state;
+> +	unsigned int *const width = chip->gpio_width;
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-but the TRM mentions GPIO_1 pad is muxed for card detetcion,
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
+Immutable pointers to mutable data are pretty unusual, especially for 
+temporary local variables. Let me share my thought process upon seeing this:
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
+- hmm, is "* const" simply a mistake that's meant to be "const *"?
+- <scan the rest of the function> no, updating chip->gpio_state seems 
+appropriate, so it can't be that.
+- does anything take the address of either of these variables that might 
+justify it?
+- <scan the rest of the function again> nope, they're only ever used by 
+value
+- hmm, maybe it's just paranoia, but in that case why isn't width "const 
+* const" since chip->gpio_width shouldn't need to be modified?
+- hmm...
 
-Fix the pin muxing as per TRM by muxing ENET_RX_ER pad for USB_OTG_ID
-and GPIO_1 pad for card detect.
+And at that point I've spent nearly a minute parsing what should have 
+been be some trivial definitions of local shorthand variables. Defensive 
+programming is all very well, but the distraction to readers (I can't be 
+the only one) can easily outweigh any perceived value in trying to 
+harden against theoretical future developer error in a straightforward 
+~30-line function.
 
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
+> +	unsigned long offset, clump;
+> +	size_t index;
+> +
+> +	DECLARE_BITMAP(old, 64);
+> +	DECLARE_BITMAP(new, 64);
+> +	DECLARE_BITMAP(changed, 64);
+> +
+> +	spin_lock_irqsave(&chip->gpio_lock[0], flags[0]);
+> +	spin_lock_irqsave(&chip->gpio_lock[1], flags[1]);
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
----
-NOTE:
-- patch tested on i.Core 1.5 MX6 DL
----
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Why _irqsave on the inner lock? (think about it...)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 756f3a9..12997da 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -397,7 +397,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -409,6 +409,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
--- 
-2.7.4
+> +
+> +	bitmap_set_value(old, state[0], 0, width[0]);
+> +	bitmap_set_value(old, state[1], width[0], width[1]);
+> +	bitmap_replace(new, old, bits, mask, gc->ngpio);
+> +
+> +	bitmap_set_value(old, state[0], 0, 32);
+> +	bitmap_set_value(old, state[1], 32, 32);
+> +	state[0] = bitmap_get_value(new, 0, width[0]);
+> +	state[1] = bitmap_get_value(new, width[0], width[1]);
+> +	bitmap_set_value(new, state[0], 0, 32);
+> +	bitmap_set_value(new, state[1], 32, 32);
+> +	bitmap_xor(changed, old, new, 64);
+> +
+> +	for_each_set_clump(offset, clump, changed, 64, 32) {
+> +		index = offset / 32;
+> +		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> +				index * XGPIO_CHANNEL_OFFSET,
+> +				state[index]);
+>   	}
 
+TBH this looks like a rather overcomplicated and horribly inefficient 
+way of doing:
+
+	if (((u32 *)changed)[0])
+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
+				state[0]);
+	if (((u32 *)changed)[1])
+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+				XGPIO_CHANNEL_OFFSET, state[1]);
+
+(and doing the changed/state update itself one word at a time for each 
+condition would probably be a fair bit more efficient in terms of 
+minimising spilling to the stack on 32-bit machines)
+
+I can see this API having merit if the clumps are a weird size or 
+expected to be significantly sparse in the bitmap, but making 
+out-of-line calls to an iterator which itself involves another 
+out-of-line call and an integer division, all just to process two halves 
+of a 64-bit value, seems... unnecessarily silly :/
+
+[drive-by review since I had a "packing small values into bitmaps" 
+use-case and wondered if there might be anything interesting here]
+
+Robin.
+
+>   
+> -	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+> -
+> -	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> +	spin_unlock_irqrestore(&chip->gpio_lock[1], flags[1]);
+> +	spin_unlock_irqrestore(&chip->gpio_lock[0], flags[0]);
+>   }
+>   
+>   /**
+> 
