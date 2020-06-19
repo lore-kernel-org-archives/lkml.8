@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA85C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB5D207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573B821707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582619;
-	bh=AwDgvlPuxMjSektF2op7uOYUaYC5N3ZYlM32Knp8Xwo=;
+	s=default; t=1592582623;
+	bh=56jubeqSvCe5abxjdH8iGRYSrHs+X6XVvwqLUlx67Zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DOOyNqDLmAKhrodZLjQ4YyTpB1ANxGNX1jQzT4q+vPTo7Fcu0qC0RngarH33qfzlw
-	 4Yit7kkkBXliYnCAZWgYw5hhhVcappQ0b81vkD6FfWVLq7rZctevuf0mKr4ScH1loG
-	 rdgyegDF/xwcJmF0sYmq/U4iWM4oY7BPF+4OsWmw=
+	b=g4IoF8mVIQTiJTVu9MUq3ZOopX8IXvQFkRg+1xP10dJvVXvW4rtsyVGKxJzzNTiMk
+	 1NdP0IpZb6jcXb16iDq21BT9QAuv+Y6oqKFIkcFzoUzCejxoqvioFlRaj8uw1R9C7X
+	 jukuo5bzZaoecqO1B8MmK00/eRxYsV/DfwELQZcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403828AbgFSPL1 (ORCPT
+        id S2393591AbgFSQDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392087AbgFSPLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:14 -0400
+        id S2403826AbgFSPL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14CA8206FA;
-        Fri, 19 Jun 2020 15:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1591720776;
+        Fri, 19 Jun 2020 15:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579473;
-        bh=AwDgvlPuxMjSektF2op7uOYUaYC5N3ZYlM32Knp8Xwo=;
+        s=default; t=1592579486;
+        bh=56jubeqSvCe5abxjdH8iGRYSrHs+X6XVvwqLUlx67Zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWHozHGiGNuBzj9UcJ5psEh+UmekfawbHrju99NnVwvzK+dAY7scW7kQ+DmxNS6PK
-         iUIKGTTfTURBjYW/7wtcEFF8lI8TEAQNdVT5OiDK+EvOkD75JjGcKQdQCUREyp5yq/
-         XDgeVyw0h3D1yEvNyq0UFjbAYil/ZFTYoBKydZ9Q=
+        b=NkxCDdfAHs1XAu+5yW84g3L0k7MljfwEKkjztRhtal3Vx3H+vvekViF8YWGc12OWo
+         Z0vw9M5Gby9w+ZNXGM5QnTpV67jQW9GI0v6os/9OicuiKwWv7GuBrpzAI9/gV8pZFM
+         8Yasf+4v6V2GOOVLt1IX5PXE2JVMpgup4sdf9kYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 148/261] cpuidle: Fix three reference count leaks
-Date:   Fri, 19 Jun 2020 16:32:39 +0200
-Message-Id: <20200619141656.962741005@linuxfoundation.org>
+Subject: [PATCH 5.4 152/261] platform/x86: asus_wmi: Reserve more space for struct bias_args
+Date:   Fri, 19 Jun 2020 16:32:43 +0200
+Message-Id: <20200619141657.166997708@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,55 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Chris Chiu <chiu@endlessm.com>
 
-[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
+[ Upstream commit 7b91f1565fbfbe5a162d91f8a1f6c5580c2fc1d0 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
+working due to the ASUS WMI driver fails to be loaded. The ACPI error
+as follows leads to the failure of asus_wmi_evaluate_method.
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
+  No Local Variables are initialized for Method [WMNB]
+  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
 
-Previous commit "b8eb718348b8" fixed a similar problem.
+The DSDT for the WMNB part shows that 5 DWORD required for local
+variables and the 3rd variable IIA3 hit the buffer limit.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-[ rjw: Subject ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Method (WMNB, 3, Serialized)
+{ ..
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    CreateDWordField (Arg2, 0x0C, IIA3)
+    CreateDWordField (Arg2, 0x10, IIA4)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    If ((Local0 == 0x54494E49))
+  ..
+}
+
+The limitation is determined by the input acpi_buffer size passed
+to the wmi_evaluate_method. Since the struct bios_args is the data
+structure used as input buffer by default for all ASUS WMI calls,
+the size needs to be expanded to fix the problem.
+
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/sysfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
-index 2bb2683b493c..f8747322b3c7 100644
---- a/drivers/cpuidle/sysfs.c
-+++ b/drivers/cpuidle/sysfs.c
-@@ -480,7 +480,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
- 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
- 					   &kdev->kobj, "state%d", i);
- 		if (ret) {
--			kfree(kobj);
-+			kobject_put(&kobj->kobj);
- 			goto error_state;
- 		}
- 		cpuidle_add_s2idle_attr_group(kobj);
-@@ -611,7 +611,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
- 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
- 				   &kdev->kobj, "driver");
- 	if (ret) {
--		kfree(kdrv);
-+		kobject_put(&kdrv->kobj);
- 		return ret;
- 	}
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 41e28552b2ce..b1f4a31ba1ee 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -111,6 +111,8 @@ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
+ 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
++	u32 arg4;
++	u32 arg5;
+ } __packed;
  
-@@ -705,7 +705,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
- 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
- 				   "cpuidle");
- 	if (error) {
--		kfree(kdev);
-+		kobject_put(&kdev->kobj);
- 		return error;
- 	}
- 
+ /*
 -- 
 2.25.1
 
