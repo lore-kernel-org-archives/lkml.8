@@ -2,185 +2,148 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5556C20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FUNxybH2"
+	by mail.kernel.org (Postfix) with ESMTP id 2092620706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592581856;
+	bh=b8sF3nzdbNYI7vM2opADzKQK1kEfaHKTQBe+5In3VHI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PY9hKw3HAiFwk5cI7hMAVAk6ncI3zXHFEVqcA2/9O9dzLdHJzZVHyqcVPqjdH5nAX
+	 Y6TU/IN4xMqpBIJxDlDw+tFlscMdWT/5ueFL9aJGdj9egvpWaRIWqtQaGDO4v1wxY/
+	 unV8lPDarSqwWzGtAvyKuYyWHb87KOdgbOP/AuNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394141AbgFSPuo (ORCPT
+        id S2394148AbgFSPuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394132AbgFSPuk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:50:40 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F93C06174E;
-        Fri, 19 Jun 2020 08:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=gqRrOSjrTbnmLixbeSJjNyufrKjbx8bQ0hoWXFgHbbA=; b=FUNxybH2BQdZYCAyU9DCQsfcFT
-        milNvBpSYbFN9uggxqVw0KSSDEG8nnbG+ql3mVjPp7AGcKj7l66qo7y2pl6Hsv7KKr6kCa51ScPTA
-        EWwUCzuL0G+vNeMOviK7AWZvLfdFPi8VUhljOifHnmuFJUfXW3CJKbQ1H2c5PTeuGieu8SbXAa1Dp
-        YrWnLx/3z4T6G+ocOe4jNVdXNTaCsztfIZqLGclRIelAdmBMlLEo5XKpVhrctiNhazPND5Tcu3MFM
-        mJb5LKpxVvyhwWPmmJKuO6DX/PwVz4UKmTlTElCrFBDQmypl5AUn9Db+94F3puc3J3a2YbmpFPz9Q
-        NxC1wcFg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmJHo-0005rh-J2; Fri, 19 Jun 2020 15:50:36 +0000
-Date:   Fri, 19 Jun 2020 08:50:36 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        agruenba@redhat.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [RFC] Bypass filesystems for reading cached pages
-Message-ID: <20200619155036.GZ8681@bombadil.infradead.org>
+        Fri, 19 Jun 2020 11:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393252AbgFSPYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C8B021548;
+        Fri, 19 Jun 2020 15:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580263;
+        bh=b8sF3nzdbNYI7vM2opADzKQK1kEfaHKTQBe+5In3VHI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QsTiuN9hKSJhHmOD6zRuHfZ3yzbf7PxPvmF619lDW911/NRsOm0QSqsHoYLdHrxNH
+         yaxu/XTISOZX3Ph5bo7nCDbojm/eHCzeabh8kZONteM6QcREkO9Cwe0plloapgZ9gk
+         E1x6DlZeIRwOSymG+BlZeifc3Nma/ci5argl81yk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tamizh Chelvam <tamizhr@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 153/376] ath11k: fix kernel panic by freeing the msdu received with invalid length
+Date:   Fri, 19 Jun 2020 16:31:11 +0200
+Message-Id: <20200619141717.566399422@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tamizh Chelvam <tamizhr@codeaurora.org>
 
-This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
-The advantage of this patch is that we can avoid taking any filesystem
-lock, as long as the pages being accessed are in the cache (and we don't
-need to readahead any pages into the cache).  We also avoid an indirect
-function call in these cases.
+[ Upstream commit d7d43782d541edb8596d2f4fc7f41b0734948ec5 ]
 
-I'm sure reusing the name call_read_iter() is the wrong way to go about
-this, but renaming all the callers would make this a larger patch.
-I'm happy to do it if something like this stands a chance of being
-accepted.
+In certain scenario host receives the packets with invalid length
+which causes below kernel panic. Free up those msdus to avoid
+this kernel panic.
 
-Compared to Andreas' patch, I removed the -ECANCELED return value.
-We can happily return 0 from generic_file_buffered_read() and it's less
-code to handle that.  I bypass the attempt to read from the page cache
-for O_DIRECT reads, and for inodes which have no cached pages.  Hopefully
-this will avoid calling generic_file_buffered_read() for drivers which
-implement read_iter() (although I haven't audited them all to check that
+ 2270.028121:   <6> task: ffffffc0008306d0 ti: ffffffc0008306d0 task.ti: ffffffc0008306d0
+ 2270.035247:   <2> PC is at skb_panic+0x40/0x44
+ 2270.042784:   <2> LR is at skb_panic+0x40/0x44
+ 2270.521775:   <2> [<ffffffc0004a06e0>] skb_panic+0x40/0x44
+ 2270.524039:   <2> [<ffffffc0004a1278>] skb_put+0x54/0x5c
+ 2270.529264:   <2> [<ffffffbffcc373a8>] ath11k_dp_process_rx_err+0x320/0x5b0 [ath11k]
+ 2270.533860:   <2> [<ffffffbffcc30b68>] ath11k_dp_service_srng+0x80/0x268 [ath11k]
+ 2270.541063:   <2> [<ffffffbffcc1d554>] ath11k_hal_rx_reo_ent_buf_paddr_get+0x200/0xb64 [ath11k]
+ 2270.547917:   <2> [<ffffffc0004b1f74>] net_rx_action+0xf8/0x274
+ 2270.556247:   <2> [<ffffffc000099df4>] __do_softirq+0x128/0x228
+ 2270.561625:   <2> [<ffffffc00009a130>] irq_exit+0x84/0xcc
+ 2270.567008:   <2> [<ffffffc0000cfb28>] __handle_domain_irq+0x8c/0xb0
+ 2270.571695:   <2> [<ffffffc000082484>] gic_handle_irq+0x6c/0xbc
 
-This could go horribly wrong if filesystems rely on doing work in their
-->read_iter implementation (eg checking i_size after acquiring their
-lock) instead of keeping the page cache uptodate.  On the other hand,
-the ->map_pages() method is already called without locks, so filesystems
-should already be prepared for this.
+Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1588611568-20791-1-git-send-email-tamizhr@codeaurora.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Arguably we could do something similar for writes.  I'm a little more
-scared of that patch since filesystems are more likely to want to do
-things to keep their fies in sync for writes.
-
-diff --git a/fs/read_write.c b/fs/read_write.c
-index bbfa9b12b15e..7b899538d3c0 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -401,6 +401,41 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
- 				read_write == READ ? MAY_READ : MAY_WRITE);
- }
+diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
+index 34b1e8e6a7fb..007bb73d6c61 100644
+--- a/drivers/net/wireless/ath/ath11k/dp_rx.c
++++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
+@@ -2265,6 +2265,7 @@ static int ath11k_dp_rx_process_msdu(struct ath11k *ar,
+ 	struct ieee80211_hdr *hdr;
+ 	struct sk_buff *last_buf;
+ 	u8 l3_pad_bytes;
++	u8 *hdr_status;
+ 	u16 msdu_len;
+ 	int ret;
  
-+ssize_t call_read_iter(struct file *file, struct kiocb *iocb,
-+				     struct iov_iter *iter)
-+{
-+	ssize_t written, ret = 0;
-+
-+	if (iocb->ki_flags & IOCB_DIRECT)
-+		goto uncached;
-+	if (!file->f_mapping->nrpages)
-+		goto uncached;
-+
-+	iocb->ki_flags |= IOCB_CACHED;
-+	ret = generic_file_buffered_read(iocb, iter, 0);
-+	iocb->ki_flags &= ~IOCB_CACHED;
-+
-+	if (likely(!iov_iter_count(iter)))
-+		return ret;
-+
-+	if (ret == -EAGAIN) {
-+		if (iocb->ki_flags & IOCB_NOWAIT)
-+			return ret;
-+		ret = 0;
-+	} else if (ret < 0) {
-+		return ret;
+@@ -2293,8 +2294,13 @@ static int ath11k_dp_rx_process_msdu(struct ath11k *ar,
+ 		skb_pull(msdu, HAL_RX_DESC_SIZE);
+ 	} else if (!rxcb->is_continuation) {
+ 		if ((msdu_len + HAL_RX_DESC_SIZE) > DP_RX_BUFFER_SIZE) {
++			hdr_status = ath11k_dp_rx_h_80211_hdr(rx_desc);
+ 			ret = -EINVAL;
+ 			ath11k_warn(ar->ab, "invalid msdu len %u\n", msdu_len);
++			ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", hdr_status,
++					sizeof(struct ieee80211_hdr));
++			ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", rx_desc,
++					sizeof(struct hal_rx_desc));
+ 			goto free_out;
+ 		}
+ 		skb_put(msdu, HAL_RX_DESC_SIZE + l3_pad_bytes + msdu_len);
+@@ -3389,6 +3395,7 @@ ath11k_dp_process_rx_err_buf(struct ath11k *ar, u32 *ring_desc, int buf_id, bool
+ 	struct sk_buff *msdu;
+ 	struct ath11k_skb_rxcb *rxcb;
+ 	struct hal_rx_desc *rx_desc;
++	u8 *hdr_status;
+ 	u16 msdu_len;
+ 
+ 	spin_lock_bh(&rx_ring->idr_lock);
+@@ -3426,6 +3433,17 @@ ath11k_dp_process_rx_err_buf(struct ath11k *ar, u32 *ring_desc, int buf_id, bool
+ 
+ 	rx_desc = (struct hal_rx_desc *)msdu->data;
+ 	msdu_len = ath11k_dp_rx_h_msdu_start_msdu_len(rx_desc);
++	if ((msdu_len + HAL_RX_DESC_SIZE) > DP_RX_BUFFER_SIZE) {
++		hdr_status = ath11k_dp_rx_h_80211_hdr(rx_desc);
++		ath11k_warn(ar->ab, "invalid msdu leng %u", msdu_len);
++		ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", hdr_status,
++				sizeof(struct ieee80211_hdr));
++		ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", rx_desc,
++				sizeof(struct hal_rx_desc));
++		dev_kfree_skb_any(msdu);
++		goto exit;
 +	}
 +
-+uncached:
-+	written = ret;
-+
-+	ret = file->f_op->read_iter(iocb, iter);
-+	if (ret > 0)
-+		written += ret;
-+
-+	return written ? written : ret;
-+}
-+
- static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
- {
- 	struct iovec iov = { .iov_base = buf, .iov_len = len };
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 6c4ab4dc1cd7..0985773feffd 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -315,6 +315,7 @@ enum rw_hint {
- #define IOCB_SYNC		(1 << 5)
- #define IOCB_WRITE		(1 << 6)
- #define IOCB_NOWAIT		(1 << 7)
-+#define IOCB_CACHED		(1 << 8)
+ 	skb_put(msdu, HAL_RX_DESC_SIZE + msdu_len);
  
- struct kiocb {
- 	struct file		*ki_filp;
-@@ -1895,11 +1896,7 @@ struct inode_operations {
- 	int (*set_acl)(struct inode *, struct posix_acl *, int);
- } ____cacheline_aligned;
- 
--static inline ssize_t call_read_iter(struct file *file, struct kiocb *kio,
--				     struct iov_iter *iter)
--{
--	return file->f_op->read_iter(kio, iter);
--}
-+ssize_t call_read_iter(struct file *, struct kiocb *, struct iov_iter *);
- 
- static inline ssize_t call_write_iter(struct file *file, struct kiocb *kio,
- 				      struct iov_iter *iter)
-diff --git a/mm/filemap.c b/mm/filemap.c
-index f0ae9a6308cb..4ee97941a1f2 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2028,7 +2028,7 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 
- 		page = find_get_page(mapping, index);
- 		if (!page) {
--			if (iocb->ki_flags & IOCB_NOWAIT)
-+			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_CACHED))
- 				goto would_block;
- 			page_cache_sync_readahead(mapping,
- 					ra, filp,
-@@ -2038,12 +2038,16 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 				goto no_cached_page;
- 		}
- 		if (PageReadahead(page)) {
-+			if (iocb->ki_flags & IOCB_CACHED) {
-+				put_page(page);
-+				goto out;
-+			}
- 			page_cache_async_readahead(mapping,
- 					ra, filp, page,
- 					index, last_index - index);
- 		}
- 		if (!PageUptodate(page)) {
--			if (iocb->ki_flags & IOCB_NOWAIT) {
-+			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_CACHED)) {
- 				put_page(page);
- 				goto would_block;
- 			}
+ 	if (ath11k_dp_rx_frag_h_mpdu(ar, msdu, ring_desc)) {
+-- 
+2.25.1
+
+
 
