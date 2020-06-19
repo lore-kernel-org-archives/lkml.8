@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A284C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FEC206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AEAC20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580967;
-	bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+	s=default; t=1592580969;
+	bh=bHkNN74cdzXa9vVkD8gRknfG06ao0SH0hSvjcOVtP5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/kOrFSBWmdbPDGwKwFiapGXH2ShjzaeJnCdWda9mU8rfjZxPxcWLupuBC7fOc3sl
-	 KhZPn4wDt3byHZ0+ZHo719umkLTHhxcGJZ+9sDoUMoEdtN0qB/TWFb3QJNA0khztLZ
-	 ELogxMVdVbK8CIDgZDcQDVih0hZeCn7AdX9odP0Q=
+	b=jbBpPWNNB3HEjSMyGnJFOFn1JqZssjw9QxqPiGmcqIOTK04TQzkZ4AB4lXHijQ2vZ
+	 /sSLLqjx5c4JJbTQElu9faFSyJYT8/dNfHOEN0eFWM6pXTAxeZmOw10vxmDsZKS7+3
+	 5cpqDDTxNBBBlkHLUa3FxZkes418B2hHV8C4hPrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393795AbgFSPbM (ORCPT
+        id S2393784AbgFSPbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393164AbgFSPbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:04 -0400
+        id S2391325AbgFSPbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD7020734;
-        Fri, 19 Jun 2020 15:31:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 641CC206B7;
+        Fri, 19 Jun 2020 15:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580664;
-        bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+        s=default; t=1592580658;
+        bh=bHkNN74cdzXa9vVkD8gRknfG06ao0SH0hSvjcOVtP5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjQFozjMaHjlmwCNQqcw/mfPjaBI4txsBdQ6cirdyDEk+CoxLC4pG7iuAxyL+t9Nc
-         MHJ24hpEk0SL+TlZ9e+LKfJk0kxVvbBsvMMGOPo+dnL3yHKwJwDSIdQsz7xYRaHAqo
-         ENGvLvwJVXJMX3e6uOzy491CV18HJdRpTrPHpavo=
+        b=eOgBuiXvtJMznWM9ab+A2Ebbsx302bgOuHggIE/+QV8TpBUhqPT3ZRy2R1PmzRLre
+         rAgVYlJSgjeSD7Vq4C/t7zuOZtfds30ksenWJUybXSqQvTdljpsqaiQWcZQleX8F0r
+         1q5iypnttrfbuLmdJZ9W/LhQEzGbXFAYjkwR4J6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.7 335/376] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
-Date:   Fri, 19 Jun 2020 16:34:13 +0200
-Message-Id: <20200619141726.188486624@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.7 333/376] jbd2: avoid leaking transaction credits when unreserving handle
+Date:   Fri, 19 Jun 2020 16:34:11 +0200
+Message-Id: <20200619141726.093088973@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,34 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Jan Kara <jack@suse.cz>
 
-commit baa998aecb75c04d62be0a4ab6b724af6d73a0f9 upstream.
+commit 14ff6286309e2853aed50083c9a83328423fdd8c upstream.
 
-The gpio property for the vbus pin doesn't match the pinctrl and is
-not correct.
+When reserved transaction handle is unused, we subtract its reserved
+credits in __jbd2_journal_unreserve_handle() called from
+jbd2_journal_stop(). However this function forgets to remove reserved
+credits from transaction->t_outstanding_credits and thus the transaction
+space that was reserved remains effectively leaked. The leaked
+transaction space can be quite significant in some cases and leads to
+unnecessarily small transactions and thus reducing throughput of the
+journalling machinery. E.g. fsmark workload creating lots of 4k files
+was observed to have about 20% lower throughput due to this when ext4 is
+mounted with dioread_nolock mount option.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
-Link: https://lore.kernel.org/r/20200401221947.41502-1-ludovic.desroches@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subtract reserved credits from t_outstanding_credits as well.
+
+CC: stable@vger.kernel.org
+Fixes: 8f7d89f36829 ("jbd2: transaction reservation support")
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200520133119.1383-3-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/transaction.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -40,7 +40,7 @@
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -541,17 +541,24 @@ handle_t *jbd2_journal_start(journal_t *
+ }
+ EXPORT_SYMBOL(jbd2_journal_start);
  
- 	ahb {
- 		usb0: gadget@300000 {
--			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
-+			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usba_vbus>;
- 			status = "okay";
+-static void __jbd2_journal_unreserve_handle(handle_t *handle)
++static void __jbd2_journal_unreserve_handle(handle_t *handle, transaction_t *t)
+ {
+ 	journal_t *journal = handle->h_journal;
+ 
+ 	WARN_ON(!handle->h_reserved);
+ 	sub_reserved_credits(journal, handle->h_total_credits);
++	if (t)
++		atomic_sub(handle->h_total_credits, &t->t_outstanding_credits);
+ }
+ 
+ void jbd2_journal_free_reserved(handle_t *handle)
+ {
+-	__jbd2_journal_unreserve_handle(handle);
++	journal_t *journal = handle->h_journal;
++
++	/* Get j_state_lock to pin running transaction if it exists */
++	read_lock(&journal->j_state_lock);
++	__jbd2_journal_unreserve_handle(handle, journal->j_running_transaction);
++	read_unlock(&journal->j_state_lock);
+ 	jbd2_free_handle(handle);
+ }
+ EXPORT_SYMBOL(jbd2_journal_free_reserved);
+@@ -722,7 +729,8 @@ static void stop_this_handle(handle_t *h
+ 	atomic_sub(handle->h_total_credits,
+ 		   &transaction->t_outstanding_credits);
+ 	if (handle->h_rsv_handle)
+-		__jbd2_journal_unreserve_handle(handle->h_rsv_handle);
++		__jbd2_journal_unreserve_handle(handle->h_rsv_handle,
++						transaction);
+ 	if (atomic_dec_and_test(&transaction->t_updates))
+ 		wake_up(&journal->j_wait_updates);
+ 
 
 
