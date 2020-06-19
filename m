@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1908EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B5B206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7664D20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581397;
-	bh=KNfO35iPHZp9nM2fIPPOABKvCwIRqbqzPl/v/G3GlKU=;
+	s=default; t=1592581403;
+	bh=k+RT4ra8HZVN8ceO6WwOrSW3uphgh9ngo3vHcxY/p1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANdH6xQJlNXqvtqzLsOWYgOAc/TeHST2FbVhzM8uCdWZei5oZD6xCsrdokbF/pgAC
-	 44hC3mmNGmdcQwu5zbX3pMtLkNgEqfxO/6QUs3HR1MffQnK+4HNDzdLrFzWCzfxVzB
-	 QPyr8H6JC4Bd5CjvCjcnBr5b5lKBcBdZLkMdDNRY=
+	b=zMjq3Mg0k/Q8OjLgl8O2oek9ne/zoZpXw4Aw3k0QEsUpEkNN5IrSUVTD14quBF2ic
+	 09c3AO9O4xZ34fPo02zISc7LDiFc9clZPcJYCIi6ahOu4VFPBitqQ79ay7b4RrUCPH
+	 Dq3edLTb2WPRi9oivGVNW6yrT7G9eI4GbUJ5SqsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393649AbgFSPnO (ORCPT
+        id S2404535AbgFSP2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60162 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404546AbgFSP2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:21 -0400
+        id S2393579AbgFSP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3D721941;
-        Fri, 19 Jun 2020 15:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88BDB218AC;
+        Fri, 19 Jun 2020 15:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580501;
-        bh=KNfO35iPHZp9nM2fIPPOABKvCwIRqbqzPl/v/G3GlKU=;
+        s=default; t=1592580458;
+        bh=k+RT4ra8HZVN8ceO6WwOrSW3uphgh9ngo3vHcxY/p1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wb+LqWWTXk8EWW9VE9j125PSWyLQiexU5EXxRAie/6gxDz/VJw7OGvLwODuqO6AIi
-         sCE66S3zZD/zsS9exuN0obsnSbl/qgzwdJQKYBGuGgA3PPhuVVN2DdQkKOXviN/gga
-         MFvOsztLfpBYhWOGA/Ch3y4/nCyf0rpFJHuNL1AI=
+        b=doSyZmnG1cCfQKoe1U3Y9mN2O/IinyMkVAbrH4bnoV3UPmIts2gtq10aI4XL0hAZD
+         mzgpnZWT5riFBOjT2ly62wxaMzYDJNOfUviOIYJGB4JRfz4PNHiZT7LrDCpjl+Y6b5
+         DgsU1Sd1fa22P7a7vUu5TZAVNYvOJ56yVHRSw8Og=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 246/376] platform/x86: asus_wmi: Reserve more space for struct bias_args
-Date:   Fri, 19 Jun 2020 16:32:44 +0200
-Message-Id: <20200619141721.970397798@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 257/376] btrfs: include non-missing as a qualifier for the latest_bdev
+Date:   Fri, 19 Jun 2020 16:32:55 +0200
+Message-Id: <20200619141722.492382514@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,60 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-[ Upstream commit 7b91f1565fbfbe5a162d91f8a1f6c5580c2fc1d0 ]
+commit 998a0671961f66e9fad4990ed75f80ba3088c2f1 upstream.
 
-On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
-working due to the ASUS WMI driver fails to be loaded. The ACPI error
-as follows leads to the failure of asus_wmi_evaluate_method.
-  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
-  No Local Variables are initialized for Method [WMNB]
-  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
+btrfs_free_extra_devids() updates fs_devices::latest_bdev to point to
+the bdev with greatest device::generation number.  For a typical-missing
+device the generation number is zero so fs_devices::latest_bdev will
+never point to it.
 
-The DSDT for the WMNB part shows that 5 DWORD required for local
-variables and the 3rd variable IIA3 hit the buffer limit.
+But if the missing device is due to alienation [1], then
+device::generation is not zero and if it is greater or equal to the rest
+of device  generations in the list, then fs_devices::latest_bdev ends up
+pointing to the missing device and reports the error like [2].
 
-Method (WMNB, 3, Serialized)
-{ ..
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    CreateDWordField (Arg2, 0x0C, IIA3)
-    CreateDWordField (Arg2, 0x10, IIA4)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    If ((Local0 == 0x54494E49))
-  ..
-}
+[1] We maintain devices of a fsid (as in fs_device::fsid) in the
+fs_devices::devices list, a device is considered as an alien device
+if its fsid does not match with the fs_device::fsid
 
-The limitation is determined by the input acpi_buffer size passed
-to the wmi_evaluate_method. Since the struct bios_args is the data
-structure used as input buffer by default for all ASUS WMI calls,
-the size needs to be expanded to fix the problem.
+Consider a working filesystem with raid1:
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  $ mkfs.btrfs -f -d raid1 -m raid1 /dev/sda /dev/sdb
+  $ mount /dev/sda /mnt-raid1
+  $ umount /mnt-raid1
+
+While mnt-raid1 was unmounted the user force-adds one of its devices to
+another btrfs filesystem:
+
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt-single
+  $ btrfs dev add -f /dev/sda /mnt-single
+
+Now the original mnt-raid1 fails to mount in degraded mode, because
+fs_devices::latest_bdev is pointing to the alien device.
+
+  $ mount -o degraded /dev/sdb /mnt-raid1
+
+[2]
+mount: wrong fs type, bad option, bad superblock on /dev/sdb,
+       missing codepage or helper program, or other error
+
+       In some cases useful info is found in syslog - try
+       dmesg | tail or so.
+
+  kernel: BTRFS warning (device sdb): devid 1 uuid 072a0192-675b-4d5a-8640-a5cf2b2c704d is missing
+  kernel: BTRFS error (device sdb): failed to read devices
+  kernel: BTRFS error (device sdb): open_ctree failed
+
+Fix the root cause by checking if the device is not missing before it
+can be considered for the fs_devices::latest_bdev.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/x86/asus-wmi.c | 2 ++
+ fs/btrfs/volumes.c |    2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index bb7c529d7d16..cd212ee210e2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -116,6 +116,8 @@ struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
- 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
-+	u32 arg4;
-+	u32 arg5;
- } __packed;
- 
- /*
--- 
-2.25.1
-
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -1042,6 +1042,8 @@ again:
+ 							&device->dev_state)) {
+ 			if (!test_bit(BTRFS_DEV_STATE_REPLACE_TGT,
+ 			     &device->dev_state) &&
++			    !test_bit(BTRFS_DEV_STATE_MISSING,
++				      &device->dev_state) &&
+ 			     (!latest_dev ||
+ 			      device->generation > latest_dev->generation)) {
+ 				latest_dev = device;
 
 
