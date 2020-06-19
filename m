@@ -2,87 +2,143 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC05C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD47E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A4C20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592586200;
-	bh=L17dXPmuNlCLuhUupfHZeKfAGhXDukgs88cXcfbXs0c=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=IpUbub+lFVdCIa64sh7BEFWbjOJ3fpZ8mvwtxjNWLwOaGvdZpM5jZqNh5C6H0ShSY
-	 Ug2vsq+qdNHhr1zZ/C1ECsWQTanDFcRGlAvy35kp95jOyQg0cSJgtW8VDSvNwRDKOP
-	 tBb7H631NcRWwFJZMVbR7TjrzOW6xhXS+hfKMsp8=
+	s=default; t=1592586208;
+	bh=jm7iURKGIOvFqc9Z3q6moQdo07peRYBrkuujf/K565M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fJ0KEFLbnBDrX21ZR0PXAEjIWmzsqH98JY0wBDaQHSq4kkY9YTh1veX/P2w52jvYs
+	 oQml8bIj3UnF4e21y42ArAOvgRxjNuT0R0XJHndnxqiWUnCXhwMxqsxLaDuLr1OtUx
+	 U/vqH4sPRFa3R5k7LmGVBVuw/IOGxjiu+8kWN380=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbgFSRDT (ORCPT
+        id S2390568AbgFSRD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 13:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733192AbgFSRDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:03:19 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S1733192AbgFSRD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:03:26 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 729BE20707;
-        Fri, 19 Jun 2020 17:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31C320734;
+        Fri, 19 Jun 2020 17:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592586198;
-        bh=L17dXPmuNlCLuhUupfHZeKfAGhXDukgs88cXcfbXs0c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sc5f8P516WieS+1vxXmn/W06s7vLO4x+wv4jTbrH7xr5ooBJ4Fox0NvduzeJlT891
-         bzSmv6CvUf/aL+VXd+nb+eXWl3qoUWgIrBxj6wyJgV3naThzZ84LV6s93W8yq8QO1v
-         bFJDpOfdAQXbS+RTeZKOsCXRwxkK61Wpo/Sfinfs=
-Date:   Fri, 19 Jun 2020 12:08:43 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] rapidio: rio_mport_cdev: Use struct_size() helper
-Message-ID: <20200619170843.GA24923@embeddedor>
+        s=default; t=1592586205;
+        bh=jm7iURKGIOvFqc9Z3q6moQdo07peRYBrkuujf/K565M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OnJMZa4IoQ/Ve4GwA5VIoBqRjavl5heZUQEgDvqOxJgv8j8wugoopuQbI9i7RIPr0
+         NgNMOZNiLUd1ykJjaVxmUMiB3E4QBmcAdx1wTPTtr8qUplZ701onbdmJbNWJKu8Kna
+         wHJu201KmnSv2cj3rfeRM4wdLGYYYuoxgM0h/jo8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 0F7CC3C08CD; Fri, 19 Jun 2020 19:03:24 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 19:03:24 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] [v2] power: supply: bq24190_charger: Fix runtime PM
+ imbalance on error
+Message-ID: <20200619170324.2uh2uoqhzsrdwpmd@earth.universe>
+References: <20200525110540.6949-1-dinghao.liu@zju.edu.cn>
+ <CAJZ5v0j7cy1qZ5q3jWjJ77zJrVp+Kt2-4sWN3KF0jBgV9FOQew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hfs6ocpfhxpyqlxm"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJZ5v0j7cy1qZ5q3jWjJ77zJrVp+Kt2-4sWN3KF0jBgV9FOQew@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
 
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
+--hfs6ocpfhxpyqlxm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/rapidio/devices/rio_mport_cdev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 451608e960a1..3abbba8c2b5b 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1710,8 +1710,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
- 	if (rval & RIO_PEF_SWITCH) {
- 		rio_mport_read_config_32(mport, destid, hopcount,
- 					 RIO_SWP_INFO_CAR, &swpinfo);
--		size += (RIO_GET_TOTAL_PORTS(swpinfo) *
--			 sizeof(rswitch->nextdev[0])) + sizeof(*rswitch);
-+		size += struct_size(rswitch, nextdev, RIO_GET_TOTAL_PORTS(swpinfo));
- 	}
- 
- 	rdev = kzalloc(size, GFP_KERNEL);
--- 
-2.27.0
+On Mon, May 25, 2020 at 01:09:00PM +0200, Rafael J. Wysocki wrote:
+> On Mon, May 25, 2020 at 1:05 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrot=
+e:
+> >
+> > pm_runtime_get_sync() increments the runtime PM usage counter even
+> > it returns an error code. Thus a pairing decrement is needed on
+> > the error handling path to keep the counter balanced.
+> >
+> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+>=20
+> Better now:
+>=20
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
+Thanks, queued.
+
+-- Sebastian
+
+> > ---
+> >
+> > Changelog:
+> >
+> > v2: - Use pm_runtime_put_noidle() rather than
+> >       pm_runtime_put_autosuspend().
+> > ---
+> >  drivers/power/supply/bq24190_charger.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/sup=
+ply/bq24190_charger.c
+> > index 453d6332d43a..7b24c41a2137 100644
+> > --- a/drivers/power/supply/bq24190_charger.c
+> > +++ b/drivers/power/supply/bq24190_charger.c
+> > @@ -481,8 +481,10 @@ static ssize_t bq24190_sysfs_store(struct device *=
+dev,
+> >                 return ret;
+> >
+> >         ret =3D pm_runtime_get_sync(bdi->dev);
+> > -       if (ret < 0)
+> > +       if (ret < 0) {
+> > +               pm_runtime_put_noidle(bdi->dev);
+> >                 return ret;
+> > +       }
+> >
+> >         ret =3D bq24190_write_mask(bdi, info->reg, info->mask, info->sh=
+ift, v);
+> >         if (ret)
+> > --
+> > 2.17.1
+> >
+
+--hfs6ocpfhxpyqlxm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s79sACgkQ2O7X88g7
++pq0+w/8C/4vBPrSRH0rWcIJdajqgkNmnPPK8jKZ/IqRvEi+xuN5o4udRKDddnV9
+hcJqXPiyfWmUvgceyI9qDRd8GRk5ezUXH7izk3FCao9V9KJzem/YpkmAn2NbXQ+j
+lhmw/sxVW12R7w0nlRCaQ7MxIdwfz6jt+L0ZPOCLZjSHZQk++46zF/zOlqUI0oKP
+GNB04HMbgKjZpFKCw0UQrtPbbOJuciFCYcAUkFfL0SpNcGVxzcxWkH3SYC8kag5m
+Dr5x+cex5tP5CxAPtvAqM2seMtba+tM3goOJH0ivmG6cP+3fu+4RuvPSQ6MIT0qy
+o8QYMScUVO30V3Qxs2jBO8ytSAhZ425J/s8mQxOL14EhTP4DN3+UndgSaDj4ZcrX
+TCfXtTQzwN6Z7Xln1GOp4Lpxdysp2MRVkDX0xffVc7kGR8EFl9EuFvf94IHuLE0y
+Bc7PUwxD08G83VjIiItpaBd1UDvkZAx01dDnIXwN/ihd4a2GeAEvx/zhn8sksFwG
+iEuEXLkgOmUiHa+hWgO80NCvaVDJ9rRs7amCgCfDNouonwe9DBC948WOxA+6ue8U
+2N4bD2Y/u53ItO3ROXXulMjGOpNOQ1xmVLM6jGDGsCMlV6z8N8BN1qpo+73VlzCF
+0KE0+HlED+ZfOYtoX3jEDb42OCVW7R4up9FDdGlsbeINiC7TOYc=
+=veqx
+-----END PGP SIGNATURE-----
+
+--hfs6ocpfhxpyqlxm--
