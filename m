@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2319C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 366D520B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2B620B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581488;
-	bh=jgH7W4uBhh0DiOYmPYpnZY92jnyyqhhICDrT5uPbnmg=;
+	s=default; t=1592581494;
+	bh=irzTMsY+KqXnyontaU8CT4smXOnZ+Pu+cz+OaDBR/XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbUD2OA/+ZAnu6epFTpfjSkQEC7je/UIp5rO+vAbRLF4SkCXDgdCEeGx89rbue+oU
-	 aTQJxiQtja8w5r/qJiRj4AOXLz8CT+tHnov92uCf3ASgiHWPE9GTaYtEo0mneNSiy8
-	 cYq4ZS0EUkuqkIBmFGXpON/2jMvwLQ4V+E+EVISg=
+	b=erxipCYEW/3e6ypFaWDBRG+yff6ajAf8WSVDaMd4iEUXiW8dZhSzdSbtTSccmyoJu
+	 14NxF1cW4uMln6QcmgjWE1dZfmxFE8sVuM8VYfW1fKZ8K1SvSI6YPtqWF3F+dWtmDq
+	 ByV9w/8TP1IdHjpu1CvZUrUlH+N1pQxht7hWNMis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405196AbgFSPop (ORCPT
+        id S2405210AbgFSPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404423AbgFSP1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:49 -0400
+        id S2404292AbgFSP1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD4B720734;
-        Fri, 19 Jun 2020 15:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A861218AC;
+        Fri, 19 Jun 2020 15:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580468;
-        bh=jgH7W4uBhh0DiOYmPYpnZY92jnyyqhhICDrT5uPbnmg=;
+        s=default; t=1592580465;
+        bh=irzTMsY+KqXnyontaU8CT4smXOnZ+Pu+cz+OaDBR/XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJDb1mxAVgQOa34HoO1qxxbL5HM/E8D+2x6UYOPJVGZwvo/pnbxKHQhAUDt24FPUF
-         3bhY2NvQquXQeD7vQ5s7maJ+TNiURzOfmsG2gefko+Fxend4DLgWlKqiTZQ6KmdizY
-         nWHR42uAo5SS0/PCJol965BiVMho+wJlBve2qD3s=
+        b=V5SeeummqLVirDHak4oqQSRaKF8O5zdasA/aSgZ5ZFa393DO+oh1a6z42M5lF/cUH
+         5VNNezS5Ikfcbf7L6EJfo5AbGUWzyg5t3xd1l7tFqFYJ9PXmO0IVOr7pX5AYwGN6cI
+         nFeeJTHglUcbZFlGh83CSUCDbaeYrO6H/FBHzOfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 261/376] btrfs: reloc: fix reloc root leak and NULL pointer dereference
-Date:   Fri, 19 Jun 2020 16:32:59 +0200
-Message-Id: <20200619141722.682117523@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 260/376] btrfs: force chunk allocation if our global rsv is larger than metadata
+Date:   Fri, 19 Jun 2020 16:32:58 +0200
+Message-Id: <20200619141722.634574244@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,134 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 51415b6c1b117e223bc083e30af675cb5c5498f3 upstream.
+commit 9c343784c4328781129bcf9e671645f69fe4b38a upstream.
 
-[BUG]
-When balance is canceled, there is a pretty high chance that unmounting
-the fs can lead to lead the NULL pointer dereference:
+Nikolay noticed a bunch of test failures with my global rsv steal
+patches.  At first he thought they were introduced by them, but they've
+been failing for a while with 64k nodes.
 
-  BTRFS warning (device dm-3): page private not zero on page 223158272
-  ...
-  BTRFS warning (device dm-3): page private not zero on page 223162368
-  BTRFS error (device dm-3): leaked root 18446744073709551608-304 refcount 1
-  BUG: kernel NULL pointer dereference, address: 0000000000000168
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] PREEMPT SMP NOPTI
-  CPU: 2 PID: 5793 Comm: umount Tainted: G           O      5.7.0-rc5-custom+ #53
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:__lock_acquire+0x5dc/0x24c0
-  Call Trace:
-   lock_acquire+0xab/0x390
-   _raw_spin_lock+0x39/0x80
-   btrfs_release_extent_buffer_pages+0xd7/0x200 [btrfs]
-   release_extent_buffer+0xb2/0x170 [btrfs]
-   free_extent_buffer+0x66/0xb0 [btrfs]
-   btrfs_put_root+0x8e/0x130 [btrfs]
-   btrfs_check_leaked_roots.cold+0x5/0x5d [btrfs]
-   btrfs_free_fs_info+0xe5/0x120 [btrfs]
-   btrfs_kill_super+0x1f/0x30 [btrfs]
-   deactivate_locked_super+0x3b/0x80
-   deactivate_super+0x3e/0x50
-   cleanup_mnt+0x109/0x160
-   __cleanup_mnt+0x12/0x20
-   task_work_run+0x67/0xa0
-   exit_to_usermode_loop+0xc5/0xd0
-   syscall_return_slowpath+0x205/0x360
-   do_syscall_64+0x6e/0xb0
-   entry_SYSCALL_64_after_hwframe+0x49/0xb3
-  RIP: 0033:0x7fd028ef740b
+The problem is with 64k nodes we have a global reserve that calculates
+out to 13MiB on a freshly made file system, which only has 8MiB of
+metadata space.  Because of changes I previously made we no longer
+account for the global reserve in the overcommit logic, which means we
+correctly allow overcommit to happen even though we are already
+overcommitted.
 
-[CAUSE]
-When balance is canceled, all reloc roots are marked as orphan, and
-orphan reloc roots are going to be cleaned up.
+However in some corner cases, for example btrfs/170, we will allocate
+the entire file system up with data chunks before we have enough space
+pressure to allocate a metadata chunk.  Then once the fs is full we
+ENOSPC out because we cannot overcommit and the global reserve is taking
+up all of the available space.
 
-However for orphan reloc roots and merged reloc roots, their lifespan
-are quite different:
+The most ideal way to deal with this is to change our space reservation
+stuff to take into account the height of the tree's that we're
+modifying, so that our global reserve calculation does not end up so
+obscenely large.
 
-	Merged reloc roots	|	Orphan reloc roots by cancel
---------------------------------------------------------------------
-create_reloc_root()		| create_reloc_root()
-|- refs == 1			| |- refs == 1
-				|
-btrfs_grab_root(reloc_root);	| btrfs_grab_root(reloc_root);
-|- refs == 2			| |- refs == 2
-				|
-root->reloc_root = reloc_root;	| root->reloc_root = reloc_root;
-		>>> No difference so far <<<
-				|
-prepare_to_merge()		| prepare_to_merge()
-|- btrfs_set_root_refs(item, 1);| |- if (!err) (err == -EINTR)
-				|
-merge_reloc_roots()		| merge_reloc_roots()
-|- merge_reloc_root()		| |- Doing nothing to put reloc root
-   |- insert_dirty_subvol()	| |- refs == 2
-      |- __del_reloc_root()	|
-         |- btrfs_put_root()	|
-            |- refs == 1	|
-		>>> Now orphan reloc roots still have refs 2 <<<
-				|
-clean_dirty_subvols()		| clean_dirty_subvols()
-|- btrfs_drop_snapshot()	| |- btrfS_drop_snapshot()
-   |- reloc_root get freed	|    |- reloc_root still has refs 2
-				|	related ebs get freed, but
-				|	reloc_root still recorded in
-				|	allocated_roots
-btrfs_check_leaked_roots()	| btrfs_check_leaked_roots()
-|- No leaked roots		| |- Leaked reloc_roots detected
-				| |- btrfs_put_root()
-				|    |- free_extent_buffer(root->node);
-				|       |- eb already freed, caused NULL
-				|	   pointer dereference
+However that is a huge undertaking.  Instead fix this by forcing a chunk
+allocation if the global reserve is larger than the total metadata
+space.  This gives us essentially the same behavior that happened
+before, we get a chunk allocated and these tests can pass.
 
-[FIX]
-The fix is to clear fs_root->reloc_root and put it at
-merge_reloc_roots() time, so that we won't leak reloc roots.
+This is meant to be a stop-gap measure until we can tackle the "tree
+height only" project.
 
-Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
-CC: stable@vger.kernel.org # 5.1+
-Tested-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
+Fixes: 0096420adb03 ("btrfs: do not account global reserve in can_overcommit")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Tested-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ fs/btrfs/block-rsv.c   |    3 +++
+ fs/btrfs/transaction.c |   18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -2624,12 +2624,10 @@ again:
- 		reloc_root = list_entry(reloc_roots.next,
- 					struct btrfs_root, root_list);
+--- a/fs/btrfs/block-rsv.c
++++ b/fs/btrfs/block-rsv.c
+@@ -5,6 +5,7 @@
+ #include "block-rsv.h"
+ #include "space-info.h"
+ #include "transaction.h"
++#include "block-group.h"
  
-+		root = read_fs_root(fs_info, reloc_root->root_key.offset);
- 		if (btrfs_root_refs(&reloc_root->root_item) > 0) {
--			root = read_fs_root(fs_info,
--					    reloc_root->root_key.offset);
- 			BUG_ON(IS_ERR(root));
- 			BUG_ON(root->reloc_root != reloc_root);
--
- 			ret = merge_reloc_root(rc, root);
- 			btrfs_put_root(root);
- 			if (ret) {
-@@ -2639,6 +2637,14 @@ again:
- 				goto out;
- 			}
- 		} else {
-+			if (!IS_ERR(root)) {
-+				if (root->reloc_root == reloc_root) {
-+					root->reloc_root = NULL;
-+					btrfs_put_root(reloc_root);
-+				}
-+				btrfs_put_root(root);
-+			}
+ /*
+  * HOW DO BLOCK RESERVES WORK
+@@ -405,6 +406,8 @@ void btrfs_update_global_block_rsv(struc
+ 	else
+ 		block_rsv->full = 0;
+ 
++	if (block_rsv->size >= sinfo->total_bytes)
++		sinfo->force_alloc = CHUNK_ALLOC_FORCE;
+ 	spin_unlock(&block_rsv->lock);
+ 	spin_unlock(&sinfo->lock);
+ }
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -21,6 +21,7 @@
+ #include "dev-replace.h"
+ #include "qgroup.h"
+ #include "block-group.h"
++#include "space-info.h"
+ 
+ #define BTRFS_ROOT_TRANS_TAG 0
+ 
+@@ -523,6 +524,7 @@ start_transaction(struct btrfs_root *roo
+ 	u64 num_bytes = 0;
+ 	u64 qgroup_reserved = 0;
+ 	bool reloc_reserved = false;
++	bool do_chunk_alloc = false;
+ 	int ret;
+ 
+ 	/* Send isn't supposed to start transactions. */
+@@ -585,6 +587,9 @@ start_transaction(struct btrfs_root *roo
+ 							  delayed_refs_bytes);
+ 			num_bytes -= delayed_refs_bytes;
+ 		}
 +
- 			list_del_init(&reloc_root->root_list);
- 			/* Don't forget to queue this reloc root for cleanup */
- 			list_add_tail(&reloc_root->reloc_dirty_list,
++		if (rsv->space_info->force_alloc)
++			do_chunk_alloc = true;
+ 	} else if (num_items == 0 && flush == BTRFS_RESERVE_FLUSH_ALL &&
+ 		   !delayed_refs_rsv->full) {
+ 		/*
+@@ -667,6 +672,19 @@ got_it:
+ 		current->journal_info = h;
+ 
+ 	/*
++	 * If the space_info is marked ALLOC_FORCE then we'll get upgraded to
++	 * ALLOC_FORCE the first run through, and then we won't allocate for
++	 * anybody else who races in later.  We don't care about the return
++	 * value here.
++	 */
++	if (do_chunk_alloc && num_bytes) {
++		u64 flags = h->block_rsv->space_info->flags;
++
++		btrfs_chunk_alloc(h, btrfs_get_alloc_profile(fs_info, flags),
++				  CHUNK_ALLOC_NO_FORCE);
++	}
++
++	/*
+ 	 * btrfs_record_root_in_trans() needs to alloc new extents, and may
+ 	 * call btrfs_join_transaction() while we're also starting a
+ 	 * transaction.
 
 
