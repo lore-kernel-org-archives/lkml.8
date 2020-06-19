@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED08AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF51C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC164217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A753C21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580198;
-	bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+	s=default; t=1592580202;
+	bh=KT/3CO6F1Y/I0XkJN8sD4P2ewKtBu/xnwku614W1EWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tf508kyCNGkLsAmTftIV78VH2qeN2mv8AD+4uhbqZlx4DttePIbj8sspuk4IReZO/
-	 HJDGEe8mIcR6yALsI5DBKDgSu2Z/94nkOmxzZUJckmGpFhvf5WWCgVs7Pi2lghjgW6
-	 d8Hjrww8zWFE6rGHiziZZSwBidAFlj8wvkEBI2fw=
+	b=qzW76gi8HLH63GoEeQT/rC5y1GziU5uAuUKNamw3ioKo93bcPiI43srZNaPCw1Be8
+	 //iCWyXljfoieH+TlzhbkQZYG6zdugt81+MFDK4L5YgAV99nw0T8wmpw/IB4e7X/HL
+	 v73zUDKYsvKvTnc8/5gSxHFDStIqmywRySse+RV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393152AbgFSPXO (ORCPT
+        id S2393166AbgFSPXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392406AbgFSPTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:33 -0400
+        id S2404111AbgFSPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC7F206DB;
-        Fri, 19 Jun 2020 15:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F1B206DB;
+        Fri, 19 Jun 2020 15:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579971;
-        bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+        s=default; t=1592579976;
+        bh=KT/3CO6F1Y/I0XkJN8sD4P2ewKtBu/xnwku614W1EWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BosjqeSf1QikeWpeKes9xGoD5Ws0c3krhw6JKdIU+9RYMi//ZKEqSm/J7p/rYIkHY
-         RXSu20iDzvVxB9/ckuQL1i7i9oSJ4jjUIeL5z+UVHpqiIUxv07Mimi12i7mJxYCIU5
-         Jb+PuUCj67n3yFcT1s7vMBS8KCGUJEAhmAcdBHTo=
+        b=oidivbZeaxFrIE7XuBneUa9b61gJnAtsthE0u/jg4/S6tcBzneT68P/Y4513lbptw
+         XQfBt8fUHs1XdV/LEDjyMAvImlUf0vV+E3NU/bqlzv2c/WnicgXfhdLwWfgylPfr7m
+         M/N1FkO9AMqRgOR+lbIEpue9N/Rdsafa6Wbdx8Nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 073/376] Bluetooth: btmtkuart: Improve exception handling in btmtuart_probe()
-Date:   Fri, 19 Jun 2020 16:29:51 +0200
-Message-Id: <20200619141713.807949518@linuxfoundation.org>
+Subject: [PATCH 5.7 075/376] spi: dw: Fix Rx-only DMA transfers
+Date:   Fri, 19 Jun 2020 16:29:53 +0200
+Message-Id: <20200619141713.903566681@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,69 +68,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 4803c54ca24923a30664bea2a7772db6e7303c51 ]
+[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
 
-Calls of the functions clk_disable_unprepare() and hci_free_dev()
-were missing for the exception handling.
-Thus add the missed function calls together with corresponding
-jump targets.
+Tx-only DMA transfers are working perfectly fine since in this case
+the code just ignores the Rx FIFO overflow interrupts. But it turns
+out the SPI Rx-only transfers are broken since nothing pushing any
+data to the shift registers, so the Rx FIFO is left empty and the
+SPI core subsystems just returns a timeout error. Since DW DMAC
+driver doesn't support something like cyclic write operations of
+a single byte to a device register, the only way to support the
+Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+This is what we intend to fix in this commit by setting the
+SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Fixes: 055825614c6b ("Bluetooth: btmtkuart: add an implementation for clock osc property")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmtkuart.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
-index e11169ad8247..8a81fbca5c9d 100644
---- a/drivers/bluetooth/btmtkuart.c
-+++ b/drivers/bluetooth/btmtkuart.c
-@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	if (btmtkuart_is_standalone(bdev)) {
- 		err = clk_prepare_enable(bdev->osc);
- 		if (err < 0)
--			return err;
-+			goto err_hci_free_dev;
- 
- 		if (bdev->boot) {
- 			gpiod_set_value_cansleep(bdev->boot, 1);
-@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 
- 		/* Power on */
- 		err = regulator_enable(bdev->vcc);
--		if (err < 0) {
--			clk_disable_unprepare(bdev->osc);
--			return err;
--		}
-+		if (err < 0)
-+			goto err_clk_disable_unprepare;
- 
- 		/* Reset if the reset-gpios is available otherwise the board
- 		 * -level design should be guaranteed.
-@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	err = hci_register_dev(hdev);
- 	if (err < 0) {
- 		dev_err(&serdev->dev, "Can't register HCI device\n");
--		hci_free_dev(hdev);
- 		goto err_regulator_disable;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index dbf9b8d5cebe..5725c37544f2 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -531,6 +531,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 			dws->dma_inited = 0;
+ 		} else {
+ 			master->can_dma = dws->dma_ops->can_dma;
++			master->flags |= SPI_CONTROLLER_MUST_TX;
+ 		}
  	}
  
-@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- err_regulator_disable:
- 	if (btmtkuart_is_standalone(bdev))
- 		regulator_disable(bdev->vcc);
-+err_clk_disable_unprepare:
-+	if (btmtkuart_is_standalone(bdev))
-+		clk_disable_unprepare(bdev->osc);
-+err_hci_free_dev:
-+	hci_free_dev(hdev);
- 
- 	return err;
- }
 -- 
 2.25.1
 
