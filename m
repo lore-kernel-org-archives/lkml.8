@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B357C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A272C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032BB20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9AD20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581953;
-	bh=yZWkXOfP2kad7R2XBI+KQjjxoy8Pk3WC5roLHhgPHOo=;
+	s=default; t=1592581956;
+	bh=YP48rbtDsCt7cPYauRcjGLjAc3a4MGalUtGGAlwwvpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhHKljIeuCylhEOuzYEp8eLqYMPSrnRITEsy306BnWNiXMV18NoosPwIm2Y8JqYSZ
-	 /DjwKVpAE6w4GWs1cWlAdAdf2x2rUOVXD3M6FklrLXNiYpMylccQK2J4ynmfpdUv3A
-	 K3B3NZxC551a4LqnaLoxavGoCV7IUsLDqB4bjPJI=
+	b=NLJ46FCChOCIG4G4Sc1zBIDLI0qlrkrLWBecCmNfavHpw4ihmtgzFTn9QSEj00+HO
+	 LJHQZnlyC/MnwE5Gj6DiAPesDRei6va4CZB2sx7prraUzqkZkEGi9dtUXTmP9qwMkf
+	 1Sk6nrF6n0Tr/rI94OLafHUrPI/io/8QDGZbAh04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392489AbgFSPwb (ORCPT
+        id S2405377AbgFSPwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54698 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392580AbgFSPXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:09 -0400
+        id S2391970AbgFSPXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B33021D7F;
-        Fri, 19 Jun 2020 15:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2478F217A0;
+        Fri, 19 Jun 2020 15:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580188;
-        bh=yZWkXOfP2kad7R2XBI+KQjjxoy8Pk3WC5roLHhgPHOo=;
+        s=default; t=1592580182;
+        bh=YP48rbtDsCt7cPYauRcjGLjAc3a4MGalUtGGAlwwvpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+NBpjh28KkVmVmGiBD4ezDsyTMsiVPQo12oO5pz3pKHnL7sPRU5EjaEatcvMm/rh
-         npqehy4uO0hDUn/G0pzRT7qYKhxFOudAtj7+/qcAgrtScZzmiiuLR9KBZNuXB3+kxu
-         O8ox0NDbLvf3hz+DCjTaUM1GR/EsBVgxpxozS19M=
+        b=kblRO297nVEOxm3cjPY5+iZOWoT+f2h9xCHlsArgqoNMruEdQXg6mt8jwiUhzoYwO
+         E/4N+E+VrUFVGk7TCDGQPsxBjvgj6v9/dqHpp7k0U0cm0ciaFCsafw4FUEM7KSCVLv
+         LLSZXDSkD7jbt8qS+D8Td43I37yNjQ+dFyiWW3wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
-        Devulapally Shiva Krishna <shiva@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 156/376] Crypto/chcr: fix ctr, cbc, xts and rfc3686-ctr failed tests
-Date:   Fri, 19 Jun 2020 16:31:14 +0200
-Message-Id: <20200619141717.706332342@linuxfoundation.org>
+Subject: [PATCH 5.7 154/376] libertas_tf: avoid a null dereference in pointer priv
+Date:   Fri, 19 Jun 2020 16:31:12 +0200
+Message-Id: <20200619141717.612882249@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,177 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devulapally Shiva Krishna <shiva@chelsio.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 6b363a286cd01961423f5dcd648b265088ec56d0 ]
+[ Upstream commit 049ceac308b0d57c4f06b9fb957cdf95d315cf0b ]
 
-This solves the following issues observed during self test when
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is enabled.
+Currently there is a check if priv is null when calling lbtf_remove_card
+but not in a previous call to if_usb_reset_dev that can also dereference
+priv.  Fix this by also only calling lbtf_remove_card if priv is null.
 
-1. Added fallback for cbc, ctr and rfc3686 if req->nbytes is zero
-and for xts added a fallback case if req->nbytes is not multiple of 16.
+It is noteable that there don't seem to be any bugs reported that the
+null pointer dereference has ever occurred, so I'm not sure if the null
+check is required, but since we're doing a null check anyway it should
+be done for both function calls.
 
-2. In case of cbc-aes, solved wrong iv update. When
-chcr_cipher_fallback() is called, used req->info pointer instead of
-reqctx->iv.
-
-3. In cbc-aes decryption there was a wrong result. This occurs when
-chcr_cipher_fallback() is called from chcr_handle_cipher_resp().
-In the fallback function iv(req->info) used is wrongly updated.
-So use the initial iv for this case.
-
-4)In case of ctr-aes encryption observed wrong result. In adjust_ctr_overflow()
-there is condition which checks if ((bytes / AES_BLOCK_SIZE) > c),
-where c is the number of blocks which can be processed without iv overflow,
-but for the above bytes (req->nbytes < 32 , not a multiple of 16) this
-condition fails and the 2nd block is corrupted as it requires the rollover iv.
-So added a '=' condition in this to take care of this.
-
-5)In rfc3686-ctr there was wrong result observed. This occurs when
-chcr_cipher_fallback() is called from chcr_handle_cipher_resp().
-Here also copying initial_iv in init_iv pointer for handling the fallback
-case correctly.
-
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: baa0280f08c7 ("libertas_tf: don't defer firmware loading until start()")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200501173900.296658-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c   | 42 ++++++++++++++++++----------
- drivers/crypto/chelsio/chcr_crypto.h |  1 +
- 2 files changed, 29 insertions(+), 14 deletions(-)
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index 5a2d9ee9348d..446fb896ee6d 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -1054,8 +1054,8 @@ static unsigned int adjust_ctr_overflow(u8 *iv, u32 bytes)
- 	u32 temp = be32_to_cpu(*--b);
+diff --git a/drivers/net/wireless/marvell/libertas_tf/if_usb.c b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+index 25ac9db35dbf..bedc09215088 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+@@ -247,10 +247,10 @@ static void if_usb_disconnect(struct usb_interface *intf)
  
- 	temp = ~temp;
--	c = (u64)temp +  1; // No of block can processed withou overflow
--	if ((bytes / AES_BLOCK_SIZE) > c)
-+	c = (u64)temp +  1; // No of block can processed without overflow
-+	if ((bytes / AES_BLOCK_SIZE) >= c)
- 		bytes = c * AES_BLOCK_SIZE;
- 	return bytes;
- }
-@@ -1158,15 +1158,16 @@ static int chcr_final_cipher_iv(struct skcipher_request *req,
- static int chcr_handle_cipher_resp(struct skcipher_request *req,
- 				   unsigned char *input, int err)
- {
-+	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
--	struct chcr_context *ctx = c_ctx(tfm);
--	struct uld_ctx *u_ctx = ULD_CTX(c_ctx(tfm));
--	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
--	struct sk_buff *skb;
- 	struct cpl_fw6_pld *fw6_pld = (struct cpl_fw6_pld *)input;
--	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
--	struct cipher_wr_param wrparam;
-+	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
-+	struct uld_ctx *u_ctx = ULD_CTX(c_ctx(tfm));
- 	struct chcr_dev *dev = c_ctx(tfm)->dev;
-+	struct chcr_context *ctx = c_ctx(tfm);
-+	struct adapter *adap = padap(ctx->dev);
-+	struct cipher_wr_param wrparam;
-+	struct sk_buff *skb;
- 	int bytes;
+ 	lbtf_deb_enter(LBTF_DEB_MAIN);
  
- 	if (err)
-@@ -1197,6 +1198,8 @@ static int chcr_handle_cipher_resp(struct skcipher_request *req,
- 	if (unlikely(bytes == 0)) {
- 		chcr_cipher_dma_unmap(&ULD_CTX(c_ctx(tfm))->lldi.pdev->dev,
- 				      req);
-+		memcpy(req->iv, reqctx->init_iv, IV);
-+		atomic_inc(&adap->chcr_stats.fallback);
- 		err = chcr_cipher_fallback(ablkctx->sw_cipher,
- 				     req->base.flags,
- 				     req->src,
-@@ -1248,20 +1251,28 @@ static int process_cipher(struct skcipher_request *req,
- 				  struct sk_buff **skb,
- 				  unsigned short op_type)
- {
-+	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
- 	unsigned int ivsize = crypto_skcipher_ivsize(tfm);
--	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
-+	struct adapter *adap = padap(c_ctx(tfm)->dev);
- 	struct	cipher_wr_param wrparam;
- 	int bytes, err = -EINVAL;
-+	int subtype;
+-	if_usb_reset_device(priv);
+-
+-	if (priv)
++	if (priv) {
++		if_usb_reset_device(priv);
+ 		lbtf_remove_card(priv);
++	}
  
- 	reqctx->processed = 0;
- 	reqctx->partial_req = 0;
- 	if (!req->iv)
- 		goto error;
-+	subtype = get_cryptoalg_subtype(tfm);
- 	if ((ablkctx->enckey_len == 0) || (ivsize > AES_BLOCK_SIZE) ||
- 	    (req->cryptlen == 0) ||
- 	    (req->cryptlen % crypto_skcipher_blocksize(tfm))) {
-+		if (req->cryptlen == 0 && subtype != CRYPTO_ALG_SUB_TYPE_XTS)
-+			goto fallback;
-+		else if (req->cryptlen % crypto_skcipher_blocksize(tfm) &&
-+			 subtype == CRYPTO_ALG_SUB_TYPE_XTS)
-+			goto fallback;
- 		pr_err("AES: Invalid value of Key Len %d nbytes %d IV Len %d\n",
- 		       ablkctx->enckey_len, req->cryptlen, ivsize);
- 		goto error;
-@@ -1302,12 +1313,10 @@ static int process_cipher(struct skcipher_request *req,
- 	} else {
- 		bytes = req->cryptlen;
- 	}
--	if (get_cryptoalg_subtype(tfm) ==
--	    CRYPTO_ALG_SUB_TYPE_CTR) {
-+	if (subtype == CRYPTO_ALG_SUB_TYPE_CTR) {
- 		bytes = adjust_ctr_overflow(req->iv, bytes);
- 	}
--	if (get_cryptoalg_subtype(tfm) ==
--	    CRYPTO_ALG_SUB_TYPE_CTR_RFC3686) {
-+	if (subtype == CRYPTO_ALG_SUB_TYPE_CTR_RFC3686) {
- 		memcpy(reqctx->iv, ablkctx->nonce, CTR_RFC3686_NONCE_SIZE);
- 		memcpy(reqctx->iv + CTR_RFC3686_NONCE_SIZE, req->iv,
- 				CTR_RFC3686_IV_SIZE);
-@@ -1315,20 +1324,25 @@ static int process_cipher(struct skcipher_request *req,
- 		/* initialize counter portion of counter block */
- 		*(__be32 *)(reqctx->iv + CTR_RFC3686_NONCE_SIZE +
- 			CTR_RFC3686_IV_SIZE) = cpu_to_be32(1);
-+		memcpy(reqctx->init_iv, reqctx->iv, IV);
- 
- 	} else {
- 
- 		memcpy(reqctx->iv, req->iv, IV);
-+		memcpy(reqctx->init_iv, req->iv, IV);
- 	}
- 	if (unlikely(bytes == 0)) {
- 		chcr_cipher_dma_unmap(&ULD_CTX(c_ctx(tfm))->lldi.pdev->dev,
- 				      req);
-+fallback:       atomic_inc(&adap->chcr_stats.fallback);
- 		err = chcr_cipher_fallback(ablkctx->sw_cipher,
- 					   req->base.flags,
- 					   req->src,
- 					   req->dst,
- 					   req->cryptlen,
--					   reqctx->iv,
-+					   subtype ==
-+					   CRYPTO_ALG_SUB_TYPE_CTR_RFC3686 ?
-+					   reqctx->iv : req->iv,
- 					   op_type);
- 		goto error;
- 	}
-diff --git a/drivers/crypto/chelsio/chcr_crypto.h b/drivers/crypto/chelsio/chcr_crypto.h
-index 542bebae001f..b3fdbdc25acb 100644
---- a/drivers/crypto/chelsio/chcr_crypto.h
-+++ b/drivers/crypto/chelsio/chcr_crypto.h
-@@ -302,6 +302,7 @@ struct chcr_skcipher_req_ctx {
- 	unsigned int op;
- 	u16 imm;
- 	u8 iv[CHCR_MAX_CRYPTO_IV_LEN];
-+	u8 init_iv[CHCR_MAX_CRYPTO_IV_LEN];
- 	u16 txqidx;
- 	u16 rxqidx;
- };
+ 	/* Unlink and free urb */
+ 	if_usb_free(cardp);
 -- 
 2.25.1
 
