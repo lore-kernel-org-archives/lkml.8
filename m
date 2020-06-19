@@ -2,155 +2,63 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5174C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C465C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1D420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC21206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgFSCsX (ORCPT
+        id S1729508AbgFSCur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 22:48:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6285 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727114AbgFSCsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 22:48:23 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 91C94DE41C02577A07ED;
-        Fri, 19 Jun 2020 10:48:20 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 19 Jun
- 2020 10:48:16 +0800
-Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:_[PATCH]_f2fs-tools:_set_cold_flag?=
- =?UTF-8?Q?_for_non-dir_node?=
-To:     Zac <zhaowuyun@wingtech.com>, <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592484487-12072-1-git-send-email-zhaowuyun@wingtech.com>
- <4a2d19c4-1ede-0172-fe50-c8464ee341df@huawei.com>
- <000001d645e0$4aa645d0$dff2d170$@wingtech.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <ffcc8474-f2af-1934-9219-f4de6757e4a7@huawei.com>
-Date:   Fri, 19 Jun 2020 10:48:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <000001d645e0$4aa645d0$dff2d170$@wingtech.com>
-Content-Type: text/plain; charset="gbk"
-Content-Language: en-US
+        Thu, 18 Jun 2020 22:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgFSCuq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 22:50:46 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A76DC06174E;
+        Thu, 18 Jun 2020 19:50:46 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7DFDF120ED49A;
+        Thu, 18 Jun 2020 19:50:45 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 19:50:44 -0700 (PDT)
+Message-Id: <20200618.195044.1169450777833829991.davem@davemloft.net>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v1 3/6] serial: sunzilog: Return proper error code from
+ console ->setup() hook
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200618164751.56828-4-andriy.shevchenko@linux.intel.com>
+References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
+        <20200618164751.56828-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 19:50:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/19 10:21, Zac wrote:
->> On 2020/6/18 20:48, zhaowuyun@wingtech.com wrote:
->>> From: Wuyun Zhao <zhaowuyun@wingtech.com>
->>
->> Thanks for the patch. :)
->>
->> Please add commit message here.
-> 
-> OK
-> 
->>>
->>> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
->>> ---
->>>  fsck/dir.c  |  1 +
->>>  fsck/node.c |  1 +
->>>  fsck/node.h | 11 +++++++++++
->>>  3 files changed, 13 insertions(+)
->>>
->>> diff --git a/fsck/dir.c b/fsck/dir.c
->>> index 5f4f75e..dc03c98 100644
->>> --- a/fsck/dir.c
->>> +++ b/fsck/dir.c
->>> @@ -522,6 +522,7 @@ static void init_inode_block(struct f2fs_sb_info
->> *sbi,
->>>  	node_blk->footer.nid = cpu_to_le32(de->ino);
->>>  	node_blk->footer.flag = 0;
->>>  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
->>> +	set_cold_node(node_blk, S_ISDIR(mode));
->>>
->>>  	if (S_ISDIR(mode)) {
->>>  		make_empty_dir(sbi, node_blk);
->>> diff --git a/fsck/node.c b/fsck/node.c
->>> index 229a99c..1d291ca 100644
->>> --- a/fsck/node.c
->>> +++ b/fsck/node.c
->>> @@ -79,6 +79,7 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
->>>  	node_blk->footer.ino = f2fs_inode->footer.ino;
->>>  	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
->>>  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
->>> +	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
->>
->> How about wrapping these node footer fields assignment into a function?
->> then
->> we can reuse this in other places.
->>
->> void set_node_footer(nid, ino, ofs, ver, is_dir)
->> {
->> 	node_blk->footer.nid = cpu_to_le32(nid);
->> 	node_blk->footer.ino = f2fs_inode->footer.ino;
->> 	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
->> 	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
->> 	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
->> }
-> 
-> Ok, That's good.
-> 
->>>
->>>  	type = CURSEG_COLD_NODE;
->>>  	if (IS_DNODE(node_blk)) {
->>> diff --git a/fsck/node.h b/fsck/node.h
->>> index 6bce1fb..99139b1 100644
->>> --- a/fsck/node.h
->>> +++ b/fsck/node.h
->>> @@ -161,6 +161,17 @@ static inline int is_node(struct f2fs_node
->> *node_blk, int type)
->>>  	return le32_to_cpu(node_blk->footer.flag) & (1 << type);
->>>  }
->>
->> Beside this, I think we need to use set_node_footer() in:
->> - f2fs_write_root_inode
->> - f2fs_write_qf_inode
->> - f2fs_write_lpf_inode
->>
->> as well to fix mkfs bugs.
-> 
-> the root inode and the lpf inode is dir, need to set cold flag? 
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date: Thu, 18 Jun 2020 19:47:48 +0300
 
-No, but it is worth to use set_node_footer(..., is_dir:true) for cleanup.
+> For unifying console ->setup() handling, which is pure documented,
+> return error code, rather than non-zero arbitrary number.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
 
-Thanks,
-
-> 
->> Thanks,
->>
->>>
->>> +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
->>> +{
->>> +	unsigned int flag = le32_to_cpu(rn->footer.flag);
->>> +
->>> +	if (is_dir)
->>> +		flag &= ~(0x1 << COLD_BIT_SHIFT);
->>> +	else
->>> +		flag |= (0x1 << COLD_BIT_SHIFT);
->>> +	rn->footer.flag = cpu_to_le32(flag);
->>> +}
->>> +
->>>  #define is_fsync_dnode(node_blk)	is_node(node_blk, FSYNC_BIT_SHIFT)
->>>  #define is_dent_dnode(node_blk)		is_node(node_blk,
->> DENT_BIT_SHIFT)
->>>
->>>
-> 
-> .
-> 
+Acked-by: David S. Miller <davem@davemloft.net>
