@@ -2,54 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24241C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73870C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB9222193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424572193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579063;
-	bh=dtp5uvGLbHw4Xfc/4V3mo3lxqduEex7T+w3FHSLK934=;
+	s=default; t=1592579068;
+	bh=PPadPgYmjEXms2WCaeO6M5HS8S7ptyK8JnjsRSw2vPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXiMC5EnknxcHk1w7QjuT0BVmxAYR7piYmEnFqmbobh8B2T90UX6gjPqXIOzCZuit
-	 g/y71pNPmunwWNAmCmRFpmKd5ZyYwgLff9/74BOd+stb6qGk0JP+9Zr7K8yA/xaFnH
-	 Dui1h5a/Gz+AielUAqeFPCmX0ujPnu/LKOHTNlwM=
+	b=yRXQ2KmRuF11dBlaJuxw7gZe+loV3cidkYEy03bwa/9fbALIF0/i1+cfCYyXhrS8E
+	 7O9lzJJ24CpZ2z8T5zmn4tVS/jmj8ACS8GlZ8U1mm7d1GYHSPVeC5D0I7SVlphw5Dm
+	 yNu3qbokW4r1DCvAtANoKxeeXmn9Zqtn8wiMTF1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391124AbgFSPEV (ORCPT
+        id S2391141AbgFSPE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32800 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391105AbgFSPEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:10 -0400
+        id S2391129AbgFSPEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9AC21BE5;
-        Fri, 19 Jun 2020 15:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3CB021841;
+        Fri, 19 Jun 2020 15:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579049;
-        bh=dtp5uvGLbHw4Xfc/4V3mo3lxqduEex7T+w3FHSLK934=;
+        s=default; t=1592579063;
+        bh=PPadPgYmjEXms2WCaeO6M5HS8S7ptyK8JnjsRSw2vPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvhHEv0W1rbwEq0C+Kg1R3dPFYDZmj+PQyU+D+5pm4DpjBLghxN1n60GTtWGVagqn
-         PBHyVNgal/QWPGMPLRvpGqXlPPIAACEwBTlOPg4Bi+jln0B9S7GP75lqgmvWhCIlbg
-         o7ffc0GKzbMyuUeAZ/jdHREYgZnbckCrYChefzIA=
+        b=jUdp5ISYlKq02pbyYWz/ebtzhnAQ/SNnUKpRdl71Ye50jORzvHaVnVt7ihd2qW7++
+         Wy1tDyhhd9p5tTBDN53mMQROw3XHeF0g5MX5+aESeTHFsSpXY4K42wifIteHo/UENP
+         GvMrh3Z6ZaemSAojPdh+ycOjF2BarisYCQoz74jI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 216/267] PCI: mediatek: Add controller support for MT7629
-Date:   Fri, 19 Jun 2020 16:33:21 +0200
-Message-Id: <20200619141659.084933223@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 262/267] mtd: rawnand: pasemi: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:07 +0200
+Message-Id: <20200619141701.234818228@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,101 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianjun Wang <jianjun.wang@mediatek.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 0cccd42e6193e168cbecc271dae464e4a53fd7b3 ]
+commit f51466901c07e6930435d30b02a21f0841174f61 upstream.
 
-MT7629 is an ARM platform SoC which has the same PCIe IP as MT7622.
+nand_cleanup() is supposed to be called on error after a successful
+call to nand_scan() to free all NAND resources.
 
-The HW default value of its PCI host controller Device ID is invalid,
-fix it to match the hardware implementation.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible, hence pointing it as the commit to
+fix for backporting purposes, even if this commit is not introducing
+any bug.
 
-Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-[lorenzo.pieralisi@arm.com: commit log/minor spelling update]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-41-miquel.raynal@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
- include/linux/pci_ids.h                |  1 +
- 2 files changed, 19 insertions(+)
+ drivers/mtd/nand/raw/pasemi_nand.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 1bfbceb9f445..ca06d8bc01e7 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -72,6 +72,7 @@
- #define PCIE_MSI_VECTOR		0x0c0
- 
- #define PCIE_CONF_VEND_ID	0x100
-+#define PCIE_CONF_DEVICE_ID	0x102
- #define PCIE_CONF_CLASS_ID	0x106
- 
- #define PCIE_INT_MASK		0x420
-@@ -134,12 +135,16 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @need_fix_device_id: whether this host's device ID needed to be fixed or not
-+ * @device_id: device ID which this host need to be fixed
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool need_fix_device_id;
-+	unsigned int device_id;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -678,6 +683,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+--- a/drivers/mtd/nand/raw/pasemi_nand.c
++++ b/drivers/mtd/nand/raw/pasemi_nand.c
+@@ -163,7 +163,7 @@ static int pasemi_nand_probe(struct plat
+ 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
+ 		dev_err(dev, "Unable to register MTD device\n");
+ 		err = -ENODEV;
+-		goto out_lpc;
++		goto out_cleanup_nand;
  	}
  
-+	if (soc->need_fix_device_id)
-+		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-+
- 	/* 100ms timeout value should be enough for Gen1/2 training */
- 	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
- 				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-@@ -1213,11 +1221,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.setup_irq = mtk_pcie_setup_irq,
- };
+ 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
+@@ -171,6 +171,8 @@ static int pasemi_nand_probe(struct plat
  
-+static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-+	.need_fix_class_id = true,
-+	.need_fix_device_id = true,
-+	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-+	.ops = &mtk_pcie_ops_v2,
-+	.startup = mtk_pcie_startup_port_v2,
-+	.setup_irq = mtk_pcie_setup_irq,
-+};
-+
- static const struct of_device_id mtk_pcie_ids[] = {
- 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
- 	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-+	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
- 	{},
- };
+ 	return 0;
  
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b952f1557f5d..a7abaaa9bc27 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2132,6 +2132,7 @@
- #define PCI_VENDOR_ID_MYRICOM		0x14c1
- 
- #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-+#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
- 
- #define PCI_VENDOR_ID_TITAN		0x14D2
- #define PCI_DEVICE_ID_TITAN_010L	0x8001
--- 
-2.25.1
-
++ out_cleanup_nand:
++	nand_cleanup(chip);
+  out_lpc:
+ 	release_region(lpcctl, 4);
+  out_ior:
 
 
