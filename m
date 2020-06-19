@@ -2,159 +2,119 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94854C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA71C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CA220C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0421532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FUB52KH7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYDrt5Dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389213AbgFSTh0 (ORCPT
+        id S2389725AbgFSTiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
+        Fri, 19 Jun 2020 15:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389188AbgFSThX (ORCPT
+        with ESMTP id S2389188AbgFSTiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:37:23 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47FB6C0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:37:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i4so4702133pjd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:37:23 -0700 (PDT)
+        Fri, 19 Jun 2020 15:38:54 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24919C06174E;
+        Fri, 19 Jun 2020 12:38:54 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id cy7so1971984edb.5;
+        Fri, 19 Jun 2020 12:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=o7if+DdFqLdTqlhmKOgGWwPbnBli3b0MNWvVpv3R4kw=;
-        b=FUB52KH7JaEZzQ1Sa88+rHDFmBQsWgAcadbsgEbWzKh0ASy5MJvrDDegCm1NTXAOS8
-         vGHr/8ouSL2waaiB0YbuZHgyMv/9ZwoFxlq+Rv9mQnqomECuQBKi0/XNW3pVwoYGpCEf
-         Goc0O9aqUxBX+7MjVIfo9KadJ7D/V9gTIEtuA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=frpyFy5QhoXErzx9/nthK4q+e/lcRU4mJpRY09aN6PA=;
+        b=mYDrt5DrKzmDCQwm9gPQbDVuVr529D863mAn7FNUpRyR1nWf69L967Ke/w51sdoDMA
+         hnYfl5nJISwIEdd8VA1WqZer+gFJ5rL8acldeRBfiN0G1d72e4AGWfXpPE5Ku9jva0Hb
+         4kwHVxetDRnKvRkgc4lk6og73xQKqdwjomP2wdLkpvcWlopJU9OA/lpWWW86wMuSduMu
+         ikdZjv2iGNZHqYXWXOxRjgzyp1PnvfA9WWJAJxtDLzqV3Mfa8PnnT6r2mjQ/PWO5tYlD
+         hrmUzIJ8LWrSW3Rap/fzHR0e31fuEnPL2KaJtbLsgW1fXp9VphJqZK3W1CeK+UxWQrHW
+         8l4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=o7if+DdFqLdTqlhmKOgGWwPbnBli3b0MNWvVpv3R4kw=;
-        b=rGEI8Upzm+eutfv4dfcApITxscZgwW/uM7Sj7PQQ91StKElkDboFNEbYXA5qHnSEQ7
-         nZcCTAcwwZprcSDYT3054ilM6yu5BBqg49KFhL/l9L76kYi4RD4qZ8wSCjdTrKST7beG
-         9XEdf5UPr3LRwCX5V5ZY8oCoX5Bc+KPhGYMJHCtTaqXeqiPrYHu8UdPDB2HRauwgR1T+
-         LpFvX/kvSLm4jCzpns/mhpuYJTYNDzv53RlZHdzyy0b2S9qoFWDzzfBWL9br2AsIZ09f
-         6VC2Ob09eVY1R2dtmQptfWs9M30nJ1kB9tG/qQK4/ySTU+nbOpNjuIqFwoqZnt7pCflg
-         FuzA==
-X-Gm-Message-State: AOAM531xrJd9618QLmO0ExXbE6lZ/1W7nWRHFuRlX9hR2E9ECRJ37Pzi
-        lk9tdAfzT7aLXO7Zpytfs+pBvw==
-X-Google-Smtp-Source: ABdhPJy1kxnlCvJmO5IS+9Scdoew2zfX/pdbNf5xDUloU8j9e4g8x0h4K8xzytX/BaBY+vfXdU7CGQ==
-X-Received: by 2002:a17:90a:ea84:: with SMTP id h4mr4579161pjz.45.1592595442674;
-        Fri, 19 Jun 2020 12:37:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w10sm5773025pgm.70.2020.06.19.12.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 12:37:21 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 12:37:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-mips@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH] seccomp: Use -1 marker for end of mode 1 syscall list
-Message-ID: <202006191236.AC3E22AAB@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=frpyFy5QhoXErzx9/nthK4q+e/lcRU4mJpRY09aN6PA=;
+        b=fo6Mo+G2a+KI6j7uc5vJWmuPqrg3nSVm1zRY9z6xpoHXk5Rm5e6RAiHwdkGdW8KUC5
+         bubeewqalyZ81ZG9u80ZzpEwjQ2/8DKoBJdgGMTOH3ud2cGSboGPRR2mcMxBwsL261IM
+         54fDFOMR8y6MRqxM1z1YLoWYEshLjajRflPGODWN3Y2mPbu1dUqldr6ghfm1QAttoLht
+         iJnZaFRoho9aSiSE8cJLBGSFwWpG08aveLQ+bNG+dZMHBWKMr3IAzCBikwG3IynBp9O/
+         mPwUyeT1PdysPgLlqAj8L9rPQDKFCrSykoOz3afy0ao4YkwOEmXI++4QGexYGP7aFL3d
+         uZzg==
+X-Gm-Message-State: AOAM530Ru0luJOpeestEMeURvGfWGWbJqcMw9af0zYfbFc1gNuKMehDj
+        +3/muqSr+5rDyAeYTvaOQMLWnwVPs8Xl1WzcuB1wEA==
+X-Google-Smtp-Source: ABdhPJzV33vZ0/jK36xk96KlbpobiwtmnsYkMISH5S+FKGnGUONvBgrNbgeMkwbM6+OMOGz2GB7d8uU0v45ksH5cwhM=
+X-Received: by 2002:aa7:dc50:: with SMTP id g16mr5135478edu.318.1592595532859;
+ Fri, 19 Jun 2020 12:38:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200619181007.GA32353@embeddedor>
+In-Reply-To: <20200619181007.GA32353@embeddedor>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 19 Jun 2020 22:38:41 +0300
+Message-ID: <CA+h21hoQiRnpiAsLR6ZttbmFMQHb6UNAojaDTH=Y-RPrwwpR0w@mail.gmail.com>
+Subject: Re: [PATCH][next] net: dsa: sja1105: Use struct_size() in kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The terminator for the mode 1 syscalls list was a 0, but that could be
-a valid syscall number (e.g. x86_64 __NR_read). By luck, __NR_read was
-listed first and the loop construct would not test it, so there was no
-bug. However, this is fragile. Replace the terminator with -1 instead,
-and make the variable name for mode 1 syscall lists more descriptive.
+Hi Gustavo,
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-I'll be putting this into my for-next/seccomp tree. I would love a MIPS
-ack, if someone's got a moment to double-check this. :)
----
- arch/mips/include/asm/seccomp.h |  4 ++--
- include/asm-generic/seccomp.h   |  2 +-
- kernel/seccomp.c                | 10 +++++-----
- 3 files changed, 8 insertions(+), 8 deletions(-)
+On Fri, 19 Jun 2020 at 21:04, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+>
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
+>
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/dsa/sja1105/sja1105_tas.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_tas.c b/drivers/net/dsa/sja1105/sja1105_tas.c
+> index 3aa1a8b5f766..31d8acff1f01 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_tas.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_tas.c
+> @@ -475,8 +475,7 @@ bool sja1105_gating_check_conflicts(struct sja1105_private *priv, int port,
+>         if (list_empty(&gating_cfg->entries))
+>                 return false;
+>
+> -       dummy = kzalloc(sizeof(struct tc_taprio_sched_entry) * num_entries +
+> -                       sizeof(struct tc_taprio_qopt_offload), GFP_KERNEL);
+> +       dummy = kzalloc(struct_size(dummy, entries, num_entries), GFP_KERNEL);
 
-diff --git a/arch/mips/include/asm/seccomp.h b/arch/mips/include/asm/seccomp.h
-index e383d7e27b93..aa809589a181 100644
---- a/arch/mips/include/asm/seccomp.h
-+++ b/arch/mips/include/asm/seccomp.h
-@@ -9,12 +9,12 @@ static inline const int *get_compat_mode1_syscalls(void)
- 	static const int syscalls_O32[] = {
- 		__NR_O32_Linux + 3, __NR_O32_Linux + 4,
- 		__NR_O32_Linux + 1, __NR_O32_Linux + 193,
--		0, /* null terminated */
-+		-1, /* negative terminated */
- 	};
- 	static const int syscalls_N32[] = {
- 		__NR_N32_Linux + 0, __NR_N32_Linux + 1,
- 		__NR_N32_Linux + 58, __NR_N32_Linux + 211,
--		0, /* null terminated */
-+		-1, /* negative terminated */
- 	};
- 
- 	if (IS_ENABLED(CONFIG_MIPS32_O32) && test_thread_flag(TIF_32BIT_REGS))
-diff --git a/include/asm-generic/seccomp.h b/include/asm-generic/seccomp.h
-index 1321ac7821d7..6b6f42bc58f9 100644
---- a/include/asm-generic/seccomp.h
-+++ b/include/asm-generic/seccomp.h
-@@ -33,7 +33,7 @@ static inline const int *get_compat_mode1_syscalls(void)
- 	static const int mode1_syscalls_32[] = {
- 		__NR_seccomp_read_32, __NR_seccomp_write_32,
- 		__NR_seccomp_exit_32, __NR_seccomp_sigreturn_32,
--		0, /* null terminated */
-+		-1, /* negative terminated */
- 	};
- 	return mode1_syscalls_32;
- }
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 0ed57e8c49d0..866a432cd746 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -742,20 +742,20 @@ static inline void seccomp_log(unsigned long syscall, long signr, u32 action,
-  */
- static const int mode1_syscalls[] = {
- 	__NR_seccomp_read, __NR_seccomp_write, __NR_seccomp_exit, __NR_seccomp_sigreturn,
--	0, /* null terminated */
-+	-1, /* negative terminated */
- };
- 
- static void __secure_computing_strict(int this_syscall)
- {
--	const int *syscall_whitelist = mode1_syscalls;
-+	const int *allowed_syscalls = mode1_syscalls;
- #ifdef CONFIG_COMPAT
- 	if (in_compat_syscall())
--		syscall_whitelist = get_compat_mode1_syscalls();
-+		allowed_syscalls = get_compat_mode1_syscalls();
- #endif
- 	do {
--		if (*syscall_whitelist == this_syscall)
-+		if (*allowed_syscalls == this_syscall)
- 			return;
--	} while (*++syscall_whitelist);
-+	} while (*++allowed_syscalls != -1);
- 
- #ifdef SECCOMP_DEBUG
- 	dump_stack();
--- 
-2.25.1
+Before, I could read this line and I knew what it did. Now, I have to
+look it up.
+But if it's in the interest of kernel coding style, what can I say.
 
+Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
--- 
-Kees Cook
+>         if (!dummy) {
+>                 NL_SET_ERR_MSG_MOD(extack, "Failed to allocate memory");
+>                 return true;
+> --
+> 2.27.0
+>
