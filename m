@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03748206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEC5206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580958;
-	bh=THVtaWUnXGtkXiUpMl98ezwe7oGbMPmTprpCeiVDeSk=;
+	s=default; t=1592580964;
+	bh=jPxXse+cQPfEmZrr9f0Q4FwlTl3ase3YR4MRbsFeDCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmtEiQNOcKYeA+Gq3V3kW5kuxpNm2lYmpIEjuWQu8PA1mLooTkNgOOXUxx+Ayj9c1
-	 uziIGSwozzSdy4NIju7iQAAPNPCRrvG3cgG19Emgwj0NB8DOR2idTpkeIEJM0kTvTP
-	 u/0XjNSkx/Fw+65iLb6xz9YEqWC7B4RhVjurnqh8=
+	b=GEoPoiaKqaQSSdq2rCCVc9BxgHYJzUDhTMMojmT4XhrEUOK/Lw983P2DQQ7bxWOZo
+	 l33DVS38PSbbTucuRgrC3ROINCfPv1FMTvTVpVMuUxxdPe1sspWIFO5hqToI3o25IJ
+	 +/NYPeLt9/qqBxu4Oq2A6+BWz5z/P+0CWi/az/Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405037AbgFSPf5 (ORCPT
+        id S2405048AbgFSPgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393812AbgFSPbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:20 -0400
+        id S2393798AbgFSPbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 262E52166E;
-        Fri, 19 Jun 2020 15:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B62C20734;
+        Fri, 19 Jun 2020 15:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580679;
-        bh=THVtaWUnXGtkXiUpMl98ezwe7oGbMPmTprpCeiVDeSk=;
+        s=default; t=1592580677;
+        bh=jPxXse+cQPfEmZrr9f0Q4FwlTl3ase3YR4MRbsFeDCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBXco2l95FCrWMmx7GaN1Pa/qEwDZRYP+BKzV+VblnO5+B8sVxuEIwvxJjaIXJgN6
-         yeWtSC9v6ZzAYjuL7BwJzdnArp3vvt5UTdz33zwNeaPRMUzjk2wtUrqncibhSz5g//
-         uwWq5rEr3fjxRIpzt9x/+O9I38xvwl3LQqV7p4jU=
+        b=2IBpAg0DwYWqSsmQ0M9RuFlOUot4BR6pnOQI9nDTUMJjE7QY1G1WPkoUIPVfTMubo
+         U916pe4NDVwn0rI279aGaVkUjutDa3uDQGJ0dDGqnR4gfWRXe0ZdE3LlOAvJigpAq/
+         3OLZIoMDw2qY3jFvjcLq++1vLXhtPIZ8lb6srv4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 340/376] powerpc/kasan: Fix shadow pages allocation failure
-Date:   Fri, 19 Jun 2020 16:34:18 +0200
-Message-Id: <20200619141726.427515605@linuxfoundation.org>
+Subject: [PATCH 5.7 339/376] powerpc/kasan: Fix issues by lowering KASAN_SHADOW_END
+Date:   Fri, 19 Jun 2020 16:34:17 +0200
+Message-Id: <20200619141726.380553220@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,72 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-commit d2a91cef9bbdeb87b7449fdab1a6be6000930210 upstream.
+commit 3a66a24f6060e6775f8c02ac52329ea0152d7e58 upstream.
 
-Doing kasan pages allocation in MMU_init is too early, kernel doesn't
-have access yet to the entire memory space and memblock_alloc() fails
-when the kernel is a bit big.
+At the time being, KASAN_SHADOW_END is 0x100000000, which
+is 0 in 32 bits representation.
 
-Do it from kasan_init() instead.
+This leads to a couple of issues:
+- kasan_remap_early_shadow_ro() does nothing because the comparison
+k_cur < k_end is always false.
+- In ptdump, address comparison for markers display fails and the
+marker's name is printed at the start of the KASAN area instead of
+being printed at the end.
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+However, there is no need to shadow the KASAN shadow area itself,
+so the KASAN shadow area can stop shadowing memory at the start
+of itself.
+
+With a PAGE_OFFSET set to 0xc0000000, KASAN shadow area is then going
+from 0xf8000000 to 0xff000000.
+
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
 Cc: stable@vger.kernel.org
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/c24163ee5d5f8cdf52fefa45055ceb35435b8f15.1589866984.git.christophe.leroy@csgroup.eu
+Link: https://lore.kernel.org/r/ae1a3c0d19a37410c209c3fc453634cfcc0ee318.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/kasan.h      |    2 --
- arch/powerpc/mm/init_32.c             |    2 --
- arch/powerpc/mm/kasan/kasan_init_32.c |    4 +++-
- 3 files changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/kasan.h |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 --- a/arch/powerpc/include/asm/kasan.h
 +++ b/arch/powerpc/include/asm/kasan.h
-@@ -27,12 +27,10 @@
+@@ -23,9 +23,7 @@
+ 
+ #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
+ 
+-#define KASAN_SHADOW_END	0UL
+-
+-#define KASAN_SHADOW_SIZE	(KASAN_SHADOW_END - KASAN_SHADOW_START)
++#define KASAN_SHADOW_END	(-(-KASAN_SHADOW_START >> KASAN_SHADOW_SCALE_SHIFT))
  
  #ifdef CONFIG_KASAN
  void kasan_early_init(void);
--void kasan_mmu_init(void);
- void kasan_init(void);
- void kasan_late_init(void);
- #else
- static inline void kasan_init(void) { }
--static inline void kasan_mmu_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -170,8 +170,6 @@ void __init MMU_init(void)
- 	btext_unmap();
- #endif
- 
--	kasan_mmu_init();
--
- 	setup_kup();
- 
- 	/* Shortly after that, the entire linear mapping will be available */
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -132,7 +132,7 @@ static void __init kasan_unmap_early_sha
- 	flush_tlb_kernel_range(k_start, k_end);
- }
- 
--void __init kasan_mmu_init(void)
-+static void __init kasan_mmu_init(void)
- {
- 	int ret;
- 	struct memblock_region *reg;
-@@ -160,6 +160,8 @@ void __init kasan_mmu_init(void)
- 
- void __init kasan_init(void)
- {
-+	kasan_mmu_init();
-+
- 	kasan_remap_early_shadow_ro();
- 
- 	clear_page(kasan_early_shadow_page);
 
 
