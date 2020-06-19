@@ -2,151 +2,140 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD713C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C5220B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8BC20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581646;
-	bh=rkbbiQCs8BHaHAQU5zfRpAxLE0KUC9UftSsS8I2Mpe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYADY8MuYIrW0ntf2u1eEOqZe7NOWwJNuoRzkUnhIW9k7LDFujFP7h8iRkc1GQsJl
-	 d6zenu7BzalBxdRaW5ydqix1ZD6i1++dN1frHs060wki3zJj9+7qR0SIzkaLBtPT5q
-	 0N6EhGCrpAEDOWcpHnRPBEIfI787o/c1hGESP5OE=
+	s=default; t=1592581647;
+	bh=CYwDfiZCEpSQjiLnyHw+QzZI0tfgn9p3Bas41aa32U0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=hM7FWX2J6ZRrk5hoFTqv6c0qSNl8KvbYfIX75shK1rJZeycbdt5lhQ6GYDtB3215Q
+	 M/z6zQPuJBRp/j4ffrX0dwQRXzZ9klPuBm5J9Xmk04Golak1h1Bdil4xCU4YoMdCiw
+	 GPCdfI2962A9FHnRruzZw3xpMzSDwwnoBxzu12QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405293AbgFSPrY (ORCPT
+        id S2404290AbgFSPrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404287AbgFSP0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A0AB20B80;
-        Fri, 19 Jun 2020 15:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580367;
-        bh=rkbbiQCs8BHaHAQU5zfRpAxLE0KUC9UftSsS8I2Mpe0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzUASzFmeJ+KNtRf1uHBWJb3bWOYAj/TeyFdxmiH01pPc0Syuq6DLTQ/g49bAXPVA
-         dQXcTdu+1jms+Qlur0SVEBQFISe6mmXp3x6WOLfsJ7+1dCNU6ZEKJn5aCoSbR6tv24
-         2NeD+/Weid997/5xaVnu1OocKd5fMqPC2PzwtrJ4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Milburn <dmilburn@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 223/376] nvmet: fix memory leak when removing namespaces and controllers concurrently
-Date:   Fri, 19 Jun 2020 16:32:21 +0200
-Message-Id: <20200619141720.879639115@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404291AbgFSP0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:14 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F10C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:26:13 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id r77so11658591ior.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7bbqKL5wCur00YbM/P403tQCUvrv7O7GPTjyjOfZP3M=;
+        b=a5rw+SuJdniF8RKB6Otd2K6eahNkDBJ9VTxPEP0DKdttF+f0c0b18PDls9fNzgQ3aW
+         UwIU/+YKfz0IYqCsJwSszna/Wlu4rfkq6R0OB7AhpahzxJ/NbHy5tuVtbdypxSnSbFhE
+         nRvNuKACiABpy/evYMn7Z3cD+pPw2yYIWlKuU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7bbqKL5wCur00YbM/P403tQCUvrv7O7GPTjyjOfZP3M=;
+        b=snPbUfuemO3Dn2rhb4VLgtmHe2KmwzAmlfpzW3NGbgmzVe5zRsssSmInk8YZSwURds
+         sZ6uF8tXIP1swkSRdDQ56+cXZAreAuM+hNW4ONUnBlDuzOxYJs/MimWwBZ6IZnIK7mc2
+         RxtPsH0nJJnM2nwh2MB8FsMCOknxomPAuhmiBOWZP0RVx75IN9msZgp2hC/ZLvECrKBI
+         KszekWadvC5LP9UcGfwtrOQhj+5CbIY/QHPSkOc5kE5AxtDHwarFLsKkY3UEkda98GKp
+         6uGHxB0FyNL5+R9+xyXiScV06+3Nhlah/PmxGFkXTgws8sF29KFkC5UiZRmm4kpumcZi
+         0avw==
+X-Gm-Message-State: AOAM532ZfPq/oUmM8NEvUgucKeGnG5/veY8Iaws2SBUjey3nJ2Z0OwFA
+        Vyxo6uWeS2KhP/iGSWTFAXJfCA==
+X-Google-Smtp-Source: ABdhPJydeDBPRvmTQU4moYrg0CwkvLT5oEAoZxzMBBZM/suYprvYjQ4q60WRHVJdPvxVgMVwxXK4Lg==
+X-Received: by 2002:a02:cce1:: with SMTP id l1mr4088483jaq.89.1592580372392;
+        Fri, 19 Jun 2020 08:26:12 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g21sm3688936ioc.14.2020.06.19.08.26.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 08:26:11 -0700 (PDT)
+Subject: Re: [PATCH v3 4/7] selftests/ftrace: Convert required interface
+ checks into requires list
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <159115200085.70027.6141550347953439240.stgit@devnote2>
+ <159115203782.70027.2241223276591824366.stgit@devnote2>
+ <1cf646af-ef25-a7df-9df3-1e6aa8e6a9c8@linuxfoundation.org>
+ <20200610145535.747d2765d60e6e3923441768@kernel.org>
+ <5a658ffa-348a-436d-fb74-e01f56541d6b@linuxfoundation.org>
+ <20200610093206.5b9fb1b7@oasis.local.home>
+ <f8cc0d67-3f35-134a-a6c4-ad4a98a215a3@linuxfoundation.org>
+ <41b50b37-c9cb-9e7c-3ea7-d0824a41c03c@linuxfoundation.org>
+ <20200617235822.76b94496733a3d7c5bb647b6@kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <df1b214f-99d9-621c-0fb4-9b6a1d33eab8@linuxfoundation.org>
+Date:   Fri, 19 Jun 2020 09:26:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617235822.76b94496733a3d7c5bb647b6@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+On 6/17/20 8:58 AM, Masami Hiramatsu wrote:
+> Hi Shuah,
+> 
+> On Tue, 16 Jun 2020 10:48:12 -0600
+> Shuah Khan <skhan@linuxfoundation.org> wrote:
+> 
+>> On 6/11/20 6:03 AM, Shuah Khan wrote:
+>>> On 6/10/20 7:32 AM, Steven Rostedt wrote:
+>>>> On Wed, 10 Jun 2020 06:04:33 -0600
+>>>> Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>>>
+>>>>>> Steve, what would you think?
+>>>>>
+>>>>> No worries. As far as kselftest tree is concrned, I can apply these
+>>>>> after rc1 comes out with Tom's patch.
+>>>>>
+>>>>> Or I can give Ack and Steve can take these through tracing tree.
+>>>>
+>>>> All my patches have already made it to Linus's tree. Perhaps
+>>>> cherry-pick the commit needed from Linus's tree (it shouldn't break
+>>>> anything when Linus pulls it). Just let Linus know what you did, and
+>>>> everything should be fine.
+>>>>
+>>>
+>>> Good to know. I will get these in.
+>>>
+>>
+>> I applied all 7 patches to linux-kselftest next for my second update.
+>> I saw a couple of merge problems with 4/7 patch even when I applied
+>> it on top of with Tom's patch.
+> 
+> Oh, I might miss something.
+> 
+>>
+>> I resolved them and amended the commit message to indicate the merge.
+>> It is straight forward. Please check for sanity.
+> 
+> Yes, I confirmed that the merge looks good, and also test ran out
+> without any error. :)
+> 
 
-[ Upstream commit 64f5e9cdd711b030b05062c17b2ecfbce890cf4c ]
+Thanks for confirming. Pull request going out today.
 
-When removing a namespace, we add an NS_CHANGE async event, however if
-the controller admin queue is removed after the event was added but not
-yet processed, we won't free the aens, resulting in the below memory
-leak [1].
-
-Fix that by moving nvmet_async_event_free to the final controller
-release after it is detached from subsys->ctrls ensuring no async
-events are added, and modify it to simply remove all pending aens.
-
---
-$ cat /sys/kernel/debug/kmemleak
-unreferenced object 0xffff888c1af2c000 (size 32):
-  comm "nvmetcli", pid 5164, jiffies 4295220864 (age 6829.924s)
-  hex dump (first 32 bytes):
-    28 01 82 3b 8b 88 ff ff 28 01 82 3b 8b 88 ff ff  (..;....(..;....
-    02 00 04 65 76 65 6e 74 5f 66 69 6c 65 00 00 00  ...event_file...
-  backtrace:
-    [<00000000217ae580>] nvmet_add_async_event+0x57/0x290 [nvmet]
-    [<0000000012aa2ea9>] nvmet_ns_changed+0x206/0x300 [nvmet]
-    [<00000000bb3fd52e>] nvmet_ns_disable+0x367/0x4f0 [nvmet]
-    [<00000000e91ca9ec>] nvmet_ns_free+0x15/0x180 [nvmet]
-    [<00000000a15deb52>] config_item_release+0xf1/0x1c0
-    [<000000007e148432>] configfs_rmdir+0x555/0x7c0
-    [<00000000f4506ea6>] vfs_rmdir+0x142/0x3c0
-    [<0000000000acaaf0>] do_rmdir+0x2b2/0x340
-    [<0000000034d1aa52>] do_syscall_64+0xa5/0x4d0
-    [<00000000211f13bc>] entry_SYSCALL_64_after_hwframe+0x6a/0xdf
-
-Fixes: a07b4970f464 ("nvmet: add a generic NVMe target")
-Reported-by: David Milburn <dmilburn@redhat.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Tested-by: David Milburn <dmilburn@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/target/core.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index b685f99d56a1..aa5ca222c6f5 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -157,14 +157,12 @@ static void nvmet_async_events_process(struct nvmet_ctrl *ctrl, u16 status)
- 
- static void nvmet_async_events_free(struct nvmet_ctrl *ctrl)
- {
--	struct nvmet_req *req;
-+	struct nvmet_async_event *aen, *tmp;
- 
- 	mutex_lock(&ctrl->lock);
--	while (ctrl->nr_async_event_cmds) {
--		req = ctrl->async_event_cmds[--ctrl->nr_async_event_cmds];
--		mutex_unlock(&ctrl->lock);
--		nvmet_req_complete(req, NVME_SC_INTERNAL | NVME_SC_DNR);
--		mutex_lock(&ctrl->lock);
-+	list_for_each_entry_safe(aen, tmp, &ctrl->async_events, entry) {
-+		list_del(&aen->entry);
-+		kfree(aen);
- 	}
- 	mutex_unlock(&ctrl->lock);
- }
-@@ -764,10 +762,8 @@ void nvmet_sq_destroy(struct nvmet_sq *sq)
- 	 * If this is the admin queue, complete all AERs so that our
- 	 * queue doesn't have outstanding requests on it.
- 	 */
--	if (ctrl && ctrl->sqs && ctrl->sqs[0] == sq) {
-+	if (ctrl && ctrl->sqs && ctrl->sqs[0] == sq)
- 		nvmet_async_events_process(ctrl, status);
--		nvmet_async_events_free(ctrl);
--	}
- 	percpu_ref_kill_and_confirm(&sq->ref, nvmet_confirm_sq);
- 	wait_for_completion(&sq->confirm_done);
- 	wait_for_completion(&sq->free_done);
-@@ -1357,6 +1353,7 @@ static void nvmet_ctrl_free(struct kref *ref)
- 
- 	ida_simple_remove(&cntlid_ida, ctrl->cntlid);
- 
-+	nvmet_async_events_free(ctrl);
- 	kfree(ctrl->sqs);
- 	kfree(ctrl->cqs);
- 	kfree(ctrl->changed_ns_list);
--- 
-2.25.1
-
-
-
+thanks,
+-- Shuah
