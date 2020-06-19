@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55ACF2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEB72067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584740;
-	bh=x7B5wod4MBfR1dx5pVObIqXplMbNsgaIgDDQQ7vpFEE=;
+	s=default; t=1592584746;
+	bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQ0UoBpy5s4rGEGacSPkp2Zl0ICzdCoWiAG38HDN4v+PU3w9FCPhGaYiYNoX5nqGu
-	 /yHyuAx8kqT9rgyKWfchXXKN/907kM1mjz7kvHkCuLlFkNpQva7aIWKKeh2i85XLQ9
-	 nCo5xJ2vELAhvwB7HrZYUe5LdOfMnozR4iuMep4o=
+	b=pdTmEoBcb+dce+CDFHygwYM0l6NYC1mntTOUsvIacqMkLB63iBhrgCslGNkbiDNoE
+	 vIGaVLPWNCAB5Uvizppl9QhxYsqCQpYZAFbFG3gsMvtyukYnJ8n3u3D/kgT09z3hlh
+	 VM7SBEa2Y9HHvs7tgYio/AfxwLUhWmEX2HHnrkCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395387AbgFSQi5 (ORCPT
+        id S2388878AbgFSOqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39146 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388918AbgFSOrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:08 -0400
+        id S2388863AbgFSOqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A12C20DD4;
-        Fri, 19 Jun 2020 14:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E46120DD4;
+        Fri, 19 Jun 2020 14:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578027;
-        bh=x7B5wod4MBfR1dx5pVObIqXplMbNsgaIgDDQQ7vpFEE=;
+        s=default; t=1592578005;
+        bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIAxzxX5xpBLbv5hoCKsNmV0r/cm2zmmxyfnapu/hAwIg3iBrCAfmDUM00ELCjdjt
-         OKRvy9VibByANbxlD36aA2XuspT2YzIgP0GJGI6IbPy0Cy4RfFKECLwyOnNCfZDwsY
-         4ITDz8yrND5sF6+kI7XnlG6fSV5J2iK48HgQ6j18=
+        b=UcZ3/mCH65oUfyNUt3MjJXhfRXnxTTtV1w9r3SJpaPucHiBW2OIrUvBFAS0k6CA1G
+         H5hLxHa+n2KocL6tUxMRmaiIRtdp+Wo9gO4ZXtQgYVvv5kPV7wzSDhxnKmwQvfpJGP
+         ZVSIccNqIymtW17c+YorNMgffyjumxm4nkmMle9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 053/190] ovl: initialize error in ovl_copy_xattr
-Date:   Fri, 19 Jun 2020 16:31:38 +0200
-Message-Id: <20200619141636.236038789@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 028/190] ACPI: GED: add support for _Exx / _Lxx handler methods
+Date:   Fri, 19 Jun 2020 16:31:13 +0200
+Message-Id: <20200619141634.938811682@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,46 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuxuan Shui <yshuiv7@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 520da69d265a91c6536c63851cbb8a53946974f0 upstream.
+commit ea6f3af4c5e63f6981c0b0ab8ebec438e2d5ef40 upstream.
 
-In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
-xattrs, the copy loop will terminate without assigning anything to the
-error variable, thus returning an uninitialized value.
+Per the ACPI spec, interrupts in the range [0, 255] may be handled
+in AML using individual methods whose naming is based on the format
+_Exx or _Lxx, where xx is the hex representation of the interrupt
+index.
 
-If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized error
-value is put into a pointer by ERR_PTR(), causing potential invalid memory
-accesses down the line.
+Add support for this missing feature to our ACPI GED driver.
 
-This commit initialize error with 0. This is the correct value because when
-there's no xattr to copy, because all xattrs are private, ovl_copy_xattr
-should succeed.
-
-This bug is discovered with the help of INIT_STACK_ALL and clang.
-
-Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
-Fixes: 0956254a2d5b ("ovl: don't copy up opaqueness")
-Cc: stable@vger.kernel.org # v4.8
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: v4.9+ <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/copy_up.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/evged.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -59,7 +59,7 @@ int ovl_copy_xattr(struct dentry *old, s
- {
- 	ssize_t list_size, size, value_size = 0;
- 	char *buf, *name, *value = NULL;
--	int uninitialized_var(error);
-+	int error = 0;
- 	size_t slen;
+--- a/drivers/acpi/evged.c
++++ b/drivers/acpi/evged.c
+@@ -82,6 +82,8 @@ static acpi_status acpi_ged_request_inte
+ 	struct resource r;
+ 	struct acpi_resource_irq *p = &ares->data.irq;
+ 	struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
++	char ev_name[5];
++	u8 trigger;
  
- 	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
+ 	if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
+ 		return AE_OK;
+@@ -90,14 +92,28 @@ static acpi_status acpi_ged_request_inte
+ 		dev_err(dev, "unable to parse IRQ resource\n");
+ 		return AE_ERROR;
+ 	}
+-	if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
++	if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
+ 		gsi = p->interrupts[0];
+-	else
++		trigger = p->triggering;
++	} else {
+ 		gsi = pext->interrupts[0];
++		trigger = p->triggering;
++	}
+ 
+ 	irq = r.start;
+ 
+-	if (ACPI_FAILURE(acpi_get_handle(handle, "_EVT", &evt_handle))) {
++	switch (gsi) {
++	case 0 ... 255:
++		sprintf(ev_name, "_%c%02hhX",
++			trigger == ACPI_EDGE_SENSITIVE ? 'E' : 'L', gsi);
++
++		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
++			break;
++		/* fall through */
++	default:
++		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
++			break;
++
+ 		dev_err(dev, "cannot locate _EVT method\n");
+ 		return AE_ERROR;
+ 	}
 
 
