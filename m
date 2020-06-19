@@ -2,471 +2,249 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AECBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A6120885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002BC20890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="mJPTeHMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbgFSIWP (ORCPT
+        id S1731369AbgFSIWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:22:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39962 "EHLO huawei.com"
+        Fri, 19 Jun 2020 04:22:46 -0400
+Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:30338
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731369AbgFSIV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:21:27 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2AE8129E78B79E999E1F;
-        Fri, 19 Jun 2020 16:21:23 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.90) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 19 Jun 2020
- 16:21:16 +0800
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-To:     John Donnelly <john.p.donnelly@oracle.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
- <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
- <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
- <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
- <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
- <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
- <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
- <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
- <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
- <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
- <751bbe2512628ff38002db33ce02af051d080cd2.camel@suse.de>
- <8ca6c3e9-b8ab-77c3-a1d3-beb513c22f1b@oracle.com>
-CC:     Simon Horman <horms@verge.net.au>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        <guohanjun@huawei.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Prabhakar Kushwaha <prabhakar.pkin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Prabhakar Kushwaha" <pkushwaha@marvell.com>,
-        RuiRui Yang <dyoung@redhat.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <03929ef5-7044-5610-c207-e497d3994f49@huawei.com>
-Date:   Fri, 19 Jun 2020 16:21:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1731378AbgFSIVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:21:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tgJCOmQiRFbDEdD1JbCoDVpsYor0RuxpBdyBIdRMgE0=;
+ b=mJPTeHMNhI6jMivr69zVUEb2wa7zvi24uaUkY4jffssVkjtSJFAU83THQGyplL3xV6gpftnNSzYkWBZvsm81Zcwy8Rg+XUKk4H2NCATcTcJmnadhJK3vEiSihpw3W/rKTBf1L+ebsd7YrrVOMVYDSAtfyjUPp/BxmJE7jBD0Eaw=
+Received: from AM6P193CA0082.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:88::23)
+ by DB7PR04MB5244.eurprd04.prod.outlook.com (2603:10a6:10:21::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
+ 2020 08:21:43 +0000
+Received: from HE1EUR01FT006.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:209:88:cafe::26) by AM6P193CA0082.outlook.office365.com
+ (2603:10a6:209:88::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend
+ Transport; Fri, 19 Jun 2020 08:21:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 40.68.112.65)
+ smtp.mailfrom=topicproducts.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
+ designates 40.68.112.65 as permitted sender) receiver=protection.outlook.com;
+ client-ip=40.68.112.65; helo=westeu12-emailsignatures-cloud.codetwo.com;
+Received: from westeu12-emailsignatures-cloud.codetwo.com (40.68.112.65) by
+ HE1EUR01FT006.mail.protection.outlook.com (10.152.1.228) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 08:21:42 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (104.47.18.112) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Fri, 19 Jun 2020 08:21:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d7wkivcxmHCKuuai88oOdgv630jM8dbgSvR3yvJJxakStuSW6tCHn0NdWdY9PodeJZd0x9r7NPpZlbX+GCiZQKLm5piwcaQUVfSZHPp3yMwgox1Nqi+zH9Lm4XRvqqO+ypO4a3lO45i+0dckrgzzQjJEEEX6sKiuh0/7LWXjcSXjvnCJnDt8uxKntitXCFORLDixW6D/KMV5qk0QpxKDeYWBstafYR/7osyco7rHb4aMj0nF0EWWCTwgLJvl5k3g/GzhlfaT3X+7caJRIWoCo7OgClJJURpzbwbgKc3RDoZ1CBOPQaG7C/nnVLS4BvvSme4aEoe4GensFjQ9fhr5iA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bniLtBVeVfXzgGd73eWO1OKXN70Y2NBcOYf1liwSPhE=;
+ b=gEwMHdU6U7nIuOqPVCT5G+TAsItYv+Jy4sJIsTMmhWfqMpx5a0ahFnOytrD3zLzSM/OmxatSvaho8quUAEbYaMIF5UE+TjnL59UxR+HH7/RSBldxGdpquFVITJEwFgf6bOPdK/tSZM36s6gfiFYhXU51Nt/fifXnDvrI3FK1NaXo182bCQNI/28QS8t+30llrUKzsMQJrtIdQdXFGfq8b0LHNfj6Z3UaC6YPzx3Z/oTMKkK5cMGqfrwHS4A2q+5qxYJ40Us/oogO55PdesxVnwtvlVHVm3nC1o2zfSvYAfhQK6syfD3NXh3vDNByd1+uPkYePLoGhjW0JEgsnuLMXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
+ dkim=pass header.d=topic.nl; arc=none
+Authentication-Results-Original: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
+ by DB8PR04MB6378.eurprd04.prod.outlook.com (2603:10a6:10:3d::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Fri, 19 Jun
+ 2020 08:21:40 +0000
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::6cf6:7323:7395:eec9]) by DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::6cf6:7323:7395:eec9%7]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 08:21:40 +0000
+Subject: Re: [PATCH v2] usb: dwc3: Add support for VBUS power control
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     Rob Herring <robh@kernel.org>
+CC:     Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>
+References: <20200603120915.14001-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.37aec1ae-7fee-44cb-ae24-a10a151abcb3@emailsignatures365.codetwo.com>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.3fedbcf4-0977-416b-9979-d557fd9233a7@emailsignatures365.codetwo.com>
+ <20200610202255.GA3646369@bogus>
+ <504080a1-cbc9-f781-04bb-12d5679ba697@topic.nl>
+ <CAL_Jsq+6cj99+7cb1vrZ9eLouo-pPWTDjDEOotDQExazdrx-XA@mail.gmail.com>
+ <413a840f-6765-51ba-a4b4-dd6204265fb7@topic.nl>
+Organization: Topic
+Message-ID: <70866852-20d3-d84a-6d15-552be716ecb4@topic.nl>
+Date:   Fri, 19 Jun 2020 10:21:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <413a840f-6765-51ba-a4b4-dd6204265fb7@topic.nl>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR06CA0135.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::40) To DB8PR04MB6523.eurprd04.prod.outlook.com
+ (2603:10a6:10:10f::26)
 MIME-Version: 1.0
-In-Reply-To: <8ca6c3e9-b8ab-77c3-a1d3-beb513c22f1b@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.90]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.130] (83.128.90.119) by AM0PR06CA0135.eurprd06.prod.outlook.com (2603:10a6:208:ab::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 08:21:40 +0000
+X-Originating-IP: [83.128.90.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b18f49d3-b8fb-4a19-3dc3-08d81429cc97
+X-MS-TrafficTypeDiagnostic: DB8PR04MB6378:|DB7PR04MB5244:
+X-Microsoft-Antispam-PRVS: <DB7PR04MB5244CEE700E05E45059657B296980@DB7PR04MB5244.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;OLM:8273;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: b3api/AlxBrRRAUyc6byc8HVHrcZ+qrZfOn9MMG+mQcWeaqqXeuWYzSA2z288OjHLyWQqanjTvhxgwV7+LqN2xiI5xTYqQoQAEXUc7xx7wygxrNx5dtcRlu74rKJuqVdzOmtyZCYIQkcFIPxe+6mx1+p/jNxevLuIhHgAwl46bP6OYaTRn10n7xb/G3dJQGFr8+4kOkm5cwKnlMDp+4EUQNpzAmxmR/Ave/aQC6S72zMIYZ6GQ+HDAGRYrLCN4wl/WFO8byDxrIFyafBVu78P8nfWXSW7OLD+3os64YSe/tTo69sNcRRZhMjd35HQnkjMxoLNWkh5jncjuSjzbgLLqAyOfZ3pNx6sXQNjXT7SIcrw4S7bBBmv3/bjVgeaGSh
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(366004)(396003)(39840400004)(36916002)(2906002)(6486002)(36756003)(16526019)(186003)(42882007)(26005)(8936002)(2616005)(52116002)(6916009)(44832011)(956004)(4326008)(8676002)(53546011)(66556008)(16576012)(316002)(83170400001)(31696002)(508600001)(83380400001)(5660300002)(54906003)(31686004)(66476007)(66946007)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 8I7xDia8Ovs1rqgdx3AlIsdNYOp3PzMwyOuqh8hc7bJF9zwtHfC3jcuM3Q9os+Ss+9rNzd3hl3zR2GlZg1YdkrhW1+YO8xFqFSs6oJ0J+wOjdcq1dU+sLbFjLPKs/nskolsw/EszyKR2T5NIwk8Wfk0lsKOQssrANyCORDNSt7ngxfaNJ/LMpEzvgAm8JvpcIQcg6edEd8B0BtJS7WFrE+6aCm8JDB5l6EBqh4JsASNs3ebQ5KXmlYY+ws4D7UdcJbYlsaiXJ5ImDSOt0PP+sP6YpPHK+4d9oXqVOpOhfcPKF426c607bn7fA3HU1ykDqQWCTAxtW2/WXvQd3hLBPzTOKfgBajlazjc+bmPQXgM/ZVUlLzuVTPh0QhUO3PC0Zoay24oCkM0xY59A9tBnW7m71kMq46bbSAMp7EKvBoYuO21dUGuyRy5xQZX/9I/ZpWUUiip5Qp40VX3UiJoNNF2lzCwCukFsiXh44YeE2xE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6378
+X-CodeTwo-MessageID: 28f56e6d-2d53-4d41-95ff-4a5215c0001d.20200619082141@westeu12-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: HE1EUR01FT006.eop-EUR01.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:40.68.112.65;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(376002)(346002)(136003)(39840400004)(396003)(46966005)(44832011)(316002)(36756003)(70586007)(336012)(54906003)(70206006)(956004)(4326008)(7596003)(83380400001)(82310400002)(8936002)(2616005)(42882007)(7636003)(356005)(83170400001)(6486002)(15974865002)(2906002)(36916002)(47076004)(53546011)(5660300002)(16526019)(26005)(186003)(8676002)(508600001)(31686004)(6916009)(16576012)(31696002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 7a4b5509-08aa-4f0f-6b47-08d81429cade
+X-Forefront-PRVS: 0439571D1D
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wxfz5v5iLgjvi+qkoPQES+KQgWUBkKdYSJ1RODp1MT6e4MNhYGJdo8reX+uSvv09ZeMS8EexaJ0CtJxlm/aCDcY/O3LIJYoT2jorPzWtXuLBN93fbJREKizHDwPecVD9vS3aeT+JXClWRhMRHvOVl5V/Dk5CCUUbwKZFTlA1pZum5jsYEI7DVaL78rXSer2Vzg4OBS0dIMEPQT5xrmqwLyD2hFObYBFGjeAcruaToaC1pEmybBGxWIhDue92cGIzZpsLM/i3uqcYZ/0vMMeKfwiJ73WKIWTd+3UX/AAU8jfWSq+dremM1QlLB9kcXYFW/IwCsVSoNSYD5QTkqUanpCC5o/Wf/ChzLCD7xB6PNR4eLfgLUJRq/abeOdOoA7zpo2ZFNev8IN3aOraTpmItGNUmLqlXEAOivCFFMgr9HmVcBoqtsM02klR7+5lG/fsV4jC54vQrZVYszfp/7beICyFo3uF9NFwAfG+6E1vlXaU5FiJscMEdn7xSyDX1Fkpv
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 08:21:42.9854
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b18f49d3-b8fb-4a19-3dc3-08d81429cc97
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[40.68.112.65];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/6/19 10:32, John Donnelly wrote:
->
-> On 6/4/20 12:01 PM, Nicolas Saenz Julienne wrote:
->> On Thu, 2020-06-04 at 01:17 +0530, Bhupesh Sharma wrote:
->>> Hi All,
->>>
->>> On Wed, Jun 3, 2020 at 9:03 PM John Donnelly <john.p.donnelly@oracle.com>
->>> wrote:
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topicproducts.com=0A=
+W: www.topicproducts.com=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
+On 17-06-2020 19:28, Mike Looijmans wrote:
+> On 17-06-2020 18:13, Rob Herring wrote:
+>> On Wed, Jun 17, 2020 at 8:38 AM Mike Looijmans=20
+>> <mike.looijmans@topic.nl> wrote:
+>>> On 10-06-2020 22:22, Rob Herring wrote:
+>>>> On Wed, Jun 03, 2020 at 02:09:15PM +0200, Mike Looijmans wrote:
+>>>>> Support VBUS power control using regulator framework. Enables the=20
+>>>>> regulator
+>>>>> while the port is in host mode.
+>>>>>
+>>>>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+>>>>> ---
+>>>>> v2: Add missing devm_regulator_get call which got lost during rebase
+>>>>>
+>>>>> =C2=A0=C2=A0 .../devicetree/bindings/usb/dwc3.txt=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+>>>>> =C2=A0=C2=A0 drivers/usb/dwc3/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 34=20
+>>>>> ++++++++++++++-----
+>>>>> =C2=A0=C2=A0 drivers/usb/dwc3/core.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++
+>>>>> =C2=A0=C2=A0 drivers/usb/dwc3/drd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++--
+>>>>> =C2=A0=C2=A0 4 files changed, 33 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt=20
+>>>>> b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> index 9946ff9ba735..56bc3f238e2d 100644
+>>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> @@ -37,6 +37,7 @@ Optional properties:
+>>>>> =C2=A0=C2=A0=C2=A0 - phys: from the *Generic PHY* bindings
+>>>>> =C2=A0=C2=A0=C2=A0 - phy-names: from the *Generic PHY* bindings; supp=
+orted names=20
+>>>>> are "usb2-phy"
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or "usb3-phy".
+>>>>> + - vbus-supply: Regulator handle that provides the VBUS power.
+>>>> Does the DWC3 block require Vbus to power itself? Doubtful. This
+>>>> belongs in a usb-connector node. If the DWC3 driver wants to get the
+>>>> Vbus supply, it can fetch it from that node.
 >>>>
->>>>> On Jun 3, 2020, at 8:20 AM, chenzhou <chenzhou10@huawei.com> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>>
->>>>> On 2020/6/3 19:47, Prabhakar Kushwaha wrote:
->>>>>> Hi Chen,
->>>>>>
->>>>>> On Tue, Jun 2, 2020 at 8:12 PM John Donnelly <john.p.donnelly@oracle.com
->>>>>>> wrote:
->>>>>>>
->>>>>>>> On Jun 2, 2020, at 12:38 AM, Prabhakar Kushwaha <
->>>>>>>> prabhakar.pkin@gmail.com> wrote:
->>>>>>>>
->>>>>>>> On Tue, Jun 2, 2020 at 3:29 AM John Donnelly <
->>>>>>>> john.p.donnelly@oracle.com> wrote:
->>>>>>>>> Hi .  See below !
->>>>>>>>>
->>>>>>>>>> On Jun 1, 2020, at 4:02 PM, Bhupesh Sharma <bhsharma@redhat.com>
->>>>>>>>>> wrote:
->>>>>>>>>>
->>>>>>>>>> Hi John,
->>>>>>>>>>
->>>>>>>>>> On Tue, Jun 2, 2020 at 1:01 AM John Donnelly <
->>>>>>>>>> John.P.donnelly@oracle.com> wrote:
->>>>>>>>>>> Hi,
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> On 6/1/20 7:02 AM, Prabhakar Kushwaha wrote:
->>>>>>>>>>>> Hi Chen,
->>>>>>>>>>>>
->>>>>>>>>>>> On Thu, May 21, 2020 at 3:05 PM Chen Zhou <
->>>>>>>>>>>> chenzhou10@huawei.com> wrote:
->>>>>>>>>>>>> This patch series enable reserving crashkernel above 4G in
->>>>>>>>>>>>> arm64.
->>>>>>>>>>>>>
->>>>>>>>>>>>> There are following issues in arm64 kdump:
->>>>>>>>>>>>> 1. We use crashkernel=X to reserve crashkernel below 4G,
->>>>>>>>>>>>> which will fail
->>>>>>>>>>>>> when there is no enough low memory.
->>>>>>>>>>>>> 2. Currently, crashkernel=Y@X can be used to reserve
->>>>>>>>>>>>> crashkernel above 4G,
->>>>>>>>>>>>> in this case, if swiotlb or DMA buffers are required,
->>>>>>>>>>>>> crash dump kernel
->>>>>>>>>>>>> will boot failure because there is no low memory available
->>>>>>>>>>>>> for allocation.
->>>>>>>>>>>>>
->>>>>>>>>>>> We are getting "warn_alloc" [1] warning during boot of kdump
->>>>>>>>>>>> kernel
->>>>>>>>>>>> with bootargs as [2] of primary kernel.
->>>>>>>>>>>> This error observed on ThunderX2  ARM64 platform.
->>>>>>>>>>>>
->>>>>>>>>>>> It is observed with latest upstream tag (v5.7-rc3) with this
->>>>>>>>>>>> patch set
->>>>>>>>>>>> and
->>>>>>>>>>>>
->> https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/2020-May/025128.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkIPIhsaxbiIAAlzu$
->>>>>>>>>>>> Also **without** this patch-set
->>>>>>>>>>>> "
->>>>>>>>>>>>
->> https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkIPIhsaxbjC6ujMA$
->>>>>>>>>>>> "
->>>>>>>>>>>>
->>>>>>>>>>>> This issue comes whenever crashkernel memory is reserved
->>>>>>>>>>>> after 0xc000_0000.
->>>>>>>>>>>> More details discussed earlier in
->>>>>>>>>>>>
->> https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkIPIhsaxbjC6ujMA$
->>    without
->>>>>>>>>>>> any
->>>>>>>>>>>> solution
->>>>>>>>>>>>
->>>>>>>>>>>> This patch-set is expected to solve similar kind of issue.
->>>>>>>>>>>> i.e. low memory is only targeted for DMA, swiotlb; So above
->>>>>>>>>>>> mentioned
->>>>>>>>>>>> observation should be considered/fixed. .
->>>>>>>>>>>>
->>>>>>>>>>>> --pk
->>>>>>>>>>>>
->>>>>>>>>>>> [1]
->>>>>>>>>>>> [   30.366695] DMI: Cavium Inc. Saber/Saber, BIOS
->>>>>>>>>>>> TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/yyyy
->>>>>>>>>>>> [   30.367696] NET: Registered protocol family 16
->>>>>>>>>>>> [   30.369973] swapper/0: page allocation failure: order:6,
->>>>>>>>>>>> mode:0x1(GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
->>>>>>>>>>>> [   30.369980] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
->>>>>>>>>>>> 5.7.0-rc3+ #121
->>>>>>>>>>>> [   30.369981] Hardware name: Cavium Inc. Saber/Saber, BIOS
->>>>>>>>>>>> TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/yyyy
->>>>>>>>>>>> [   30.369984] Call trace:
->>>>>>>>>>>> [   30.369989]  dump_backtrace+0x0/0x1f8
->>>>>>>>>>>> [   30.369991]  show_stack+0x20/0x30
->>>>>>>>>>>> [   30.369997]  dump_stack+0xc0/0x10c
->>>>>>>>>>>> [   30.370001]  warn_alloc+0x10c/0x178
->>>>>>>>>>>> [   30.370004]  __alloc_pages_slowpath.constprop.111+0xb10/0
->>>>>>>>>>>> xb50
->>>>>>>>>>>> [   30.370006]  __alloc_pages_nodemask+0x2b4/0x300
->>>>>>>>>>>> [   30.370008]  alloc_page_interleave+0x24/0x98
->>>>>>>>>>>> [   30.370011]  alloc_pages_current+0xe4/0x108
->>>>>>>>>>>> [   30.370017]  dma_atomic_pool_init+0x44/0x1a4
->>>>>>>>>>>> [   30.370020]  do_one_initcall+0x54/0x228
->>>>>>>>>>>> [   30.370027]  kernel_init_freeable+0x228/0x2cc
->>>>>>>>>>>> [   30.370031]  kernel_init+0x1c/0x110
->>>>>>>>>>>> [   30.370034]  ret_from_fork+0x10/0x18
->>>>>>>>>>>> [   30.370036] Mem-Info:
->>>>>>>>>>>> [   30.370064] active_anon:0 inactive_anon:0 isolated_anon:0
->>>>>>>>>>>> [   30.370064]  active_file:0 inactive_file:0
->>>>>>>>>>>> isolated_file:0
->>>>>>>>>>>> [   30.370064]  unevictable:0 dirty:0 writeback:0 unstable:0
->>>>>>>>>>>> [   30.370064]  slab_reclaimable:34 slab_unreclaimable:4438
->>>>>>>>>>>> [   30.370064]  mapped:0 shmem:0 pagetables:14 bounce:0
->>>>>>>>>>>> [   30.370064]  free:1537719 free_pcp:219 free_cma:0
->>>>>>>>>>>> [   30.370070] Node 0 active_anon:0kB inactive_anon:0kB
->>>>>>>>>>>> active_file:0kB inactive_file:0kB unevictable:0kB
->>>>>>>>>>>> isolated(anon):0kB
->>>>>>>>>>>> isolated(file):0kB mapped:0kB dirty:0kB writeback:0kB
->>>>>>>>>>>> shmem:0kB
->>>>>>>>>>>> shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
->>>>>>>>>>>> writeback_tmp:0kB
->>>>>>>>>>>> unstable:0kB all_unreclaimable? no
->>>>>>>>>>>> [   30.370073] Node 1 active_anon:0kB inactive_anon:0kB
->>>>>>>>>>>> active_file:0kB inactive_file:0kB unevictable:0kB
->>>>>>>>>>>> isolated(anon):0kB
->>>>>>>>>>>> isolated(file):0kB mapped:0kB dirty:0kB writeback:0kB
->>>>>>>>>>>> shmem:0kB
->>>>>>>>>>>> shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
->>>>>>>>>>>> writeback_tmp:0kB
->>>>>>>>>>>> unstable:0kB all_unreclaimable? no
->>>>>>>>>>>> [   30.370079] Node 0 DMA free:0kB min:0kB low:0kB high:0kB
->>>>>>>>>>>> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
->>>>>>>>>>>> active_file:0kB inactive_file:0kB unevictable:0kB
->>>>>>>>>>>> writepending:0kB
->>>>>>>>>>>> present:128kB managed:0kB mlocked:0kB kernel_stack:0kB
->>>>>>>>>>>> pagetables:0kB
->>>>>>>>>>>> bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
->>>>>>>>>>>> [   30.370084] lowmem_reserve[]: 0 250 6063 6063
->>>>>>>>>>>> [   30.370090] Node 0 DMA32 free:256000kB min:408kB
->>>>>>>>>>>> low:664kB
->>>>>>>>>>>> high:920kB reserved_highatomic:0KB active_anon:0kB
->>>>>>>>>>>> inactive_anon:0kB
->>>>>>>>>>>> active_file:0kB inactive_file:0kB unevictable:0kB
->>>>>>>>>>>> writepending:0kB
->>>>>>>>>>>> present:269700kB managed:256000kB mlocked:0kB
->>>>>>>>>>>> kernel_stack:0kB
->>>>>>>>>>>> pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB
->>>>>>>>>>>> free_cma:0kB
->>>>>>>>>>>> [   30.370094] lowmem_reserve[]: 0 0 5813 5813
->>>>>>>>>>>> [   30.370100] Node 0 Normal free:5894876kB min:9552kB
->>>>>>>>>>>> low:15504kB
->>>>>>>>>>>> high:21456kB reserved_highatomic:0KB active_anon:0kB
->>>>>>>>>>>> inactive_anon:0kB
->>>>>>>>>>>> active_file:0kB inactive_file:0kB unevictable:0kB
->>>>>>>>>>>> writepending:0kB
->>>>>>>>>>>> present:8388608kB managed:5953112kB mlocked:0kB
->>>>>>>>>>>> kernel_stack:21672kB
->>>>>>>>>>>> pagetables:56kB bounce:0kB free_pcp:876kB local_pcp:176kB
->>>>>>>>>>>> free_cma:0kB
->>>>>>>>>>>> [   30.370104] lowmem_reserve[]: 0 0 0 0
->>>>>>>>>>>> [   30.370107] Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB
->>>>>>>>>>>> 0*128kB
->>>>>>>>>>>> 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 0kB
->>>>>>>>>>>> [   30.370113] Node 0 DMA32: 0*4kB 0*8kB 0*16kB 0*32kB
->>>>>>>>>>>> 0*64kB 0*128kB
->>>>>>>>>>>> 0*256kB 0*512kB 0*1024kB 1*2048kB (M) 62*4096kB (M) =
->>>>>>>>>>>> 256000kB
->>>>>>>>>>>> [   30.370119] Node 0 Normal: 2*4kB (M) 3*8kB (ME) 2*16kB
->>>>>>>>>>>> (UE) 3*32kB
->>>>>>>>>>>> (UM) 1*64kB (U) 2*128kB (M) 2*256kB (ME) 3*512kB (ME)
->>>>>>>>>>>> 3*1024kB (ME)
->>>>>>>>>>>> 3*2048kB (UME) 1436*4096kB (M) = 5893600kB
->>>>>>>>>>>> [   30.370129] Node 0 hugepages_total=0 hugepages_free=0
->>>>>>>>>>>> hugepages_surp=0 hugepages_size=1048576kB
->>>>>>>>>>>> [   30.370130] 0 total pagecache pages
->>>>>>>>>>>> [   30.370132] 0 pages in swap cache
->>>>>>>>>>>> [   30.370134] Swap cache stats: add 0, delete 0, find 0/0
->>>>>>>>>>>> [   30.370135] Free swap  = 0kB
->>>>>>>>>>>> [   30.370136] Total swap = 0kB
->>>>>>>>>>>> [   30.370137] 2164609 pages RAM
->>>>>>>>>>>> [   30.370139] 0 pages HighMem/MovableOnly
->>>>>>>>>>>> [   30.370140] 612331 pages reserved
->>>>>>>>>>>> [   30.370141] 0 pages hwpoisoned
->>>>>>>>>>>> [   30.370143] DMA: failed to allocate 256 KiB pool for
->>>>>>>>>>>> atomic
->>>>>>>>>>>> coherent allocation
->>>>>>>>>>> During my testing I saw the same error and Chen's  solution
->>>>>>>>>>> corrected it .
->>>>>>>>>> Which combination you are using on your side? I am using
->>>>>>>>>> Prabhakar's
->>>>>>>>>> suggested environment and can reproduce the issue
->>>>>>>>>> with or without Chen's crashkernel support above 4G patchset.
->>>>>>>>>>
->>>>>>>>>> I am also using a ThunderX2 platform with latest makedumpfile
->>>>>>>>>> code and
->>>>>>>>>> kexec-tools (with the suggested patch
->>>>>>>>>> <
->>>>>>>>>>
->> https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/2020-May/025128.html__;!!GqivPVa7Brio!J6lUig58-Gw6TKZnEEYzEeSU36T-1SqlB1kImU00xtX_lss5Tx-JbUmLE9TJC3foXBLg$
->>>>>>>>>>> ).
->>>>>>>>>> Thanks,
->>>>>>>>>> Bhupesh
->>>>>>>>> I did this activity 5 months ago and I have moved on to other
->>>>>>>>> activities. My DMA failures were related to PCI devices that could
->>>>>>>>> not be enumerated because  low-DMA space was not  available when
->>>>>>>>> crashkernel was moved above 4G; I don’t recall the exact platform.
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> For this failure ,
->>>>>>>>>
->>>>>>>>>>>> DMA: failed to allocate 256 KiB pool for atomic
->>>>>>>>>>>> coherent allocation
->>>>>>>>> Is due to :
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> 3618082c
->>>>>>>>> ("arm64 use both ZONE_DMA and ZONE_DMA32")
->>>>>>>>>
->>>>>>>>> With the introduction of ZONE_DMA to support the Raspberry DMA
->>>>>>>>> region below 1G, the crashkernel is placed in the upper 4G
->>>>>>>>> ZONE_DMA_32 region. Since the crashkernel does not have access
->>>>>>>>> to the ZONE_DMA region, it prints out call trace during bootup.
->>>>>>>>>
->>>>>>>>> It is due to having this CONFIG item  ON  :
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> CONFIG_ZONE_DMA=y
->>>>>>>>>
->>>>>>>>> Turning off ZONE_DMA fixes a issue and Raspberry PI 4 will
->>>>>>>>> use the device tree to specify memory below 1G.
->>>>>>>>>
->>>>>>>>>
->>>>>>>> Disabling ZONE_DMA is temporary solution.  We may need proper
->>>>>>>> solution
->>>>>>> Perhaps the Raspberry platform configuration dependencies need
->>>>>>> separated  from “server class” Arm  equipment ?  Or auto-configured on
->>>>>>> boot ?  Consult an expert ;-)
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>>> I would like to see Chen’s feature added , perhaps as
->>>>>>>>> EXPERIMENTAL,  so we can get some configuration testing done on
->>>>>>>>> it.   It corrects having a DMA zone in low memory while crash-
->>>>>>>>> kernel is above 4GB.  This has been going on for a year now.
->>>>>>>> I will also like this patch to be added in Linux as early as
->>>>>>>> possible.
->>>>>>>>
->>>>>>>> Issue mentioned by me happens with or without this patch.
->>>>>>>>
->>>>>>>> This patch-set can consider fixing because it uses low memory for
->>>>>>>> DMA
->>>>>>>> & swiotlb only.
->>>>>>>> We can consider restricting crashkernel within the required range
->>>>>>>> like below
->>>>>>>>
->>>>>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->>>>>>>> index 7f9e5a6dc48c..bd67b90d35bd 100644
->>>>>>>> --- a/kernel/crash_core.c
->>>>>>>> +++ b/kernel/crash_core.c
->>>>>>>> @@ -354,7 +354,7 @@ int __init reserve_crashkernel_low(void)
->>>>>>>>                        return 0;
->>>>>>>>        }
->>>>>>>>
->>>>>>>> -       low_base = memblock_find_in_range(0, 1ULL << 32, low_size,
->>>>>>>> CRASH_ALIGN);
->>>>>>>> +       low_base = memblock_find_in_range(0,0xc0000000, low_size,
->>>>>>>> CRASH_ALIGN);
->>>>>>>>        if (!low_base) {
->>>>>>>>                pr_err("Cannot reserve %ldMB crashkernel low memory,
->>>>>>>> please try smaller size.\n",
->>>>>>>>                       (unsigned long)(low_size >> 20));
->>>>>>>>
->>>>>>>>
->>>>>>>     I suspect  0xc0000000  would need to be a CONFIG item  and not
->>>>>>> hard-coded.
->>>>>>>
->>>>>> if you consider this as valid change,  can you please incorporate as
->>>>>> part of your patch-set.
->>>>> After commit 1a8e1cef7 ("arm64: use both ZONE_DMA and ZONE_DMA32")，the 0-
->>>>> 4G memory is splited
->>>>> to DMA [mem 0x0000000000000000-0x000000003fffffff] and DMA32 [mem
->>>>> 0x0000000040000000-0x00000000ffffffff] on arm64.
->>>>>
->>>>>  From the above discussion, on your platform, the low crashkernel fall in
->>>>> DMA32 region, but your environment needs to access DMA
->>>>> region, so there is the call trace.
->>>>>
->>>>> I have a question, why do you choose 0xc0000000 here?
->>>>>
->>>>> Besides, this is common code, we also need to consider about x86.
->>>>>
->>>>   + nsaenzjulienne@suse.de
->> Thanks for adding me to the conversation, and sorry for the headaches.
->>
->>>>    Exactly .  This is why it needs to be a CONFIG option for  Raspberry
->>>> ..,  or device tree option.
->>>>
->>>>
->>>>    We could revert 1a8e1cef7 since it broke  Arm kdump too.
->>> Well, unfortunately the patch for commit 1a8e1cef7603 ("arm64: use
->>> both ZONE_DMA and ZONE_DMA32") was not Cc'ed to the kexec mailing
->>> list, thus we couldn't get many eyes on it for a thorough review from
->>> kexec/kdump p-o-v.
+>>>> Rob
+>>> Okay, I've been digging into that. But there's no actual driver that
+>>> binds to a "usb-b-connector" compatible, so how do we get to the
+>>> vbus-supply from there?
 >>>
->>> Also we historically never had distinction in common arch code on the
->>> basis of the intended end use-case: embedded, server or automotive, so
->>> I am not sure introducing a Raspberry specific CONFIG option would be
->>> a good idea.
->> +1
+>>> [devm_]regulator_get only accepts a device as argument, and will not
+>>> look into child nodes. The only way to get at the vbus of a child node
+>>> (or a node linked through a port) would be to hand-code the equivalent
+>>> of of_regulator_get(), which will not be acceptable.
+>> Doesn't it look into child nodes calling of_get_child_regulator()?
+> Looking at the code in regulator/core.c, yeah, it should. I'll have to=20
+> add some debugging lines and look into why it didn't work in my test.
+
+Ah, I had put my "connector" child in the wrong node. If I add the=20
+following fragment to the dwc3 node, the vbus patch works:
+
+ =C2=A0=C2=A0=C2=A0 connector {
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 compatible =3D "usb-b-connector";
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 label =3D "micro-USB-otg";
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 type =3D "micro";
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 vbus-supply =3D <&reg_usb0_vbus>;
+ =C2=A0=C2=A0=C2=A0 };
+
+The driver indeed picks up the vbus supply from a child node.
+
+This would mean there's no change to the devicetree bindings, it's using=20
+already existing bindings.
+
+>> You're right that it wouldn't work if graph is used. The connector has
+>> to be either a child of a controller for the connector or the USB
+>> controller. I'd expect you'd have the former for Type-C, but for
+>> "usb-b-connector" the parent is more likely just the USB controller.
+> For my current case, using a direct child would be fine, there's=20
+> nothing else connected. But I expect that we'll produce a board with=20
+> some USB-C connector some day yeah.
 >>
->>  From the distros perspective it's very important to keep a single kernel image.
+>> In any case, having a struct device shouldn't be a requirement and
+>> most subsystems expose a get function only needing the DT node.
 >>
->>> So, rather than reverting the patch, we can look at addressing the
->>> same properly this time - especially from a kdump p-o-v.
->>> This issue has been reported by some Red Hat arm64 partners with
->>> upstream kernel also and as we have noticed in the past as well,
->>> hardcoding the placement of the crashkernel base address (unless the
->>> base address is specified by a crashkernel=X@Y like bootargs) is also
->>> not a portable suggestion.
->>>
->>> I am working on a possible fix and will have more updates on the same
->>> in a day-or-two.
->> Please keep me in the loop, we've also had issues pointing to this reported by
->> SUSE partners. I can do some testing both on the RPi4 and on big servers that
->> need huge crashkernel sizes.
+>>> Or is it the intention that I write a usb-X-connector device driver
+>>> first that handles the vbus?
+>> That's a kernel implementation detail that is independent of the
+>> binding, but yes we'll probably need a driver or library helper
+>> functions eventually. Note that it is possible to have a struct device
+>> without a driver.
 >>
->> Regards,
->> Nicolas
->>
+>> Rob
 >
->   Hi
->
->   Has there been any progress on this ? It appears we are stalled because Nicolas's  and Chen's changes are not compatible . One is needed for RPi4 and the other for server class equipment.
->
->
-> Thanks,
->
-> John
->
->
-Hi all,
-
-Thanks for John's reminder.
-commit 1a8e1cef7 ("arm64: use both ZONE_DMA and ZONE_DMA32") broken the arm64 kdump,
-there is a simple solution similar to pk's to fix this, see below:
-
-In crash dump kernel, if the peripherals need to use ZONE_DMA like the the Raspberry Pi 4, based on
-my solution, we adjusted the memory range in memblock_find_in_range.
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index a7580d291c37..eb16c6d54b73 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
-        unsigned long long base, low_base = 0, low_size = 0;
-        unsigned long total_low_mem;
-        int ret;
-+       phys_addr_t crash_max = 1ULL << 32;
- 
-        total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
- 
-@@ -352,7 +353,12 @@ int __init reserve_crashkernel_low(void)
-                        return 0;
-        }
- 
--       low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-+#ifdef CONFIG_ARM64
-+       if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-+               crash_max = arm64_dma_phys_limit;
-+       }
-+#endif
-+       low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
-        if (!low_base) {
-                pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-                       (unsigned long)(low_size >> 20));
-
-
-Thanks,
-Chen Zhou
-
->
-> .
 >
 
+--=20
+Mike Looijmans
 
