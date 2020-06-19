@@ -2,144 +2,151 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC00C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B5C20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370B820776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733011AbgFSON5 (ORCPT
+        id S1733035AbgFSOOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:13:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:33514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbgFSONy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:13:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 594A32B;
-        Fri, 19 Jun 2020 07:13:53 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADF553F73C;
-        Fri, 19 Jun 2020 07:13:51 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 15:13:49 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
- static key
-Message-ID: <20200619141348.5o5iqomwe6lofgiu@e107158-lin.cambridge.arm.com>
-References: <20200618195525.7889-1-qais.yousef@arm.com>
- <20200618195525.7889-3-qais.yousef@arm.com>
- <jhjwo43cpfl.mognet@arm.com>
- <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
- <jhjsgerchmn.mognet@arm.com>
+        Fri, 19 Jun 2020 10:14:09 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:51900 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgFSOOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:14:04 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jmHmK-00081o-MS; Fri, 19 Jun 2020 08:14:00 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jmHmJ-0001Ae-Fn; Fri, 19 Jun 2020 08:14:00 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin\@oracle.com" <joe.jin@oracle.com>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+        <20200618233958.GV8681@bombadil.infradead.org>
+        <877dw3apn8.fsf@x220.int.ebiederm.org>
+        <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+Date:   Fri, 19 Jun 2020 09:09:41 -0500
+In-Reply-To: <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com> (Junxiao Bi's
+        message of "Thu, 18 Jun 2020 17:27:43 -0700")
+Message-ID: <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <jhjsgerchmn.mognet@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-XM-SPF: eid=1jmHmJ-0001Ae-Fn;;;mid=<87bllf87ve.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19+kJXk7DdBNSbufeE2zhsPt9yABoMvPa4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH] proc: Avoid a thundering herd of threads freeing proc dentries
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/19/20 14:25, Valentin Schneider wrote:
-> 
-> On 19/06/20 13:51, Qais Yousef wrote:
-> > On 06/19/20 11:36, Valentin Schneider wrote:
-> >>
-> >> On 18/06/20 20:55, Qais Yousef wrote:
-> >> > There is a report that when uclamp is enabled, a netperf UDP test
-> >> > regresses compared to a kernel compiled without uclamp.
-> >> >
-> >> > https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
-> >> >
-> >>
-> >> ISTR the perennial form for those is: https://lkml.kernel.org/r/<message-id>
-> >
-> > The link is correct permalinnk from lore and contains the message-id as Peter
-> > likes and he has accepted this form before.
-> >
-> 
-> I think the objections I remember were on using lkml.org rather than
-> lkml.kernel.org. Sorry!
-> 
-> > If you look closely you'll see that what you suggest is just moving 'lkml' to
-> > replace lore in the dns name and put an /r/. I don't see a need to enforce one
-> > form over the other as the one I used is much easier to get.
-> >
-> 
-> My assumption would be that while lore may fade (it hasn't been there for
-> that long, who knows what will come next), lkml.kernel.org ought to be
-> perennial. Keyword here being "assumption".
-> 
-> > If Peter really insists I'll be happy to change.
-> >
-> > [...]
-> >
-> >> > +	 * This could happen if sched_uclamp_unused was disabled while the
-> >> > +	 * current task was running, hence we could end up with unbalanced call
-> >> > +	 * to uclamp_rq_dec_id().
-> >> > +	 */
-> >> > +	if (unlikely(!bucket->tasks))
-> >> > +		return;
-> >>
-> >> I'm slightly worried about silent returns for cases like these, can we try
-> >> to cook something up to preserve the previous SCHED_WARN_ON()? Say,
-> >> something like the horrendous below - alternatively might be feasible with
-> >> with some clever p->on_rq flag.
-> >
-> > I am really against extra churn and debug code to detect an impossible case
-> > that is not really tricky for reviewers to discern. Outside of enqueue/dequeue
-> > path, it's only used in update_uclamp_active(). It is quite easy to see that
-> > it's impossible, except for the legit case now when we have a static key
-> > changing when a task is running.
-> >
-> 
-> Providing it isn't too much of a head scratcher (and admittedly what I am
-> suggesting is borderline here), I believe it is worthwhile to add debug
-> helps in what is assumed to be impossible cases - even more so in this case
-> seeing as it had been deemed worth to check previously. We've been proved
-> wrong on the "impossible" nature of some things before.
-> 
-> We have a few of those checks strewn over the scheduler code, so it's not
-> like we would be starting a new trend.
 
-I am sorry I am still not bought in. I think the parts you're talking about are
-in the lockless part of the scheduler which are really hard to debug as several
-cpus could be traversing these data from different code paths. But here this is
-just extra churn.
+Junxiao Bi <junxiao.bi@oracle.com> reported:
+> When debugging some performance issue, i found that thousands of threads exit
+> around same time could cause a severe spin lock contention on proc dentry
+> "/proc/$parent_process_pid/task/", that's because threads needs to clean up
+> their pid file from that dir when exit.
 
-If an imbalance has happend this means either:
+Matthew Wilcox <willy@infradead.org> reported:
+> We've looked at a few different ways of fixing this problem.
 
-	1. enqueue/dequeue_task() is imablanced itself
-	2. uclamp_update_active() calls dec without inc.
+The flushing of the proc dentries from the dcache is an optmization,
+and is not necessary for correctness.  Eventually cache pressure will
+cause the dentries to be freed even if no flushing happens.  Some
+light testing when I refactored the proc flushg[1] indicated that at
+least the memory footprint is easily measurable.
 
-If 1 happened we have more reasons to be worried about. For 2 the function
-takes task_rq_lock() and does dec/inc in obvious way.
+An optimization that causes a performance problem due to a thundering
+herd of threads is no real optimization.
 
-So I don't see any reason to add new info in task_struct and sprinkle #ifdefs
-to protect against something that I can't see we can't reason correctly about
-now.
+Modify the code to only flush the /proc/<tgid>/ directory when all
+threads in a process are killed at once.  This continues to flush
+practically everything when the process is reaped as the threads live
+under /proc/<tgid>/task/<tid>.
 
-We don't use pr_debug() in scheduler (I guess no computer would have booted
-with that on), otherwise that would have been a good candidate for one, yes.
-But we can't do that.
+There is a rare possibility that a debugger will access /proc/<tid>/,
+which this change will no longer flush, but I believe such accesses
+are sufficiently rare to not be observed in practice.
 
-Thanks
+[1] 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
+Link: https://lkml.kernel.org/r/54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Reported-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
 
---
-Qais Yousef
+I am still waiting for word on how this affects performance, but this is
+a clean version that should avoid the thundering herd problem in
+general.
+
+
+ kernel/exit.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index cebae77a9664..567354550d62 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -151,8 +151,8 @@ void put_task_struct_rcu_user(struct task_struct *task)
+ 
+ void release_task(struct task_struct *p)
+ {
++	struct pid *flush_pid = NULL;
+ 	struct task_struct *leader;
+-	struct pid *thread_pid;
+ 	int zap_leader;
+ repeat:
+ 	/* don't need to get the RCU readlock here - the process is dead and
+@@ -165,7 +165,16 @@ void release_task(struct task_struct *p)
+ 
+ 	write_lock_irq(&tasklist_lock);
+ 	ptrace_release_task(p);
+-	thread_pid = get_pid(p->thread_pid);
++
++	/*
++	 * When all of the threads are exiting wait until the end
++	 * and flush everything.
++	 */
++	if (thread_group_leader(p))
++		flush_pid = get_pid(task_tgid(p));
++	else if (!(p->signal->flags & SIGNAL_GROUP_EXIT))
++		flush_pid = get_pid(task_pid(p));
++
+ 	__exit_signal(p);
+ 
+ 	/*
+@@ -188,8 +197,10 @@ void release_task(struct task_struct *p)
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
+-	proc_flush_pid(thread_pid);
+-	put_pid(thread_pid);
++	if (flush_pid) {
++		proc_flush_pid(flush_pid);
++		put_pid(flush_pid);
++	}
+ 	release_thread(p);
+ 	put_task_struct_rcu_user(p);
+ 
+-- 
+2.20.1
