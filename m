@@ -2,164 +2,89 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6134AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D505C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBF620DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="O3ucnUXJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0903420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592589886;
+	bh=4BtD3MYD+VZOU9pnwXf8Ajs1DRRHrNXmV37Wuhj/+Gc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=tRG/NcR9FN0HSyTpqF2m5wS2rs/PxShbbVDJM0MXYV+yxc3Y77DS95pEiAxndY/xt
+	 z0Gi/xcGNOI/hC8FiC9B/JP9KC8E5IyRofU9jwsMqXRBoW/m22mtOxg/Pv8AOFK8zY
+	 JTPUUw7gnJ1wJeW9p5DLvqslGU/GZtGRyyDr1Nw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbgFSSEL (ORCPT
+        id S2392071AbgFSSEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:04:11 -0400
-Received: from forward102p.mail.yandex.net ([77.88.28.102]:44305 "EHLO
-        forward102p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727003AbgFSSEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:04:11 -0400
-X-Greylist: delayed 345 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Jun 2020 14:04:08 EDT
-Received: from mxback28g.mail.yandex.net (mxback28g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:328])
-        by forward102p.mail.yandex.net (Yandex) with ESMTP id 169E21D40CA2;
-        Fri, 19 Jun 2020 20:58:17 +0300 (MSK)
-Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (myt5-ca5ec8faf378.qloud-c.yandex.net [2a02:6b8:c12:2514:0:640:ca5e:c8fa])
-        by mxback28g.mail.yandex.net (mxback/Yandex) with ESMTP id yrlIGU87mc-wFO0RYVi;
-        Fri, 19 Jun 2020 20:58:17 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1592589497;
-        bh=dTABDPAC0TIJvPPbhyKvGl6SRvL9aurhWCWf7c3kue0=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=O3ucnUXJHdobJao47TJC+LUhCY9isFAos37C5xg8vuMACmoE1qNZczvvirtVNiPqk
-         BBMom4SxcxJf85ZK4ygJgy/6JndshlILOcHoN75TwzQ9odRQdovmIOFCPGzb7TdTTE
-         aALW6UyH/6oFzsj06x8eVwcTm2s0+bvmwVDTVN5A=
-Authentication-Results: mxback28g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8kc9Js6YU8-wE0uc5mT;
-        Fri, 19 Jun 2020 20:58:15 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Alexander Lobakin <bloodyreaper@yandex.ru>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        Fri, 19 Jun 2020 14:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389671AbgFSSEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 14:04:44 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B073420DD4;
+        Fri, 19 Jun 2020 18:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592589883;
+        bh=4BtD3MYD+VZOU9pnwXf8Ajs1DRRHrNXmV37Wuhj/+Gc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UZfGmO8K/btUZpFfszkFst5DdKQp3Z5but4edsWZRZEa649haUjZIo/YfTaIihf9J
+         MHr9+242B2LfW5ZQt0C4GlvHuYwNDDu7tyNRlhvSOcIUkM0svtcIKnULrfGL0b200u
+         ZoFkVbUk1/ukdB7mdywIyqBa/v5CzlQwfKGRCUVM=
+Date:   Fri, 19 Jun 2020 13:10:07 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>,
-        Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Lobakin <bloodyreaper@yandex.ru>
-Subject: [PATCH net 3/3] net: ethtool: sync netdev_features_strings order with enum netdev_features
-Date:   Fri, 19 Jun 2020 20:58:05 +0300
-Message-Id: <20200619175805.34331-1-bloodyreaper@yandex.ru>
-X-Mailer: git-send-email 2.27.0
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: dsa: sja1105: Use struct_size() in kzalloc()
+Message-ID: <20200619181007.GA32353@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ordering of netdev_features_strings[] makes no sense when it comes
-to user interaction, as list of features in `ethtool -k` input is sorted
-according to the corresponding bit's position.
-Instead, it *does* make sense when it comes to adding new netdev_features
-or modifying existing ones. We have at least 2 occasions of forgetting to
-add the strings for newly introduced features, and one of them existed
-since 3.1x times till now.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-Let's keep this stringtable sorted according to bit's position in enum
-netdev_features, as this simplifies both reading and modification of the
-source code and can help not to miss or forget anything.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/ethtool/common.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_tas.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index c8e3fce6e48d..24f35d47832d 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -8,25 +8,25 @@
- const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
- 	[NETIF_F_SG_BIT]			= "tx-scatter-gather",
- 	[NETIF_F_IP_CSUM_BIT]			= "tx-checksum-ipv4",
-+
-+	/* __UNUSED_NETIF_F_1 - deprecated */
-+
- 	[NETIF_F_HW_CSUM_BIT]			= "tx-checksum-ip-generic",
- 	[NETIF_F_IPV6_CSUM_BIT]			= "tx-checksum-ipv6",
- 	[NETIF_F_HIGHDMA_BIT]			= "highdma",
- 	[NETIF_F_FRAGLIST_BIT]			= "tx-scatter-gather-fraglist",
- 	[NETIF_F_HW_VLAN_CTAG_TX_BIT]		= "tx-vlan-hw-insert",
--
- 	[NETIF_F_HW_VLAN_CTAG_RX_BIT]		= "rx-vlan-hw-parse",
- 	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]	= "rx-vlan-filter",
--	[NETIF_F_HW_VLAN_STAG_TX_BIT]		= "tx-vlan-stag-hw-insert",
--	[NETIF_F_HW_VLAN_STAG_RX_BIT]		= "rx-vlan-stag-hw-parse",
--	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	= "rx-vlan-stag-filter",
- 	[NETIF_F_VLAN_CHALLENGED_BIT]		= "vlan-challenged",
- 	[NETIF_F_GSO_BIT]			= "tx-generic-segmentation",
- 	[NETIF_F_LLTX_BIT]			= "tx-lockless",
- 	[NETIF_F_NETNS_LOCAL_BIT]		= "netns-local",
- 	[NETIF_F_GRO_BIT]			= "rx-gro",
--	[NETIF_F_GRO_HW_BIT]			= "rx-gro-hw",
- 	[NETIF_F_LRO_BIT]			= "rx-lro",
+diff --git a/drivers/net/dsa/sja1105/sja1105_tas.c b/drivers/net/dsa/sja1105/sja1105_tas.c
+index 3aa1a8b5f766..31d8acff1f01 100644
+--- a/drivers/net/dsa/sja1105/sja1105_tas.c
++++ b/drivers/net/dsa/sja1105/sja1105_tas.c
+@@ -475,8 +475,7 @@ bool sja1105_gating_check_conflicts(struct sja1105_private *priv, int port,
+ 	if (list_empty(&gating_cfg->entries))
+ 		return false;
  
-+	/* NETIF_F_GSO_SHIFT = NETIF_F_TSO_BIT */
-+
- 	[NETIF_F_TSO_BIT]			= "tx-tcp-segmentation",
- 	[NETIF_F_GSO_ROBUST_BIT]		= "tx-gso-robust",
- 	[NETIF_F_TSO_ECN_BIT]			= "tx-tcp-ecn-segmentation",
-@@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
- 	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]	= "tx-tunnel-remcsum-segmentation",
- 	[NETIF_F_GSO_SCTP_BIT]			= "tx-sctp-segmentation",
- 	[NETIF_F_GSO_ESP_BIT]			= "tx-esp-segmentation",
-+
-+	/* NETIF_F_GSO_UDP_BIT - deprecated */
-+
- 	[NETIF_F_GSO_UDP_L4_BIT]		= "tx-udp-segmentation",
- 	[NETIF_F_GSO_FRAGLIST_BIT]		= "tx-gso-list",
- 
-+	/* NETIF_F_GSO_LAST = NETIF_F_GSO_FRAGLIST_BIT */
-+
- 	[NETIF_F_FCOE_CRC_BIT]			= "tx-checksum-fcoe-crc",
- 	[NETIF_F_SCTP_CRC_BIT]			= "tx-checksum-sctp",
- 	[NETIF_F_FCOE_MTU_BIT]			= "fcoe-mtu",
-@@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
- 	[NETIF_F_LOOPBACK_BIT]			= "loopback",
- 	[NETIF_F_RXFCS_BIT]			= "rx-fcs",
- 	[NETIF_F_RXALL_BIT]			= "rx-all",
-+	[NETIF_F_HW_VLAN_STAG_TX_BIT]		= "tx-vlan-stag-hw-insert",
-+	[NETIF_F_HW_VLAN_STAG_RX_BIT]		= "rx-vlan-stag-hw-parse",
-+	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	= "rx-vlan-stag-filter",
- 	[NETIF_F_HW_L2FW_DOFFLOAD_BIT]		= "l2-fwd-offload",
-+
- 	[NETIF_F_HW_TC_BIT]			= "hw-tc-offload",
- 	[NETIF_F_HW_ESP_BIT]			= "esp-hw-offload",
- 	[NETIF_F_HW_ESP_TX_CSUM_BIT]		= "esp-tx-csum-hw-offload",
- 	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]	= "rx-udp_tunnel-port-offload",
--	[NETIF_F_HW_TLS_RECORD_BIT]		= "tls-hw-record",
- 	[NETIF_F_HW_TLS_TX_BIT]			= "tls-hw-tx-offload",
- 	[NETIF_F_HW_TLS_RX_BIT]			= "tls-hw-rx-offload",
-+
-+	[NETIF_F_GRO_HW_BIT]			= "rx-gro-hw",
-+	[NETIF_F_HW_TLS_RECORD_BIT]		= "tls-hw-record",
- 	[NETIF_F_GRO_FRAGLIST_BIT]		= "rx-gro-list",
-+
- 	[NETIF_F_HW_MACSEC_BIT]			= "macsec-hw-offload",
-+
-+	/* NETDEV_FEATURE_COUNT */
- };
- 
- const char
+-	dummy = kzalloc(sizeof(struct tc_taprio_sched_entry) * num_entries +
+-			sizeof(struct tc_taprio_qopt_offload), GFP_KERNEL);
++	dummy = kzalloc(struct_size(dummy, entries, num_entries), GFP_KERNEL);
+ 	if (!dummy) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Failed to allocate memory");
+ 		return true;
 -- 
 2.27.0
 
