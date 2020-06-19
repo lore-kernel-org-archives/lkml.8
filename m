@@ -2,58 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F63C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87749C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900EF2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A42B2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578565;
-	bh=4BmLQ4xdgqMNFzoGZ/g0+auNtCyRAfQH+JRACJVb7ig=;
+	s=default; t=1592578569;
+	bh=waDnIzkFy2yPMYa8d+xDQU4UEevm4QyBOITEaJdX0T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=suEOmadQJ6nIJ5K/sBLPgmQZEFSXav58HVG6ep14SUkaNV81ihoG3CUsa42Ymhh6/
-	 qSe/kZk4bcxBAIWOKfPz+vQrow8328CUCfOmP9lyY3j2WpfFh/9KVTDo6SL2bYQKVF
-	 Zevobi2FV+EIC94b5Zt+2E5lkvlxiXNcQhBh1DzE=
+	b=Fd2UHkvvVPQNjRwzuHqYEHQkGyzWHMjPIXxs1T+RGrU3aT7pfMTZXeqyU2+1SkH5W
+	 qywx+Dgz8FyekNiiLgNG0gvtykHYCQVFEB+DcHpEsI56d3iRXsO5KsHDOJghWJD9Zt
+	 O5tAAbBIp01z6myjiDo5Wo8cSHV0naNB8hFxIB84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbgFSO4E (ORCPT
+        id S2390030AbgFSO4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389980AbgFSOzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:49 -0400
+        id S2388945AbgFSOz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961082184D;
-        Fri, 19 Jun 2020 14:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A65A2217D8;
+        Fri, 19 Jun 2020 14:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578549;
-        bh=4BmLQ4xdgqMNFzoGZ/g0+auNtCyRAfQH+JRACJVb7ig=;
+        s=default; t=1592578557;
+        bh=waDnIzkFy2yPMYa8d+xDQU4UEevm4QyBOITEaJdX0T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ff7niHzlF5rppe5AkVmEK5Yd/Ax6jg7YTGH+xru4lJ9aGKVHK11lG4wBfD0B3UVF9
-         ATaHQKgVvNaAC2Psdu59LWnJ8tKhwzNSwRJ7VqA3CI1kOicw/kIVHTKTj7jSjJvWXb
-         s9FEZAhTTndbAlJ7F5D3pK4X9hbbhlsvzKv0+0W0=
+        b=S3Zw2torBlN1ZNy4Yy17hS5GNdWylaNqAAdhrpiHYvmNyx6RrrhQNjXGgwkQH/ZUO
+         RcJLSrN0if4dv2hmmzly8m8R3WEmKOckVGhYKw9aeYUXjI1Jy/kR6l2q/isjkonjJa
+         h5OwTkczooDO3iW2dbg3H/ywpipt356lvfztmbxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Gonglei <arei.gonglei@huawei.com>,
-        "Longpeng(Mike)" <longpeng2@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/267] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
-Date:   Fri, 19 Jun 2020 16:30:50 +0200
-Message-Id: <20200619141652.001022189@linuxfoundation.org>
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 068/267] ovl: initialize error in ovl_copy_xattr
+Date:   Fri, 19 Jun 2020 16:30:53 +0200
+Message-Id: <20200619141652.149764885@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -66,80 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Yuxuan Shui <yshuiv7@gmail.com>
 
-[ Upstream commit b02989f37fc5e865ceeee9070907e4493b3a21e2 ]
+commit 520da69d265a91c6536c63851cbb8a53946974f0 upstream.
 
-The system will crash when the users insmod crypto/tcrypt.ko with mode=38
-( testing "cts(cbc(aes))" ).
+In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
+xattrs, the copy loop will terminate without assigning anything to the
+error variable, thus returning an uninitialized value.
 
-Usually the next entry of one sg will be @sg@ + 1, but if this sg element
-is part of a chained scatterlist, it could jump to the start of a new
-scatterlist array. Fix it by sg_next() on calculation of src/dst
-scatterlist.
+If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized error
+value is put into a pointer by ERR_PTR(), causing potential invalid memory
+accesses down the line.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Signed-off-by: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commit initialize error with 0. This is the correct value because when
+there's no xattr to copy, because all xattrs are private, ovl_copy_xattr
+should succeed.
+
+This bug is discovered with the help of INIT_STACK_ALL and clang.
+
+Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
+Fixes: 0956254a2d5b ("ovl: don't copy up opaqueness")
+Cc: stable@vger.kernel.org # v4.8
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ fs/overlayfs/copy_up.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 9348060cc32f..e9a8485c4929 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -367,13 +367,18 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 	int err;
- 	unsigned long flags;
- 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
--	int i;
- 	u64 dst_len;
- 	unsigned int num_out = 0, num_in = 0;
- 	int sg_total;
- 	uint8_t *iv;
-+	struct scatterlist *sg;
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -43,7 +43,7 @@ int ovl_copy_xattr(struct dentry *old, s
+ {
+ 	ssize_t list_size, size, value_size = 0;
+ 	char *buf, *name, *value = NULL;
+-	int uninitialized_var(error);
++	int error = 0;
+ 	size_t slen;
  
- 	src_nents = sg_nents_for_len(req->src, req->nbytes);
-+	if (src_nents < 0) {
-+		pr_err("Invalid number of src SG.\n");
-+		return src_nents;
-+	}
-+
- 	dst_nents = sg_nents(req->dst);
- 
- 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
-@@ -459,12 +464,12 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 	vc_sym_req->iv = iv;
- 
- 	/* Source data */
--	for (i = 0; i < src_nents; i++)
--		sgs[num_out++] = &req->src[i];
-+	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
-+		sgs[num_out++] = sg;
- 
- 	/* Destination data */
--	for (i = 0; i < dst_nents; i++)
--		sgs[num_out + num_in++] = &req->dst[i];
-+	for (sg = req->dst; sg; sg = sg_next(sg))
-+		sgs[num_out + num_in++] = sg;
- 
- 	/* Status */
- 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
--- 
-2.25.1
-
+ 	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
 
 
