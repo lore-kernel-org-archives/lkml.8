@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE02C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FD5206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4256206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585069;
-	bh=f1V455MIpPmgMu8VkJ6CW9z6ZykWPwkYorbzYRpxZvE=;
+	s=default; t=1592585075;
+	bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LFebtnYoWVJSrjaJC9zkjyuu4sHAp9LHGQR2FIoNp4+oad1PGzka3vy9UXruRTNAp
-	 rJnVO2KIVR6/YB3T9Vrj2dZMe7cIvfZTVIJW3P3LPCN5U1jkkvehmcKzpSYzMx7Jhw
-	 U8LUKx9FejcL3wY37AkB7ESiUYla1Ausq3i9yLlk=
+	b=YRedqWeVk+pi2lluUVCewdWhocDmf6U+fKdiCpDE+1iBzXLCavDWPD1JwR4gzZ/mI
+	 eZ26G0Py3klAgtVpCd8hJUY4OvTszVZlvUi0ybajuoeRF8zhaHvz6SX/ik4bOs3kvJ
+	 P6zF2Ff3VkFOmVlDCER7q2YjgDlN/1b6zLz511lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395538AbgFSQo2 (ORCPT
+        id S2388441AbgFSQoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388446AbgFSOnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:13 -0400
+        id S2388095AbgFSOnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4814C2166E;
-        Fri, 19 Jun 2020 14:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E1202168B;
+        Fri, 19 Jun 2020 14:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577792;
-        bh=f1V455MIpPmgMu8VkJ6CW9z6ZykWPwkYorbzYRpxZvE=;
+        s=default; t=1592577788;
+        bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1D8NxPH4k7GqzRZxb8VbpiIcyPsYSVb2K77lTQrnu6JwVf05oSpvAhnRP8KYJlQ32
-         nx81RWc225zUSbdlMiVIqE80xVjlW6QHQWzMIptOnLubbfN0m8cd75ZBqAawK9vyR4
-         IGP7RHPsRqbSz7XhtwcmBYYvpwAz0jIG1J4wmiVw=
+        b=hfoUg6eKXR0/ybKawEd16AymW+zu3hP6yiXXBgnyuvQT2Ac7d02BbPCkrflPhCPYp
+         AracQco/y1utrmAf8fX3IqcWfMp5EUL9kGKrE5An7MOdLMvZcXSPi6pPQ6WTHJ1OkY
+         lxVAiRpORL61Aef3/PiiF/kU+P55Qii5OmB6mozo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 062/128] clocksource: dw_apb_timer_of: Fix missing clockevent timers
-Date:   Fri, 19 Jun 2020 16:32:36 +0200
-Message-Id: <20200619141623.495923419@linuxfoundation.org>
+Subject: [PATCH 4.9 060/128] kgdb: Prevent infinite recursive entries to the debugger
+Date:   Fri, 19 Jun 2020 16:32:34 +0200
+Message-Id: <20200619141623.389129571@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -70,70 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 6d2e16a3181bafb77b535095c39ad1c8b9558c8c ]
+[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
 
-Commit 100214889973 ("clocksource: dw_apb_timer_of: use
-clocksource_of_init") replaced a publicly available driver
-initialization method with one called by the timer_probe() method
-available after CLKSRC_OF. In current implementation it traverses
-all the timers available in the system and calls their initialization
-methods if corresponding devices were either in dtb or in acpi. But
-if before the commit any number of available timers would be installed
-as clockevent and clocksource devices, after that there would be at most
-two. The rest are just ignored since default case branch doesn't do
-anything. I don't see a reason of such behaviour, neither the commit
-message explains it. Moreover this might be wrong if on some platforms
-these timers might be used for different purpose, as virtually CPU-local
-clockevent timers and as an independent broadcast timer. So in order
-to keep the compatibility with the platforms where the order of the
-timers detection has some meaning, lets add the secondly discovered
-timer to be of clocksource/sched_clock type, while the very first and
-the others would provide the clockevents service.
+If we detect that we recursively entered the debugger we should hack
+our I/O ops to NULL so that the panic() in the next line won't
+actually cause another recursion into the debugger.  The first line of
+kgdb_panic() will check this and return.
 
-Fixes: 100214889973 ("clocksource: dw_apb_timer_of: use clocksource_of_init")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200521204818.25436-7-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/dw_apb_timer_of.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/debug/debug_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
-index aee6c0d39a7c..024e6cc5025b 100644
---- a/drivers/clocksource/dw_apb_timer_of.c
-+++ b/drivers/clocksource/dw_apb_timer_of.c
-@@ -146,10 +146,6 @@ static int num_called;
- static int __init dw_apb_timer_init(struct device_node *timer)
- {
- 	switch (num_called) {
--	case 0:
--		pr_debug("%s: found clockevent timer\n", __func__);
--		add_clockevent(timer);
--		break;
- 	case 1:
- 		pr_debug("%s: found clocksource timer\n", __func__);
- 		add_clocksource(timer);
-@@ -160,6 +156,8 @@ static int __init dw_apb_timer_init(struct device_node *timer)
- #endif
- 		break;
- 	default:
-+		pr_debug("%s: found clockevent timer\n", __func__);
-+		add_clockevent(timer);
- 		break;
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 79517e5549f1..9c939c6bf21c 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -443,6 +443,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
+ 
+ 	if (exception_level > 1) {
+ 		dump_stack();
++		kgdb_io_module_registered = false;
+ 		panic("Recursive entry to debugger");
  	}
  
 -- 
