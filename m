@@ -2,204 +2,144 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A72C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC00C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49C920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOdb10J3"
+	by mail.kernel.org (Postfix) with ESMTP id E4B5C20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbgFSONw (ORCPT
+        id S1733011AbgFSON5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgFSONr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:13:47 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF15EC06174E;
-        Fri, 19 Jun 2020 07:13:46 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l12so10346159ejn.10;
-        Fri, 19 Jun 2020 07:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/u6tJnI73bJ/e/Tlk8P+EJrFujPPPek4eDZC5ID4TB4=;
-        b=OOdb10J3fJcUv7rD7aa2nUAL2at0tcc+aJ+JmPHo1mNqaaNtEE2mGL/LDBYIA/RChO
-         fLIWzDY8P23r2i12eghtL9CGezE+y0Z3lL35O+bnRFBfSaz2DZRUOhpgbB7jzRncPr4k
-         IMx6vBGtazjQgbTxo+DrN0HJpgkU/GUoqttbcppx4cZUrusCKEfnkDAYU/811C0svVSc
-         DYukW/CJQcoW8m/papdvBWF4L49snxiYqT+7InBCdUwcKOILhkFBuH7wVRJYP6KH9QJ7
-         mD63k6lXHNav4GC+dP2hEsJo2fsZBjaU9UIzPbVUT24Tb9bGvJWKpR+BCFmxDsmrrspB
-         PsJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/u6tJnI73bJ/e/Tlk8P+EJrFujPPPek4eDZC5ID4TB4=;
-        b=ZKjVNoQs0t/Vr5Dzm+U0klL6JiRFLtjhI37hoRKHUayZXq/zm5/0V6ZebuHJuL9Cq5
-         avArnjfmGUZXqDDUh6va/0ni/S+Rg8iNGRBmqt1aHxqGJN/IjtSB62zV2+zm1cvSUb1h
-         s+hMXd1AAX5abmG4U2jyVhNhRd1RvfmNuQLjPVXn2yzh4AmFnO+TZtO4D6TeHD0brjbR
-         q8w/eyrgAzXT8iQlZNgSGfIFAFzV95y9nxwxhMb9f/uljUxqviftFCoGn14r3DpkdqUs
-         RjOBscA1uq2Orsgdi4PmQXgbsQsqjbKTXGg1i7GFARfxyCiWiBuU8MOGLhG520hL67ct
-         2usQ==
-X-Gm-Message-State: AOAM5317lKRSP2qJpWoPI3rOxOteu/76nv8tGimiLVPDuaHEp+4lh6oL
-        4ml4r5s69XHMGtfuUk6GeaNWBCJY
-X-Google-Smtp-Source: ABdhPJwWdBfRvifwAV1AW1ZLcskxfE0/peDRuwlANJdnd5OP32hhuWt7QQZuJy2YsaBdReoZ4DuO7w==
-X-Received: by 2002:a17:907:216c:: with SMTP id rl12mr4088982ejb.156.1592576025563;
-        Fri, 19 Jun 2020 07:13:45 -0700 (PDT)
-Received: from [192.168.43.243] ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id k24sm4611013edk.95.2020.06.19.07.13.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 07:13:45 -0700 (PDT)
-To:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-5-axboe@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 04/15] io_uring: re-issue block requests that failed
- because of resources
-Message-ID: <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
-Date:   Fri, 19 Jun 2020 17:12:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 19 Jun 2020 10:13:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:33514 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbgFSONy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:13:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 594A32B;
+        Fri, 19 Jun 2020 07:13:53 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADF553F73C;
+        Fri, 19 Jun 2020 07:13:51 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 15:13:49 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619141348.5o5iqomwe6lofgiu@e107158-lin.cambridge.arm.com>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-3-qais.yousef@arm.com>
+ <jhjwo43cpfl.mognet@arm.com>
+ <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
+ <jhjsgerchmn.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200618144355.17324-5-axboe@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <jhjsgerchmn.mognet@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 17:43, Jens Axboe wrote:
-> Mark the plug with nowait == true, which will cause requests to avoid
-> blocking on request allocation. If they do, we catch them and reissue
-> them from a task_work based handler.
+On 06/19/20 14:25, Valentin Schneider wrote:
 > 
-> Normally we can catch -EAGAIN directly, but the hard case is for split
-> requests. As an example, the application issues a 512KB request. The
-> block core will split this into 128KB if that's the max size for the
-> device. The first request issues just fine, but we run into -EAGAIN for
-> some latter splits for the same request. As the bio is split, we don't
-> get to see the -EAGAIN until one of the actual reads complete, and hence
-> we cannot handle it inline as part of submission.
+> On 19/06/20 13:51, Qais Yousef wrote:
+> > On 06/19/20 11:36, Valentin Schneider wrote:
+> >>
+> >> On 18/06/20 20:55, Qais Yousef wrote:
+> >> > There is a report that when uclamp is enabled, a netperf UDP test
+> >> > regresses compared to a kernel compiled without uclamp.
+> >> >
+> >> > https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
+> >> >
+> >>
+> >> ISTR the perennial form for those is: https://lkml.kernel.org/r/<message-id>
+> >
+> > The link is correct permalinnk from lore and contains the message-id as Peter
+> > likes and he has accepted this form before.
+> >
 > 
-> This does potentially cause re-reads of parts of the range, as the whole
-> request is reissued. There's currently no better way to handle this.
+> I think the objections I remember were on using lkml.org rather than
+> lkml.kernel.org. Sorry!
 > 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> ---
->  fs/io_uring.c | 148 ++++++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 124 insertions(+), 24 deletions(-)
+> > If you look closely you'll see that what you suggest is just moving 'lkml' to
+> > replace lore in the dns name and put an /r/. I don't see a need to enforce one
+> > form over the other as the one I used is much easier to get.
+> >
 > 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 2e257c5a1866..40413fb9d07b 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -900,6 +900,13 @@ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
->  static void __io_queue_sqe(struct io_kiocb *req,
->  			   const struct io_uring_sqe *sqe);
->  
-...> +
-> +static void io_rw_resubmit(struct callback_head *cb)
-> +{
-> +	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
-> +	struct io_ring_ctx *ctx = req->ctx;
-> +	int err;
-> +
-> +	__set_current_state(TASK_RUNNING);
-> +
-> +	err = io_sq_thread_acquire_mm(ctx, req);
-> +
-> +	if (io_resubmit_prep(req, err)) {
-> +		refcount_inc(&req->refs);
-> +		io_queue_async_work(req);
-> +	}
+> My assumption would be that while lore may fade (it hasn't been there for
+> that long, who knows what will come next), lkml.kernel.org ought to be
+> perennial. Keyword here being "assumption".
+> 
+> > If Peter really insists I'll be happy to change.
+> >
+> > [...]
+> >
+> >> > +	 * This could happen if sched_uclamp_unused was disabled while the
+> >> > +	 * current task was running, hence we could end up with unbalanced call
+> >> > +	 * to uclamp_rq_dec_id().
+> >> > +	 */
+> >> > +	if (unlikely(!bucket->tasks))
+> >> > +		return;
+> >>
+> >> I'm slightly worried about silent returns for cases like these, can we try
+> >> to cook something up to preserve the previous SCHED_WARN_ON()? Say,
+> >> something like the horrendous below - alternatively might be feasible with
+> >> with some clever p->on_rq flag.
+> >
+> > I am really against extra churn and debug code to detect an impossible case
+> > that is not really tricky for reviewers to discern. Outside of enqueue/dequeue
+> > path, it's only used in update_uclamp_active(). It is quite easy to see that
+> > it's impossible, except for the legit case now when we have a static key
+> > changing when a task is running.
+> >
+> 
+> Providing it isn't too much of a head scratcher (and admittedly what I am
+> suggesting is borderline here), I believe it is worthwhile to add debug
+> helps in what is assumed to be impossible cases - even more so in this case
+> seeing as it had been deemed worth to check previously. We've been proved
+> wrong on the "impossible" nature of some things before.
+> 
+> We have a few of those checks strewn over the scheduler code, so it's not
+> like we would be starting a new trend.
 
-Hmm, I have similar stuff but for iopoll. On top removing grab_env* for
-linked reqs and some extra. I think I'll rebase on top of this.
+I am sorry I am still not bought in. I think the parts you're talking about are
+in the lockless part of the scheduler which are really hard to debug as several
+cpus could be traversing these data from different code paths. But here this is
+just extra churn.
 
-> +}
-> +#endif
-> +
-> +static bool io_rw_reissue(struct io_kiocb *req, long res)
-> +{
-> +#ifdef CONFIG_BLOCK
-> +	struct task_struct *tsk;
-> +	int ret;
-> +
-> +	if ((res != -EAGAIN && res != -EOPNOTSUPP) || io_wq_current_is_worker())
-> +		return false;
-> +
-> +	tsk = req->task;
-> +	init_task_work(&req->task_work, io_rw_resubmit);
-> +	ret = task_work_add(tsk, &req->task_work, true);
+If an imbalance has happend this means either:
 
-I don't like that the request becomes un-discoverable for cancellation
-awhile sitting in the task_work list. Poll stuff at least have hash_node
-for that.
+	1. enqueue/dequeue_task() is imablanced itself
+	2. uclamp_update_active() calls dec without inc.
 
-> +	if (!ret)
-> +		return true;
-> +#endif
-> +	return false;
-> +}
-> +
+If 1 happened we have more reasons to be worried about. For 2 the function
+takes task_rq_lock() and does dec/inc in obvious way.
 
--- 
-Pavel Begunkov
+So I don't see any reason to add new info in task_struct and sprinkle #ifdefs
+to protect against something that I can't see we can't reason correctly about
+now.
+
+We don't use pr_debug() in scheduler (I guess no computer would have booted
+with that on), otherwise that would have been a good candidate for one, yes.
+But we can't do that.
+
+Thanks
+
+--
+Qais Yousef
