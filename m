@@ -2,119 +2,205 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5C8207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592530842;
-	bh=/DcyoxhOq3EPl6v9vMrYGrha7kfVrA41Sgm4VzQ4Z1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bDyLhTkvKMyVdKksVqZFqguakZ9noZLly7rhDd3Xm8Ry3ykVwvrCXmwuwX6qU3dTr
-	 r4WH8i9UmXXC4+TyHQnTU8FQlsnkHiJHJUg13phthZbNvGQzrMUK+0enZ0lPu1ujEI
-	 mjweAYTlxKjxjXrMPPpNoIV+EjIAf/2K0CVBt0hY=
+	by mail.kernel.org (Postfix) with ESMTP id C214C2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgFSBkk (ORCPT
+        id S1730656AbgFSBo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 21:40:40 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33537 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFSBkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 21:40:39 -0400
-Received: by mail-il1-f194.google.com with SMTP id z2so7871271ilq.0;
-        Thu, 18 Jun 2020 18:40:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mJoP7oVOvzpVuZPM3osFjxe5D6t5ctLfG4HCj8088To=;
-        b=QvepFfza0ezZ6GE9/Lk5XNGwVLRHCvoEV3lxSkvonpKyiO8IYyod7gBG2bLZbj7d25
-         Ie0iMzKwdW8laLSjaWVQQPPoGF5IZoYOKAkmgxlnXuBoVqK60dzOe+tNZ8cUsk1jGBhL
-         mVGl7+EtdTtt/HOc4hu5O208IcrsWSu4eehhQ6mdZiW4b80l0BBxBav6zZC6mh2L8YVl
-         GVLBajyycq4RL4u3Fe4IKKrSU5L3NY3mND+Gj2hRs2RAHEINNaNi9KVCrpqYQSZqtp9O
-         Mpc9eJJJteV923TlXA/jY2gsmeZqJJl+PTvrtzSvEpzIct9l3BHiQvBS5RTEAhSbetmm
-         WrEw==
-X-Gm-Message-State: AOAM53315IHhi6VSfe4xUHKfoFxRy0hRUBQomVfBAx6qOeo1CWdoOJiC
-        h2ho+tCbIZXvrGhf2Ryb+Yo=
-X-Google-Smtp-Source: ABdhPJyfe8V1yYPwY1ynMF8zhUqQIJoWWg7x/rgBPX8e9zy+pO7+hD6Bij8+mo58ek+D21nEI0JpmQ==
-X-Received: by 2002:a92:dc47:: with SMTP id x7mr1487780ilq.130.1592530838660;
-        Thu, 18 Jun 2020 18:40:38 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id u2sm2346059ilg.29.2020.06.18.18.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 18:40:37 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 18:40:36 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] fpga: dfl: Use struct_size() in kzalloc()
-Message-ID: <20200619014036.GF3685@epycbox.lan>
-References: <20200617221039.GA21877@embeddedor>
+        Thu, 18 Jun 2020 21:44:56 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46132 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728765AbgFSBoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 21:44:55 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8EC574B4AE2FF67EA064;
+        Fri, 19 Jun 2020 09:44:53 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 19 Jun
+ 2020 09:44:50 +0800
+Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
+ <20200618235932.GA227771@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
+Date:   Fri, 19 Jun 2020 09:44:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617221039.GA21877@embeddedor>
+In-Reply-To: <20200618235932.GA227771@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:10:39PM -0500, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes. Also, remove unnecessary
-> function dfl_feature_platform_data_size().
-> 
-> This code was detected with the help of Coccinelle and, audited and
-> fixed manually.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/fpga/dfl.c | 3 +--
->  drivers/fpga/dfl.h | 6 ------
->  2 files changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> index 990994874bf1..2dd13e036d45 100644
-> --- a/drivers/fpga/dfl.c
-> +++ b/drivers/fpga/dfl.c
-> @@ -487,8 +487,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
->  	 * it will be automatically freed by device's release() callback,
->  	 * platform_device_release().
->  	 */
-> -	pdata = kzalloc(dfl_feature_platform_data_size(binfo->feature_num),
-> -			GFP_KERNEL);
-> +	pdata = kzalloc(struct_size(pdata, features, binfo->feature_num), GFP_KERNEL);
->  	if (!pdata)
->  		return -ENOMEM;
->  
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index 2f5d3052e36e..044b0e88e5a8 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -299,12 +299,6 @@ struct dfl_feature_ops {
->  #define DFL_FPGA_FEATURE_DEV_FME		"dfl-fme"
->  #define DFL_FPGA_FEATURE_DEV_PORT		"dfl-port"
->  
-> -static inline int dfl_feature_platform_data_size(const int num)
-> -{
-> -	return sizeof(struct dfl_feature_platform_data) +
-> -		num * sizeof(struct dfl_feature);
-> -}
-> -
->  void dfl_fpga_dev_feature_uinit(struct platform_device *pdev);
->  int dfl_fpga_dev_feature_init(struct platform_device *pdev,
->  			      struct dfl_feature_driver *feature_drvs);
-> -- 
-> 2.27.0
-> 
-Applied to for-next,
+Hi Jaegeuk,
 
-Thanks!
+On 2020/6/19 7:59, Jaegeuk Kim wrote:
+> Hi Chao,
+> 
+> On 06/18, Chao Yu wrote:
+>> to make page content stable for special device like raid.
+> 
+> Could you elaborate the problem a bit?
+
+Some devices like raid5 wants page content to be stable, because
+it will calculate parity info based page content, if page is not
+stable, parity info could be corrupted, result in data inconsistency
+in stripe.
+
+Thanks,
+
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/dir.c          |  2 ++
+>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
+>>  fs/f2fs/f2fs.h         |  2 +-
+>>  fs/f2fs/file.c         |  1 +
+>>  fs/f2fs/inline.c       |  2 ++
+>>  fs/f2fs/inode.c        |  3 +--
+>>  6 files changed, 16 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+>> index d35976785e8c..91e86747a604 100644
+>> --- a/fs/f2fs/dir.c
+>> +++ b/fs/f2fs/dir.c
+>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
+>>  	if (IS_ERR(dentry_page))
+>>  		return PTR_ERR(dentry_page);
+>>  
+>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
+>> +
+>>  	dentry_blk = page_address(dentry_page);
+>>  
+>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
+>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+>> index e60078460ad1..686c68b98610 100644
+>> --- a/fs/f2fs/extent_cache.c
+>> +++ b/fs/f2fs/extent_cache.c
+>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
+>>  }
+>>  
+>>  /* return true, if inode page is changed */
+>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>  {
+>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
+>>  	struct extent_tree *et;
+>>  	struct extent_node *en;
+>>  	struct extent_info ei;
+>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>  	if (!f2fs_may_extent_tree(inode)) {
+>>  		/* drop largest extent */
+>>  		if (i_ext && i_ext->len) {
+>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+>>  			i_ext->len = 0;
+>> -			return true;
+>> +			set_page_dirty(ipage);
+>> +			return;
+>>  		}
+>> -		return false;
+>> +		return;
+>>  	}
+>>  
+>>  	et = __grab_extent_tree(inode);
+>>  
+>>  	if (!i_ext || !i_ext->len)
+>> -		return false;
+>> +		return;
+>>  
+>>  	get_extent_info(&ei, i_ext);
+>>  
+>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>  	}
+>>  out:
+>>  	write_unlock(&et->lock);
+>> -	return false;
+>>  }
+>>  
+>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>  {
+>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
+>> +	__f2fs_init_extent_tree(inode, ipage);
+>>  
+>>  	if (!F2FS_I(inode)->extent_tree)
+>>  		set_inode_flag(inode, FI_NO_EXTENT);
+>> -
+>> -	return ret;
+>>  }
+>>  
+>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index b35a50f4953c..326c12fa0da5 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
+>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
+>>  						struct rb_root_cached *root);
+>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
+>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
+>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
+>>  void f2fs_drop_extent_tree(struct inode *inode);
+>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
+>>  void f2fs_destroy_extent_tree(struct inode *inode);
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index 3268f8dd59bb..1862073b96d2 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+>>  				f2fs_put_page(psrc, 1);
+>>  				return PTR_ERR(pdst);
+>>  			}
+>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+>>  			f2fs_copy_page(psrc, pdst);
+>>  			set_page_dirty(pdst);
+>>  			f2fs_put_page(pdst, 1);
+>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+>> index dbade310dc79..4bcbc486c9e2 100644
+>> --- a/fs/f2fs/inline.c
+>> +++ b/fs/f2fs/inline.c
+>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+>>  	struct f2fs_dentry_ptr d;
+>>  	void *inline_dentry;
+>>  
+>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+>> +
+>>  	inline_dentry = inline_data_addr(inode, ipage);
+>>  
+>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
+>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>> index 44582a4db513..7c156eb26dd7 100644
+>> --- a/fs/f2fs/inode.c
+>> +++ b/fs/f2fs/inode.c
+>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
+>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
+>>  	fi->i_dir_level = ri->i_dir_level;
+>>  
+>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
+>> -		set_page_dirty(node_page);
+>> +	f2fs_init_extent_tree(inode, node_page);
+>>  
+>>  	get_inline_info(inode, ri);
+>>  
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
