@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72BFC21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6D620B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581555;
-	bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+	s=default; t=1592581556;
+	bh=MPww2KMiIHzg/oIztqFpjBj3n/wGtvouVkgda4QhFYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztLwZQWyZZUyZGzSarchA1QZCCLst0wMMzcWs3f+25rnfE/Xjohft0wJsYrAM0omI
-	 MJRJ4Pjg5ILN5Dai6e+PlV/VSUuKago6IudFtLhQ4YUfzdwPiKblCOcp7LhJxDDdMq
-	 xcu6ajJoRMIq5aV0nxj61GeriyaVIXA1XQjGOUD8=
+	b=A7pxJNW8bWrWhzL4sz0vNafd4UAcbb2pTHNJJmMPEmb5ISN7gymLZ6OXeHjNsTb/r
+	 WuRBg1rwdA7XRv0aVzTa4xc6T3t/7SHy5osld1DqPMKAmnab/QZuhL27c5hTURQDkQ
+	 rJs3wjuc+LGRGY6rZ8RnQXKCUSDQUDY6XsQh/v1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405241AbgFSPpw (ORCPT
+        id S2391055AbgFSP1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393526AbgFSP1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:04 -0400
+        id S2393395AbgFSPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3F2217D8;
-        Fri, 19 Jun 2020 15:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5109420734;
+        Fri, 19 Jun 2020 15:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580424;
-        bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+        s=default; t=1592580319;
+        bh=MPww2KMiIHzg/oIztqFpjBj3n/wGtvouVkgda4QhFYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQHA268bOl2kMEOsnQCJeBmWX0sFsng58RztAhu1pFkr/1tdfy9+qewyWBZVPY3zt
-         kVS9hDuKPiXzY1Cm+sIVx8fPeSy9dax6I9k9SCIhfVtWT2Tb/Nhsjx8m1v8FBGQMZu
-         8CWNASmT6kz97qAz3mehqN4GyxImeGROx/G/hTlc=
+        b=TXxW9avdXkLmzb1ZSrRcEmhTu7dKfxtDMOczlYBeLAEZDF6jTUn0Z5J0nNZ4PAAz0
+         Zpka9JEk7InTIoKoLvjWQNpTA8pNmwjCn1alNGn02sbxBi4TQF6wHlpIfvQS8HsCKe
+         OKQ6Pc+i44e4iUtWpnMe0waFp0d6SUIfO075lDkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Eric Joyner <eric.joyner@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 242/376] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date:   Fri, 19 Jun 2020 16:32:40 +0200
-Message-Id: <20200619141721.786058666@linuxfoundation.org>
+Subject: [PATCH 5.7 204/376] ice: Fix resource leak on early exit from function
+Date:   Fri, 19 Jun 2020 16:32:02 +0200
+Message-Id: <20200619141719.995181180@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,42 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Eric Joyner <eric.joyner@intel.com>
 
-[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
+[ Upstream commit 857a4f0e9f4956fffc0cedcaa2ba187a2e987153 ]
 
-First of all, unsigned long can overflow u32 value on 64-bit machine.
-Second, simple_strtoul() doesn't check for overflow in the input.
+Memory allocated in the ice_add_prof_id_vsig() function wasn't being
+properly freed if an error occurred inside the for-loop in the function.
 
-Convert simple_strtoul() to kstrtou32() to eliminate above issues.
+In particular, 'p' wasn't being freed if an error occurred before it was
+added to the resource list at the end of the for-loop.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Eric Joyner <eric.joyner@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_flex_pipe.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index a881b709af25..a44a2ec33287 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -461,8 +461,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
- {
--	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-+	u32 tmp;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 10, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
+diff --git a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+index e7a2671222d2..abfec38bb483 100644
+--- a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
++++ b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+@@ -3705,8 +3705,10 @@ ice_add_prof_id_vsig(struct ice_hw *hw, enum ice_block blk, u16 vsig, u64 hdl,
+ 					      t->tcam[i].prof_id,
+ 					      t->tcam[i].ptg, vsig, 0, 0,
+ 					      vl_msk, dc_msk, nm_msk);
+-		if (status)
++		if (status) {
++			devm_kfree(ice_hw_to_dev(hw), p);
+ 			goto err_ice_add_prof_id_vsig;
++		}
+ 
+ 		/* log change */
+ 		list_add(&p->list_entry, chg);
 -- 
 2.25.1
 
