@@ -2,197 +2,213 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD48221FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89334221FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGGyApQt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XAj5t1/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgFSVyf (ORCPT
+        id S1728238AbgFSVzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgFSVyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:54:31 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA948C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:54:31 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t6so8417404otk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tjHcE/5M9O22uKlxZwubGkeEUmI4Cm1526N7egEPkQQ=;
-        b=SGGyApQtKHtPpBHllsG1s2yJWmtmeoZ5ybblICA58bzr0lOT9kYrov3/sA3V/i9qHw
-         hw5COvL8Pf6JoRZrHfiaQIW63/qQhXLwyTsyNnz4ikoFe97w+PU9Biy9aQg7bVPNIKtk
-         fTUVwXs50/4xGAejaP8lKxZmFNe4dMUEgaKd1ISuQFLFFwVPygKgjDsFoLVaFf3Ar/Ai
-         RzIm3WTYQxfwjZxZxW6I8px0t4mRwCCEFvUd2vIXeUi13n+PO63vTLq68zFOVq8t9OLE
-         Use8WBCzOWhiFAJ9aNl67bZ8sfGSzwKhvKn1kpmCDCbqKELfih4qps9oo96Fy4SS8ayf
-         c53w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tjHcE/5M9O22uKlxZwubGkeEUmI4Cm1526N7egEPkQQ=;
-        b=T7eqocw/WGH0PE/8n4hrzJXlOOo1I2lDcyFkUgSicDwrSQUJKCKSvBczS524vHdLIb
-         cqKIfzwjr1Kkxej+kZH/QqY5Hw2X8wCtgzP0NMjs2uLE09CoEcJtmGN8jq8lSgOVp93c
-         edyOka8L6Sqbk76miXCgznh40IquJry+zyA62h6Pk0EsYy02/7GipjYIAa3s/cNJf6q2
-         VSNUZpNpxFtycWlnj9rMLBrbShRdM4mlyoa7JlL9rfCt2qqWxg40JTKNoYH0tTCvOMsm
-         mGQzCKW/eteLg/yg83sfd4Lk4W8NHa0AtJNjjYfs81Z2SsNXnusPAXxhRH7RZPRcOTZn
-         I1RQ==
-X-Gm-Message-State: AOAM530SwbfSSpRU7N6OIjgs389ZynnJmbQC6CrImFYVAeE4LH1qazKF
-        CTmIo4x4Igv7esHoFVRQEyFOj5zzHtqS6Q==
-X-Google-Smtp-Source: ABdhPJxzIHFQ9eT/XpZJWPsNHVvYm/18siWW2A/USl9dpUrjZMyNnXTipR4nDwVlgVT2/b2vTul4fA==
-X-Received: by 2002:a9d:631a:: with SMTP id q26mr4765793otk.220.1592603671027;
-        Fri, 19 Jun 2020 14:54:31 -0700 (PDT)
-Received: from [192.168.17.59] ([189.152.177.49])
-        by smtp.gmail.com with ESMTPSA id j89sm1636939otc.72.2020.06.19.14.54.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 14:54:30 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/261] 5.4.48-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
-        stable@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, linux@roeck-us.net
-References: <20200619141649.878808811@linuxfoundation.org>
-From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <4c81037d-9c54-4d71-dd52-8e9825710a6a@linaro.org>
-Date:   Fri, 19 Jun 2020 16:54:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 19 Jun 2020 17:55:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15340 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728215AbgFSVzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:55:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592603710; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wam1wyE1W3Of+tegUUPP3NeNpIntvTygPj4lrZBjm+o=;
+ b=XAj5t1/UQoJLpFnDkFXAoo7AH07nSxat+B5SYe3/YnXo1dFO08M+fC3vf0Ue2v4y4hK7Gyb2
+ DWbXXj6oZ5k0Lxmi5z7qsuXdYJk7ew0TcRrGCLts/7fD51WphsKrN2/++P3fOclWxnNZBxxS
+ Ieh9I7vcwlRfFNtFl0KsDxDDLRc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5eed343d6bebe35deb2df771 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 21:55:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5208EC43387; Fri, 19 Jun 2020 21:55:09 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C819C433CA;
+        Fri, 19 Jun 2020 21:55:08 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 19 Jun 2020 14:55:08 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, robdclark@gmail.com, dianders@chromium.org,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        bjorn.andersson@linaro.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add Display Port dt node
+In-Reply-To: <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
+References: <20200618232113.22687-1-tanmay@codeaurora.org>
+ <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
+Message-ID: <c110cd89a3144a20b21ec392f50eee68@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Thanks Stephen for reviews.
+I will post new change addressing your all comments.
 
-On 6/19/20 9:30 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.48 release.
-> There are 261 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2020-06-18 18:12, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-06-18 16:21:13)
+>> Enable DP driver for sc7180.
 > 
-> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
-> Anything received after that time might be too late.
+> Add DP device node on sc7180? This isn't a driver.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.48-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+Done.
+>> 
+>> This change depends-on following series:
+>> https://patchwork.freedesktop.org/series/78583/
+>> and https://patchwork.freedesktop.org/patch/351990/
+>> 
+>> Changes in v2:
+>> 
+>> - Add assigned-clocks and assigned-clock-parents
+>> - Remove cell-index and pixel_rcg
+>> - Change compatible to qcom,sc7180-dp
+>> 
+>> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 
+>> ++++++++++++++++++++++++++--
+>>  1 file changed, 53 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 916401f7e87c..26fe623e3b0f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -2216,10 +2216,19 @@ ports {
+>>                                         #address-cells = <1>;
+>>                                         #size-cells = <0>;
+>> 
+>> +                                       port@1 {
+>> +                                               reg = <1>;
+>> +                                               dpu_intf1_out: 
+>> endpoint {
+>> +                                                       
+>> remote-endpoint =
+>> +                                                                
+>> <&dsi0_in>;
+>> +                                               };
+>> +                                       };
+>> +
+>>                                         port@0 {
+>>                                                 reg = <0>;
+>> -                                               dpu_intf1_out: 
+>> endpoint {
+>> -                                                       
+>> remote-endpoint = <&dsi0_in>;
+>> +                                               dpu_intf0_out: 
+>> endpoint {
+>> +                                                       
+>> remote-endpoint =
+>> +                                                                
+>> <&dp_in>;
+>>                                                 };
+>>                                         };
+>>                                 };
 > 
-> thanks,
+> I thought this wasn't supposed to change? At least according to the
+> binding it shouldn't be needed.
 > 
-> greg k-h
+Thanks. Yes it should be port@2 as per new dpu-sc7180.yaml bindings in 
+below patch.
+https://patchwork.freedesktop.org/patch/371087/?series=78583&rev=1
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+>> @@ -2293,6 +2302,46 @@ dsi_phy: dsi-phy@ae94400 {
+>>                         };
+>>                 };
+>> 
+>> +               msm_dp: displayport-controller@ae90000{
+>> +                       status = "ok";
+> 
+> Please use status = "disabled";
+> 
+Ok got it. Board's DT will enable it.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.48-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.4.y
-git commit: 1b895c62ebf44a0852908c0f7ce05f53006fddf0
-git describe: v5.4.46-394-g1b895c62ebf4
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.46-394-g1b895c62ebf4
-
-No regressions (compared to build v5.4.47)
-
-No fixes (compared to build v5.4.47)
-
-Ran 32839 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fs-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+>> +                       compatible = "qcom,sc7180-dp";
+>> +
+>> +                       reg = <0 0xae90000 0 0x1400>;
+>> +                       reg-names = "dp_controller";
+>> +
+>> +                       interrupt-parent = <&mdss>;
+> 
+> Any reason why this isn't under the mdss node like the other display
+> device nodes?
+> 
+Done. Moved msm_dp node under mdss.
+>> +                       interrupts = <12 0>;
+>> +
+>> +                       clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
+>> +                                <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
+>> +                                <&dispcc 
+>> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
+>> +                                <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
+>> +                       clock-names = "core_aux", "ctrl_link",
+>> +                                     "ctrl_link_iface", 
+>> "stream_pixel";
+>> +                       #clock-cells = <1>;
+>> +                       assigned-clocks = <&dispcc 
+>> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
+>> +                       assigned-clock-parents = <&msm_dp 1>;
+>> +
+>> +                       data-lanes = <0 1>;
+> 
+> This can and should be left to the board files. At the SoC level my
+> understanding is that there are four lanes possible, so no need to
+> artificially limit it here.
+> 
+Removed from here. Driver changes I will be posting accordingly.
+>> +
+>> +                       ports {
+>> +                               #address-cells = <1>;
+>> +                               #size-cells = <0>;
+>> +                               port@0 {
+>> +                                       reg = <0>;
+>> +                                       dp_in: endpoint {
+>> +                                               remote-endpoint =
+>> +                                                        
+>> <&dpu_intf0_out>;
+> 
+> I'd prefer these were on one line, regardless of the 80 character line
+> limit/suggestion.
+> 
+ok done.
+>> +                                       };
+>> +                               };
+>> +
+>> +                               port@1 {
+>> +                                       reg = <1>;
+>> +                                       dp_out: endpoint { };
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>>                 dispcc: clock-controller@af00000 {
+>>                         compatible = "qcom,sc7180-dispcc";
+>>                         reg = <0 0x0af00000 0 0x200000>;
