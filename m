@@ -2,28 +2,29 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F811C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5176F207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA68B206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbgFSM1J (ORCPT
+        id S1733140AbgFSM12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:27:09 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:41145 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733035AbgFSMZX (ORCPT
+        Fri, 19 Jun 2020 08:27:28 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:43683 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732980AbgFSMZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:25:23 -0400
+        Fri, 19 Jun 2020 08:25:18 -0400
+X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0ADF120000C;
-        Fri, 19 Jun 2020 12:25:20 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 622F0E0005;
+        Fri, 19 Jun 2020 12:25:06 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -31,12 +32,10 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v3 7/8] dt-bindings: net: phy: vsc8531: document the load/save GPIO
-Date:   Fri, 19 Jun 2020 14:22:59 +0200
-Message-Id: <20200619122300.2510533-8-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v3 0/8] net: phy: mscc: PHC and timestamping support
+Date:   Fri, 19 Jun 2020 14:22:52 +0200
+Message-Id: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
-References: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,34 +43,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new optional property can be used to reference the load/save GPIO,
-used for PTP hardware clock (PHC) operations. This patch documents it in
-the binding documentation.
+Hello,
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
- 1 file changed, 3 insertions(+)
+This series aims at adding support for PHC and timestamping operations
+in the MSCC PHY driver, for the VSC858x and VSC8575. Those PHYs are
+capable of timestamping in 1-step and 2-step for both L2 and L4 traffic.
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c68c941..87a27d775d48 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -31,6 +31,8 @@ Optional properties:
- 			  VSC8531_LINK_100_ACTIVITY (2),
- 			  VSC8531_LINK_ACTIVITY (0) and
- 			  VSC8531_DUPLEX_COLLISION (8).
-+- load-save-gpios	: GPIO used for the load/save operation of the PTP
-+			  hardware clock (PHC).
- 
- 
- Table: 1 - Edge rate change
-@@ -67,4 +69,5 @@ Example:
-                 vsc8531,edge-slowdown	= <7>;
-                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-                 vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
-+		load-save-gpios		= <&gpio 10 GPIO_ACTIVE_HIGH>;
-         };
+As of this series, only IPv4 support was implemented when using L4 mode.
+This is because of an hardware limitation which prevents us for
+supporting both IPv4 and IPv6 at the same time. Implementing support for
+IPv6 should be quite easy (I do have the modifications needed for the
+hardware configuration) but I did not see a way to retrieve this
+information in hwtstamp(). What would you suggest?
+
+Those PHYs are distributed in hardware packages containing multiple
+times the PHY. The VSC8584 for example is composed of 4 PHYs. With
+hardware packages, parts of the logic is usually common and one of the
+PHY has to be used for some parts of the initialization. Following this
+logic, the 1588 blocks of those PHYs are shared between two PHYs and
+accessing the registers has to be done using the "base" PHY of the
+group. This is handled thanks to helpers in the PTP code (and locks).
+We also need the MDIO bus lock while performing a single read or write
+to the 1588 registers as the read/write are composed of multiple MDIO
+transactions (and we don't want other threads updating the page).
+
+To get and set the PHC time, a GPIO has to be used and changes are only
+retrieved or committed when on a rising edge. The same GPIO is shared by
+all PHYs, so the granularity of the lock protecting it has to be
+different from the ones protecting the 1588 registers (the VSC8584 PHY
+has 2 1588 blocks, and a single load/save pin).
+
+Patch 1 extends the recently added helpers to share information between
+PHYs of the same hardware package; to allow having part of the probe to
+be shared (in addition to the already supported init part). This will be
+used when adding support for PHC/TS to initialize locks.
+
+Patches 2 and 3 are mostly cosmetic.
+
+Patch 4 takes into account the 1588 block in the MACsec initialization,
+to allow having both the MACsec and 1588 blocks initialized on a running
+system.
+
+Patches 5 and 6 add support for PHC and timestamping operations in the
+MSCC driver. An initialization of the 1588 block (plus all the registers
+definition; and helpers) is added first; and then comes a patch to
+implement the PHC and timestamping API.
+
+Patches 7 and 8 add the required hardware description for device trees,
+to be able to use the load/save GPIO pin on the PCB120 board.
+
+To use this on a PCB120 board, two other series are needed and have
+already been sent upstream (one is merged). There are no dependency
+between all those series.
+
+Thanks!
+Antoine
+
+Since v2:
+  - Removed explicit inlines from .c files.
+  - Fixed three warnings.
+
+Since v1:
+  - Removed checks in rxtstamp/txtstamp as skb cannot be NULL here.
+  - Reworked get_ptp_header_rx/get_ptp_header.
+  - Reworked the locking logic between the PHC and timestamping
+    operations.
+  - Fixed a compilation issue on x86 reported by Jakub.
+
+Antoine Tenart (5):
+  net: phy: add support for a common probe between shared PHYs
+  net: phy: mscc: fix copyright and author information in MACsec
+  net: phy: mscc: take into account the 1588 block in MACsec init
+  net: phy: mscc: timestamping and PHC support
+  dt-bindings: net: phy: vsc8531: document the load/save GPIO
+
+Quentin Schulz (3):
+  net: phy: mscc: remove the TR CLK disable magic value
+  net: phy: mscc: 1588 block initialization
+  MIPS: dts: ocelot: describe the load/save GPIO
+
+ .../bindings/net/mscc-phy-vsc8531.txt         |    3 +
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts     |   12 +-
+ drivers/net/phy/mscc/Makefile                 |    4 +
+ drivers/net/phy/mscc/mscc.h                   |   64 +
+ drivers/net/phy/mscc/mscc_fc_buffer.h         |    2 +-
+ drivers/net/phy/mscc/mscc_mac.h               |    2 +-
+ drivers/net/phy/mscc/mscc_macsec.c            |   10 +-
+ drivers/net/phy/mscc/mscc_macsec.h            |    2 +-
+ drivers/net/phy/mscc/mscc_main.c              |   63 +-
+ drivers/net/phy/mscc/mscc_ptp.c               | 1587 +++++++++++++++++
+ drivers/net/phy/mscc/mscc_ptp.h               |  477 +++++
+ include/linux/phy.h                           |   18 +-
+ 12 files changed, 2223 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/net/phy/mscc/mscc_ptp.c
+ create mode 100644 drivers/net/phy/mscc/mscc_ptp.h
+
 -- 
 2.26.2
 
