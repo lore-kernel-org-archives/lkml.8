@@ -2,125 +2,204 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A72C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1C6207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49C920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ow02Xl8F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOdb10J3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732844AbgFSOMl (ORCPT
+        id S1732942AbgFSONw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
+        Fri, 19 Jun 2020 10:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgFSOMk (ORCPT
+        with ESMTP id S1725974AbgFSONr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:12:40 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817A9C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:12:40 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dp18so10344697ejc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:12:40 -0700 (PDT)
+        Fri, 19 Jun 2020 10:13:47 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF15EC06174E;
+        Fri, 19 Jun 2020 07:13:46 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l12so10346159ejn.10;
+        Fri, 19 Jun 2020 07:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=P8Ayf9ltxS+pfH19OKDWTpDtAf+hqQzXQbxNUzkX6og=;
-        b=Ow02Xl8FLGIRIoGYfHWH4WlUlH6w5LlCPeuRphbEAfmtJiDEWFb3gidW2dml9pJhzo
-         CSY6Mz6RGRmBMqgjFPyYZBL25/OZY5gPqMNuteaOixeA85yRckgCUusJO6KnoWPb1wF3
-         eu6ustwcOnkv+wQl0Fz42DkErY1Qr7CUnr8o1ENeBc3b92hUiteAX+MGT7Gw+4TbfFLh
-         Y5VH7B7BZ9BKK4UjgZB82X1f6OJ9ipnmjlNIpQbLlygh3oqUm0CrAbYpNXmQHxcJkgp2
-         CcFx5ebFZiJNQdzxxhdFBy+BXl33ECAwYwzz4wL1oISfGsHPPIE/2dz3YDOnpTA7jKOn
-         TduQ==
+        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/u6tJnI73bJ/e/Tlk8P+EJrFujPPPek4eDZC5ID4TB4=;
+        b=OOdb10J3fJcUv7rD7aa2nUAL2at0tcc+aJ+JmPHo1mNqaaNtEE2mGL/LDBYIA/RChO
+         fLIWzDY8P23r2i12eghtL9CGezE+y0Z3lL35O+bnRFBfSaz2DZRUOhpgbB7jzRncPr4k
+         IMx6vBGtazjQgbTxo+DrN0HJpgkU/GUoqttbcppx4cZUrusCKEfnkDAYU/811C0svVSc
+         DYukW/CJQcoW8m/papdvBWF4L49snxiYqT+7InBCdUwcKOILhkFBuH7wVRJYP6KH9QJ7
+         mD63k6lXHNav4GC+dP2hEsJo2fsZBjaU9UIzPbVUT24Tb9bGvJWKpR+BCFmxDsmrrspB
+         PsJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P8Ayf9ltxS+pfH19OKDWTpDtAf+hqQzXQbxNUzkX6og=;
-        b=SfHpSRIjlAzPPSKylu9rG155xrqnIgbblLRPeTE1fsJotOXDY5omHKOBO5BCQYZxe+
-         oRxL/mwRVAZ+au0N1LW6Bomp5wph1qUj/B8xb91YOF3BVA4aTKwzBgMOmPQRQtQHqRKs
-         tBUbCU8g6ffleT3R1YVJ4ppVgwYeVFLwLDR/bVKq+fgmEf2VFKT7HCyXwpKciSJf9jCy
-         bmfZndhLlZsLdmMqkm80lDko7yLyp78cj5Kn5i5BndNUGoRmZxDrMnCzcmwvGLknJwHn
-         ggMFxd4NNiN4fpJ70EYTI+dv1NsJt9c6Pa2BBqcT//JYzGxMU/gvMEG/WIXo1pkNyJEK
-         Bw/g==
-X-Gm-Message-State: AOAM530gqdXswxR1KDzgQV4L5JkiMjI6XfVW4jBh4hPZHKbdu+P00FFU
-        p1SkNBjrEyL6cB0WNQWkSbE=
-X-Google-Smtp-Source: ABdhPJwwyM43eQ6ECiXYT7HX3JqBoSfTuenbEwvqkMWJvZCC4Z87l4O7vqlNbvp3luModL+FmepEAQ==
-X-Received: by 2002:a17:906:3a43:: with SMTP id a3mr3736171ejf.121.1592575959273;
-        Fri, 19 Jun 2020 07:12:39 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:904f:be8d:1d92:9974])
-        by smtp.gmail.com with ESMTPSA id d11sm4582310edy.79.2020.06.19.07.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 07:12:38 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:12:37 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] sparse: use the _Generic() version of
- __unqual_scalar_typeof()
-Message-ID: <20200619141237.onwjhjbc7ni7rrev@ltop.local>
-References: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
- <20200619095105.GA222848@elver.google.com>
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/u6tJnI73bJ/e/Tlk8P+EJrFujPPPek4eDZC5ID4TB4=;
+        b=ZKjVNoQs0t/Vr5Dzm+U0klL6JiRFLtjhI37hoRKHUayZXq/zm5/0V6ZebuHJuL9Cq5
+         avArnjfmGUZXqDDUh6va/0ni/S+Rg8iNGRBmqt1aHxqGJN/IjtSB62zV2+zm1cvSUb1h
+         s+hMXd1AAX5abmG4U2jyVhNhRd1RvfmNuQLjPVXn2yzh4AmFnO+TZtO4D6TeHD0brjbR
+         q8w/eyrgAzXT8iQlZNgSGfIFAFzV95y9nxwxhMb9f/uljUxqviftFCoGn14r3DpkdqUs
+         RjOBscA1uq2Orsgdi4PmQXgbsQsqjbKTXGg1i7GFARfxyCiWiBuU8MOGLhG520hL67ct
+         2usQ==
+X-Gm-Message-State: AOAM5317lKRSP2qJpWoPI3rOxOteu/76nv8tGimiLVPDuaHEp+4lh6oL
+        4ml4r5s69XHMGtfuUk6GeaNWBCJY
+X-Google-Smtp-Source: ABdhPJwWdBfRvifwAV1AW1ZLcskxfE0/peDRuwlANJdnd5OP32hhuWt7QQZuJy2YsaBdReoZ4DuO7w==
+X-Received: by 2002:a17:907:216c:: with SMTP id rl12mr4088982ejb.156.1592576025563;
+        Fri, 19 Jun 2020 07:13:45 -0700 (PDT)
+Received: from [192.168.43.243] ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id k24sm4611013edk.95.2020.06.19.07.13.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:13:45 -0700 (PDT)
+To:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-5-axboe@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
+ bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
+ 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
+ +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
+ W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
+ CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
+ Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
+ EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
+ jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
+ NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
+ bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
+ PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
+ Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
+ Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
+ xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
+ aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
+ HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
+ 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
+ 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
+ 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
+ M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
+ reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
+ IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
+ dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
+ Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
+ jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
+ Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
+ dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
+ xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
+ DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
+ F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
+ 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
+ aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
+ 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
+ LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
+ uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
+ rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
+ 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
+ JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
+ UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
+ m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
+ OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
+Subject: Re: [PATCH 04/15] io_uring: re-issue block requests that failed
+ because of resources
+Message-ID: <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
+Date:   Fri, 19 Jun 2020 17:12:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619095105.GA222848@elver.google.com>
+In-Reply-To: <20200618144355.17324-5-axboe@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:51:05AM +0200, Marco Elver wrote:
-> On Fri, Jun 19, 2020 at 12:26AM +0200, Luc Van Oostenryck wrote:
-> > If the file is being checked with sparse, use the version of
-> > __unqual_scalar_typeof() using _Generic(), leaving the unoptimized
-> > version only for the oldest versions of GCC.
-> > 
-> > This reverts commit
-> >   b398ace5d2ea ("compiler_types.h: Use unoptimized __unqual_scalar_typeof for sparse")
-> > 
-> > Note: a recent version of sparse will be needed (minimum v0.6.2-rc2
-> >        or later than 2020-05-28).
-> > 
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Borislav Petkov <bp@suse.de>
-> > Cc: Will Deacon <will@kernel.org>
-> > Link: https://marc.info/?l=linux-sparse&m=159233481816454
-> > Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+On 18/06/2020 17:43, Jens Axboe wrote:
+> Mark the plug with nowait == true, which will cause requests to avoid
+> blocking on request allocation. If they do, we catch them and reissue
+> them from a task_work based handler.
 > 
-> Definitely support this change, so in principle:
+> Normally we can catch -EAGAIN directly, but the hard case is for split
+> requests. As an example, the application issues a 512KB request. The
+> block core will split this into 128KB if that's the max size for the
+> device. The first request issues just fine, but we run into -EAGAIN for
+> some latter splits for the same request. As the bio is split, we don't
+> get to see the -EAGAIN until one of the actual reads complete, and hence
+> we cannot handle it inline as part of submission.
 > 
-> 	Acked-by: Marco Elver <elver@google.com>
+> This does potentially cause re-reads of parts of the range, as the whole
+> request is reissued. There's currently no better way to handle this.
 > 
-> But, I think sparse still isn't entirely happy with all legal uses of
-> _Generic. Running latest sparse on:
-
-Indeed.
-
-> Whereas GCC or Clang accept this as expected. I can't find the
-> standardese right now, but in [1] we have:
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+>  fs/io_uring.c | 148 ++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 124 insertions(+), 24 deletions(-)
 > 
-> 	"[...] The conversion is performed in type domain only: it
-> 	discards the top-level cvr-qualifiers and atomicity and applies
-> 	array-to-pointer/function-to-pointer transformations to the type
-> 	of the controlling expression [...]"
-> 
-> [1] https://en.cppreference.com/w/c/language/generic
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 2e257c5a1866..40413fb9d07b 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -900,6 +900,13 @@ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
+>  static void __io_queue_sqe(struct io_kiocb *req,
+>  			   const struct io_uring_sqe *sqe);
+>  
+...> +
+> +static void io_rw_resubmit(struct callback_head *cb)
+> +{
+> +	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+> +	struct io_ring_ctx *ctx = req->ctx;
+> +	int err;
+> +
+> +	__set_current_state(TASK_RUNNING);
+> +
+> +	err = io_sq_thread_acquire_mm(ctx, req);
+> +
+> +	if (io_resubmit_prep(req, err)) {
+> +		refcount_inc(&req->refs);
+> +		io_queue_async_work(req);
+> +	}
 
-Yes, these are the rules following the resolution of DR481, which
-are now used for C17 and also by gcc & clang for C11 but were not
-present the C11 standard.
+Hmm, I have similar stuff but for iopoll. On top removing grab_env* for
+linked reqs and some extra. I think I'll rebase on top of this.
 
-This should be fixed now but I'm waiting for the tests results.
+> +}
+> +#endif
+> +
+> +static bool io_rw_reissue(struct io_kiocb *req, long res)
+> +{
+> +#ifdef CONFIG_BLOCK
+> +	struct task_struct *tsk;
+> +	int ret;
+> +
+> +	if ((res != -EAGAIN && res != -EOPNOTSUPP) || io_wq_current_is_worker())
+> +		return false;
+> +
+> +	tsk = req->task;
+> +	init_task_work(&req->task_work, io_rw_resubmit);
+> +	ret = task_work_add(tsk, &req->task_work, true);
 
-Thanks for reporting this.
--- Luc
+I don't like that the request becomes un-discoverable for cancellation
+awhile sitting in the task_work list. Poll stuff at least have hash_node
+for that.
+
+> +	if (!ret)
+> +		return true;
+> +#endif
+> +	return false;
+> +}
+> +
+
+-- 
+Pavel Begunkov
