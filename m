@@ -2,139 +2,71 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB50FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38BE120888
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592531914;
-	bh=F/8ShmQT8YBz5aQ9FSoJ8n8biUK+yb4/2n2kI3CCzVg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=U+VbDcLDZPIUi5QvNsrhtFCYfL5MXnovhJdMWvNsfd1heAvEmxRYLL7hGpOVlahSF
-	 GahPVp0TLwD8/hK/4cEQedq3RWc6GU0vhfNiFBWIRyMinMbguWarkCcw0Qf2xWrCjD
-	 x3kJeVCNZIY//2/W3rCZl71FrVE9Gb9nHERxJsHE=
+	by mail.kernel.org (Postfix) with ESMTP id BD65120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbgFSB6c (ORCPT
+        id S1730888AbgFSB7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 21:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbgFSB6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 21:58:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27A020776;
-        Fri, 19 Jun 2020 01:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592531911;
-        bh=F/8ShmQT8YBz5aQ9FSoJ8n8biUK+yb4/2n2kI3CCzVg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LW8stfj4UEZ4mxBhDblDfhrmV3TUHLN52q7VCCq0/nOxeCznoT/7G1LrRdjQWcoc6
-         qxnvAvDHSMkJhI/IpQ6y7/wbbZBJ8rmWEoRMW0K7zGbD3XPzdDW7QO5O8Oyc4V+nQP
-         3TIXke8huxq5QUiR2HoYzcGd6GvMtcQlOIrK9NAE=
-Date:   Fri, 19 Jun 2020 10:58:27 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-Cc:     linux-kernel@i4.cs.fau.de, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, maximilian.werner96@gmail.com,
-        mingo@redhat.com, rostedt@goodmis.org
-Subject: Re: [PATCH v2] tracing/boottime: Fix kprobe multiple events
-Message-Id: <20200619105827.c6042e60cdcd8609f5ec79e4@kernel.org>
-In-Reply-To: <20200618163301.25854-1-sascha.ortmann@stud.uni-hannover.de>
-References: <20200618105051.ce01a84a13bbf67b816c1363@kernel.org>
-        <20200618163301.25854-1-sascha.ortmann@stud.uni-hannover.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jun 2020 21:59:36 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:11670 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727981AbgFSB7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 21:59:35 -0400
+Received: by ajax-webmail-mail-app2 (Coremail) ; Fri, 19 Jun 2020 09:59:21
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Fri, 19 Jun 2020 09:59:21 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM
+ imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
+References: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
+ <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: by_KCgBXITT5G+xeNNEtAA--.6813W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsQBlZdtOuLuQABs4
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGvS07vEb7Iv0x
+        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6w4lV2xY6xkI7II2jI8vz4vEwIxGrwCS07
+        vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14
+        v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v2
+        6r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2
+        z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 18:33:01 +0200
-Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de> wrote:
-
-> Fix boottime kprobe events to report and abort after each failure when
-> adding probes.
-> 
-> As an example, when we try to set multiprobe kprobe events in
-> bootconfig like this:
-> 
-> ftrace.event.kprobes.vfsevents {
->         probes = "vfs_read $arg1 $arg2,,
->                  !error! not reported;?", // leads to error
->                  "vfs_write $arg1 $arg2"
-> }
-> 
-> This will not work as expected. After 
-> commit da0f1f4167e3af69e ("tracing/boottime: Fix kprobe event API usage"), 
-> the function trace_boot_add_kprobe_event will not produce any error 
-> message when adding a probe fails at kprobe_event_gen_cmd_start. 
-> Furthermore, we continue to add probes when kprobe_event_gen_cmd_end fails
-> (and kprobe_event_gen_cmd_start did not fail). In this case the function 
-> even returns successfully when the last call to kprobe_event_gen_cmd_end
-> is successful.
-> 
-> The behaviour of reporting and aborting after failures is not
-> consistent.
-> 
-> The function trace_boot_add_kprobe_event now reports each failure and
-> stops adding probes immediately.
-
-Thanks for updating. This looks good to me. 
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-and 
-
-Fixes: da0f1f4167e3 ("tracing/boottime: Fix kprobe event API usage")
-
-Thank you!
-
-> 
-> Cc: linux-kernel@i4.cs.fau.de
-> Co-developed-by: Maximilian Werner <maximilian.werner96@gmail.com>
-> Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-> Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-> ---
->  kernel/trace/trace_boot.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-> index 9de29bb45a27..be893eb22071 100644
-> --- a/kernel/trace/trace_boot.c
-> +++ b/kernel/trace/trace_boot.c
-> @@ -101,12 +101,16 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
->  		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
->  
->  		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
-> -		if (ret)
-> +		if (ret) {
-> +			pr_err("Failed to generate probe: %s\n", buf);
->  			break;
-> +		}
->  
->  		ret = kprobe_event_gen_cmd_end(&cmd);
-> -		if (ret)
-> +		if (ret) {
->  			pr_err("Failed to add probe: %s\n", buf);
-> +			break;
-> +		}
->  	}
->  
->  	return ret;
-> -- 
-> 2.17.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+PiAKPiBXaHkgbm9pZGxlPwo+IAoKX25vaWRsZSBpcyBlbm91Z2ggZm9yIGZpeGluZyB0aGlzIGJ1
+Zy4gX3N5bmMgbWF5IHN1c3BlbmQKdGhlIGRldmljZSBiZXlvbmQgZXhwZWN0YXRpb24uCgpSZWdh
+cmRzLApEaW5naGFv
