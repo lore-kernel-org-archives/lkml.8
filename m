@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A121AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1586AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDBD20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6FD2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580321;
-	bh=0iFoIg7nV2CD2R+djatO1hodQJVSkJJ3Jzd7XRmEByk=;
+	s=default; t=1592580330;
+	bh=9tkCS5V/ET0qK/qSspzqlwj0GfOSKTROamVXeZoqZYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLk/8JzCpM3+9+JxR/YJA3Ad2o1ww9O/LeVNK7EUGjW3wLWqFoQ4inSkFUW8ZwlC4
-	 aoE/trr0TQdFIlKdUWB2BY7+qBF7p5qq01nvDjJXPCmWUqQCal4ecoLT35qsiq5TFb
-	 NbktoeU8AUVI53hlg9OgguGzlcv6jNL8gmPbHCkw=
+	b=Lg/YX4AgvEaXUsL1qWSalCuzc+8o/FHvdhNUkthGRDWeqSAitSmVP9aTvGxVHGA+X
+	 gNnXb3uOXCXOzFSrPPFpsX+uUaDhz/YXOFzia+QuJIrneOc0iAhNuXS7PVY8YFDpKQ
+	 a5FnDN5mlQbGkZhgzdFKpd6mfPKnfupo8g/J3wHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393394AbgFSPZU (ORCPT
+        id S2393422AbgFSPZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392996AbgFSPWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:24 -0400
+        id S2393037AbgFSPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3078321582;
-        Fri, 19 Jun 2020 15:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF3E21582;
+        Fri, 19 Jun 2020 15:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580143;
-        bh=0iFoIg7nV2CD2R+djatO1hodQJVSkJJ3Jzd7XRmEByk=;
+        s=default; t=1592580159;
+        bh=9tkCS5V/ET0qK/qSspzqlwj0GfOSKTROamVXeZoqZYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aSmDTa27ZHoPecETeKpLKoAOd0BUxxNW4LYnmpWdTJcCiNomjEYHaVqTVoM155g2d
-         0nrirxo2uQLP1WQGki9CRNzvgAQp1VS2uzdEouxwGJJz/nDBg6OP4ipEm8ozo8u2dm
-         P2XZa7j9nFAkI6hdrOor5BduvYmHIUwm1hR1rfKE=
+        b=CGacKLHZiGivkdSYW+KVgPZ/lMRfIkAWmUe3hweOTM+PZWILS94X6LnVXrkcbr7vL
+         ooXwiJILd7aNp7IYNY3xLlSFiN+t8rrIeWoATiJlpwFqtP5k2waCnDUu1owZniFP1J
+         Iayi/rrht2y/PrH8BhyU2rWp9f7vvVJUU5YjO30k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 138/376] arm64: kexec_file: print appropriate variable
-Date:   Fri, 19 Jun 2020 16:30:56 +0200
-Message-Id: <20200619141716.866608111@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 143/376] net: lpc-enet: fix error return code in lpc_mii_init()
+Date:   Fri, 19 Jun 2020 16:31:01 +0200
+Message-Id: <20200619141717.102530435@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,57 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Stelmach <l.stelmach@samsung.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 51075e0cb759a736e60ab4f3a5fed8670dba5852 ]
+[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
 
-The value of kbuf->memsz may be different than kbuf->bufsz after calling
-kexec_add_buffer(). Hence both values should be logged.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: 52b2a8af74360 ("arm64: kexec_file: load initrd and device-tree")
-Fixes: 3751e728cef29 ("arm64: kexec_file: add crash dump support")
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
-Link: https://lore.kernel.org/r/20200430163142.27282-2-l.stelmach@samsung.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/machine_kexec_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index b40c3b0def92..5ebb21b859b4 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -284,7 +284,7 @@ int load_other_segments(struct kimage *image,
- 		image->arch.elf_headers_sz = headers_sz;
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index d20cf03a3ea0..311454d9b0bc 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -823,7 +823,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
+ 	if (err)
+ 		goto err_out_unregister_bus;
  
- 		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			 image->arch.elf_headers_mem, headers_sz, headers_sz);
-+			 image->arch.elf_headers_mem, kbuf.bufsz, kbuf.memsz);
- 	}
- 
- 	/* load initrd */
-@@ -305,7 +305,7 @@ int load_other_segments(struct kimage *image,
- 		initrd_load_addr = kbuf.mem;
- 
- 		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--				initrd_load_addr, initrd_len, initrd_len);
-+				initrd_load_addr, kbuf.bufsz, kbuf.memsz);
- 	}
- 
- 	/* load dtb */
-@@ -332,7 +332,7 @@ int load_other_segments(struct kimage *image,
- 	image->arch.dtb_mem = kbuf.mem;
- 
- 	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			kbuf.mem, dtb_len, dtb_len);
-+			kbuf.mem, kbuf.bufsz, kbuf.memsz);
+-	if (lpc_mii_probe(pldat->ndev) != 0)
++	err = lpc_mii_probe(pldat->ndev);
++	if (err)
+ 		goto err_out_unregister_bus;
  
  	return 0;
- 
 -- 
 2.25.1
 
