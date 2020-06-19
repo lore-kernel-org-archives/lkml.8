@@ -2,73 +2,82 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF687C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A64C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9857121532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E8721532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HP2EZNf4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXuQscfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392438AbgFSQGw (ORCPT
+        id S2405560AbgFSQGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405547AbgFSQF5 (ORCPT
+        Fri, 19 Jun 2020 12:06:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25794 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405541AbgFSQF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 12:05:57 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96ECCC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:57 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id m21so7980738eds.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=osi+7kegHQUhLjJCtI4D4dYsD7Tnr4PgL85qHMsaxOY=;
-        b=HP2EZNf4A1EVG7NLnAfafrXxKY2QlHTRc7+0DkPnBlREWkBZ+JUC/6X5c8vzCTzEcN
-         jtqdKfzTls4uekWytl18VNuEsonzP4ji9CDcmzKVRiLp8DFA8Z8VLjWhdH8GSXEbWXkz
-         fCwYdPNXierqrjWx97YmEuA4pbWoPIjlLJ33Lfq+nuQGa8AHwh19CjK63qVqSS0pXLSl
-         LCqTfjYU6meqY2yaFll0okiIzJYR1hTT6x6NxHaTyHTm0Ngp3i7h34KfURb8QyjiRd4e
-         AASuDrBWHIaU7gtEKHS5fedKx+LEZm3MFYXSG417OtSl+56Qa3AyGqMjsy9z5aaZkwIh
-         I3hQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592582756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SagB2x6xDXMHuNfH0nszNoiVH7/+fXWLgMfhv8WOo7E=;
+        b=SXuQscfIp84Jam/3SNag7zZHTrGwnKri/xm+9Yk4bv7VuxQWefJbFQq4NZY2De8nCxOs6R
+        1mXbMC6ZG3ckJuBNrVEiNUYsea5P6aOF4kG2MDm8bfcnqAku/gO6u2oh3RECEVxm3CVA9s
+        FER3YW8QvV85Uw3gyq4cDyy2Z8+IJp4=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-L5VbXHp8OdONKxz-kSAJKw-1; Fri, 19 Jun 2020 12:05:54 -0400
+X-MC-Unique: L5VbXHp8OdONKxz-kSAJKw-1
+Received: by mail-qt1-f200.google.com with SMTP id s30so4383023qts.18
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=osi+7kegHQUhLjJCtI4D4dYsD7Tnr4PgL85qHMsaxOY=;
-        b=bAjll0uZBOROeTaDVuuToxcwcpgtaWXag/q6i6y0iu4ytImn63edDm4zQI/mAPgOuN
-         Q1zcv28QCdDVqGfqrethKOsMHBEIWOUAhhOBRVwu0Se6x3OtWGz33eSfkI26Rwq0/pr/
-         lbKp3/KfU3zh3EmM1nHd5U/JAJD+laahcGc9BQV82hdlzybhirNt6+UjCPB9lTXRrWJV
-         MAtExdP4sNKuDQ8Cnq/jh5b7U9cJQB1MuPUxQOi3Wz+gu154rbyhiiXUDVElXoF0JNPc
-         hJf2lUw6YrboMCf1kvvVV5Fkw8J0hfoq0VnIfzuj72wmqjsd0QbBPyww0iAPH2Noj/fl
-         oG1w==
-X-Gm-Message-State: AOAM5330PJyDdppCx9iuY6IwvjeS5WLGpaZAafs2ImKrmQW0rFdTci6c
-        3Uq2IaDLSdrD3Qw5ChEG5JU=
-X-Google-Smtp-Source: ABdhPJwUJgBnLelDqqBVTLpTKWXVb6j1Ab5QhWAYa9AwdkoiMBzgtNrWAvKq/HY4LJGAZ3TxgRZ4xw==
-X-Received: by 2002:a50:f983:: with SMTP id q3mr4227018edn.259.1592582756391;
-        Fri, 19 Jun 2020 09:05:56 -0700 (PDT)
-Received: from localhost.localdomain (dslb-178-006-252-242.178.006.pools.vodafone-ip.de. [178.6.252.242])
-        by smtp.gmail.com with ESMTPSA id dj26sm4931780edb.4.2020.06.19.09.05.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SagB2x6xDXMHuNfH0nszNoiVH7/+fXWLgMfhv8WOo7E=;
+        b=WLqx8JJZ4kzzL4eANzlbEtO3idM9E16BaPgo1xbbk1bqrUPkgcQGL/Io4JW/Mw7ws4
+         gMGlj4Gmvn783vgcjqFEtBjk5bbhMGnFqRxuhG6Uj6QNmnsqwaA12JAg0Ftkgf1Ciy0l
+         7NRCsHc5/yqnG8bfOK0UyeqiBhhdJj3euIFs729KpjB2qNbzJLz/aQ2iTr1z/vIOVhUy
+         cqjjx4FceFUadEI8z959m3lCxikMiht+/bvNGhtN66pE/cv9XqUfvTcf0h7760tqtgpw
+         bMKnxYdUz6mlcB8f/c4XrZafrsJlMtXHp10HSRGUGWKFsW0N5QHIUFGnvUD3e4igiWEg
+         PBYg==
+X-Gm-Message-State: AOAM53320tsGzUMLyWgYI7YsNjEXr/6uajy4maGOBD/g4+8q+y0X/lKO
+        +aeY5icJLz2vVleTBth4xF3rNcnJ5m4j0UX+z99qh/aSkStWF4Xfe/BkVU/UWI0IbfG353GXXTZ
+        vUfY4q/6TXyWpyEO9am+v545C
+X-Received: by 2002:a37:9e52:: with SMTP id h79mr3975297qke.467.1592582753531;
+        Fri, 19 Jun 2020 09:05:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzd2Ml6f1U4IsoXVUG+sGmbZtZswjvwyuO+DQ4aozpetfpM522QVCnolfKkgB3x792Y2yKCcA==
+X-Received: by 2002:a37:9e52:: with SMTP id h79mr3975266qke.467.1592582753231;
+        Fri, 19 Jun 2020 09:05:53 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id g11sm6412604qkk.123.2020.06.19.09.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:05:55 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: use common packet header constants
-Date:   Fri, 19 Jun 2020 18:03:28 +0200
-Message-Id: <20200619160328.22776-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 19 Jun 2020 09:05:52 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, peterx@redhat.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org
+Subject: [PATCH 07/26] mm/hexagon: Use general page fault accounting
+Date:   Fri, 19 Jun 2020 12:05:19 -0400
+Message-Id: <20200619160538.8641-8-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
+References: <20200619160538.8641-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,68 +85,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver replicates the definitions of rfc1042_header and
-bridge_tunnel_header available from cfg80211.h. Use the common
-ones from cfg80211.h.
+Use the general page fault accounting by passing regs into handle_mm_fault().
+It naturally solve the issue of multiple page fault accounting when page fault
+retry happened.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
+perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+
+CC: Brian Cain <bcain@codeaurora.org>
+CC: linux-hexagon@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_recv.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ arch/hexagon/mm/vm_fault.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_recv.c b/drivers/staging/rtl8188eu/core/rtw_recv.c
-index a036ef104198..0257e56b551a 100644
---- a/drivers/staging/rtl8188eu/core/rtw_recv.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_recv.c
-@@ -15,6 +15,7 @@
- #include <mon.h>
- #include <wifi.h>
- #include <linux/vmalloc.h>
-+#include <net/cfg80211.h>
+diff --git a/arch/hexagon/mm/vm_fault.c b/arch/hexagon/mm/vm_fault.c
+index f04cd0a6d905..1b1802f30862 100644
+--- a/arch/hexagon/mm/vm_fault.c
++++ b/arch/hexagon/mm/vm_fault.c
+@@ -19,6 +19,7 @@
+ #include <linux/signal.h>
+ #include <linux/extable.h>
+ #include <linux/hardirq.h>
++#include <linux/perf_event.h>
  
- #define ETHERNET_HEADER_SIZE	14	/*  Ethernet Header Length */
- #define LLC_HEADER_SIZE			6	/*  LLC Header Length */
-@@ -22,15 +23,6 @@
- static u8 SNAP_ETH_TYPE_IPX[2] = {0x81, 0x37};
- static u8 SNAP_ETH_TYPE_APPLETALK_AARP[2] = {0x80, 0xf3};
+ /*
+  * Decode of hardware exception sends us to one of several
+@@ -54,6 +55,8 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
  
--/* Bridge-Tunnel header (for EtherTypes ETH_P_AARP and ETH_P_IPX) */
--static u8 rtw_bridge_tunnel_header[] = {
--	0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8
--};
--
--static u8 rtw_rfc1042_header[] = {
--	0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00
--};
--
- static void rtw_signal_stat_timer_hdl(struct timer_list *t);
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
++
++	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ retry:
+ 	down_read(&mm->mmap_sem);
+ 	vma = find_vma(mm, address);
+@@ -89,7 +92,7 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
+ 		break;
+ 	}
  
- void _rtw_init_sta_recv_priv(struct sta_recv_priv *psta_recvpriv)
-@@ -1277,10 +1269,10 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
- 	psnap = (struct ieee80211_snap_hdr *)(ptr+pattrib->hdrlen + pattrib->iv_len);
- 	psnap_type = ptr+pattrib->hdrlen + pattrib->iv_len+SNAP_SIZE;
- 	/* convert hdr + possible LLC headers into Ethernet header */
--	if ((!memcmp(psnap, rtw_rfc1042_header, SNAP_SIZE) &&
-+	if ((!memcmp(psnap, rfc1042_header, SNAP_SIZE) &&
- 	     memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2) &&
- 	     memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2)) ||
--	     !memcmp(psnap, rtw_bridge_tunnel_header, SNAP_SIZE)) {
-+	     !memcmp(psnap, bridge_tunnel_header, SNAP_SIZE)) {
- 		/* remove RFC1042 or Bridge-Tunnel encapsulation and replace EtherType */
- 		bsnaphdr = true;
- 	} else {
-@@ -1560,9 +1552,9 @@ static int amsdu_to_msdu(struct adapter *padapter, struct recv_frame *prframe)
- 		/* convert hdr + possible LLC headers into Ethernet header */
- 		eth_type = get_unaligned_be16(&sub_skb->data[6]);
- 		if (sub_skb->len >= 8 &&
--		    ((!memcmp(sub_skb->data, rtw_rfc1042_header, SNAP_SIZE) &&
-+		    ((!memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) &&
- 			  eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) ||
--			 !memcmp(sub_skb->data, rtw_bridge_tunnel_header, SNAP_SIZE))) {
-+			 !memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE))) {
- 			/* remove RFC1042 or Bridge-Tunnel encapsulation and replace EtherType */
- 			skb_pull(sub_skb, SNAP_SIZE);
- 			memcpy(skb_push(sub_skb, ETH_ALEN), pattrib->src, ETH_ALEN);
+-	fault = handle_mm_fault(vma, address, flags, NULL);
++	fault = handle_mm_fault(vma, address, flags, regs);
+ 
+ 	if (fault_signal_pending(fault, regs))
+ 		return;
+@@ -97,10 +100,6 @@ void do_page_fault(unsigned long address, long cause, struct pt_regs *regs)
+ 	/* The most common case -- we are done. */
+ 	if (likely(!(fault & VM_FAULT_ERROR))) {
+ 		if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-			if (fault & VM_FAULT_MAJOR)
+-				current->maj_flt++;
+-			else
+-				current->min_flt++;
+ 			if (fault & VM_FAULT_RETRY) {
+ 				flags |= FAULT_FLAG_TRIED;
+ 				goto retry;
 -- 
-2.27.0
+2.26.2
 
