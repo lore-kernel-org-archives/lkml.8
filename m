@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0020C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C4A217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD87821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584179;
-	bh=I9StSnQTve+NRfXNCgjhEtbvSfCpEbTyi7oxIjiSrxE=;
+	s=default; t=1592584186;
+	bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPUEhrd64qX3QgdSLhB+hg/snRbdvj7qY27TgNAFKGcac1WwjkhDTT633plWmcI3E
-	 GzEhmzP+hOIplH0TN3CA4eRtWKTmj5kwu70y/5t7a/wXCYqYLS6YZEUn3/xHQ4m7GT
-	 wI77ve+M3MqGjC92Xao32idTtdHavX53xuceKcGE=
+	b=Eh45gRxY1ojhdWTtlfb6zA2LeI140QE1ZfJ00dslWH5vzZOSow/xE1Ha6IFEmgEI7
+	 aTi//LJcSegYhkPvJpbOkRZpFXs9+VdqhmvSz+fTkGDIZ6rTBbNyQYPXQmJatgllz2
+	 GpUTLMAH43hnniYCdCpHpXzLWbbc7ZKUtrlCF5GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394984AbgFSQ3d (ORCPT
+        id S2394934AbgFSQ3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389871AbgFSOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:37 -0400
+        id S2389843AbgFSOyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB4AC21556;
-        Fri, 19 Jun 2020 14:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E53F21556;
+        Fri, 19 Jun 2020 14:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578474;
-        bh=I9StSnQTve+NRfXNCgjhEtbvSfCpEbTyi7oxIjiSrxE=;
+        s=default; t=1592578463;
+        bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZ7dSvjAxvIcGroMlF0+KoqWIjTrLp8xHcWso8ek3uwojLLc8mDQPKu5djMz3Lo7g
-         XnMYnLUj8thwiUW2wang++gLYbbwFQiRpzRayeADXyhyaPEKkK9RNUeToRalqrszne
-         RkV9AubcAiQglOvJ6zyxp7osuOcYJvLnjAnRaD8o=
+        b=vicvIHstJcx5OzSc3ZYezBT9W/iF2OlaFeLyr7ZGpMPZwxyQ8MW7Zu4HxFjGvhei1
+         0J1F2me451N6Sb+AGKXzUTWHMZ2NEp4KdJ4ujRS78L6UkSkCHyVQmlPHDhpVevVgr4
+         i8XO7LTEIUFkFF3VJH0pxRhhqk6ymiG7pD2QTY4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 036/267] ALSA: usb-audio: Add vendor, product and profile name for HP Thunderbolt Dock
-Date:   Fri, 19 Jun 2020 16:30:21 +0200
-Message-Id: <20200619141650.577504242@linuxfoundation.org>
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 4.19 032/267] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
+Date:   Fri, 19 Jun 2020 16:30:17 +0200
+Message-Id: <20200619141650.400313581@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 0c5086f5699906ec8e31ea6509239489f060f2dc upstream.
+commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
 
-The HP Thunderbolt Dock has two separate USB devices, one is for speaker
-and one is for headset. Add names for them so userspace can apply UCM
-settings.
+The documentation provided by kobject_init_and_add() clearly spells out
+the need to call kobject_put() on the kobject if an error is returned.
+Add this missing call to the error path.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200608062630.10806-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks-table.h |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/firmware/efi/efivars.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -39,6 +39,26 @@
- 	.idProduct = prod, \
- 	.bInterfaceClass = USB_CLASS_VENDOR_SPEC
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -586,8 +586,10 @@ efivar_create_sysfs_entry(struct efivar_
+ 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+ 				   NULL, "%s", short_name);
+ 	kfree(short_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&new_var->kobj);
+ 		return ret;
++	}
  
-+/* HP Thunderbolt Dock Audio Headset */
-+{
-+	USB_DEVICE(0x03f0, 0x0269),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "HP",
-+		.product_name = "Thunderbolt Dock Audio Headset",
-+		.profile_name = "HP-Thunderbolt-Dock-Audio-Headset",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+/* HP Thunderbolt Dock Audio Module */
-+{
-+	USB_DEVICE(0x03f0, 0x0567),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "HP",
-+		.product_name = "Thunderbolt Dock Audio Module",
-+		.profile_name = "HP-Thunderbolt-Dock-Audio-Module",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
- /* FTDI devices */
- {
- 	USB_DEVICE(0x0403, 0xb8d8),
+ 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
+ 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
 
 
