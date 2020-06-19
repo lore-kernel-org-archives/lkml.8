@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15666C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7459C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E46FA2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF30E218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579531;
-	bh=9H/ayrhInPhbiryYv+WI4UkOCHnSdm8qAYqXHb8mIZ4=;
+	s=default; t=1592579533;
+	bh=AB/m0SfOCiWyKEove6ycVAjabbVWhS2iSCf5oadL31w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bx+S15lVpQDRBvAPhqJs8Lp5c1/1CCM+QvVhN0dBQuLnwg+32YC+af8jX05yblLLB
-	 JVTk7kwhPFTERyzzUZ/kOLtYPAnAKxNYBWBqq9HKp/r3LO53grTMwmUhluBN2wPUp5
-	 1kTMOUdqhc1Brsg+I0Bkoejefxp6NiH4S5zfFEIY=
+	b=WTJwLKIey4rlfHr/ct+aerqJ/+DAZiLt+k465+XWOq5mEEYTSwcflhNSWtCrpa4Lv
+	 a7g2kkLXulJ8tdag4+ki2kFQpZAXwksdV/vJufCZZwUFmHBln7SaqFJEtjgv2T3y97
+	 hP+41Vn8URwvRMpzDxppoWgNeIc5VZ4X0wkcA+ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403883AbgFSPMK (ORCPT
+        id S2403874AbgFSPMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403859AbgFSPMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:06 -0400
+        id S2392144AbgFSPL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF5F2158C;
-        Fri, 19 Jun 2020 15:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A422421582;
+        Fri, 19 Jun 2020 15:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579526;
-        bh=9H/ayrhInPhbiryYv+WI4UkOCHnSdm8qAYqXHb8mIZ4=;
+        s=default; t=1592579518;
+        bh=AB/m0SfOCiWyKEove6ycVAjabbVWhS2iSCf5oadL31w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLaMoPhfD8jVNRLy+Gqu6slARhxN3QklxtBTFyKdwurQJtG2CDUq4igC2VWop+TPj
-         jOWGf7csSd3wzdE35OWDdYIjiQhGODEo/wOjf91gO+jbp+w1vwActGlLkjRb/K5vFo
-         1TVi5ssLZR+6ODpXkVwfAElX6uzxD+r5rKdqat0c=
+        b=A07E/sz1ylREmqBUDUrxlGPtJ5TkSXSxFiN/Bb5UpVLjGPglRbOsFugqWo6vn9VIE
+         zhDbSnrxdeVH79+uz4z1rWTFlAPp50I7ZKBEalTuuAB511se8036EwLpj5iwulCkcF
+         v3MwQHSq6YCDPFCJPat7nTyuyPs220E+IYO6gO4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 169/261] mm: thp: make the THP mapcount atomic against __split_huge_pmd_locked()
-Date:   Fri, 19 Jun 2020 16:33:00 +0200
-Message-Id: <20200619141658.011212429@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 166/261] btrfs: fix space_info bytes_may_use underflow after nocow buffered write
+Date:   Fri, 19 Jun 2020 16:32:57 +0200
+Message-Id: <20200619141657.849187546@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,102 +59,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit c444eb564fb16645c172d550359cb3d75fe8a040 upstream.
+commit 467dc47ea99c56e966e99d09dae54869850abeeb upstream.
 
-Write protect anon page faults require an accurate mapcount to decide
-if to break the COW or not. This is implemented in the THP path with
-reuse_swap_page() ->
-page_trans_huge_map_swapcount()/page_trans_huge_mapcount().
+When doing a buffered write we always try to reserve data space for it,
+even when the file has the NOCOW bit set or the write falls into a file
+range covered by a prealloc extent. This is done both because it is
+expensive to check if we can do a nocow write (checking if an extent is
+shared through reflinks or if there's a hole in the range for example),
+and because when writeback starts we might actually need to fallback to
+COW mode (for example the block group containing the target extents was
+turned into RO mode due to a scrub or balance).
 
-If the COW triggers while the other processes sharing the page are
-under a huge pmd split, to do an accurate reading, we must ensure the
-mapcount isn't computed while it's being transferred from the head
-page to the tail pages.
+When we are unable to reserve data space we check if we can do a nocow
+write, and if we can, we proceed with dirtying the pages and setting up
+the range for delalloc. In this case the bytes_may_use counter of the
+data space_info object is not incremented, unlike in the case where we
+are able to reserve data space (done through btrfs_check_data_free_space()
+which calls btrfs_alloc_data_chunk_ondemand()).
 
-reuse_swap_cache() already runs serialized by the page lock, so it's
-enough to add the page lock around __split_huge_pmd_locked too, in
-order to add the missing serialization.
+Later when running delalloc we attempt to start writeback in nocow mode
+but we might revert back to cow mode, for example because in the meanwhile
+a block group was turned into RO mode by a scrub or relocation. The cow
+path after successfully allocating an extent ends up calling
+btrfs_add_reserved_bytes(), which expects the bytes_may_use counter of
+the data space_info object to have been incremented before - but we did
+not do it when the buffered write started, since there was not enough
+available data space. So btrfs_add_reserved_bytes() ends up decrementing
+the bytes_may_use counter anyway, and when the counter's current value
+is smaller then the size of the allocated extent we get a stack trace
+like the following:
 
-Note: the commit in "Fixes" is just to facilitate the backporting,
-because the code before such commit didn't try to do an accurate THP
-mapcount calculation and it instead used the page_count() to decide if
-to COW or not. Both the page_count and the pin_count are THP-wide
-refcounts, so they're inaccurate if used in
-reuse_swap_page(). Reverting such commit (besides the unrelated fix to
-the local anon_vma assignment) would have also opened the window for
-memory corruption side effects to certain workloads as documented in
-such commit header.
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 20138 at fs/btrfs/space-info.h:115 btrfs_add_reserved_bytes+0x3d6/0x4e0 [btrfs]
+ Modules linked in: btrfs blake2b_generic xor raid6_pq libcrc32c (...)
+ CPU: 0 PID: 20138 Comm: kworker/u8:15 Not tainted 5.6.0-rc7-btrfs-next-58 #5
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+ Workqueue: writeback wb_workfn (flush-btrfs-1754)
+ RIP: 0010:btrfs_add_reserved_bytes+0x3d6/0x4e0 [btrfs]
+ Code: ff ff 48 (...)
+ RSP: 0018:ffffbda18a4b3568 EFLAGS: 00010287
+ RAX: 0000000000000000 RBX: ffff9ca076f5d800 RCX: 0000000000000000
+ RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffff9ca068470410
+ RBP: fffffffffffff000 R08: 0000000000000001 R09: 0000000000000000
+ R10: ffff9ca079d58040 R11: 0000000000000000 R12: ffff9ca068470400
+ R13: ffff9ca0408b2000 R14: 0000000000001000 R15: ffff9ca076f5d800
+ FS:  0000000000000000(0000) GS:ffff9ca07a600000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00005605dbfe7048 CR3: 0000000138570006 CR4: 00000000003606f0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  find_free_extent+0x4a0/0x16c0 [btrfs]
+  btrfs_reserve_extent+0x91/0x180 [btrfs]
+  cow_file_range+0x12d/0x490 [btrfs]
+  run_delalloc_nocow+0x341/0xa40 [btrfs]
+  btrfs_run_delalloc_range+0x1ea/0x6d0 [btrfs]
+  ? find_lock_delalloc_range+0x221/0x250 [btrfs]
+  writepage_delalloc+0xe8/0x150 [btrfs]
+  __extent_writepage+0xe8/0x4c0 [btrfs]
+  extent_write_cache_pages+0x237/0x530 [btrfs]
+  ? btrfs_wq_submit_bio+0x9f/0xc0 [btrfs]
+  extent_writepages+0x44/0xa0 [btrfs]
+  do_writepages+0x23/0x80
+  __writeback_single_inode+0x59/0x700
+  writeback_sb_inodes+0x267/0x5f0
+  __writeback_inodes_wb+0x87/0xe0
+  wb_writeback+0x382/0x590
+  ? wb_workfn+0x4a2/0x6c0
+  wb_workfn+0x4a2/0x6c0
+  process_one_work+0x26d/0x6a0
+  worker_thread+0x4f/0x3e0
+  ? process_one_work+0x6a0/0x6a0
+  kthread+0x103/0x140
+  ? kthread_create_worker_on_cpu+0x70/0x70
+  ret_from_fork+0x3a/0x50
+ irq event stamp: 0
+ hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+ hardirqs last disabled at (0): [<ffffffff94ebdedf>] copy_process+0x74f/0x2020
+ softirqs last  enabled at (0): [<ffffffff94ebdedf>] copy_process+0x74f/0x2020
+ softirqs last disabled at (0): [<0000000000000000>] 0x0
+ ---[ end trace f9f6ef8ec4cd8ec9 ]---
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Suggested-by: Jann Horn <jannh@google.com>
-Reported-by: Jann Horn <jannh@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 6d0a07edd17c ("mm: thp: calculate the mapcount correctly for THP pages during WP faults")
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+So to fix this, when falling back into cow mode check if space was not
+reserved, by testing for the bit EXTENT_NORESERVE in the respective file
+range, and if not, increment the bytes_may_use counter for the data
+space_info object. Also clear the EXTENT_NORESERVE bit from the range, so
+that if the cow path fails it decrements the bytes_may_use counter when
+clearing the delalloc range (through the btrfs_clear_delalloc_extent()
+callback).
+
+Fixes: 7ee9e4405f264e ("Btrfs: check if we can nocow if we don't have data space")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ fs/btrfs/inode.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 56 insertions(+), 5 deletions(-)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2301,6 +2301,8 @@ void __split_huge_pmd(struct vm_area_str
- {
- 	spinlock_t *ptl;
- 	struct mmu_notifier_range range;
-+	bool was_locked = false;
-+	pmd_t _pmd;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -49,6 +49,7 @@
+ #include "qgroup.h"
+ #include "delalloc-space.h"
+ #include "block-group.h"
++#include "space-info.h"
  
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
- 				address & HPAGE_PMD_MASK,
-@@ -2313,11 +2315,32 @@ void __split_huge_pmd(struct vm_area_str
- 	 * pmd against. Otherwise we can end up replacing wrong page.
- 	 */
- 	VM_BUG_ON(freeze && !page);
--	if (page && page != pmd_page(*pmd))
--	        goto out;
-+	if (page) {
-+		VM_WARN_ON_ONCE(!PageLocked(page));
-+		was_locked = true;
-+		if (page != pmd_page(*pmd))
-+			goto out;
+ struct btrfs_iget_args {
+ 	struct btrfs_key *location;
+@@ -1322,6 +1323,56 @@ static noinline int csum_exist_in_range(
+ 	return 1;
+ }
+ 
++static int fallback_to_cow(struct inode *inode, struct page *locked_page,
++			   const u64 start, const u64 end,
++			   int *page_started, unsigned long *nr_written)
++{
++	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
++	u64 range_start = start;
++	u64 count;
++
++	/*
++	 * If EXTENT_NORESERVE is set it means that when the buffered write was
++	 * made we had not enough available data space and therefore we did not
++	 * reserve data space for it, since we though we could do NOCOW for the
++	 * respective file range (either there is prealloc extent or the inode
++	 * has the NOCOW bit set).
++	 *
++	 * However when we need to fallback to COW mode (because for example the
++	 * block group for the corresponding extent was turned to RO mode by a
++	 * scrub or relocation) we need to do the following:
++	 *
++	 * 1) We increment the bytes_may_use counter of the data space info.
++	 *    If COW succeeds, it allocates a new data extent and after doing
++	 *    that it decrements the space info's bytes_may_use counter and
++	 *    increments its bytes_reserved counter by the same amount (we do
++	 *    this at btrfs_add_reserved_bytes()). So we need to increment the
++	 *    bytes_may_use counter to compensate (when space is reserved at
++	 *    buffered write time, the bytes_may_use counter is incremented);
++	 *
++	 * 2) We clear the EXTENT_NORESERVE bit from the range. We do this so
++	 *    that if the COW path fails for any reason, it decrements (through
++	 *    extent_clear_unlock_delalloc()) the bytes_may_use counter of the
++	 *    data space info, which we incremented in the step above.
++	 */
++	count = count_range_bits(io_tree, &range_start, end, end + 1 - start,
++				 EXTENT_NORESERVE, 0);
++	if (count > 0) {
++		struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
++		struct btrfs_space_info *sinfo = fs_info->data_sinfo;
++
++		spin_lock(&sinfo->lock);
++		btrfs_space_info_update_bytes_may_use(fs_info, sinfo, count);
++		spin_unlock(&sinfo->lock);
++
++		clear_extent_bit(io_tree, start, end, EXTENT_NORESERVE, 0, 0,
++				 NULL);
 +	}
++
++	return cow_file_range(inode, locked_page, start, end, page_started,
++			      nr_written, 1);
++}
++
+ /*
+  * when nowcow writeback call back.  This checks for snapshots or COW copies
+  * of the extents that exist in the file, and COWs the file as required.
+@@ -1569,9 +1620,9 @@ out_check:
+ 		 * NOCOW, following one which needs to be COW'ed
+ 		 */
+ 		if (cow_start != (u64)-1) {
+-			ret = cow_file_range(inode, locked_page,
+-					     cow_start, found_key.offset - 1,
+-					     page_started, nr_written, 1);
++			ret = fallback_to_cow(inode, locked_page, cow_start,
++					      found_key.offset - 1,
++					      page_started, nr_written);
+ 			if (ret) {
+ 				if (nocow)
+ 					btrfs_dec_nocow_writers(fs_info,
+@@ -1660,8 +1711,8 @@ out_check:
  
-+repeat:
- 	if (pmd_trans_huge(*pmd)) {
--		page = pmd_page(*pmd);
-+		if (!page) {
-+			page = pmd_page(*pmd);
-+			if (unlikely(!trylock_page(page))) {
-+				get_page(page);
-+				_pmd = *pmd;
-+				spin_unlock(ptl);
-+				lock_page(page);
-+				spin_lock(ptl);
-+				if (unlikely(!pmd_same(*pmd, _pmd))) {
-+					unlock_page(page);
-+					put_page(page);
-+					page = NULL;
-+					goto repeat;
-+				}
-+				put_page(page);
-+			}
-+		}
- 		if (PageMlocked(page))
- 			clear_page_mlock(page);
- 	} else if (!(pmd_devmap(*pmd) || is_pmd_migration_entry(*pmd)))
-@@ -2325,6 +2348,8 @@ void __split_huge_pmd(struct vm_area_str
- 	__split_huge_pmd_locked(vma, pmd, range.start, freeze);
- out:
- 	spin_unlock(ptl);
-+	if (!was_locked && page)
-+		unlock_page(page);
- 	/*
- 	 * No need to double call mmu_notifier->invalidate_range() callback.
- 	 * They are 3 cases to consider inside __split_huge_pmd_locked():
+ 	if (cow_start != (u64)-1) {
+ 		cur_offset = end;
+-		ret = cow_file_range(inode, locked_page, cow_start, end,
+-				     page_started, nr_written, 1);
++		ret = fallback_to_cow(inode, locked_page, cow_start, end,
++				      page_started, nr_written);
+ 		if (ret)
+ 			goto error;
+ 	}
 
 
