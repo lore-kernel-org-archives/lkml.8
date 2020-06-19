@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3504CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079CE206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE15206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580948;
-	bh=QasecetVS2wywm5+DfOgUE0zZX8LEXJJBx2rbD4hdMc=;
+	s=default; t=1592580953;
+	bh=fesb+m6/8ZgvadMLW5u59Am+eMgAkVHAPFHdsmUzjg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vupRKHGMF1eSllR17fYd3yfbJ796f2Kx65D/kpKMVqZDWB8CtAOuNGipRFilxd7xq
-	 8eOBE3ISG7Y5rgW9V1G+S0WBRzoOivJGbILcDjxB7POyrPuGjaeLLzzfIs078G9z6V
-	 02MS6uXJ/TkHl5Hd1Fh0RE/VhUIkjYOr9GDqKhKk=
+	b=DO7D+nqFqNbCHapGGzhhq/7ti52mbZSfgEjuw0AtfS91EyZB+XwpCC7rze4IFO4V9
+	 AzNObFnv4I4yuoCjmNaSTLDkALaq700UFojVBvoE1TXat9p7EplMoC01nNjb+iDuk7
+	 7q1+sv4SMrL7upPkm155WQzf/fRTIK+mEIqEXNIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405040AbgFSPfq (ORCPT
+        id S2404836AbgFSPbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:35:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404855AbgFSPba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:30 -0400
+        id S2393797AbgFSPbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795E420734;
-        Fri, 19 Jun 2020 15:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4963620757;
+        Fri, 19 Jun 2020 15:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580690;
-        bh=QasecetVS2wywm5+DfOgUE0zZX8LEXJJBx2rbD4hdMc=;
+        s=default; t=1592580671;
+        bh=fesb+m6/8ZgvadMLW5u59Am+eMgAkVHAPFHdsmUzjg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvorxeJ1LZ3JFx/n3UCVZYVUkKxuXDpcgMFGjrh/zk2XYzpqj0Pg0V/efKlu0pKLN
-         7FIZbHSJhOg9WbazEBNyQnSj2kfue4V+hREznb6uSqkiDBmMgIPbsJSGY22wBsBoh+
-         dviPyhJGwLwSU0e/QHnso0KJiU0oQ07qC49ENuyE=
+        b=wGXkW/n3uL0b18uwA7Mh9LSkxZ4ehOFBiwtZthPWXhqjvzE1apX/v7v5eul0SRJoW
+         wKfJsWmYW4BIeNwDFPdav+kgSOFZmljbggHg/zqb42d9gS33b1hEGhiV8k1FuSgaxr
+         GNZ6vD1zsO8yMmA/JlKNUHomuAf/Wyl8kkx9c9tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.7 315/376] power: vexpress: add suppress_bind_attrs to true
-Date:   Fri, 19 Jun 2020 16:33:53 +0200
-Message-Id: <20200619141725.248342027@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.7 338/376] powerpc/32s: Fix another build failure with CONFIG_PPC_KUAP_DEBUG
+Date:   Fri, 19 Jun 2020 16:34:16 +0200
+Message-Id: <20200619141726.333670293@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
+commit 74016701fe5f873ae23bf02835407227138d874d upstream.
 
-Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
-attributes available via the sysfs, so lets be explicit here and use
-".suppress_bind_attrs = true" to prevent userspace from doing something
-silly.
+'thread' doesn't exist in kuap_check() macro.
 
-Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
+Use 'current' instead.
+
+Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
 Cc: stable@vger.kernel.org
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/b459e1600b969047a74e34251a84a3d6fdf1f312.1590858925.git.christophe.leroy@csgroup.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/reset/vexpress-poweroff.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/book3s/32/kup.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/power/reset/vexpress-poweroff.c
-+++ b/drivers/power/reset/vexpress-poweroff.c
-@@ -143,6 +143,7 @@ static struct platform_driver vexpress_r
- 	.driver = {
- 		.name = "vexpress-reset",
- 		.of_match_table = vexpress_reset_of_match,
-+		.suppress_bind_attrs = true,
- 	},
- };
+--- a/arch/powerpc/include/asm/book3s/32/kup.h
++++ b/arch/powerpc/include/asm/book3s/32/kup.h
+@@ -2,6 +2,7 @@
+ #ifndef _ASM_POWERPC_BOOK3S_32_KUP_H
+ #define _ASM_POWERPC_BOOK3S_32_KUP_H
  
++#include <asm/bug.h>
+ #include <asm/book3s/32/mmu-hash.h>
+ 
+ #ifdef __ASSEMBLY__
+@@ -75,7 +76,7 @@
+ 
+ .macro kuap_check	current, gpr
+ #ifdef CONFIG_PPC_KUAP_DEBUG
+-	lwz	\gpr, KUAP(thread)
++	lwz	\gpr, THREAD + KUAP(\current)
+ 999:	twnei	\gpr, 0
+ 	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
+ #endif
 
 
