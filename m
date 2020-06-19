@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F46CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF65C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 188E921974
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C04F21D7A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579007;
-	bh=WMYEYzI7BjDBMgGaCwxYvQu43FWLlK9Lo5LewrgX6VQ=;
+	s=default; t=1592579012;
+	bh=Wf+R+6KTe04nlGSoWtQvkQLfcRzDNkTHxtiNJQH0HDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Km3GVpowG7kI3+f7t/1IrHB84VhFkkAiDmOR9a5BL/fG+aaypvcICaIzjAsR8H5lS
-	 yY0dOH6DljfqCd7H0KZKYV+6b9JHrd2EfaiSmZUDk9CJUDlu2zegkxsGHJv71hHIYG
-	 WW49A07nODthchm6aKrx47zpm/n1cPkf9jjwDWZ4=
+	b=jjtCUR72jJLd0O8ruNytzHXdcqWdB4u9Mlx7o5B14ohSA0Bcok35DTrFHddC5eoQd
+	 izrMzwusrEb2AK+MPJSwGeoQINNslGfwkzyP64sQyeYuC2rxl0RfsgPmgSDKc+hl/G
+	 enyzYNvdPWXsyXnb5rMhg5p/N5KKkgpM+JLc2Ja8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbgFSPDX (ORCPT
+        id S2391004AbgFSPD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59756 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390916AbgFSPC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:58 -0400
+        id S2390944AbgFSPDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC6C2193E;
-        Fri, 19 Jun 2020 15:02:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CEE206DB;
+        Fri, 19 Jun 2020 15:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578978;
-        bh=WMYEYzI7BjDBMgGaCwxYvQu43FWLlK9Lo5LewrgX6VQ=;
+        s=default; t=1592578980;
+        bh=Wf+R+6KTe04nlGSoWtQvkQLfcRzDNkTHxtiNJQH0HDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q82tY6HNhp7NQv3caG23IbeQx2IzhSTlojyf1eamQYP66A/LckTz2g10SgPkHyPbL
-         KzVXO+GHBAtRje9EFuJ8/Aypm3q/WWXOPor7nI9N78GguvllGW+aR2mSv5D17F4rcg
-         jVhaUfNIgDPX/13Na4XN1Quk76aODNp4C0WFxlbQ=
+        b=yCCJdd/noGjPPvErEk35KjSuD/FZHwUH/rzlIa4/n5eTomqQaVkDkTZ58AhGwvTtS
+         CPJ4EUd/FrvJ7kg5FahTUP3Xo8E3b1qE7Y9SigP+4iOPoNjv2g+P94+/IxCESWJt8A
+         k8Z7TLKFLK8V5/pQX1JMy+F1cBTvElHv4P8pKIxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 230/267] ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
-Date:   Fri, 19 Jun 2020 16:33:35 +0200
-Message-Id: <20200619141659.752314005@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.19 231/267] PCI: Program MPS for RCiEP devices
+Date:   Fri, 19 Jun 2020 16:33:36 +0200
+Message-Id: <20200619141659.800042789@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,121 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Ashok Raj <ashok.raj@intel.com>
 
-[ Upstream commit 6cc7c266e5b47d3cd2b5bb7fd3aac4e6bb2dd1d2 ]
+commit aa0ce96d72dd2e1b0dfd0fb868f82876e7790878 upstream.
 
-If the template field 'd' is chosen and the digest to be added to the
-measurement entry was not calculated with SHA1 or MD5, it is
-recalculated with SHA1, by using the passed file descriptor. However, this
-cannot be done for boot_aggregate, because there is no file descriptor.
+Root Complex Integrated Endpoints (RCiEPs) do not have an upstream bridge,
+so pci_configure_mps() previously ignored them, which may result in reduced
+performance.
 
-This patch adds a call to ima_calc_boot_aggregate() in
-ima_eventdigest_init(), so that the digest can be recalculated also for the
-boot_aggregate entry.
+Instead, program the Max_Payload_Size of RCiEPs to the maximum supported
+value (unless it is limited for the PCIE_BUS_PEER2PEER case).  This also
+affects the subsequent programming of Max_Read_Request_Size because Linux
+programs MRRS based on the MPS value.
 
-Cc: stable@vger.kernel.org # 3.13.x
-Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()")
+Link: https://lore.kernel.org/r/1585343775-4019-1-git-send-email-ashok.raj@intel.com
+Tested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/integrity/ima/ima.h              |  3 ++-
- security/integrity/ima/ima_crypto.c       |  6 +++---
- security/integrity/ima/ima_init.c         |  2 +-
- security/integrity/ima/ima_template_lib.c | 18 ++++++++++++++++++
- 4 files changed, 24 insertions(+), 5 deletions(-)
+ drivers/pci/probe.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index e7dfd460fe1d..d12b07eb3a58 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -56,6 +56,7 @@ extern int ima_policy_flag;
- extern int ima_hash_algo;
- extern int ima_appraise;
- extern struct tpm_chip *ima_tpm_chip;
-+extern const char boot_aggregate_name[];
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1748,13 +1748,33 @@ static void pci_configure_mps(struct pci
+ 	struct pci_dev *bridge = pci_upstream_bridge(dev);
+ 	int mps, mpss, p_mps, rc;
  
- /* IMA event related data */
- struct ima_event_data {
-@@ -139,7 +140,7 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
- int ima_calc_field_array_hash(struct ima_field_data *field_data,
- 			      struct ima_template_desc *desc, int num_fields,
- 			      struct ima_digest_data *hash);
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash);
- void ima_add_violation(struct file *file, const unsigned char *filename,
- 		       struct integrity_iint_cache *iint,
- 		       const char *op, const char *cause);
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 6a6d19ada66a..c5dd05ace28c 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -663,8 +663,8 @@ static void __init ima_pcrread(int idx, u8 *pcr)
- /*
-  * Calculate the boot aggregate hash
-  */
--static int __init ima_calc_boot_aggregate_tfm(char *digest,
--					      struct crypto_shash *tfm)
-+static int ima_calc_boot_aggregate_tfm(char *digest,
-+				       struct crypto_shash *tfm)
- {
- 	u8 pcr_i[TPM_DIGEST_SIZE];
- 	int rc, i;
-@@ -688,7 +688,7 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
- 	return rc;
- }
+-	if (!pci_is_pcie(dev) || !bridge || !pci_is_pcie(bridge))
++	if (!pci_is_pcie(dev))
+ 		return;
  
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash)
- {
- 	struct crypto_shash *tfm;
- 	int rc;
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index faac9ecaa0ae..a2bc4cb4482a 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -25,7 +25,7 @@
- #include "ima.h"
+ 	/* MPS and MRRS fields are of type 'RsvdP' for VFs, short-circuit out */
+ 	if (dev->is_virtfn)
+ 		return;
  
- /* name for boot aggregate entry */
--static const char *boot_aggregate_name = "boot_aggregate";
-+const char boot_aggregate_name[] = "boot_aggregate";
- struct tpm_chip *ima_tpm_chip;
- 
- /* Add the boot aggregate to the IMA measurement list and extend
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 43752002c222..48c5a1be88ac 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -284,6 +284,24 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
- 		goto out;
- 	}
- 
-+	if ((const char *)event_data->filename == boot_aggregate_name) {
-+		if (ima_tpm_chip) {
-+			hash.hdr.algo = HASH_ALGO_SHA1;
-+			result = ima_calc_boot_aggregate(&hash.hdr);
-+
-+			/* algo can change depending on available PCR banks */
-+			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
-+				result = -EINVAL;
-+
-+			if (result < 0)
-+				memset(&hash, 0, sizeof(hash));
++	/*
++	 * For Root Complex Integrated Endpoints, program the maximum
++	 * supported value unless limited by the PCIE_BUS_PEER2PEER case.
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		if (pcie_bus_config == PCIE_BUS_PEER2PEER)
++			mps = 128;
++		else
++			mps = 128 << dev->pcie_mpss;
++		rc = pcie_set_mps(dev, mps);
++		if (rc) {
++			pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
++				 mps);
 +		}
-+
-+		cur_digest = hash.hdr.digest;
-+		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
-+		goto out;
++		return;
 +	}
 +
- 	if (!event_data->file)	/* missing info to re-calculate the digest */
- 		return -EINVAL;
++	if (!bridge || !pci_is_pcie(bridge))
++		return;
++
+ 	mps = pcie_get_mps(dev);
+ 	p_mps = pcie_get_mps(bridge);
  
--- 
-2.25.1
-
 
 
