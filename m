@@ -2,229 +2,107 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F48C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3430C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D180A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B4F207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZFhjTnVZ"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="LKg+PWRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732747AbgFSKo4 (ORCPT
+        id S1732472AbgFSKqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:44:56 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51625 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732500AbgFSKhd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:37:33 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200619103703euoutp02aed5172cd44dcf5475bb37ca4b6f45bb~Z66G31dfB2242222422euoutp02W
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:37:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200619103703euoutp02aed5172cd44dcf5475bb37ca4b6f45bb~Z66G31dfB2242222422euoutp02W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592563023;
-        bh=ePXLHe/mfRhAa1xR5V0eqYUoM9rqbQC5MkvAEkUq1G0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFhjTnVZaE2XiZnBCSspMbkgzH5Il+E9nD+ZVHohrLrsgoN1wSxJ79CrFMiz5g1yu
-         mAS/0ZrNEkc9kXberoIVjTBNb8hD0AIYZGKbt6+AyHHuVrmv/VLa/3Zb/LL0ANN58U
-         cWEfTHTnWTZlkF70igiCj8OxDOXj2GPA+SGbEadA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200619103702eucas1p14e7a598cf79bb058dee154e1946a2c9c~Z66GdCl0p0705907059eucas1p1E;
-        Fri, 19 Jun 2020 10:37:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 9F.8C.06318.E459CEE5; Fri, 19
-        Jun 2020 11:37:02 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5~Z66F_rJ3n0704707047eucas1p1y;
-        Fri, 19 Jun 2020 10:37:02 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200619103701eusmtrp1ccebd68058c16a8bf7a62b76bf5d0462~Z66F4Xp_60959609596eusmtrp1-;
-        Fri, 19 Jun 2020 10:37:01 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-63-5eec954e7dc0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 98.0B.06017.D459CEE5; Fri, 19
-        Jun 2020 11:37:01 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200619103701eusmtip230514ba84e3184c5dd6c231d8b83c417~Z66FMKCde3164531645eusmtip2W;
-        Fri, 19 Jun 2020 10:37:01 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-Subject: [PATCH v7 13/36] drm: msm: fix common struct sg_table related
- issues
-Date:   Fri, 19 Jun 2020 12:36:13 +0200
-Message-Id: <20200619103636.11974-14-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619103636.11974-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRjmO2eXo7g6TdEPk6xpUUFesMtXhtkNTn8yqD8GmStPam1TNrUM
-        ItEKm068UI0pZWVq3lObqZg5nTNk8zbNLNNlpeU1b5mJtnlm/Xve5/I+Lx8fgfOb2c5EuCSK
-        lkqEIgHHlqVu/m3YdfLeWJCXMsUNKQxvMfRCWcpGK+o0HBnnJjkoa1gP0PNCLYay633RrNGE
-        ofKhHjZKq9dzUVdNFgcVN/Vz0fDjBRw1TH1ho/6MJuC/nip6WASouvlsFlWt6udSVfODbGog
-        SYdRFTk3qQ/LQziV0ZsHqNr3cRxKV9PHpVIqCwA1U77plN1Z24MhtCg8hpZ6+gXbhmV1VLAj
-        VYJrqXotFgf0LnJgQ0ByNxzOLMbkwJbgk/kAlswmAYvAJ2cBzHwZyAgzAOaXaMBaIslgAIyQ
-        B6Dq/mecGcyJ8YQ53OLikN5QPi7nWLADeRvAFoWdxYSTKhyOaP6sCvZkAFTmajALZpFbYXqj
-        ZpXnkX4wvlpvrXOFhWVvVpfamPnRWw1syyJI9nHhu8FnGGM6BrsztFZsD3/oKrkMdoGtGcks
-        JpAAoMlQzGWGZAC74pXWCl/40bBoribM9+2ApTWeDH0YKjuMXAsNyXWwd3yDhcbNMF39AGdo
-        Hky8w2fc26BKV/KvtqG9E2cwBXvaFNYHTgMwPVnNSgWuqv9l2QAUACc6WiYOpWU+Evqqh0wo
-        lkVLQj0uRojLgfl3tS7r5l6B10sXNIAkgMCON3JmNIjPFsbIYsUaAAlc4MA7om8N4vNChLHX
-        aWnEeWm0iJZpwEaCJXDi+Tz5fo5Phgqj6Cs0HUlL11SMsHGOA3d1fZK+R8FdZUUFIalpg017
-        pB5JXitfL4kCpy4rkVFuOjHtaNrcGzARNmU/Muc3HfGrYswdfdr/M+C0i58bZ8SxVfT0+EQk
-        2Ku3cW9pzDrQZrf9m6GuwXtpcV+TUrvcreksNE5V1zYqDhVrJ2eq0v1Dmo+2CxO3LNwYyJ2f
-        EeQIWLIwofdOXCoT/gW9h8I/WQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xe7q+U9/EGbw/Z2nRe+4kk8XGGetZ
-        Lf5vm8hsceXrezaLOc/PMlqsXH2UyWLBfmuLL1ceMllsenyN1WLi/rPsFpd3zWGzWHvkLrvF
-        84U/mC0OfnjCanF38hFGB36PNfPWMHrs/baAxWPnrLvsHtu/PWD1uN99nMlj85J6j9v/HjN7
-        TL6xnNFj980GNo/ju26xe/RtWcXo8XmTXABPlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYml
-        nqGxeayVkamSvp1NSmpOZllqkb5dgl7GnIubWQtmKVVMOHuUqYHxrEwXIyeHhICJRPe5c4xd
-        jFwcQgJLGSUmX/rKCJGQkTg5rYEVwhaW+HOtiw2i6BOjxMldD5lBEmwChhJdbyESIgKdjBLT
-        uj+ygzjMAkuYJfqmXmIDqRIW8JXYffk7WAeLgKrEpMOHwOK8AnYSTTvPQq2Tl1i94QBYDSdQ
-        /HXLQbDVQgK2EssXvGeewMi3gJFhFaNIamlxbnpusZFecWJucWleul5yfu4mRmAsbTv2c8sO
-        xq53wYcYBTgYlXh4X4S8jhNiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZT
-        oKMmMkuJJucD4zyvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOj
-        23eX5T1rOq/pTc2681JoufTxmvWur2/Na2eUVjV0m239VKaf6Y8mg3gX011lacM5X4znh0yw
-        /nNge0le9tVi/dRVFmdDr901nOay//X7ZU/OnDnQ9OX88Sl3xIz37s5XWsPO/NLe+Nqfz/Wh
-        4QbxRdflt6VPdxVIvC1YefPk7/n3lVUPaWwTV2Ipzkg01GIuKk4EAHK7XDC7AgAA
-X-CMS-MailID: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5
-References: <20200619103636.11974-1-m.szyprowski@samsung.com>
-        <CGME20200619103702eucas1p1c57147013bbac3968f6ba073caec68b5@eucas1p1.samsung.com>
+        Fri, 19 Jun 2020 06:46:36 -0400
+Received: from mail-mw2nam10on2065.outbound.protection.outlook.com ([40.107.94.65]:38496
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732399AbgFSKqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:46:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P0bGjwboSzl9I3h4xrBa/kEljZcCfpC8YZKFcnQ182B50Ytk700rAwFVubLHlfLoJOYs/D6n1P/OP8HG4fIiIYCVvSAk8qLfRKd2isGN1pLD4LLpyxeFT0GYpL26WWM6C5zayxgo1BLDLJDLCUuppVvLKWJRW7Y6iVxwD7MhxNlIf7Sm60K+fRjdksu3efzk9SNclSEudI5Vm6P8vMhP/iY2uM1ndfApBtEOBnXBeMm875/2nVPqEG52Newg3PikftsCgUNO1u4/p7oIvZeaUWmhwmW9iMtyACKCVibmd3QT2S96t7YllMv+fJKSQqaaXlMLxdM7ntNLHHavzTHV8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NRuX8siAhQBLaj437WkZhe3Gmckltza0HY6lxcVeW4Q=;
+ b=kvVJ29055g6Q9KV9SCiUGYYJ7xcs23y3on9521WH93nIuDfwcdVtsunZUMfJN8P4kPUBtOY79NeHeATiAO2xn6xF0/MU93IU2AAwanOOpAbC3zb3SeUqI2LCr+vZ7sC8mOc5tUesmXH3wySr1BrIUfv88uNlKA7uloyIjMfR+tmNyLg6b7kD6TMtduIPCT9Qv0YmsnRemPVSFM0xKhL6yPFu5IxzBRYF+CxzpAAVzXONuHMBuKdpB6Ll0ukKiXTpI8323nLoitXSjnhwO/ndLR5F/xhlLAhkhxPu+FgvtrZpghFoQoLsawjOv89KZU+1e0/48LfzFGVdYotB+kZnfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NRuX8siAhQBLaj437WkZhe3Gmckltza0HY6lxcVeW4Q=;
+ b=LKg+PWRngS9VcoLKQXLedD7f6upyg5JYlopOcJrozdlDNxSstQpaSOC5VjD6ReHzWqtAMfn2Y4BzJ8dRRWT/MvghK+7FcGJBWHxR4OsTzbtsSbW66HiJcqzJicfR2qcR8UF9VjRMqzSH6rtpdIEN1Sk7Lrg0QcmvMCKofF7jWpw=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB3580.namprd03.prod.outlook.com (2603:10b6:5:b2::14) by
+ DM6PR03MB3481.namprd03.prod.outlook.com (2603:10b6:5:af::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.21; Fri, 19 Jun 2020 10:46:32 +0000
+Received: from DM6PR03MB3580.namprd03.prod.outlook.com
+ ([fe80::3122:b605:87fd:339e]) by DM6PR03MB3580.namprd03.prod.outlook.com
+ ([fe80::3122:b605:87fd:339e%6]) with mapi id 15.20.3109.023; Fri, 19 Jun 2020
+ 10:46:32 +0000
+Date:   Fri, 19 Jun 2020 18:44:37 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: perf: add support for Cortex-A55/A75/A76
+Message-ID: <20200619184423.5e61a838@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYBP286CA0040.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:404:10a::28) To DM6PR03MB3580.namprd03.prod.outlook.com
+ (2603:10b6:5:b2::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYBP286CA0040.JPNP286.PROD.OUTLOOK.COM (2603:1096:404:10a::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 10:46:29 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9173a735-979c-49d5-2a56-08d8143e07b3
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3481:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB3481FBA8A9DD3C0867FEED21ED980@DM6PR03MB3481.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cyaQm4IrveS/AiSh8Iyl0DOhW/RagtxYnaT6oUhc4bwPAOj8kePeheF6PL4MqRBSPu4+BUMmdvKiubBcKcR6duMNAsQGzUdt71nIkW0qynh49olSN5yvt3ACzK4CZv3HHV283S3NLaIO09/o3UTtMq0IqPLBxJYC+Mc2lRn3/uwJ+YZIeYczWi7wCTNbLATp5cUuxNcGimG70O9owl5DHK22n3NwziVi1Ybwhe4wEhvPA/8j09VIOLFetPIujoGf/5KldtCWgN4GVHc/mitVhhC7zWC1Apl9T9k3iN+rzaU4eafYc6MpSJB87s7WDDuTmRHvSe+tDYG+BtkK0tSH4w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB3580.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(136003)(376002)(346002)(366004)(66476007)(6666004)(66946007)(66556008)(5660300002)(86362001)(52116002)(16526019)(7696005)(186003)(55016002)(9686003)(4744005)(956004)(8676002)(2906002)(6506007)(1076003)(26005)(83380400001)(110136005)(316002)(8936002)(4326008)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 0w+L1WVUPlehHiypeJ7o1ibsC/7pRHCC4FHhAoKawwK5KUhWeGVTXDFwo+SwhTLD0Tz2bPLPFgX5JIfgsBZCKO5fby3r4BKoCAT0dc/vvtxL8DMm3HFqALQ5Sj0sfAJbRxxoZhSiFUYIzAhVYCDGeR0aa4/Iu6NyxsIF/loWXlt7i/V7MeFwuvJbBEqwgl45F70BqvLkdi4hefPQXXVnx0pxiLUpbjpP+Y8SJi9VZNiKo7LEIvU9JFw6HDHeJNPULNQEo2iQlj8q5sHklGMlrHIM/7z/+LdfiAEADlgex+89Bnmc6R8sUsmjFH8qyAFrVz2O7YgxLLNfTfX9XcXaFE0MTjU2+B0PREdjPx9a/B8DCmhXSeMgetR0zgeLH/EzYbfnGyF3sjv0IsVM/z5VeqCkUZvBwAEgcqai/D1Neu3Fr4QS6Wmd5L8YiIlweSfDHcwSeL0ObMJqzyi5R/laoPXOlTiK0WQxa8JGm/suqvpNlBKP+xdD0za4gVhe6B2K
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9173a735-979c-49d5-2a56-08d8143e07b3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 10:46:32.5373
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n59/9kYHbA5llGvfBMgmLB9PuBRuSIcffTiuedfo6O8EgOtE2LmNNzH4zpenTqy2sz6DGlyPKECHrWcDTH6i3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3481
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
+The Cortex-A55/A75/A76 use some implementation defined perf events.
+Add the support.
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
+Jisheng Zhang (3):
+  arm64: perf: add support for Cortex-A55
+  arm64: perf: add support for Cortex-A75
+  arm64: perf: add support for Cortex-A76
 
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
+ arch/arm64/kernel/perf_event.c | 49 +++++++++++++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 4 deletions(-)
 
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/gpu/drm/msm/msm_gem.c    | 13 +++++--------
- drivers/gpu/drm/msm/msm_gpummu.c | 14 ++++++--------
- drivers/gpu/drm/msm/msm_iommu.c  |  2 +-
- 3 files changed, 12 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 38b0c0e1f83e..e0d5fd36ea8f 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -53,11 +53,10 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
- 	struct device *dev = msm_obj->base.dev->dev;
- 
- 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
--		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_sync_sgtable_for_device(dev, msm_obj->sgt,
-+					    DMA_BIDIRECTIONAL);
- 	} else {
--		dma_map_sg(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_map_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
- 	}
- }
- 
-@@ -66,11 +65,9 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
- 	struct device *dev = msm_obj->base.dev->dev;
- 
- 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
--		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_sync_sgtable_for_cpu(dev, msm_obj->sgt, DMA_BIDIRECTIONAL);
- 	} else {
--		dma_unmap_sg(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_unmap_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
- 	}
- }
- 
-diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-index 310a31b05faa..319f06c28235 100644
---- a/drivers/gpu/drm/msm/msm_gpummu.c
-+++ b/drivers/gpu/drm/msm/msm_gpummu.c
-@@ -30,21 +30,19 @@ static int msm_gpummu_map(struct msm_mmu *mmu, uint64_t iova,
- {
- 	struct msm_gpummu *gpummu = to_msm_gpummu(mmu);
- 	unsigned idx = (iova - GPUMMU_VA_START) / GPUMMU_PAGE_SIZE;
--	struct scatterlist *sg;
-+	struct sg_dma_page_iter dma_iter;
- 	unsigned prot_bits = 0;
--	unsigned i, j;
- 
- 	if (prot & IOMMU_WRITE)
- 		prot_bits |= 1;
- 	if (prot & IOMMU_READ)
- 		prot_bits |= 2;
- 
--	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
--		dma_addr_t addr = sg->dma_address;
--		for (j = 0; j < sg->length / GPUMMU_PAGE_SIZE; j++, idx++) {
--			gpummu->table[idx] = addr | prot_bits;
--			addr += GPUMMU_PAGE_SIZE;
--		}
-+	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
-+		dma_addr_t addr = sg_page_iter_dma_address(&dma_iter);
-+
-+		BUILD_BUG_ON(GPUMMU_PAGE_SIZE != PAGE_SIZE);
-+		gpummu->table[idx++] = addr | prot_bits;
- 	}
- 
- 	/* we can improve by deferring flush for multiple map() */
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..6c31e65834c6 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,7 +36,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
--	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
-+	ret = iommu_map_sgtable(iommu->domain, iova, sgt, prot);
- 	WARN_ON(!ret);
- 
- 	return (ret == len) ? 0 : -EINVAL;
 -- 
-2.17.1
+2.27.0
 
