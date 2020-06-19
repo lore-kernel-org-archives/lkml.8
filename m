@@ -4,39 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51827C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29EC4206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080762080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgFSKad (ORCPT
+        id S1732372AbgFSKba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        Fri, 19 Jun 2020 06:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732225AbgFSK2J (ORCPT
+        with ESMTP id S1732320AbgFSK2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:28:09 -0400
+        Fri, 19 Jun 2020 06:28:07 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A96C061794;
-        Fri, 19 Jun 2020 03:28:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EDCC0613EF;
+        Fri, 19 Jun 2020 03:28:06 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 55E3C2A5248
+        with ESMTPSA id 425E12A51F9
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH 4/7] arm64: dts: mt8183: Fix unit name warnings
-Date:   Fri, 19 Jun 2020 12:27:54 +0200
-Message-Id: <20200619102757.1358675-5-enric.balletbo@collabora.com>
+Subject: [PATCH 1/7] dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
+Date:   Fri, 19 Jun 2020 12:27:51 +0200
+Message-Id: <20200619102757.1358675-2-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619102757.1358675-1-enric.balletbo@collabora.com>
 References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
@@ -47,40 +49,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the unit address from the DT nodes that doesn't have a reg
-property. This fixes the following unit name warnings:
-
-  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@0: node has a unit name, but no reg or ranges property
-  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@1: node has a unit name, but no reg or ranges property
+The krane-sku176 is the Lenovo IdeaPad Duet Chromebook. A 2-in-1
+detachable device using the MediaTek MT8183 SoC.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 00137ec61164d..e356076749148 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -168,7 +168,7 @@ CPU_SLEEP: cpu-sleep {
- 				min-residency-us = <800>;
- 			};
- 
--			CLUSTER_SLEEP0: cluster-sleep@0 {
-+			CLUSTER_SLEEP0: cluster-sleep0 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
- 				arm,psci-suspend-param = <0x01010001>;
-@@ -176,7 +176,7 @@ CLUSTER_SLEEP0: cluster-sleep@0 {
- 				exit-latency-us = <400>;
- 				min-residency-us = <1000>;
- 			};
--			CLUSTER_SLEEP1: cluster-sleep@1 {
-+			CLUSTER_SLEEP1: cluster-sleep1 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
- 				arm,psci-suspend-param = <0x01010001>;
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index abc544dde6920..30908963ae261 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -114,4 +114,9 @@ properties:
+           - enum:
+               - mediatek,mt8183-evb
+           - const: mediatek,mt8183
++      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
++        items:
++          - const: google,krane-sku176
++          - const: google,krane
++          - const: mediatek,mt8183
+ ...
 -- 
 2.27.0
 
