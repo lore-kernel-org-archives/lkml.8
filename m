@@ -2,99 +2,111 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19332C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C77BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3B6A20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246FB20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgFSGqY (ORCPT
+        id S1729272AbgFSGrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:46:24 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:59148 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbgFSGqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 02:46:24 -0400
-Received: from p5b127c2f.dip0.t-ipconnect.de ([91.18.124.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jmAn1-0007yi-Au; Fri, 19 Jun 2020 08:46:15 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v5 2/3] dt-bindings: net: mscc-vsc8531: add optional clock properties
-Date:   Fri, 19 Jun 2020 08:46:14 +0200
-Message-ID: <1876004.CZoxnk3e8W@phil>
-In-Reply-To: <a877e41d-4c3c-c4c2-1875-71e1e08cf977@gmail.com>
-References: <20200618121139.1703762-1-heiko@sntech.de> <20200618121139.1703762-3-heiko@sntech.de> <a877e41d-4c3c-c4c2-1875-71e1e08cf977@gmail.com>
+        Fri, 19 Jun 2020 02:47:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44476 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgFSGrC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 02:47:02 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x202so7564988oix.11;
+        Thu, 18 Jun 2020 23:47:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=obSLRSGUdtL1aSsm/uf2ID8ufq/D3V0gORBSH0QDde0=;
+        b=n91YsgLoij0lvALblDHm4hqnsTAVBPsYQmh1EltPTykSDCDJhz2m8IbjCSEAIo9Lcf
+         Q73OLP9sOOub7cRl2Byb612G7Y18u/U1SHJxGdixhUV2xj53ajhse84+Zo8Gui7/SjzQ
+         PFTivm9BkDxkS0YxcS/WdXGz8Ba0TULkymYeUge1NbQz7LFmaNfo4i85RHZoEdVGfGpB
+         Fa6rFLH+wQAuCEWwPb9Px7BAyDfuN3uwwi8tOfB1As+zz8/GFCcgLgA8JLlONnLc9LgK
+         92TTko4nNcO3+Yd/+wvfh6P7SvB86bTBxYWqsdgQ0xilwAdhgLNaVj3MHfeldlhf9C5r
+         Og0w==
+X-Gm-Message-State: AOAM533iOCMXjlprY/ccrPfNpGKT6MOOS0AOUHYREER0unvcmhinHJT1
+        3jrjDaCW1TgnXXbNVu5TFFYuytb+UG+hFSNqTpfhqA==
+X-Google-Smtp-Source: ABdhPJyM/HIf32MqGOd016BpCM/MH9LqQadoHNgeCyy6v07UdPWFKyqvPx+AZn/Je52XhLCCn8CJo6EWO0pqYb4es34=
+X-Received: by 2002:aca:849:: with SMTP id 70mr1908872oii.153.1592549221910;
+ Thu, 18 Jun 2020 23:47:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200615141606.2814208-1-thierry.reding@gmail.com>
+ <20200615141606.2814208-2-thierry.reding@gmail.com> <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
+ <20200618200507.GA2905@codeaurora.org>
+In-Reply-To: <20200618200507.GA2905@codeaurora.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 19 Jun 2020 08:46:50 +0200
+Message-ID: <CAMuHMdUv8xic7L=UJzCmJ+WepvADBYvcaPCmaN0BzCvcbgvx6g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit
+ format specifier
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 19. Juni 2020, 07:01:58 CEST schrieb Florian Fainelli:
-> 
-> On 6/18/2020 5:11 AM, Heiko Stuebner wrote:
-> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > 
-> > Some mscc ethernet phys have a configurable clock output, so describe the
-> > generic properties to access them in devicetrees.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> > index 5ff37c68c941..67625ba27f53 100644
-> > --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> > @@ -1,6 +1,8 @@
-> >  * Microsemi - vsc8531 Giga bit ethernet phy
-> >  
-> >  Optional properties:
-> > +- clock-output-names	: Name for the exposed clock output
-> > +- #clock-cells		: should be 0
-> >  - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
-> >  			  in the first row of Table 1 (below).
-> >  			  This property is only used in combination
-> > 
-> 
-> With that approach, you also need to be careful as a driver writer to
-> ensure that you have at least probed the MDIO bus to ensure that the PHY
-> device has been created (and therefore it is available as a clock
-> provider) if that same Ethernet MAC is a consumer of that clock (which
-> it appears to be). Otherwise you may just never probe and be trapped in
-> a circular dependency.
+Hi Guru,
 
-Yep - although without anything like this, the phy won't emit any clock
-at all. Even when enabling the clock output in u-boot already, when the
-kernel starts that config is lost,  so no existing board should break.
+On Thu, Jun 18, 2020 at 10:05 PM Guru Das Srinagesh
+<gurus@codeaurora.org> wrote:
+> On Wed, Jun 17, 2020 at 09:18:34AM +0200, Geert Uytterhoeven wrote:
+> > On Mon, Jun 15, 2020 at 4:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > The PWM core will soon change the duty cycle and period of PWMs to 64
+> > > bits to allow for a broader range of values. Use a 64-bit format
+> > > specifier to avoid a warning when that change is made.
+> > >
+> > > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> >
+> > > --- a/drivers/video/fbdev/ssd1307fb.c
+> > > +++ b/drivers/video/fbdev/ssd1307fb.c
+> > > @@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+> > >                 /* Enable the PWM */
+> > >                 pwm_enable(par->pwm);
+> > >
+> > > -               dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n",
+> > > +               dev_dbg(&par->client->dev, "Using PWM%d with a %lluns period.\n",
+> > >                         par->pwm->pwm, pwm_get_period(par->pwm));
+> > >         }
+> >
+> > This change must be done together with changing the return type of
+> > pwm_get_period(), else you will get a compiler warning, and will print a
+> > bogus value.
+>
+> Hi Geert,
+>
+> Yes, this is already being done in the patch series [1] that forms the
+> base for this specific patch.
+>
+> [1] https://lore.kernel.org/lkml/64f9ba1c9d6c49a397f12846493707883cee430f.1591136989.git.gurus@codeaurora.org/
 
+IC, but the "will soon" suggested otherwise.
+In any case, not combining both into a single patch causes a bisection
+regression, regardless of the order in which they are applied.
 
-As you can see in the discussion about patch 3/3 the wanted solution
-is not so clear cut as well. With Rob suggesting this clock-provider way
-and Russell strongly encouraging taking a second look.
+Gr{oetje,eeting}s,
 
-[My first iteration (till v4) was doing it like other phys by specifying
-a property to just tell the phy what frequency to output]
+                        Geert
 
-I don't really have a preference for one or the other, so
-maybe you can also give a vote over there ;-)
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Heiko
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
