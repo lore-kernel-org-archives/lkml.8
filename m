@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C147C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A097217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11998217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583674;
-	bh=kG9t7AnTnL9Y93YN+7mvClU3moEy9xDxPacmFdvK0/w=;
+	s=default; t=1592583677;
+	bh=4ljtbtWFQHlpXv5YMNSizjWjGiVY5t/bwWmBU85FxWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=quLrnziCl9AzP287obkGoZZF0jZUqsOcRDihaKJjtlqLibxC4gbczyqYYuKTnpqid
-	 JV8C5pl53LZSNzLhUfo+7XiuPGXCta5/cv8+LRNyv5MXOiRQfXRAFSM+SF0esYSLZq
-	 WF95q4u0DCNchOLdluh20jQlBeR8dVhmsNiNaRhA=
+	b=W+Q1TqULsPmFRVIk1npgNHNBDGZ24TVnvw1QrT7iodDjDjgdUiUeAIC2bjmf04qEV
+	 cE/kYVg+NPNeSeB5d0hrbrsBbQmIn0cv9+mhzf4n18IP5kEO7Sr93JvAYC48+gsToN
+	 nStlK1ZXql9zLY4WGhKN4UOSWv/P99cSmoOf8yGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394673AbgFSQVN (ORCPT
+        id S2393743AbgFSQVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390332AbgFSPAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:53 -0400
+        id S2388718AbgFSPAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F98421582;
-        Fri, 19 Jun 2020 15:00:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 578022193E;
+        Fri, 19 Jun 2020 15:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578853;
-        bh=kG9t7AnTnL9Y93YN+7mvClU3moEy9xDxPacmFdvK0/w=;
+        s=default; t=1592578847;
+        bh=4ljtbtWFQHlpXv5YMNSizjWjGiVY5t/bwWmBU85FxWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEG/HqgimmwUGs9+3NjZbqh91EDGLUSXQ6fABEPC+QLCMEkvQCH2cJ+R+PR203Wvq
-         GnGuj1WFgdVXPfxJMKh2nKVFNKd2MpuGplf6bM1oJdiAvImvZiuzT0UKNcJJvQH0BB
-         RKBfUphMnc9UAcnrg8X7wRE/ryqUuPb5aIR8AO6E=
+        b=HOCu/Yyqk12ZXJgSq74y1AxMVW5gCTwd8j2jIWb1gBpqVDak983vSDrq23xFc9Qih
+         hM9YSruRoKEqvMjxiNQ84bENGgM5kAyf086DbMKuQxa056i9rUN2+aoxZwMGTQdY1R
+         nD7M7gYHHnmhma24lFZA+drYEjd11A4aeFzZTmMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Bruce Chang <brucechang@via.com.tw>,
+        Harald Welte <HaraldWelte@viatech.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/267] ath10k: Remove msdu from idr when management pkt send fails
-Date:   Fri, 19 Jun 2020 16:32:19 +0200
-Message-Id: <20200619141656.212900201@linuxfoundation.org>
+Subject: [PATCH 4.19 179/267] mmc: via-sdmmc: Respect the cmd->busy_timeout from the mmc core
+Date:   Fri, 19 Jun 2020 16:32:44 +0200
+Message-Id: <20200619141657.367848960@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,120 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit c730c477176ad4af86d9aae4d360a7ad840b073a ]
+[ Upstream commit 966244ccd2919e28f25555a77f204cd1c109cad8 ]
 
-Currently when the sending of any management pkt
-via wmi command fails, the packet is being unmapped
-freed in the error handling. But the idr entry added,
-which is used to track these packet is not getting removed.
+Using a fixed 1s timeout for all commands (and data transfers) is a bit
+problematic.
 
-Hence, during unload, in wmi cleanup, all the entries
-in IDR are removed and the corresponding buffer is
-attempted to be freed. This can cause a situation where
-one packet is attempted to be freed twice.
+For some commands it means waiting longer than needed for the timer to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+1s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
 
-Fix this error by rmeoving the msdu from the idr
-list when the sending of a management packet over
-wmi fails.
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1588667015-25490-1-git-send-email-pillair@codeaurora.org
+Cc: Bruce Chang <brucechang@via.com.tw>
+Cc: Harald Welte <HaraldWelte@viatech.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-17-ulf.hansson@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c     |  3 +++
- drivers/net/wireless/ath/ath10k/wmi-ops.h | 10 ++++++++++
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
- 3 files changed, 28 insertions(+)
+ drivers/mmc/host/via-sdmmc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index a09d7a07e90a..81af403c19c2 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3852,6 +3852,9 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
- 			if (ret) {
- 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
- 					    ret);
-+				/* remove this msdu from idr tracking */
-+				ath10k_wmi_cleanup_mgmt_tx_send(ar, skb);
-+
- 				dma_unmap_single(ar->dev, paddr, skb->len,
- 						 DMA_TO_DEVICE);
- 				ieee80211_free_txskb(ar->hw, skb);
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-index 7fd63bbf8e24..b6cd33fa79f8 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-@@ -139,6 +139,7 @@ struct wmi_ops {
- 	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
- 					    struct sk_buff *skb,
- 					    dma_addr_t paddr);
-+	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
- 	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
- 					  u32 log_level);
- 	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
-@@ -431,6 +432,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
- 	return ar->wmi.ops->get_txbf_conf_scheme(ar);
- }
+diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
+index 32c4211506fc..246dc6255e69 100644
+--- a/drivers/mmc/host/via-sdmmc.c
++++ b/drivers/mmc/host/via-sdmmc.c
+@@ -323,6 +323,8 @@ struct via_crdr_mmc_host {
+ /* some devices need a very long delay for power to stabilize */
+ #define VIA_CRDR_QUIRK_300MS_PWRDELAY	0x0001
  
-+static inline int
-+ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
-+{
-+	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
-+		return -EOPNOTSUPP;
++#define VIA_CMD_TIMEOUT_MS		1000
 +
-+	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
-+}
-+
- static inline int
- ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 			dma_addr_t paddr)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index 248decb494c2..7f435fa29f75 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2638,6 +2638,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
- 	return skb;
- }
+ static const struct pci_device_id via_ids[] = {
+ 	{PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_9530,
+ 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0,},
+@@ -555,14 +557,17 @@ static void via_sdc_send_command(struct via_crdr_mmc_host *host,
+ {
+ 	void __iomem *addrbase;
+ 	struct mmc_data *data;
++	unsigned int timeout_ms;
+ 	u32 cmdctrl = 0;
  
-+static int
-+ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
-+				       struct sk_buff *msdu)
-+{
-+	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
-+	struct ath10k_wmi *wmi = &ar->wmi;
-+
-+	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
-+
-+	return 0;
-+}
-+
- static int
- ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
- 				 dma_addr_t paddr)
-@@ -2710,6 +2722,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if (desc_id < 0)
- 		goto err_free_skb;
+ 	WARN_ON(host->cmd);
  
-+	cb->msdu_id = desc_id;
+ 	data = cmd->data;
+-	mod_timer(&host->timer, jiffies + HZ);
+ 	host->cmd = cmd;
+ 
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout : VIA_CMD_TIMEOUT_MS;
++	mod_timer(&host->timer, jiffies + msecs_to_jiffies(timeout_ms));
 +
- 	ptr = (void *)skb->data;
- 	tlv = ptr;
- 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
-@@ -3949,6 +3963,7 @@ static const struct wmi_ops wmi_tlv_ops = {
- 	.gen_force_fw_hang = ath10k_wmi_tlv_op_gen_force_fw_hang,
- 	/* .gen_mgmt_tx = not implemented; HTT is used */
- 	.gen_mgmt_tx_send = ath10k_wmi_tlv_op_gen_mgmt_tx_send,
-+	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
- 	.gen_dbglog_cfg = ath10k_wmi_tlv_op_gen_dbglog_cfg,
- 	.gen_pktlog_enable = ath10k_wmi_tlv_op_gen_pktlog_enable,
- 	.gen_pktlog_disable = ath10k_wmi_tlv_op_gen_pktlog_disable,
+ 	/*Command index*/
+ 	cmdctrl = cmd->opcode << 8;
+ 
 -- 
 2.25.1
 
