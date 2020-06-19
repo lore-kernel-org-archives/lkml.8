@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5138C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A75321974
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D79C21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579171;
-	bh=AbrDoYb1mtOPgL9voySeDvbnxUxAfco9Fnjx+ijRfyE=;
+	s=default; t=1592579180;
+	bh=Y875Dia4Q1F7Rb7MJQgFlPzLbag97EsU+2KHsI8K/aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQighofgrXF2nGVdxWRolfNxjuXYWJTq2uImQz05uuD0EvskhaOSnZt91dQdJj5sj
-	 F9mzZBxW7Y7yL48e1xI46//+0oO/hi6IbPsSlj+VpoJtCJmnTEwqdZhZcbOsJ/yf5s
-	 p9AJJ5o649RgDCuqP9n5ZzxNh+u436FAJ1+sV18M=
+	b=B1+ajxnDm/PVLn4WOnpONY8vEpMVOlxU8jdwrew3s8Bc+3qVnHm9RAgNLchKI0qFR
+	 iKavc6p4NCbg2xgo+sunG8Aj6u3ct2pvJL2AeVAo9TzDDpJ4gN0UQyMVB8Dt1wwFZl
+	 4d75b2Cjv/ZgfvZyLnRAhTH1BINCbOhrdqm9l4jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391396AbgFSPGJ (ORCPT
+        id S2391412AbgFSPGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391366AbgFSPF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:59 -0400
+        id S2391398AbgFSPGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3309A21835;
-        Fri, 19 Jun 2020 15:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91C4221ED;
+        Fri, 19 Jun 2020 15:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579158;
-        bh=AbrDoYb1mtOPgL9voySeDvbnxUxAfco9Fnjx+ijRfyE=;
+        s=default; t=1592579172;
+        bh=Y875Dia4Q1F7Rb7MJQgFlPzLbag97EsU+2KHsI8K/aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/LjLE/zrpb1/x6lbzHXpe1tislqNGIC6YA+z9mYm/giqKVLURw0kTbbkh8Mi92Vk
-         ahL28b8bZqJc82VKyuevKBfcdtf3w3Cc09RHYR8q8pcyR5NiJhD6v8c6+nABaJ3Dof
-         hhE/+/H7rn7Jxzew7t47cRh5nQUlLvCVUUX8Ahu8=
+        b=Lm5zWklkx0pd+RowPvbbqSf1ve+kgzd/8kwj03R8O54tGtVsOEHIYdmc+NVzqpI/e
+         pThrlD7GUqLROvC+JiPM5GoFHoerc7U3SyFnw/caG7puImIA33Kxdb0nxo2W9qkMjf
+         j49p5j+fb52pkn4ghdUYIb1Tz+hqQDUbxTlO+Jv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 009/261] media: si2157: Better check for running tuner in init
-Date:   Fri, 19 Jun 2020 16:30:20 +0200
-Message-Id: <20200619141650.333115403@linuxfoundation.org>
+Subject: [PATCH 5.4 035/261] Bluetooth: Add SCO fallback for invalid LMP parameters error
+Date:   Fri, 19 Jun 2020 16:30:46 +0200
+Message-Id: <20200619141651.594215949@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,59 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Hsin-Yu Chao <hychao@chromium.org>
 
-[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
+[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
 
-Getting the Xtal trim property to check if running is less error prone.
-Reset if_frequency if state is unknown.
+Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
+with invalid parameter at the first SCO request expecting AG to
+attempt another SCO request with the use of "safe settings" for
+given codec, base on section 5.7.1.2 of HFP 1.7 specification.
 
-Replaces the previous "garbage check".
+This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
+to the SCO fallback case. Verified with below log:
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 13
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x0380
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Number of Completed Packets (0x13) plen 5
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
+        Handle: 0
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x00
+        Retransmission window: 0x02
+        RX packet length: 0
+        TX packet length: 0
+        Air mode: Transparent (0x03)
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 8
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x03c8
+          EV3 may be used
+          2-EV3 may not be used
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 5
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Success (0x00)
+        Handle: 257
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x06
+        Retransmission window: 0x04
+        RX packet length: 30
+        TX packet length: 30
+        Air mode: Transparent (0x03)
+
+Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/tuners/si2157.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ net/bluetooth/hci_event.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index e87040d6eca7..a39e1966816b 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -75,24 +75,23 @@ static int si2157_init(struct dvb_frontend *fe)
- 	struct si2157_cmd cmd;
- 	const struct firmware *fw;
- 	const char *fw_name;
--	unsigned int uitmp, chip_id;
-+	unsigned int chip_id, xtal_trim;
- 
- 	dev_dbg(&client->dev, "\n");
- 
--	/* Returned IF frequency is garbage when firmware is not running */
--	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
-+	/* Try to get Xtal trim property, to verify tuner still running */
-+	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
- 	cmd.wlen = 4;
- 	cmd.rlen = 4;
- 	ret = si2157_cmd_execute(client, &cmd);
--	if (ret)
--		goto err;
- 
--	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
--	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
-+	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
- 
--	if (uitmp == dev->if_frequency / 1000)
-+	if (ret == 0 && xtal_trim < 16)
- 		goto warm;
- 
-+	dev->if_frequency = 0; /* we no longer know current tuner state */
-+
- 	/* power up */
- 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
- 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index c1d3a303d97f..88cd410e5728 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4216,6 +4216,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
+ 	case 0x11:	/* Unsupported Feature or Parameter Value */
+ 	case 0x1c:	/* SCO interval rejected */
+ 	case 0x1a:	/* Unsupported Remote Feature */
++	case 0x1e:	/* Invalid LMP Parameters */
+ 	case 0x1f:	/* Unspecified error */
+ 	case 0x20:	/* Unsupported LMP Parameter value */
+ 		if (conn->out) {
 -- 
 2.25.1
 
