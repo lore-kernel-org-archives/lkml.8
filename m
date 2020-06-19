@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D27C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1696EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC87F2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF7620A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577949;
-	bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
+	s=default; t=1592577953;
+	bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/eBDocIEuZneAcl6Y8Yi/zx9Wh7Nx6OQ1lPJYQbHDX74rqbdJh23GDVpQx7GUM01
-	 lkjoDYBAdBe2Tu67Aq5hqCd4OyUixqE3qWYa3cjtwRxL883BzrHpeobLm6XIuTLyoR
-	 givyAvtRPyex+D7SsLbJcjJhdzX1iWxsaWNCnMI4=
+	b=SPBYKGTpIXDdMdEZykKzDxpIfJHH0PRs+Ge2e9YaoL3Bi4ay0RxJfm1PiP/vy4jcq
+	 lQALheIBiVPsog3cAA4ldrUV21BALo54cGq62fllLT3nr5R3nQNO2AGiOnvlY65Esf
+	 uFnsqcLDgz8uegQ7MbExvVVf03RQHgm9ZLle9foo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388753AbgFSOps (ORCPT
+        id S2388759AbgFSOpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37340 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388734AbgFSOpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:40 -0400
+        id S2388745AbgFSOpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7120C21582;
-        Fri, 19 Jun 2020 14:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740DC20A8B;
+        Fri, 19 Jun 2020 14:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577940;
-        bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
+        s=default; t=1592577945;
+        bh=wDH/5okJyIGslq/z6aOXJ/16hU1tvR3xkoeeS4hjMNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlchXEMXpySaAImBTKgpDO+POTfkn1SkbLXEhptEZhD4h14JmaXJdoFtht3uHOLtr
-         tRbdHX9eKKcgqAV0ocayqiaPz4D2X28lSrzRK0BpZk9ObJy2TqA8yNom8MezwpDtap
-         vF2tPz/jrQC248a+8suBhEOAk6XlIAEeUprzn5Yk=
+        b=SDCiFdhh2sUd9Iyfbo7/73jYtK9E2RjplEmjIQrNzgID1N9alumb5qHz1N4NqWJY3
+         QDLkU3mYeucbbm+xq431cS5fxtlUrxsKUtsruGU+sRtDgWd2M6NeaH5YueD+VQrElV
+         KFlukRS8oVB9fy9L4NZA6PQIqWWjlGkrr2iO0UII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hill Ma <maahiuzeon@gmail.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.14 021/190] x86/reboot/quirks: Add MacBook6,1 reboot quirk
-Date:   Fri, 19 Jun 2020 16:31:06 +0200
-Message-Id: <20200619141634.537389228@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 023/190] ALSA: es1688: Add the missed snd_card_free()
+Date:   Fri, 19 Jun 2020 16:31:08 +0200
+Message-Id: <20200619141634.646112314@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hill Ma <maahiuzeon@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 140fd4ac78d385e6c8e6a5757585f6c707085f87 upstream.
+commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
 
-On MacBook6,1 reboot would hang unless parameter reboot=pci is added.
-Make it automatic.
+snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
+Add the missed function call to fix it.
 
-Signed-off-by: Hill Ma <maahiuzeon@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200425200641.GA1554@cslab.localdomain
+Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/reboot.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/isa/es1688/es1688.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -197,6 +197,14 @@ static const struct dmi_system_id reboot
- 			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook5"),
- 		},
- 	},
-+	{	/* Handle problems with rebooting on Apple MacBook6,1 */
-+		.callback = set_pci_reboot,
-+		.ident = "Apple MacBook6,1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook6,1"),
-+		},
-+	},
- 	{	/* Handle problems with rebooting on Apple MacBookPro5 */
- 		.callback = set_pci_reboot,
- 		.ident = "Apple MacBookPro5",
+--- a/sound/isa/es1688/es1688.c
++++ b/sound/isa/es1688/es1688.c
+@@ -284,8 +284,10 @@ static int snd_es968_pnp_detect(struct p
+ 		return error;
+ 	}
+ 	error = snd_es1688_probe(card, dev);
+-	if (error < 0)
++	if (error < 0) {
++		snd_card_free(card);
+ 		return error;
++	}
+ 	pnp_set_card_drvdata(pcard, card);
+ 	snd_es968_pnp_is_probed = 1;
+ 	return 0;
 
 
