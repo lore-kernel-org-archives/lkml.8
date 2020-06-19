@@ -2,117 +2,105 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3172C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2B6720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC2C20890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dYqfLLGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391935AbgFSVHY (ORCPT
+        id S2391939AbgFSVJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:07:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50614 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391572AbgFSVHV (ORCPT
+        Fri, 19 Jun 2020 17:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389580AbgFSVJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:07:21 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0A47C1C0C12; Fri, 19 Jun 2020 23:07:20 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 23:07:19 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200619210719.GB12233@amd>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
+        Fri, 19 Jun 2020 17:09:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458B0C06174E;
+        Fri, 19 Jun 2020 14:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=SKXBg9QCixG/IchKHg9Q2/lXiIJ73XcZduzMIVVEuUQ=; b=dYqfLLGFB8fvVBDYf1TIgO0wYh
+        FP7werI4Q/FAE7u7P6X1AU6HfAOG/7ZHvwxQJPaxy6esNCCCsOy1C1V4TtnhFNIDBeMbyv9h+DdY3
+        IgHp8Y2NVmydmTD+aGKHWHUFz7deZOGTT3voPMo6eng9tD05KSXEe0vo4ON1EmxCpT8Dvu5CHBaNb
+        2jjxUbtd640+5DIUNY94jO+pXWc+/q3jb682oVQWx2jS/X2fQTxhin6yyDs1nuVl7agNac4CCJz5q
+        3U1waI7KAFxgfakjYr3kMR6yAAWWJK6Vsusz7MBTSwLXAzgar6NOJdTUDsFkmBSDoOB+yB6tfWGyZ
+        YS1qFaZA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmOGW-0004Vu-6E; Fri, 19 Jun 2020 21:09:36 +0000
+Subject: Re: [PATCH v3] docs: block: Create blk-mq documentation
+To:     Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, dongli.zhang@oracle.com
+References: <20200619200114.6896-1-andrealmeid@collabora.com>
+ <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4ff82592-c5cb-bb2a-d298-10a91fb9e69d@infradead.org>
+Date:   Fri, 19 Jun 2020 14:09:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
-Content-Disposition: inline
-In-Reply-To: <20200619141657.498868116@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/19/20 1:56 PM, Jens Axboe wrote:
+> On 6/19/20 2:01 PM, André Almeida wrote:
+>> Create a documentation providing a background and explanation around the
+>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+>>
+>> The reference for writing this documentation was the source code and
+>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+>> Systems", by Axboe et al.
+>>
+>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+>> ---
+>> Changes from v2:
+>> - More fixed typos
+>> - Once again, reworked the definition of `blk_mq_hw_ctx` in "Hardware
+>>   dispatch queues" section
+>>
+>> Changes from v1:
+>> - Fixed typos
+>> - Reworked blk_mq_hw_ctx
+>>
+>> Hello,
+>>
+>> This commit was tested using "make htmldocs" and the HTML output has
+>> been verified.
+>>
+>> Thanks,
+>> 	André
+>> ---
+>>  Documentation/block/blk-mq.rst | 155 +++++++++++++++++++++++++++++++++
+>>  Documentation/block/index.rst  |   1 +
+>>  2 files changed, 156 insertions(+)
+>>  create mode 100644 Documentation/block/blk-mq.rst
 
---NMuMz9nt05w80d4+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+LGTM.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-On Fri 2020-06-19 16:32:47, Greg Kroah-Hartman wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
-> [ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
->=20
-> DW APB SSI DMA-part of the driver may need to perform the requested
-> SPI-transfer synchronously. In that case the dma_transfer() callback
-> will return 0 as a marker of the SPI transfer being finished so the
-> SPI core doesn't need to wait and may proceed with the SPI message
-> trasnfers pumping procedure. This will be needed to fix the problem
-> when DMA transactions are finished, but there is still data left in
-> the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-> to return 1 as the normal dw_spi_transfer_one() method.
 
-As far as I understand, this is support for new SoC, not a fix?
+thanks.
+-- 
+~Randy
 
-> +++ b/drivers/spi/spi-dw.c
-> @@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller=
- *master,
-> =20
->  	spi_enable_chip(dws, 1);
-> =20
-> -	if (dws->dma_mapped) {
-> -		ret =3D dws->dma_ops->dma_transfer(dws, transfer);
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> +	if (dws->dma_mapped)
-> +		return dws->dma_ops->dma_transfer(dws, transfer);
-> =20
->  	if (chip->poll_mode)
->  		return poll_transfer(dws);
-
-Mainline patch simply changes return value, but code is different in
-v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
-that a problem?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---NMuMz9nt05w80d4+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7tKQcACgkQMOfwapXb+vJ1sgCeOJVyrkyrloM2p+RmL54QRIPJ
-CLQAn1uKYJOgsc+yYzmNLkQTUJ86pN4t
-=lPtX
------END PGP SIGNATURE-----
-
---NMuMz9nt05w80d4+--
