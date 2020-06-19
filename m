@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6261C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5793206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C21A2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579112;
-	bh=APWOxe5i+4mN0d7ABUNLsvxwK/Ip4U9lQs6A6LrDs1E=;
+	s=default; t=1592579115;
+	bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYiAobuFdqUggesx1GhCYB+bv961kdugCMgWrS/pLvAYkd7LCB1Y6g6T4khpJU9/f
-	 d0wHoMLBKaQgDYCHHwscyvD3IYHRIcsBm4k9SDy+GAiZnUGAvlGzl7wSQiAks8RKbq
-	 V+Ze6I26QyN0TTAGdGiPyYdiOK3i07dbhCmUwZ3Y=
+	b=FfLlV+9cS9+HoE1Irhbb9+Etv5zLZAmXBfvB2w3HBDZoZigTcznS2Y8JL25c0qkMb
+	 HbfN7glvxJ45WWY41PIlXYl7Hfu7J7PeP4lyGkzyv+1aB6Bbkq/BGMfFAzZDZ7F8h6
+	 cRz7Nkvor/V1mpGGzd42ppN8LwN57wV3y9DHxPQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390529AbgFSPFK (ORCPT
+        id S2391265AbgFSPFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391243AbgFSPFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:06 -0400
+        id S2390550AbgFSPFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A63A21852;
-        Fri, 19 Jun 2020 15:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B02012080C;
+        Fri, 19 Jun 2020 15:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579105;
-        bh=APWOxe5i+4mN0d7ABUNLsvxwK/Ip4U9lQs6A6LrDs1E=;
+        s=default; t=1592579108;
+        bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ae+sefvZgiD/9CmoWjzT7Kh7k+ir1xPVfthbHequo3h66+Qc5zZSqaZNljOK7/3aX
-         1uYwl/OK5Iqg1i+F3MneWPAdx1ulhrneQ35o1dyO3WCl6tn0CRl7ntd19HXMedX+Kw
-         Z3T//XbM2jgxbJSo4Xo70K9FWG8/VKyHcSLWif4g=
+        b=XEEGsO6K0JePlK5OvOIWXxQ/HzWGLJLJ67hkA60tghIH4kPAxj8UrEj4og6lQvQTD
+         yRZL/56vcoI46wbfzKoxpkNPz3k1mL43sCA6LsplvUneehQLFTg2o+D3IH6ToktHcX
+         vEbUhGJvoe2whWb2JZxDyWrGp2RSefuiS2N/Z9Dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <jthierry@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 010/261] objtool: Ignore empty alternatives
-Date:   Fri, 19 Jun 2020 16:30:21 +0200
-Message-Id: <20200619141650.372901698@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 011/261] spi: spi-mem: Fix Dual/Quad modes on Octal-capable devices
+Date:   Fri, 19 Jun 2020 16:30:22 +0200
+Message-Id: <20200619141650.421402262@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,43 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <jthierry@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
+[ Upstream commit 80300a7d5f2d7178335652f41d2e55ba898b4ec1 ]
 
-The .alternatives section can contain entries with no original
-instructions. Objtool will currently crash when handling such an entry.
+Currently buswidths 2 and 4 are rejected for a device that advertises
+Octal capabilities.  Allow these buswidths, just like is done for
+buswidth 2 and Quad-capable devices.
 
-Just skip that entry, but still give a warning to discourage useless
-entries.
-
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: b12a084c8729ef42 ("spi: spi-mem: add support for octal mode I/O data transfer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200416101418.14379-1-geert+renesas@glider.be
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-mem.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fcc6cd404f56..48b234d8f251 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -865,6 +865,12 @@ static int add_special_section_alts(struct objtool_file *file)
- 		}
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 9f0fa9f3116d..de0ba3e5449f 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -108,15 +108,17 @@ static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
+ 		return 0;
  
- 		if (special_alt->group) {
-+			if (!special_alt->orig_len) {
-+				WARN_FUNC("empty alternative entry",
-+					  orig_insn->sec, orig_insn->offset);
-+				continue;
-+			}
-+
- 			ret = handle_group_alt(file, special_alt, orig_insn,
- 					       &new_insn);
- 			if (ret)
+ 	case 2:
+-		if ((tx && (mode & (SPI_TX_DUAL | SPI_TX_QUAD))) ||
+-		    (!tx && (mode & (SPI_RX_DUAL | SPI_RX_QUAD))))
++		if ((tx &&
++		     (mode & (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL))) ||
++		    (!tx &&
++		     (mode & (SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL))))
+ 			return 0;
+ 
+ 		break;
+ 
+ 	case 4:
+-		if ((tx && (mode & SPI_TX_QUAD)) ||
+-		    (!tx && (mode & SPI_RX_QUAD)))
++		if ((tx && (mode & (SPI_TX_QUAD | SPI_TX_OCTAL))) ||
++		    (!tx && (mode & (SPI_RX_QUAD | SPI_RX_OCTAL))))
+ 			return 0;
+ 
+ 		break;
 -- 
 2.25.1
 
