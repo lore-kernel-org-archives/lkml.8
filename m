@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5083C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72274C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946ED21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F7D21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584662;
-	bh=ByaBwvM0x9jrCerVOvexAYwUk8Y6Xv2hRaX91b41Llk=;
+	s=default; t=1592584668;
+	bh=ihRGke3F8C3EzU5YHRa+sfbGeIHPfno11X1+nn+coJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTR5dXQspL+KUwQJcqu+9ZxrX9IcC1jCQMQ61koGbaP+GfgLAzt/KROl8yWtwXZLB
-	 vyZOOM+Q6Qm35xuhj6oX80A81JSSLUBJjGFXWSdoKerjeKwweUwp6lboFJobSbqsB1
-	 PoepEY4mJeccevHVDqroEKsO379/SFng0ixEfQ0I=
+	b=2e9uxnLzppFcigkAYdQl9mc0SdQcwEYKL0JuF99ntqYPUEHzazJM980P40iBUBVW2
+	 PEq752zIg8Eiu0SDGncGvafalxSH2zs2q0KbzwqDjtn0vAuK9FitKlOc7VEFuiXH1Y
+	 2+no2UelmXcKx+kSTVH5nqXsKVD+A56oJWaQ98B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395328AbgFSQhl (ORCPT
+        id S2395336AbgFSQhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40670 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbgFSOsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:23 -0400
+        id S2389054AbgFSOsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A299420DD4;
-        Fri, 19 Jun 2020 14:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 316E82083B;
+        Fri, 19 Jun 2020 14:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578103;
-        bh=ByaBwvM0x9jrCerVOvexAYwUk8Y6Xv2hRaX91b41Llk=;
+        s=default; t=1592578100;
+        bh=ihRGke3F8C3EzU5YHRa+sfbGeIHPfno11X1+nn+coJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7a6qnMyEDBqsuAznBdyf+05YMLYD+hnYdQ1g0v07u/s8YQzyqm7pi5vgPTWrzXjK
-         qbUV7xb91WNKwEqoLSIpCSrlXYFdhOgaMJHCsEI8+1PHZzoPJ9kEO3uxGqpOFJ9fzf
-         5YCNAOmr35EIvWe2ebAcyyIRG7eXGloFBMHoo3lw=
+        b=iQ907y0NKSmiSoUZZzbGAwZ7gL2eSAyiln/kDrB0TsfqRM9XiEYLUHOkcPmIBqek9
+         kP7hAgTrVICXpba5raExoPH3cdm6QMtLm1cx3da5te8jEaMjWgeSFR5SUuJebSOcM5
+         5NphphZS4ZP6khqxPKqYCHYKjf3L1woKXenP2POw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/190] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
-Date:   Fri, 19 Jun 2020 16:32:08 +0200
-Message-Id: <20200619141637.739759890@linuxfoundation.org>
+Subject: [PATCH 4.14 082/190] spi: dw: Zero DMA Tx and Rx configurations on stack
+Date:   Fri, 19 Jun 2020 16:32:07 +0200
+Message-Id: <20200619141637.684758489@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,46 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
+[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
 
-The ixgbe driver have another memory model when compiled on archs with
-PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
-two halves, but instead increment rx_buffer->page_offset by truesize of
-packet (which include headroom and tailroom for skb_shared_info).
+Some DMA controller drivers do not tolerate non-zero values in
+the DMA configuration structures. Zero them to avoid issues with
+such DMA controller drivers. Even despite above this is a good
+practice per se.
 
-This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
-which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
-to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
-veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
-
-Maintainers notice: This fix have been queued to Jeff.
-
-Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
+Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Feng Tang <feng.tang@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-dw-mid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index ba184287e11f..64ee45b6680a 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2274,7 +2274,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
- 	rx_buffer->page_offset ^= truesize;
- #else
- 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
--				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-+				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
-+				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
- 				SKB_DATA_ALIGN(size);
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 837cb8d0bac6..4f41d44e8b4c 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -155,6 +155,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	if (!xfer->tx_buf)
+ 		return NULL;
  
- 	rx_buffer->page_offset += truesize;
++	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+ 	txconf.dst_maxburst = 16;
+@@ -201,6 +202,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	if (!xfer->rx_buf)
+ 		return NULL;
+ 
++	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+ 	rxconf.src_maxburst = 16;
 -- 
 2.25.1
 
