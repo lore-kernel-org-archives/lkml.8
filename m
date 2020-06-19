@@ -2,86 +2,110 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC16C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C06AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A36B320786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592589389;
-	bh=SBYulPuDZybIxI1JcS3h+aJtlYogWO1Z61bGFGfjzVk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ifTdCUnLU5XiaNhNsh1u0IQVQS6erkKxB8K32FNlVPYB5WG7j8ujmpKdTLUEuaIpV
-	 FhY0m8RdxBv2FcTplwrU69BY5q0l8AENB/OzhMFKCV0Ycvi+rZbO5rqKgSM0T+XyQc
-	 OX2yd+qqEwPEE1PhLPnyQep3XwnB44Tlnbfq4sQw=
+	by mail.kernel.org (Postfix) with ESMTP id 1C25421532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHok0T2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404349AbgFSR41 (ORCPT
+        id S2436499AbgFSR5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391253AbgFSR4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:56:25 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEAA20776;
-        Fri, 19 Jun 2020 17:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592589385;
-        bh=SBYulPuDZybIxI1JcS3h+aJtlYogWO1Z61bGFGfjzVk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MWg9vX70Vo/xjh7nTRyaioJm0lcT3zBZmEJysYbEY6GE3tH3dBTqcaTOPAN/fHPlV
-         n+8EkK89P6V1ND4DkUYKiBpI1IOW1us0edAp3BGGpHWoDqCh9fulIRIsdQZtaIDjP9
-         vlhStnqIBvBJHus59C9BjeJkAly85Npdd0K2vyLM=
-Date:   Fri, 19 Jun 2020 13:01:49 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] cxgb4: Use struct_size() helper
-Message-ID: <20200619180149.GA29621@embeddedor>
+        Fri, 19 Jun 2020 13:57:01 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23650 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404675AbgFSR4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:56:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592589403;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WcqrPcvDJb0ExZL7Rd/avo/FZMjKRYWp5ZMPjnD5nIw=;
+        b=dHok0T2BJBE6itHP/T5lIWFHKakOeDJOceKEMKKF1YXxffTR0j0i3oBTLbrbzwgbAiJCxt
+        Aj+M8V8Un/vBCtHZvdv7aLsIGgPAxf5bCT0VCqEJvR45L/5DeOd4M5XYKQSQp58u4EfpyE
+        3pl6OUpVJOOKKuhwGYJYi5quupz8dBI=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-p8JdQDTQOGuVwQhNsM36kQ-1; Fri, 19 Jun 2020 13:56:41 -0400
+X-MC-Unique: p8JdQDTQOGuVwQhNsM36kQ-1
+Received: by mail-qt1-f200.google.com with SMTP id y5so7755465qto.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:56:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WcqrPcvDJb0ExZL7Rd/avo/FZMjKRYWp5ZMPjnD5nIw=;
+        b=fFvnfxybgNXC5Qf9NyOSHvbug0/ke9YouJT7Vf/DeVC1CbSqv7iheW8ObwA67mpU24
+         kDlhjVDFX9Fobev0smlQyVHijKGWjd2GzkkSjucMkSBXv3og41YGaKBnqKE1Lem9FY3t
+         rihTfpAIO0qtiqt000lFuF7pnR4g+bGcK/3kXNUPtrp0O8eGp979PB5IGhfx1HqSNmdW
+         1yLT7cufS/St7O/gZ491M0+aKLTzjjC/yjA0DNNAq5ilJ932XjemCaZxbDAU4lWFVJNR
+         dCp05WrmFr+YYRlGes5h77RUdb5etgxY2UAvWh+QDiFcNbgVlD9ALROtButUJCHJnuYu
+         IwkQ==
+X-Gm-Message-State: AOAM532YyIMeOaSAl85+jUcSGfVb1XFx64AZ4824bqziSOdKAjiPnC6R
+        /U9ZS5UlUR9NY8tIv7egH+WUiLqSgLZIpCaH5/6adkGGL+yULbSFeL9gGvxtUhXfTLIY3lf0iLb
+        qDmJdYO1/eAAt4GlQigbbC7U1ZT6LU4yCl2Ch6R+V
+X-Received: by 2002:a37:64c6:: with SMTP id y189mr4793910qkb.353.1592589400890;
+        Fri, 19 Jun 2020 10:56:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxts4JUG/DUZlXwHieuKsAsn4bVIZKK4d+Lvr6aZFXHNaYrdVkmy8Kqr7GNRfSCb53+bLew1eRqhZdN3cQW/5s=
+X-Received: by 2002:a37:64c6:: with SMTP id y189mr4793881qkb.353.1592589400629;
+ Fri, 19 Jun 2020 10:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
+ <0332b0cf-cf00-9216-042c-e870efa33626@redhat.com>
+In-Reply-To: <0332b0cf-cf00-9216-042c-e870efa33626@redhat.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Fri, 19 Jun 2020 19:56:04 +0200
+Message-ID: <CAJaqyWcDb5GefbiBkcaMADFzWup7yvmvOekRmRQ40pqxdgB0eg@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+On Wed, Jun 17, 2020 at 5:19 AM Jason Wang <jasowang@redhat.com> wrote:
+>
+>
+> On 2020/6/11 =E4=B8=8B=E5=8D=887:34, Michael S. Tsirkin wrote:
+> >   static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+> >   {
+> >       kfree(vq->descs);
+> > @@ -394,6 +400,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev=
+ *dev)
+> >       for (i =3D 0; i < dev->nvqs; ++i) {
+> >               vq =3D dev->vqs[i];
+> >               vq->max_descs =3D dev->iov_limit;
+> > +             if (vhost_vq_num_batch_descs(vq) < 0) {
+> > +                     return -EINVAL;
+> > +             }
+>
+>
+> This check breaks vdpa which set iov_limit to zero. Consider iov_limit
+> is meaningless to vDPA, I wonder we can skip the test when device
+> doesn't use worker.
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+I tested as
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+if (dev->use_worker && vhost_vq_num_batch_descs(vq) < 0)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 1359158652b7..b3da3d05aa2d 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -2431,7 +2431,7 @@ int cxgb4_ethofld_send_flowc(struct net_device *dev, u32 eotid, u32 tc)
- 	struct sk_buff *skb;
- 	int ret = 0;
- 
--	len = sizeof(*flowc) + sizeof(struct fw_flowc_mnemval) * nparams;
-+	len = struct_size(flowc, mnemval, nparams);
- 	len16 = DIV_ROUND_UP(len, 16);
- 
- 	entry = cxgb4_lookup_eotid(&adap->tids, eotid);
--- 
-2.27.0
+In v9. Please let me know if that is ok for you.
+
+Thanks!
+
+>
+> Thanks
+>
 
