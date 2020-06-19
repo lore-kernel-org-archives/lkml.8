@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E665C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48A120757
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBDD20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580713;
-	bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
+	s=default; t=1592580720;
+	bh=cnbGbbHSMj46Cwtqzz0LD7AuWiPIvqCAFyoE1CsdBqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWT+46/vpgxETcPbiz9tb8PMLZfxH5GXNUw04WLzh27qh8sX3erEVJx48RTl5wRkD
-	 7Xi0gVdMWutzwL7/jS6aDMHG2+ljExbFTvBE/zr8pwrU1xEBjjTV/wFbUSkde++Ke/
-	 qJt8mSJw4DHmosWoqCrkISTdJPSXVufTAqqcsz+I=
+	b=BfG8/W2qkX/zIANfdeVKsP2ACxPJU+N4ROa+7mRSxvUQhtDiPNJAG5geHRJyy2eIM
+	 xkSRk5Hy8U2IqZmvSz+QD2PWbIuw6Wnh4AHVTGQXztiaz1HE/5GyaPXJGfhn7oYGJc
+	 9Hrnfv4ltULZbqA/F4Qep/eJ+VDizUJ+Sp9d33vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404885AbgFSPbu (ORCPT
+        id S2393851AbgFSPb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393647AbgFSPbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:39 -0400
+        id S2404874AbgFSPbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C162166E;
-        Fri, 19 Jun 2020 15:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CBD220786;
+        Fri, 19 Jun 2020 15:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580698;
-        bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
+        s=default; t=1592580706;
+        bh=cnbGbbHSMj46Cwtqzz0LD7AuWiPIvqCAFyoE1CsdBqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWyqPydTiY2TD10gMqiO+d6WZYeE0Ehg4CkJ8lUPazsPak3REMZPklHChtahHUx4l
-         RToPCbKSpr5y1BcDt5woyFK4Ro0r4L/PgoQsT+DvrZSWCHNBKQMQypTi5d6LmH5PvO
-         jVZQfFIZgntY3k1lDbDXAMTdzhRS5KHXJ1rrG870=
+        b=f5Lzi1vDltnijLErXT1XjaDzlGZgak7xO4TVaR7YT3Sno2a9R2akkZaLZQtC/50TR
+         q13VkRn7IYcmi41rOdrrWy6z+zZJ3t+PvFCvJpiI+9S+ZaxSRd0bNvZh7T2P2Q+keE
+         jsFU8jut4YeIECqI0loNmh3tc+DJmz1MC5KQYa10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.7 318/376] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
-Date:   Fri, 19 Jun 2020 16:33:56 +0200
-Message-Id: <20200619141725.384183554@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 352/376] mtd: rawnand: Fix nand_gpio_waitrdy()
+Date:   Fri, 19 Jun 2020 16:34:30 +0200
+Message-Id: <20200619141726.982950815@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,151 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-commit b577a279914085c6b657c33e9f39ef56d96a3302 upstream.
+commit e45a4b652dbd2f8b5a3b8e97e89f602a58cb28aa upstream.
 
-Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
-mask") started writing the eint wakeup mask from the pinctrl driver.
-Unfortunately, it made the assumption that the private retention data
-was always a regmap while in the case of s5pv210 it is a raw pointer
-to the clock base (as the eint wakeup mask not in the PMU as with newer
-Exynos platforms).
+Mimic what's done in nand_soft_waitrdy() and add one to the jiffies
+timeout so we don't end up waiting less than actually required.
 
-Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+Reported-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Fixes: b0e137ad24b6c ("mtd: rawnand: Provide helper for polling GPIO R/B pin")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200518155237.297549-1-boris.brezillon@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c |   73 ++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+ drivers/mtd/nand/raw/nand_base.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -40,6 +40,8 @@ struct exynos_irq_chip {
- 	u32 eint_pend;
- 	u32 eint_wake_mask_value;
- 	u32 eint_wake_mask_reg;
-+	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
-+				     struct exynos_irq_chip *irq_chip);
- };
- 
- static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
-@@ -342,6 +344,47 @@ static int exynos_wkup_irq_set_wake(stru
- 	return 0;
- }
- 
-+static void
-+exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+{
-+	struct regmap *pmu_regs;
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -736,8 +736,14 @@ EXPORT_SYMBOL_GPL(nand_soft_waitrdy);
+ int nand_gpio_waitrdy(struct nand_chip *chip, struct gpio_desc *gpiod,
+ 		      unsigned long timeout_ms)
+ {
+-	/* Wait until R/B pin indicates chip is ready or timeout occurs */
+-	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
 +
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+	pmu_regs = drvdata->retention_ctrl->priv;
-+	dev_info(drvdata->dev,
-+		 "Setting external wakeup interrupt mask: 0x%x\n",
-+		 irq_chip->eint_wake_mask_value);
-+
-+	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
-+		     irq_chip->eint_wake_mask_value);
-+}
-+
-+static void
-+s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+
-+{
-+	void __iomem *clk_base;
-+
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+
-+	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
-+
-+	__raw_writel(irq_chip->eint_wake_mask_value,
-+		     clk_base + irq_chip->eint_wake_mask_reg);
-+}
-+
- /*
-  * irq_chip for wakeup interrupts
-  */
-@@ -360,8 +403,9 @@ static const struct exynos_irq_chip s5pv
- 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
--	/* Only difference with exynos4210_wkup_irq_chip: */
-+	/* Only differences with exynos4210_wkup_irq_chip: */
- 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
- };
- 
- static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
-@@ -380,6 +424,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
-@@ -398,6 +443,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- /* list of external wakeup controllers supported */
-@@ -574,27 +620,6 @@ int exynos_eint_wkup_init(struct samsung
- 	return 0;
- }
- 
--static void
--exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
--				    struct exynos_irq_chip *irq_chip)
--{
--	struct regmap *pmu_regs;
--
--	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
--		dev_warn(drvdata->dev,
--			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
--		return;
--	}
--
--	pmu_regs = drvdata->retention_ctrl->priv;
--	dev_info(drvdata->dev,
--		 "Setting external wakeup interrupt mask: 0x%x\n",
--		 irq_chip->eint_wake_mask_value);
--
--	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
--		     irq_chip->eint_wake_mask_value);
--}
--
- static void exynos_pinctrl_suspend_bank(
- 				struct samsung_pinctrl_drv_data *drvdata,
- 				struct samsung_pin_bank *bank)
-@@ -626,8 +651,8 @@ void exynos_pinctrl_suspend(struct samsu
- 		else if (bank->eint_type == EINT_TYPE_WKUP) {
- 			if (!irq_chip) {
- 				irq_chip = bank->irq_chip;
--				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
--								    irq_chip);
-+				irq_chip->set_eint_wakeup_mask(drvdata,
-+							       irq_chip);
- 			} else if (bank->irq_chip != irq_chip) {
- 				dev_warn(drvdata->dev,
- 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
++	/*
++	 * Wait until R/B pin indicates chip is ready or timeout occurs.
++	 * +1 below is necessary because if we are now in the last fraction
++	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
++	 * small jiffy fraction - possibly leading to false timeout.
++	 */
++	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
+ 	do {
+ 		if (gpiod_get_value_cansleep(gpiod))
+ 			return 0;
 
 
