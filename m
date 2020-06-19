@@ -2,115 +2,116 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5601C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B85F206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585493;
-	bh=kq7xnAF9snUBez46/Ih5rjBI7O4wxsDS2jImrawFsYc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVLHV8du7LU18RzZCxnJwwTMpjR/O57iX39lI+YGML2XUTRD1ROryZaMD2r3KQiMj
-	 qSSeQXzsQntrqLi7RDS/JTjAk4VPwxy/nQHRC2k1frbxfPUkElpvtr5WbUJa61sbx4
-	 6A0xeF+bKJMswAMLgS5TQIX6VmAxthjsuarSmojw=
+	by mail.kernel.org (Postfix) with ESMTP id A4C18206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405896AbgFSQvb (ORCPT
+        id S2392357AbgFSQve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:51:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55022 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:51:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45046 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387822AbgFSOiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCE94208B8;
-        Fri, 19 Jun 2020 14:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577483;
-        bh=kq7xnAF9snUBez46/Ih5rjBI7O4wxsDS2jImrawFsYc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSbJE0MPP+gKFpl+sCud9gehkG+YFXuQFLIckb+OSzxgt+UGvkdWT2+QEKU8FfCke
-         ylYgqCnhrpFc+1034p37mPLl7YEAQbr11yzumk0RB96/gaXvVyiwL1ya6uDzvBhTcC
-         FCfdXoO3YjJnQFibb05SzrU1KobIRVIHzCCdQME4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 039/101] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-Date:   Fri, 19 Jun 2020 16:32:28 +0200
-Message-Id: <20200619141616.165285038@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
-References: <20200619141614.001544111@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2405893AbgFSQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:51:30 -0400
+IronPort-SDR: avhy3UrXdccRIw4UXF463hl29XWJLiW6/BIb1vM/wF3w50ZauXr2R24OzgmV1ZkJt0ARRb9MIn
+ G91r09A2Xttw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="130381936"
+X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
+   d="scan'208";a="130381936"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 09:51:29 -0700
+IronPort-SDR: vDx/9AjKNDTgQSiYOJgpv7hgdtW+fU1at2UA2BIJsfZy2JGHoip1gqaT4ZT24fRtN4XWMAwSya
+ 5vnxcFr1a2Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
+   d="scan'208";a="318165134"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2020 09:51:28 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next 3/7] mei: me: make mei_me_fw_sku_sps_4() less cryptic
+Date:   Fri, 19 Jun 2020 19:51:17 +0300
+Message-Id: <20200619165121.2145330-3-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200619165121.2145330-1-tomas.winkler@intel.com>
+References: <20200619165121.2145330-1-tomas.winkler@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+Last add mei_me_fw_sku_sps_4() kdoc and add descriptive defines
+for register name and values.
 
-commit e4ff08a4d727146bb6717a39a8d399d834654345 upstream.
-
-Write out of slab bounds. We should check epid.
-
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
-BUG: KASAN: use-after-free in htc_process_conn_rsp
-drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
-BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
-
-Call Trace:
- htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
-[inline]
-ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/misc/mei/hw-me-regs.h |  2 ++
+ drivers/misc/mei/hw-me.c      | 18 ++++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -114,6 +114,9 @@ static void htc_process_conn_rsp(struct
+diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+index 01b1bf74f262..64823bdde6af 100644
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -105,6 +105,8 @@
+ /* Host Firmware Status Registers in PCI Config Space */
+ #define PCI_CFG_HFS_1         0x40
+ #  define PCI_CFG_HFS_1_D0I3_MSK     0x80000000
++#  define PCI_CFG_HFS_1_OPMODE_MSK 0xf0000 /* OP MODE Mask: SPS <= 4.0 */
++#  define PCI_CFG_HFS_1_OPMODE_SPS 0xf0000 /* SPS SKU : SPS <= 4.0 */
+ #define PCI_CFG_HFS_2         0x48
+ #define PCI_CFG_HFS_3         0x60
+ #  define PCI_CFG_HFS_3_FW_SKU_MSK   0x00000070
+diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
+index b45143510912..6aa522c0d910 100644
+--- a/drivers/misc/mei/hw-me.c
++++ b/drivers/misc/mei/hw-me.c
+@@ -1366,20 +1366,26 @@ static bool mei_me_fw_type_nm(const struct pci_dev *pdev)
+ #define MEI_CFG_FW_NM                           \
+ 	.quirk_probe = mei_me_fw_type_nm
  
- 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
- 		epid = svc_rspmsg->endpoint_id;
-+		if (epid < 0 || epid >= ENDPOINT_MAX)
-+			return;
-+
- 		service_id = be16_to_cpu(svc_rspmsg->service_id);
- 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
- 		endpoint = &target->endpoint[epid];
-
++/**
++ * mei_me_fw_sku_sps_4() - check for sps 4.0 sku
++ *
++ * Read ME FW Status register to check for SPS Firmware.
++ * The SPS FW is only signaled in the PCI function 0.
++ * __Note__: Deprecated by SPS 5.0 and newer.
++ *
++ * @pdev: pci device
++ *
++ * Return: true in case of SPS firmware
++ */
+ static bool mei_me_fw_type_sps_4(const struct pci_dev *pdev)
+ {
+ 	u32 reg;
+ 	unsigned int devfn;
+ 
+-	/*
+-	 * Read ME FW Status register to check for SPS Firmware
+-	 * The SPS FW is only signaled in pci function 0
+-	 */
+ 	devfn = PCI_DEVFN(PCI_SLOT(pdev->devfn), 0);
+ 	pci_bus_read_config_dword(pdev->bus, devfn, PCI_CFG_HFS_1, &reg);
+ 	trace_mei_pci_cfg_read(&pdev->dev, "PCI_CFG_HFS_1", PCI_CFG_HFS_1, reg);
+-	/* if bits [19:16] = 15, running SPS Firmware */
+-	return (reg & 0xf0000) == 0xf0000;
++	return (reg & PCI_CFG_HFS_1_OPMODE_MSK) == PCI_CFG_HFS_1_OPMODE_SPS;
+ }
+ 
+ #define MEI_CFG_FW_SPS_4                          \
+-- 
+2.25.4
 
