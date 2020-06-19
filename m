@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5B62158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F46521841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579149;
-	bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
+	s=default; t=1592579152;
+	bh=MvkpziLz+OYcARuVbeGtxopmI4GZl9PufbVqxqdF9n4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZ/fGikzO690wTHR3VxA1g/GLUu4pKb7wshQDlIBgyNDPNngSg3i+zVUfuBJNHgp8
-	 VVEy9c4JQ6upuE9CeOTJRRH4C2Q9FtNF/rlIXAk9dTGD3xJlGj6o2EXjuCUEg9IuiQ
-	 rXoZbaMyOrsb8AX3tyOlG3E8FiN8ZxdzxGh6NsOg=
+	b=h4D0S16lxr7Dv+TkqbRQThBjcxP5lJZvejSX8kqYKx50WY2VQHiUkmFJdAfGMrIK8
+	 5tvrISMJzreTmmKjZwwZWNQHzDPlEQXU7ZR8ZkmcIGU7AxUyShCUGJbedXuIasBGn0
+	 Aa2TH4hKiHX43UM1GKw3sfj9le/Lt915liCSWaUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391341AbgFSPFq (ORCPT
+        id S2391347AbgFSPFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391331AbgFSPFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:40 -0400
+        id S2390277AbgFSPFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E412158C;
-        Fri, 19 Jun 2020 15:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7EB321841;
+        Fri, 19 Jun 2020 15:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579140;
-        bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
+        s=default; t=1592579145;
+        bh=MvkpziLz+OYcARuVbeGtxopmI4GZl9PufbVqxqdF9n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzOiDE924EOoSB++dhIKtoxaTUsFNVvQZBm2KEvni9Rh4nyoGfVBh8YlWfFtKvFaw
-         MfnGptHuzZT5h1QnjI7CDZ+Fr4pZnKHkaJyia2BhfPAUJycxDO+64pgJ63rnCKt0nO
-         1PLNzt72FNR/5wViCHYJm8EpcFFnjcrmMHbsGgtk=
+        b=zp1G5PJKWT8MusYYzE0WwvLyNOFk/0GmBjV6bVRo0ngishy3QFgSnmoj5zYdvOlm5
+         Y+S7cJE1vfJyrjEXDmd2YBQEQ/KWSI3+I2utTkSlsIoBSgGOnnj9k1ragyUEFyte6i
+         peGWXHCcxLHz4DvByisz5zSlHcFYhiKqBJ+vOjgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/261] arm64: cacheflush: Fix KGDB trap detection
-Date:   Fri, 19 Jun 2020 16:30:33 +0200
-Message-Id: <20200619141650.972111586@linuxfoundation.org>
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 004/261] drm: bridge: adv7511: Extend list of audio sample rates
+Date:   Fri, 19 Jun 2020 16:30:15 +0200
+Message-Id: <20200619141650.102445580@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,61 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Bogdan Togorean <bogdan.togorean@analog.com>
 
-[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
+[ Upstream commit b97b6a1f6e14a25d1e1ca2a46c5fa3e2ca374e22 ]
 
-flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
-trap handler is running because issuing IPIs is unsafe (and not needed)
-in this execution context. However the current test, based on
-kgdb_connected is flawed: it both over-matches and under-matches.
+ADV7511 support sample rates up to 192kHz. CTS and N parameters should
+be computed accordingly so this commit extend the list up to maximum
+supported sample rate.
 
-The over match occurs because kgdb_connected is set when gdb attaches
-to the stub and remains set during normal running. This is relatively
-harmelss because in almost all cases irq_disabled() will be false.
-
-The under match is more serious. When kdb is used instead of kgdb to access
-the debugger then kgdb_connected is not set in all the places that the
-debug core updates sw breakpoints (and hence flushes the icache). This
-can lead to deadlock.
-
-Fix by replacing the ad-hoc check with the proper kgdb macro. This also
-allows us to drop the #ifdef wrapper.
-
-Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200413113513.86091-2-bogdan.togorean@analog.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cacheflush.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index 665c78e0665a..3e7dda6f1ab1 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * IPI all online CPUs so that they undergo a context synchronization
- 	 * event and are forced to refetch the new instructions.
- 	 */
--#ifdef CONFIG_KGDB
-+
- 	/*
- 	 * KGDB performs cache maintenance with interrupts disabled, so we
- 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * the patching operation, so we don't need extra IPIs here anyway.
- 	 * In which case, add a KGDB-specific bodge and return early.
- 	 */
--	if (kgdb_connected && irqs_disabled())
-+	if (in_dbg_master())
- 		return;
--#endif
-+
- 	kick_all_cpus_sync();
- }
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+index a428185be2c1..d05b3033b510 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+@@ -19,13 +19,15 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
+ {
+ 	switch (fs) {
+ 	case 32000:
+-		*n = 4096;
++	case 48000:
++	case 96000:
++	case 192000:
++		*n = fs * 128 / 1000;
+ 		break;
+ 	case 44100:
+-		*n = 6272;
+-		break;
+-	case 48000:
+-		*n = 6144;
++	case 88200:
++	case 176400:
++		*n = fs * 128 / 900;
+ 		break;
+ 	}
  
 -- 
 2.25.1
