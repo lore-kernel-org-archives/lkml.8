@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F36C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4E7206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7226D2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579864;
-	bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+	s=default; t=1592579868;
+	bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UCtRI/bm8OjPFXSFcZarL3Tmljp/OGmpzBSl600eLeHpmCn1BnKBIFkq/7+NX7HR
-	 l4I/LzAL7rIwuetSxGKc+gULfJRVqfJF0gHciBQm1oUMWEGjsT/wjzI6KhHVLVRO03
-	 X4/RB3YN86ZTBt16Pqj+cLZyIze8f0hDWIbMk+0s=
+	b=LN3BDNukQusmjoYdk/Q9MYLv58NTxpIw0QoYq2r92cyS7JkUCdL18SOXDoPsYER0B
+	 vdWPNFRTbPz/eg3iSev9mqQ0s7FI7wvXIks7B7gmLC/Hc2TjzjS5J6GYfYRmB9CXbY
+	 L2KjQ03Vtfm6y4T3CaJsi7E6QI5MkvKB16y4CmjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392530AbgFSPRn (ORCPT
+        id S2392545AbgFSPRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:17:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404182AbgFSPRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:22 -0400
+        id S2389741AbgFSPRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34564217D8;
-        Fri, 19 Jun 2020 15:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B8421919;
+        Fri, 19 Jun 2020 15:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579841;
-        bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+        s=default; t=1592579855;
+        bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFmQWw2OCjuY5MSglCjXDUAl7A+Hm2mA0Kr7wfPayRwJ+lOSMVUo8NJKFSEfV6UWr
-         kN+tWpGsmriqSSe2XMf3+Ni4TrqSVJCqG1iGbAE7cErmNBiL+K8usvPZyTmn0e2i6O
-         vuSVj//OenVfQvRm0Vbu3zzozBsBAOVNRZBPsaAA=
+        b=AXXYJaFjwV5ruqG0DCO55eo9DcwyQlh1jwf32Khaspace2eEVsy1wLaqWCRcXcint
+         OPluPdoE8v1SJgrJBRqCETYPLF/BjM1hoR2YdKfhX2+Jbqvgu8dcpBScoTcdECU+9W
+         qvLRPQ14opHliX+fZboWygDVZNjfluMEHJaCxrmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Huaixin Chang <changhuaixin@linux.alibaba.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>, Phil Auld <pauld@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 025/376] sched/fair: Refill bandwidth before scaling
-Date:   Fri, 19 Jun 2020 16:29:03 +0200
-Message-Id: <20200619141711.552881832@linuxfoundation.org>
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 030/376] arm64: cacheflush: Fix KGDB trap detection
+Date:   Fri, 19 Jun 2020 16:29:08 +0200
+Message-Id: <20200619141711.780398678@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,52 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaixin Chang <changhuaixin@linux.alibaba.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 5a6d6a6ccb5f48ca8cf7c6d64ff83fd9c7999390 ]
+[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
 
-In order to prevent possible hardlockup of sched_cfs_period_timer()
-loop, loop count is introduced to denote whether to scale quota and
-period or not. However, scale is done between forwarding period timer
-and refilling cfs bandwidth runtime, which means that period timer is
-forwarded with old "period" while runtime is refilled with scaled
-"quota".
+flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
+trap handler is running because issuing IPIs is unsafe (and not needed)
+in this execution context. However the current test, based on
+kgdb_connected is flawed: it both over-matches and under-matches.
 
-Move do_sched_cfs_period_timer() before scaling to solve this.
+The over match occurs because kgdb_connected is set when gdb attaches
+to the stub and remains set during normal running. This is relatively
+harmelss because in almost all cases irq_disabled() will be false.
 
-Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/20200420024421.22442-3-changhuaixin@linux.alibaba.com
+The under match is more serious. When kdb is used instead of kgdb to access
+the debugger then kgdb_connected is not set in all the places that the
+debug core updates sw breakpoints (and hence flushes the icache). This
+can lead to deadlock.
+
+Fix by replacing the ad-hoc check with the proper kgdb macro. This also
+allows us to drop the #ifdef wrapper.
+
+Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index da3e5b54715b..2ae7e30ccb33 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5170,6 +5170,8 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
- 
-+		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index e6cca3d4acf7..ce50c1f1f1ea 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * IPI all online CPUs so that they undergo a context synchronization
+ 	 * event and are forced to refetch the new instructions.
+ 	 */
+-#ifdef CONFIG_KGDB
 +
- 		if (++count > 3) {
- 			u64 new, old = ktime_to_ns(cfs_b->period);
+ 	/*
+ 	 * KGDB performs cache maintenance with interrupts disabled, so we
+ 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
+@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * the patching operation, so we don't need extra IPIs here anyway.
+ 	 * In which case, add a KGDB-specific bodge and return early.
+ 	 */
+-	if (kgdb_connected && irqs_disabled())
++	if (in_dbg_master())
+ 		return;
+-#endif
++
+ 	kick_all_cpus_sync();
+ }
  
-@@ -5199,8 +5201,6 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 			/* reset count so we don't come right back in here */
- 			count = 0;
- 		}
--
--		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
- 	}
- 	if (idle)
- 		cfs_b->period_active = 0;
 -- 
 2.25.1
 
