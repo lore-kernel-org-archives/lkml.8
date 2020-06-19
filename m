@@ -2,83 +2,518 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB5D20DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9963220DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732679AbgFSNXZ (ORCPT
+        id S1732681AbgFSNYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:23:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39132 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731756AbgFSNXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:23:22 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a9so11461300ljn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:23:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E/TRBC6roif3JRfR0eyS1Twcm7a48T8psf0xx78VupM=;
-        b=XVPsDm+7s2P2YAk/NpTntK+gfNAwBj18+coRFPXf7MzTIgFenroCj1lr4t/Kw7ya9E
-         EDRoB/ZxIz2i62zDkJTOk+K+dm9x7xXiONRiyjadEZ9PGXLc848A4L1aj+7BKsgD8nep
-         rk7T6e/JVwlH10t0c/rv5omggD4Oi+UYadqdswsObtKITerUPoyurD0c4hT09kz4f2y0
-         Nk5j+AKNtYaabM/onwARZmr4Negk1hr4HWxD0UWUL5HERKpN2aDpc1ZV1G6RceEGaEz7
-         2nsGcqSmGmglWObzP/E1mSBAsxz4YiZ6o80jON3uU13GeJbjOj62BcOIQx2qpARFVjCF
-         HemQ==
-X-Gm-Message-State: AOAM533xgqaTq8KWJpMrgbpWxEKpX+B3wHCzcHb7gS7sbYUi4N9fOMhi
-        pie2A3jXnUhrF6maTXpICOXIYlDnYSf4BQ==
-X-Google-Smtp-Source: ABdhPJyDmos2erRDWIlEDAeX01T8RHF9cvr8rL7N4KSNa/VmvcUvm8MuMKsymrWUrrHGxoTzj6q3Ng==
-X-Received: by 2002:a2e:b615:: with SMTP id r21mr1773433ljn.1.1592573000818;
-        Fri, 19 Jun 2020 06:23:20 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.137.195])
-        by smtp.googlemail.com with ESMTPSA id q11sm1398026lfe.34.2020.06.19.06.23.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 06:23:20 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] coccinelle: api/kstrdup: fix coccinelle position
-Date:   Fri, 19 Jun 2020 16:23:07 +0300
-Message-Id: <20200619132307.16612-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 19 Jun 2020 09:24:42 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35120 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732284AbgFSNYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:24:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49pKJq4RZsz9v02q;
+        Fri, 19 Jun 2020 15:24:11 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pR3xHgsATSCG; Fri, 19 Jun 2020 15:24:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49pKJq3ZJpz9v02n;
+        Fri, 19 Jun 2020 15:24:11 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6A1038B86E;
+        Fri, 19 Jun 2020 15:24:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 12HEOEBDIMx0; Fri, 19 Jun 2020 15:24:13 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F1A788B868;
+        Fri, 19 Jun 2020 15:24:11 +0200 (CEST)
+Subject: Re: ld.lld: warning:
+ drivers/built-in.a(misc/ds1682.o):(.data..compoundliteral) is being placed in
+ '.data..compoundliteral'
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <202006180904.TVUXCf6H%lkp@intel.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <150a9a49-8d61-ea34-94d4-fff158aae802@csgroup.eu>
+Date:   Fri, 19 Jun 2020 15:24:01 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <202006180904.TVUXCf6H%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a typo in rule r2. Position p1 should be attached to kzalloc()
-call.
 
-Fixes: 29a36d4dec6c ("scripts/coccinelle: improve the coverage of some semantic patches")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- scripts/coccinelle/api/kstrdup.cocci | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/coccinelle/api/kstrdup.cocci b/scripts/coccinelle/api/kstrdup.cocci
-index 19f2645e6076..3c6dc5469ee4 100644
---- a/scripts/coccinelle/api/kstrdup.cocci
-+++ b/scripts/coccinelle/api/kstrdup.cocci
-@@ -66,7 +66,7 @@ position p1,p2;
- 
- *   x = strlen(from) + 1;
-     ... when != \( x = E1 \| from = E1 \)
--*   to = \(kmalloc@p1\|kzalloc@p2\)(x,flag);
-+*   to = \(kmalloc@p1\|kzalloc@p1\)(x,flag);
-     ... when != \(x = E2 \| from = E2 \| to = E2 \)
-     if (to==NULL || ...) S
-     ... when != \(x = E3 \| from = E3 \| to = E3 \)
--- 
-2.26.2
+Le 18/06/2020 à 03:12, kernel test robot a écrit :
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   1b5044021070efa3259f3e9548dc35d1eb6aa844
+> commit: 74016701fe5f873ae23bf02835407227138d874d powerpc/32s: Fix another build failure with CONFIG_PPC_KUAP_DEBUG
 
+I'm really having hard time understanding the link between this commit 
+and the issue reported below.
+
+Can Clang people help understand what the problem might be ?
+
+Christophe
+
+> date:   2 weeks ago
+> config: powerpc-randconfig-r032-20200617 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 487ca07fcc75d52755c9fe2ee05bcb3b6eeeec44)
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # install powerpc cross compiling tool for clang build
+>          # apt-get install binutils-powerpc-linux-gnu
+>          git checkout 74016701fe5f873ae23bf02835407227138d874d
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> 
+>>> ld.lld: warning: drivers/built-in.a(misc/ds1682.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.29) is being placed in '.data..compoundliteral.29'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.31) is being placed in '.data..compoundliteral.31'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.33) is being placed in '.data..compoundliteral.33'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.bss..compoundliteral.35) is being placed in '.bss..compoundliteral.35'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.37) is being placed in '.data..compoundliteral.37'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.39) is being placed in '.data..compoundliteral.39'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.41) is being placed in '.data..compoundliteral.41'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.43) is being placed in '.data..compoundliteral.43'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.45) is being placed in '.data..compoundliteral.45'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.47) is being placed in '.data..compoundliteral.47'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.49) is being placed in '.data..compoundliteral.49'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.51) is being placed in '.data..compoundliteral.51'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.53) is being placed in '.data..compoundliteral.53'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.55) is being placed in '.data..compoundliteral.55'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.57) is being placed in '.data..compoundliteral.57'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.59) is being placed in '.data..compoundliteral.59'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.61) is being placed in '.data..compoundliteral.61'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.63) is being placed in '.data..compoundliteral.63'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.65) is being placed in '.data..compoundliteral.65'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.67) is being placed in '.data..compoundliteral.67'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.69) is being placed in '.data..compoundliteral.69'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.71) is being placed in '.data..compoundliteral.71'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.73) is being placed in '.data..compoundliteral.73'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.75) is being placed in '.data..compoundliteral.75'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.77) is being placed in '.data..compoundliteral.77'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.79) is being placed in '.data..compoundliteral.79'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.81) is being placed in '.data..compoundliteral.81'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.83) is being placed in '.data..compoundliteral.83'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.85) is being placed in '.data..compoundliteral.85'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.87) is being placed in '.data..compoundliteral.87'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.89) is being placed in '.data..compoundliteral.89'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.91) is being placed in '.data..compoundliteral.91'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.93) is being placed in '.data..compoundliteral.93'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.95) is being placed in '.data..compoundliteral.95'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.97) is being placed in '.data..compoundliteral.97'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.99) is being placed in '.data..compoundliteral.99'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.101) is being placed in '.data..compoundliteral.101'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.103) is being placed in '.data..compoundliteral.103'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.105) is being placed in '.data..compoundliteral.105'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.107) is being placed in '.data..compoundliteral.107'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.109) is being placed in '.data..compoundliteral.109'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.111) is being placed in '.data..compoundliteral.111'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.113) is being placed in '.data..compoundliteral.113'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.115) is being placed in '.data..compoundliteral.115'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.117) is being placed in '.data..compoundliteral.117'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.119) is being placed in '.data..compoundliteral.119'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.121) is being placed in '.data..compoundliteral.121'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.123) is being placed in '.data..compoundliteral.123'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.125) is being placed in '.data..compoundliteral.125'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.127) is being placed in '.data..compoundliteral.127'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.129) is being placed in '.data..compoundliteral.129'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.131) is being placed in '.data..compoundliteral.131'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.133) is being placed in '.data..compoundliteral.133'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.135) is being placed in '.data..compoundliteral.135'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.137) is being placed in '.data..compoundliteral.137'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.139) is being placed in '.data..compoundliteral.139'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.141) is being placed in '.data..compoundliteral.141'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.143) is being placed in '.data..compoundliteral.143'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.145) is being placed in '.data..compoundliteral.145'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.147) is being placed in '.data..compoundliteral.147'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.149) is being placed in '.data..compoundliteral.149'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.151) is being placed in '.data..compoundliteral.151'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.153) is being placed in '.data..compoundliteral.153'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.155) is being placed in '.data..compoundliteral.155'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.157) is being placed in '.data..compoundliteral.157'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.159) is being placed in '.data..compoundliteral.159'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.161) is being placed in '.data..compoundliteral.161'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.163) is being placed in '.data..compoundliteral.163'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.165) is being placed in '.data..compoundliteral.165'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.167) is being placed in '.data..compoundliteral.167'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.169) is being placed in '.data..compoundliteral.169'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.171) is being placed in '.data..compoundliteral.171'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.173) is being placed in '.data..compoundliteral.173'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.175) is being placed in '.data..compoundliteral.175'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.177) is being placed in '.data..compoundliteral.177'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.179) is being placed in '.data..compoundliteral.179'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.181) is being placed in '.data..compoundliteral.181'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.183) is being placed in '.data..compoundliteral.183'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.185) is being placed in '.data..compoundliteral.185'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.187) is being placed in '.data..compoundliteral.187'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.189) is being placed in '.data..compoundliteral.189'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.191) is being placed in '.data..compoundliteral.191'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.193) is being placed in '.data..compoundliteral.193'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.195) is being placed in '.data..compoundliteral.195'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.197) is being placed in '.data..compoundliteral.197'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.199) is being placed in '.data..compoundliteral.199'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.201) is being placed in '.data..compoundliteral.201'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.203) is being placed in '.data..compoundliteral.203'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.205) is being placed in '.data..compoundliteral.205'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.207) is being placed in '.data..compoundliteral.207'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.209) is being placed in '.data..compoundliteral.209'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.211) is being placed in '.data..compoundliteral.211'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.213) is being placed in '.data..compoundliteral.213'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.215) is being placed in '.data..compoundliteral.215'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.217) is being placed in '.data..compoundliteral.217'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.219) is being placed in '.data..compoundliteral.219'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.221) is being placed in '.data..compoundliteral.221'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.223) is being placed in '.data..compoundliteral.223'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.225) is being placed in '.data..compoundliteral.225'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.227) is being placed in '.data..compoundliteral.227'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.229) is being placed in '.data..compoundliteral.229'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.231) is being placed in '.data..compoundliteral.231'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.233) is being placed in '.data..compoundliteral.233'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.235) is being placed in '.data..compoundliteral.235'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.237) is being placed in '.data..compoundliteral.237'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.239) is being placed in '.data..compoundliteral.239'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.241) is being placed in '.data..compoundliteral.241'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.243) is being placed in '.data..compoundliteral.243'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.245) is being placed in '.data..compoundliteral.245'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.247) is being placed in '.data..compoundliteral.247'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.249) is being placed in '.data..compoundliteral.249'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.251) is being placed in '.data..compoundliteral.251'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.253) is being placed in '.data..compoundliteral.253'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.255) is being placed in '.data..compoundliteral.255'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.257) is being placed in '.data..compoundliteral.257'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.259) is being placed in '.data..compoundliteral.259'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.261) is being placed in '.data..compoundliteral.261'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.263) is being placed in '.data..compoundliteral.263'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.265) is being placed in '.data..compoundliteral.265'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.267) is being placed in '.data..compoundliteral.267'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.269) is being placed in '.data..compoundliteral.269'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.271) is being placed in '.data..compoundliteral.271'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.273) is being placed in '.data..compoundliteral.273'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.275) is being placed in '.data..compoundliteral.275'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.277) is being placed in '.data..compoundliteral.277'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.279) is being placed in '.data..compoundliteral.279'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.281) is being placed in '.data..compoundliteral.281'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.283) is being placed in '.data..compoundliteral.283'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.285) is being placed in '.data..compoundliteral.285'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.287) is being placed in '.data..compoundliteral.287'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.289) is being placed in '.data..compoundliteral.289'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.294) is being placed in '.data..compoundliteral.294'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.295) is being placed in '.data..compoundliteral.295'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.296) is being placed in '.data..compoundliteral.296'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.297) is being placed in '.data..compoundliteral.297'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.18) is being placed in '.data..compoundliteral.18'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.19) is being placed in '.data..compoundliteral.19'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.20) is being placed in '.data..compoundliteral.20'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.21) is being placed in '.data..compoundliteral.21'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.22) is being placed in '.data..compoundliteral.22'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.15) is being placed in '.data..compoundliteral.15'
+> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.16) is being placed in '.data..compoundliteral.16'
+> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.17) is being placed in '.data..compoundliteral.17'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.2) is being placed in '.data..compoundliteral.2'
+> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.3) is being placed in '.data..compoundliteral.3'
+> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.4) is being placed in '.data..compoundliteral.4'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.10) is being placed in '.data..compoundliteral.10'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.11) is being placed in '.data..compoundliteral.11'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.12) is being placed in '.data..compoundliteral.12'
+>>> ld.lld: warning: drivers/built-in.a(cpufreq/cpufreq-dt-platdev.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hid/hid-cp2112.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.2) is being placed in '.data..compoundliteral.2'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.3) is being placed in '.data..compoundliteral.3'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.4) is being placed in '.data..compoundliteral.4'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.5) is being placed in '.data..compoundliteral.5'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.6) is being placed in '.data..compoundliteral.6'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.7) is being placed in '.data..compoundliteral.7'
+> ld.lld: warning: net/built-in.a(ipv6/addrconf_core.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
+> ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
+> ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
+>>> ld.lld: warning: drivers/built-in.a(misc/ds1682.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.29) is being placed in '.data..compoundliteral.29'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.31) is being placed in '.data..compoundliteral.31'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.33) is being placed in '.data..compoundliteral.33'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.bss..compoundliteral.35) is being placed in '.bss..compoundliteral.35'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.37) is being placed in '.data..compoundliteral.37'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.39) is being placed in '.data..compoundliteral.39'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.41) is being placed in '.data..compoundliteral.41'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.43) is being placed in '.data..compoundliteral.43'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.45) is being placed in '.data..compoundliteral.45'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.47) is being placed in '.data..compoundliteral.47'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.49) is being placed in '.data..compoundliteral.49'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.51) is being placed in '.data..compoundliteral.51'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.53) is being placed in '.data..compoundliteral.53'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.55) is being placed in '.data..compoundliteral.55'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.57) is being placed in '.data..compoundliteral.57'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.59) is being placed in '.data..compoundliteral.59'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.61) is being placed in '.data..compoundliteral.61'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.63) is being placed in '.data..compoundliteral.63'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.65) is being placed in '.data..compoundliteral.65'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.67) is being placed in '.data..compoundliteral.67'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.69) is being placed in '.data..compoundliteral.69'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.71) is being placed in '.data..compoundliteral.71'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.73) is being placed in '.data..compoundliteral.73'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.75) is being placed in '.data..compoundliteral.75'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.77) is being placed in '.data..compoundliteral.77'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.79) is being placed in '.data..compoundliteral.79'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.81) is being placed in '.data..compoundliteral.81'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.83) is being placed in '.data..compoundliteral.83'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.85) is being placed in '.data..compoundliteral.85'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.87) is being placed in '.data..compoundliteral.87'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.89) is being placed in '.data..compoundliteral.89'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.91) is being placed in '.data..compoundliteral.91'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.93) is being placed in '.data..compoundliteral.93'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.95) is being placed in '.data..compoundliteral.95'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.97) is being placed in '.data..compoundliteral.97'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.99) is being placed in '.data..compoundliteral.99'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.101) is being placed in '.data..compoundliteral.101'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.103) is being placed in '.data..compoundliteral.103'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.105) is being placed in '.data..compoundliteral.105'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.107) is being placed in '.data..compoundliteral.107'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.109) is being placed in '.data..compoundliteral.109'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.111) is being placed in '.data..compoundliteral.111'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.113) is being placed in '.data..compoundliteral.113'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.115) is being placed in '.data..compoundliteral.115'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.117) is being placed in '.data..compoundliteral.117'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.119) is being placed in '.data..compoundliteral.119'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.121) is being placed in '.data..compoundliteral.121'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.123) is being placed in '.data..compoundliteral.123'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.125) is being placed in '.data..compoundliteral.125'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.127) is being placed in '.data..compoundliteral.127'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.129) is being placed in '.data..compoundliteral.129'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.131) is being placed in '.data..compoundliteral.131'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.133) is being placed in '.data..compoundliteral.133'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.135) is being placed in '.data..compoundliteral.135'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.137) is being placed in '.data..compoundliteral.137'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.139) is being placed in '.data..compoundliteral.139'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.141) is being placed in '.data..compoundliteral.141'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.143) is being placed in '.data..compoundliteral.143'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.145) is being placed in '.data..compoundliteral.145'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.147) is being placed in '.data..compoundliteral.147'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.149) is being placed in '.data..compoundliteral.149'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.151) is being placed in '.data..compoundliteral.151'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.153) is being placed in '.data..compoundliteral.153'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.155) is being placed in '.data..compoundliteral.155'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.157) is being placed in '.data..compoundliteral.157'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.159) is being placed in '.data..compoundliteral.159'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.161) is being placed in '.data..compoundliteral.161'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.163) is being placed in '.data..compoundliteral.163'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.165) is being placed in '.data..compoundliteral.165'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.167) is being placed in '.data..compoundliteral.167'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.169) is being placed in '.data..compoundliteral.169'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.171) is being placed in '.data..compoundliteral.171'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.173) is being placed in '.data..compoundliteral.173'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.175) is being placed in '.data..compoundliteral.175'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.177) is being placed in '.data..compoundliteral.177'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.179) is being placed in '.data..compoundliteral.179'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.181) is being placed in '.data..compoundliteral.181'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.183) is being placed in '.data..compoundliteral.183'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.185) is being placed in '.data..compoundliteral.185'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.187) is being placed in '.data..compoundliteral.187'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.189) is being placed in '.data..compoundliteral.189'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.191) is being placed in '.data..compoundliteral.191'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.193) is being placed in '.data..compoundliteral.193'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.195) is being placed in '.data..compoundliteral.195'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.197) is being placed in '.data..compoundliteral.197'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.199) is being placed in '.data..compoundliteral.199'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.201) is being placed in '.data..compoundliteral.201'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.203) is being placed in '.data..compoundliteral.203'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.205) is being placed in '.data..compoundliteral.205'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.207) is being placed in '.data..compoundliteral.207'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.209) is being placed in '.data..compoundliteral.209'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.211) is being placed in '.data..compoundliteral.211'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.213) is being placed in '.data..compoundliteral.213'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.215) is being placed in '.data..compoundliteral.215'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.217) is being placed in '.data..compoundliteral.217'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.219) is being placed in '.data..compoundliteral.219'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.221) is being placed in '.data..compoundliteral.221'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.223) is being placed in '.data..compoundliteral.223'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.225) is being placed in '.data..compoundliteral.225'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.227) is being placed in '.data..compoundliteral.227'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.229) is being placed in '.data..compoundliteral.229'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.231) is being placed in '.data..compoundliteral.231'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.233) is being placed in '.data..compoundliteral.233'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.235) is being placed in '.data..compoundliteral.235'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.237) is being placed in '.data..compoundliteral.237'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.239) is being placed in '.data..compoundliteral.239'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.241) is being placed in '.data..compoundliteral.241'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.243) is being placed in '.data..compoundliteral.243'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.245) is being placed in '.data..compoundliteral.245'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.247) is being placed in '.data..compoundliteral.247'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.249) is being placed in '.data..compoundliteral.249'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.251) is being placed in '.data..compoundliteral.251'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.253) is being placed in '.data..compoundliteral.253'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.255) is being placed in '.data..compoundliteral.255'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.257) is being placed in '.data..compoundliteral.257'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.259) is being placed in '.data..compoundliteral.259'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.261) is being placed in '.data..compoundliteral.261'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.263) is being placed in '.data..compoundliteral.263'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.265) is being placed in '.data..compoundliteral.265'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.267) is being placed in '.data..compoundliteral.267'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.269) is being placed in '.data..compoundliteral.269'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.271) is being placed in '.data..compoundliteral.271'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.273) is being placed in '.data..compoundliteral.273'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.275) is being placed in '.data..compoundliteral.275'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.277) is being placed in '.data..compoundliteral.277'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.279) is being placed in '.data..compoundliteral.279'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.281) is being placed in '.data..compoundliteral.281'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.283) is being placed in '.data..compoundliteral.283'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.285) is being placed in '.data..compoundliteral.285'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.287) is being placed in '.data..compoundliteral.287'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.289) is being placed in '.data..compoundliteral.289'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.294) is being placed in '.data..compoundliteral.294'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.295) is being placed in '.data..compoundliteral.295'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.296) is being placed in '.data..compoundliteral.296'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.297) is being placed in '.data..compoundliteral.297'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.18) is being placed in '.data..compoundliteral.18'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.19) is being placed in '.data..compoundliteral.19'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.20) is being placed in '.data..compoundliteral.20'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.21) is being placed in '.data..compoundliteral.21'
+> ld.lld: warning: drivers/built-in.a(hwmon/ina3221.o):(.data..compoundliteral.22) is being placed in '.data..compoundliteral.22'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.15) is being placed in '.data..compoundliteral.15'
+> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.16) is being placed in '.data..compoundliteral.16'
+> ld.lld: warning: drivers/built-in.a(hwmon/max6650.o):(.data..compoundliteral.17) is being placed in '.data..compoundliteral.17'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+>>> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.2) is being placed in '.data..compoundliteral.2'
+> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.3) is being placed in '.data..compoundliteral.3'
+> ld.lld: warning: drivers/built-in.a(hwmon/max31790.o):(.data..compoundliteral.4) is being placed in '.data..compoundliteral.4'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.10) is being placed in '.data..compoundliteral.10'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.11) is being placed in '.data..compoundliteral.11'
+> ld.lld: warning: drivers/built-in.a(hwmon/tmp102.o):(.data..compoundliteral.12) is being placed in '.data..compoundliteral.12'
+> ld.lld: warning: drivers/built-in.a(cpufreq/cpufreq-dt-platdev.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(hid/hid-cp2112.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.2) is being placed in '.data..compoundliteral.2'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.3) is being placed in '.data..compoundliteral.3'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.4) is being placed in '.data..compoundliteral.4'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.5) is being placed in '.data..compoundliteral.5'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.6) is being placed in '.data..compoundliteral.6'
+> ld.lld: warning: net/built-in.a(ipv6/addrlabel.o):(.data..compoundliteral.7) is being placed in '.data..compoundliteral.7'
+> ld.lld: warning: net/built-in.a(ipv6/addrconf_core.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
+> ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
+> ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
+> ld.lld: warning: drivers/built-in.a(misc/ds1682.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral) is being placed in '.data..compoundliteral'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.29) is being placed in '.data..compoundliteral.29'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.31) is being placed in '.data..compoundliteral.31'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.33) is being placed in '.data..compoundliteral.33'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.bss..compoundliteral.35) is being placed in '.bss..compoundliteral.35'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.37) is being placed in '.data..compoundliteral.37'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.39) is being placed in '.data..compoundliteral.39'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.41) is being placed in '.data..compoundliteral.41'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.43) is being placed in '.data..compoundliteral.43'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.45) is being placed in '.data..compoundliteral.45'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.47) is being placed in '.data..compoundliteral.47'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.49) is being placed in '.data..compoundliteral.49'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.51) is being placed in '.data..compoundliteral.51'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.53) is being placed in '.data..compoundliteral.53'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.55) is being placed in '.data..compoundliteral.55'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.57) is being placed in '.data..compoundliteral.57'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.59) is being placed in '.data..compoundliteral.59'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.61) is being placed in '.data..compoundliteral.61'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.63) is being placed in '.data..compoundliteral.63'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.65) is being placed in '.data..compoundliteral.65'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.67) is being placed in '.data..compoundliteral.67'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.69) is being placed in '.data..compoundliteral.69'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.71) is being placed in '.data..compoundliteral.71'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.73) is being placed in '.data..compoundliteral.73'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.75) is being placed in '.data..compoundliteral.75'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.77) is being placed in '.data..compoundliteral.77'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.79) is being placed in '.data..compoundliteral.79'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.81) is being placed in '.data..compoundliteral.81'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.83) is being placed in '.data..compoundliteral.83'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.85) is being placed in '.data..compoundliteral.85'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.87) is being placed in '.data..compoundliteral.87'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.89) is being placed in '.data..compoundliteral.89'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.91) is being placed in '.data..compoundliteral.91'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.93) is being placed in '.data..compoundliteral.93'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.95) is being placed in '.data..compoundliteral.95'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.97) is being placed in '.data..compoundliteral.97'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.99) is being placed in '.data..compoundliteral.99'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.101) is being placed in '.data..compoundliteral.101'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.103) is being placed in '.data..compoundliteral.103'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.105) is being placed in '.data..compoundliteral.105'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.107) is being placed in '.data..compoundliteral.107'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.109) is being placed in '.data..compoundliteral.109'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.111) is being placed in '.data..compoundliteral.111'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.113) is being placed in '.data..compoundliteral.113'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.115) is being placed in '.data..compoundliteral.115'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.117) is being placed in '.data..compoundliteral.117'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.119) is being placed in '.data..compoundliteral.119'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.121) is being placed in '.data..compoundliteral.121'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.123) is being placed in '.data..compoundliteral.123'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.125) is being placed in '.data..compoundliteral.125'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.127) is being placed in '.data..compoundliteral.127'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.129) is being placed in '.data..compoundliteral.129'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.131) is being placed in '.data..compoundliteral.131'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.133) is being placed in '.data..compoundliteral.133'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.135) is being placed in '.data..compoundliteral.135'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.137) is being placed in '.data..compoundliteral.137'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.139) is being placed in '.data..compoundliteral.139'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.141) is being placed in '.data..compoundliteral.141'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.143) is being placed in '.data..compoundliteral.143'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.145) is being placed in '.data..compoundliteral.145'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.147) is being placed in '.data..compoundliteral.147'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.149) is being placed in '.data..compoundliteral.149'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.151) is being placed in '.data..compoundliteral.151'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.153) is being placed in '.data..compoundliteral.153'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.155) is being placed in '.data..compoundliteral.155'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.157) is being placed in '.data..compoundliteral.157'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.159) is being placed in '.data..compoundliteral.159'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.161) is being placed in '.data..compoundliteral.161'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.163) is being placed in '.data..compoundliteral.163'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.165) is being placed in '.data..compoundliteral.165'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.167) is being placed in '.data..compoundliteral.167'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.169) is being placed in '.data..compoundliteral.169'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.171) is being placed in '.data..compoundliteral.171'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.173) is being placed in '.data..compoundliteral.173'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.175) is being placed in '.data..compoundliteral.175'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.177) is being placed in '.data..compoundliteral.177'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.179) is being placed in '.data..compoundliteral.179'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.181) is being placed in '.data..compoundliteral.181'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.183) is being placed in '.data..compoundliteral.183'
+> ld.lld: warning: drivers/built-in.a(net/phy/mdio_bus.o):(.data..compoundliteral.185) is being placed in '.data..compoundliteral.185'
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
