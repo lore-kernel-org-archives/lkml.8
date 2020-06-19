@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8870721707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8653D21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584074;
-	bh=C00lb73rbG9xsFzU6HfWKhv3Y6ec1kY1TeDnLPYBR4w=;
+	s=default; t=1592584093;
+	bh=CDbuC6NeE0DQQKmZTYLkb0wr4fPE3gNaAz8iQPAkSnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/Voq8AnoXExHmECE3lvDbwH2tt/3cusOsGdyrB82d878Udz8BzGPALu/GmzSnxMU
-	 +nlsBfyCfREfxvsbYBCXg7cU71NleHnggttGkQi3zTshWHZSzCpz80J1WRppMxgeAI
-	 zrTRp17nf+oF2aT4BfpFu5g5e5akhT3NvmQV0CIU=
+	b=TdFKNwhK9beCxBG9xXIKhTDBtmh3Dzkc9wWdqegtG8jG26xCcPoi4ZUf0DSYmFnw8
+	 MZmUVfsSEn5dPcvwDlFnvYSR8doDPr8EuJgWLqu0JF6ef7f6AVF5D5alfVWUvDD/4N
+	 cfs8ykzMRb2PTK7S6Ej7aYFYNB4LEogOkWgdUw/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394911AbgFSQ1w (ORCPT
+        id S2394917AbgFSQ1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389463AbgFSOzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:31 -0400
+        id S2389970AbgFSOz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACC721835;
-        Fri, 19 Jun 2020 14:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED167217D9;
+        Fri, 19 Jun 2020 14:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578531;
-        bh=C00lb73rbG9xsFzU6HfWKhv3Y6ec1kY1TeDnLPYBR4w=;
+        s=default; t=1592578528;
+        bh=CDbuC6NeE0DQQKmZTYLkb0wr4fPE3gNaAz8iQPAkSnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDucm9fkLB/+T7m8FCW+qQPvHAAYVKfHZoH/N04xIMfRGWbDJ5g7LTBFSmC6GsyzC
-         Tp/vn1W6ZYfB11OabJLm0bmMJZV37mssRdGhksn1TI2O3l+GRkRd/Mf2xJKFEbUa8o
-         TcXLwdoz/CncJocQtCT5DSlR9M9LjX26+rWpMLrA=
+        b=JY+d15uVjmwGcC9xQHhqCPGj4E9d4hvjCvc4kLrOWf1jyY6+DL+VqQgUVeoSuK9av
+         hCQlAiQQtS+hhbRNxRXkyY9tHcpMlj1Ad3pxFOg5Pl/bZFhymQf85Bw3IrZQbao/BE
+         8PmoQrz6kNEbmMvoo6zl4zsmsMw2x8ASZpG1N/L4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Su Yue <suy.fnst@cn.fujitsu.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/267] btrfs: tree-checker: Check level for leaves and nodes
-Date:   Fri, 19 Jun 2020 16:30:12 +0200
-Message-Id: <20200619141650.167676951@linuxfoundation.org>
+        stable@vger.kernel.org, Avi Kivity <avi@scylladb.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.19 026/267] aio: fix async fsync creds
+Date:   Fri, 19 Jun 2020 16:30:11 +0200
+Message-Id: <20200619141650.119038260@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,64 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit f556faa46eb4e96d0d0772e74ecf66781e132f72 ]
+commit 530f32fc370fd1431ea9802dbc53ab5601dfccdb upstream.
 
-Although we have tree level check at tree read runtime, it's completely
-based on its parent level.
-We still need to do accurate level check to avoid invalid tree blocks
-sneak into kernel space.
+Avi Kivity reports that on fuse filesystems running in a user namespace
+asyncronous fsync fails with EOVERFLOW.
 
-The check itself is simple, for leaf its level should always be 0.
-For nodes its level should be in range [1, BTRFS_MAX_LEVEL - 1].
+The reason is that f_ops->fsync() is called with the creds of the kthread
+performing aio work instead of the creds of the process originally
+submitting IOCB_CMD_FSYNC.
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fuse sends the creds of the caller in the request header and it needs to
+translate the uid and gid into the server's user namespace.  Since the
+kthread is running in init_user_ns, the translation will fail and the
+operation returns an error.
+
+It can be argued that fsync doesn't actually need any creds, but just
+zeroing out those fields in the header (as with requests that currently
+don't take creds) is a backward compatibility risk.
+
+Instead of working around this issue in fuse, solve the core of the problem
+by calling the filesystem with the proper creds.
+
+Reported-by: Avi Kivity <avi@scylladb.com>
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Fixes: c9582eb0ff7d ("fuse: Fail all requests with invalid uids or gids")
+Cc: stable@vger.kernel.org  # 4.18+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/tree-checker.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ fs/aio.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
-index 235c2970b944..d98ec885b72a 100644
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -485,6 +485,13 @@ static int check_leaf(struct btrfs_fs_info *fs_info, struct extent_buffer *leaf,
- 	u32 nritems = btrfs_header_nritems(leaf);
- 	int slot;
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -169,6 +169,7 @@ struct fsync_iocb {
+ 	struct file		*file;
+ 	struct work_struct	work;
+ 	bool			datasync;
++	struct cred		*creds;
+ };
  
-+	if (btrfs_header_level(leaf) != 0) {
-+		generic_err(fs_info, leaf, 0,
-+			"invalid level for leaf, have %d expect 0",
-+			btrfs_header_level(leaf));
-+		return -EUCLEAN;
-+	}
+ struct poll_iocb {
+@@ -1579,8 +1580,11 @@ static ssize_t aio_write(struct kiocb *r
+ static void aio_fsync_work(struct work_struct *work)
+ {
+ 	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
++	const struct cred *old_cred = override_creds(iocb->fsync.creds);
+ 
+ 	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
++	revert_creds(old_cred);
++	put_cred(iocb->fsync.creds);
+ 	iocb_put(iocb);
+ }
+ 
+@@ -1594,6 +1598,10 @@ static int aio_fsync(struct fsync_iocb *
+ 	if (unlikely(!req->file->f_op->fsync))
+ 		return -EINVAL;
+ 
++	req->creds = prepare_creds();
++	if (!req->creds)
++		return -ENOMEM;
 +
- 	/*
- 	 * Extent buffers from a relocation tree have a owner field that
- 	 * corresponds to the subvolume tree they are based on. So just from an
-@@ -649,9 +656,16 @@ int btrfs_check_node(struct btrfs_fs_info *fs_info, struct extent_buffer *node)
- 	unsigned long nr = btrfs_header_nritems(node);
- 	struct btrfs_key key, next_key;
- 	int slot;
-+	int level = btrfs_header_level(node);
- 	u64 bytenr;
- 	int ret = 0;
- 
-+	if (level <= 0 || level >= BTRFS_MAX_LEVEL) {
-+		generic_err(fs_info, node, 0,
-+			"invalid level for node, have %d expect [1, %d]",
-+			level, BTRFS_MAX_LEVEL - 1);
-+		return -EUCLEAN;
-+	}
- 	if (nr == 0 || nr > BTRFS_NODEPTRS_PER_BLOCK(fs_info)) {
- 		btrfs_crit(fs_info,
- "corrupt node: root=%llu block=%llu, nritems too %s, have %lu expect range [1,%u]",
--- 
-2.25.1
-
+ 	req->datasync = datasync;
+ 	INIT_WORK(&req->work, aio_fsync_work);
+ 	schedule_work(&req->work);
 
 
