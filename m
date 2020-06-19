@@ -4,64 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B29FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14106207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783C3207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592573338;
-	bh=LesmmGjwNyruZz2lXKjFL5SydTkXOhMREE472owY8hw=;
+	s=default; t=1592573342;
+	bh=lu3A8dgfddBJOdAh48Om/2tmW8Fdzk+zN7yT4K1Hta0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ZactOs7dwTB9v/5/G0B9D4qBvMiIAnESxqL1rjNjO1yTmYuRYKAC0KCTl5eYMJvK3
-	 e/POjm7H/qRjWUb3LLHcoG6Eh64GpBPQcH5pFjpCIXavmzyCGT6c//oyxkl0bxxnTM
-	 oF6WslYxEi1pJBM1xQSt8gMnIgixgc6SMjpe8P04=
+	b=opA7AKLVsvIrnSVNBVyMo0QIcxfI9dyv1mXwv9wMiCO4x1oV2CqIdH+kd3qmEePeL
+	 G8HLqYKvZwk4sT1K+8bz7AZbKHOSeBdRoR8JZPwRAlzuS/aU7meBXM6UjossRl2uLL
+	 Rb8eO54B2gONOljZqimA7nRQ9lE6rZ/oqmOQLWzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbgFSN2z (ORCPT
+        id S1732939AbgFSN27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:28:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45974 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 09:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731398AbgFSN1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:27:38 -0400
+        id S1729134AbgFSN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:27:43 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E0C20771;
-        Fri, 19 Jun 2020 13:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26668207FC;
+        Fri, 19 Jun 2020 13:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592573257;
-        bh=LesmmGjwNyruZz2lXKjFL5SydTkXOhMREE472owY8hw=;
+        s=default; t=1592573262;
+        bh=lu3A8dgfddBJOdAh48Om/2tmW8Fdzk+zN7yT4K1Hta0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=cE5Y6mgFKG9RWrq/3D58egK36HL8+Y2NKAaAwB0w3Q1SX+jbwm+U4wWqVDOwWGfMe
-         wHJenbY0Intxm+EYD6ydqu5QPxjiAh1nHlCCojps/BhKVr6CkOA33m6YnjFZ/HzMiG
-         LcEtR4fd61D1SOP5b+kZZH97duXCK/H9NTjsrMZM=
-Date:   Fri, 19 Jun 2020 14:27:35 +0100
+        b=mAoOQ5S2dI0eG+mUTj3k4LYTRCwGkCXuZ0Ed8a8oUVDhRLNiRi1OnOcQhLIEW1R14
+         sdRWoDgPRRmdNx43+xX9LgOEzxcHGhUWB0f+rxdQakxaejVm1eGPFQ6fwtnP9yXLyG
+         jKCk8ZQjC/AqhcH0w6Hje01KzFQyEuxeWfAvcjZQ=
+Date:   Fri, 19 Jun 2020 14:27:40 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Banajit Goswami <bgoswami@codeaurora.org>
-In-Reply-To: <20200619031407.116140-1-john.stultz@linaro.org>
-References: <20200619031407.116140-1-john.stultz@linaro.org>
-Subject: Re: [PATCH v3] ASoC: qcom: Kconfig: Tweak dependencies on SND_SOC_SDM845
-Message-Id: <159257325526.5735.5370337418723229662.b4-ty@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        festevam@gmail.com, Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com,
+        alsa-devel@alsa-project.org, perex@perex.cz, tiwai@suse.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <579c0d71e976f34f23f40daa9f1aa06c4baca2f1.1592552389.git.shengjiu.wang@nxp.com>
+References: <579c0d71e976f34f23f40daa9f1aa06c4baca2f1.1592552389.git.shengjiu.wang@nxp.com>
+Subject: Re: [PATCH v2] ASoC: fsl_spdif: Add pm runtime function
+Message-Id: <159257325526.5735.7482602069730796749.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 03:14:07 +0000, John Stultz wrote:
-> CROS_EC isn't strictly required for audio to work
-> on other SDM845 platforms (like the Dragonboard 845c).
+On Fri, 19 Jun 2020 15:54:33 +0800, Shengjiu Wang wrote:
+> Add pm runtime support and move clock handling there.
+> Close the clocks at suspend to reduce the power consumption.
 > 
-> So lets remove the dependency and select the related
-> CROS_EC options via imply.
+> fsl_spdif_suspend is replaced by pm_runtime_force_suspend.
+> fsl_spdif_resume is replaced by pm_runtime_force_resume.
 
 Applied to
 
@@ -69,8 +66,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: qcom: Kconfig: Tweak dependencies on SND_SOC_SDM845
-      commit: 3bd057c8219d4006f2b436cea2ae5ac723067a51
+[1/1] ASoC: fsl_spdif: Add pm runtime function
+      commit: 9cb2b3796e083169b368a7add19faec1750ad998
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
