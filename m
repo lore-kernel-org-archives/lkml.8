@@ -2,54 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2984C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE32B204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4CD204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585407;
-	bh=iKUmM6v7/ah/zZSaO/RwZOR+T9xRXtfNxHYJYjeZnTM=;
+	s=default; t=1592585410;
+	bh=7+X0hyeQZi+E5L9CQEftM+9/uRKUx6Trp8ntOOrkFOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8PXKCjKySmVWrBlDOzcQymi0TeZ4X+dBsWLtiwYQKhlsGoipopEwFXnupcGvQnYK
-	 z5kqsGKa4jpwAhnuZO31HFGgQcXFUyo23zsdD0Moc/jozPYsJ9OUtzpNW0IV8ghVzt
-	 wzrDuqwX5yMaws59SlK2cFpkx+mtS+2Hhv78lY+g=
+	b=1y1VzgZxmKbqSdnf4op7Fy7QnJM7BTNWWqmvr3+1k4aVP/MTXtDzOSt87Xf22lGe5
+	 5H1/4QME1VNsdBvF9Qv8IMftQvpPY8/X5Qem13Rj63AYwfKOZn6SEha59peqshQfhz
+	 WOO0ZriBs1aL/FEApGg5JS9hUSaFrLLg69rvzE34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405827AbgFSQuG (ORCPT
+        id S2387957AbgFSOjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387951AbgFSOjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:06 -0400
+        id S2387656AbgFSOiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8746E208B8;
-        Fri, 19 Jun 2020 14:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B21208B8;
+        Fri, 19 Jun 2020 14:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577546;
-        bh=iKUmM6v7/ah/zZSaO/RwZOR+T9xRXtfNxHYJYjeZnTM=;
+        s=default; t=1592577535;
+        bh=7+X0hyeQZi+E5L9CQEftM+9/uRKUx6Trp8ntOOrkFOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y93+L2OeDu4loO5Ucplr9L9s/BbCEpBEJtqwVzfZ2BDTiXMnqTxPEY5jo4uebqRAw
-         MRg8c4vB6rGb3/xaNZsk/k6zzshHoae0q0evunPZ4AL8bjaPgSJ+YJv0r71PEQ2nZE
-         M7GiPum8eEQqlZrL/kypBztMKl9xfUojPTT+mMpo=
+        b=2fZkzakCs6iorbDy+AyXiz+znZ6TKE+qv1/xz406od25rofIHWcILcOCjYEK9JK3o
+         k6K69nYF5+KaOZw5W0eHuf9tNN3V63IL5rbejwJj6/ahQxOwYqB4qiBm2TOqoLqsUX
+         kP6kwhnBqJNNiiP54EcyNsQriuzE/koKoKcoUIXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 066/101] mwifiex: Fix memory corruption in dump_station
-Date:   Fri, 19 Jun 2020 16:32:55 +0200
-Message-Id: <20200619141617.521091852@linuxfoundation.org>
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.4 089/101] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Fri, 19 Jun 2020 16:33:18 +0200
+Message-Id: <20200619141618.628608721@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -62,89 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 3aa42bae9c4d1641aeb36f1a8585cd1d506cf471 ]
+commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
 
-The mwifiex_cfg80211_dump_station() uses static variable for iterating
-over a linked list of all associated stations (when the driver is in UAP
-role). This has a race condition if .dump_station is called in parallel
-for multiple interfaces. This corruption can be triggered by registering
-multiple SSIDs and calling, in parallel for multiple interfaces
-    iw dev <iface> station dump
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-[16750.719775] Unable to handle kernel paging request at virtual address dead000000000110
-...
-[16750.899173] Call trace:
-[16750.901696]  mwifiex_cfg80211_dump_station+0x94/0x100 [mwifiex]
-[16750.907824]  nl80211_dump_station+0xbc/0x278 [cfg80211]
-[16750.913160]  netlink_dump+0xe8/0x320
-[16750.916827]  netlink_recvmsg+0x1b4/0x338
-[16750.920861]  ____sys_recvmsg+0x7c/0x2b0
-[16750.924801]  ___sys_recvmsg+0x70/0x98
-[16750.928564]  __sys_recvmsg+0x58/0xa0
-[16750.932238]  __arm64_sys_recvmsg+0x28/0x30
-[16750.936453]  el0_svc_common.constprop.3+0x90/0x158
-[16750.941378]  do_el0_svc+0x74/0x90
-[16750.944784]  el0_sync_handler+0x12c/0x1a8
-[16750.948903]  el0_sync+0x114/0x140
-[16750.952312] Code: f9400003 f907f423 eb02007f 54fffd60 (b9401060)
-[16750.958583] ---[ end trace c8ad181c2f4b8576 ]---
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
 
-This patch drops the use of the static iterator, and instead every time
-the function is called iterates to the idx-th position of the
-linked-list.
+Since device can only be runtime suspended when there's no link partner,
+we can skip reading register and let the following logic set speed and
+duplex with correct status.
 
-It would be better to convert the code not to use linked list for
-associated stations storage (since the chip has a limited number of
-associated stations anyway - it could just be an array). Such a change
-may be proposed in the future. In the meantime this patch can backported
-into stable kernels in this simple form.
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
 
-Fixes: 8baca1a34d4c ("mwifiex: dump station support in uap mode")
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200515075924.13841-1-pali@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
+
+CC: stable <stable@vger.kernel.org>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/mwifiex/cfg80211.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mwifiex/cfg80211.c b/drivers/net/wireless/mwifiex/cfg80211.c
-index c6c2d3304dba..8b649b8e4301 100644
---- a/drivers/net/wireless/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/mwifiex/cfg80211.c
-@@ -1387,7 +1387,8 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
- 			      int idx, u8 *mac, struct station_info *sinfo)
- {
- 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
--	static struct mwifiex_sta_node *node;
-+	struct mwifiex_sta_node *node;
-+	int i;
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -143,7 +143,8 @@ static int igb_get_settings(struct net_d
+ 	u32 status;
+ 	u32 speed;
  
- 	if ((GET_BSS_ROLE(priv) == MWIFIEX_BSS_ROLE_STA) &&
- 	    priv->media_connected && idx == 0) {
-@@ -1397,13 +1398,10 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
- 		mwifiex_send_cmd(priv, HOST_CMD_APCMD_STA_LIST,
- 				 HostCmd_ACT_GEN_GET, 0, NULL, true);
+-	status = rd32(E1000_STATUS);
++	status = pm_runtime_suspended(&adapter->pdev->dev) ?
++		 0 : rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
  
--		if (node && (&node->list == &priv->sta_list)) {
--			node = NULL;
--			return -ENOENT;
--		}
--
--		node = list_prepare_entry(node, &priv->sta_list, list);
--		list_for_each_entry_continue(node, &priv->sta_list, list) {
-+		i = 0;
-+		list_for_each_entry(node, &priv->sta_list, list) {
-+			if (i++ != idx)
-+				continue;
- 			ether_addr_copy(mac, node->mac_addr);
- 			return mwifiex_dump_station_info(priv, node, sinfo);
- 		}
--- 
-2.25.1
-
+ 		ecmd->supported = (SUPPORTED_10baseT_Half |
 
 
