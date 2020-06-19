@@ -2,363 +2,229 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B599DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB4D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3E4207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tyyt/7P6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="d+PbxyhF";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="UfNglZeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgFSDGC (ORCPT
+        id S1730086AbgFSDIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgFSDGB (ORCPT
+        Thu, 18 Jun 2020 23:08:38 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:33891 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgFSDIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:06:01 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426E1C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:06:00 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d4so3868549pgk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:06:00 -0700 (PDT)
+        Thu, 18 Jun 2020 23:08:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592536117; x=1624072117;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=5tx7MYVrmeAPaRRdrPyiPXXW3+cpGEblJM68gghZJak=;
+  b=d+PbxyhFTb29vUEsu+Qq6nhzoWHxPROuUkjES4NR1eA6PR7J91S1pavh
+   Yi0GCzPXG4LTXSAm5PpzjVnPQVWzrkovYv7x8tavKex0tSIhHZgmuWHtF
+   l5jlCoeDzDs+XCRByquc3OUOPxWZ6c9pFNpUPdLqZml1MD2n83z33sFeJ
+   GfX4mRRdOUzeE/kLiDhGPnwWsUns2ZHcSKhcpvMUGR1FKkEtpnFclq3Gr
+   SlPK8lrjrPleCLxU+7MYQdsfeg3EXB60PBTNDEmtKCcCCCWWosa5FpVp2
+   4eS+wpXbVqiu8VPlPtR6y4mBraGWYfTutY2SRPB9nrq8iUm4ur4EAorO7
+   g==;
+IronPort-SDR: fUThbbkSQNjXUFL+1mFzroCsQqv9aLCpWp+uu2M+x0DsMtq00ngcSlok3TDgDDj5BTDXO7ul5L
+ INSfBypDg44qrwoWsJpv16//vQuhpPTirhKPlw1jbb1ucgrSDpIJdCEdnTX1xUXw+kHlF1XPSo
+ kYJhAMb50aJM1KvD9SgJ8hA+7YGd92Xoke5CLDZUFKfywOm4OgJNmKgSF3vSwcKCrMpwp77IqV
+ 0jwDprdi5pYJ5gqYjnUEVCVyKeyS5+CY3U3ksF/OXPwhVb9B94DbUqXlEUdVhVOmjy75UTfz0Y
+ S5w=
+X-IronPort-AV: E=Sophos;i="5.75,253,1589212800"; 
+   d="scan'208";a="140640724"
+Received: from mail-co1nam04lp2053.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.53])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jun 2020 11:08:36 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BGWf/mZtLL9a58iRhZYeFKtLKEt4eFbXNyUKT13Z2qXp/TbiyIADq3MuaDZy2R7+2fZXVNioQEX0yaXcrPeADSscMV86l8yleakLMiOiZMSHfxJSdL4948q6RwnqrYETLFwvV2yxnlrJ4NKFOw8fps/l+dOSAdHMvkl6U15iVMoVkpcqHc5nK2vz5Bqh4oMMiT4oxJTR/f9z65Z2e0zBgCIKRuskgC2lWcUap1lo6TvbqFuspOEUw4qeffpUwUqszv5QgMtWPt0p3v0iZW9zxI9xahTkjLbpUyhkWNEUbJowhr5i7CaeaIRVE752Zt5XLM9s0WSrVr3Vdl1dOFKAIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H3DO+cmFnzR8do8BgU9ESA7ESlaS6meuMU+qG/OTPU8=;
+ b=QR7Trp08RkPJTq7uRTfEeBBHH7wBDnrDYbRQDOs+HxGVuXDDiYMJcLpkoSVu65ZsLg3CXkTwfLc1Bwcu3TxP/wYiMwDPRvyyLu0X2z6WcAVNiMSAulqMJ9VkemwEjdFXPgvxSygeFB6dkJPD0EIauIsoI6xZt9R3g6F83PiO1DBU4mdMFYaNRlz3lKSf7NFjXqRMClAtB2aWkogiA/O8T4f+12eJ7nSNUpTMAYxqLwTQ+I/xV9td2iwqmCvAhJddOJCiGgIaV0vWIjLcF/pei/r8CiQUYOQcAtNSGQ9imjA+vR2gcYaaMSyQMUMK/zjZKAYO037nYLH9mPhGlIDCSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sl3yoM++/CNn9Byxz9TBqE1X2qyiA9tBa4xlvf5jcC8=;
-        b=Tyyt/7P6Nb023Z1WyohS/89WAxXb1gDWTHicvBf+rCoanq5S04tRB2voXl3k9vf/jb
-         BhKzbuuClnoaQVpR4bPoe315LsYdq5h97EifSmi0SlBckG5KMZeDONHKF2dx+Y602DhY
-         c+h0LZbbuLJMWKDAQmg3AC207p2WZrVfgeUJk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sl3yoM++/CNn9Byxz9TBqE1X2qyiA9tBa4xlvf5jcC8=;
-        b=O1hx/ulJvttXTog9Ps/W9IaeeB9kYyUDeWtCAhDF734ZI20kmaAbyHp7sG3kwKfNU0
-         mV9Sz8F4+279cy1gJ3WF13sPf/lorSNTRdrXhLK/dtPe/dIWo5EilP90Rf9khHGWYlrI
-         Ief8QAbbx+aOyTy856Tf8z9aIO22rYN5SCd62BA6SVKDltjEKaqg7i/F4u7WA7w0gWu9
-         NhEJJFU13KHhfjpAQL/c0dhOdrFbShlycuaglwnjEVIT0qcFU93qXmjlpAwrD/ClGeRw
-         hhlI222t+ALMvPPhn+gDwRiEw+Mek16frgSmYYhhbZl8sa0RkdGzsIJ9XfnLSvApbRII
-         Hrcg==
-X-Gm-Message-State: AOAM532gDNAwvHFggc6QR8zT/o8fGgEYVNv102zSSQXUvM5YX879eW73
-        vOFvkJxa77tg+VZ/Rbafi8/J+g==
-X-Google-Smtp-Source: ABdhPJykwMLIAa2d7nHyCMEfXBLzV1tFN6aDzIFdBMy0xAEFDINGsjKJ4Gv1L6HNe/ePJAbDPlePDQ==
-X-Received: by 2002:a62:1444:: with SMTP id 65mr6153925pfu.294.1592535959486;
-        Thu, 18 Jun 2020 20:05:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j126sm3293706pfg.95.2020.06.18.20.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 20:05:58 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 20:05:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux@rasmusvillemoes.dk, davidgow@google.com
-Subject: Re: [RESEND, PATCH v2] lib: overflow-test: add KUnit test of
- check_*_overflow functions
-Message-ID: <202006181949.6402C456@keescook>
-References: <20200618140814.135948-1-vitor@massaru.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H3DO+cmFnzR8do8BgU9ESA7ESlaS6meuMU+qG/OTPU8=;
+ b=UfNglZeTxXX3ZVatv5ilOC3oxI5UjE9H12uhiOYypHYvX+9ekRruIrgOISO6GgdbxvDQjjOsIBCynAok45SioCOO/VXiVdHBAadaQQNBSo0ol59BabjfLRlMYxdddWX7AF4uuYOZMsgG0EX+J8dqAqQzLWIjTBAa+rwvnHM2A5Y=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR04MB1049.namprd04.prod.outlook.com (2603:10b6:910:56::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Fri, 19 Jun
+ 2020 03:08:33 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3109.023; Fri, 19 Jun 2020
+ 03:08:33 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Kanchan Joshi <joshi.k@samsung.com>,
+        "hch@infradead.org" <hch@infradead.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
+        "javier.gonz@samsung.com" <javier.gonz@samsung.com>
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Thread-Topic: [PATCH 0/3] zone-append support in aio and io-uring
+Thread-Index: AQHWRMyErNBfEVsLrU+xBQX5pX+rOw==
+Date:   Fri, 19 Jun 2020 03:08:33 +0000
+Message-ID: <CY4PR04MB37515E4FCD1EAA5880E2E1A2E7980@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <20200618065634.GB24943@infradead.org> <20200618175258.GA4141152@test-zns>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.182.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7ba96318-441b-4b32-b60a-08d813fe0d33
+x-ms-traffictypediagnostic: CY4PR04MB1049:
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+x-microsoft-antispam-prvs: <CY4PR04MB1049B0A63ADD6BE636D81212E7980@CY4PR04MB1049.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0439571D1D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7fr/BocJ4xJiQqMJOrO7aTDqd9cgzZXJ57u807OGrV3taZTVyM+a/Qar+t9VDy7D/55EH/JLRNkKoIyszCH8sT2Ut4FsVC2lDLCT+hSXsvpZxGay+Gs7uWuJmT6ypQKKhW5RoWQGK52BXuUVOINkI3HBAi0T/XpZgB4ucwL1Bg5QG2kQwWZpgQGwOJmyc0X+6waqJMOdaqtbPPwuy98Ft0uaMqJ8UexCjjErybPuCnGbbDsKw3RLO945YWAUwUjOKzDwd6NkRIkxw+T0WebDXKR/2GvRwtnj1SqcFoU0fJL0cYGVUn6oV1ki69e2h3Z9G/YR947E4CLPZHFkPO1WqA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(76116006)(5660300002)(6506007)(66556008)(52536014)(66476007)(186003)(66946007)(91956017)(7416002)(64756008)(71200400001)(53546011)(66446008)(86362001)(110136005)(2906002)(9686003)(55016002)(478600001)(4326008)(8676002)(83380400001)(316002)(26005)(8936002)(54906003)(7696005)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 2bNb0vOZPx/90Fkgnj9C+ZEi97Qauy+tPrU3d9Ug2OM+5SuAyZ5xtKOuU7oCe5WuWttXJ9qYXbYr6iOX5CzMBLhUMuwcsC4UKvVazrnZnWEVXAW9pP7uUg4X4LQffLi+w2gdTKOcqCkto6HOu6Tr29MEfIQc2xJMqurzMVCCLslq8qvE4VoqP6xL+57pSqM7iPvrl4NsnofVsN9gSVMmYxQiDCY8TtdSlKCK37zWWQzfdqIyj40oBj9Ouj8zwAcdKIdvCdsuTZiNHATT7Fdr1/vR8qv4US63ZvD5hvj1MfdygEX9kFHgPXFmA9u+2Zg53Hty6HYFo+5XsVp0CNYUvoRlqnfoQnWiGGWVilQ4GeH/Lwtk7+EQRDsmrzxX0weYIF5EbsAraPczlsf7VlsfyD1VU7fuzv1TvIhRe3coM0WDC/YEpKLBWEA3rn5xaSq3ZEkubX1EcLrONMUZY4QIFhbEL3aOZtIzZvyaj5QgaZbruWAdWiFcWC/vdbULgbiS
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618140814.135948-1-vitor@massaru.org>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba96318-441b-4b32-b60a-08d813fe0d33
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2020 03:08:33.5909
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MY0lI43d7+EtG7UXHNOU9tUs9YdWL/HLUBwrX124jxNbFS3io0MJvXnVtVKIkFzgIBgAJMDYWAc5qfWXMUhxvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:08:14AM -0300, Vitor Massaru Iha wrote:
-> This adds the conversion of the runtime tests of check_*_overflow functions,
-> from `lib/test_overflow.c`to KUnit tests.
-> 
-> The log similar to the one seen in dmesg running test_overflow.c can be
-> seen in `test.log`.
-> 
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Tested-by: David Gow <davidgow@google.com>
-> ---
-> v2:
->   * moved lib/test_overflow.c to lib/overflow-test.c; 
-
-I still don't want a dash in the filename, as this creates a difference
-between the source name and the module name. While I still prefer
-overflow_kunit.c, I can get over it and accept overflow_test.c :)
-
->     * back to original license;
->     * fixed style code;
->     * keeps __initconst and added _refdata on overflow_test_cases variable;
->     * keeps macros intact making asserts with the variable err;
->     * removed duplicate test_s8_overflow();
->   * fixed typos on commit message;
-> ---
->  lib/Kconfig.debug                        | 20 +++++++--
->  lib/Makefile                             |  2 +-
->  lib/{test_overflow.c => overflow-test.c} | 54 +++++++++---------------
->  3 files changed, 38 insertions(+), 38 deletions(-)
->  rename lib/{test_overflow.c => overflow-test.c} (96%)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index d74ac0fd6b2d..fb8a3955e969 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2000,9 +2000,6 @@ config TEST_UUID
->  config TEST_XARRAY
->  	tristate "Test the XArray code at runtime"
->  
-> -config TEST_OVERFLOW
-> -	tristate "Test check_*_overflow() functions at runtime"
-> -
->  config TEST_RHASHTABLE
->  	tristate "Perform selftest on resizable hash table"
->  	help
-> @@ -2155,6 +2152,23 @@ config SYSCTL_KUNIT_TEST
->  
->  	  If unsure, say N.
->  
-> +config OVERFLOW_KUNIT_TEST
-> +	tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  This builds the overflow KUnit tests.
-> +
-> +	  KUnit tests run during boot and output the results to the debug log
-> +	  in TAP format (http://testanything.org/). Only useful for kernel devs
-> +	  running KUnit test harness and are not for inclusion into a production
-> +	  build.
-> +
-> +	  For more information on KUnit and unit tests in general please refer
-> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +	  If unsure, say N.
-> +
->  config LIST_KUNIT_TEST
->  	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
->  	depends on KUNIT
-> diff --git a/lib/Makefile b/lib/Makefile
-> index b1c42c10073b..3b725c9f92d4 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -75,7 +75,6 @@ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
->  obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
->  obj-$(CONFIG_TEST_LKM) += test_module.o
->  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
-> -obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
->  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
->  obj-$(CONFIG_TEST_SORT) += test_sort.o
->  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
-> @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
->  # KUnit tests
->  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
->  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> +obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow-test.o
-> diff --git a/lib/test_overflow.c b/lib/overflow-test.c
-> similarity index 96%
-> rename from lib/test_overflow.c
-> rename to lib/overflow-test.c
-> index 7a4b6f6c5473..d40ef06b1ade 100644
-> --- a/lib/test_overflow.c
-> +++ b/lib/overflow-test.c
-> @@ -4,14 +4,11 @@
->   */
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> +#include <kunit/test.h>
->  #include <linux/device.h>
->  #include <linux/init.h>
-> -#include <linux/kernel.h>
->  #include <linux/mm.h>
-> -#include <linux/module.h>
->  #include <linux/overflow.h>
-> -#include <linux/slab.h>
-> -#include <linux/types.h>
->  #include <linux/vmalloc.h>
->  
->  #define DEFINE_TEST_ARRAY(t)			\
-> @@ -270,7 +267,7 @@ DEFINE_TEST_FUNC(u64, "%llu");
->  DEFINE_TEST_FUNC(s64, "%lld");
->  #endif
->  
-> -static int __init test_overflow_calculation(void)
-> +static void __init overflow_calculation_test(struct kunit *test)
->  {
->  	int err = 0;
->  
-> @@ -285,10 +282,10 @@ static int __init test_overflow_calculation(void)
->  	err |= test_s64_overflow();
->  #endif
->  
-> -	return err;
-> +	KUNIT_EXPECT_FALSE(test, err);
->  }
-
-Ah! Well, yes, I guess that is one way to do it. :) I'm just curious:
-why the change away from doing EXPECTs on individual tests?
-
->  
-> -static int __init test_overflow_shift(void)
-> +static void __init overflow_shift_test(struct kunit *test)
->  {
->  	int err = 0;
->  
-> @@ -479,7 +476,7 @@ static int __init test_overflow_shift(void)
->  	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
->  	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
->  
-> -	return err;
-> +	KUNIT_EXPECT_FALSE(test, err);
->  }
->  
->  /*
-> @@ -555,7 +552,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0, 1, 1);
->  DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
->  DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
->  
-> -static int __init test_overflow_allocation(void)
-> +static void __init overflow_allocation_test(struct kunit *test)
->  {
->  	const char device_name[] = "overflow-test";
->  	struct device *dev;
-> @@ -563,10 +560,8 @@ static int __init test_overflow_allocation(void)
->  
->  	/* Create dummy device for devm_kmalloc()-family tests. */
->  	dev = root_device_register(device_name);
-> -	if (IS_ERR(dev)) {
-> -		pr_warn("Cannot register test device\n");
-> -		return 1;
-> -	}
-> +	if (IS_ERR(dev))
-> +		kunit_warn(test, "Cannot register test device\n");
->  
->  	err |= test_kmalloc(NULL);
->  	err |= test_kmalloc_node(NULL);
-> @@ -585,30 +580,21 @@ static int __init test_overflow_allocation(void)
->  
->  	device_unregister(dev);
->  
-> -	return err;
-> +	KUNIT_EXPECT_FALSE(test, err);
->  }
->  
-> -static int __init test_module_init(void)
-> -{
-> -	int err = 0;
-> -
-> -	err |= test_overflow_calculation();
-> -	err |= test_overflow_shift();
-> -	err |= test_overflow_allocation();
-> -
-> -	if (err) {
-> -		pr_warn("FAIL!\n");
-> -		err = -EINVAL;
-> -	} else {
-> -		pr_info("all tests passed\n");
-> -	}
-> +static struct kunit_case __refdata overflow_test_cases[] = {
-
-Erm, __refdata? This seems like it should be __initdata.
-
-> +	KUNIT_CASE(overflow_calculation_test),
-> +	KUNIT_CASE(overflow_shift_test),
-> +	KUNIT_CASE(overflow_allocation_test),
-> +	{}
-> +};
->  
-> -	return err;
-> -}
-> +static struct kunit_suite overflow_test_suite = {
-
-And this.
-
-> +	.name = "overflow",
-> +	.test_cases = overflow_test_cases,
-> +};
->  
-> -static void __exit test_module_exit(void)
-> -{ }
-> +kunit_test_suites(&overflow_test_suite);
-
-I suspect the problem causing the need for __refdata there is the lack
-of __init markings on the functions in kunit_test_suites()?
-
-(Or maybe this is explained somewhere else I've missed it.)
-
-For example, would this work? (I haven't tested it all.)
-
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 59f3144f009a..aad746d59d2f 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -233,9 +233,9 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
- unsigned int kunit_test_case_num(struct kunit_suite *suite,
- 				 struct kunit_case *test_case);
- 
--int __kunit_test_suites_init(struct kunit_suite **suites);
-+int __init __kunit_test_suites_init(struct kunit_suite **suites);
- 
--void __kunit_test_suites_exit(struct kunit_suite **suites);
-+void __exit __kunit_test_suites_exit(struct kunit_suite **suites);
- 
- /**
-  * kunit_test_suites() - used to register one or more &struct kunit_suite
-@@ -263,8 +263,9 @@ void __kunit_test_suites_exit(struct kunit_suite **suites);
-  * everything else is definitely initialized.
-  */
- #define kunit_test_suites(suites_list...)				\
--	static struct kunit_suite *suites[] = {suites_list, NULL};	\
--	static int kunit_test_suites_init(void)				\
-+	static struct kunit_suite *suites[] __initdata =		\
-+		{suites_list, NULL};					\
-+	static int __init kunit_test_suites_init(void)			\
- 	{								\
- 		return __kunit_test_suites_init(suites);		\
- 	}								\
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index c36037200310..bfb0f563721b 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -381,7 +381,7 @@ static void kunit_init_suite(struct kunit_suite *suite)
- 	kunit_debugfs_create_suite(suite);
- }
- 
--int __kunit_test_suites_init(struct kunit_suite **suites)
-+int __init __kunit_test_suites_init(struct kunit_suite **suites)
- {
- 	unsigned int i;
- 
-@@ -393,7 +393,7 @@ int __kunit_test_suites_init(struct kunit_suite **suites)
- }
- EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
- 
--static void kunit_exit_suite(struct kunit_suite *suite)
-+static void __exit kunit_exit_suite(struct kunit_suite *suite)
- {
- 	kunit_debugfs_destroy_suite(suite);
- }
-
->  
-> -module_init(test_module_init);
-> -module_exit(test_module_exit);
->  MODULE_LICENSE("Dual MIT/GPL");
-> 
-> base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
-> prerequisite-patch-id: e827b6b22f950b9f69620805a04e4a264cf4cc6a
-> -- 
-> 2.26.2
-> 
-
-Thanks again for the conversion!
-
--- 
-Kees Cook
+On 2020/06/19 2:55, Kanchan Joshi wrote:=0A=
+> On Wed, Jun 17, 2020 at 11:56:34PM -0700, Christoph Hellwig wrote:=0A=
+>> On Wed, Jun 17, 2020 at 10:53:36PM +0530, Kanchan Joshi wrote:=0A=
+>>> This patchset enables issuing zone-append using aio and io-uring direct=
+-io interface.=0A=
+>>>=0A=
+>>> For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application uses =
+start LBA=0A=
+>>> of the zone to issue append. On completion 'res2' field is used to retu=
+rn=0A=
+>>> zone-relative offset.=0A=
+>>>=0A=
+>>> For io-uring, this introduces three opcodes: IORING_OP_ZONE_APPEND/APPE=
+NDV/APPENDV_FIXED.=0A=
+>>> Since io_uring does not have aio-like res2, cqe->flags are repurposed t=
+o return zone-relative offset=0A=
+>>=0A=
+>> And what exactly are the semantics supposed to be?  Remember the=0A=
+>> unix file abstractions does not know about zones at all.=0A=
+>>=0A=
+>> I really don't think squeezing low-level not quite block storage=0A=
+>> protocol details into the Linux read/write path is a good idea.=0A=
+> =0A=
+> I was thinking of raw block-access to zone device rather than pristine fi=
+le=0A=
+> abstraction. And in that context, semantics, at this point, are unchanged=
+=0A=
+> (i.e. same as direct writes) while flexibility of async-interface gets=0A=
+> added.=0A=
+=0A=
+The aio->aio_offset use by the user and kernel differs for regular writes a=
+nd=0A=
+zone append writes. This is a significant enough change to say that semanti=
+c=0A=
+changed. Yes both cases are direct IOs, but specification of the write loca=
+tion=0A=
+by the user and where the data actually lands on disk are different.=0A=
+=0A=
+There are a lot of subtle things that can happen that makes mapping of zone=
+=0A=
+append operations to POSIX semantic difficult. E.g. for a regular file, usi=
+ng=0A=
+zone append for any write issued to a file open with O_APPEND maps well to =
+POSIX=0A=
+only for blocking writes. For asynchronous writes, that is not true anymore=
+=0A=
+since the order of data defined by the automatic append after the previous =
+async=0A=
+write breaks: data can land anywhere in the zone regardless of the offset=
+=0A=
+specified on submission.=0A=
+=0A=
+> Synchronous-writes on single-zone sound fine, but synchronous-appends on=
+=0A=
+> single-zone do not sound that fine.=0A=
+=0A=
+Why not ? This is a perfectly valid use case that actually does not have an=
+y=0A=
+semantic problem. It indeed may not be the  most effective method to get hi=
+gh=0A=
+performance but saying that it is "not fine" is not correct in my opinion.=
+=0A=
+=0A=
+> =0A=
+>> What could be a useful addition is a way for O_APPEND/RWF_APPEND writes=
+=0A=
+>> to report where they actually wrote, as that comes close to Zone Append=
+=0A=
+>> while still making sense at our usual abstraction level for file I/O.=0A=
+> =0A=
+> Thanks for suggesting this. O and RWF_APPEND may not go well with block=
+=0A=
+> access as end-of-file will be picked from dev inode. But perhaps a new=0A=
+> flag like RWF_ZONE_APPEND can help to transform writes (aio or uring)=0A=
+> into append without introducing new opcodes.=0A=
+=0A=
+Yes, RWF_ZONE_APPEND may be better if the semantic of RWF_APPEND cannot be=
+=0A=
+cleanly reused. But as Christoph said, RWF_ZONE_APPEND semantic need to be=
+=0A=
+clarified so that all reviewer can check the code against the intended beha=
+vior,=0A=
+and comment on that intended behavior too.=0A=
+=0A=
+> And, I think, this can fit fine on file-abstraction of ZoneFS as well.=0A=
+=0A=
+May be. Depends on what semantic you are after for user zone append interfa=
+ce.=0A=
+Ideally, we should have at least the same for raw block device and zonefs. =
+But=0A=
+zonefs may be able to do a better job thanks to its real regular file=0A=
+abstraction of zones. As Christoph said, we started looking into it but lac=
+ked=0A=
+time to complete this work. This is still on-going.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
