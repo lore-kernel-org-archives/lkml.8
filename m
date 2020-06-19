@@ -2,89 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B21C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0297C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8948321D7A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B39421D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgFSVen (ORCPT
+        id S1727863AbgFSVg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:34:43 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:48224 "EHLO inva021.nxp.com"
+        Fri, 19 Jun 2020 17:36:27 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42269 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgFSVeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:34:23 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0238720120C;
-        Fri, 19 Jun 2020 23:34:22 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E9B8D20120A;
-        Fri, 19 Jun 2020 23:34:21 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 38846204B6;
-        Fri, 19 Jun 2020 23:34:21 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] ARM: dts: imx6sll: add rng
-Date:   Sat, 20 Jun 2020 00:33:45 +0300
-Message-Id: <20200619213347.27826-3-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619213347.27826-1-horia.geanta@nxp.com>
-References: <20200619213347.27826-1-horia.geanta@nxp.com>
+        id S1726220AbgFSVg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:36:26 -0400
+IronPort-SDR: OS2KFiwiQh6Hm40mwlWWJTx9T0mF6DuaZKpaN+DweYKGkrykGhpCNFJA3zPD3Pi6Yok2Boi/+o
+ IQhZpPl09Jrw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="140621171"
+X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
+   d="scan'208";a="140621171"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 14:36:25 -0700
+IronPort-SDR: 4K/HxW4uIuQ0D6dlKG6XYG191cP3Z0mCRfpBOrnwzL11vK8zKp2IHOZo9/kIQcRPP7PbfzSJej
+ U0vAS1rcNaNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
+   d="scan'208";a="477774556"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Jun 2020 14:36:24 -0700
+Date:   Fri, 19 Jun 2020 14:36:24 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] nvdimm/region: Use struct_size() in kzalloc()
+Message-ID: <20200619213624.GA3910394@iweiny-DESK2.sc.intel.com>
+References: <20200619172112.GA31702@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619172112.GA31702@embeddedor>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add node for the RNGB block.
+On Fri, Jun 19, 2020 at 12:21:12PM -0500, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> This issue was found with the help of Coccinelle and, audited and fixed
+> manually.
+> 
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
- arch/arm/boot/dts/imx6sll.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index edd3abb9a9f1..e634cd45086b 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -786,6 +786,13 @@
- 				clocks = <&clks IMX6SLL_CLK_MMDC_P0_IPG>;
- 			};
- 
-+			rngb: rng@21b4000 {
-+				compatible = "fsl,imx25-rngb";
-+				reg = <0x021b4000 0x4000>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6SLL_CLK_DUMMY>;
-+			};
-+
- 			ocotp: ocotp-ctrl@21bc000 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--- 
-2.17.1
-
+> ---
+>  drivers/nvdimm/region_devs.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index 4502f9c4708d..8365fb1a9114 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -1063,8 +1063,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+>  		struct nd_blk_region *ndbr;
+>  
+>  		ndbr_desc = to_blk_region_desc(ndr_desc);
+> -		ndbr = kzalloc(sizeof(*ndbr) + sizeof(struct nd_mapping)
+> -				* ndr_desc->num_mappings,
+> +		ndbr = kzalloc(struct_size(ndbr, nd_region.mapping, ndr_desc->num_mappings),
+>  				GFP_KERNEL);
+>  		if (ndbr) {
+>  			nd_region = &ndbr->nd_region;
+> -- 
+> 2.27.0
+> 
