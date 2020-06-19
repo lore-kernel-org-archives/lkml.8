@@ -2,58 +2,212 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47313C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE91C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C61B20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A451120771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLS4t+v7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389639AbgFSUJ5 (ORCPT
+        id S2389717AbgFSUKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389050AbgFSUJ4 (ORCPT
+        Fri, 19 Jun 2020 16:10:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60817 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730512AbgFSUKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:09:56 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D207C06174E;
-        Fri, 19 Jun 2020 13:09:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CC0871288116F;
-        Fri, 19 Jun 2020 13:09:55 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 13:09:55 -0700 (PDT)
-Message-Id: <20200619.130955.642068136124585412.davem@davemloft.net>
-To:     f.suligoi@asem.it
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] net: ethernet: oki-semi: pch_gbe: fix spelling
- mistake
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200619091811.28651-1-f.suligoi@asem.it>
-References: <20200619091811.28651-1-f.suligoi@asem.it>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 19 Jun 2020 13:09:55 -0700 (PDT)
+        Fri, 19 Jun 2020 16:10:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592597421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sNFVnCF0ZnPwrKnet21C7zXJrmj/IcMRNriOPX8epSE=;
+        b=bLS4t+v7SbR3GyaP5sY2hccDWY9Q6T3ObDQNOnJPQo2WhnA4Tw6+RM5k+h3OPi0n+zeDel
+        8ufLh9p2lDRjxT2dYqCCOMxn+whiQXy4tXeconVrfAyDIlwC4cuz6UIRu9ztpvQDTVCsdQ
+        FkHlwsuY1OwwrflDMfWVEi4qWVKeMgQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-OXocr5PeP2CcqCjY-9Fygw-1; Fri, 19 Jun 2020 16:10:17 -0400
+X-MC-Unique: OXocr5PeP2CcqCjY-9Fygw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9E831005512;
+        Fri, 19 Jun 2020 20:10:14 +0000 (UTC)
+Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6849210013D7;
+        Fri, 19 Jun 2020 20:10:13 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 16:10:11 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619201011.GB13117@redhat.com>
+References: <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619181849.GR6578@ziepe.ca>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Flavio Suligoi <f.suligoi@asem.it>
-Date: Fri, 19 Jun 2020 11:18:11 +0200
-
-> Fix typo: "Triger" --> "Trigger"
+On Fri, Jun 19, 2020 at 03:18:49PM -0300, Jason Gunthorpe wrote:
+> On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
+> > On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+> > > On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+> > > 
+> > > > The madness is only that device B's mmu notifier might need to wait
+> > > > for fence_B so that the dma operation finishes. Which in turn has to
+> > > > wait for device A to finish first.
+> > > 
+> > > So, it sound, fundamentally you've got this graph of operations across
+> > > an unknown set of drivers and the kernel cannot insert itself in
+> > > dma_fence hand offs to re-validate any of the buffers involved?
+> > > Buffers which by definition cannot be touched by the hardware yet.
+> > > 
+> > > That really is a pretty horrible place to end up..
+> > > 
+> > > Pinning really is right answer for this kind of work flow. I think
+> > > converting pinning to notifers should not be done unless notifier
+> > > invalidation is relatively bounded. 
+> > > 
+> > > I know people like notifiers because they give a bit nicer performance
+> > > in some happy cases, but this cripples all the bad cases..
+> > > 
+> > > If pinning doesn't work for some reason maybe we should address that?
+> > 
+> > Note that the dma fence is only true for user ptr buffer which predate
+> > any HMM work and thus were using mmu notifier already. You need the
+> > mmu notifier there because of fork and other corner cases.
 > 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> I wonder if we should try to fix the fork case more directly - RDMA
+> has this same problem and added MADV_DONTFORK a long time ago as a
+> hacky way to deal with it.
+>
+> Some crazy page pin that resolved COW in a way that always kept the
+> physical memory with the mm that initiated the pin?
 
-Applied.
+Just no way to deal with it easily, i thought about forcing the
+anon_vma (page->mapping for anonymous page) to the anon_vma that
+belongs to the vma against which the GUP was done but it would
+break things if page is already in other branch of a fork tree.
+Also this forbid fast GUP.
+
+Quite frankly the fork was not the main motivating factor. GPU
+can pin potentialy GBytes of memory thus we wanted to be able
+to release it but since Michal changes to reclaim code this is
+no longer effective.
+
+User buffer should never end up in those weird corner case, iirc
+the first usage was for xorg exa texture upload, then generalize
+to texture upload in mesa and latter on to more upload cases
+(vertices, ...). At least this is what i remember today. So in
+those cases we do not expect fork, splice, mremap, mprotect, ...
+
+Maybe we can audit how user ptr buffer are use today and see if
+we can define a usage pattern that would allow to cut corner in
+kernel. For instance we could use mmu notifier just to block CPU
+pte update while we do GUP and thus never wait on dma fence.
+
+Then GPU driver just keep the GUP pin around until they are done
+with the page. They can also use the mmu notifier to keep a flag
+so that the driver know if it needs to redo a GUP ie:
+
+The notifier path:
+   GPU_mmu_notifier_start_callback(range)
+        gpu_lock_cpu_pagetable(range)
+        for_each_bo_in(bo, range) {
+            bo->need_gup = true;
+        }
+        gpu_unlock_cpu_pagetable(range)
+
+   GPU_validate_buffer_pages(bo)
+        if (!bo->need_gup)
+            return;
+        put_pages(bo->pages);
+        range = bo_vaddr_range(bo)
+        gpu_lock_cpu_pagetable(range)
+        GUP(bo->pages, range)
+        gpu_unlock_cpu_pagetable(range)
+
+
+Depending on how user_ptr are use today this could work.
+
+
+> (isn't this broken for O_DIRECT as well anyhow?)
+
+Yes it can in theory, if you have an application that does O_DIRECT
+and fork concurrently (ie O_DIRECT in one thread and fork in another).
+Note that O_DIRECT after fork is fine, it is an issue only if GUP_fast
+was able to lookup a page with write permission before fork had the
+chance to update it to read only for COW.
+
+But doing O_DIRECT (or anything that use GUP fast) in one thread and
+fork in another is inherently broken ie there is no way to fix it.
+
+See 17839856fd588f4ab6b789f482ed3ffd7c403e1f
+
+> 
+> How does mmu_notifiers help the fork case anyhow? Block fork from
+> progressing?
+
+It enforce ordering between fork and GUP, if fork is first it blocks
+GUP and if forks is last then fork waits on GUP and then user buffer
+get invalidated.
+
+> 
+> > I probably need to warn AMD folks again that using HMM means that you
+> > must be able to update the GPU page table asynchronously without
+> > fence wait.
+> 
+> It is kind of unrelated to HMM, it just shouldn't be using mmu
+> notifiers to replace page pinning..
+
+Well my POV is that if you abide by rules HMM defined then you do
+not need to pin pages. The rule is asynchronous device page table
+update.
+
+Pinning pages is problematic it blocks many core mm features and
+it is just bad all around. Also it is inherently broken in front
+of fork/mremap/splice/...
+
+Cheers,
+Jérôme
+
