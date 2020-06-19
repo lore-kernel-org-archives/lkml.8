@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A997DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CCF217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E818218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578665;
-	bh=T3peY554NwlALNIfveCqi8a67Cv2Pt7s4h5T++96M/A=;
+	s=default; t=1592578675;
+	bh=g7s+4E0FWjGLf3fU+sdwvbuqe4aR7mVLH5Y7cpF0E24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e1t0xeRPUkFjwnGnfn7FW1RhUcyCp4oUzhElnPQpjMeGssQ40rr1ZexVtTAtDbwhN
-	 KPMFyG1KMmmJ436Kn9FUkHb/j/npZ3DlR5ySXyA3tcW2y9qrTDZKkbS+u4NRT8zy+t
-	 3O4UIqUjC6pdb4Kmrsm5Pg7VGxUJIkocWkb1Q1uQ=
+	b=ugQsGe3T+ArXRg09LM6jcbFbSPKmj8//8nFqYLUwL7Yslm8XlHPglcqLeHMgmY9N0
+	 AiC7aecHjUVgSHhMzRt3PPCApkOZBllV5ZNMmG93XsAoQiFpUannrzF8P58STXeMZj
+	 a5Wxi+zf1R9nguL4DbZ61O5iwTyCcqbbCVxcYPsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390284AbgFSO5n (ORCPT
+        id S2390295AbgFSO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390237AbgFSO52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:28 -0400
+        id S2390242AbgFSO5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6750217D8;
-        Fri, 19 Jun 2020 14:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D88218AC;
+        Fri, 19 Jun 2020 14:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578648;
-        bh=T3peY554NwlALNIfveCqi8a67Cv2Pt7s4h5T++96M/A=;
+        s=default; t=1592578651;
+        bh=g7s+4E0FWjGLf3fU+sdwvbuqe4aR7mVLH5Y7cpF0E24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLwCwLLgcSVLQhngVeLuBEtkg6sr6FBlvWFS/2M8RZNy5z0EM1lE84UvIXwgP+GsI
-         kgbDzfbfpEBsGyBhpRygudgljoEMk4lthKP2wVi4OKmz+6U92s0rIERkCP9glPXY8f
-         2Z5UvuB4l4kA+LHK0JK6FuDrSrmVyp+OG8VWuW/c=
+        b=Ik3qZQ7VsvqK8MEWdQUDlYRWDBrVabl6PprqrTU11KK2EVlYVqtKaFbNR4rr5VVLS
+         0JQEh5gMPZTt3KQMarBaeDxJqOxsJpiwEWHqlUefsZg28ia/l80+jTMP/kU3Fuqf5d
+         Y0EUtQxkfsz8lURGtsZ4yOZ0B8d/lG/0F0aVkF7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/267] spi: dw: Zero DMA Tx and Rx configurations on stack
-Date:   Fri, 19 Jun 2020 16:31:28 +0200
-Message-Id: <20200619141653.798594279@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 104/267] arm64: insn: Fix two bugs in encoding 32-bit logical immediates
+Date:   Fri, 19 Jun 2020 16:31:29 +0200
+Message-Id: <20200619141653.850412984@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,46 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
+[ Upstream commit 579d1b3faa3735e781ff74aac0afd598515dbc63 ]
 
-Some DMA controller drivers do not tolerate non-zero values in
-the DMA configuration structures. Zero them to avoid issues with
-such DMA controller drivers. Even despite above this is a good
-practice per se.
+This patch fixes two issues present in the current function for encoding
+arm64 logical immediates when using the 32-bit variants of instructions.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+First, the code does not correctly reject an all-ones 32-bit immediate,
+and returns an undefined instruction encoding.
+
+Second, the code incorrectly rejects some 32-bit immediates that are
+actually encodable as logical immediates. The root cause is that the code
+uses a default mask of 64-bit all-ones, even for 32-bit immediates.
+This causes an issue later on when the default mask is used to fill the
+top bits of the immediate with ones, shown here:
+
+  /*
+   * Pattern: 0..01..10..01..1
+   *
+   * Fill the unused top bits with ones, and check if
+   * the result is a valid immediate (all ones with a
+   * contiguous ranges of zeroes).
+   */
+  imm |= ~mask;
+  if (!range_of_ones(~imm))
+          return AARCH64_BREAK_FAULT;
+
+To see the problem, consider an immediate of the form 0..01..10..01..1,
+where the upper 32 bits are zero, such as 0x80000001. The code checks
+if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
+1..10..01..10..0, which fails the check; the correct mask yields
+0..01..10..0, which succeeds.
+
+The fix for both issues is to generate a correct mask based on the
+instruction immediate size, and use the mask to check for all-ones,
+all-zeroes, and values wider than the mask.
+
+Currently, arch/arm64/kvm/va_layout.c is the only user of this function,
+which uses 64-bit immediates and therefore won't trigger these bugs.
+
+We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+logical immediates and all 5,334 encodable 64-bit logical immediates.
+
+Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
+Suggested-by: Will Deacon <will@kernel.org>
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200508181547.24783-2-luke.r.nels@gmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/insn.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 3db905f5f345..f7ec8b98e6db 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -155,6 +155,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	if (!xfer->tx_buf)
- 		return NULL;
+diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+index 3e6229e30109..cd37edbdedcb 100644
+--- a/arch/arm64/kernel/insn.c
++++ b/arch/arm64/kernel/insn.c
+@@ -1490,16 +1490,10 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 				    u32 insn)
+ {
+ 	unsigned int immr, imms, n, ones, ror, esz, tmp;
+-	u64 mask = ~0UL;
+-
+-	/* Can't encode full zeroes or full ones */
+-	if (!imm || !~imm)
+-		return AARCH64_BREAK_FAULT;
++	u64 mask;
  
-+	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
- 	txconf.dst_maxburst = 16;
-@@ -201,6 +202,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	if (!xfer->rx_buf)
- 		return NULL;
+ 	switch (variant) {
+ 	case AARCH64_INSN_VARIANT_32BIT:
+-		if (upper_32_bits(imm))
+-			return AARCH64_BREAK_FAULT;
+ 		esz = 32;
+ 		break;
+ 	case AARCH64_INSN_VARIANT_64BIT:
+@@ -1511,6 +1505,12 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 		return AARCH64_BREAK_FAULT;
+ 	}
  
-+	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
- 	rxconf.src_maxburst = 16;
++	mask = GENMASK(esz - 1, 0);
++
++	/* Can't encode full zeroes, full ones, or value wider than the mask */
++	if (!imm || imm == mask || imm & ~mask)
++		return AARCH64_BREAK_FAULT;
++
+ 	/*
+ 	 * Inverse of Replicate(). Try to spot a repeating pattern
+ 	 * with a pow2 stride.
 -- 
 2.25.1
 
