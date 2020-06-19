@@ -2,95 +2,208 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5424AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9867920A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cVyekK6g"
+	by mail.kernel.org (Postfix) with ESMTP id 2DCF120DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592578003;
+	bh=2geJ1HC8sbOSBhL2sqC+ZhlfgC+NLuBZuPi5yQ1oKYM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ay6teaKDv9eMgtAy9ANZ4A+n5fVAeoORd4qhWOpXZ6KTRkDnUFLJLu+tW/mlPlSm1
+	 duzBIdYdfZ6ejO+0Z4VDTrB1wv55TFWF5LD3wm4nRXmylq9ySqz7p8AP8xHMz+Qfot
+	 Vu2z3lyffFk3wDt5bpqrvFj/+vxFDx/zIiEnTcg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388849AbgFSOqg (ORCPT
+        id S2388865AbgFSOqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388831AbgFSOqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:21 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C88C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:20 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b4so9102705qkn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+s6pkBRDM30YuGdJhldYKeWDIO48yG6flkbbQQFbzXo=;
-        b=cVyekK6gNaex1l33w5CHjg7QMVi68Sw9rhx+fP+2dHuJ9VuuQAjQuvPC0embsAEdll
-         pL39qxS6t4Z72V7EuzIFUxGRiUy0R9xd48CMucaUVTTfLG6KJuB1lp1lfDG99zhzwayW
-         RiNI4sAMzD5UAnCVeEJWJkrrLXz2X5a1+EHq7MfcAf4QEvRW11cPPhA2vSJJXwgq8+AN
-         wSG6JToEpWDGOJRIkVr0GSgtT9FzIJgJ3aJeeIbBu9wiiXvhrQHVX2R98vmzUHyZ8cjv
-         lNeHlLryFxqhdOjBqQ+153TWRlnSTkOAXNDtxCU6bs6aX/NcBxp1dDa0Y7/0d+TcX9er
-         bwfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+s6pkBRDM30YuGdJhldYKeWDIO48yG6flkbbQQFbzXo=;
-        b=neBrbNm/WRBh1E00NRTKZLyxyCiIMQwCgZbRoCTqKB1VYL0ZX1p35qkbDT4QLvnNfy
-         YfYCWqoaeGZphazEDBr5xACsHAy2YcfpwOthKH99wkFZj1esgh1rcsLrmsAaWF4XC3Oa
-         pwml7IBlyhBf/oVJ5pJ9jPKnH1cbq9dkncJtq2GBjERo4Mw6HabZFfFdzd2wheWDnzo0
-         vETR1+T178G3bfB4Erxy1qtle/ibDaRTZd9ps8sjVIk5AWFqsuGZ8BOUXImz6QcS1Exj
-         4FVEgrtx8KsIZ1p1/oZxYQpPmhKTg7APEdLJmU8inz8zo2IV+rMkL/hTZmCZcoDoPDTS
-         +hBA==
-X-Gm-Message-State: AOAM533Q7A8/BOSx9WXSbwCug+P2/As8fTiBkpSs5b2Ne5ciCom4OVQE
-        FoxQiy69G5e31xW5F5dnJ8WKrQ==
-X-Google-Smtp-Source: ABdhPJygwoh996Fm9/gdg5XwxRwtTBWoa4pQqIYXEJJKN05JlUNfo4ySIZl5kXOYWSFVrRj4BFCHdg==
-X-Received: by 2002:a05:620a:205e:: with SMTP id d30mr3855514qka.450.1592577979603;
-        Fri, 19 Jun 2020 07:46:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 6sm6469489qkl.26.2020.06.19.07.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 07:46:19 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jmIHa-00AoSr-JK; Fri, 19 Jun 2020 11:46:18 -0300
-Date:   Fri, 19 Jun 2020 11:46:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Bo YU <tsu.yubo@gmail.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        ledford@redhat.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/rtrs: fix potential resources leaks
-Message-ID: <20200619144618.GO6578@ziepe.ca>
-References: <20200619131017.pr7eoca2bzdtlbk4@debian.debian-2>
- <CAMGffEntL4XkF6bCuhUDP+AOBO4mpKK1pTe3NgPUW86ySyy7Wg@mail.gmail.com>
+        Fri, 19 Jun 2020 10:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388838AbgFSOqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314E220A8B;
+        Fri, 19 Jun 2020 14:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577989;
+        bh=2geJ1HC8sbOSBhL2sqC+ZhlfgC+NLuBZuPi5yQ1oKYM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H1V95gEedGa5uz4yi72L0RFG/uu/3PgUZfvY8f6OHvacPixcb82r3ACupsbattjo9
+         Nbz0SIZJ3YM0bF9fXXXNNkxre1Yj5MkmncXRDwCXIEwyvptzLbLGG+YlB7XR4K5L44
+         rZtUqahARiwh+EdGNQOaboIUntwC/y20s6p0jbLI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jiri Kosina <jkosina@suse.cz>, Borislav Petkov <bp@alien8.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 040/190] x86/speculation: Add support for STIBP always-on preferred mode
+Date:   Fri, 19 Jun 2020 16:31:25 +0200
+Message-Id: <20200619141635.583521394@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMGffEntL4XkF6bCuhUDP+AOBO4mpKK1pTe3NgPUW86ySyy7Wg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 03:16:57PM +0200, Jinpu Wang wrote:
-> Hi, Bo,
-> On Fri, Jun 19, 2020 at 3:10 PM Bo YU <tsu.yubo@gmail.com> wrote:
-> >
-> > Dev is returned from allocation function kzalloc but it does not
-> > free it in out_err path.
-> If allocation failed, kzalloc return NULL, nothing to free.
+From: Thomas Lendacky <Thomas.Lendacky@amd.com>
 
-You should re-organize this to not confuse coverity.
+[ Upstream commit 20c3a2c33e9fdc82e9e8e8d2a6445b3256d20191 ]
 
-IS_ERR_OR_NULL should rarely be used and is the problem here
+Different AMD processors may have different implementations of STIBP.
+When STIBP is conditionally enabled, some implementations would benefit
+from having STIBP always on instead of toggling the STIBP bit through MSR
+writes. This preference is advertised through a CPUID feature bit.
 
-Jason
+When conditional STIBP support is requested at boot and the CPU advertises
+STIBP always-on mode as preferred, switch to STIBP "on" support. To show
+that this transition has occurred, create a new spectre_v2_user_mitigation
+value and a new spectre_v2_user_strings message. The new mitigation value
+is used in spectre_v2_user_select_mitigation() to print the new mitigation
+message as well as to return a new string from stibp_state().
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Link: https://lkml.kernel.org/r/20181213230352.6937.74943.stgit@tlendack-t1.amdoffice.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/cpufeatures.h   |  1 +
+ arch/x86/include/asm/nospec-branch.h |  1 +
+ arch/x86/kernel/cpu/bugs.c           | 28 ++++++++++++++++++++++------
+ 3 files changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 764cbf1774d9..e08866cd2287 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -291,6 +291,7 @@
+ #define X86_FEATURE_AMD_IBPB		(13*32+12) /* "" Indirect Branch Prediction Barrier */
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
++#define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
+ #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
+ #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
+ #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index b73a16a56e4f..041d2a04be1d 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -232,6 +232,7 @@ enum spectre_v2_mitigation {
+ enum spectre_v2_user_mitigation {
+ 	SPECTRE_V2_USER_NONE,
+ 	SPECTRE_V2_USER_STRICT,
++	SPECTRE_V2_USER_STRICT_PREFERRED,
+ 	SPECTRE_V2_USER_PRCTL,
+ 	SPECTRE_V2_USER_SECCOMP,
+ };
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 3c3406a36812..ecd7ff665efe 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -633,10 +633,11 @@ enum spectre_v2_user_cmd {
+ };
+ 
+ static const char * const spectre_v2_user_strings[] = {
+-	[SPECTRE_V2_USER_NONE]		= "User space: Vulnerable",
+-	[SPECTRE_V2_USER_STRICT]	= "User space: Mitigation: STIBP protection",
+-	[SPECTRE_V2_USER_PRCTL]		= "User space: Mitigation: STIBP via prctl",
+-	[SPECTRE_V2_USER_SECCOMP]	= "User space: Mitigation: STIBP via seccomp and prctl",
++	[SPECTRE_V2_USER_NONE]			= "User space: Vulnerable",
++	[SPECTRE_V2_USER_STRICT]		= "User space: Mitigation: STIBP protection",
++	[SPECTRE_V2_USER_STRICT_PREFERRED]	= "User space: Mitigation: STIBP always-on protection",
++	[SPECTRE_V2_USER_PRCTL]			= "User space: Mitigation: STIBP via prctl",
++	[SPECTRE_V2_USER_SECCOMP]		= "User space: Mitigation: STIBP via seccomp and prctl",
+ };
+ 
+ static const struct {
+@@ -726,6 +727,15 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 		break;
+ 	}
+ 
++	/*
++	 * At this point, an STIBP mode other than "off" has been set.
++	 * If STIBP support is not being forced, check if STIBP always-on
++	 * is preferred.
++	 */
++	if (mode != SPECTRE_V2_USER_STRICT &&
++	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
++		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
++
+ 	/* Initialize Indirect Branch Prediction Barrier */
+ 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
+@@ -999,6 +1009,7 @@ void arch_smt_update(void)
+ 	case SPECTRE_V2_USER_NONE:
+ 		break;
+ 	case SPECTRE_V2_USER_STRICT:
++	case SPECTRE_V2_USER_STRICT_PREFERRED:
+ 		update_stibp_strict();
+ 		break;
+ 	case SPECTRE_V2_USER_PRCTL:
+@@ -1233,7 +1244,8 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
+ 		 * Indirect branch speculation is always disabled in strict
+ 		 * mode.
+ 		 */
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
++		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
+@@ -1246,7 +1258,8 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
+ 		 */
+ 		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
+ 			return -EPERM;
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
++		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return 0;
+ 		task_set_spec_ib_disable(task);
+ 		if (ctrl == PR_SPEC_FORCE_DISABLE)
+@@ -1317,6 +1330,7 @@ static int ib_prctl_get(struct task_struct *task)
+ 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
+ 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
+ 	case SPECTRE_V2_USER_STRICT:
++	case SPECTRE_V2_USER_STRICT_PREFERRED:
+ 		return PR_SPEC_DISABLE;
+ 	default:
+ 		return PR_SPEC_NOT_AFFECTED;
+@@ -1564,6 +1578,8 @@ static char *stibp_state(void)
+ 		return ", STIBP: disabled";
+ 	case SPECTRE_V2_USER_STRICT:
+ 		return ", STIBP: forced";
++	case SPECTRE_V2_USER_STRICT_PREFERRED:
++		return ", STIBP: always-on";
+ 	case SPECTRE_V2_USER_PRCTL:
+ 	case SPECTRE_V2_USER_SECCOMP:
+ 		if (static_key_enabled(&switch_to_cond_stibp))
+-- 
+2.25.1
+
+
+
