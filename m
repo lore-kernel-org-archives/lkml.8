@@ -2,49 +2,49 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A21C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 936062100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B092100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTXeeE3H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFFWikqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436634AbgFSSYT (ORCPT
+        id S2405397AbgFSSXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:24:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405783AbgFSSXq (ORCPT
+        Fri, 19 Jun 2020 14:23:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47447 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405381AbgFSSXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:23:46 -0400
+        Fri, 19 Jun 2020 14:23:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592591025;
+        s=mimecast20190719; t=1592591018;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qkSO6uAew6y5ogpj/Gk8Z9+bhI6aspDyhTULUBQkJkA=;
-        b=MTXeeE3Hq9eDG/V8DYhTY4eAKtb8HUPITc/c+RyMGpCrDC4Qi2ew6I2ZbbRUXTUkF1ZidP
-        uq5HAjPvgqw+lHOgvqoMd0W0l5MUk8E8/B6oaR1IIqCfCsNqzjhHCPGtzFjbKz2JqtxhLc
-        JSwVF6qkGCzA7fR9/uVPQU54ExORO1U=
+        bh=hizvuErrfe2IuRCAoJyyo6xCFe+4OpL2MM7w/xo1d5g=;
+        b=NFFWikqxwoVHlXbGzwMMqrj7SIGT/HTLpqlCrMImpHngVLl5I5YfCCGr8sgG2r6oaNQz+x
+        t4q5TeR7sHpLDjyphXp4NoE4YaGjYCbtqRBP8GW4Cex6PSxmtyWvaa/3aXaPo6PxaEvNy2
+        HSJdW4q/Y5FyJPRsIaqVyvEsn4LMR44=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-dJw4fSr5P9ej4gAyiHZ2Ww-1; Fri, 19 Jun 2020 14:23:42 -0400
-X-MC-Unique: dJw4fSr5P9ej4gAyiHZ2Ww-1
+ us-mta-193-CYcofGs2NzCziALfYEt4aw-1; Fri, 19 Jun 2020 14:23:36 -0400
+X-MC-Unique: CYcofGs2NzCziALfYEt4aw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDA1F835B8E;
-        Fri, 19 Jun 2020 18:23:41 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5FD7107ACCA;
+        Fri, 19 Jun 2020 18:23:34 +0000 (UTC)
 Received: from eperezma.remote.csb (ovpn-113-14.ams2.redhat.com [10.36.113.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D91011C8;
-        Fri, 19 Jun 2020 18:23:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E414C7C1E4;
+        Fri, 19 Jun 2020 18:23:32 +0000 (UTC)
 From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To:     mst@redhat.com
 Cc:     kvm list <kvm@vger.kernel.org>,
@@ -53,9 +53,9 @@ Cc:     kvm list <kvm@vger.kernel.org>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Jason Wang <jasowang@redhat.com>
-Subject: [RFC v9 10/11] vhost/vsock: switch to the buf API
-Date:   Fri, 19 Jun 2020 20:23:01 +0200
-Message-Id: <20200619182302.850-11-eperezma@redhat.com>
+Subject: [RFC v9 07/11] vhost/net: avoid iov length math
+Date:   Fri, 19 Jun 2020 20:22:58 +0200
+Message-Id: <20200619182302.850-8-eperezma@redhat.com>
 In-Reply-To: <20200619182302.850-1-eperezma@redhat.com>
 References: <20200619182302.850-1-eperezma@redhat.com>
 MIME-Version: 1.0
@@ -69,98 +69,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Michael S. Tsirkin" <mst@redhat.com>
 
-A straight-forward conversion.
+Now that API exposes buffer length, we no longer need to
+scan IOVs to figure it out.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
 ---
- drivers/vhost/vsock.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/vhost/net.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index a483cec31d5c..61c6d3dd2ae3 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -103,7 +103,8 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 		unsigned out, in;
- 		size_t nbytes;
- 		size_t iov_len, payload_len;
--		int head;
-+		struct vhost_buf buf;
-+		int ret;
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 871214d8c64d..3356b249bf64 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -607,11 +607,9 @@ static bool vhost_exceeds_maxpend(struct vhost_net *net)
+ }
  
- 		spin_lock_bh(&vsock->send_pkt_list_lock);
- 		if (list_empty(&vsock->send_pkt_list)) {
-@@ -117,16 +118,17 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 		list_del_init(&pkt->list);
- 		spin_unlock_bh(&vsock->send_pkt_list_lock);
+ static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
+-			    size_t hdr_size, int out)
++			    size_t len, size_t hdr_size, int out)
+ {
+ 	/* Skip header. TODO: support TSO. */
+-	size_t len = iov_length(vq->iov, out);
+-
+ 	iov_iter_init(iter, WRITE, vq->iov, out, len);
+ 	iov_iter_advance(iter, hdr_size);
  
--		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
--					 &out, &in, NULL, NULL);
--		if (head < 0) {
-+		ret = vhost_get_avail_buf(vq, &buf,
-+					  vq->iov, ARRAY_SIZE(vq->iov),
-+					  &out, &in, NULL, NULL);
-+		if (ret < 0) {
- 			spin_lock_bh(&vsock->send_pkt_list_lock);
- 			list_add(&pkt->list, &vsock->send_pkt_list);
- 			spin_unlock_bh(&vsock->send_pkt_list_lock);
- 			break;
+@@ -640,7 +638,7 @@ static int get_tx_bufs(struct vhost_net *net,
+ 	}
+ 
+ 	/* Sanity check */
+-	*len = init_iov_iter(vq, &msg->msg_iter, nvq->vhost_hlen, *out);
++	*len = init_iov_iter(vq, &msg->msg_iter, buf->out_len, nvq->vhost_hlen, *out);
+ 	if (*len == 0) {
+ 		vq_err(vq, "Unexpected header len for TX: %zd expected %zd\n",
+ 			*len, nvq->vhost_hlen);
+@@ -1081,7 +1079,7 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
+ 			nlogs += *log_num;
+ 			log += *log_num;
  		}
- 
--		if (head == vq->num) {
-+		if (!ret) {
- 			spin_lock_bh(&vsock->send_pkt_list_lock);
- 			list_add(&pkt->list, &vsock->send_pkt_list);
- 			spin_unlock_bh(&vsock->send_pkt_list_lock);
-@@ -186,7 +188,8 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		buf.in_len = sizeof(pkt->hdr) + payload_len;
-+		vhost_put_used_buf(vq, &buf);
- 		added = true;
- 
- 		pkt->off += payload_len;
-@@ -440,7 +443,8 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
- 	struct vhost_vsock *vsock = container_of(vq->dev, struct vhost_vsock,
- 						 dev);
- 	struct virtio_vsock_pkt *pkt;
--	int head, pkts = 0, total_len = 0;
-+	int ret, pkts = 0, total_len = 0;
-+	struct vhost_buf buf;
- 	unsigned int out, in;
- 	bool added = false;
- 
-@@ -461,12 +465,13 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
- 			goto no_more_replies;
- 		}
- 
--		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
--					 &out, &in, NULL, NULL);
--		if (head < 0)
-+		ret = vhost_get_avail_buf(vq, &buf,
-+					  vq->iov, ARRAY_SIZE(vq->iov),
-+					  &out, &in, NULL, NULL);
-+		if (ret < 0)
- 			break;
- 
--		if (head == vq->num) {
-+		if (!ret) {
- 			if (unlikely(vhost_enable_notify(&vsock->dev, vq))) {
- 				vhost_disable_notify(&vsock->dev, vq);
- 				continue;
-@@ -494,7 +499,8 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
- 			virtio_transport_free_pkt(pkt);
- 
- 		len += sizeof(pkt->hdr);
--		vhost_add_used(vq, head, len);
-+		buf.in_len = len;
-+		vhost_put_used_buf(vq, &buf);
- 		total_len += len;
- 		added = true;
- 	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
+-		len = iov_length(vq->iov + seg, in);
++		len = bufs[bufcount].in_len;
+ 		datalen -= len;
+ 		++bufcount;
+ 		seg += in;
 -- 
 2.18.1
 
