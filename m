@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2ADA21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251B21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583043;
-	bh=FQzGguG+hmcl7cfXxLr3IInpG6jYeF8Ns+/5r+ngYpM=;
+	s=default; t=1592583054;
+	bh=MR39vtB/C9XrQbTfXckuJXqd4TZpcXNPYMB/BQEKY5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCw9ba9tkuSNbno8O05fhks5nujMf8UlWsAFLp2ejhaKPURInOBdSUgMvtsOyDBjv
-	 kGsfJNn4I5PjqGKnPhoHQ/BaAkr4nAXjRTBgOfTIh6MJ2GNLbV93tZv1OHJScWyuy/
-	 HMYZLjo4TvDSXBAqbTMMQvr7n0PTA7fPKb8yHyV8=
+	b=BeExqM3WyxBIDgX+AT9F494cOkuvfxGBsjpZbP7Ecejbi2BWN6RKnIE2kz8jiTR1p
+	 rc5CF8Dep5MelJv3Q/c8JPZipcA7xMmBq7uJ5jUop63DjZ/NIfjAFRzlOn3iH4n/RK
+	 OJxASJ86IRg+N521WyVf2nCRB+ZammeVi5zWll9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405522AbgFSQKi (ORCPT
+        id S2391424AbgFSQKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390999AbgFSPGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:34 -0400
+        id S2391417AbgFSPGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 108AA21974;
-        Fri, 19 Jun 2020 15:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B209721835;
+        Fri, 19 Jun 2020 15:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579193;
-        bh=FQzGguG+hmcl7cfXxLr3IInpG6jYeF8Ns+/5r+ngYpM=;
+        s=default; t=1592579183;
+        bh=MR39vtB/C9XrQbTfXckuJXqd4TZpcXNPYMB/BQEKY5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MwufHuOcl3h/5d0ffBN43NLnFQ8Wzi0RsWzfVy/edwOcZu3kcgEGgOFSBsP0rNIM6
-         zpF5xYoY9zPa+IMEcvS0sz/I0GxoTm0xyVeUAGRabHqfN3CjA+6IiWqXIHyTWAQBSA
-         Kw3ApBXuetdJtRHN1AgVdcrp/RLF37paUXzqlVNs=
+        b=O2IoPdVnJzdhyr90Hx9OibI1Bsy3bTCqYN4hM4YrBQppl0KDqNEKvrhcPRACe2tIE
+         SohjKpDwIP3IUQ7XhA9K7Xkmq64LOHnl0X5Xv9BQc5Ljprfrq+GToNAf+M+PQ4aye5
+         v5IZMZYnUkXLXCdq79waBeXC98iHl2K5H4XIhe58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 025/261] spi: dw: Zero DMA Tx and Rx configurations on stack
-Date:   Fri, 19 Jun 2020 16:30:36 +0200
-Message-Id: <20200619141651.128636286@linuxfoundation.org>
+        Tuan Phan <tuanphan@os.amperecomputing.com>,
+        Hanjun Guo <guoahanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 039/261] ACPI/IORT: Fix PMCG node single ID mapping handling
+Date:   Fri, 19 Jun 2020 16:30:50 +0200
+Message-Id: <20200619141651.794880896@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,46 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Tuan Phan <tuanphan@os.amperecomputing.com>
 
-[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
+[ Upstream commit 50c8ab8d9fbf5b18d5162a797ca26568afc0af1a ]
 
-Some DMA controller drivers do not tolerate non-zero values in
-the DMA configuration structures. Zero them to avoid issues with
-such DMA controller drivers. Even despite above this is a good
-practice per se.
+An IORT PMCG node can have no ID mapping if its overflow interrupt is
+wire based therefore the code that parses the PMCG node can not assume
+the node will always have a single mapping present at index 0.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+and mapping count.
+
+Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Link: https://lore.kernel.org/r/1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/arm64/iort.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 2663bb12d9ce..242ac2768518 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -147,6 +147,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	if (!xfer->tx_buf)
- 		return NULL;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 5a7551d060f2..bc95a5eebd13 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -361,6 +361,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu_v3 *smmu;
++	struct acpi_iort_pmcg *pmcg;
  
-+	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
- 	txconf.dst_maxburst = 16;
-@@ -193,6 +194,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	if (!xfer->rx_buf)
- 		return NULL;
+ 	switch (node->type) {
+ 	case ACPI_IORT_NODE_SMMU_V3:
+@@ -388,6 +389,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
  
-+	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
- 	rxconf.src_maxburst = 16;
+ 		return smmu->id_mapping_index;
+ 	case ACPI_IORT_NODE_PMCG:
++		pmcg = (struct acpi_iort_pmcg *)node->node_data;
++		if (pmcg->overflow_gsiv || node->mapping_count == 0)
++			return -EINVAL;
++
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.25.1
 
