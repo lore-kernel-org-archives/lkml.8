@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C036621548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089F720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578828;
-	bh=DHBRFXpIxPF1VNe8ybMO2CoC+qFMUHZwChE270UunJw=;
+	s=default; t=1592578840;
+	bh=d8+EqofeeBMOBFNJT6NfDdQN0skLq6rIHmBekhQBzSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtDBubHIuYZt1BCoIcI6V7UV7C+qu032cwEjodk4KHP78M3ZD1DQEGPUhL6urBEVT
-	 Mbk4UpitRulOGiG+etMIaEUwRtDrXHTieTNAPDK160xmyKSXU20Axfsg8lkX6xBNeU
-	 Kf4s1m1nbwUnypE0nfglQUGMVNwnBWYIS7IyVxDk=
+	b=ma6kV5gQF1vsOL1guS1ZlJFeGgAq8XhXbiSgRzKrJ2i+FWasOHWgJaQbXHbYXLymM
+	 j0tZOPyefBQlccFTvMNewj2JdKC8cq/z2jzfEtFwimZjGu58seiwMeD71AFFMKBAHM
+	 Oj5hEavfjx7o0FW2k38Lk27GwWPaZ2J2jhMdykMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389788AbgFSPAZ (ORCPT
+        id S2389994AbgFSPAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390611AbgFSPAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:03 -0400
+        id S2390608AbgFSPAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA3042193E;
-        Fri, 19 Jun 2020 15:00:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3349B218AC;
+        Fri, 19 Jun 2020 15:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578803;
-        bh=DHBRFXpIxPF1VNe8ybMO2CoC+qFMUHZwChE270UunJw=;
+        s=default; t=1592578800;
+        bh=d8+EqofeeBMOBFNJT6NfDdQN0skLq6rIHmBekhQBzSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRee/xHGaOUSkdA0MWFi3AMdjQiCRUY+PSM7xXKr9tHcifOWCaeCpMywU5EEIQpB4
-         UuibZ4eX6MfWHAjh00oIqjPxgrzUhTF3OYRWowhQ3GzVAihGKQni5iwghwLs5n/XrZ
-         EdmH+Vdy+vJlJpIHX3a6uo2MDt/gObREbrE56ZuE=
+        b=V54FZ9vSiDT3xsANoU/EjYKxLXFdUfUGhmqviSYhDLZ1uESEaTJx7sNmJIKFDYzbh
+         jLuSQtgiyHpOvHmQV9tttbUPnHQNGm5Yj8eGkuE0fFrHl6Q2n/Yny1PmdLukWLV/sT
+         45faoNF7TVGBtVZ3TkA0KVMEAPm48kSJkIODAVE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 163/267] x86/boot: Correct relocation destination on old linkers
-Date:   Fri, 19 Jun 2020 16:32:28 +0200
-Message-Id: <20200619141656.621766768@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 162/267] mwifiex: Fix memory corruption in dump_station
+Date:   Fri, 19 Jun 2020 16:32:27 +0200
+Message-Id: <20200619141656.581746549@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,112 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 5214028dd89e49ba27007c3ee475279e584261f0 ]
+[ Upstream commit 3aa42bae9c4d1641aeb36f1a8585cd1d506cf471 ]
 
-For the 32-bit kernel, as described in
+The mwifiex_cfg80211_dump_station() uses static variable for iterating
+over a linked list of all associated stations (when the driver is in UAP
+role). This has a race condition if .dump_station is called in parallel
+for multiple interfaces. This corruption can be triggered by registering
+multiple SSIDs and calling, in parallel for multiple interfaces
+    iw dev <iface> station dump
 
-  6d92bc9d483a ("x86/build: Build compressed x86 kernels as PIE"),
+[16750.719775] Unable to handle kernel paging request at virtual address dead000000000110
+...
+[16750.899173] Call trace:
+[16750.901696]  mwifiex_cfg80211_dump_station+0x94/0x100 [mwifiex]
+[16750.907824]  nl80211_dump_station+0xbc/0x278 [cfg80211]
+[16750.913160]  netlink_dump+0xe8/0x320
+[16750.916827]  netlink_recvmsg+0x1b4/0x338
+[16750.920861]  ____sys_recvmsg+0x7c/0x2b0
+[16750.924801]  ___sys_recvmsg+0x70/0x98
+[16750.928564]  __sys_recvmsg+0x58/0xa0
+[16750.932238]  __arm64_sys_recvmsg+0x28/0x30
+[16750.936453]  el0_svc_common.constprop.3+0x90/0x158
+[16750.941378]  do_el0_svc+0x74/0x90
+[16750.944784]  el0_sync_handler+0x12c/0x1a8
+[16750.948903]  el0_sync+0x114/0x140
+[16750.952312] Code: f9400003 f907f423 eb02007f 54fffd60 (b9401060)
+[16750.958583] ---[ end trace c8ad181c2f4b8576 ]---
 
-pre-2.26 binutils generates R_386_32 relocations in PIE mode. Since the
-startup code does not perform relocation, any reloc entry with R_386_32
-will remain as 0 in the executing code.
+This patch drops the use of the static iterator, and instead every time
+the function is called iterates to the idx-th position of the
+linked-list.
 
-Commit
+It would be better to convert the code not to use linked list for
+associated stations storage (since the chip has a limited number of
+associated stations anyway - it could just be an array). Such a change
+may be proposed in the future. In the meantime this patch can backported
+into stable kernels in this simple form.
 
-  974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
-                 decompression buffer")
-
-added a new symbol _end but did not mark it hidden, which doesn't give
-the correct offset on older linkers. This causes the compressed kernel
-to be copied beyond the end of the decompression buffer, rather than
-flush against it. This region of memory may be reserved or already
-allocated for other purposes by the bootloader.
-
-Mark _end as hidden to fix. This changes the relocation from R_386_32 to
-R_386_RELATIVE even on the pre-2.26 binutils.
-
-For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
-built as PIE if the linker supports -z noreloc-overflow, which implies
-binutils-2.27+, but for consistency, mark _end as hidden here too.
-
-The below illustrates the before/after impact of the patch using
-binutils-2.25 and gcc-4.6.4 (locally compiled from source) and QEMU.
-
-  Disassembly before patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 00 00 00          sub    $0x0,%eax
-                          4f: R_386_32    _end
-  Disassembly after patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 f0 76 00          sub    $0x76f000,%eax
-                          4f: R_386_RELATIVE      *ABS*
-
-Dump from extract_kernel before patch:
-	early console in extract_kernel
-	input_data: 0x0207c098 <--- this is at output + init_size
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Dump from extract_kernel after patch:
-	early console in extract_kernel
-	input_data: 0x0190d098 <--- this is at output + init_size - _end
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200207214926.3564079-1-nivedita@alum.mit.edu
+Fixes: 8baca1a34d4c ("mwifiex: dump station support in uap mode")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200515075924.13841-1-pali@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 5 +++--
- arch/x86/boot/compressed/head_64.S | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 01d628ea3402..c6c4b877f3d2 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,17 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
-+ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
-  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-  * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
-+ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
-  * hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 7b74ef71bef1..650191db25cb 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -1468,7 +1468,8 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
+ 			      int idx, u8 *mac, struct station_info *sinfo)
+ {
+ 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
+-	static struct mwifiex_sta_node *node;
++	struct mwifiex_sta_node *node;
++	int i;
  
- 	__HEAD
- ENTRY(startup_32)
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 9fa644c62839..474733f8b330 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -42,6 +42,7 @@
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+ 	if ((GET_BSS_ROLE(priv) == MWIFIEX_BSS_ROLE_STA) &&
+ 	    priv->media_connected && idx == 0) {
+@@ -1478,13 +1479,10 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
+ 		mwifiex_send_cmd(priv, HOST_CMD_APCMD_STA_LIST,
+ 				 HostCmd_ACT_GEN_GET, 0, NULL, true);
  
- 	__HEAD
- 	.code32
+-		if (node && (&node->list == &priv->sta_list)) {
+-			node = NULL;
+-			return -ENOENT;
+-		}
+-
+-		node = list_prepare_entry(node, &priv->sta_list, list);
+-		list_for_each_entry_continue(node, &priv->sta_list, list) {
++		i = 0;
++		list_for_each_entry(node, &priv->sta_list, list) {
++			if (i++ != idx)
++				continue;
+ 			ether_addr_copy(mac, node->mac_addr);
+ 			return mwifiex_dump_station_info(priv, node, sinfo);
+ 		}
 -- 
 2.25.1
 
