@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6261C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C21A2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718E521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579115;
-	bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
+	s=default; t=1592579119;
+	bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FfLlV+9cS9+HoE1Irhbb9+Etv5zLZAmXBfvB2w3HBDZoZigTcznS2Y8JL25c0qkMb
-	 HbfN7glvxJ45WWY41PIlXYl7Hfu7J7PeP4lyGkzyv+1aB6Bbkq/BGMfFAzZDZ7F8h6
-	 cRz7Nkvor/V1mpGGzd42ppN8LwN57wV3y9DHxPQQ=
+	b=b7UWTn8ZFIdmPbiG+uH1+xt1czdnQSi4bYNfKHSonQswj2m8BjO9Xr08Ch8dl6cyu
+	 fRomXAtOTirI7/djtMtlPN7XdJeoNx5NtCy/PHkeWgAZESg8q8h0EohDbnWPm4UGqu
+	 Na3s4w60WHLdYSvt/1pCbbsbqpOTrqM9G4jPpLGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391265AbgFSPFO (ORCPT
+        id S2391277AbgFSPFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33964 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390550AbgFSPFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:08 -0400
+        id S2391262AbgFSPFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02012080C;
-        Fri, 19 Jun 2020 15:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB7E206DB;
+        Fri, 19 Jun 2020 15:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579108;
-        bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
+        s=default; t=1592579113;
+        bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEEGsO6K0JePlK5OvOIWXxQ/HzWGLJLJ67hkA60tghIH4kPAxj8UrEj4og6lQvQTD
-         yRZL/56vcoI46wbfzKoxpkNPz3k1mL43sCA6LsplvUneehQLFTg2o+D3IH6ToktHcX
-         vEbUhGJvoe2whWb2JZxDyWrGp2RSefuiS2N/Z9Dw=
+        b=ODjdnl8hdGJBEOdblLFzZt1Prt1px5t87tI1y4knOUNMRYBHE34q6FTQnaGiK2itZ
+         0lCxQ6c2oIBNwVCjT6HJtNpl8Rl2z4QZEzDpYMOo5vsKPM/fk+trBM7JV7jMQTBFLk
+         Km35zEvcIbxKkDGGFdRj0uq2q3IoJmObySrUyc9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/261] spi: spi-mem: Fix Dual/Quad modes on Octal-capable devices
-Date:   Fri, 19 Jun 2020 16:30:22 +0200
-Message-Id: <20200619141650.421402262@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 013/261] arm64/kernel: Fix range on invalidating dcache for boot page tables
+Date:   Fri, 19 Jun 2020 16:30:24 +0200
+Message-Id: <20200619141650.508600849@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,49 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Gavin Shan <gshan@redhat.com>
 
-[ Upstream commit 80300a7d5f2d7178335652f41d2e55ba898b4ec1 ]
+[ Upstream commit 9d2d75ede59bc1edd8561f2ee9d4702a5ea0ae30 ]
 
-Currently buswidths 2 and 4 are rejected for a device that advertises
-Octal capabilities.  Allow these buswidths, just like is done for
-buswidth 2 and Quad-capable devices.
+Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
+rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
+and init_pg_dir were contiguous at the end of the kernel image. The
+maintenance at the end of __create_page_tables assumed these were
+contiguous, and affected everything from the start of idmap_pg_dir
+to the end of init_pg_dir.
 
-Fixes: b12a084c8729ef42 ("spi: spi-mem: add support for octal mode I/O data transfer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200416101418.14379-1-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
+That commit moved all but init_pg_dir into the .rodata section, with
+other data placed between idmap_pg_dir and init_pg_dir, but did not
+update the maintenance. Hence the maintenance is performed on much
+more data than necessary (but as the bootloader previously made this
+clean to the PoC there is no functional problem).
+
+As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
+maintenance for these. As the other dirs are in .rodata, the bootloader
+will have initialised them as expected and cleaned them to the PoC. The
+kernel will initialize them as necessary after enabling the MMU.
+
+This patch reworks the maintenance to only cover the idmap_pg_dir and
+init_pg_dir to avoid this unnecessary work.
+
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://lore.kernel.org/r/20200427235700.112220-1-gshan@redhat.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mem.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/pgtable.h |  1 +
+ arch/arm64/kernel/head.S         | 12 +++++++++---
+ arch/arm64/kernel/vmlinux.lds.S  |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index 9f0fa9f3116d..de0ba3e5449f 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -108,15 +108,17 @@ static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
- 		return 0;
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 13ebe2bad79f..41dd4b1f0ccb 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -456,6 +456,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
+ extern pgd_t init_pg_end[];
+ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
+ extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
++extern pgd_t idmap_pg_end[];
+ extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
  
- 	case 2:
--		if ((tx && (mode & (SPI_TX_DUAL | SPI_TX_QUAD))) ||
--		    (!tx && (mode & (SPI_RX_DUAL | SPI_RX_QUAD))))
-+		if ((tx &&
-+		     (mode & (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL))) ||
-+		    (!tx &&
-+		     (mode & (SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL))))
- 			return 0;
+ extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 989b1944cb71..bdb5ec341900 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -393,13 +393,19 @@ __create_page_tables:
  
- 		break;
+ 	/*
+ 	 * Since the page tables have been populated with non-cacheable
+-	 * accesses (MMU disabled), invalidate the idmap and swapper page
+-	 * tables again to remove any speculatively loaded cache lines.
++	 * accesses (MMU disabled), invalidate those tables again to
++	 * remove any speculatively loaded cache lines.
+ 	 */
++	dmb	sy
++
+ 	adrp	x0, idmap_pg_dir
++	adrp	x1, idmap_pg_end
++	sub	x1, x1, x0
++	bl	__inval_dcache_area
++
++	adrp	x0, init_pg_dir
+ 	adrp	x1, init_pg_end
+ 	sub	x1, x1, x0
+-	dmb	sy
+ 	bl	__inval_dcache_area
  
- 	case 4:
--		if ((tx && (mode & SPI_TX_QUAD)) ||
--		    (!tx && (mode & SPI_RX_QUAD)))
-+		if ((tx && (mode & (SPI_TX_QUAD | SPI_TX_OCTAL))) ||
-+		    (!tx && (mode & (SPI_RX_QUAD | SPI_RX_OCTAL))))
- 			return 0;
+ 	ret	x28
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index aa76f7259668..e1af25dbc57e 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -142,6 +142,7 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);
+ 	idmap_pg_dir = .;
+ 	. += IDMAP_DIR_SIZE;
++	idmap_pg_end = .;
  
- 		break;
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ 	tramp_pg_dir = .;
 -- 
 2.25.1
 
