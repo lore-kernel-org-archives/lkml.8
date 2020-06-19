@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1328C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6DCC218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363E721852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578392;
-	bh=wNE4d/y/KwReZvgM0w+QmOl4/gIlUfiYZGCFEF3hM5w=;
+	s=default; t=1592578399;
+	bh=YUAEiWEGe5jqokQOiKCUo81Y71KVNrYCtlGnZm3dUVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcnWf9Y7atuhgiKzilD3Bi6pb9fWMM88dUiJWIzONTjxmlJs4Czei51KIf7lz9Z8E
-	 5whQTQkPE6hIeJ8aWLlJposGKwtYW71DYjbM0+9zQ3huGvqVM/1Fc19AHgwvKmytyv
-	 qJJXrw8BbFDxj4+yVQMufY4VJgrKqEd8Fe+sE3w0=
+	b=rDhhS/DkyltMKjo7RRrvf8/65NjVweU0Nx5HI0ib1/h+tdOM3GiYRrOxbF2cdV+lU
+	 26DOtIn+eAS1JfyzwYX3DfXXD9c6Jv+Rsymky0tyndK8NP8UpQr2Lu6ZDIV5XWKx4A
+	 7Yoxlp+rgAQUwZrMBb4CPU0X3n3QHkt0gvTqgO+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbgFSOxK (ORCPT
+        id S2389725AbgFSOxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389690AbgFSOxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:07 -0400
+        id S2389294AbgFSOxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF06721852;
-        Fri, 19 Jun 2020 14:53:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D215218AC;
+        Fri, 19 Jun 2020 14:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578387;
-        bh=wNE4d/y/KwReZvgM0w+QmOl4/gIlUfiYZGCFEF3hM5w=;
+        s=default; t=1592578389;
+        bh=YUAEiWEGe5jqokQOiKCUo81Y71KVNrYCtlGnZm3dUVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=us6aRXz+pV/UAQbaFy1Edtk7cnT7+wKHTwisnaxatPf4imjkt9WiCGmyIDbHGR51C
-         IK7qhTALa/AkAH3ucDYpC0zstb6ogy4j26m+UANDHPNxOPJfANa25Kqr5KrS3x/aw2
-         XmPAnK83d1Q5k153iDm0iCbdUIkavHYn46AyTxKY=
+        b=hMjeAzGDd3ye3bazGMpK5Qz/38xRAjHKBBX/319ORz0fgnmQuyIJGyV6EUvUTK5iU
+         iF17JRe34Py1bJmyaYA3Sl4QBreKxHsAE2a65lwyAGX8cANkpGeukw4NJqxyMF0uyu
+         /47g6C9IZUcjviQb8Z3EaJOu6oDgHJ9ukHGKUoGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.14 162/190] PCI: Program MPS for RCiEP devices
-Date:   Fri, 19 Jun 2020 16:33:27 +0200
-Message-Id: <20200619141641.854318422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.14 163/190] e1000e: Disable TSO for buffer overrun workaround
+Date:   Fri, 19 Jun 2020 16:33:28 +0200
+Message-Id: <20200619141641.911923484@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,67 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit aa0ce96d72dd2e1b0dfd0fb868f82876e7790878 upstream.
+commit f29801030ac67bf98b7a65d3aea67b30769d4f7c upstream.
 
-Root Complex Integrated Endpoints (RCiEPs) do not have an upstream bridge,
-so pci_configure_mps() previously ignored them, which may result in reduced
-performance.
+Commit b10effb92e27 ("e1000e: fix buffer overrun while the I219 is
+processing DMA transactions") imposes roughly 30% performance penalty.
 
-Instead, program the Max_Payload_Size of RCiEPs to the maximum supported
-value (unless it is limited for the PCIE_BUS_PEER2PEER case).  This also
-affects the subsequent programming of Max_Read_Request_Size because Linux
-programs MRRS based on the MPS value.
+The commit log states that "Disabling TSO eliminates performance loss
+for TCP traffic without a noticeable impact on CPU performance", so
+let's disable TSO by default to regain the loss.
 
-Fixes: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()")
-Link: https://lore.kernel.org/r/1585343775-4019-1-git-send-email-ashok.raj@intel.com
-Tested-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+CC: stable <stable@vger.kernel.org>
+Fixes: b10effb92e27 ("e1000e: fix buffer overrun while the I219 is processing DMA transactions")
+BugLink: https://bugs.launchpad.net/bugs/1802691
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/probe.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1557,13 +1557,33 @@ static void pci_configure_mps(struct pci
- 	struct pci_dev *bridge = pci_upstream_bridge(dev);
- 	int mps, p_mps, rc;
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5271,6 +5271,10 @@ static void e1000_watchdog_task(struct w
+ 					/* oops */
+ 					break;
+ 				}
++				if (hw->mac.type == e1000_pch_spt) {
++					netdev->features &= ~NETIF_F_TSO;
++					netdev->features &= ~NETIF_F_TSO6;
++				}
+ 			}
  
--	if (!pci_is_pcie(dev) || !bridge || !pci_is_pcie(bridge))
-+	if (!pci_is_pcie(dev))
- 		return;
- 
- 	/* MPS and MRRS fields are of type 'RsvdP' for VFs, short-circuit out */
- 	if (dev->is_virtfn)
- 		return;
- 
-+	/*
-+	 * For Root Complex Integrated Endpoints, program the maximum
-+	 * supported value unless limited by the PCIE_BUS_PEER2PEER case.
-+	 */
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-+		if (pcie_bus_config == PCIE_BUS_PEER2PEER)
-+			mps = 128;
-+		else
-+			mps = 128 << dev->pcie_mpss;
-+		rc = pcie_set_mps(dev, mps);
-+		if (rc) {
-+			pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
-+				 mps);
-+		}
-+		return;
-+	}
-+
-+	if (!bridge || !pci_is_pcie(bridge))
-+		return;
-+
- 	mps = pcie_get_mps(dev);
- 	p_mps = pcie_get_mps(bridge);
- 
+ 			/* enable transmits in the hardware, need to do this
 
 
