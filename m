@@ -2,111 +2,64 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79307C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C3620786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aS7TxzKo"
+	by mail.kernel.org (Postfix) with ESMTP id 3199D2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732129AbgFSJkO (ORCPT
+        id S1731369AbgFSJlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:40:14 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732110AbgFSJkN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:40:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592559612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=owa0qFAPsKpu74jXgvEbAGd5tDvX5jYwWR6WKxTC83E=;
-        b=aS7TxzKo4XpvVqOKG4a75I+wltTFPbbauE3/p/pZFSlwr4z9UYsPpHwoXZszdNB3WQx1k4
-        cDySvsaJySj01o2enO+y69+V4rYdm+aawxImncoWpd1VJqwtftp8f30zOlSRzXuuzFVdSW
-        N/kCi+uhTD0RgUIt9QFLMG1wveox2ko=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-E2DQ6Q59N3WWMbSJVCOn4A-1; Fri, 19 Jun 2020 05:39:29 -0400
-X-MC-Unique: E2DQ6Q59N3WWMbSJVCOn4A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7B8107B265;
-        Fri, 19 Jun 2020 09:39:26 +0000 (UTC)
-Received: from max.home.com (unknown [10.40.195.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9A15D9E8;
-        Fri, 19 Jun 2020 09:39:18 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>,
+        Fri, 19 Jun 2020 05:41:49 -0400
+Received: from elvis.franken.de ([193.175.24.41]:37444 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729195AbgFSJlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:41:49 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jmDWr-0006aC-00; Fri, 19 Jun 2020 11:41:45 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 2709FC06DA; Fri, 19 Jun 2020 10:37:43 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 10:37:43 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        linux-btrfs@vger.kernel.org
-Subject: [RFC PATCH 0/2] gfs2 readahead regression in v5.8-rc1
-Date:   Fri, 19 Jun 2020 11:39:14 +0200
-Message-Id: <20200619093916.1081129-1-agruenba@redhat.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] mips: Return proper error code from console
+ ->setup() hook
+Message-ID: <20200619083743.GA6894@alpha.franken.de>
+References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
+ <20200618164751.56828-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618164751.56828-2-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Jun 18, 2020 at 07:47:46PM +0300, Andy Shevchenko wrote:
+> For unifying console ->setup() handling, which is pure documented,
+> return error code, rather than non-zero arbitrary number.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> ---
+>  arch/mips/fw/arc/arc_con.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-can the two patches in this set still be considered for v5.8?
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-Commit d4388340ae0b ("fs: convert mpage_readpages to mpage_readahead")
-which converts gfs2 and other filesystems to use the new ->readahead
-address space operation is leading to deadlocks between the inode glocks
-and page locks: ->readahead is called with the pages to readahead
-already locked.  When gfs2_readahead then tries to lock the associated
-inode glock, another process already holding the inode glock may be
-trying to lock the same pages.
-
-We could work around this in gfs by using a LM_FLAG_TRY lock in
-->readahead for now.  The real reason for this deadlock is that gfs2
-shouldn't be taking the inode glock in ->readahead in the first place
-though, so I'd prefer to fix this "properly" instead.  Unfortunately,
-this depends on a new IOCB_CACHED flag for generic_file_read_iter.
-
-A previous version was posted in November:
-
-https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/
-
-Thanks,
-Andreas
-
-Andreas Gruenbacher (2):
-  fs: Add IOCB_CACHED flag for generic_file_read_iter
-  gfs2: Rework read and page fault locking
-
- fs/gfs2/aops.c     | 27 ++------------------
- fs/gfs2/file.c     | 61 ++++++++++++++++++++++++++++++++++++++++++++--
- include/linux/fs.h |  1 +
- mm/filemap.c       | 16 ++++++++++--
- 4 files changed, 76 insertions(+), 29 deletions(-)
-
-
-base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
 -- 
-2.26.2
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
