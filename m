@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C57C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94E32158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AC12158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579784;
-	bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+	s=default; t=1592579788;
+	bh=BUl86xW/ewJqWL8X0Gzx62jgAFsGACn6a8dbQ2QMsy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSMlPMFxw16hbwx1VhnEtuGyuWlxBQ7pH4+csqixMFLahooyaSpnCSb/Xs+NQ33iq
-	 /Sdy572MUJ8Vcv+epzV8I0tIDZoLleUcJz2xTudIGz98j+KIy0A302/3yfPOvctDD+
-	 BizHazuigKjiUo9M4b6fhqhiBTy9e8Ipky4aBFF8=
+	b=ULIx2sGkOf0MgoHfun6KN2u1jh0Ks/iw+o22YZEgeYw0IVmu2bir0OXrMqESmXULL
+	 a1/vR21J+4C5cd1IecK1+f1BGE3jDvgVUWmutsA7FD1LjgIMhUrKF1Ykp4nI/jgdAV
+	 JyWBSWU91nZ3Xl/7A8Sb+OgCOb3fBxSHwu5stv8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbgFSPQW (ORCPT
+        id S2404071AbgFSPQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391953AbgFSPQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:08 -0400
+        id S2392473AbgFSPQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:16:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE1BD206DB;
-        Fri, 19 Jun 2020 15:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD390206DB;
+        Fri, 19 Jun 2020 15:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579767;
-        bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+        s=default; t=1592579775;
+        bh=BUl86xW/ewJqWL8X0Gzx62jgAFsGACn6a8dbQ2QMsy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2XVfqKiLg2gY7ZGRhaYl/B9FVQbTt4ugi/+ek0lwPcuTdyBKOt7lZo60EG7/DqQ8Q
-         rI2OTXmI/BLqZbFCbqoaM2r3J6PcXE3JUADRcGDNGveQ7Z/VQ0iTNnQryUvVPVVHg+
-         l4AHeK903Kw3cVUtN8kA/KKdXuoI29bmH5L09qAY=
+        b=F9ktMczfd8AnTl1oQweXOJ0NefiyArTrK1LEnF/YDQacmxsedwvr7ERrYD1JlLsyq
+         f9rRGFv59qkr1InWK0Cuv2bVOeElU0Y7L9U8/uwzAFYsLLLE0C+zbdS+gj4pSmJS5j
+         qrzFSJVayElrTuVGRCJwY1SNMWbVXkylbLpiEMu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 228/261] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
-Date:   Fri, 19 Jun 2020 16:33:59 +0200
-Message-Id: <20200619141700.787277817@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 254/261] mtd: rawnand: tmio: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:25 +0200
+Message-Id: <20200619141702.047060788@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,34 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit baa998aecb75c04d62be0a4ab6b724af6d73a0f9 upstream.
+commit 75e9a330a9bd48f97a55a08000236084fe3dae56 upstream.
 
-The gpio property for the vbus pin doesn't match the pinctrl and is
-not correct.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
-Link: https://lore.kernel.org/r/20200401221947.41502-1-ludovic.desroches@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
+
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-57-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 +-
+ drivers/mtd/nand/raw/tmio_nand.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -40,7 +40,7 @@
+--- a/drivers/mtd/nand/raw/tmio_nand.c
++++ b/drivers/mtd/nand/raw/tmio_nand.c
+@@ -448,7 +448,7 @@ static int tmio_probe(struct platform_de
+ 	if (!retval)
+ 		return retval;
  
- 	ahb {
- 		usb0: gadget@300000 {
--			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
-+			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usba_vbus>;
- 			status = "okay";
+-	nand_release(nand_chip);
++	nand_cleanup(nand_chip);
+ 
+ err_irq:
+ 	tmio_hw_stop(dev, tmio);
 
 
