@@ -2,51 +2,61 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA9121707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724AA21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583370;
-	bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
+	s=default; t=1592583374;
+	bh=efr4F5l8E5T54xKaxuUYJ3rAEcKcuyWv6c6byuZfwpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WDKBCxbrlQXE7bwlQsJihzuvJMc9coa7QQaF8zNCAslDM09bx/5eeL66LquMvu/ti
-	 gGzbb04vGDXXdWI4eH79pAbqkbS7kYTKoE9SrOZGqB983WuWYJN+x5G8js00YXaEEn
-	 eofjSnQVUZ6KfFzRsEf1y5KMUBhZk88OjhXvnPMQ=
+	b=cLkUlqCEY0MerYGEEMU8qgrikC1TPENm3W9JLf0dh362LmBaIptCEbKhYyUbSJ8kc
+	 KracXlBqMjhyDqfWdKEdjDUW/rLfzKkr8MdZRUx40vEaxdgOr/+xAqhrdFkpPtuetk
+	 roS8KsVN7Z5bfoeTINgNKI86sISWq1P/uthsyuIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394490AbgFSQQI (ORCPT
+        id S2390965AbgFSPDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390980AbgFSPDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:19 -0400
+        id S2390881AbgFSPCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD32221841;
-        Fri, 19 Jun 2020 15:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFF021582;
+        Fri, 19 Jun 2020 15:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578999;
-        bh=tQhxigQbmQOKnMbx5j51NiN66GZ0gOKoylnatGUazao=;
+        s=default; t=1592578965;
+        bh=efr4F5l8E5T54xKaxuUYJ3rAEcKcuyWv6c6byuZfwpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrNJnne0RWB37g8TkInOkqexKFoglMYeIc3Mt6cAcs+fLn5R0g0WfMMAykYYX2naZ
-         WF2zY9LakobXuKyPCYLVFFDlp/r02vIREigOaJaHn3+PpIVfAJTjE9n0uQ46HKfq5d
-         aocf4FQgU+n3SF8SKuxnlNIjHGwzQvdT98RbTYbs=
+        b=gQutwUwytduWBmuUqcw0UJhbJCRmfwGs9Xuyiw3cFUvc4BMEU3Q9kY0tneg5Xg9a9
+         pwnK9ZdrjK/zN8lmqwaP/3B/9s0EvAOcyBVZMMocSfg4Lmn0O5H7sG+95CKzdRHZjx
+         eM/eJfEXfpxh1cx892Q1N7+jnXrusAzWk2Oknb9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 237/267] b43legacy: Fix case where channel status is corrupted
-Date:   Fri, 19 Jun 2020 16:33:42 +0200
-Message-Id: <20200619141700.075189213@linuxfoundation.org>
+        stable@vger.kernel.org, Vicki Pfau <vi@endrift.com>,
+        Marcel Bocu <marcel.p.bocu@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Brian Woods <brian.woods@amd.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.19 217/267] x86/amd_nb: Add PCI device IDs for family 17h, model 70h
+Date:   Fri, 19 Jun 2020 16:33:22 +0200
+Message-Id: <20200619141659.132768385@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,56 +69,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Marcel Bocu <marcel.p.bocu@gmail.com>
 
-commit ec4d3e3a054578de34cd0b587ab8a1ac36f629d9 upstream.
+[ Upstream commit af4e1c5eca95bed1192d8dc45c8ed63aea2209e8 ]
 
-This patch fixes commit 75388acd0cd8 ("add mac80211-based driver for
-legacy BCM43xx devices")
+The AMD Ryzen gen 3 processors came with a different PCI IDs for the
+function 3 & 4 which are used to access the SMN interface. The root
+PCI address however remained at the same address as the model 30h.
 
-In https://bugzilla.kernel.org/show_bug.cgi?id=207093, a defect in
-b43legacy is reported. Upon testing, thus problem exists on PPC and
-X86 platforms, is present in the oldest kernel tested (3.2), and
-has been present in the driver since it was first added to the kernel.
+Adding the F3/F4 PCI IDs respectively to the misc and link ids appear
+to be sufficient for k10temp, so let's add them and follow up on the
+patch if other functions need more tweaking.
 
-The problem is a corrupted channel status received from the device.
-Both the internal card in a PowerBook G4 and the PCMCIA version
-(Broadcom BCM4306 with PCI ID 14e4:4320) have the problem. Only Rev, 2
-(revision 4 of the 802.11 core) of the chip has been tested. No other
-devices using b43legacy are available for testing.
+Vicki Pfau sent an identical patch after I checked that no-one had
+written this patch. I would have been happy about dropping my patch but
+unlike for his patch series, I had already Cc:ed the x86 people and
+they already reviewed the changes. Since Vicki has not answered to
+any email after his initial series, let's assume she is on vacation
+and let's avoid duplication of reviews from the maintainers and merge
+my series. To acknowledge Vicki's anteriority, I added her S-o-b to
+the patch.
 
-Various sources of the problem were considered. Buffer overrun and
-other sources of corruption within the driver were rejected because
-the faulty channel status is always the same, not a random value.
-It was concluded that the faulty data is coming from the device, probably
-due to a firmware bug. As that source is not available, the driver
-must take appropriate action to recover.
+v2, suggested by Guenter Roeck and Brian Woods:
+ - rename from 71h to 70h
 
-At present, the driver reports the error, and them continues to process
-the bad packet. This is believed that to be a mistake, and the correct
-action is to drop the correpted packet.
+Signed-off-by: Vicki Pfau <vi@endrift.com>
+Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Brian Woods <brian.woods@amd.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 
-Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx devices")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reported-and-tested by: F. Erhard <erhard_f@mailbox.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200407190043.1686-1-Larry.Finger@lwfinger.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Link: https://lore.kernel.org/r/20190722174510.2179-1-marcel.p.bocu@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43legacy/xmit.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/amd_nb.c | 3 +++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/net/wireless/broadcom/b43legacy/xmit.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/xmit.c
-@@ -571,6 +571,7 @@ void b43legacy_rx(struct b43legacy_wldev
- 	default:
- 		b43legacywarn(dev->wl, "Unexpected value for chanstat (0x%X)\n",
- 		       chanstat);
-+		goto drop;
- 	}
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index b95db8ce83bf..be1d15a27079 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -20,6 +20,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
  
- 	memcpy(IEEE80211_SKB_RXCB(skb), &status, sizeof(status));
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -49,6 +50,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{}
+ };
+ EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+@@ -62,6 +64,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index a7abaaa9bc27..81ddbd891202 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -548,6 +548,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+-- 
+2.25.1
+
 
 
