@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ABFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC12C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D752F20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4F320734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580877;
-	bh=YtVlJQS36T/FGl827kIC89tbz5tIe3JW861Tai/VvyU=;
+	s=default; t=1592580882;
+	bh=LRtF0ol0E5xrY/TP7vBKd8wccCxYeetSbp8974+YILI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGeexpxSfY5/t5dxPnofcAWj+YVay6jadaEdzCvv0puaKpx4pBDPt4mx3ac78DTcT
-	 gsy7hodSut7R9YCJXsv74X57rasq0eTKcRUsSh2iJojJqEv0yfcTcWSrCqtfMbQVgH
-	 xvVzrZnTnNy8xKUwC9kjgXRiKXdkdMFxD+xqVRYk=
+	b=udig3TISGXQjih0M+HWKfbY54LuFRPl8YqV/hUTnhB5W/3hMRqQ77m+70Ge6Q6llV
+	 A18uavAMVdyznM1fq0t4yFVWylg6s+liQfBw2B+7L/a3Is02bmKJj2J7LgNlCPONH5
+	 tNYXxcfmGwFw6XBIcwGzgYjccH+1rD/k/IQ57vrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404898AbgFSPc3 (ORCPT
+        id S2391606AbgFSPel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:32:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393873AbgFSPcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:07 -0400
+        id S2393903AbgFSPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:32:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D8520734;
-        Fri, 19 Jun 2020 15:32:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65A4720734;
+        Fri, 19 Jun 2020 15:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580726;
-        bh=YtVlJQS36T/FGl827kIC89tbz5tIe3JW861Tai/VvyU=;
+        s=default; t=1592580756;
+        bh=LRtF0ol0E5xrY/TP7vBKd8wccCxYeetSbp8974+YILI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiAi/ojAWD6/u8zzzTNQvgIl3auEUIIKgBxugqIRNZsJv5H6svDo0mi8MBGG4NgPf
-         6RtM1LnOayluZ0RS4I65pqEemkzOOxZ6QdCjHv5Gs5UaatFInkLbwbG6cW5+lmRhzD
-         Wun0ih8tmmH+qFs9ov2LXy/YuFLVKB0klg+9pcRs=
+        b=yogwpQfVZ6/d0t9WCLVnplyXMzeCJyU2oCT2xMVUi+FsmyGW8dvGYYefOVVDcvq1H
+         LwsFYw7mhrTTMobjLvlJfoewqm03vNRdmkOR/SwoCeofEn/cjGc0w4q6aAmJCtyJbR
+         t039jqbM0fz2t4hJzBWwAFgIE9C4EXRMFnyy6Ekc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.7 360/376] mtd: rawnand: socrates: Fix the probe error path
-Date:   Fri, 19 Jun 2020 16:34:38 +0200
-Message-Id: <20200619141727.356736861@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.7 371/376] f2fs: fix checkpoint=disable:%u%%
+Date:   Fri, 19 Jun 2020 16:34:49 +0200
+Message-Id: <20200619141727.854313296@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -58,40 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-commit 9c6c2e5cc77119ce0dacb4f9feedb73ce0354421 upstream.
+commit 1ae18f71cb522684bac1718f5c188fb5e30eb23d upstream.
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+When parsing the mount option, we don't have sbi->user_block_count.
+Should do it after getting it.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
-
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-51-miquel.raynal@bootlin.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/socrates_nand.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/f2fs.h  |    1 +
+ fs/f2fs/super.c |   25 +++++++++++++++++++------
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/mtd/nand/raw/socrates_nand.c
-+++ b/drivers/mtd/nand/raw/socrates_nand.c
-@@ -169,7 +169,7 @@ static int socrates_nand_probe(struct pl
- 	if (!res)
- 		return res;
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -139,6 +139,7 @@ struct f2fs_mount_info {
+ 	int fs_mode;			/* fs mode: LFS or ADAPTIVE */
+ 	int bggc_mode;			/* bggc mode: off, on or sync */
+ 	bool test_dummy_encryption;	/* test dummy encryption */
++	block_t unusable_cap_perc;	/* percentage for cap */
+ 	block_t unusable_cap;		/* Amount of space allowed to be
+ 					 * unusable when disabling checkpoint
+ 					 */
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -284,6 +284,22 @@ static inline void limit_reserve_root(st
+ 					   F2FS_OPTION(sbi).s_resgid));
+ }
  
--	nand_release(nand_chip);
-+	nand_cleanup(nand_chip);
++static inline void adjust_unusable_cap_perc(struct f2fs_sb_info *sbi)
++{
++	if (!F2FS_OPTION(sbi).unusable_cap_perc)
++		return;
++
++	if (F2FS_OPTION(sbi).unusable_cap_perc == 100)
++		F2FS_OPTION(sbi).unusable_cap = sbi->user_block_count;
++	else
++		F2FS_OPTION(sbi).unusable_cap = (sbi->user_block_count / 100) *
++					F2FS_OPTION(sbi).unusable_cap_perc;
++
++	f2fs_info(sbi, "Adjust unusable cap for checkpoint=disable = %u / %u%%",
++			F2FS_OPTION(sbi).unusable_cap,
++			F2FS_OPTION(sbi).unusable_cap_perc);
++}
++
+ static void init_once(void *foo)
+ {
+ 	struct f2fs_inode_info *fi = (struct f2fs_inode_info *) foo;
+@@ -795,12 +811,7 @@ static int parse_options(struct super_bl
+ 				return -EINVAL;
+ 			if (arg < 0 || arg > 100)
+ 				return -EINVAL;
+-			if (arg == 100)
+-				F2FS_OPTION(sbi).unusable_cap =
+-					sbi->user_block_count;
+-			else
+-				F2FS_OPTION(sbi).unusable_cap =
+-					(sbi->user_block_count / 100) *	arg;
++			F2FS_OPTION(sbi).unusable_cap_perc = arg;
+ 			set_opt(sbi, DISABLE_CHECKPOINT);
+ 			break;
+ 		case Opt_checkpoint_disable_cap:
+@@ -1845,6 +1856,7 @@ skip:
+ 		(test_opt(sbi, POSIX_ACL) ? SB_POSIXACL : 0);
  
- out:
- 	iounmap(host->io_base);
+ 	limit_reserve_root(sbi);
++	adjust_unusable_cap_perc(sbi);
+ 	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
+ 	return 0;
+ restore_gc:
+@@ -3521,6 +3533,7 @@ try_onemore:
+ 	sbi->reserved_blocks = 0;
+ 	sbi->current_reserved_blocks = 0;
+ 	limit_reserve_root(sbi);
++	adjust_unusable_cap_perc(sbi);
+ 
+ 	for (i = 0; i < NR_INODE_TYPE; i++) {
+ 		INIT_LIST_HEAD(&sbi->inode_list[i]);
 
 
