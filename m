@@ -2,168 +2,217 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B15C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD44C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C844F21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc6uaCkq"
+	by mail.kernel.org (Postfix) with ESMTP id E47BB2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732962AbgFSNA0 (ORCPT
+        id S1732283AbgFSNBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728851AbgFSNAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:00:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B357FC06174E;
-        Fri, 19 Jun 2020 06:00:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q11so9626252wrp.3;
-        Fri, 19 Jun 2020 06:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ljPyNN/Qwakhqe+XqUeYOBqoxf7hProQtLOxnDnQs48=;
-        b=Gc6uaCkqyn8M5NULiegeLR+e+X1JkduCf6rQvSXt8Nl16hZHSKp2biDEJ8StKzqR/r
-         1Wcjd6LIBwveF4quZvhVEW1BvqnKkGvhoT4QbYs+t14SeTniS5Jpo561hQW3anupFQ+h
-         EFw3T4P2N4ooBB930lvjBYYc3LowpM2sdscZQr0c2LD91eS9EEuWp/4whuZVEGXRXAE6
-         jxzIEcdC933SSrQBX4e4nzYKv9MIi2LI5lpgVjanijHeT/MApW5lCMIkXQhgiNfqqJHU
-         SwW/fGCEkhxW25+gw/NVDAGvNI3BwUOureUH9XB37sQTh7bgE+2mqxcONVvzg7O2n6kQ
-         vDuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ljPyNN/Qwakhqe+XqUeYOBqoxf7hProQtLOxnDnQs48=;
-        b=CvMx+mkD62Dq04psuMvzSbQcqlPFBs31c2evxVd2nbU1hXWSqA79UmHs9tJvufBqkx
-         YnkBF5PAEoTW2ucmY4tKkc2+FwfJ/tnkiNjMsM+uId+n3wLOeKCLv5Y6CnLWcn/YTl31
-         UT6MPitT6oOr+hbCQ96qM2XMSY6cMdkry+BAQq5ufJqm5DHu6ApeoIjVgRHciaCEG9BI
-         1f+fuDdtLkMWb5uj8dnhjrtG0wQZUL5yzyigIS64S9Hlos3V7VT9kgoW+Owj1qCn2qxT
-         zMfC8Y8fOb8V1+z2CIsScK9UThDSv9Dqx1qI8N7BB7ycQGCBrNrQPdA2u0Ya/w3z7tw5
-         OGdQ==
-X-Gm-Message-State: AOAM532L4FFcfaUrhsCIJlIbOfzgKNLhbFk/srsYpH0kMrd5YGy9Mokl
-        gXxWDEqNneecRNLTDX2OCzE=
-X-Google-Smtp-Source: ABdhPJx/JZS/Eblefk0zI3gb+uu+uT/5gLoiMz5ESaB+mWGa/RKum9IKOsU9NdFWwNFwyMESL8EE2Q==
-X-Received: by 2002:a05:6000:341:: with SMTP id e1mr4003694wre.1.1592571616385;
-        Fri, 19 Jun 2020 06:00:16 -0700 (PDT)
-Received: from ?IPv6:2001:a61:253c:8201:b2fb:3ef8:ca:1604? ([2001:a61:253c:8201:b2fb:3ef8:ca:1604])
-        by smtp.gmail.com with ESMTPSA id e15sm7147479wme.9.2020.06.19.06.00.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 06:00:15 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        christian@brauner.io
-Subject: Re: [PATCH] symlink.7: document magic-links more completely
-To:     Aleksa Sarai <cyphar@cyphar.com>
-References: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
- <20200610055319.26374-1-cyphar@cyphar.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <fe72a276-a977-2589-ee83-d6ac8a21fbfa@gmail.com>
-Date:   Fri, 19 Jun 2020 15:00:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200610055319.26374-1-cyphar@cyphar.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jun 2020 09:01:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:57352 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728606AbgFSNBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:01:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B73101E;
+        Fri, 19 Jun 2020 06:01:39 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 81B593F6CF;
+        Fri, 19 Jun 2020 06:01:33 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
+Subject: [PATCH v13 0/9] Enable ptp_kvm for arm64
+Date:   Fri, 19 Jun 2020 21:01:11 +0800
+Message-Id: <20200619130120.40556-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
+Currently, we offen use ntp (sync time with remote network clock)
+to sync time in VM. But the precision of ntp is subject to network delay
+so it's difficult to sync time in a high precision.
 
-On 6/10/20 7:53 AM, Aleksa Sarai wrote:
-> Hi Michael,
-> 
-> Sorry for the delay and here is the patch I promised in this thread.
+kvm virtual ptp clock (ptp_kvm) offers another way to sync time in VM,
+as the remote clock locates in the host instead of remote network clock.
+It targets to sync time between guest and host in virtualization
+environment and in this way, we can keep the time of all the VMs running
+in the same host in sync. In general, the delay of communication between
+host and guest is quiet small, so ptp_kvm can offer time sync precision
+up to in order of nanosecond. Please keep in mind that ptp_kvm just
+limits itself to be a channel which transmit the remote clock from
+host to guest and leaves the time sync jobs to an application, eg. chrony,
+in usersapce in VM.
 
-Thanks!
+How ptp_kvm works:
+After ptp_kvm initialized, there will be a new device node under
+/dev called ptp%d. A guest userspace service, like chrony, can use this
+device to get host walltime, sometimes also counter cycle, which depends
+on the service it calls. Then this guest userspace service can use those
+data to do the time sync for guest.
+here is a rough sketch to show how kvm ptp clock works.
 
-Patch applied.
+|----------------------------|              |--------------------------|
+|       guest userspace      |              |          host            |
+|ioctl -> /dev/ptp%d         |              |                          |
+|       ^   |                |              |                          |
+|----------------------------|              |                          |
+|       |   | guest kernel   |              |                          |
+|       |   V      (get host walltime/counter cycle)                   |
+|      ptp_kvm -> hypercall - - - - - - - - - - ->hypercall service    |
+|                         <- - - - - - - - - - - -                     |
+|----------------------------|              |--------------------------|
 
-Cheers,
+1. time sync service in guest userspace call ptp device through /dev/ptp%d.
+2. ptp_kvm module in guest recive this request then invoke hypercall to
+route into host kernel to request host walltime/counter cycle.
+3. ptp_kvm hypercall service in host response to the request and send data
+back.
+4. ptp (not ptp_kvm) in guest copy the data to userspace.
 
-Michael
+This ptp_kvm implementation focuses itself to step 2 and 3 and step 2 works
+in guest comparing step 3 works in host kernel.
 
+change log:
+from v12 to v13:
+        (1) rebase code on 5.8-rc1.
+        (2) this patch set base on 2 patches of 1/8 and 2/8 from Will Decon.
+        (3) remove the change to ptp device code of extend getcrosststamp.
+        (4) remove the mechanism of letting user choose the counter type in
+ptp_kvm for arm64.
+        (5) add virtual counter option in ptp_kvm service to let user choose
+the specific counter explicitly.
 
-> --8<---------------------------------------------------------------------8<--
-> 
-> Traditionally, magic-links have not been a well-understood topic in
-> Linux. This helps clarify some of the terminology used in openat2.2.
-> 
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
->  man7/symlink.7 | 31 ++++++++++++++++++++++---------
->  1 file changed, 22 insertions(+), 9 deletions(-)
-> 
-> diff --git a/man7/symlink.7 b/man7/symlink.7
-> index 07b1db3a3764..ed99bc4236f1 100644
-> --- a/man7/symlink.7
-> +++ b/man7/symlink.7
-> @@ -84,6 +84,21 @@ as they are implemented on Linux and other systems,
->  are outlined here.
->  It is important that site-local applications also conform to these rules,
->  so that the user interface can be as consistent as possible.
-> +.SS Magic-links
-> +There is a special class of symlink-like objects known as "magic-links" which
-> +can be found in certain pseudo-filesystems such as
-> +.BR proc (5)
-> +(examples include
-> +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
-> +Unlike normal symlinks, magic-links are not resolved through
-> +pathname-expansion, but instead act as direct references to the kernel's own
-> +representation of a file handle. As such, these magic-links allow users to
-> +access files which cannot be referenced with normal paths (such as unlinked
-> +files still referenced by a running program.)
-> +.PP
-> +Because they can bypass ordinary
-> +.BR mount_namespaces (7)-based
-> +restrictions, magic-links have been used as attack vectors in various exploits.
->  .SS Symbolic link ownership, permissions, and timestamps
->  The owner and group of an existing symbolic link can be changed
->  using
-> @@ -99,16 +114,14 @@ of a symbolic link can be changed using
->  or
->  .BR lutimes (3).
->  .PP
-> -On Linux, the permissions of a symbolic link are not used
-> -in any operations; the permissions are always
-> -0777 (read, write, and execute for all user categories),
->  .\" Linux does not currently implement an lchmod(2).
-> -and can't be changed.
-> -(Note that there are some "magic" symbolic links in the
-> -.I /proc
-> -directory tree\(emfor example, the
-> -.IR /proc/[pid]/fd/*
-> -files\(emthat have different permissions.)
-> +On Linux, the permissions of an ordinary symbolic link are not used in any
-> +operations; the permissions are always 0777 (read, write, and execute for all
-> +user categories), and can't be changed.
-> +.PP
-> +However, magic-links do not follow this rule. They can have a non-0777 mode,
-> +though this mode is not currently used in any permission checks.
-> +
->  .\"
->  .\" The
->  .\" 4.4BSD
-> 
+from v11 to v12:
+        (1) rebase code on 5.7-rc6 and rebase 2 patches from Will Decon
+including 1/11 and 2/11. as these patches introduce discover mechanism of
+vendor smccc service.
+        (2) rebase ptp_kvm hypercall service from standard smccc to vendor
+smccc and add ptp_kvm to vendor smccc service discover mechanism.
+        (3) add detail of why we need ptp_kvm and how ptp_kvm works in cover
+letter.
 
+from v10 to v11:
+        (1) rebase code on 5.7-rc2.
+        (2) remove support for arm32, as kvm support for arm32 will be
+removed [1]
+        (3) add error report in ptp_kvm initialization.
+
+from v9 to v10:
+        (1) change code base to v5.5.
+        (2) enable ptp_kvm both for arm32 and arm64.
+        (3) let user choose which of virtual counter or physical counter
+should return when using crosstimestamp mode of ptp_kvm for arm/arm64.
+        (4) extend input argument for getcrosstimestamp API.
+
+from v8 to v9:
+        (1) move ptp_kvm.h to driver/ptp/
+        (2) replace license declaration of ptp_kvm.h the same with other
+header files in the same directory.
+
+from v7 to v8:
+        (1) separate adding clocksource id for arm_arch_counter as a
+single patch.
+        (2) update commit message for patch 4/8.
+        (3) refine patch 7/8 and patch 8/8 to make them more independent.
+
+from v6 to v7:
+        (1) include the omitted clocksource_id.h in last version.
+        (2) reorder the header file in patch.
+        (3) refine some words in commit message to make it more impersonal.
+
+from v5 to v6:
+        (1) apply Mark's patch[4] to get SMCCC conduit.
+        (2) add mechanism to recognize current clocksource by add
+clocksouce_id value into struct clocksource instead of method in patch-v5.
+        (3) rename kvm_arch_ptp_get_clock_fn into
+kvm_arch_ptp_get_crosststamp.
+
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of
+hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+        (4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
+
+[1] https://patchwork.kernel.org/cover/11373351/
+
+Jianyong Wu (7):
+  arm/arm64: KVM: Advertise KVM UID to guests via SMCCC
+  smccc: export smccc conduit get helper.
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  clocksource: Add clocksource id for arm arch counter
+  arm64/kvm: Add hypercall service for kvm ptp.
+  ptp: arm64: Enable ptp_kvm for arm64
+  arm64: Add kvm capability check extension for ptp_kvm
+
+Thomas Gleixner (1):
+  time: Add mechanism to recognize clocksource in time_get_snapshot
+
+Will Deacon (1):
+  arm64: Probe for the presence of KVM hypervisor services during boot
+
+ arch/arm64/include/asm/hypervisor.h         | 11 +++
+ arch/arm64/kernel/setup.c                   | 36 +++++++++
+ arch/arm64/kvm/arm.c                        |  4 +
+ arch/arm64/kvm/hypercalls.c                 | 79 +++++++++++++++---
+ drivers/clocksource/arm_arch_timer.c        | 26 ++++++
+ drivers/firmware/smccc/smccc.c              |  1 +
+ drivers/ptp/Kconfig                         |  2 +-
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/ptp_kvm_arm64.c                 | 53 ++++++++++++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 80 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ include/linux/arm-smccc.h                   | 56 +++++++++++++
+ include/linux/clocksource.h                 |  6 ++
+ include/linux/clocksource_ids.h             | 12 +++
+ include/linux/timekeeping.h                 | 12 +--
+ include/uapi/linux/kvm.h                    |  1 +
+ kernel/time/clocksource.c                   |  3 +
+ kernel/time/timekeeping.c                   |  1 +
+ virt/kvm/Kconfig                            |  4 +
+ 20 files changed, 413 insertions(+), 75 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/linux/clocksource_ids.h
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
