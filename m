@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE22C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF781C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4BA206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954E1206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580919;
-	bh=weOuWtfn6nT0MnIi8mNlyVJD7ZvXbBB6BvY525BbmuU=;
+	s=default; t=1592580922;
+	bh=KGIYyD5rD/ejMxLwxaiYeAQS/wlR+d0LwFY6X29p1oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jM5CCrg3JaHtkovNjFpx4QIojgJCg6baaRhAwFIsdoRK4/VYnlr85ydjIi3+lt2bs
-	 OvKJ8P/IQCVhY1+GLrUPw0fztoOuohKp48334q/jX9S0xslK4YwFb8uneVl0iIpdFa
-	 zUiSgf3HNAQi2ZkIhTwO+vPKDMAUpxYrhKK/ADhM=
+	b=i3Y0MQNPZS60VOvmPrbmeHNO8s5FMFr2z/qQ/ouw9KQVgLlv1Vxt/hoKFMSH8fnrC
+	 hQhf1mz/Psw9TWH7FIBf9ubtlwZ0l3r1/WReDLSub4lV7uRFkQvN9H1kA9o2jMPxuH
+	 KpMCWyieIuQB9J9LVSVrRInEhVMxF5EX+XtO/kj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393835AbgFSPbs (ORCPT
+        id S2405013AbgFSPfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404857AbgFSPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:33 -0400
+        id S2404878AbgFSPbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 594AA20786;
-        Fri, 19 Jun 2020 15:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215BD20734;
+        Fri, 19 Jun 2020 15:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580692;
-        bh=weOuWtfn6nT0MnIi8mNlyVJD7ZvXbBB6BvY525BbmuU=;
+        s=default; t=1592580708;
+        bh=KGIYyD5rD/ejMxLwxaiYeAQS/wlR+d0LwFY6X29p1oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/X69lpfXanhiZuEqUxDnvs+AwVRpTETPql+X+a5VPSam4xuxYQSqMeJvsY8zwaNd
-         W/0C0haw1Kq3oa2KhHIFzpL1wCWehFcFE2pw72BLOE0NGCEt0Fxy3+dq7jTFiktaTm
-         9wtukS70hnI2sazEuFFBy2sm1JPxk6d18MFMH4WI=
+        b=G1DxCpK/0/TCURlQj/9ixw9WaXpzGjEW8SwP7as/RV36/fh9TJBntlxf3ucAZ+b7x
+         eEYX7mb8YiPuZc/Mwm9lgOAWNH/CEM2U6ByTDu0YG6+HzkVtb8AyQNgsO/QQPKD+US
+         SjgO+Xe+HH4uEkcIcoggZ2WvF8DxInVJcurYEm3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.7 316/376] power: supply: core: fix HWMON temperature labels
-Date:   Fri, 19 Jun 2020 16:33:54 +0200
-Message-Id: <20200619141725.294018925@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH 5.7 353/376] mtd: rawnand: onfi: Fix redundancy detection check
+Date:   Fri, 19 Jun 2020 16:34:31 +0200
+Message-Id: <20200619141727.029919949@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,33 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 6b20464ad9fb5fd76ef6f219ce62156aa9639dcc upstream.
+commit 1d5d08ee9b28cff907326b4ad5a2463fd2808be1 upstream.
 
-tempX_label files are swapped compared to what
-power_supply_hwmon_temp_to_property() uses. Make them match.
+During ONFI detection, the CRC derived from the parameter page and the
+CRC supposed to be at the end of the parameter page are compared. If
+they do not match, the second then the third copies of the page are
+tried.
 
+The current implementation compares the newly derived CRC with the CRC
+contained in the first page only. So if this particular CRC area has
+been corrupted, then the detection will fail for a wrong reason.
+
+Fix this issue by checking the derived CRC against the right one.
+
+Fixes: 39138c1f4a31 ("mtd: rawnand: use bit-wise majority to recover the ONFI param page")
 Cc: stable@vger.kernel.org
-Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Link: https://lore.kernel.org/linux-mtd/20200428094302.14624-4-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/power_supply_hwmon.c |    2 +-
+ drivers/mtd/nand/raw/nand_onfi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -144,7 +144,7 @@ static int power_supply_hwmon_read_strin
- 					  u32 attr, int channel,
- 					  const char **str)
- {
--	*str = channel ? "temp" : "temp ambient";
-+	*str = channel ? "temp ambient" : "temp";
- 	return 0;
- }
+--- a/drivers/mtd/nand/raw/nand_onfi.c
++++ b/drivers/mtd/nand/raw/nand_onfi.c
+@@ -173,7 +173,7 @@ int nand_onfi_detect(struct nand_chip *c
+ 		}
  
+ 		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)&p[i], 254) ==
+-				le16_to_cpu(p->crc)) {
++		    le16_to_cpu(p[i].crc)) {
+ 			if (i)
+ 				memcpy(p, &p[i], sizeof(*p));
+ 			break;
 
 
