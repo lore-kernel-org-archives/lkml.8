@@ -2,111 +2,104 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D24C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE0C208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0315B20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMFgCmWR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuiTQ484"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbgFSNJM (ORCPT
+        id S1730051AbgFSNKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:09:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48536 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgFSNJC (ORCPT
+        Fri, 19 Jun 2020 09:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgFSNKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:09:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592572141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OK11zaapoxWJXtILVuIHMvOvKkMZ2TEh815CSjabwLM=;
-        b=AMFgCmWRDRAvK1RYZWKW9i5Fnli/60QfcTXo0QfD12Vwk54fw7wGBD22cwhiOMv6LWwJG9
-        +3jNpZ1WjwH/uJLb2H0t8Sj/kirSI3108biujgiHEP5CJf/X2G4JPOhTKYk8cE8RtHPcbg
-        Ao3SDcJ1QEYthkI4yFgN5dK/ScHHJQ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-PA03q-gaMLqEu7SXLAaFYA-1; Fri, 19 Jun 2020 09:08:58 -0400
-X-MC-Unique: PA03q-gaMLqEu7SXLAaFYA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16C428057B0;
-        Fri, 19 Jun 2020 13:08:37 +0000 (UTC)
-Received: from agerstmayr-thinkpad.redhat.com (unknown [10.40.196.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9502871667;
-        Fri, 19 Jun 2020 13:08:34 +0000 (UTC)
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf flamegraph: explicitly set utf-8 encoding
-Date:   Fri, 19 Jun 2020 15:07:43 +0200
-Message-Id: <20200619130745.153113-1-agerstmayr@redhat.com>
+        Fri, 19 Jun 2020 09:10:31 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D87C06174E;
+        Fri, 19 Jun 2020 06:10:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i4so4278799pjd.0;
+        Fri, 19 Jun 2020 06:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Mpz+FtahIGVbaWCXUqlKnR3T+YHk6o26tu6s0yCqAdA=;
+        b=UuiTQ484P8miKGDp4jn4oAJ5OMcCW4IFNTRppv0vZIjCXuc2+8bDL7tLuuCvveGwNm
+         JXtBsUY4wpCH5bGp4xB6z4jvD51GCFNtg1Irx8cAC4rVmWv8VgKRXSvqS7Sgo31GzoN+
+         B0rDHgMGhkqFrjPRtouQ7JBLdIqxeHJSO7mtBLBSpPzXnq+7/eo2Imt/DcDnhJWg4Uqn
+         LGWuZXfRQYpwciONKdtgXCd45ic4eF1ys0JKtiZCXuvIm6z4AW4NWDCvE/toaQtHnqo6
+         4OwkGCYIUK2arabhNxZIA3tMDmWciRINV6mUpvGdXLn24rzmTAoD6I12zFVp2mWnRP5o
+         x1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Mpz+FtahIGVbaWCXUqlKnR3T+YHk6o26tu6s0yCqAdA=;
+        b=UeUwqHfKlN2IwgW39QJWajOzHEoi33EcPGKZKk9UMoh2tiFMn8i5+DmWYribBs/zZ3
+         V+Ns6lfIpJQ8qymPbzLoktWnmewnq2IrVhfdJ7UU7Spd0fmDjDa4geVvnNcWuFFDsPsI
+         AgA0XPbAfom1LC9YVYlLKX4HlkQmV4NSjzfsyhUQ/jPnZtvhBNSiY9nIr5Y8B8cRJq+B
+         AQsAB9DKsLrjlUJYZL4dJ919dZZOEpN9H3/oP70cIa49csa5UbkPqTCdnoyCrAc7PhUQ
+         5WYbPXI2+qAYPGNrzMKZNyjGe4dAsKq3gaad2ig8u77ZCaAxnYIVzmn1dFpCXfdoyO6f
+         7FUQ==
+X-Gm-Message-State: AOAM532qWnwcfxw/Cvs6T3e0OXkLqXeDrGRTmHR1xPooacVM61N7Cxeh
+        majhILR3UBHTXpFxtmrLLTRLN0ycHnU=
+X-Google-Smtp-Source: ABdhPJzqPs81Vxl274BtKkELFraEc0MGFOSHQD7zMxgPdkugNt7MMVOACN7G7nfOa7jQjxHFMnYTGA==
+X-Received: by 2002:a17:90a:e60c:: with SMTP id j12mr3524233pjy.185.1592572229826;
+        Fri, 19 Jun 2020 06:10:29 -0700 (PDT)
+Received: from debian.debian-2 ([154.223.71.34])
+        by smtp.gmail.com with ESMTPSA id w18sm6062762pfq.121.2020.06.19.06.10.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jun 2020 06:10:28 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 21:10:23 +0800
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com,
+        ledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tsu.yubo@gmail.com
+Subject: [PATCH -next] RDMA/rtrs: fix potential resources leaks
+Message-ID: <20200619131017.pr7eoca2bzdtlbk4@debian.debian-2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-on some platforms the default encoding is not utf-8,
-which causes an UnicodeDecodeError when reading the flamegraph template
+Dev is returned from allocation function kzalloc but it does not
+free it in out_err path.
 
-Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+Detected by CoverityScan, CID# 1464569: (Resource leak)
+
+Fixes: c0894b3ea69d3("RDMA/rtrs: core: lib functions shared between client and server modules")
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
 ---
-Tested with Python 2.7 and 3.
+ drivers/infiniband/ulp/rtrs/rtrs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- tools/perf/scripts/python/flamegraph.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-index 61f3be9add6b..8979db910a8f 100755
---- a/tools/perf/scripts/python/flamegraph.py
-+++ b/tools/perf/scripts/python/flamegraph.py
-@@ -17,6 +17,7 @@
- from __future__ import print_function
- import sys
- import os
-+import io
- import argparse
- import json
- 
-@@ -81,7 +82,7 @@ class FlameGraphCLI:
- 
-         if self.args.format == "html":
-             try:
--                with open(self.args.template) as f:
-+                with io.open(self.args.template, encoding="utf-8") as f:
-                     output_str = f.read().replace("/** @flamegraph_json **/",
-                                                   json_str)
-             except IOError as e:
-@@ -97,7 +98,7 @@ class FlameGraphCLI:
-         else:
-             print("dumping data to {}".format(output_fn))
-             try:
--                with open(output_fn, "w") as out:
-+                with io.open(output_fn, "w", encoding="utf-8") as out:
-                     out.write(output_str)
-             except IOError as e:
-                 print("Error writing output file: {}".format(e), file=sys.stderr)
--- 
-2.25.4
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs.c b/drivers/infiniband/ulp/rtrs/rtrs.c
+index ff1093d6e4bc..03bdab92fa49 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs.c
+@@ -607,6 +607,7 @@ rtrs_ib_dev_find_or_add(struct ib_device *ib_dev,
+ 	else
+ 		kfree(dev);
+ out_err:
++	kfree(dev);
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(rtrs_ib_dev_find_or_add);
+--
+2.11.0
 
