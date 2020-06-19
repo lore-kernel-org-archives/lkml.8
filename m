@@ -2,221 +2,330 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF69C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8067E2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3682073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbgFSJeY (ORCPT
+        id S1732158AbgFSJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:34:24 -0400
-Received: from mx.wingtech.com ([180.166.216.14]:59047 "EHLO mail.wingtech.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732059AbgFSJdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:33:55 -0400
-Received: from mx.wingtech.com ([192.168.2.43])
-        by mail.wingtech.com  with SMTP id 05J9Xi4q022465-05J9Xi4r022465
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:33:44 +0800
-Received: from 192.168.51.143 (HELO ZHAOWUYUN.WINGTECH.COM); Fri, 19 Jun 2020 17:33:41 +0800
-From:   zhaowuyun@wingtech.com
-To:     yuchao0@huawei.com, jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, zhaowuyun@wingtech.com
-Subject: [PATCH v4] f2fs-tools: introduce set_node_footer to initialize node footer
-Date:   Fri, 19 Jun 2020 17:33:30 +0800
-Message-Id: <1592559210-2379-1-git-send-email-zhaowuyun@wingtech.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Jun 2020 05:34:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:49216 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731651AbgFSJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:31:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BD6913A1;
+        Fri, 19 Jun 2020 02:31:15 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5EEF03F71F;
+        Fri, 19 Jun 2020 02:31:09 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v13 4/9] ptp: Reorganize ptp_kvm module to make it arch-independent.
+Date:   Fri, 19 Jun 2020 17:30:28 +0800
+Message-Id: <20200619093033.58344-5-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200619093033.58344-1-jianyong.wu@arm.com>
+References: <20200619093033.58344-1-jianyong.wu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wuyun Zhao <zhaowuyun@wingtech.com>
+Currently, ptp_kvm modules implementation is only for x86 which includs
+large part of arch-specific code.  This patch move all of those code
+into new arch related file in the same directory.
 
-the filesystem will use the cold flag, so deal with it to avoid
-potential issue of inconsistency
-
-Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
 ---
- fsck/dir.c         |  7 ++-----
- fsck/node.c        | 12 +++++-------
- include/f2fs_fs.h  | 23 +++++++++++++++++++++++
- mkfs/f2fs_format.c | 34 +++++++++++++---------------------
- 4 files changed, 43 insertions(+), 33 deletions(-)
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 80 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ 4 files changed, 122 insertions(+), 59 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
 
-diff --git a/fsck/dir.c b/fsck/dir.c
-index 5f4f75e..b067aec 100644
---- a/fsck/dir.c
-+++ b/fsck/dir.c
-@@ -517,11 +517,8 @@ static void init_inode_block(struct f2fs_sb_info *sbi,
- 	}
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 7aff75f745dc..baac6f5b243b 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -4,6 +4,7 @@
+ #
  
- 	set_file_temperature(sbi, node_blk, de->name);
+ ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
++ptp_kvm-y				:= ptp_kvm_$(ARCH).o ptp_kvm_common.o
+ obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
+ obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
+ obj-$(CONFIG_PTP_1588_CLOCK_INES)	+= ptp_ines.o
+diff --git a/drivers/ptp/ptp_kvm.h b/drivers/ptp/ptp_kvm.h
+new file mode 100644
+index 000000000000..4bf1802bbeb8
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++int kvm_arch_ptp_init(void);
++int kvm_arch_ptp_get_clock(struct timespec64 *ts);
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle,
++		struct timespec64 *tspec, void *cs);
+diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/ptp_kvm_common.c
+similarity index 63%
+rename from drivers/ptp/ptp_kvm.c
+rename to drivers/ptp/ptp_kvm_common.c
+index 658d33fc3195..8d8a9bcd1d22 100644
+--- a/drivers/ptp/ptp_kvm.c
++++ b/drivers/ptp/ptp_kvm_common.c
+@@ -8,15 +8,16 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/slab.h>
+ #include <linux/module.h>
+ #include <uapi/linux/kvm_para.h>
+ #include <asm/kvm_para.h>
+-#include <asm/pvclock.h>
+-#include <asm/kvmclock.h>
+ #include <uapi/asm/kvm_para.h>
+ 
+ #include <linux/ptp_clock_kernel.h>
+ 
++#include "ptp_kvm.h"
++
+ struct kvm_ptp_clock {
+ 	struct ptp_clock *ptp_clock;
+ 	struct ptp_clock_info caps;
+@@ -24,56 +25,29 @@ struct kvm_ptp_clock {
+ 
+ static DEFINE_SPINLOCK(kvm_ptp_lock);
+ 
+-static struct pvclock_vsyscall_time_info *hv_clock;
 -
--	node_blk->footer.ino = cpu_to_le32(de->ino);
--	node_blk->footer.nid = cpu_to_le32(de->ino);
--	node_blk->footer.flag = 0;
--	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-+	set_node_footer(node_blk, de->ino, de->ino, 0,
-+			le64_to_cpu(ckpt->checkpoint_ver), 0, S_ISDIR(mode));
- 
- 	if (S_ISDIR(mode)) {
- 		make_empty_dir(sbi, node_blk);
-diff --git a/fsck/node.c b/fsck/node.c
-index 229a99c..ef7ed0b 100644
---- a/fsck/node.c
-+++ b/fsck/node.c
-@@ -61,7 +61,7 @@ void set_data_blkaddr(struct dnode_of_data *dn)
- block_t new_node_block(struct f2fs_sb_info *sbi,
- 				struct dnode_of_data *dn, unsigned int ofs)
+-static struct kvm_clock_pairing clock_pair;
+-static phys_addr_t clock_pair_gpa;
+-
+ static int ptp_kvm_get_time_fn(ktime_t *device_time,
+ 			       struct system_counterval_t *system_counter,
+ 			       void *ctx)
  {
--	struct f2fs_node *f2fs_inode;
-+	struct f2fs_node *f2fs_inode = dn->inode_blk;
- 	struct f2fs_node *node_blk;
- 	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
- 	struct f2fs_summary sum;
-@@ -69,16 +69,14 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
- 	block_t blkaddr = NULL_ADDR;
- 	int type;
- 	int ret;
+-	unsigned long ret;
++	unsigned long ret, cycle;
+ 	struct timespec64 tspec;
+-	unsigned version;
+-	int cpu;
+-	struct pvclock_vcpu_time_info *src;
++	struct clocksource *cs;
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+ 	preempt_disable_notrace();
+-	cpu = smp_processor_id();
+-	src = &hv_clock[cpu].pvti;
 -
--	f2fs_inode = dn->inode_blk;
-+	nid_t ino = le32_to_cpu(f2fs_inode->footer.ino);
-+	u64 cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
+-	do {
+-		/*
+-		 * We are using a TSC value read in the hosts
+-		 * kvm_hc_clock_pairing handling.
+-		 * So any changes to tsc_to_system_mul
+-		 * and tsc_shift or any other pvclock
+-		 * data invalidate that measurement.
+-		 */
+-		version = pvclock_read_begin(src);
+-
+-		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-				     clock_pair_gpa,
+-				     KVM_CLOCK_PAIRING_WALLCLOCK);
+-		if (ret != 0) {
+-			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
+-			spin_unlock(&kvm_ptp_lock);
+-			preempt_enable_notrace();
+-			return -EOPNOTSUPP;
+-		}
+-
+-		tspec.tv_sec = clock_pair.sec;
+-		tspec.tv_nsec = clock_pair.nsec;
+-		ret = __pvclock_read_cycles(src, clock_pair.tsc);
+-	} while (pvclock_read_retry(src, version));
++	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs);
++	if (ret != 0) {
++		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
++		spin_unlock(&kvm_ptp_lock);
++		preempt_enable_notrace();
++		return -EOPNOTSUPP;
++	}
  
- 	node_blk = calloc(BLOCK_SZ, 1);
- 	ASSERT(node_blk);
+ 	preempt_enable_notrace();
  
--	node_blk->footer.nid = cpu_to_le32(dn->nid);
--	node_blk->footer.ino = f2fs_inode->footer.ino;
--	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
--	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-+	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver, 0,
-+			S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+-	system_counter->cycles = ret;
+-	system_counter->cs = &kvm_clock;
++	system_counter->cycles = cycle;
++	system_counter->cs = cs;
  
- 	type = CURSEG_COLD_NODE;
- 	if (IS_DNODE(node_blk)) {
-diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
-index 709bfd8..ab19eb7 100644
---- a/include/f2fs_fs.h
-+++ b/include/f2fs_fs.h
-@@ -923,6 +923,29 @@ struct f2fs_node {
- 	struct node_footer footer;
- } __attribute__((packed));
+ 	*device_time = timespec64_to_ktime(tspec);
  
-+static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
-+{
-+	unsigned int flag = le32_to_cpu(rn->footer.flag);
+@@ -116,17 +90,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-			     clock_pair_gpa,
+-			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	ret = kvm_arch_ptp_get_clock(&tspec);
+ 	if (ret != 0) {
+ 		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
+ 		spin_unlock(&kvm_ptp_lock);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	tspec.tv_sec = clock_pair.sec;
+-	tspec.tv_nsec = clock_pair.nsec;
+ 	spin_unlock(&kvm_ptp_lock);
+ 
+ 	memcpy(ts, &tspec, sizeof(struct timespec64));
+@@ -166,21 +136,13 @@ static void __exit ptp_kvm_exit(void)
+ 
+ static int __init ptp_kvm_init(void)
+ {
+-	long ret;
+-
+-	if (!kvm_para_available())
+-		return -ENODEV;
+-
+-	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+-	hv_clock = pvclock_get_pvti_cpu0_va();
++	int ret;
+ 
+-	if (!hv_clock)
+-		return -ENODEV;
+-
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+-			KVM_CLOCK_PAIRING_WALLCLOCK);
+-	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
+-		return -ENODEV;
++	ret = kvm_arch_ptp_init();
++	if (ret) {
++		pr_err("fail to initialize ptp_kvm");
++		return -EOPNOTSUPP;
++	}
+ 
+ 	kvm_ptp_clock.caps = ptp_kvm_caps;
+ 
+diff --git a/drivers/ptp/ptp_kvm_x86.c b/drivers/ptp/ptp_kvm_x86.c
+new file mode 100644
+index 000000000000..aabed1b08a0d
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm_x86.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
 +
-+	if (is_dir)
-+		flag &= ~(0x1 << COLD_BIT_SHIFT);
-+	else
-+		flag |= (0x1 << COLD_BIT_SHIFT);
-+	rn->footer.flag = cpu_to_le32(flag);
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <asm/pvclock.h>
++#include <asm/kvmclock.h>
++#include <linux/module.h>
++#include <uapi/asm/kvm_para.h>
++#include <uapi/linux/kvm_para.h>
++#include <linux/ptp_clock_kernel.h>
++
++phys_addr_t clock_pair_gpa;
++struct kvm_clock_pairing clock_pair;
++struct pvclock_vsyscall_time_info *hv_clock;
++
++int kvm_arch_ptp_init(void)
++{
++	int ret;
++
++	if (!kvm_para_available())
++		return -ENODEV;
++
++	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
++	hv_clock = pvclock_get_pvti_cpu0_va();
++	if (!hv_clock)
++		return -ENODEV;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
++		return -ENODEV;
++
++	return 0;
 +}
 +
-+static inline void set_node_footer(struct f2fs_node *rn, nid_t nid, nid_t ino,
-+					u32 ofs, u64 ver, block_t blkaddr,
-+					bool is_dir)
++int kvm_arch_ptp_get_clock(struct timespec64 *ts)
 +{
-+	rn->footer.nid = cpu_to_le32(nid);
-+	rn->footer.ino = cpu_to_le32(ino);
-+	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-+	rn->footer.cp_ver = cpu_to_le64(ver);
-+	rn->footer.next_blkaddr = cpu_to_le32(blkaddr);
-+	set_cold_node(rn, is_dir);
++	long ret;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++			     clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret != 0)
++		return -EOPNOTSUPP;
++
++	ts->tv_sec = clock_pair.sec;
++	ts->tv_nsec = clock_pair.nsec;
++
++	return 0;
 +}
 +
- /*
-  * For NAT entries
-  */
-diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
-index 44575e0..656023a 100644
---- a/mkfs/f2fs_format.c
-+++ b/mkfs/f2fs_format.c
-@@ -1094,6 +1094,9 @@ static int f2fs_write_root_inode(void)
- 	struct f2fs_node *raw_node = NULL;
- 	u_int64_t blk_size_bytes, data_blk_nor;
- 	u_int64_t main_area_node_seg_blk_offset = 0;
-+	nid_t nid = le32_to_cpu(sb->root_ino);
-+	block_t blkaddr = get_sb(main_blkaddr) +
-+				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg + 1;
- 
- 	raw_node = calloc(F2FS_BLKSIZE, 1);
- 	if (raw_node == NULL) {
-@@ -1101,13 +1104,7 @@ static int f2fs_write_root_inode(void)
- 		return -1;
- 	}
- 
--	raw_node->footer.nid = sb->root_ino;
--	raw_node->footer.ino = sb->root_ino;
--	raw_node->footer.cp_ver = cpu_to_le64(1);
--	raw_node->footer.next_blkaddr = cpu_to_le32(
--			get_sb(main_blkaddr) +
--			c.cur_seg[CURSEG_HOT_NODE] *
--			c.blks_per_seg + 1);
-+	set_node_footer(raw_node, nid, nid, 0, 1, blkaddr, 1);
- 
- 	raw_node->i.i_mode = cpu_to_le16(0x41ed);
- 	if (c.lpf_ino)
-@@ -1256,6 +1253,10 @@ static int f2fs_write_qf_inode(int qtype)
- 	u_int64_t main_area_node_seg_blk_offset = 0;
- 	__le32 raw_id;
- 	int i;
-+	nid_t qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
-+	block_t blkaddr = get_sb(main_blkaddr) +
-+					c.cur_seg[CURSEG_HOT_NODE] *
-+					c.blks_per_seg + 1 + qtype + 1;
- 
- 	raw_node = calloc(F2FS_BLKSIZE, 1);
- 	if (raw_node == NULL) {
-@@ -1263,13 +1264,7 @@ static int f2fs_write_qf_inode(int qtype)
- 		return -1;
- 	}
- 
--	raw_node->footer.nid = sb->qf_ino[qtype];
--	raw_node->footer.ino = sb->qf_ino[qtype];
--	raw_node->footer.cp_ver = cpu_to_le64(1);
--	raw_node->footer.next_blkaddr = cpu_to_le32(
--			get_sb(main_blkaddr) +
--			c.cur_seg[CURSEG_HOT_NODE] *
--			c.blks_per_seg + 1 + qtype + 1);
-+	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, blkaddr, 0);
- 
- 	raw_node->i.i_mode = cpu_to_le16(0x8180);
- 	raw_node->i.i_links = cpu_to_le32(1);
-@@ -1447,6 +1442,9 @@ static int f2fs_write_lpf_inode(void)
- 	struct f2fs_node *raw_node;
- 	u_int64_t blk_size_bytes, main_area_node_seg_blk_offset;
- 	block_t data_blk_nor;
-+	block_t blkaddr = get_sb(main_blkaddr) +
-+				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
-+				1 + c.quota_inum + 1;
- 	int err = 0;
- 
- 	ASSERT(c.lpf_ino);
-@@ -1457,13 +1455,7 @@ static int f2fs_write_lpf_inode(void)
- 		return -1;
- 	}
- 
--	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
--	raw_node->footer.ino = raw_node->footer.nid;
--	raw_node->footer.cp_ver = cpu_to_le64(1);
--	raw_node->footer.next_blkaddr = cpu_to_le32(
--			get_sb(main_blkaddr) +
--			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
--			1 + c.quota_inum + 1);
-+	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, blkaddr, 1);
- 
- 	raw_node->i.i_mode = cpu_to_le16(0x41c0); /* 0700 */
- 	raw_node->i.i_links = cpu_to_le32(2);
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct timespec64 *tspec,
++			      struct clocksource **cs)
++{
++	unsigned long ret;
++	unsigned int version;
++	int cpu;
++	struct pvclock_vcpu_time_info *src;
++
++	cpu = smp_processor_id();
++	src = &hv_clock[cpu].pvti;
++
++	do {
++		/*
++		 * We are using a TSC value read in the hosts
++		 * kvm_hc_clock_pairing handling.
++		 * So any changes to tsc_to_system_mul
++		 * and tsc_shift or any other pvclock
++		 * data invalidate that measurement.
++		 */
++		version = pvclock_read_begin(src);
++
++		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++				     clock_pair_gpa,
++				     KVM_CLOCK_PAIRING_WALLCLOCK);
++		tspec->tv_sec = clock_pair.sec;
++		tspec->tv_nsec = clock_pair.nsec;
++		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
++	} while (pvclock_read_retry(src, version));
++
++	*cs = &kvm_clock;
++
++	return 0;
++}
 -- 
-2.7.4
+2.17.1
 
