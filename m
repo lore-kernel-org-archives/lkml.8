@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1393C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88DE720786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE5120786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585707;
-	bh=c7SLgyVDoRo4h+rVjcS9GAUD3QtJz1n2CTV5nhc8540=;
+	s=default; t=1592585710;
+	bh=GpaoxSM7OEtx+hmL3101sa/SZl5PTqmk3Qk78BmE58w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qaZ1lElavuaKTIm+uLenz7EfMVJ4OPuPrqSyVz04RCCUM4CSa/zIcXCtEdiKUvSbK
-	 30nlymRVc7yROgI7TI4qskV51Ks/UCuQmVUrk21JPKvKPHhnTs3Sh5xGmG/+bC4m45
-	 fhJG7mljgQkAZU/OXoqdMrzXrL3UYxeF5HNOgyro=
+	b=rxdTpU/r/y1MNvCid92cPgUYNSgCYVVMqsMSpWFKo5NaV9BD/qL9RobQ8zC/Gflj9
+	 q/W2jLqA8pBHAm/Fa2pDzXTMWIEk3HuGqj+pXrYQHhn3gXdUqLU30pM5f9tS5K+xnK
+	 BGs8DFr5HSSsIx6yEJmfdUH/IV7aHl32vDfnm8kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbgFSOf6 (ORCPT
+        id S2387461AbgFSQzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733303AbgFSOft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:35:49 -0400
+        id S2387427AbgFSOf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:35:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F1172070A;
-        Fri, 19 Jun 2020 14:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F6E2070A;
+        Fri, 19 Jun 2020 14:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577347;
-        bh=c7SLgyVDoRo4h+rVjcS9GAUD3QtJz1n2CTV5nhc8540=;
+        s=default; t=1592577357;
+        bh=GpaoxSM7OEtx+hmL3101sa/SZl5PTqmk3Qk78BmE58w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upMfG9CxwI3au+Qzhuh8KCVRTIOnjgFlOovz2fg3If3hJWhvjMEYebg3qUs1hZjcO
-         INeBjWHYYMPxAPViULvEKQMwIg2QfSpygfKQaXararjmfwRAkkQ83ibCrxP4MKdzHm
-         03UIt4V7m/WhlKvliZc/+jDkCNmxLxwp4p7KhRiw=
+        b=ak17SJAVkTAynxQd0VUeqaD/9KbaFIMuhm6JAisEShAcNBEJIRX3lxPYLwjxQOND/
+         5XW60GfBPpmv3fvuCTTDcFZHi1xq0Yta5wtfvsAdu3aDXfSuRdTBKT0l7RAZZGQjvv
+         cy8+Gd5rp1ecqo9dZC45VAIalKS9WtZL9lbFlQvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Macpaul Lin <macpaul.lin@mediatek.com>
-Subject: [PATCH 4.4 015/101] ALSA: usb-audio: Fix inconsistent card PM state after resume
-Date:   Fri, 19 Jun 2020 16:32:04 +0200
-Message-Id: <20200619141614.786080695@linuxfoundation.org>
+        stable@vger.kernel.org, Walton Hoops <me@waltonhoops.com>,
+        Tomas Hlavaty <tom@logand.com>,
+        ARAI Shun-ichi <hermes@ceres.dti.ne.jp>,
+        Hideki EIRAKU <hdk1983@gmail.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 019/101] nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
+Date:   Fri, 19 Jun 2020 16:32:08 +0200
+Message-Id: <20200619141615.089198176@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -59,127 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
 
-commit 862b2509d157c629dd26d7ac6c6cdbf043d332eb upstream.
+commit 8301c719a2bd131436438e49130ee381d30933f5 upstream.
 
-When a USB-audio interface gets runtime-suspended via auto-pm feature,
-the driver suspends all functionality and increment
-chip->num_suspended_intf.  Later on, when the system gets suspended to
-S3, the driver increments chip->num_suspended_intf again, skips the
-device changes, and sets the card power state to
-SNDRV_CTL_POWER_D3hot.  In return, when the system gets resumed from
-S3, the resume callback decrements chip->num_suspended_intf.  Since
-this refcount is still not zero (it's been runtime-suspended), the
-whole resume is skipped.  But there is a small pitfall here.
+After commit c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if
+mapping has no dirty pages"), the following null pointer dereference has
+been reported on nilfs2:
 
-The problem is that the driver doesn't restore the card power state
-after this resume call, leaving it as SNDRV_CTL_POWER_D3hot.  So,
-even after the system resume finishes, the card instance still appears
-as if it were system-suspended, and this confuses many ioctl accesses
-that are blocked unexpectedly.
+  BUG: kernel NULL pointer dereference, address: 00000000000000a8
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  ...
+  RIP: 0010:percpu_counter_add_batch+0xa/0x60
+  ...
+  Call Trace:
+    __test_set_page_writeback+0x2d3/0x330
+    nilfs_segctor_do_construct+0x10d3/0x2110 [nilfs2]
+    nilfs_segctor_construct+0x168/0x260 [nilfs2]
+    nilfs_segctor_thread+0x127/0x3b0 [nilfs2]
+    kthread+0xf8/0x130
+    ...
 
-In details, we have two issues behind the scene: one is that the card
-power state is changed only when the refcount becomes zero, and
-another is that the prior auto-suspend check is kept in a boolean
-flag.  Although the latter problem is almost negligible since the
-auto-pm feature is imposed only on the primary interface, but this can
-be a potential problem on the devices with multiple interfaces.
+This crash turned out to be caused by set_page_writeback() call for
+segment summary buffers at nilfs_segctor_prepare_write().
 
-This patch addresses those issues by the following:
+set_page_writeback() can call inc_wb_stat(inode_to_wb(inode),
+WB_WRITEBACK) where inode_to_wb(inode) is NULL if the inode of
+underlying block device does not have an associated wb.
 
-- Replace chip->autosuspended boolean flag with chip->system_suspend
-  counter
+This fixes the issue by calling inode_attach_wb() in advance to ensure
+to associate the bdev inode with its wb.
 
-- At the first system-suspend, chip->num_suspended_intf is recorded to
-  chip->system_suspend
-
-- At system-resume, the card power state is restored when the
-  chip->num_suspended_intf refcount reaches to chip->system_suspend,
-  i.e. the state returns to the auto-suspended
-
-Also, the patch fixes yet another hidden problem by the code
-refactoring along with the fixes above: namely, when some resume
-procedure failed, the driver left chip->num_suspended_intf that was
-already decreased, and it might lead to the refcount unbalance.
-In the new code, the refcount decrement is done after the whole resume
-procedure, and the problem is avoided as well.
-
-Fixes: 0662292aec05 ("ALSA: usb-audio: Handle normal and auto-suspend equally")
-Reported-and-tested-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603153709.6293-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping has no dirty pages")
+Reported-by: Walton Hoops <me@waltonhoops.com>
+Reported-by: Tomas Hlavaty <tom@logand.com>
+Reported-by: ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
+Reported-by: Hideki EIRAKU <hdk1983@gmail.com>
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/20200608.011819.1399059588922299158.konishi.ryusuke@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/card.c     |   20 +++++++++++++-------
- sound/usb/usbaudio.h |    2 +-
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ fs/nilfs2/segment.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -713,9 +713,6 @@ static int usb_audio_suspend(struct usb_
- 	if (chip == (void *)-1L)
- 		return 0;
+--- a/fs/nilfs2/segment.c
++++ b/fs/nilfs2/segment.c
+@@ -2781,6 +2781,8 @@ int nilfs_attach_log_writer(struct super
+ 	if (!nilfs->ns_writer)
+ 		return -ENOMEM;
  
--	chip->autosuspended = !!PMSG_IS_AUTO(message);
--	if (!chip->autosuspended)
--		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
- 	if (!chip->num_suspended_intf++) {
- 		list_for_each_entry(as, &chip->pcm_list, list) {
- 			snd_pcm_suspend_all(as->pcm);
-@@ -728,6 +725,11 @@ static int usb_audio_suspend(struct usb_
- 			snd_usb_mixer_suspend(mixer);
- 	}
- 
-+	if (!PMSG_IS_AUTO(message) && !chip->system_suspend) {
-+		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
-+		chip->system_suspend = chip->num_suspended_intf;
-+	}
++	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
 +
- 	return 0;
- }
- 
-@@ -740,10 +742,11 @@ static int __usb_audio_resume(struct usb
- 
- 	if (chip == (void *)-1L)
- 		return 0;
--	if (--chip->num_suspended_intf)
--		return 0;
- 
- 	atomic_inc(&chip->active); /* avoid autopm */
-+	if (chip->num_suspended_intf > 1)
-+		goto out;
-+
- 	/*
- 	 * ALSA leaves material resumption to user space
- 	 * we just notify and restart the mixers
-@@ -758,9 +761,12 @@ static int __usb_audio_resume(struct usb
- 		snd_usbmidi_resume(p);
- 	}
- 
--	if (!chip->autosuspended)
-+ out:
-+	if (chip->num_suspended_intf == chip->system_suspend) {
- 		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
--	chip->autosuspended = 0;
-+		chip->system_suspend = 0;
-+	}
-+	chip->num_suspended_intf--;
- 
- err_out:
- 	atomic_dec(&chip->active); /* allow autopm after this point */
---- a/sound/usb/usbaudio.h
-+++ b/sound/usb/usbaudio.h
-@@ -37,7 +37,7 @@ struct snd_usb_audio {
- 	struct usb_interface *pm_intf;
- 	u32 usb_id;
- 	struct mutex mutex;
--	unsigned int autosuspended:1;	
-+	unsigned int system_suspend;
- 	atomic_t active;
- 	atomic_t shutdown;
- 	atomic_t usage_count;
+ 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
+ 	if (err) {
+ 		kfree(nilfs->ns_writer);
 
 
