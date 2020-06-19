@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7557BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4487C208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480AA208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvTuGnvF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZddSThi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgFSEet (ORCPT
+        id S1730449AbgFSEex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
+        Fri, 19 Jun 2020 00:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgFSEeV (ORCPT
+        with ESMTP id S1728974AbgFSEeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:34:21 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414D8C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:21 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id u48so6157989qth.17
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:21 -0700 (PDT)
+        Fri, 19 Jun 2020 00:34:11 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A87FC0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:10 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id o84so8849266ybg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=cjsDEQ6wkFVAP826jltGaMg5SguvvdgWlTd8+GYZSFQ=;
-        b=lvTuGnvFfp6vNDPCekBQWbvPU8X66VrXyl8fIwdzEm1omVrVmp95L/8WbLeejC3tav
-         9wOBO8YkFBJ2PPYejuzo03S67/6CAFvLx5LcPOE9m+hdXqFUHIBlmekVIqU2AIotvLrK
-         KoivdS+DsQbuOHE/bb3bDa9CbeTbBApHQZRswamothXM+k0upWUr8xszBmQlfuPtHj34
-         b+NYmTf1c+Hv82rRGIGDgSEsakxeA4CBnG5bh67xhaT02ED9YNNyfwOVERttXqU/cXqc
-         bnaSepiyYvGDJBNylQc0tK123QR9OxZzhp1PFyTmbpi70rGRq29bY/0WZt7B42VunRP6
-         40WA==
+        bh=vw05Hr6gQMHkdgIxFDB0bOiYw6mRSy0yRyh3Egshj0w=;
+        b=ZddSThi+qbrT7YkxNz4wUq09u5efYQVzacpmPUU5wXZvewpGwwvsBNBuCirRe91Pl/
+         GTwjZZeNjoD1R9JzSCf/zpC7nayfMgEoSYcRBm4g0sygDxq48AsqiLbTpsuw/ZuhxUJj
+         Agd3d730HeSJl6UpV/wiCV41SpWbUOGXFGnDWKvlKd2Owzv6NO3/TvEIw8PqTrViCfIE
+         tQTr+ZyoTPQVBtAFS+yUDOguNd5gcuoijiiduoT0efPC4exk3CYwVmJ+pqTC1Pa5F5Bh
+         zqWW3bXrFBXXLZIdw9c/AMwdrIrdsR3CrAlr8tDvBv6v/GhTPyp49cLcE4uyZUKolPf7
+         7x6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=cjsDEQ6wkFVAP826jltGaMg5SguvvdgWlTd8+GYZSFQ=;
-        b=YHHtJiQUmSa3FddlGGfopELJ3YJ88HuYWW8WlSjChycOsvBvlf0CQe8Xz6JeKiaAOw
-         ehzBShkgatE6XXIDovVK5LKBJkxIM1b3PjKtalHXzu3njISHKuTp+P9TW/3+gPQOspGS
-         VBHM+qaqtYJbmDsUEpSmrpt8oGaYj0zr3uFeQBr0Ov2I7whlAXh6sgTI9KI4WCELiyZy
-         KHrpjOuEKbwcJFtI8oRKz/cR9ZsJPIcVadmZBOLL5cK9sR3hiMVuRpJFZkxB5K7OjaBd
-         49T8XlbXthA9kh4EDatgJrze+ivzv7hveYFl3O8mfVpDkdfD2QnMbZ4RBv+1stzHlmQJ
-         VNfw==
-X-Gm-Message-State: AOAM530oSHYhUhszzCdEUA3pWC86tzYHGrsPWdqYiw4zmt9r616gnLZD
-        o8CQr5UtkfqwlZzh7wNR6CmsnSVsoDzm
-X-Google-Smtp-Source: ABdhPJzLfsGCYaReZRdAtoj/rVUji3Lw3xeiQLS2IP3fh4xeBBZi5v1C/waeLGN2ODYigz6lQwQVMXlxKWpp
-X-Received: by 2002:ad4:54ee:: with SMTP id k14mr7159723qvx.9.1592541259308;
- Thu, 18 Jun 2020 21:34:19 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 21:33:52 -0700
+        bh=vw05Hr6gQMHkdgIxFDB0bOiYw6mRSy0yRyh3Egshj0w=;
+        b=NWKUveCZZtlamB29WEKWEg+ZE3oNABvdTDxChK5yHw17FDdHidGjQaqrp4QNuiSIBf
+         JGzJKYNH+H8+fozxjfoyR9w4QueuLyElmldnlZo/EvosJpS0dPWxsNxsmCjfP0e8DWQw
+         es8VAoRBfQxZJZcp9/mBMd9WR+UBsEoHPEbKZRUfsx9HKitCoWuxe026rscx8VHOZdOu
+         6MppvCmKS3Wz/dWOh3b622jxil43d2heTIDPJo6NpdQM7GO9bEFY9EdXjEqJFvLiV2bT
+         7+2yOIOLrxcvo8j8AKegPZg1rucFKs4GsIQySXINZlcKG3MHHBLeB2jLPFhevn4QCbjj
+         iWyQ==
+X-Gm-Message-State: AOAM532yMDsyxgcEQdV4cyWcfuDlqc+B/Rokh93fBt9/krwPll2GbwUv
+        +90F0TgDkdgxpLxRmVkbXM6I+SGUuvxr
+X-Google-Smtp-Source: ABdhPJz2gzcoW6j04ojC5EmMo4415rURb8VGmSsabv1X5bkihuqmh+TIpgCID0kpVPAfOvnirS6HF9aL6lle
+X-Received: by 2002:a25:a0c7:: with SMTP id i7mr3267724ybm.420.1592541249751;
+ Thu, 18 Jun 2020 21:34:09 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 21:33:47 -0700
 In-Reply-To: <20200619043356.90024-1-irogers@google.com>
-Message-Id: <20200619043356.90024-7-irogers@google.com>
+Message-Id: <20200619043356.90024-2-irogers@google.com>
 Mime-Version: 1.0
 References: <20200619043356.90024-1-irogers@google.com>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2 06/10] perf parse-events: Declare bison header file output
+Subject: [PATCH v2 01/10] perf parse-events: Use automatic variable for flex input
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,56 +83,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Declare bison header file output so that C files can depend upon
-them. As there are multiple output targets $@ is replaced by the
-target name.
+This reduces the command line size slightly.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/Build | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ tools/perf/util/Build | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 55c78ac53f04..504a6bb991ba 100644
+index 8d18380ecd10..66cf009f78d8 100644
 --- a/tools/perf/util/Build
 +++ b/tools/perf/util/Build
-@@ -196,27 +196,30 @@ $(OUTPUT)util/parse-events-flex.c $(OUTPUT)util/parse-events-flex.h: util/parse-
- 	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/parse-events-flex.c \
- 		--header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) $<
+@@ -193,7 +193,7 @@ CFLAGS_genelf_debug.o  += -Wno-packed
  
--$(OUTPUT)util/parse-events-bison.c: util/parse-events.y
-+$(OUTPUT)util/parse-events-bison.c $(OUTPUT)util/parse-events-bison.h: util/parse-events.y
+ $(OUTPUT)util/parse-events-flex.c: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
  	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) -o $@ -p parse_events_
-+	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) \
-+		-o $(OUTPUT)util/parse-events-bison.c -p parse_events_
+-	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) util/parse-events.l
++	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) $<
  
- $(OUTPUT)util/expr-flex.c $(OUTPUT)util/expr-flex.h: util/expr.l $(OUTPUT)util/expr-bison.c
+ $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
  	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/expr-flex.c \
- 		--header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) $<
+@@ -201,7 +201,7 @@ $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
  
--$(OUTPUT)util/expr-bison.c: util/expr.y
-+$(OUTPUT)util/expr-bison.c $(OUTPUT)util/expr-bison.h: util/expr.y
+ $(OUTPUT)util/expr-flex.c: util/expr.l $(OUTPUT)util/expr-bison.c
  	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) -o $@ -p expr_
-+	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) \
-+		-o $(OUTPUT)util/expr-bison.c -p expr_
+-	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) util/expr.l
++	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) $<
  
- $(OUTPUT)util/pmu-flex.c $(OUTPUT)util/pmu-flex.h: util/pmu.l $(OUTPUT)util/pmu-bison.c
+ $(OUTPUT)util/expr-bison.c: util/expr.y
  	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/pmu-flex.c \
- 		--header-file=$(OUTPUT)util/pmu-flex.h $(PARSER_DEBUG_FLEX) $<
+@@ -209,7 +209,7 @@ $(OUTPUT)util/expr-bison.c: util/expr.y
  
--$(OUTPUT)util/pmu-bison.c: util/pmu.y
-+$(OUTPUT)util/pmu-bison.c $(OUTPUT)util/pmu-bison.h: util/pmu.y
+ $(OUTPUT)util/pmu-flex.c: util/pmu.l $(OUTPUT)util/pmu-bison.c
  	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) -o $@ -p perf_pmu_
-+	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) \
-+		-o $(OUTPUT)util/pmu-bison.c -p perf_pmu_
+-	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h util/pmu.l
++	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h $<
  
- CFLAGS_parse-events-flex.o  += -w
- CFLAGS_pmu-flex.o           += -w
+ $(OUTPUT)util/pmu-bison.c: util/pmu.y
+ 	$(call rule_mkdir)
 -- 
 2.27.0.111.gc72c7da667-goog
 
