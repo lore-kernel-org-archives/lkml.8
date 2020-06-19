@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB834C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC92621527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED2F21548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578230;
-	bh=ZrZuISgxSPbULElfgZdBa23irpnyvkf+VsvAEYPxeZg=;
+	s=default; t=1592578236;
+	bh=SqMZ8KY+FjtbFnYZ4eKhIAmYzpPAlUIp/YzvchYKZzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0oqFnWS/lHVpdbCHKURXsTIMc5DSncOvsTmiGMt0koF7+VudzNqBhUGnMaptaYQb
-	 sVgUDcO3h53HpDVQLM1AWmWyjGuGHU2ND+yCw1Dte1pFe1JEJlYPqYVHNvIabykgRp
-	 m+5q683q25YSzQHpXtiaORNxc88ph/6s2a74JBhQ=
+	b=A69MYfP/1TgsjQG5aO3ITWX5UvlmUybmSiexiyxiQG1aeIzLRPSc3Y+OOJtSkvNTH
+	 VFHYCTcYfSSKs6Ip76+r0m9l9yMP1TP6cIPvKBPHEx9Kw1WTyYuGhf/tW1d2rFXwXb
+	 ChEUMf2f2QYWAx4lWN58d8n10NLK05BRSbHohJ9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388964AbgFSOu3 (ORCPT
+        id S2389320AbgFSOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:50:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42890 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389279AbgFSOuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:07 -0400
+        id S2389287AbgFSOuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F25217A0;
-        Fri, 19 Jun 2020 14:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8ACD20DD4;
+        Fri, 19 Jun 2020 14:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578207;
-        bh=ZrZuISgxSPbULElfgZdBa23irpnyvkf+VsvAEYPxeZg=;
+        s=default; t=1592578212;
+        bh=SqMZ8KY+FjtbFnYZ4eKhIAmYzpPAlUIp/YzvchYKZzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMCtS31s2uqQhxI8LRpJkWUNpBzfsjtADXJNVnrpvsNy1/0V0cleqUxt94jDEqvOK
-         US/DgsXmyWEGMue7jNvGFS00bCgzFU0T7IN61NaJzhrzLeAvwBSX3x55nu2wqgIvUL
-         PWSTgRFLZ/8iR6SbBzxjZiXWXRl2FpNZYsKX4ZYo=
+        b=JtldHJQMnKeReieOkbRxwu0k9h2kCCHgnAvneJ++HqLMQCRc4qtknVjUyJbFv8OV6
+         uYitnYnRPp1872aMzDO0O8TsBA3B/J8F003x30YkVTp5nu2HEVCdwyNqT5YRSGKPsN
+         X/SztOXTQ3VSYfva9m+w+gl/QFcLib+ee7PL9lyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/190] x86/boot: Correct relocation destination on old linkers
-Date:   Fri, 19 Jun 2020 16:32:48 +0200
-Message-Id: <20200619141639.769736005@linuxfoundation.org>
+        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 096/190] brcmfmac: fix wrong location to get firmware feature
+Date:   Fri, 19 Jun 2020 16:32:21 +0200
+Message-Id: <20200619141638.395766583@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,112 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit 5214028dd89e49ba27007c3ee475279e584261f0 ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-For the 32-bit kernel, as described in
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-  6d92bc9d483a ("x86/build: Build compressed x86 kernels as PIE"),
-
-pre-2.26 binutils generates R_386_32 relocations in PIE mode. Since the
-startup code does not perform relocation, any reloc entry with R_386_32
-will remain as 0 in the executing code.
-
-Commit
-
-  974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
-                 decompression buffer")
-
-added a new symbol _end but did not mark it hidden, which doesn't give
-the correct offset on older linkers. This causes the compressed kernel
-to be copied beyond the end of the decompression buffer, rather than
-flush against it. This region of memory may be reserved or already
-allocated for other purposes by the bootloader.
-
-Mark _end as hidden to fix. This changes the relocation from R_386_32 to
-R_386_RELATIVE even on the pre-2.26 binutils.
-
-For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
-built as PIE if the linker supports -z noreloc-overflow, which implies
-binutils-2.27+, but for consistency, mark _end as hidden here too.
-
-The below illustrates the before/after impact of the patch using
-binutils-2.25 and gcc-4.6.4 (locally compiled from source) and QEMU.
-
-  Disassembly before patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 00 00 00          sub    $0x0,%eax
-                          4f: R_386_32    _end
-  Disassembly after patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 f0 76 00          sub    $0x76f000,%eax
-                          4f: R_386_RELATIVE      *ABS*
-
-Dump from extract_kernel before patch:
-	early console in extract_kernel
-	input_data: 0x0207c098 <--- this is at output + init_size
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Dump from extract_kernel after patch:
-	early console in extract_kernel
-	input_data: 0x0190d098 <--- this is at output + init_size - _end
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200207214926.3564079-1-nivedita@alum.mit.edu
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 5 +++--
- arch/x86/boot/compressed/head_64.S | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 01d628ea3402..c6c4b877f3d2 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,17 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
-+ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
-  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-  * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
-+ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
-  * hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 53ae30259989..473b2b3cb6f5 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -192,13 +192,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
  
- 	__HEAD
- ENTRY(startup_32)
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index a25127916e67..7ab1c6bcc66a 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -41,6 +41,7 @@
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
++
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
  
- 	__HEAD
- 	.code32
+ 	/* set chip related quirks */
+ 	switch (drvr->bus_if->chip) {
 -- 
 2.25.1
 
