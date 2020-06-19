@@ -2,104 +2,150 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5846C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90173C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8853A20888
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C3C20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="kl2ZlXn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgFSBv7 (ORCPT
+        id S1730668AbgFSBx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 21:51:59 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:57270 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgFSBv6 (ORCPT
+        Thu, 18 Jun 2020 21:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgFSBxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 21:51:58 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id ABE87CA699;
-        Fri, 19 Jun 2020 09:51:52 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P15426T140189185066752S1592531511027415_;
-        Fri, 19 Jun 2020 09:51:52 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <e06d658c216d5f17574a771ae9beedb1>
-X-RL-SENDER: finley.xiao@rock-chips.com
-X-SENDER: xf@rock-chips.com
-X-LOGIN-NAME: finley.xiao@rock-chips.com
-X-FST-TO: xf@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Finley Xiao <finley.xiao@rock-chips.com>
-To:     xf@rock-chips.com, heiko@sntech.de, amit.kachhap@gmail.com,
-        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
-        javi.merino@kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, huangtao@rock-chips.com,
-        tony.xie@rock-chips.com, cl@rock-chips.com,
-        Finley Xiao <finley.xiao@rock-chips.com>
-Subject: [PATCH] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
-Date:   Fri, 19 Jun 2020 09:51:26 +0800
-Message-Id: <20200619015126.15002-1-finley.xiao@rock-chips.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 18 Jun 2020 21:53:25 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF94C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 18:53:24 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so3775698pge.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 18:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPjvsjb4L/XUk4DOVwf5+goE/PhKwDE2Q9XXqApM3gE=;
+        b=kl2ZlXn3hm/jWCOkK+/c4/yU6rt1osi6hbdBD9PsIY0TCyc82pVsciWwLVu4W/b2fc
+         SUea1ro4dFO3uW6VBz0McApVjegphmH2ffajl3ouM8Ft/1qoIa539aszdLZyXWk6Obx0
+         95/gOm5q4I6Cf6rRbTyPiHkBWH+aEhFID0TLzBDl0aa6VGLWqc5FV19NKz1BzVg1j29A
+         Mipk8fdjeej3Z+EKYGiqGNfQwA99JLdogQ9RoqHLICmS++v5lzTavQL4IoEFbjh8jTPn
+         eVttfK+MldKECVUfMANymYs/ssjgAAnDsEOI3mEbPD7elZiMiyVWJsqlS63UKm5DGdY2
+         2FrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ZPjvsjb4L/XUk4DOVwf5+goE/PhKwDE2Q9XXqApM3gE=;
+        b=uQOSkKBd4Lno9HPhz8eorvFGvZDCdoPNEHOoNGT+hGtnIP3G95GN9kl4ywp8Iksd2G
+         SFz+DtNFBTLZydFvx1PRlk79VJYeYNfVxqew44w6FFf7AzGn1b8X8Y+fAdkYHXfI+Iyz
+         MiEWHVbUWBKm9IvrHMzlLH4DCDAHo1JQiPTZpM3mfG2ae4j2jw4v0l6oz7QGP+H4Hr+q
+         1t7NzCsv4e+f6HrroWo6DOe5QyNIQ/QOnYbkrjKZQgwJW+Leqgd2MXYvqbm7d9SmbGsl
+         vKWM1R00WJsvmlRim50tkpt1zAYxA0zO31XBeq4XKYrEQR/a7LlfaabpxVMfo//myYVU
+         QLbg==
+X-Gm-Message-State: AOAM530JL8jBTDnHomrnHyEPZBtfXalyCWmJA370XPOzX7e5U/YnJcSd
+        ryxI5QQaNZkaihmhiAa6OaJM3BU6D4aigg==
+X-Google-Smtp-Source: ABdhPJxKJB5coooxn+ajBp9fp4eq1fOEfzkiahliTn7K1WAiK9Pf+Md0brBXhSbRl/WQAYcYd/UE7g==
+X-Received: by 2002:a62:76c5:: with SMTP id r188mr6197043pfc.60.1592531603969;
+        Thu, 18 Jun 2020 18:53:23 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id p8sm3571243pgs.29.2020.06.18.18.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 18:53:23 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 18:53:23 -0700 (PDT)
+X-Google-Original-Date: Thu, 18 Jun 2020 18:53:21 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: Acquire mmap lock before invoking walk_page_range
+In-Reply-To: <20200617203732.2076611-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, akpm@linux-foundation.org,
+        daniel.m.jordan@oracle.com, linux-riscv@lists.infradead.org,
+        walken@google.com, rppt@linux.ibm.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>,
+        Will Deacon <willdeacon@google.com>
+Message-ID: <mhng-c8581870-6152-43a6-9d9f-28a9cc5ce39e@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function cpu_power_to_freq is used to find a frequency and set the
-cooling device to consume at most the power to be converted. For example,
-if the power to be converted is 80mW, and the em table is as follow.
-struct em_cap_state table[] = {
-	/* KHz     mW */
-	{ 1008000, 36, 0 },
-	{ 1200000, 49, 0 },
-	{ 1296000, 59, 0 },
-	{ 1416000, 72, 0 },
-	{ 1512000, 86, 0 },
-};
-The target frequency should be 1416000KHz, not 1512000KHz.
+On Wed, 17 Jun 2020 13:37:32 PDT (-0700), Atish Patra wrote:
+> As per walk_page_range documentation, mmap lock should be acquired by the
+> caller before invoking walk_page_range. mmap_assert_locked gets triggered
+> without that. The details can be found here.
+>
+> http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
+>
+> Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/mm/pageattr.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+> index ec2c70f84994..289a9a5ea5b5 100644
+> --- a/arch/riscv/mm/pageattr.c
+> +++ b/arch/riscv/mm/pageattr.c
+> @@ -151,6 +151,7 @@ int set_memory_nx(unsigned long addr, int numpages)
+>
+>  int set_direct_map_invalid_noflush(struct page *page)
+>  {
+> +	int ret;
+>  	unsigned long start = (unsigned long)page_address(page);
+>  	unsigned long end = start + PAGE_SIZE;
+>  	struct pageattr_masks masks = {
+> @@ -158,11 +159,16 @@ int set_direct_map_invalid_noflush(struct page *page)
+>  		.clear_mask = __pgprot(_PAGE_PRESENT)
+>  	};
+>
+> -	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
+> +	mmap_read_lock(&init_mm);
+> +	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
+> +	mmap_read_unlock(&init_mm);
+> +
+> +	return ret;
+>  }
+>
+>  int set_direct_map_default_noflush(struct page *page)
+>  {
+> +	int ret;
+>  	unsigned long start = (unsigned long)page_address(page);
+>  	unsigned long end = start + PAGE_SIZE;
+>  	struct pageattr_masks masks = {
+> @@ -170,7 +176,11 @@ int set_direct_map_default_noflush(struct page *page)
+>  		.clear_mask = __pgprot(0)
+>  	};
+>
+> -	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
+> +	mmap_read_lock(&init_mm);
+> +	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
+> +	mmap_read_unlock(&init_mm);
+> +
+> +	return ret;
+>  }
+>
+>  void __kernel_map_pages(struct page *page, int numpages, int enable)
 
-Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
----
- drivers/thermal/cpufreq_cooling.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
++Will, who pointed out that we could avoid the lock by using apply_page_range.
 
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index 9e124020519f..6c0e1b053126 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -123,12 +123,12 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
- {
- 	int i;
- 
--	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
--		if (power > cpufreq_cdev->em->table[i].power)
-+	for (i = cpufreq_cdev->max_level; i >= 0; i--) {
-+		if (power >= cpufreq_cdev->em->table[i].power)
- 			break;
- 	}
- 
--	return cpufreq_cdev->em->table[i + 1].frequency;
-+	return cpufreq_cdev->em->table[i].frequency;
- }
- 
- /**
--- 
-2.11.0
+Given that the bug doesn't reproduce for me, we don't otherwise use
+apply_page_range, and the commit is somewhat suspect (I screwed up that PR, and
+the original patch mentions avoiding caching invalid states) I'm going to just
+take this as is and add it to the list of things to look at.
 
+I've put this on fixes: walk_page_range() directly says you must take the lock
+and I don't want to wait for pedantic reasons on a boot issue, even if it's one
+that doesn't show up for me.
 
-
+Thanks!
