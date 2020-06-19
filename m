@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6475720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAA920DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577484;
-	bh=Oe+ZdXhi98kSzbDOcm8/UbNuNAzaBhb9xZaekVWJw1A=;
+	s=default; t=1592577491;
+	bh=iZ99/muoQA+HvUu2CsDY47KC7bfbAwbs6HN8cYGzKeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbhXuul6wYzYb5apcaEBYbYSbCKVrTwZ+RPIqx424LjPFBi2zpZvKI3LqYotgillA
-	 I7SZHQ7llD+YiIZWeGw5LpSJdIyGo+D93gVeJt1kzPsPN2EAk5i1rystPCcdou3eRN
-	 2XS3vbmYC+Ae17nHKLg1+ATd59IqP1JDwHPT51PI=
+	b=sR/koCwg2tP34RGhGmfajWYeJ1fNUnBoR6intFVbIqopjpPnvYIGx0b0mDrNg1Ou3
+	 +Y8cw7UK93tTP7EBi4lks1mekbj87MZWsKeB14sVxr/GVfMWbakJ7Dko48iLOOH8yB
+	 E3sV8hFgh4iOiebKq7IgXX5Ocyey4WWmSSNqB/ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbgFSOiB (ORCPT
+        id S1733290AbgFSOiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54566 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387757AbgFSOhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:40 -0400
+        id S2387815AbgFSOiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62501208B8;
-        Fri, 19 Jun 2020 14:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2914120DD4;
+        Fri, 19 Jun 2020 14:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577459;
-        bh=Oe+ZdXhi98kSzbDOcm8/UbNuNAzaBhb9xZaekVWJw1A=;
+        s=default; t=1592577480;
+        bh=iZ99/muoQA+HvUu2CsDY47KC7bfbAwbs6HN8cYGzKeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enoQ2xhpEnC9if73KoIJpJcCx0CltlAFGDjRCvRreMRfYILPJN5gqZrBpj9U/WKM0
-         CvSLnHVyDTMZA2bz8JcRxrOwtJxZn38rfHfG76imUhSILBBduOgwggbqk1upFTAW3g
-         y+YXoEXfL44gViRSPJ5jldEMHzy3vFfH86xHABCw=
+        b=UdCx+LXhZob34xSx+LyV0T8VqFtkI9TFeRFUWDx1rgIsFN7hNo7PLBPUVho60Zv68
+         7TcLD6whI5DAvnhPCyZ73eEAhjLz8xm9cvOQzaaYjwabdlJMht13WdBsZIOr/JpcKM
+         49//BkGiDr3PLV+UBO9ylI0tGARJGo8BKmQxqbYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 059/101] lib/mpi: Fix 64-bit MIPS build with Clang
-Date:   Fri, 19 Jun 2020 16:32:48 +0200
-Message-Id: <20200619141617.140559433@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 038/101] ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+Date:   Fri, 19 Jun 2020 16:32:27 +0200
+Message-Id: <20200619141616.116726756@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -61,69 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 18f1ca46858eac22437819937ae44aa9a8f9f2fa ]
+commit abeaa85054ff8cfe8b99aafc5c70ea067e5d0908 upstream.
 
-When building 64r6_defconfig with CONFIG_MIPS32_O32 disabled and
-CONFIG_CRYPTO_RSA enabled:
+Free wmi later after cmd urb has been killed, as urb cb will access wmi.
 
-lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:664:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w0))
-                         ~~~~~~~~~~^~~
-lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:668:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w1))
-                         ~~~~~~~~~~^~~
-2 errors generated.
+the case reported by syzbot:
+https://lore.kernel.org/linux-usb/0000000000000002fc05a1d61a68@google.com
+BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500
+drivers/net/wireless/ath/ath9k/wmi.c:215
+Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
 
-This special case for umul_ppmm for MIPS64r6 was added in
-commit bbc25bee37d2b ("lib/mpi: Fix umul_ppmm() for MIPS64r6"), due to
-GCC being inefficient and emitting a __multi3 intrinsic.
+Call Trace:
+<IRQ>
+ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
+ath9k_htc_rx_msg+0x2da/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ath9k_hif_usb_reg_in_cb+0x1ba/0x630
+drivers/net/wireless/ath/ath9k/hif_usb.c:718
+__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+expire_timers kernel/time/timer.c:1449 [inline]
+__run_timers kernel/time/timer.c:1773 [inline]
+__run_timers kernel/time/timer.c:1740 [inline]
+run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
 
-There is no such issue with clang; with this patch applied, I can build
-this configuration without any problems and there are no link errors
-like mentioned in the commit above (which I can still reproduce with
-GCC 9.3.0 when that commit is reverted). Only use this definition when
-GCC is being used.
+Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200404041838.10426-3-hqjagain@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This really should have been caught by commit b0c091ae04f67 ("lib/mpi:
-Eliminate unused umul_ppmm definitions for MIPS") when I was messing
-around in this area but I was not testing 64-bit MIPS at the time.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/885
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/mpi/longlong.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/hif_usb.c      |    5 +++--
+ drivers/net/wireless/ath/ath9k/hif_usb.h      |    1 +
+ drivers/net/wireless/ath/ath9k/htc_drv_init.c |   10 +++++++---
+ drivers/net/wireless/ath/ath9k/wmi.c          |    5 ++++-
+ drivers/net/wireless/ath/ath9k/wmi.h          |    3 ++-
+ 5 files changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index f1f31c754b3e..70f5cf8deab3 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -671,7 +671,7 @@ do {						\
- 	**************  MIPS/64  **************
- 	***************************************/
- #if (defined(__mips) && __mips >= 3) && W_TYPE_SIZE == 64
--#if defined(__mips_isa_rev) && __mips_isa_rev >= 6
-+#if defined(__mips_isa_rev) && __mips_isa_rev >= 6 && defined(CONFIG_CC_IS_GCC)
- /*
-  * GCC ends up emitting a __multi3 intrinsic call for MIPS64r6 with the plain C
-  * code below, so we special case MIPS64r6 until the compiler can do better.
--- 
-2.25.1
-
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -969,7 +969,7 @@ err:
+ 	return -ENOMEM;
+ }
+ 
+-static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
++void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
+ {
+ 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
+ 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
+@@ -1336,8 +1336,9 @@ static void ath9k_hif_usb_disconnect(str
+ 
+ 	if (hif_dev->flags & HIF_USB_READY) {
+ 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
+-		ath9k_htc_hw_free(hif_dev->htc_handle);
+ 		ath9k_hif_usb_dev_deinit(hif_dev);
++		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
++		ath9k_htc_hw_free(hif_dev->htc_handle);
+ 	}
+ 
+ 	usb_set_intfdata(interface, NULL);
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.h
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
+@@ -131,5 +131,6 @@ struct hif_device_usb {
+ 
+ int ath9k_hif_usb_init(void);
+ void ath9k_hif_usb_exit(void);
++void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev);
+ 
+ #endif /* HTC_USB_H */
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+@@ -931,8 +931,9 @@ err_init:
+ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
+ 			   u16 devid, char *product, u32 drv_info)
+ {
+-	struct ieee80211_hw *hw;
++	struct hif_device_usb *hif_dev;
+ 	struct ath9k_htc_priv *priv;
++	struct ieee80211_hw *hw;
+ 	int ret;
+ 
+ 	hw = ieee80211_alloc_hw(sizeof(struct ath9k_htc_priv), &ath9k_htc_ops);
+@@ -967,7 +968,10 @@ int ath9k_htc_probe_device(struct htc_ta
+ 	return 0;
+ 
+ err_init:
+-	ath9k_deinit_wmi(priv);
++	ath9k_stop_wmi(priv);
++	hif_dev = (struct hif_device_usb *)htc_handle->hif_dev;
++	ath9k_hif_usb_dealloc_urbs(hif_dev);
++	ath9k_destoy_wmi(priv);
+ err_free:
+ 	ieee80211_free_hw(hw);
+ 	return ret;
+@@ -982,7 +986,7 @@ void ath9k_htc_disconnect_device(struct
+ 			htc_handle->drv_priv->ah->ah_flags |= AH_UNPLUGGED;
+ 
+ 		ath9k_deinit_device(htc_handle->drv_priv);
+-		ath9k_deinit_wmi(htc_handle->drv_priv);
++		ath9k_stop_wmi(htc_handle->drv_priv);
+ 		ieee80211_free_hw(htc_handle->drv_priv->hw);
+ 	}
+ }
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -112,14 +112,17 @@ struct wmi *ath9k_init_wmi(struct ath9k_
+ 	return wmi;
+ }
+ 
+-void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
++void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
+ {
+ 	struct wmi *wmi = priv->wmi;
+ 
+ 	mutex_lock(&wmi->op_mutex);
+ 	wmi->stopped = true;
+ 	mutex_unlock(&wmi->op_mutex);
++}
+ 
++void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
++{
+ 	kfree(priv->wmi);
+ }
+ 
+--- a/drivers/net/wireless/ath/ath9k/wmi.h
++++ b/drivers/net/wireless/ath/ath9k/wmi.h
+@@ -179,7 +179,6 @@ struct wmi {
+ };
+ 
+ struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv);
+-void ath9k_deinit_wmi(struct ath9k_htc_priv *priv);
+ int ath9k_wmi_connect(struct htc_target *htc, struct wmi *wmi,
+ 		      enum htc_endpoint_id *wmi_ctrl_epid);
+ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
+@@ -189,6 +188,8 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum
+ void ath9k_wmi_event_tasklet(unsigned long data);
+ void ath9k_fatal_work(struct work_struct *work);
+ void ath9k_wmi_event_drain(struct ath9k_htc_priv *priv);
++void ath9k_stop_wmi(struct ath9k_htc_priv *priv);
++void ath9k_destoy_wmi(struct ath9k_htc_priv *priv);
+ 
+ #define WMI_CMD(_wmi_cmd)						\
+ 	do {								\
 
 
