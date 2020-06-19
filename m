@@ -2,100 +2,171 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277D220B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592587913;
-	bh=9mCNxE/8rXZYK27gbI7jREQY5FMFSwoWsy4EMvaeG3Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kS2UNqcCvNp/5ujUWxp/dnqDZcTcSZUcVdn56Rs9bYXelCrZ3lsMOg0ZJAzT+gisG
-	 utf480iONxLmlO2jDBYbw/8jwFgnjLjept9cEI+CtJ6dKWLKM9irJxWMqrnX6ahP57
-	 4quX+qPEe4kPKzf5IXfOOSkVibDgvXGufV2tKgsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4A84F20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:34:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lnm/XM7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392654AbgFSRbw (ORCPT
+        id S2391010AbgFSReq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392026AbgFSRbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:31:51 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jun 2020 13:34:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31897 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732307AbgFSReq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:34:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592588084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FSCXX8Dn6TNSzzYA9q3ZlYEoSdRai2clmlWhOcdNdrI=;
+        b=Lnm/XM7D0nU77eahJTS44OuwgtGC+fmw5vddS7mgcwf9b9r19kOJu3ACk0jmtZiXGf/zzP
+        XP3fqTanSfZGoArtWGsYCKnS2mIBTHNan8tVUnEQTkT1FAF4rkQACBHdoZBmhtQFxtxONi
+        jmCxNkBHa+kWhaEPQFuX6+Q56i5Ho2Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-9R5IdaOZOGmaUKDeMk5i2w-1; Fri, 19 Jun 2020 13:34:43 -0400
+X-MC-Unique: 9R5IdaOZOGmaUKDeMk5i2w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB66720809;
-        Fri, 19 Jun 2020 17:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592587911;
-        bh=9mCNxE/8rXZYK27gbI7jREQY5FMFSwoWsy4EMvaeG3Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=unM1SajPAWGLO2RLvI4NOTywsFTs4JNz5ftkv1P4abcHdAiYJlLxxftqMzWVVdRYW
-         8LjabTaptFybYvdAORjLyRqioXRM8AthFwJhxSQKnZS4mxwSJlt2gbuQfd6hqSpuZf
-         2xrtAHAexLBnyUEGA3p6bjBJm9CePmO0zvcTHIao=
-Date:   Fri, 19 Jun 2020 12:37:15 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ethernet: ti: am65-cpsw-qos: Use struct_size() in
- devm_kzalloc()
-Message-ID: <20200619173715.GA6998@embeddedor>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B824E800053;
+        Fri, 19 Jun 2020 17:34:41 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-113-94.phx2.redhat.com [10.3.113.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 178775D9E5;
+        Fri, 19 Jun 2020 17:34:37 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 13:34:36 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] Sched: Add a tracepoint to track rq->nr_running
+Message-ID: <20200619173436.GF36031@lorien.usersys.redhat.com>
+References: <20200619141120.1476-1-pauld@redhat.com>
+ <20200619124641.7f94ad14@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200619124641.7f94ad14@oasis.local.home>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes. Also, remove unnecessary
-variable _size_.
+On Fri, Jun 19, 2020 at 12:46:41PM -0400 Steven Rostedt wrote:
+> On Fri, 19 Jun 2020 10:11:20 -0400
+> Phil Auld <pauld@redhat.com> wrote:
+> 
+> > 
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > index ed168b0e2c53..a6d9fe5a68cf 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -634,6 +634,10 @@ DECLARE_TRACE(sched_overutilized_tp,
+> >  	TP_PROTO(struct root_domain *rd, bool overutilized),
+> >  	TP_ARGS(rd, overutilized));
+> >  
+> > +DECLARE_TRACE(sched_update_nr_running_tp,
+> > +	TP_PROTO(int cpu, int change, unsigned int nr_running),
+> > +	TP_ARGS(cpu, change, nr_running));
+> > +
+> >  #endif /* _TRACE_SCHED_H */
+> >  
+> >  /* This part must be outside protection */
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 9a2fbf98fd6f..6f28fdff1d48 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -6,7 +6,10 @@
+> >   *
+> >   *  Copyright (C) 1991-2002  Linus Torvalds
+> >   */
+> > +
+> > +#define SCHED_CREATE_TRACE_POINTS
+> >  #include "sched.h"
+> > +#undef SCHED_CREATE_TRACE_POINTS
+> 
+> Because of the macro magic, and really try not to have trace events
+> defined in any headers. Otherwise, we have weird defines like you are
+> doing, and it doesn't fully protect it if a C file adds this header and
+> defines CREATE_TRACE_POINTS first.
+> 
+> 
+> >  
+> >  #include <linux/nospec.h>
+> >  
+> > @@ -21,9 +24,6 @@
+> >  
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -75,6 +75,15 @@
+> >  #include "cpupri.h"
+> >  #include "cpudeadline.h"
+> >  
+> > +#ifdef SCHED_CREATE_TRACE_POINTS
+> > +#define CREATE_TRACE_POINTS
+> > +#endif
+> > +#include <trace/events/sched.h>
+> > +
+> > +#ifdef SCHED_CREATE_TRACE_POINTS
+> > +#undef CREATE_TRACE_POINTS
+> > +#endif
+> > +
+> >  #ifdef CONFIG_SCHED_DEBUG
+> >  # define SCHED_WARN_ON(x)	WARN_ONCE(x, #x)
+> >  #else
+> > @@ -1959,6 +1968,7 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
+> >  	unsigned prev_nr = rq->nr_running;
+> >  
+> >  	rq->nr_running = prev_nr + count;
+> > +	trace_sched_update_nr_running_tp(cpu_of(rq), count, rq->nr_running);
+> 
+> Instead of having sched.h define CREATE_TRACE_POINTS, I would have the
+> following:
+> 
+> 	if (trace_sched_update_nr_running_tp_enabled()) {
+> 		call_trace_sched_update_nr_runnig(rq, count);
+> 	}
+> 
+> Then in sched/core.c:
+> 
+> void trace_sched_update_nr_running(struct rq *rq, int count)
+> {
+> 	trace_sched_update_nr_running_tp(cpu_of(rq), count, rq->nr_running);
+> }
+> 
+> The trace_*_enabled() above uses static branches, where the if turns to
+> a nop (pass through) when disabled and a jmp when enabled (same logic
+> that trace points use themselves).
+> 
+> Then you don't need this macro dance, and risk having another C file
+> define CREATE_TRACE_POINTS and spend hours debugging why it suddenly
+> broke.
+>
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+Awesome, thanks Steve. I was really hoping there was a better way to do
+that. I try it this way. 
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-qos.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-qos.c b/drivers/net/ethernet/ti/am65-cpsw-qos.c
-index 32eac04468bb..3bdd4dbcd2ff 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-qos.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-qos.c
-@@ -505,7 +505,6 @@ static int am65_cpsw_set_taprio(struct net_device *ndev, void *type_data)
- 	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
- 	struct tc_taprio_qopt_offload *taprio = type_data;
- 	struct am65_cpsw_est *est_new;
--	size_t size;
- 	int ret = 0;
- 
- 	if (taprio->cycle_time_extension) {
-@@ -513,10 +512,9 @@ static int am65_cpsw_set_taprio(struct net_device *ndev, void *type_data)
- 		return -EOPNOTSUPP;
- 	}
- 
--	size = sizeof(struct tc_taprio_sched_entry) * taprio->num_entries +
--	       sizeof(struct am65_cpsw_est);
--
--	est_new = devm_kzalloc(&ndev->dev, size, GFP_KERNEL);
-+	est_new = devm_kzalloc(&ndev->dev,
-+			       struct_size(est_new, taprio.entries, taprio->num_entries),
-+			       GFP_KERNEL);
- 	if (!est_new)
- 		return -ENOMEM;
- 
+Cheers,
+Phil
+
+> -- Steve
+> 
+
 -- 
-2.27.0
 
