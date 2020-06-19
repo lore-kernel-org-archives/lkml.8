@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A8D218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58844218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580436;
-	bh=GgNbKupob62BqUCj27AYN8DGZuT/nucfLviwTiGLsBs=;
+	s=default; t=1592580445;
+	bh=3BabQJM6BN1aJZwxaMkpymzATSEqgRe2H4GvW+yQVss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1L0bPu3TIqM9xuE6b6gzZSCP25+W1kQ1jOXCu2Tgg4ZCcCbyeoz9K0cXSiiYzinm
-	 gQAhBcNqtZEjQuZsB6Nyd+YoSxLUty0QYa2mYH0KoTUZgm+7egIKIMhYXdObOde133
-	 2hRGeHU1UU036MAZLq6l9TImlKqC8aZn7i+Pf24I=
+	b=eL2ohc+snaMPhLD2mxCX7FJh/hNmXx3B4dSlTGvoOFXIlJMchZaU6Kg3j40zZVlIu
+	 TxlGvVhKN57O42ZkoqQCZZDBUmBtxDrcwg0QrWM77aZsq9jaenW9BFqRaN5Ab/xifb
+	 BLADosLN/f914bQSMM/gikzSeCgbcdR012hFczjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404420AbgFSP1P (ORCPT
+        id S2393540AbgFSP1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393466AbgFSPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:50 -0400
+        id S2404174AbgFSPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93F7120734;
-        Fri, 19 Jun 2020 15:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A1E20B80;
+        Fri, 19 Jun 2020 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580349;
-        bh=GgNbKupob62BqUCj27AYN8DGZuT/nucfLviwTiGLsBs=;
+        s=default; t=1592580354;
+        bh=3BabQJM6BN1aJZwxaMkpymzATSEqgRe2H4GvW+yQVss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7z0Y696SYCKfq8wEMuwozsPfDVO+d+3887WzF/YTpRfmwWtD1lEhwSbxO35FHOWG
-         FwCWcrjc7XgwWMpCh2nJS0wxjb2L7TqRZbr8OMj0TXzLXsaBkKrUhVTnrdAqcLCJ/6
-         ButQPIrHxXYCwg5aRJgNpIz9OTVpHPmAShzzvJFg=
+        b=C/pF7HtAvf6nzhPNO6K/oYxi2ualZ5K9CQb/LB1Ixe/D06Vl8mgL8bCNElgkUEFDK
+         idMPyLWMRWgdkGu+Pcn5PfxNZFtGZpmXYF61I1dX+9rvD36IBGzh0unp9/kms0xhCN
+         WL0h9EY+2hsYg/ycELgbgXlYQ2a4HW3MC938EsHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 185/376] selftests/bpf: Install generated test progs
-Date:   Fri, 19 Jun 2020 16:31:43 +0200
-Message-Id: <20200619141719.108539085@linuxfoundation.org>
+Subject: [PATCH 5.7 177/376] drm/mcde: dsi: Fix return value check in mcde_dsi_bind()
+Date:   Fri, 19 Jun 2020 16:31:35 +0200
+Message-Id: <20200619141718.732114117@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,39 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 309b81f0fdc4209d998bc63f0da52c2e96340d4e ]
+[ Upstream commit 761e9f4f80a21a4b845097027030bef863001636 ]
 
-Before commit 74b5a5968fe8 ("selftests/bpf: Replace test_progs and
-test_maps w/ general rule") selftests/bpf used generic install
-target from selftests/lib.mk to install generated bpf test progs
-by mentioning them in TEST_GEN_FILES variable.
+The of_drm_find_bridge() function returns NULL on error, it doesn't return
+error pointers so this check doesn't work.
 
-Take that functionality back.
-
-Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
-Signed-off-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200513021722.7787-1-yauheni.kaliuta@redhat.com
+Fixes: 5fc537bfd000 ("drm/mcde: Add new driver for ST-Ericsson MCDE")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200430073145.52321-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mcde/mcde_dsi.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 01c95f8278c7..af139d0e2e0c 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -264,6 +264,7 @@ TRUNNER_BPF_OBJS := $$(patsubst %.c,$$(TRUNNER_OUTPUT)/%.o, $$(TRUNNER_BPF_SRCS)
- TRUNNER_BPF_SKELS := $$(patsubst %.c,$$(TRUNNER_OUTPUT)/%.skel.h,	\
- 				 $$(filter-out $(SKEL_BLACKLIST),	\
- 					       $$(TRUNNER_BPF_SRCS)))
-+TEST_GEN_FILES += $$(TRUNNER_BPF_OBJS)
+diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
+index 7af5ebb0c436..e705afc08c4e 100644
+--- a/drivers/gpu/drm/mcde/mcde_dsi.c
++++ b/drivers/gpu/drm/mcde/mcde_dsi.c
+@@ -1073,10 +1073,9 @@ static int mcde_dsi_bind(struct device *dev, struct device *master,
+ 			panel = NULL;
  
- # Evaluate rules now with extra TRUNNER_XXX variables above already defined
- $$(eval $$(call DEFINE_TEST_RUNNER_RULES,$1,$2))
+ 			bridge = of_drm_find_bridge(child);
+-			if (IS_ERR(bridge)) {
+-				dev_err(dev, "failed to find bridge (%ld)\n",
+-					PTR_ERR(bridge));
+-				return PTR_ERR(bridge);
++			if (!bridge) {
++				dev_err(dev, "failed to find bridge\n");
++				return -EINVAL;
+ 			}
+ 		}
+ 	}
 -- 
 2.25.1
 
