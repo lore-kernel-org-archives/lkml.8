@@ -2,116 +2,96 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA56C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3265920771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2789A20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582136;
-	bh=Ex6skR9YdgJtGYQMG45wy7W10lh2P9b//LxuoOro6ag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fdUwrj6o1iYSp/k+glIsVX1K5efli7DSFHV1sAIhIWAWUXqgZYGYWVBmtyzMhAjUS
-	 sy/b/SFo6n97kNVbQ9Dy4UP6CudpsLJdvxXv4JO523NdYjl5YZrf1PG0tgkWL4SyL/
-	 hT4VKP/A3Hv0ste63caozLM0oYrNRPTdSMM4JZkk=
+	s=default; t=1592582149;
+	bh=V2+xHMTqohevdbiF822LvwMu8HBv9ms+KvauSS3xlIc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=y0RskmmOCKsUNmhh/mvKc1v7rRvL1ErOHDLwRoQZs8fjlOegD1z+uNkTVgqRlRSt3
+	 vf4ZLDDmn6jBvlvCqmPjXbfwAv9sX2b4fUopy7kRMp4S5+PiGv5ePp4pclJzP2jpYy
+	 MsrwoZn7UWMmRbGqGZ1t+/dzPbihRId53H2yEaFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405222AbgFSPzf (ORCPT
+        id S2388898AbgFSPzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:55:35 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37479 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392508AbgFSPzc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:55:32 -0400
-Received: by mail-ot1-f65.google.com with SMTP id v13so7646330otp.4;
-        Fri, 19 Jun 2020 08:55:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sKylRjNEpAqnQ+WaZirKknI5bexwPLrj3iuq9vdD0CA=;
-        b=X/TKFmBJ0UPo7r4Ys16Gep89hMzFRiip4ieBT+C7dIZtCM16II3nJagzP6F5FL05Gb
-         yJhTWgEKqoQHICjp2DA92Svl7pVT4L5ZhHdDVQ80H9ZkWJHCMTqPKTw4V3hbGDmZWrU6
-         8SVUSuGyDexnwTyrSBKcscCrHlPGcYxjxq+S42RO6vxN90+dYWVd+mwuoc7zhAPJ4RYZ
-         uU8Perr8d6ecpqhQa7q9WxCKsrA4sTMPIlbQcA3GTOJJNKvKBh8u0zBcvoLJWwXe6DNN
-         MmZwXFOSVT74aY1584rV93g29RnpapT1pmsfWfxiRJCeDoTIgxHLBEnlq/5EGAne4Zrh
-         HrkQ==
-X-Gm-Message-State: AOAM530AH5zlRgi+iGSZzUVyBrMfcQh30YH2iN/MzW086JPeMW2foesn
-        dZMJc5YDV4PaaJ0CB7d8N0MJQUqkULtKaEiKFA8KeQ==
-X-Google-Smtp-Source: ABdhPJyhSqxeDfqtJxbOwrEXIFkN5IH/piua+hwM2UpE8o4bHRdGgkaqYQt5l8gSyJB6dHPW44SLsjC9Q+fprChYt5U=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr3480467otn.118.1592582131467;
- Fri, 19 Jun 2020 08:55:31 -0700 (PDT)
+        Fri, 19 Jun 2020 11:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392839AbgFSPVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B843320B80;
+        Fri, 19 Jun 2020 15:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580077;
+        bh=V2+xHMTqohevdbiF822LvwMu8HBv9ms+KvauSS3xlIc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YaMKVR7zvpKCiVbOkbC+yIZblgpp10JFITuFucNiJXx3qbiEOaoFVyQMN4IwPmIj2
+         qiRD13ocy6AymIV8cMelBDrVpnDnd7cY+9CbAsUD8yi7YsbgpSbpOfFt0D4KutD8ks
+         c3M5RfYlNokA3QkvMuQc9mGnVW+SWyW12fEy94mU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 083/376] ath11k: fix error message to correctly report the command that failed
+Date:   Fri, 19 Jun 2020 16:30:01 +0200
+Message-Id: <20200619141714.272757900@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
- <20200401083729.GD17325@linux.intel.com> <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
- <20200402192145.GB10314@linux.intel.com> <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
-In-Reply-To: <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 19 Jun 2020 17:55:19 +0200
-Message-ID: <CAJZ5v0isZCK8o6hopUV3SP25P5+BwZGSSRFtGQrunQ0n45t68g@mail.gmail.com>
-Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
-To:     Stefan Berger <stefanb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-integrity@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 5:14 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
->
-> On 4/2/20 3:21 PM, Jarkko Sakkinen wrote:
-> > On Wed, Apr 01, 2020 at 11:05:36AM +0200, Rafael J. Wysocki wrote:
-> >> On Wed, Apr 1, 2020 at 10:37 AM Jarkko Sakkinen
-> >> <jarkko.sakkinen@linux.intel.com> wrote:
-> >>> On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
-> >>>> From: Stefan Berger <stefanb@linux.ibm.com>
-> >>>>
-> >>>> Recent extensions of the TPM2 ACPI table added 3 more fields
-> >>>> including 12 bytes of start method specific parameters and Log Area
-> >>>> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> >>>> the existing structure with these fields to allow non-UEFI systems
-> >>>> to access the TPM2's log.
-> >>>>
-> >>>> The specification that has the new fields is the following:
-> >>>>    TCG ACPI Specification
-> >>>>    Family "1.2" and "2.0"
-> >>>>    Version 1.2, Revision 8
-> >>>>
-> >>>> Adapt all existing table size calculations to use
-> >>>> offsetof(struct acpi_table_tpm2, start_method_specific)
-> >>>> [where start_method_specific is a newly added field]
-> >>>> rather than sizeof(struct acpi_table_tpm2) so that the addition
-> >>>> of the new fields does not affect current systems that may not
-> >>>> have them.
-> >>>>
-> >>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> >>>> Cc: linux-acpi@vger.kernel.org
-> >>> I think I'm cool with this but needs an ack from ACPI maintainer.
-> >>>
-> >>> Rafael, given that this not an intrusive change in any possible means,
-> >>> can I pick this patch and put it to my next pull request?
-> >> Yes, please.
-> >>
-> >> Thanks!
-> > Great, thanks Rafael.
-> >
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> >
-> > Do you mind if I add your ack to the commit?
->
+From: Colin Ian King <colin.king@canonical.com>
 
-It looks like I missed the previous message from Jarkko.
+[ Upstream commit 9a8074e3bcd7956ec6b4f7c26360af1b0b0abe38 ]
 
-Yes, please, feel free to add my ACK to the patch, thanks!
+Currently the error message refers to the command WMI_TWT_DIeABLE_CMDID
+which looks like a cut-n-paste mangled typo. Fix the message to match
+the command WMI_BSS_COLOR_CHANGE_ENABLE_CMDID that failed.
+
+Fixes: 5a032c8d1953 ("ath11k: add WMI calls required for handling BSS color")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200327192639.363354-1-colin.king@canonical.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath11k/wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
+index e7ce36966d6a..6fec62846279 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.c
++++ b/drivers/net/wireless/ath/ath11k/wmi.c
+@@ -2779,7 +2779,7 @@ int ath11k_wmi_send_bss_color_change_enable_cmd(struct ath11k *ar, u32 vdev_id,
+ 	ret = ath11k_wmi_cmd_send(wmi, skb,
+ 				  WMI_BSS_COLOR_CHANGE_ENABLE_CMDID);
+ 	if (ret) {
+-		ath11k_warn(ab, "Failed to send WMI_TWT_DIeABLE_CMDID");
++		ath11k_warn(ab, "Failed to send WMI_BSS_COLOR_CHANGE_ENABLE_CMDID");
+ 		dev_kfree_skb(skb);
+ 	}
+ 	return ret;
+-- 
+2.25.1
+
+
+
