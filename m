@@ -2,184 +2,166 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF19E206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFAA206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOZbgypl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mWxCcNKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgFSJ0M (ORCPT
+        id S1729255AbgFSJ3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
+        Fri, 19 Jun 2020 05:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgFSJ0L (ORCPT
+        with ESMTP id S1726196AbgFSJ3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:26:11 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1105C0613EF
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h22so4066521pjf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
+        Fri, 19 Jun 2020 05:29:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DC8C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:29:39 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x6so8957401wrm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=Vf4ohuWrMr6Ie8GDWlHSJlKxCEowfJaXNdmYfwVJvPc=;
-        b=jOZbgyplTYdCwtTeEcFO8ao/1IeWpEdkro9XqPz5EJ39CEsiECBlBL5OofeK8Lwhdj
-         2gLiKCqlqC1tnJxGddrWrfF/XWxxnqyLOhx1yoUm0s9ovbZjUeJP9p0tkXVS9ucNU5vH
-         FHcRbu9FGV/GhFMDTiPxiYqtpNNHr7NaOOqM4=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rnmzgcKo/cBaDVUinsVzz5iYDrFt1Jg4MPKsxfJtIl4=;
+        b=mWxCcNKuTZASSNd7jalvWR9GzEUGsZDpmy2q7VfMBiMO2j/l6Q/HNDM5GKyqA6AqW+
+         AUi+ol35+rU6R0Wso2uAfHe0kwM05pdnJ9m9p7ErKNfWz83dnkMKHamX7GtzAlx+SxQP
+         zf71Tao0ULZWEExaa/Ld8TFaiTdQjrgiKQ86wmJmvNe/5kV3XHXGzPn2e68YpaPfrmyS
+         He8RFDM+urT4huq23TMwwkT8bOQ0AfNCpvZv+d3iQ6HCEN4+R4JUoBE14dyyPAg7EtY0
+         V+ff+EVIcbL7x3sdIg/00yxtNxMTQZ6ovQCypY0kACLorkteLS0uNbeOsT/4eQeUHNu8
+         joaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=Vf4ohuWrMr6Ie8GDWlHSJlKxCEowfJaXNdmYfwVJvPc=;
-        b=X1Lh06mM9EnkKmMWacGhwRUFlMTv0XexXIv37v1q+ZDsmXN/myvDaV7WZY0Hk3domQ
-         4UIBFNYiebUhZFN7/6bh0mdl/PwljGATEUUV0fKiPfU7zTKneB/A8QNAe05FTSulIMZq
-         PuTus4aOO1Cdpb+yz31asHtf9/hln7v7rWWF7c17KaDZNZkZt/P2LPnauIYwf5ynpVZL
-         FRz3WkeJ22Sm+4Lr3t4yDNX+rvBwuUG1UNyWD6VuYiuZtvewYuXVhXDt59ZuGkKq+kKH
-         9ahN7EaMVtweXx33/WU2BJyX8DNXddof0tgeQpXwjtVPj2RNkLaJY4wyw6ZxziC3cA7C
-         6CSQ==
-X-Gm-Message-State: AOAM533P3wMSp6rksvNTO5bHmWHArWVlsMS85DQVoFc+Zfba0sZy7xjV
-        gnylqVGOzC8zP+U7DGrbhBlOTccqnxg=
-X-Google-Smtp-Source: ABdhPJxjHsNZeQt5FvCcMCd8wr+B8WtJxmN74WGei/ANeOiFzi/Yi8987MSgZQkKyyETYu7yUepo5g==
-X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr7621006pls.106.1592558769148;
-        Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y136sm5440917pfg.55.2020.06.19.02.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 02:26:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rnmzgcKo/cBaDVUinsVzz5iYDrFt1Jg4MPKsxfJtIl4=;
+        b=Xg3oQ4f79CJYTc+/4W0QVZP4FEhX+qftlJ7ZNuWmKqOa3L4FrEfH/KEGw1Sy3T1pn7
+         TrPYSurICe1J+JOBwMnlnL9q6cfyXUwFaVIfqBBj1NKzSo6s0uc0qoLy/8q8mvt4QvH8
+         xZlgSXIn9fVX/ve4CvIH6b+2NB7k8RrBEK3cPC7i3ybhtbkR5MZym9VS1u+F6kWNL3eZ
+         5OJOoFfavCFBXwUccSx3t1If2oyI33GdaPcb67fT7UWWIAGTDeZL+auyYChl5ZLdZV3X
+         IL5ueChFeP1b8u435Zg3KSNBZKzhRlW+m0qlj+o+FoUvmVApzCofilAdqNp9CU7iRQ0Z
+         QXtw==
+X-Gm-Message-State: AOAM533YpfxR7DdbbIiRg5qs4+uxWCKzwrM5SbUh22X0fu8F4VfCpFsm
+        vmcTjmQGu/xY39EdSGaPwGAZvcCfToI=
+X-Google-Smtp-Source: ABdhPJybrcTtdKuMtr08fQG2M3BYBsLRtDo0jbW3M7e8VIim590FRQjLi35LSQpkk5XSbfkXY340uA==
+X-Received: by 2002:adf:ed01:: with SMTP id a1mr3287107wro.271.1592558977492;
+        Fri, 19 Jun 2020 02:29:37 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id o15sm6240352wmm.31.2020.06.19.02.29.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jun 2020 02:29:36 -0700 (PDT)
+Subject: Re: [PATCH 1/3] ALSA: compress: document the compress audio state
+ machine
+To:     Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200619045449.3966868-1-vkoul@kernel.org>
+ <20200619045449.3966868-2-vkoul@kernel.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e4b24fc3-4e5d-bff7-e3ff-83ecea1e713f@linaro.org>
+Date:   Fri, 19 Jun 2020 10:29:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org> <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com> <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org> <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com> <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org> <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com> <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Fri, 19 Jun 2020 02:26:07 -0700
-Message-ID: <159255876756.62212.4221488367063412094@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200619045449.3966868-2-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-06-18 03:03:03)
-> On 6/16/2020 5:27 PM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-06-01 04:38:25)
-> >> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
-> >>> Quoting Maulik Shah (2020-05-29 02:20:32)
-> >>>> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
-> >>>>> Quoting Maulik Shah (2020-05-23 10:11:13)
-> >>>>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_dat=
-a *d)
-> >>>>>>            if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> >>>>>>                    return;
-> >>>>>>    =20
-> >>>>>> +       pdc_enable_intr(d, true);
-> >>>>>>            irq_chip_unmask_parent(d);
-> >>>>>>     }
-> >>>>>>    =20
-> >>>>> I find these two hunks deeply confusing. I'm not sure what the
-> >>>>> maintainers think though. I hope it would be simpler to always enab=
-le
-> >>>>> the hwirqs in the pdc when an irq is requested and only disable it =
-in
-> >>>>> the pdc when the system goes to suspend and the pdc pin isn't for a=
-n irq
-> >>>>> that's marked for wakeup. Does that break somehow?
-> >>>> PDC monitors interrupts during CPUidle as well, in cases where deepe=
-st
-> >>>> low power mode happened from cpuidle where GIC is not active.
-> >>>> If we keep PDC IRQ always enabled/unmasked during idle and then
-> >>>> disable/mask when entering to suspend, it will break cpuidle.
-> >>> How does it break cpuidle? The irqs that would be enabled/unmasked in
-> >>> pdc would only be the irqs that the kernel has setup irq handlers for
-> >>> (from request_irq() and friends).  We want those irqs to keep working
-> >>> during cpuidle and wake the CPU from the deepest idle states.
-> >>>> I hope it would be simpler to always enable
-> >>>> the hwirqs in the pdc when an irq is requested and only disable it in
-> >>>> the pdc when the system goes to suspend and the pdc pin isn't for an=
- irq
-> >>>> that's marked for wakeup
-> >>>> How does it break cpuidle?
-> >> Consider a scenario..
-> >> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/all=
-oc happens
-> >> 2. Client driver disable's irq. (lazy disable is there, so in HW its s=
-till unmasked) but disabled in SW.
-> >> 3. Device enters deep CPUidle low power modes where only PDC monitors =
-IRQ.
-> >> 4. This IRQ can still wakeup from CPUidle since it was monitored by PD=
-C.
-> >> 5. From handler, it comes to know that IRQ is disabled in SW, so it re=
-ally invokes irq_mask callback now to disable in HW.
-> >> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets =
-masked only during suspend, all other times its enabled)
-> >> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from=
- deep cpuidle states.
-> > Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
-> > it keeps waking up the CPU because it isn't masked at the PDC after the
-> > first time it interrupts? Is this a power problem?
-> yes it can be a power problem.
-> >   Because from a
-> > correctness standpoint we don't really care. It woke up the CPU because
-> > it happened, and the GIC can decide to ignore it or not by masking it at
-> > the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
-> > the irq at the GIC level. Is that not true?
->=20
-> once PDC detects IRQ, it directly doesn't wake up CPU. it replays IRQ to =
 
-> GIC.
->=20
-> since at GIC its masked, GIC doesn't forward to cpu to immediatly wake=20
-> it up.
->=20
-> however after PDC detecting IRQ, it exits low power mode and=20
-> watchdog/timer can wakeup upon expiry.
 
-Ok. So the only problem is some screaming irq that really wants to be
-handled but the driver that requested it has disabled it at runtime. The
-IRQ keeps kicking the CPUs out of deep idle and then eventually the
-timer tick happens and we've run the CPUs in a shallower idle state for
-this time? Presumably we'd like to have these irqs be lazily masked at
-the PDC so that they can become pending when they first arrive but not
-block deep idle states if they're interrupting often while being
-handled.
+On 19/06/2020 05:54, Vinod Koul wrote:
+> So we had some discussions of the stream states, so I thought it is a
+> good idea to document the state transitions, so add it documentation
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-On the other hand, we want irq wake state to be the only factor in irqs
-being unmasked at the PDC on the entry to suspend. Purely
-masking/unmasking at the PDC when the irq is masked in software doesn't
-work because suspend/resume will break for disabled but wake enabled
-irqs. But doing that makes idle work easily because we can assume during
-idle that leaving it unmasked until it fires and then masking it in the
-PDC until it is handled gives us good deep idle states in the face of
-screaming irqs.
+Thanks Vinod for doing this,
+Makes things much clear on the state-machine side!
 
-What are the actual requirements? Here is my attempt to boil this
-discussion down into a few bullet points:
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
- 1. During system suspend, wake enabled irqs should be enabled in PDC
- and all other irqs should be disabled in PDC.
-
- 2. During idle, enabled irqs must be enabled in PDC, unless they're
- pending in which case they should be masked in the PDC so as to not
- wake up the CPU from deep idle states
-
- 3. During non-idle, non-suspend, enabled irqs must be enabled in PDC.
-
-Or is #3 actually false and PDC has no bearing on this?
+>   .../sound/designs/compress-offload.rst        | 52 +++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+> 
+> diff --git a/Documentation/sound/designs/compress-offload.rst b/Documentation/sound/designs/compress-offload.rst
+> index ad4bfbdacc83..7292717c43bf 100644
+> --- a/Documentation/sound/designs/compress-offload.rst
+> +++ b/Documentation/sound/designs/compress-offload.rst
+> @@ -151,6 +151,58 @@ Modifications include:
+>   - Addition of encoding options when required (derived from OpenMAX IL)
+>   - Addition of rateControlSupported (missing in OpenMAX AL)
+>   
+> +State Machine
+> +=============
+> +
+> +The compressed audio stream state machine is described below ::
+> +
+> +                                        +----------+
+> +                                        |          |
+> +                                        |   OPEN   |
+> +                                        |          |
+> +                                        +----------+
+> +                                             |
+> +                                             |
+> +                                             | compr_set_params()
+> +                                             |
+> +                                             V
+> +                                        +----------+
+> +                compr_drain_notify()    |          |
+> +              +------------------------>|   SETUP  |
+> +              |                         |          |
+> +              |                         +----------+
+> +              |                              |
+> +              |                              |
+> +              |                              | compr_write()
+> +              |                              |
+> +              |                              V
+> +              |                         +----------+
+> +              |                         |          |
+> +              |                         |  PREPARE |
+> +              |                         |          |
+> +              |                         +----------+
+> +              |                              |
+> +              |                              |
+> +              |                              | compr_start()
+> +              |                              |
+> +              |                              V
+> +        +----------+                    +----------+     compr_pause()      +----------+
+> +        |          |                    |          |----------------------->|          |
+> +        |  DRAIN   |<-------------------|  RUNNING |                        |  PAUSE   |
+> +        |          |                    |          |<-----------------------|          |
+> +        +----------+                    +----------+     compr_resume()     +----------+
+> +              |                              |
+> +              |                              |
+> +              |                              | compr_free()
+> +              |                              |
+> +              |                              V
+> +              |                         +----------+
+> +              |     compr_free()        |          |
+> +              +------------------------>|          |
+> +                                        |   STOP   |
+> +                                        |          |
+> +                                        +----------+
+> +
+>   
+>   Gapless Playback
+>   ================
+> 
