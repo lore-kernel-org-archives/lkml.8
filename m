@@ -2,84 +2,194 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67889C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD89EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B83D2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44382083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:57:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CrP/0ld3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732839AbgFSL5b (ORCPT
+        id S1732846AbgFSL5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 07:57:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54298 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732448AbgFSL5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 07:57:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8A98BB5AF;
-        Fri, 19 Jun 2020 11:57:26 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 12:57:23 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
- static key
-Message-ID: <20200619115723.GF3129@suse.de>
-References: <20200618195525.7889-1-qais.yousef@arm.com>
- <20200618195525.7889-3-qais.yousef@arm.com>
- <jhjwo43cpfl.mognet@arm.com>
+        Fri, 19 Jun 2020 07:57:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:39824 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732226AbgFSL5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 07:57:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592567863; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Date: Message-ID: Subject: From: Cc: To: Sender;
+ bh=yxSnad5euOraE9R6X/yaFZQEvD8fvlYxjxhLwBIPjZw=; b=CrP/0ld35V/kJB8OMGqzR/zItdA8vA8nJVbY2PE44uGl4+UX9bKYSBMm5XmMkUHH1hxaZiqu
+ ooeYRL7llcPfeU9lw57GW4VF4gGw/6bd3ViOq/2Kn1tNYUsR/1PBw0Ozw+fW3XQ+JddEV5sI
+ ykxQ9jz/VsppVL+xQVUi6Q/NZUs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5eeca825f3deea03f3b47098 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 11:57:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2ACE3C4339C; Fri, 19 Jun 2020 11:57:25 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39BB3C433C8;
+        Fri, 19 Jun 2020 11:57:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39BB3C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+To:     Sumit Semwal <sumit.semwal@linaro.org>, michael.j.ruhl@intel.com,
+        David.Laight@ACULAB.COM,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Subject: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+Message-ID: <a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org>
+Date:   Fri, 19 Jun 2020 17:27:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <jhjwo43cpfl.mognet@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:36:46AM +0100, Valentin Schneider wrote:
-> >                                    nouclamp                 uclamp      uclamp-static-key
-> > Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
-> > Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
-> > Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
-> > Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
-> > Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
-> > Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
-> > Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
-> > Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
-> > Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
-> >
-> 
-> Am I reading this correctly in that compiling in uclamp but having the
-> static key enabled gives a slight improvement compared to not compiling in
-> uclamp? I suppose the important bit is that we're not seeing regressions
-> anymore, but still.
-> 
+There exists a sleep-while-atomic bug while accessing the dmabuf->name
+under mutex in the dmabuffs_dname(). This is caused from the SELinux
+permissions checks on a process where it tries to validate the inherited
+files from fork() by traversing them through iterate_fd() (which
+traverse files under spin_lock) and call
+match_file(security/selinux/hooks.c) where the permission checks happen.
+This audit information is logged using dump_common_audit_data() where it
+calls d_path() to get the file path name. If the file check happen on
+the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+access dmabuf->name. The flow will be like below:
+flush_unauthorized_files()
+  iterate_fd()
+    spin_lock() --> Start of the atomic section.
+      match_file()
+        file_has_perm()
+          avc_has_perm()
+            avc_audit()
+              slow_avc_audit()
+	        common_lsm_audit()
+		  dump_common_audit_data()
+		    audit_log_d_path()
+		      d_path()
+                        dmabuffs_dname()
+                          mutex_lock()--> Sleep while atomic.
 
-I haven't reviewed the series in depth because from your review, another
-version is likely in the works. However, it is not that unusual to
-see small fluctuations like this that are counter-intuitive. The report
-indicates the difference is likely outside of the noise with * around the
-percentage difference instead of () but it could be small boot-to-boot
-variance, differences in code layout, slight differences in slab usage
-patterns etc. The definitive evidence that uclamp overhead is no there
-is whether the uclamp functions show up in annotated profiles or not.
+Call trace captured (on 4.19 kernels) is below:
+___might_sleep+0x204/0x208
+__might_sleep+0x50/0x88
+__mutex_lock_common+0x5c/0x1068
+__mutex_lock_common+0x5c/0x1068
+mutex_lock_nested+0x40/0x50
+dmabuffs_dname+0xa0/0x170
+d_path+0x84/0x290
+audit_log_d_path+0x74/0x130
+common_lsm_audit+0x334/0x6e8
+slow_avc_audit+0xb8/0xf8
+avc_has_perm+0x154/0x218
+file_has_perm+0x70/0x180
+match_file+0x60/0x78
+iterate_fd+0x128/0x168
+selinux_bprm_committing_creds+0x178/0x248
+security_bprm_committing_creds+0x30/0x48
+install_exec_creds+0x1c/0x68
+load_elf_binary+0x3a4/0x14e0
+search_binary_handler+0xb0/0x1e0
 
+So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
+
+Cc: <stable@vger.kernel.org> [5.3+]
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+---
+
+Changes in V2: Addressed review comments from Ruhl, Michael J
+
+Changes in V1: https://lore.kernel.org/patchwork/patch/1255055/
+
+ drivers/dma-buf/dma-buf.c | 11 +++++++----
+ include/linux/dma-buf.h   |  1 +
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 01ce125..d81d298 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+ 	size_t ret = 0;
+ 
+ 	dmabuf = dentry->d_fsdata;
+-	dma_resv_lock(dmabuf->resv, NULL);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+-	dma_resv_unlock(dmabuf->resv);
++	spin_unlock(&dmabuf->name_lock);
+ 
+ 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+ 			     dentry->d_name.name, ret > 0 ? name : "");
+@@ -341,8 +341,10 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 		kfree(name);
+ 		goto out_unlock;
+ 	}
++	spin_lock(&dmabuf->name_lock);
+ 	kfree(dmabuf->name);
+ 	dmabuf->name = name;
++	spin_unlock(&dmabuf->name_lock);
+ 
+ out_unlock:
+ 	dma_resv_unlock(dmabuf->resv);
+@@ -405,10 +407,10 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	/* Don't count the temporary reference taken inside procfs seq_show */
+ 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+ 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+-	dma_resv_lock(dmabuf->resv, NULL);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		seq_printf(m, "name:\t%s\n", dmabuf->name);
+-	dma_resv_unlock(dmabuf->resv);
++	spin_unlock(&dmabuf->name_lock);
+ }
+ 
+ static const struct file_operations dma_buf_fops = {
+@@ -546,6 +548,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 	dmabuf->size = exp_info->size;
+ 	dmabuf->exp_name = exp_info->exp_name;
+ 	dmabuf->owner = exp_info->owner;
++	spin_lock_init(&dmabuf->name_lock);
+ 	init_waitqueue_head(&dmabuf->poll);
+ 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+ 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index ab0c156..93108fd 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -311,6 +311,7 @@ struct dma_buf {
+ 	void *vmap_ptr;
+ 	const char *exp_name;
+ 	const char *name;
++	spinlock_t name_lock;
+ 	struct module *owner;
+ 	struct list_head list_node;
+ 	void *priv;
 -- 
-Mel Gorman
-SUSE Labs
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
