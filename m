@@ -4,72 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 907AC207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DC1207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbgFSJOk (ORCPT
+        id S1729255AbgFSJQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:14:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6290 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725290AbgFSJOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:14:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 706DC7A08262838512E1;
-        Fri, 19 Jun 2020 17:14:38 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 19 Jun 2020 17:14:27 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to check page dirty status before writeback
-Date:   Fri, 19 Jun 2020 17:14:19 +0800
-Message-ID: <20200619091419.47374-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+        Fri, 19 Jun 2020 05:16:05 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:43726 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgFSJQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:16:04 -0400
+X-Greylist: delayed 411 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Jun 2020 05:16:03 EDT
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 6D418AFDC6;
+        Fri, 19 Jun 2020 17:09:11 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P3326T139697392834304S1592557749877054_;
+        Fri, 19 Jun 2020 17:09:10 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <434d5cdc956ae93f131f66b7a903d7ad>
+X-RL-SENDER: finley.xiao@rock-chips.com
+X-SENDER: xf@rock-chips.com
+X-LOGIN-NAME: finley.xiao@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Finley Xiao <finley.xiao@rock-chips.com>
+To:     heiko@sntech.de, amit.kachhap@gmail.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com
+Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, stable@vger.kernel.org,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com,
+        cl@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
+Date:   Fri, 19 Jun 2020 17:08:25 +0800
+Message-Id: <20200619090825.32747-1-finley.xiao@rock-chips.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In f2fs_write_raw_pages(), we need to check page dirty status before
-writeback, because there could be a racer (e.g. reclaimer) helps
-writebacking the dirty page.
+The function cpu_power_to_freq is used to find a frequency and set the
+cooling device to consume at most the power to be converted. For example,
+if the power to be converted is 80mW, and the em table is as follow.
+struct em_cap_state table[] = {
+	/* KHz     mW */
+	{ 1008000, 36, 0 },
+	{ 1200000, 49, 0 },
+	{ 1296000, 59, 0 },
+	{ 1416000, 72, 0 },
+	{ 1512000, 86, 0 },
+};
+The target frequency should be 1416000KHz, not 1512000KHz.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- fs/f2fs/compress.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/thermal/cpufreq_cooling.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 5643aa2b8377..ce5645b5c833 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1322,6 +1322,12 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 				congestion_wait(BLK_RW_ASYNC,
- 						DEFAULT_IO_TIMEOUT);
- 				lock_page(cc->rpages[i]);
-+
-+				if (!PageDirty(cc->rpages[i])) {
-+					unlock_page(cc->rpages[i]);
-+					continue;
-+				}
-+
- 				clear_page_dirty_for_io(cc->rpages[i]);
- 				goto retry_write;
- 			}
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index 9e124020519f..6c0e1b053126 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -123,12 +123,12 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+ {
+ 	int i;
+ 
+-	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
+-		if (power > cpufreq_cdev->em->table[i].power)
++	for (i = cpufreq_cdev->max_level; i >= 0; i--) {
++		if (power >= cpufreq_cdev->em->table[i].power)
+ 			break;
+ 	}
+ 
+-	return cpufreq_cdev->em->table[i + 1].frequency;
++	return cpufreq_cdev->em->table[i].frequency;
+ }
+ 
+ /**
 -- 
-2.26.2
+2.11.0
+
+
 
