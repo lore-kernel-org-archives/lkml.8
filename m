@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E72C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D80C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9985421532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B2D20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582390;
-	bh=GGGopzoYp1/UdNTECzraK80uWl1sSWl9CELLGoAzjqQ=;
+	s=default; t=1592582396;
+	bh=jPxXse+cQPfEmZrr9f0Q4FwlTl3ase3YR4MRbsFeDCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTsoZHLwc8aCSCIlHD2v9TdqkTw8GIgO264FC4XU5AhQzUH5Wfy+dbkOEFye8cTr7
-	 Ax3s1Mml7YvNzlkccQ7xahF1iM4sWU2QYML/H663YsFIlhu3tRWtJXxUD8gBkzA2jo
-	 IqR+9n5xLGwDXTurXkm3XT358/uAP2/Gci1+BHCY=
+	b=KSKg9UY8UyimWB3emclv6qgQk4PUFNM6hcqkQSwBzdbi31dj7B6w5W3wElCiAAcfJ
+	 fibOW/R4Z2VpRSbrh4iXmaWsxGVhzwbRPQ0kiaJk95VPkhli+fdgJBExHZDykUv7w+
+	 gMIVAw9Ytua9SC0cLk7nmwkdXzgfetZoDHm6lS7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392341AbgFSPO4 (ORCPT
+        id S2393161AbgFSP7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45206 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392319AbgFSPOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:37 -0400
+        id S2392339AbgFSPO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9C520776;
-        Fri, 19 Jun 2020 15:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 158B8218AC;
+        Fri, 19 Jun 2020 15:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579676;
-        bh=GGGopzoYp1/UdNTECzraK80uWl1sSWl9CELLGoAzjqQ=;
+        s=default; t=1592579695;
+        bh=jPxXse+cQPfEmZrr9f0Q4FwlTl3ase3YR4MRbsFeDCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JupD10T2dQ4lxqBXdw8tSgssugMQDq1hq8Yq8+YXqBchNJFa5kvXWOX03GPW8qy4d
-         ev9JyfKyLghXj+8J8+iOYYQ/4V6b+zwrNg2G1NzfkjL6VqTRw/tPc/0+tYLRywKkDo
-         zhX0HgdBdbeb7RRevBPzY9btNm2GRWSTpfSpxF3o=
+        b=QLmxtxFOJRoY8yrQeoYYpuhsKNL4BaMneTfVeI4yAH93STCWOL3MJ0oGUmB1QX7gf
+         K3lVM0CHQIdXmg29atxR2MuVAFe5fcawdXUpfT1ExOkOSvWAUwr7J2F3et5N6aFXBN
+         lyrTOhR7Z6FRmq+Qgh/hnJ7oAKEKh0xDrk/mfEXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 194/261] ima: Set again build_ima_appraise variable
-Date:   Fri, 19 Jun 2020 16:33:25 +0200
-Message-Id: <20200619141659.192504590@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 232/261] powerpc/kasan: Fix issues by lowering KASAN_SHADOW_END
+Date:   Fri, 19 Jun 2020 16:34:03 +0200
+Message-Id: <20200619141700.994873502@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,54 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit b59fda449cf07f2db3be3a67142e6c000f5e8d79 ]
+commit 3a66a24f6060e6775f8c02ac52329ea0152d7e58 upstream.
 
-After adding the new add_rule() function in commit c52657d93b05
-("ima: refactor ima_init_policy()"), all appraisal flags are added to the
-temp_ima_appraise variable. Revert to the previous behavior instead of
-removing build_ima_appraise, to benefit from the protection offered by
-__ro_after_init.
+At the time being, KASAN_SHADOW_END is 0x100000000, which
+is 0 in 32 bits representation.
 
-The mentioned commit introduced a bug, as it makes all the flags
-modifiable, while build_ima_appraise flags can be protected with
-__ro_after_init.
+This leads to a couple of issues:
+- kasan_remap_early_shadow_ro() does nothing because the comparison
+k_cur < k_end is always false.
+- In ptdump, address comparison for markers display fails and the
+marker's name is printed at the start of the KASAN area instead of
+being printed at the end.
 
-Cc: stable@vger.kernel.org # 5.0.x
-Fixes: c52657d93b05 ("ima: refactor ima_init_policy()")
-Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, there is no need to shadow the KASAN shadow area itself,
+so the KASAN shadow area can stop shadowing memory at the start
+of itself.
+
+With a PAGE_OFFSET set to 0xc0000000, KASAN shadow area is then going
+from 0xf8000000 to 0xff000000.
+
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/ae1a3c0d19a37410c209c3fc453634cfcc0ee318.1589866984.git.christophe.leroy@csgroup.eu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/integrity/ima/ima_policy.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/kasan.h |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 86624b1331ef..558a7607bf93 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -590,8 +590,14 @@ static void add_rules(struct ima_rule_entry *entries, int count,
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -23,9 +23,7 @@
  
- 			list_add_tail(&entry->list, &ima_policy_rules);
- 		}
--		if (entries[i].action == APPRAISE)
--			temp_ima_appraise |= ima_appraise_flag(entries[i].func);
-+		if (entries[i].action == APPRAISE) {
-+			if (entries != build_appraise_rules)
-+				temp_ima_appraise |=
-+					ima_appraise_flag(entries[i].func);
-+			else
-+				build_ima_appraise |=
-+					ima_appraise_flag(entries[i].func);
-+		}
- 	}
- }
+ #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
  
--- 
-2.25.1
-
+-#define KASAN_SHADOW_END	0UL
+-
+-#define KASAN_SHADOW_SIZE	(KASAN_SHADOW_END - KASAN_SHADOW_START)
++#define KASAN_SHADOW_END	(-(-KASAN_SHADOW_START >> KASAN_SHADOW_SCALE_SHIFT))
+ 
+ #ifdef CONFIG_KASAN
+ void kasan_early_init(void);
 
 
