@@ -2,52 +2,60 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B049C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE217C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C77221556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB95621582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577933;
-	bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
+	s=default; t=1592577937;
+	bh=0LPRvlOzOJYx0mRMBYwrVXRaubxfHLyg54HkbdgNwuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZoejvdzJQ4aMLDXxjw9hyCqpnloab8nnbgPWWpQ+y6gWY3Xnorx+M0xKzNFP2r8iJ
-	 8tC+6eOUkNXwnol++e9Tv7lIGlcbg+rlINtCk1pkljefs2xtVJxpwM/u+0AtAam1Bn
-	 ERMi7MGQUY0e39B34xKDHJg9fSwzybWDkidRU8OE=
+	b=MabyddOgdB2jtp19q2XrrlyttqsY13UwQxISpV5gkC7cA3Xa+QdHu4lRfY4qoPKUm
+	 5hCGyTx/y57sNQ+gcw1zgIBDF/87CKfgdkSw7G4u6Pxb4hsGIVQqYkcwTPeA45lmkr
+	 71N7aQKVvnctcNCnRoHMqFh67s0+uvqei6rhKnUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388710AbgFSOpb (ORCPT
+        id S2388719AbgFSOpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388682AbgFSOpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:17 -0400
+        id S2388707AbgFSOpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B75420A8B;
-        Fri, 19 Jun 2020 14:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE0D20A8B;
+        Fri, 19 Jun 2020 14:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577917;
-        bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
+        s=default; t=1592577930;
+        bh=0LPRvlOzOJYx0mRMBYwrVXRaubxfHLyg54HkbdgNwuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AzJjvtghmIISWZqF8XLNy6rtUY1OkAmBUUcmmMglDEwZ0Adp2wLW0iXplE/HQYHNg
-         R/mZKYaJjRrxwm7xvu4YmJ+EkcWK80yn3cDlbhYnBBcgPcqhbfNBUrGSpIMOWv0tcV
-         MjdL/hQ5kdbsH2X6OjTscBstyqFjXV9oc9nIlvnE=
+        b=lom7hk6p0/mpzjr03B3bH0kUYcS1Yu3RX6ML7jySSMPBY2Vf9xtcfGWErfwd64p/F
+         UV1/+bBOHtzW/gmoD+h6L3QFvZqw9GaBmzwzm9kbCovzolstXAD8Cksa7i+gkeK+eg
+         2A+vzjpM+4c9NQ5pwXrhuoYErsu5dqqX95Quet4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 013/190] drivers/net/ibmvnic: Update VNIC protocol version reporting
-Date:   Fri, 19 Jun 2020 16:30:58 +0200
-Message-Id: <20200619141634.133139918@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alistair Delva <adelva@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Bob Haarman <inglorion@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH 4.14 018/190] x86_64: Fix jiffies ODR violation
+Date:   Fri, 19 Jun 2020 16:31:03 +0200
+Message-Id: <20200619141634.372502650@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,43 +68,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Bob Haarman <inglorion@google.com>
 
-[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
+commit d8ad6d39c35d2b44b3d48b787df7f3359381dcbf upstream.
 
-VNIC protocol version is reported in big-endian format, but it
-is not byteswapped before logging. Fix that, and remove version
-comparison as only one protocol version exists at this time.
+'jiffies' and 'jiffies_64' are meant to alias (two different symbols that
+share the same address).  Most architectures make the symbols alias to the
+same address via a linker script assignment in their
+arch/<arch>/kernel/vmlinux.lds.S:
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+jiffies = jiffies_64;
+
+which is effectively a definition of jiffies.
+
+jiffies and jiffies_64 are both forward declared for all architectures in
+include/linux/jiffies.h. jiffies_64 is defined in kernel/time/timer.c.
+
+x86_64 was peculiar in that it wasn't doing the above linker script
+assignment, but rather was:
+1. defining jiffies in arch/x86/kernel/time.c instead via the linker script.
+2. overriding the symbol jiffies_64 from kernel/time/timer.c in
+arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
+
+As Fangrui notes:
+
+  In LLD, symbol assignments in linker scripts override definitions in
+  object files. GNU ld appears to have the same behavior. It would
+  probably make sense for LLD to error "duplicate symbol" but GNU ld
+  is unlikely to adopt for compatibility reasons.
+
+This results in an ODR violation (UB), which seems to have survived
+thus far. Where it becomes harmful is when;
+
+1. -fno-semantic-interposition is used:
+
+As Fangrui notes:
+
+  Clang after LLVM commit 5b22bcc2b70d
+  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
+  defaults to -fno-semantic-interposition similar semantics which help
+  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
+  within the same translation unit. Unlike GCC
+  -fno-semantic-interposition, Clang emits such relocations referencing
+  local symbols for non-pic code as well.
+
+This causes references to jiffies to refer to '.Ljiffies$local' when
+jiffies is defined in the same translation unit. Likewise, references to
+jiffies_64 become references to '.Ljiffies_64$local' in translation units
+that define jiffies_64.  Because these differ from the names used in the
+linker script, they will not be rewritten to alias one another.
+
+2. Full LTO
+
+Full LTO effectively treats all source files as one translation
+unit, causing these local references to be produced everywhere.  When
+the linker processes the linker script, there are no longer any
+references to jiffies_64' anywhere to replace with 'jiffies'.  And
+thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
+at all.
+
+In the process of porting patches enabling Full LTO from arm64 to x86_64,
+spooky bugs have been observed where the kernel appeared to boot, but init
+doesn't get scheduled.
+
+Avoid the ODR violation by matching other architectures and define jiffies
+only by linker script.  For -fno-semantic-interposition + Full LTO, there
+is no longer a global definition of jiffies for the compiler to produce a
+local symbol which the linker script won't ensure aliases to jiffies_64.
+
+Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Alistair Delva <adelva@google.com>
+Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
+Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Bob Haarman <inglorion@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://github.com/ClangBuiltLinux/linux/issues/852
+Link: https://lkml.kernel.org/r/20200602193100.229287-1-inglorion@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/x86/kernel/time.c        |    4 ----
+ arch/x86/kernel/vmlinux.lds.S |    4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 956fbb164e6f..85c11dafb4cd 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -3560,12 +3560,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
- 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
- 			break;
- 		}
--		dev_info(dev, "Partner protocol version is %d\n",
--			 crq->version_exchange_rsp.version);
--		if (be16_to_cpu(crq->version_exchange_rsp.version) <
--		    ibmvnic_version)
--			ibmvnic_version =
-+		ibmvnic_version =
- 			    be16_to_cpu(crq->version_exchange_rsp.version);
-+		dev_info(dev, "Partner protocol version is %d\n",
-+			 ibmvnic_version);
- 		send_cap_queries(adapter);
- 		break;
- 	case QUERY_CAPABILITY_RSP:
--- 
-2.25.1
-
+--- a/arch/x86/kernel/time.c
++++ b/arch/x86/kernel/time.c
+@@ -24,10 +24,6 @@
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ 
+-#ifdef CONFIG_X86_64
+-__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
+-#endif
+-
+ unsigned long profile_pc(struct pt_regs *regs)
+ {
+ 	unsigned long pc = instruction_pointer(regs);
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -36,13 +36,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT, CONF
+ #ifdef CONFIG_X86_32
+ OUTPUT_ARCH(i386)
+ ENTRY(phys_startup_32)
+-jiffies = jiffies_64;
+ #else
+ OUTPUT_ARCH(i386:x86-64)
+ ENTRY(phys_startup_64)
+-jiffies_64 = jiffies;
+ #endif
+ 
++jiffies = jiffies_64;
++
+ #if defined(CONFIG_X86_64)
+ /*
+  * On 64-bit, align RODATA to 2MB so we retain large page mappings for
 
 
