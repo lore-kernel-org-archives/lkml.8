@@ -2,61 +2,72 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F238AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FA92078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:18:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bGn6urih"
+	by mail.kernel.org (Postfix) with ESMTP id A0F8B2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgFSHSE (ORCPT
+        id S1730300AbgFSHTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729740AbgFSHSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:18:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7831C06174E;
-        Fri, 19 Jun 2020 00:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yIfJe0PFRgdyF2+GVyLdDtjQLZgmYPiu7eqo8YWzytw=; b=bGn6urih2VWjJAHDlVdGesTHZa
-        dxC4+l/f0dS650eIB8jOFMPtDJBue5SJbBKrJ+DtXIeJ+jNQODd/ws+yIbwGCktbS+WemW0PeMQTy
-        vlFSt5nUNSlAOuv+uN0Gw6/hrA13TxUrQaCwXnXvvj86xwyeD5KO2h6OQijyWZYF9+S2FvI+VeVk7
-        TnlJMe+MoM9827RcPMjbjHjivWI28NLueyuONvLRksa24Px+hopL2baI66XfkHXmMjMgVnh21tvnO
-        Uh8JIs6d8LbX0Lb7G1TBZBAHNvyedtbDsToAZLuf9Ka6b1KuMzb7qY2g4d//xNgth2SDqaw6h1r/O
-        JBpbqakg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmBHm-0007Rj-2n; Fri, 19 Jun 2020 07:18:02 +0000
-Date:   Fri, 19 Jun 2020 00:18:02 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        cohuck@redhat.com
-Subject: Re: [PATCH] vfio: Cleanup allowed driver naming
-Message-ID: <20200619071802.GA28304@infradead.org>
-References: <159251018108.23973.14170848139642305203.stgit@gimli.home>
+        Fri, 19 Jun 2020 03:19:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6289 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729080AbgFSHS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:18:59 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 264ADA909F44418C47F9;
+        Fri, 19 Jun 2020 15:18:56 +0800 (CST)
+Received: from localhost (10.175.101.6) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 19 Jun 2020
+ 15:18:47 +0800
+From:   Weilong Chen <chenweilong@huawei.com>
+To:     <mst@redhat.com>, <jasowang@redhat.com>,
+        <virtualization@lists.linux-foundation.org>, <lizefan@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH] virtio-mem: Fix build error due to improper use 'select'
+Date:   Fri, 19 Jun 2020 16:03:33 +0800
+Message-ID: <20200619080333.194753-1-chenweilong@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159251018108.23973.14170848139642305203.stgit@gimli.home>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:57:18PM -0600, Alex Williamson wrote:
-> No functional change, avoid non-inclusive naming schemes.
+As noted in:
+https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+"select should be used with care. select will force a symbol to a
+value without visiting the dependencies."
+Config VIRTIO_MEM should not select CONTIG_ALLOC directly.
+Otherwise it will cause an error:
+https://bugzilla.kernel.org/show_bug.cgi?id=208245
 
-Adding a bunch of overly long lines that don't change anything are
-everything but an improvement.
+Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+---
+ drivers/virtio/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 5809e5f5b157..5c92e4a50882 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -85,7 +85,7 @@ config VIRTIO_MEM
+ 	depends on VIRTIO
+ 	depends on MEMORY_HOTPLUG_SPARSE
+ 	depends on MEMORY_HOTREMOVE
+-	select CONTIG_ALLOC
++	depends on CONTIG_ALLOC
+ 	help
+ 	 This driver provides access to virtio-mem paravirtualized memory
+ 	 devices, allowing to hotplug and hotunplug memory.
+-- 
+2.17.1
+
