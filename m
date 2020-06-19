@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36910C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08FD621556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CDC217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577760;
-	bh=jIpaGaADp1jdndJkgz9vKiM+GEEYlPLQw7p7NrENuEM=;
+	s=default; t=1592577761;
+	bh=Sy0U6npbpL4YrxpNb8BSlUzN3C5FuEgDLXmWVdd9Ia4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FFJEwQtqAlFkIgodkx1uAfBt2mPMXnW+IID8J/xrxSDuxv7SnPSlB/AUGJvOKu4Oj
-	 ZaOmoFxjIvcOVMYCtZz9vxh7FlUulk4kcD7dNxbrimFf9YI32SVShumFlJcjuKpgfJ
-	 LR5lBfZRslQVQtQiyk1CMVpSGnL0ADFc/BJqO1UU=
+	b=ZYzkCLNFxFLgZWhSyhOi6fZzA/II0ej+fejXkepf/V5YFcdnsKK7V7Gv0dWeyMzLm
+	 z/84QlzS++Txad8n8bA2oKzzipVaVlFX0oPIal08WLrLgg/Lih0y2cFKzon5FfzSqv
+	 7npK3yM2O9xUh4sLp49HM+gQx+1IL2REI6kd90oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbgFSOmi (ORCPT
+        id S2388396AbgFSOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33134 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388012AbgFSOm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:26 -0400
+        id S2387708AbgFSOmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C200C21582;
-        Fri, 19 Jun 2020 14:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF6132158C;
+        Fri, 19 Jun 2020 14:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577746;
-        bh=jIpaGaADp1jdndJkgz9vKiM+GEEYlPLQw7p7NrENuEM=;
+        s=default; t=1592577751;
+        bh=Sy0U6npbpL4YrxpNb8BSlUzN3C5FuEgDLXmWVdd9Ia4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZTWb0SUro6qtsCV/FZ/F0QfRvNIfXnI+BXzFDjqZK/XyMFSSpocCLYdLGDlNlJfc
-         sqnmGeyX85Afzit871vGsjU+AIgrZjHQ+1ceq4/tLNyv57BdZIWO+lnUvwd17mjhTO
-         2v6zUSpP1i0tl4V9jGnEOx2DqhOE19NlJy3ytYsk=
+        b=UYVRzhvsQJN6uPjKwiGR+RoePdzCAlbeVbqOWPGk80iwo8lAkQcl0verhEx4AHnjo
+         l934oUTkhbdgSIz/i7QyyDA+5CxBQvwa5Q603XHrR1lGn1qrpHysv26qoMxt2YWOUv
+         NSRh/LkNA4g2nxzbCH31PLUUCc7WowW4rYr+1obM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/128] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Fri, 19 Jun 2020 16:32:47 +0200
-Message-Id: <20200619141624.052994655@linuxfoundation.org>
+Subject: [PATCH 4.9 057/128] net: ena: fix error returning in ena_com_get_hash_function()
+Date:   Fri, 19 Jun 2020 16:32:31 +0200
+Message-Id: <20200619141623.209016168@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,41 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+In case the "func" parameter is NULL we now return "-EINVAL".
+This shouldn't happen in general, but when it does happen, this is the
+proper way to handle it.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+We also check func for NULL in the beginning of the function, as there
+is no reason to do all the work and realize in the end of the function
+it was useless.
+
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index 4c48e9bb21e2..d2510e432c18 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -135,7 +135,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 905911f78693..e95f19e573a7 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2096,6 +2096,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 		rss->hash_key;
+ 	int rc;
  
- 	err = nft_nat_validate(ctx, expr, NULL);
-@@ -206,7 +206,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
++	if (unlikely(!func))
++		return -EINVAL;
++
+ 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
+ 				    ENA_ADMIN_RSS_HASH_FUNCTION,
+ 				    rss->hash_key_dma_addr,
+@@ -2108,8 +2111,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (rss->hash_func)
+ 		rss->hash_func--;
  
- 	return 0;
+-	if (func)
+-		*func = rss->hash_func;
++	*func = rss->hash_func;
+ 
+ 	if (key)
+ 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
 -- 
 2.25.1
 
