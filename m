@@ -2,142 +2,109 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C31CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6322080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0157920885
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HkfcmExM"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="L88q8AT/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YOIrJO8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbgFSHGM (ORCPT
+        id S1730613AbgFSHHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:06:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47205 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbgFSHFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:05:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592550347; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=3IGSqQn8wPmBUvFPUqXdomMb9/avgVjdyjhP5K9XSGg=; b=HkfcmExMVTbbsVO9eiqXYKPL3OvrJCs+21zGUmk5YJmZYFINwLWjgGCBD41Qv4NdUP5vqpu2
- WcJsW+aREaE9lEg9LwOW9MDIge2FmEcRtYHjV3M0rU5gM/1+ev9XXy0jSYV+gdAfCuFOLCFu
- rKw7qNJkAXx6ZNfVwqnQxNC+eOA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5eec63ca6bebe35deb5418b5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 07:05:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF227C433A0; Fri, 19 Jun 2020 07:05:46 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7154C43395;
-        Fri, 19 Jun 2020 07:05:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7154C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, kathirav@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     sivaprak@codeaurora.org
-Subject: [PATCH 6/6] regulator: qcom_smd: Add MP5496 regulators
-Date:   Fri, 19 Jun 2020 12:35:07 +0530
-Message-Id: <1592550307-11040-7-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
-References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
+        Fri, 19 Jun 2020 03:07:04 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51629 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729009AbgFSHHC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:07:02 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3925E580110;
+        Fri, 19 Jun 2020 03:07:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 19 Jun 2020 03:07:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Iaq/G/g6pbIsquztKfoYM/2rAsj
+        V4HKssqKg+8kxQbM=; b=L88q8AT/RGODoyttIOo/VtluZCybnabYcpoLzIW2uEV
+        FMKP4dNQ9Nl6HE/nSHxWU+kJazmFlrFknoX+AkHnR7UYdtKLYX+szv6rFsl/P3vy
+        GBKVsE2nOVk/x6Qv90LELqbheen81SbT0B5SnJvrLdFVXkC55YABWtL8SN8gTnZw
+        1/UANpjBsPZMiBFpER7XwI9p2iRPqDXYPHZUlvJnvajeLjU9tWCxzdC3DkJoegn5
+        uxjmAoijso6p/SfgpfMBvreIktsaOw9MdkrPGhWVeMS4Les6zcK5HETjwt1K3lFA
+        HpfguQpisi/m47dg9wui6cBghW0Rd/WoVktklKMN/rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Iaq/G/
+        g6pbIsquztKfoYM/2rAsjV4HKssqKg+8kxQbM=; b=YOIrJO8ZUj6zGNfOLzjcAx
+        b5RiG1iFbZcbL2/KeBLyZPcsopk/EQ5l4cQMRAnr2XFlTjzXwyRbpAlnBNP5p3T6
+        7M2v79P76YDSe9U+7ox397Sbj0S8VO71+rvNVszQE9MMj7kYUKXXOaKDCmJa95nK
+        racG0aJY6CeM4ozEzKesUYzChJ4bdhC/RQWx6DaLL9rPYAiCAQr/dl5xpDKwMKyZ
+        WVRGS5fD92Nb5K7PFpUwvlC+CsOBirzH9Bc43r46lkyknZIn0KaUOHLjs8X34gx1
+        tbFVVjTFaiVC2FRYBIBiaz9kPN1FewKyQT0kZoVlNHfncNYOm1tCPRyJZnJ4S4Kg
+        ==
+X-ME-Sender: <xms:FGTsXtliYZaq89sSjvtZu8aEyMEx0DQw79i6GJhxUQvxskPMs2iCUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejhedgudduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepjefhte
+    evueegjeejtddtkeetieeiheeuhedvfffffedvteeifeffgfejffeuvedtnecuffhomhgr
+    ihhnpehkvghrnhgvlhdrohhrghdprghpphhsphhothdrtghomhenucfkphepkeefrdekie
+    drkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:FGTsXo0oSBxPcRILkBfAPAcAgoyJs1G_NNzcnYu1TQKSaTbvkKblgg>
+    <xmx:FGTsXjpKhH4OtvvVo6oi9Dse80IOClZerPBo7jkUCQSqOs9ciXHBuw>
+    <xmx:FGTsXtkiX7cfddVeeLSSXrZkzd__e7Ibd-PhWITKFpU4-Uwmzb0PbA>
+    <xmx:FWTsXkI1IsKBl76qrrWcY8Ga8m4HINlwk9uO17LAzlD_CMeJ7xijoA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1F79D3280059;
+        Fri, 19 Jun 2020 03:07:00 -0400 (EDT)
+Date:   Fri, 19 Jun 2020 09:05:27 +0200
+From:   Greg KH <greg@kroah.com>
+To:     syzbot <syzbot+42bc0d31b9a21faebdf8@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, bp@alien8.de, devel@etsukata.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mingo@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, x86@kernel.org
+Subject: Re: INFO: trying to register non-static key in is_dynamic_key
+Message-ID: <20200619070527.GA544353@kroah.com>
+References: <00000000000004a76305a8624d22@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000004a76305a8624d22@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator controls the
-APSS and SDCC voltage scaling respectively. Add support for the same.
+On Thu, Jun 18, 2020 at 02:17:15PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13f305a9100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=16c2467d4b6dbee2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=42bc0d31b9a21faebdf8
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136ad566100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10138f7a100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+42bc0d31b9a21faebdf8@syzkaller.appspotmail.com
+> 
+> INFO: trying to register non-static key.
+> the code is fine but needs lockdep annotation.
 
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- drivers/regulator/qcom_smd-regulator.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
-index 53a64d8..e6d137a 100644
---- a/drivers/regulator/qcom_smd-regulator.c
-+++ b/drivers/regulator/qcom_smd-regulator.c
-@@ -198,6 +198,15 @@ static const struct regulator_ops rpm_bob_ops = {
- 	.set_voltage = rpm_reg_set_voltage,
- };
- 
-+static const struct regulator_ops rpm_mp5496_ops = {
-+	.enable = rpm_reg_enable,
-+	.disable = rpm_reg_disable,
-+	.is_enabled = rpm_reg_is_enabled,
-+	.list_voltage = regulator_list_voltage_linear_range,
-+
-+	.set_voltage = rpm_reg_set_voltage,
-+};
-+
- static const struct regulator_desc pma8084_hfsmps = {
- 	.linear_ranges = (struct linear_range[]) {
- 		REGULATOR_LINEAR_RANGE(375000,  0,  95, 12500),
-@@ -595,6 +604,24 @@ static const struct regulator_desc pms405_pldo600 = {
- 	.ops = &rpm_smps_ldo_ops,
- };
- 
-+static const struct regulator_desc mp5496_smpa2 = {
-+	.linear_ranges = (struct linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(725000, 0, 27, 12500),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 28,
-+	.ops = &rpm_mp5496_ops,
-+};
-+
-+static const struct regulator_desc mp5496_ldoa2 = {
-+	.linear_ranges = (struct linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(1800000, 0, 60, 25000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 61,
-+	.ops = &rpm_mp5496_ops,
-+};
-+
- struct rpm_regulator_data {
- 	const char *name;
- 	u32 type;
-@@ -603,6 +630,12 @@ struct rpm_regulator_data {
- 	const char *supply;
- };
- 
-+static const struct rpm_regulator_data rpm_mp5496_regulators[] = {
-+	{ "s2", QCOM_SMD_RPM_SMPA, 2, &mp5496_smpa2, "s2" },
-+	{ "l2", QCOM_SMD_RPM_LDOA, 2, &mp5496_ldoa2, "l2" },
-+	{}
-+};
-+
- static const struct rpm_regulator_data rpm_pm8841_regulators[] = {
- 	{ "s1", QCOM_SMD_RPM_SMPB, 1, &pm8x41_hfsmps, "vdd_s1" },
- 	{ "s2", QCOM_SMD_RPM_SMPB, 2, &pm8841_ftsmps, "vdd_s2" },
-@@ -901,6 +934,7 @@ static const struct rpm_regulator_data rpm_pms405_regulators[] = {
- };
- 
- static const struct of_device_id rpm_of_match[] = {
-+	{ .compatible = "qcom,rpm-mp5496-regulators", .data = &rpm_mp5496_regulators },
- 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
- 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
- 	{ .compatible = "qcom,rpm-pm8941-regulators", .data = &rpm_pm8941_regulators },
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Why is INFO: triggering syzbot?
 
