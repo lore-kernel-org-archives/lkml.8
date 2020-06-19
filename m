@@ -2,124 +2,150 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4986C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C370C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC77D217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584122;
-	bh=BHAzJPK3Q3Kd77zzxl86Y03CTOml047K0CEml83WVO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEUXIAgEEOpJHPpPaV2aTNSLtffHUxfQt8+R/mVdARfVLFF0I1jbzpruI9I3blGDK
-	 4R+aa3SOm2UKhwp8Ozqi3X/zhKUaQevzGrKrpeodq8wZvhXom6fWwuZ2ROTk3kni3y
-	 5WF2W56THiLpUhT0hcIheG/6K/9dp44imobUCAbo=
+	by mail.kernel.org (Postfix) with ESMTP id E5845217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394928AbgFSQ2i (ORCPT
+        id S2389551AbgFSQ2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389896AbgFSOyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98300217D8;
-        Fri, 19 Jun 2020 14:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578494;
-        bh=BHAzJPK3Q3Kd77zzxl86Y03CTOml047K0CEml83WVO0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBi9YVmirwpGIfBk6hALAMY7oY/deAjlLCVXTR7Dj3mBKzOiEvHSPaC7rNATyrCop
-         2x/UrfwSixLjCv5ZhiTVgitwSEDJmg+DXl+z38tX0v2qOPuJ06rniNDOd2L8Vrk81i
-         bPVuSuG2P4JvCh/1bRfgdBULY/cZyluXCqHxZa0o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+        Fri, 19 Jun 2020 12:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394953AbgFSQ2a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:28:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB33C06174E;
+        Fri, 19 Jun 2020 09:28:30 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 15E0B2A54CC
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 043/267] spi: dw: Fix controller unregister order
-Date:   Fri, 19 Jun 2020 16:30:28 +0200
-Message-Id: <20200619141650.949886846@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCH] tty/sysrq: Add alternative SysRq key
+Date:   Fri, 19 Jun 2020 18:28:19 +0200
+Message-Id: <20200619162819.715-1-andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511180145.GU89269@dtor-ws>
+References: <20200511180145.GU89269@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+There exist machines which don't have SysRq key at all, e.g. chromebooks.
 
-commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 upstream.
+This patch allows configuring an alternative key to act as SysRq. Devices
+which declare KEY_SYSRQ in their 'keybit' bitmap continue using KEY_SYSRQ,
+but other devices use the alternative SysRq key instead, by default F10.
+Which key is actually used can be modified with sysrq's module parameter.
 
-The Designware SPI driver uses devm_spi_register_controller() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-dw_spi_remove_host() before unregistering the SPI controller via
-devres_release_all().
-
-This order is incorrect:  dw_spi_remove_host() shuts down the chip,
-rendering the SPI bus inaccessible even though the SPI controller is
-still registered.  When the SPI controller is subsequently unregistered,
-it unbinds all its slave devices.  Because their drivers cannot access
-the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
-in an improper state.
-
-As a rule, devm_spi_register_controller() must not be used if the
-->remove() hook performs teardown steps which shall be performed after
-unregistering the controller and specifically after unbinding of slaves.
-
-Fix by reverting to the non-devm variant of spi_register_controller().
-
-An alternative approach would be to use device-managed functions for all
-steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
-on probe.  However that approach would add more LoC to the driver and
-it wouldn't lend itself as well to backporting to stable.
-
-Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v3.14+
-Cc: Baruch Siach <baruch@tkos.co.il>
-Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 ---
- drivers/spi/spi-dw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/sysrq.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -536,7 +536,7 @@ int dw_spi_add_host(struct device *dev,
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 0dc3878794fd..e1d271c84746 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -604,6 +604,7 @@ EXPORT_SYMBOL(handle_sysrq);
+ 
+ #ifdef CONFIG_INPUT
+ static int sysrq_reset_downtime_ms;
++static unsigned short alternative_sysrq_key = KEY_F10;
+ 
+ /* Simple translation table for the SysRq keys */
+ static const unsigned char sysrq_xlate[KEY_CNT] =
+@@ -621,6 +622,7 @@ struct sysrq_state {
+ 	unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];
+ 	unsigned int alt;
+ 	unsigned int alt_use;
++	unsigned short sysrq_key;
+ 	bool active;
+ 	bool need_reinject;
+ 	bool reinjecting;
+@@ -770,10 +772,10 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+ 
+ 		/* Simulate press and release of Alt + SysRq */
+ 		input_inject_event(handle, EV_KEY, alt_code, 1);
+-		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
++		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 1);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+ 
+-		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
++		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 0);
+ 		input_inject_event(handle, EV_KEY, alt_code, 0);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+ 
+@@ -805,6 +807,7 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
  		}
- 	}
+ 		break;
  
--	ret = devm_spi_register_controller(dev, master);
-+	ret = spi_register_controller(master);
- 	if (ret) {
- 		dev_err(&master->dev, "problem registering spi master\n");
- 		goto err_dma_exit;
-@@ -560,6 +560,8 @@ void dw_spi_remove_host(struct dw_spi *d
- {
- 	dw_spi_debugfs_remove(dws);
++key_sysrq:
+ 	case KEY_SYSRQ:
+ 		if (value == 1 && sysrq->alt != KEY_RESERVED) {
+ 			sysrq->active = true;
+@@ -825,11 +828,15 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+ 		 * triggering print screen function.
+ 		 */
+ 		if (sysrq->active)
+-			clear_bit(KEY_SYSRQ, sysrq->handle.dev->key);
++			clear_bit(sysrq->sysrq_key, sysrq->handle.dev->key);
  
-+	spi_unregister_controller(dws->master);
+ 		break;
+ 
+ 	default:
++		/* handle non-default sysrq key */
++		if (code == sysrq->sysrq_key)
++			goto key_sysrq;
 +
- 	if (dws->dma_ops && dws->dma_ops->dma_exit)
- 		dws->dma_ops->dma_exit(dws);
+ 		if (sysrq->active && value && value != 2) {
+ 			sysrq->need_reinject = false;
+ 			__handle_sysrq(sysrq_xlate[code], true);
+@@ -924,6 +931,14 @@ static int sysrq_connect(struct input_handler *handler,
+ 	sysrq->handle.private = sysrq;
+ 	timer_setup(&sysrq->keyreset_timer, sysrq_do_reset, 0);
  
++	if (test_bit(KEY_SYSRQ, dev->keybit)) {
++		sysrq->sysrq_key = KEY_SYSRQ;
++		pr_info("%s: using default sysrq key [%x]\n", dev->name, KEY_SYSRQ);
++	} else {
++		sysrq->sysrq_key = alternative_sysrq_key;
++		pr_info("%s: Using alternative sysrq key: [%x]\n", dev->name, sysrq->sysrq_key);
++	}
++
+ 	error = input_register_handle(&sysrq->handle);
+ 	if (error) {
+ 		pr_err("Failed to register input sysrq handler, error %d\n",
+@@ -1032,6 +1047,13 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
+ 
+ module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
+ 
++module_param(alternative_sysrq_key, ushort, 0644);
++MODULE_PARM_DESC(alternative_sysrq_key,
++	"Alternative SysRq key for input devices that don't have SysRq key. F10 by default.\n"
++	"Example\n"
++	"Using F9 as SysRq:\n"
++	"sysrq.alternative_sysrq_key=0x43\n");
++
+ #else
+ 
+ static inline void sysrq_register_handler(void)
 
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+-- 
+2.17.1
 
