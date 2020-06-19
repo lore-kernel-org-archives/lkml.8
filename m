@@ -7,45 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23345C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2982C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1EF217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FED4217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578052;
-	bh=1wy0WirOesUlf0Qy7uIsgO7rDDX483ubGkN+M/aVb58=;
+	s=default; t=1592578058;
+	bh=MFpOrjCF94wGepghpM4UuUPvQdDz87aXC1c0VlTyMpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSY9IuihBPbnCW/tEPNCofvbopC8ryomvdMAPcZrO2IrFF7sdflU/5vWb5mwqHlM1
-	 yEpq5pBw8TujdFXKWV5WCvkl6PO2hJc/jxAYvYOy6GhCH+bV89xs+XHZ2z7Ie29DO6
-	 YFbmc9cF1Wym1WyOcQX83BJ0fC0TI0m6JyWiVYqs=
+	b=NTVbF9w59bUJSGAyWZPlEdUQmbG8+F5IhzAdxkIUViL+2a3GtRUIMfuRj/uCsDA+4
+	 bu8tQC4f/IVGJpvJ2GlCUeyKeKzGKXk78BnYbIBxmHroex4X9pueAHSdGCgRArrVIX
+	 5HxAUCMIGYQJGX47e30AbU8n4l3mg/xmwhpUpvdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388099AbgFSOr3 (ORCPT
+        id S2388345AbgFSOrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39428 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388946AbgFSOrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:20 -0400
+        id S2388962AbgFSOr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A749E2083B;
-        Fri, 19 Jun 2020 14:47:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 644DD217BA;
+        Fri, 19 Jun 2020 14:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578040;
-        bh=1wy0WirOesUlf0Qy7uIsgO7rDDX483ubGkN+M/aVb58=;
+        s=default; t=1592578047;
+        bh=MFpOrjCF94wGepghpM4UuUPvQdDz87aXC1c0VlTyMpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mewY/7n1qQJmoX0BslXplyygoHKhKuIx7YOwnF/QUE/emLLOAZNzcflV7/0+PS5q
-         74/wdIeEdo9uQ4zueKgM4BpK3FzI5IGyWAGbYw8Q2CkpuuDYU0klfv76P597picCVr
-         IRsoqaFD+dfHrNLlsD5YcaXH1WaHAWZ4IjiQzbrk=
+        b=g5/i1B9WJKA6NLjsibRGluR6JKxX2NL4YZrDW6d75NpR2jO5fOGlnX1mYWlYHHfbK
+         AbOrbw1qxu9A/lUZtIslqeATyvh5Pzlo77jSYfEnWM7qKIF7AZbqtao8Ru/B+cq5OB
+         y9caR5eFp/9bPCI7ztCdl3VBeM2WjeXXiIbcMFss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 057/190] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-Date:   Fri, 19 Jun 2020 16:31:42 +0200
-Message-Id: <20200619141636.424440083@linuxfoundation.org>
+        stable@vger.kernel.org, Walton Hoops <me@waltonhoops.com>,
+        Tomas Hlavaty <tom@logand.com>,
+        ARAI Shun-ichi <hermes@ceres.dti.ne.jp>,
+        Hideki EIRAKU <hdk1983@gmail.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 031/190] nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
+Date:   Fri, 19 Jun 2020 16:31:16 +0200
+Message-Id: <20200619141635.090315554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -58,32 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
 
-commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
+commit 8301c719a2bd131436438e49130ee381d30933f5 upstream.
 
-Restoring the ASID from the hsave area on VMEXIT is wrong, because its
-value depends on the handling of TLB flushes.  Just skipping the field in
-copy_vmcb_control_area will do.
+After commit c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if
+mapping has no dirty pages"), the following null pointer dereference has
+been reported on nilfs2:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+  BUG: kernel NULL pointer dereference, address: 00000000000000a8
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  ...
+  RIP: 0010:percpu_counter_add_batch+0xa/0x60
+  ...
+  Call Trace:
+    __test_set_page_writeback+0x2d3/0x330
+    nilfs_segctor_do_construct+0x10d3/0x2110 [nilfs2]
+    nilfs_segctor_construct+0x168/0x260 [nilfs2]
+    nilfs_segctor_thread+0x127/0x3b0 [nilfs2]
+    kthread+0xf8/0x130
+    ...
+
+This crash turned out to be caused by set_page_writeback() call for
+segment summary buffers at nilfs_segctor_prepare_write().
+
+set_page_writeback() can call inc_wb_stat(inode_to_wb(inode),
+WB_WRITEBACK) where inode_to_wb(inode) is NULL if the inode of
+underlying block device does not have an associated wb.
+
+This fixes the issue by calling inode_attach_wb() in advance to ensure
+to associate the bdev inode with its wb.
+
+Fixes: c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping has no dirty pages")
+Reported-by: Walton Hoops <me@waltonhoops.com>
+Reported-by: Tomas Hlavaty <tom@logand.com>
+Reported-by: ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
+Reported-by: Hideki EIRAKU <hdk1983@gmail.com>
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/20200608.011819.1399059588922299158.konishi.ryusuke@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nilfs2/segment.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2847,7 +2847,7 @@ static inline void copy_vmcb_control_are
- 	dst->iopm_base_pa         = from->iopm_base_pa;
- 	dst->msrpm_base_pa        = from->msrpm_base_pa;
- 	dst->tsc_offset           = from->tsc_offset;
--	dst->asid                 = from->asid;
-+	/* asid not copied, it is handled manually for svm->vmcb.  */
- 	dst->tlb_ctl              = from->tlb_ctl;
- 	dst->int_ctl              = from->int_ctl;
- 	dst->int_vector           = from->int_vector;
+--- a/fs/nilfs2/segment.c
++++ b/fs/nilfs2/segment.c
+@@ -2794,6 +2794,8 @@ int nilfs_attach_log_writer(struct super
+ 	if (!nilfs->ns_writer)
+ 		return -ENOMEM;
+ 
++	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
++
+ 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
+ 	if (err) {
+ 		kfree(nilfs->ns_writer);
 
 
