@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7157CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B65C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538C8218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B92193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578794;
-	bh=I/W2Mc+7x9Ho4bDAW0QetiC1OjneuutnmWlqomS3EOw=;
+	s=default; t=1592578797;
+	bh=svkCY4kcX35RFxdXiTu9EV5sl1nHP7BzH9zbGc10ERc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xM7GZwi9Hm5Wknea7nvjxkmhVyy2SFFth72I/ZLuOWAYAWLVk9j5TR3dQRFOyouLy
-	 w6IlNBNhwW8ho8cq9Wan80IRECQUOkYfuYKgdB+SBzGXWjq65OQZaXS2IkOYbI4KRG
-	 J2rlg+e0ku3R6r682uzbxOKbnzHOAqrL9kQMtFeI=
+	b=hBBVCSBezUCCny69l7fVyUh00iFHyH5nF6njG1MtAD7y5T04umIcxck0s+0GtWKCE
+	 tlnuV9ivUIPoZygTVxUBkK7Ro2h42u0fyRJSo/5iRfZ40DqAB+ZdK3CXYwWBfgZoDY
+	 ZaZmensz84hiNyxqzGKW1Batkubf1JRJqE2ZzCz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbgFSO7t (ORCPT
+        id S2390582AbgFSO7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55882 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390552AbgFSO7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:41 -0400
+        id S2390553AbgFSO7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C9D8218AC;
-        Fri, 19 Jun 2020 14:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB0121BE5;
+        Fri, 19 Jun 2020 14:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578780;
-        bh=I/W2Mc+7x9Ho4bDAW0QetiC1OjneuutnmWlqomS3EOw=;
+        s=default; t=1592578785;
+        bh=svkCY4kcX35RFxdXiTu9EV5sl1nHP7BzH9zbGc10ERc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ml06sy33kE72zjHJ98MCd6mo6oqR3Gnedr6THYFwj19G0xDU4TGYe8jCYrwJIfVXO
-         8P8GS2PnfuP/PaWyions4qiVROFIcgx571FDkSyZTHIDm3ZGbYagWk5TCe1peVgx2v
-         QmX7sjsJkULoVep24dnEaubcaglsdDdiM7BoK/Bo=
+        b=E1scWhiLwFlKIkYnBfzvVrWblKgaadkftRv5HNanvWZNjGMAIIptXZmiL9j9x5CWX
+         Yr25jZRSavLEx8DMTVFAqCUfuynltzjPYi7QKM5d90h7rWGP9aHgRbUQbgpn3TccLt
+         XmBGNA48GUwATMfjgdiTYTlgleGiMras1nw/e4/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, teroincn@gmail.com,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/267] e1000: Distribute switch variables for initialization
-Date:   Fri, 19 Jun 2020 16:31:48 +0200
-Message-Id: <20200619141654.740036721@linuxfoundation.org>
+Subject: [PATCH 4.19 125/267] audit: fix a net reference leak in audit_send_reply()
+Date:   Fri, 19 Jun 2020 16:31:50 +0200
+Message-Id: <20200619141654.831201283@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,62 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit a48b284b403a4a073d8beb72d2bb33e54df67fb6 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+If audit_send_reply() fails when trying to create a new thread to
+send the reply it also fails to cleanup properly, leaking a reference
+to a net structure.  This patch fixes the error path and makes a
+handful of other cleanups that came up while fixing the code.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
-
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reported-by: teroincn@gmail.com
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/audit.c | 50 +++++++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 2110d5f2da19..47b867c64b14 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3144,8 +3144,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 7afec5f43c63..20c78480d632 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -937,19 +937,30 @@ out_kfree_skb:
+ 	return NULL;
+ }
+ 
++static void audit_free_reply(struct audit_reply *reply)
++{
++	if (!reply)
++		return;
 +
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3166,6 +3167,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
++	if (reply->skb)
++		kfree_skb(reply->skb);
++	if (reply->net)
++		put_net(reply->net);
++	kfree(reply);
++}
++
+ static int audit_send_reply_thread(void *arg)
+ {
+ 	struct audit_reply *reply = (struct audit_reply *)arg;
+-	struct sock *sk = audit_get_sk(reply->net);
+ 
+ 	audit_ctl_lock();
+ 	audit_ctl_unlock();
+ 
+ 	/* Ignore failure. It'll only happen if the sender goes away,
+ 	   because our timeout is set to infinite. */
+-	netlink_unicast(sk, reply->skb, reply->portid, 0);
+-	put_net(reply->net);
+-	kfree(reply);
++	netlink_unicast(audit_get_sk(reply->net), reply->skb, reply->portid, 0);
++	reply->skb = NULL;
++	audit_free_reply(reply);
+ 	return 0;
+ }
+ 
+@@ -963,35 +974,32 @@ static int audit_send_reply_thread(void *arg)
+  * @payload: payload data
+  * @size: payload size
+  *
+- * Allocates an skb, builds the netlink message, and sends it to the port id.
+- * No failure notifications.
++ * Allocates a skb, builds the netlink message, and sends it to the port id.
+  */
+ static void audit_send_reply(struct sk_buff *request_skb, int seq, int type, int done,
+ 			     int multi, const void *payload, int size)
+ {
+-	struct net *net = sock_net(NETLINK_CB(request_skb).sk);
+-	struct sk_buff *skb;
+ 	struct task_struct *tsk;
+-	struct audit_reply *reply = kmalloc(sizeof(struct audit_reply),
+-					    GFP_KERNEL);
++	struct audit_reply *reply;
+ 
++	reply = kzalloc(sizeof(*reply), GFP_KERNEL);
+ 	if (!reply)
+ 		return;
+ 
+-	skb = audit_make_reply(seq, type, done, multi, payload, size);
+-	if (!skb)
+-		goto out;
+-
+-	reply->net = get_net(net);
++	reply->skb = audit_make_reply(seq, type, done, multi, payload, size);
++	if (!reply->skb)
++		goto err;
++	reply->net = get_net(sock_net(NETLINK_CB(request_skb).sk));
+ 	reply->portid = NETLINK_CB(request_skb).portid;
+-	reply->skb = skb;
+ 
+ 	tsk = kthread_run(audit_send_reply_thread, reply, "audit_send_reply");
+-	if (!IS_ERR(tsk))
+-		return;
+-	kfree_skb(skb);
+-out:
+-	kfree(reply);
++	if (IS_ERR(tsk))
++		goto err;
++
++	return;
++
++err:
++	audit_free_reply(reply);
+ }
+ 
+ /*
 -- 
 2.25.1
 
