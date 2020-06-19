@@ -2,111 +2,100 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A8F2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vhka6UDt"
+	by mail.kernel.org (Postfix) with ESMTP id 0013020720
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733123AbgFSOaJ (ORCPT
+        id S1733176AbgFSObF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:30:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39810 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFSOaI (ORCPT
+        Fri, 19 Jun 2020 10:31:05 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:36519 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgFSObD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:30:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JEC1ot170432;
-        Fri, 19 Jun 2020 14:30:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=oAnixyfYUA6sbi0KFf5DGg/bzPC/rAgOKQf2fzRJfxs=;
- b=Vhka6UDtAR2GnkYivPdxfpnzT4sf7oAOwxuL5q5ap9b7vYExHuAjtQpgQCIiVmNeC1yk
- RHEhnlmLN2R999grd1Not9tqIefiJoIbWs8hpfWvYFc52SM3OgE2YgB9KAFWtmzQMVc3
- GhWNxvouOnWxbveurkLJFu2WzAqq2nIhY1KcLz77wBd8kb9mE0aszLfXl5LkRPXKM7+t
- r/LY47uUi8djpJfUt1x6516eWNPJGqBczMQSgPfHMYqO19g4MGNgYB6NSduwIPuBu3l3
- 3LAWQq+s6sysCZG5NVkyEIfxPdRPtgBzste/cb/3wFER1MyJnr5mHxKsJDMaBVoSq1ZR uQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31q660712c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 14:30:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JEDrdi123628;
-        Fri, 19 Jun 2020 14:29:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31q662utq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 14:29:59 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05JETmhr017000;
-        Fri, 19 Jun 2020 14:29:48 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jun 2020 07:29:47 -0700
-Date:   Fri, 19 Jun 2020 17:29:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/virtio: Fix an IS_ERR() vs NULL check in
- virtio_gpu_object_shmem_init()
-Message-ID: <20200619142940.GB267142@mwanda>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006190106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 clxscore=1011 mlxlogscore=999 suspectscore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006190106
+        Fri, 19 Jun 2020 10:31:03 -0400
+Received: by mail-qv1-f65.google.com with SMTP id x16so4540253qvr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:31:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EJ2H/fVddiAPK6hXHAtQLifLDsxa0nRqV7Ub9F0/6dA=;
+        b=BzvkDu2m1ekzExLNWtg8GFpN1K72nnVMOjw3cC9rvR+v1X0nY4aYeTQlYMMounSg2M
+         my+9E1t6SCQjfdVPqeN2TxuF0m53+/L0Fpe2i0tD/Vk5rcAxIkSQfpcKDKpy+kfP2Heb
+         stgkwSJe0if/ORJdjvAcEY3V1ltjJG5+cxOKrqPvrOJRDa4x+v9Qwy3ZpdzSWh5GG68N
+         c9UlUKtOHzCgVS+xyUCSGoSYvr/W77Gq0vKsrybKsm3EnLAOxWJt6VGLu5WNa3BFRQHZ
+         VaSVn52674XeFdUFDzUB7L8dm+D8eZt7ODgxU1Bh6YhA3YbKXHIp3DVKMD3AllIolZJd
+         9AIQ==
+X-Gm-Message-State: AOAM532i+i3gUth0N8zjEBTN4mgSYx7BbfLXH+RDFm0d7/aGrverwT2p
+        DCzarUDLZh8lwr2GUyzx20Uf8NA=
+X-Google-Smtp-Source: ABdhPJzcp62d0u37b3F1PLhEb1DX16D3sr8ZkLqMrAJ65xtkR6qmdSiVLa9KtI9kCGPkQ1Wjb+pSIw==
+X-Received: by 2002:a0c:efcf:: with SMTP id a15mr9180329qvt.108.1592577061579;
+        Fri, 19 Jun 2020 07:31:01 -0700 (PDT)
+Received: from bill-the-cat.local (2606-a000-1401-8080-8c25-1271-b281-e614.inf6.spectrum.com. [2606:a000:1401:8080:8c25:1271:b281:e614])
+        by smtp.gmail.com with ESMTPSA id u1sm6271677qkj.5.2020.06.19.07.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 07:31:00 -0700 (PDT)
+From:   Tom Rini <trini@konsulko.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Ronald G . Minnich" <rminnich@gmail.com>
+Subject: [PATCH] initrd: Remove erroneous comment
+Date:   Fri, 19 Jun 2020 10:30:56 -0400
+Message-Id: <20200619143056.24538-1-trini@konsulko.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The drm_gem_shmem_get_pages_sgt() function returns error pointers on
-error, it never returns NULL.
+Most architectures have been passing the location of an initrd via the
+initrd= option since their inception.  Remove the comment as it's both
+wrong and unrelated to the commit that introduced it.
 
-Fixes: d323bb44e4d2 ("drm/virtio: Call the right shmem helpers")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 694cfd87b0c8 ("x86/setup: Add an initrdmem= option to specify initrd physical address")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: H. Peter Anvin (Intel) <hpa@zytor.com>
+Cc: Ronald G. Minnich <rminnich@gmail.com>
+Signed-off-by: Tom Rini <trini@konsulko.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_object.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For a bit more context, I assume there's been some confusion between
+"initrd" being a keyword in things like extlinux.conf and also that for
+quite a long time now initrd information is passed via device tree and
+not the command line on relevant architectures.  But it's still true
+that it's been a valid command line option to the kernel since the 90s.
+It's just the case that in 2018 the code was consolidated from under
+arch/ and in to this file.
+---
+ init/do_mounts_initrd.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index 346cef5ce251..0cd5ecf4b3c0 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -151,9 +151,9 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 		return -EINVAL;
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index d72beda824aa..53314d7da4be 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -45,11 +45,6 @@ static int __init early_initrdmem(char *p)
+ }
+ early_param("initrdmem", early_initrdmem);
  
- 	shmem->pages = drm_gem_shmem_get_pages_sgt(&bo->base.base);
--	if (!shmem->pages) {
-+	if (IS_ERR(shmem->pages)) {
- 		drm_gem_shmem_unpin(&bo->base.base);
--		return -EINVAL;
-+		return PTR_ERR(shmem->pages);
- 	}
- 
- 	if (use_dma_api) {
+-/*
+- * This is here as the initrd keyword has been in use since 11/2018
+- * on ARM, PowerPC, and MIPS.
+- * It should not be; it is reserved for bootloaders.
+- */
+ static int __init early_initrd(char *p)
+ {
+ 	return early_initrdmem(p);
 -- 
-2.27.0
+2.17.1
 
