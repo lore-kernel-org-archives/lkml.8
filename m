@@ -2,119 +2,177 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3891C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFD420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLVq/MTQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8F7D520809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592546204;
+	bh=9lQMKLDkxfUoyF2wJGr/cl+gMGQit45i/+nfTpmUwJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1uHY0kDoHOowmTl51rWM0gbov297WLUQRU3a0ASeBEg+yLD6RtIfDTtpMBmOwl5r8
+	 JefeEI6I+3rmTg5iYm7vFc6dXUD1JTkrfaNVaPfv6yqNiOskHBpyTr6iJjKPVfop42
+	 QNwIfsNi62xeZWsMQQRhFF6h2vd2DqWcEQxGaf/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgFSFuE (ORCPT
+        id S1728321AbgFSF4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgFSFuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:50:04 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEC6C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:50:04 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id jz3so3642773pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uJunhxgU/GhtFdUD98Pvml4aHtu/6+uQFMKPVljojZY=;
-        b=VLVq/MTQU/NNg1KDEodPCc0dIVnRN0lPQnSff9+nrJhdE1v5B72E4p0G+nx7HDdROB
-         TwUXIT0/yD8D0OJ+3VxMmx+8x23YbT8Wxj//0vsxG6/Pag1QcQlwYCEIhI9n09u4bPaF
-         dR7NvqkQyN/C+6IU3hD6PN/CmCZsXNgwBR9NIg8ZJ8KWDhDpnNHqyBXnwffA9CRTJ8h3
-         LbaWrqCCkrPlv1EKl5zAswa/WrO+a2HBU0tpoe5lafMudJGyYhwoW7Qw74dZ2u1El1yR
-         Ab7eDkHYshROtUglv+eB0hoCm1UgWZDNEr1+xgIzG5oodweXDbRJ9G5zWb2M9ZPjnjxL
-         3s8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uJunhxgU/GhtFdUD98Pvml4aHtu/6+uQFMKPVljojZY=;
-        b=JdAYgrHtjvbPZycJb7sXvJcANkr9f1rdAujhkhWejNTwJas2eZ65RJTol7g4V4dFmR
-         s5miJqFNXOurm90O5vYf4vB7y8a8gN/ek7fNYjZLcSemxuBghkySXZ8QjyIADLq42WLs
-         FGvNsHTxhWKBrBAiDavYfSayqY59ZDUKEEYFkacZwd027UXlqTy6+ZPPvHLQLIjWtcRJ
-         AAOiIh7Op9PGuVmTSRtoS6Yu9SeO5V9ZMKhguf+UOPPa3arGpjyiCu3YCUyXWkVDJPZt
-         rRp4bSgLXygnr0S2mT44P3NoF+N3TEIaurlBTKnG33bvO2jU4yUUdQFZvV+bwW0FKSuM
-         W4ZQ==
-X-Gm-Message-State: AOAM531cH85E3IB2Hx+taMgRD+3M8PfCp0wlqyZBmiSVjXWxOP9tiLNb
-        Pb5JbBCokhZdIbRuZsdtxmo=
-X-Google-Smtp-Source: ABdhPJx9GYYwyzfa4Sv6g1ItpE1EMJ1VSw6RWycMP3Mmz6sGniIT+wDPwVV1zAwACzJLNVQELZuDEQ==
-X-Received: by 2002:a17:90a:1a17:: with SMTP id 23mr1880621pjk.231.1592545803758;
-        Thu, 18 Jun 2020 22:50:03 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id w17sm5028544pff.27.2020.06.18.22.50.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jun 2020 22:50:03 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 22:49:43 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: fsl_spdif: Add pm runtime function
-Message-ID: <20200619054942.GA25856@Asurada-Nvidia>
-References: <1592481334-3680-1-git-send-email-shengjiu.wang@nxp.com>
+        Fri, 19 Jun 2020 01:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgFSF4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 01:56:42 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7A9207DD;
+        Fri, 19 Jun 2020 05:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592546201;
+        bh=9lQMKLDkxfUoyF2wJGr/cl+gMGQit45i/+nfTpmUwJI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uNyadC1mwnLWhHwUt+8csXiE/lsUF5oJSfigS3rFy6B8uhc0tavJ6DOO3AGawjuBU
+         I1CBJH9egCmg6ovDJCCmT7oUGDf82nuO3V4v/8WQQUv2wjHwRTVS16Ec8IPwBnDjmd
+         VsJ9t+YjDSZGhTNqSaHdPxLUf2bhFTe4Vgj+KTLA=
+Date:   Thu, 18 Jun 2020 22:56:40 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/5] f2fs: shrink node_write lock coverage
+Message-ID: <20200619055640.GD227771@google.com>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
+ <20200618063625.110273-3-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592481334-3680-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200618063625.110273-3-yuchao0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 07:55:34PM +0800, Shengjiu Wang wrote:
-> Add pm runtime support and move clock handling there.
-> Close the clocks at suspend to reduce the power consumption.
+On 06/18, Chao Yu wrote:
+> - to avoid race between checkpoint and quota file writeback, it
+> just needs to hold read lock of node_write in writeback path.
+> - node_write lock has covered all LFS data write paths, it's not
+> necessary, we only need to hold node_write lock at write path of
+> quota file.
+
+I've added this:
+
+This refactors commit ca7f76e68074 ("f2fs: fix wrong discard space").
+
 > 
-> fsl_spdif_suspend is replaced by pm_runtime_force_suspend.
-> fsl_spdif_resume is replaced by pm_runtime_force_resume.
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/compress.c | 18 +++++++++++++++---
+>  fs/f2fs/data.c     | 12 ++++++++++++
+>  fs/f2fs/segment.c  | 11 -----------
+>  3 files changed, 27 insertions(+), 14 deletions(-)
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-
-LGTM, yet some nits, please add my ack after fixing:
-
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-> @@ -495,25 +496,10 @@ static int fsl_spdif_startup(struct snd_pcm_substream *substream,
-
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 36b51795b0c3..3ff6c0305ec6 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -1096,8 +1096,16 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  	loff_t psize;
+>  	int i, err;
 >  
-> -disable_txclk:
-> -	for (i--; i >= 0; i--)
-> -		clk_disable_unprepare(spdif_priv->txclk[i]);
->  err:
-> -	if (!IS_ERR(spdif_priv->spbaclk))
-> -		clk_disable_unprepare(spdif_priv->spbaclk);
-> -err_spbaclk:
-> -	clk_disable_unprepare(spdif_priv->coreclk);
+> -	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
+> +	if (IS_NOQUOTA(inode)) {
+> +		/*
+> +		 * We need to wait for node_write to avoid block allocation during
+> +		 * checkpoint. This can only happen to quota writes which can cause
+> +		 * the below discard race condition.
+> +		 */
+> +		down_read(&sbi->node_write);
+> +	} else if (!f2fs_trylock_op(sbi)) {
+>  		return -EAGAIN;
+> +	}
+>  
+>  	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+>  
+> @@ -1203,7 +1211,9 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+>  
+>  	f2fs_put_dnode(&dn);
+> -	if (!IS_NOQUOTA(inode))
+> +	if (IS_NOQUOTA(inode))
+> +		up_read(&sbi->node_write);
+> +	else
+>  		f2fs_unlock_op(sbi);
+>  
+>  	spin_lock(&fi->i_size_lock);
+> @@ -1230,7 +1240,9 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  out_put_dnode:
+>  	f2fs_put_dnode(&dn);
+>  out_unlock_op:
+> -	if (!IS_NOQUOTA(inode))
+> +	if (IS_NOQUOTA(inode))
+> +		up_read(&sbi->node_write);
+> +	else
+>  		f2fs_unlock_op(sbi);
+>  	return -EAGAIN;
+>  }
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index c78ce08f6400..cbdf062d3562 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2719,8 +2719,20 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+>  
+>  	/* Dentry/quota blocks are controlled by checkpoint */
+>  	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
+> +		/*
+> +		 * We need to wait for node_write to avoid block allocation during
+> +		 * checkpoint. This can only happen to quota writes which can cause
+> +		 * the below discard race condition.
+> +		 */
+> +		if (IS_NOQUOTA(inode))
+> +			down_read(&sbi->node_write);
+> +
+>  		fio.need_lock = LOCK_DONE;
+>  		err = f2fs_do_write_data_page(&fio);
+> +
+> +		if (IS_NOQUOTA(inode))
+> +			up_read(&sbi->node_write);
+> +
+>  		goto done;
+>  	}
+>  
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 5b2a6f865a6d..cb861ed98ee3 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3107,14 +3107,6 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  		type = CURSEG_COLD_DATA;
+>  	}
+>  
+> -	/*
+> -	 * We need to wait for node_write to avoid block allocation during
+> -	 * checkpoint. This can only happen to quota writes which can cause
+> -	 * the below discard race condition.
+> -	 */
+> -	if (IS_DATASEG(type))
+> -		down_write(&sbi->node_write);
 > -
->  	return ret;
-
-Only "return ret;" remains now. We could clean the goto away.
-
-> -static int fsl_spdif_resume(struct device *dev)
-> +static int fsl_spdif_runtime_resume(struct device *dev)
-
-> +disable_rx_clk:
-> +	clk_disable_unprepare(spdif_priv->rxclk);
-> +disable_tx_clk:
-> +disable_spba_clk:
-
-Why have two duplicated ones? Could probably drop the 2nd one.
+>  	down_read(&SM_I(sbi)->curseg_lock);
+>  
+>  	mutex_lock(&curseg->curseg_mutex);
+> @@ -3180,9 +3172,6 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  
+>  	up_read(&SM_I(sbi)->curseg_lock);
+>  
+> -	if (IS_DATASEG(type))
+> -		up_write(&sbi->node_write);
+> -
+>  	if (put_pin_sem)
+>  		up_read(&sbi->pin_sem);
+>  }
+> -- 
+> 2.18.0.rc1
