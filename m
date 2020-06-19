@@ -2,53 +2,61 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9927AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E877204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8076C206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585174;
-	bh=WBZd16pwTulkHYMylZodT11SrG1VWJ124t45szSRlhI=;
+	s=default; t=1592585177;
+	bh=nf6WbXus/fRJsbsMaoNzI2UGOISYEAtpLYyvozpfqfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdK+B8/2NtoZ7E5APJHgEOZdEojnBZGIcqw6teuKSiMhFrmzw4u38O4rj1aMIjJZC
-	 O9ROIenw8okrPBG50zcwjroDHSRlzE8/vUL1naulT4xvS/cdgMsSp+NPWccrHiL4gz
-	 O1y3jzBjOhhpiOms3HNmFS5i36T9etGDP+IpaUvg=
+	b=syYCe7xLQuOt520+XrqA7Otr3y9+Bbk0aLC9pIapQj0ZnTxY5nkuYA+O+C7PRJUfe
+	 gn7H+j9B3VSwQ+GY5sT+fMfuqzHZoucR9Ms/VrHzu7o2pRQFvbndoMULl08sn1/M3z
+	 9hTd5LrnuJx47p58IiQk7XeOHqj2+aaDg+HLIjxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405101AbgFSQqM (ORCPT
+        id S2405126AbgFSQqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387469AbgFSOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:40 -0400
+        id S2388278AbgFSOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415E821527;
-        Fri, 19 Jun 2020 14:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 539D320A8B;
+        Fri, 19 Jun 2020 14:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577700;
-        bh=WBZd16pwTulkHYMylZodT11SrG1VWJ124t45szSRlhI=;
+        s=default; t=1592577697;
+        bh=nf6WbXus/fRJsbsMaoNzI2UGOISYEAtpLYyvozpfqfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOrtXKeT3VHRObuh9aQl9buAOb2VDx0WX2U3Ld2oxjD0Ehz+ao6mmNSZ/bcUK6byu
-         PoCn+BmugWXDqY0J/QrsNIGxtjXyeJzzU3cxDgdwCwHeiHIkYUa4lrU9ww7zuMApge
-         i87v1hqD+H3njlaEUW/Aghl5YMnTfJBi1sT15P8Y=
+        b=z9+ciDKziNgZa/IkZug6IKeIxQoUTkeQholgIknAek2KS0ggzqi+TGkNmsaLlOTy6
+         CZFgttQFK/TH+kYVIQYxSyqwAoLIIlfAUb2a7YFg0SzBDUG6g63HTiyduXzmoeSUaI
+         R7xyA4kQ0FlVCadI5BiYAKJxRJLwlUcnFhARGpKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaolong Huang <butterflyhuangxx@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 052/128] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
-Date:   Fri, 19 Jun 2020 16:32:26 +0200
-Message-Id: <20200619141622.946789972@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        KarimAllah Ahmed <karahmed@amazon.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 025/128] x86/speculation: Change misspelled STIPB to STIBP
+Date:   Fri, 19 Jun 2020 16:31:59 +0200
+Message-Id: <20200619141621.505130315@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,54 +69,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolong Huang <butterflyhuangxx@gmail.com>
+From: Waiman Long <longman@redhat.com>
 
-commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
+[ Upstream commit aa77bfb354c495fc4361199e63fc5765b9e1e783 ]
 
-Uninitialized Kernel memory can leak to USB devices.
+STIBP stands for Single Thread Indirect Branch Predictors. The acronym,
+however, can be easily mis-spelled as STIPB. It is perhaps due to the
+presence of another related term - IBPB (Indirect Branch Predictor
+Barrier).
 
-Fix this by using kzalloc() instead of kmalloc().
+Fix the mis-spelling in the code.
 
-Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
-Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-[bwh: Backported to 4.9: adjust filename, context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: KarimAllah Ahmed <karahmed@amazon.de>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1544039368-9009-1-git-send-email-longman@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/usb/kvaser_usb.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 6 +++---
+ arch/x86/kernel/process.h  | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/can/usb/kvaser_usb.c
-+++ b/drivers/net/can/usb/kvaser_usb.c
-@@ -791,7 +791,7 @@ static int kvaser_usb_simple_msg_async(s
- 	if (!urb)
- 		return -ENOMEM;
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 5ef0a2b34261..704ffc01a226 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -60,7 +60,7 @@ static u64 __ro_after_init x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
+ u64 __ro_after_init x86_amd_ls_cfg_base;
+ u64 __ro_after_init x86_amd_ls_cfg_ssbd_mask;
  
--	buf = kmalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
-+	buf = kzalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
- 	if (!buf) {
- 		usb_free_urb(urb);
- 		return -ENOMEM;
-@@ -1459,7 +1459,7 @@ static int kvaser_usb_set_opt_mode(const
- 	struct kvaser_msg *msg;
- 	int rc;
+-/* Control conditional STIPB in switch_to() */
++/* Control conditional STIBP in switch_to() */
+ DEFINE_STATIC_KEY_FALSE(switch_to_cond_stibp);
+ /* Control conditional IBPB in switch_mm() */
+ DEFINE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+@@ -749,12 +749,12 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 			"always-on" : "conditional");
+ 	}
  
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
+-	/* If enhanced IBRS is enabled no STIPB required */
++	/* If enhanced IBRS is enabled no STIBP required */
+ 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return;
  
-@@ -1592,7 +1592,7 @@ static int kvaser_usb_flush_queue(struct
- 	struct kvaser_msg *msg;
- 	int rc;
- 
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
- 
+ 	/*
+-	 * If SMT is not possible or STIBP is not available clear the STIPB
++	 * If SMT is not possible or STIBP is not available clear the STIBP
+ 	 * mode.
+ 	 */
+ 	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
+diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
+index 898e97cf6629..320ab978fb1f 100644
+--- a/arch/x86/kernel/process.h
++++ b/arch/x86/kernel/process.h
+@@ -19,7 +19,7 @@ static inline void switch_to_extra(struct task_struct *prev,
+ 	if (IS_ENABLED(CONFIG_SMP)) {
+ 		/*
+ 		 * Avoid __switch_to_xtra() invocation when conditional
+-		 * STIPB is disabled and the only different bit is
++		 * STIBP is disabled and the only different bit is
+ 		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
+ 		 * in the TIF_WORK_CTXSW masks.
+ 		 */
+-- 
+2.25.1
+
 
 
