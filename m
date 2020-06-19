@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB91C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43EDB21924
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F62C2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583863;
-	bh=SrQIZo4/w6tvt/sn10MdGljp2fb7x+ziSKjuxf924D4=;
+	s=default; t=1592583872;
+	bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pacFG4yh8v9XwzcPZ9Pa+bSQRUGBeMgXBRaS6tGoAsT0H3wzFnsXQHpRg2NadEUqF
-	 RyxDyW74FQ/6V1WdyBAmL8i0BNfAyWQt0uG4yH2RMiPBfd0M3252IPQKZtPORsGPlk
-	 KDeWEr/warLd6SJoDw5hXL2OTXHq0Z71B7H6i2hI=
+	b=PBhUtWyer5NS+bQvAqA51/kzdCVZILkCALauztiBspytCRov3L33S5s7d73Sb5ZIw
+	 mVhbt0kDKcyMjL9tWn6veBPM+aDdrSrMA54Dv3zD0mZ56gvSaOxNeqTP4YNj3WSbah
+	 ew3SQpVOMqge5CKhBEXOCB8fGCRt6WLfr0439EF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404864AbgFSQYW (ORCPT
+        id S2404887AbgFSQYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390389AbgFSO60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:26 -0400
+        id S2389806AbgFSO6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 242BC21919;
-        Fri, 19 Jun 2020 14:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB74921974;
+        Fri, 19 Jun 2020 14:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578706;
-        bh=SrQIZo4/w6tvt/sn10MdGljp2fb7x+ziSKjuxf924D4=;
+        s=default; t=1592578691;
+        bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMSh2ajAIng1b2yRRwkEI0uiqWiaYbTUqgSo2ywAw8Y4mvJjAJAXcL/nZW+347e7z
-         7Qy1MlsYRHFKWZ7e0tK9qNJ9eqgG4WyBGGK8YE5PFh9mkeqtLnPc+iIu5I3oJ/YnVi
-         pRyp1wEUI4K6Fu4j37lXdSWUIeVjXhoJWPTL9j3w=
+        b=xmnvMixZGjGcG22zsSbIEuuuRIjuUoKGb5LEfKEzXnx5jT/jahVaW+W1WbZmLM8Ib
+         0LNJnViapf9FzY9JmDINRiui8VLkSKvt8jVgHFn4I8hneqrib8f20YLpAk3le+UO3T
+         QrTIGg4sAYadlgASY9BN3qKH6wScuQ3wOwv0Se70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 085/267] fat: dont allow to mount if the FAT length == 0
-Date:   Fri, 19 Jun 2020 16:31:10 +0200
-Message-Id: <20200619141652.962191910@linuxfoundation.org>
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.19 089/267] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
+Date:   Fri, 19 Jun 2020 16:31:14 +0200
+Message-Id: <20200619141653.135640879@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -64,42 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-commit b1b65750b8db67834482f758fc385bfa7560d228 upstream.
+commit a1af7f36c70369b971ee1cf679dd68368dad23f0 upstream.
 
-If FAT length == 0, the image doesn't have any data. And it can be the
-cause of overlapping the root dir and FAT entries.
+Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
+node which come probably from an unchecked copy/paste.
 
-Also Windows treats it as invalid format.
-
-Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
+Link: https://lore.kernel.org/r/20200401221504.41196-1-ludovic.desroches@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fat/inode.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -1519,6 +1519,12 @@ static int fat_read_bpb(struct super_blo
- 		goto out;
- 	}
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -125,8 +125,6 @@
+ 			bus-width = <8>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+-			non-removable;
+-			mmc-ddr-1_8v;
+ 			status = "okay";
+ 		};
  
-+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
-+		if (!silent)
-+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
-+		goto out;
-+	}
-+
- 	error = 0;
- 
- out:
 
 
