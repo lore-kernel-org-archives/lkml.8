@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 535F420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EB020B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581561;
-	bh=gJS+b6GNXzHhvclf1Xkyzwi8iPGNLwhFWy7di66hKhA=;
+	s=default; t=1592581563;
+	bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnSSBLIH11iMlJFbnXGiDdcTvTgmCKiKRLV4ciQ8NANpguUYWo4ioe+zixIp8Yk0R
-	 lP797oqw3y15nBXJi0fQdW/K3cl4orcrVcejdyr5rVVUNNAY5Y/+fuil+SiItcdlA+
-	 9vm3F6XWxaOPitgDl+E6a9lNG/YC08NLMW+jrJFc=
+	b=iLw7i3nekeAWNerRemHewT1S0h2fjmvOcxFzimzQk0iFtEYlyVxFWD719xT/TzMM9
+	 rDZBw7Guebe++5wpObJkrsSf2teUSVjwaTuxTGVkiczvotyXl6YR4LnVPAAHrfiaXR
+	 sbi1h5JaNAqiuaDuy3OYCu/jYjhReLPLWHjQ5rBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392779AbgFSP06 (ORCPT
+        id S2404371AbgFSP0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393371AbgFSPZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:07 -0400
+        id S2393351AbgFSPY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9258721548;
-        Fri, 19 Jun 2020 15:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5771F20B80;
+        Fri, 19 Jun 2020 15:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580306;
-        bh=gJS+b6GNXzHhvclf1Xkyzwi8iPGNLwhFWy7di66hKhA=;
+        s=default; t=1592580295;
+        bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsbotpFGjtLZ18ac+EIqAK3hqEsxWu2kg6z5KA9Ca8k+aRxbv0zzmFbqnkp1OP381
-         FXelXSAqiRWIU/5skU9m1Ld710bDZcWCXTgqE4vG9dJtHmL8zPnagC13O2lw0HFoeF
-         hX63AgLR4q5HtTk2Pb4UFn8dbHu+N3CspQzurpvQ=
+        b=QAXOzFRPFwLZp8fhKE1VHcY6V7DupIIeWvOl1Rhx860wiD0CIZ/zJDGL9uvOfk7fD
+         lEe0yNzezBXNpi0eLSyYQA4sNc1KbP7OLEvZK43n+iez8Cgrz4Bm+19UWgvPyA2SK4
+         guYO3fGABVaB5Wx8aKSDSd+zz5594o8Wsps90HGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 199/376] x86/boot: Correct relocation destination on old linkers
-Date:   Fri, 19 Jun 2020 16:31:57 +0200
-Message-Id: <20200619141719.763805907@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 196/376] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
+Date:   Fri, 19 Jun 2020 16:31:54 +0200
+Message-Id: <20200619141719.622180643@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,112 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5214028dd89e49ba27007c3ee475279e584261f0 ]
+[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
 
-For the 32-bit kernel, as described in
+Seven years ago we tried to fix a leak but actually introduced a double
+free instead.  It was an understandable mistake because the code was a
+bit confusing and the free was done in the wrong place.  The "skb"
+pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
+The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
+and I've cleaned the code up a bit to hopefully make it more clear.
 
-  6d92bc9d483a ("x86/build: Build compressed x86 kernels as PIE"),
-
-pre-2.26 binutils generates R_386_32 relocations in PIE mode. Since the
-startup code does not perform relocation, any reloc entry with R_386_32
-will remain as 0 in the executing code.
-
-Commit
-
-  974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
-                 decompression buffer")
-
-added a new symbol _end but did not mark it hidden, which doesn't give
-the correct offset on older linkers. This causes the compressed kernel
-to be copied beyond the end of the decompression buffer, rather than
-flush against it. This region of memory may be reserved or already
-allocated for other purposes by the bootloader.
-
-Mark _end as hidden to fix. This changes the relocation from R_386_32 to
-R_386_RELATIVE even on the pre-2.26 binutils.
-
-For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
-built as PIE if the linker supports -z noreloc-overflow, which implies
-binutils-2.27+, but for consistency, mark _end as hidden here too.
-
-The below illustrates the before/after impact of the patch using
-binutils-2.25 and gcc-4.6.4 (locally compiled from source) and QEMU.
-
-  Disassembly before patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 00 00 00          sub    $0x0,%eax
-                          4f: R_386_32    _end
-  Disassembly after patch:
-    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
-    4e:   2d 00 f0 76 00          sub    $0x76f000,%eax
-                          4f: R_386_RELATIVE      *ABS*
-
-Dump from extract_kernel before patch:
-	early console in extract_kernel
-	input_data: 0x0207c098 <--- this is at output + init_size
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Dump from extract_kernel after patch:
-	early console in extract_kernel
-	input_data: 0x0190d098 <--- this is at output + init_size - _end
-	input_len: 0x0074fef1
-	output: 0x01000000
-	output_len: 0x00fa63d0
-	kernel_total_size: 0x0107c000
-	needed_size: 0x0107c000
-
-Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200207214926.3564079-1-nivedita@alum.mit.edu
+Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 5 +++--
- arch/x86/boot/compressed/head_64.S | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index ab3307036ba4..03557f2174bf 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,17 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
-+ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
-  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-  * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
-+ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
-  * hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 348b0072cdd6..c66c6dc00378 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -881,10 +881,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
  
- 	__HEAD
- SYM_FUNC_START(startup_32)
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 4f7e6b84be07..76d1d64d51e3 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -42,6 +42,7 @@
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+ 	WARN_ON(NULL == skb);
+ 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
+-	if (!_urb) {
+-		kfree_skb(skb);
++	if (!_urb)
+ 		return NULL;
+-	}
+ 	_rtl_install_trx_info(rtlusb, skb, ep_num);
+ 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
+ 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
+@@ -898,7 +896,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
+ 	u32 ep_num;
+ 	struct urb *_urb = NULL;
+-	struct sk_buff *_skb = NULL;
  
- 	__HEAD
- 	.code32
+ 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
+ 	if (unlikely(IS_USB_STOP(rtlusb))) {
+@@ -907,8 +904,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		return;
+ 	}
+ 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
+-	_skb = skb;
+-	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
++	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
+ 	if (unlikely(!_urb)) {
+ 		pr_err("Can't allocate urb. Drop skb!\n");
+ 		kfree_skb(skb);
 -- 
 2.25.1
 
