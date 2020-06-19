@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06110C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2932C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C721A21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EAB217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578177;
-	bh=u9jQ5Wst+t+dyQX8hD+WWjVAKD9bo+Ts/flkudQAhxI=;
+	s=default; t=1592578182;
+	bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ACmm8DV3NnIf3piTlACtlObfCDfVR+BGnyiTO/ggeddFtZIh10uBkoueEzep4uOpO
-	 LbU2d0hGsutBpgzuDgc8bsW98PCtP1nCGba5Cu5tpZfuOTRjKa40S2FIoJpWqdAaTn
-	 FS4Gl8TXjHOqctLXaPscPH19qfg8e38IiIb5SQwQ=
+	b=XLZYbZ50iNbcQRyKRV1NXjrQrA8le59Af3cve6f+Wi3TLQ0EHZhd19niqyt6OZjMp
+	 TLJx33eTRhsmhjwnblxuzGtSJwV4A/+1R6GrtoRrCBYI/fxTmQHe6SNUtLWFgr2qTf
+	 BDANQMmvTMnejwmtpkGEvy/zebA4hSOkZeHIheN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389222AbgFSOtd (ORCPT
+        id S2389238AbgFSOtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389192AbgFSOt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:29 -0400
+        id S2389206AbgFSOt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CBB217D8;
-        Fri, 19 Jun 2020 14:49:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 909E52158C;
+        Fri, 19 Jun 2020 14:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578169;
-        bh=u9jQ5Wst+t+dyQX8hD+WWjVAKD9bo+Ts/flkudQAhxI=;
+        s=default; t=1592578167;
+        bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5Q866Pj5NOlyO7pTniy/55LD0l49SqC4vhA2zywYy7aaJXZfb1j1Ly4FuPQSQMuN
-         ouVCFeRPpnqNlFINWOo9WdIGQ05nXPzSyUY+dzor2h/PKRt4NcsGOEICp818HBdllo
-         hkI5vWFx95mByHuKlmI9DC8ERhL8+Gkp4jpsr51M=
+        b=D6l8jTaDSbH20fIKEH0mxpWr4kqJapdT5Jp845f4GXPnfysgff3tQanJsfP10yEo8
+         BDL/9EOV6jSdRm3hHCBUt42l25eW89neAQ+cYzcOzFSRnYltGEJz3QdfLwUqJdvqnn
+         ekfGR1K9DnrwZqAIx2t45qGO6LWoVIAEun6FNedk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/190] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
-Date:   Fri, 19 Jun 2020 16:32:35 +0200
-Message-Id: <20200619141639.098727271@linuxfoundation.org>
+Subject: [PATCH 4.14 109/190] net: lpc-enet: fix error return code in lpc_mii_init()
+Date:   Fri, 19 Jun 2020 16:32:34 +0200
+Message-Id: <20200619141639.047272584@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,54 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
+[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
 
-The log_addrs->log_addr_type[i] value is a u8 which is controlled by
-the user and comes from the ioctl.  If it's over 31 then that results in
-undefined behavior (shift wrapping) and that leads to a Smatch static
-checker warning.  We already cap the value later so we can silence the
-warning just by re-ordering the existing checks.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-I think the UBSan checker will also catch this bug at runtime and
-generate a warning.  But otherwise the bug is harmless.
-
-Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-adap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index 0d7d687aeea0..061b7824f698 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1624,6 +1624,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 		unsigned j;
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 41d30f55c946..6bd6c261f2ba 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -845,7 +845,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
+ 	if (mdiobus_register(pldat->mii_bus))
+ 		goto err_out_unregister_bus;
  
- 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
-+		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
-+			dprintk(1, "unknown logical address type\n");
-+			return -EINVAL;
-+		}
- 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
- 			dprintk(1, "duplicate logical address type\n");
- 			return -EINVAL;
-@@ -1644,10 +1648,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 			dprintk(1, "invalid primary device type\n");
- 			return -EINVAL;
- 		}
--		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
--			dprintk(1, "unknown logical address type\n");
--			return -EINVAL;
--		}
- 		for (j = 0; j < feature_sz; j++) {
- 			if ((features[j] & 0x80) == 0) {
- 				if (op_is_dev_features)
+-	if (lpc_mii_probe(pldat->ndev) != 0)
++	err = lpc_mii_probe(pldat->ndev);
++	if (err)
+ 		goto err_out_unregister_bus;
+ 
+ 	return 0;
 -- 
 2.25.1
 
