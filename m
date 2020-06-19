@@ -4,51 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F415C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7226D2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCF321927
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579868;
-	bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
+	s=default; t=1592579871;
+	bh=hqTYac1zqlyJDPaAEG6Fyc+y1JupKz26eb4ITX31SLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LN3BDNukQusmjoYdk/Q9MYLv58NTxpIw0QoYq2r92cyS7JkUCdL18SOXDoPsYER0B
-	 vdWPNFRTbPz/eg3iSev9mqQ0s7FI7wvXIks7B7gmLC/Hc2TjzjS5J6GYfYRmB9CXbY
-	 L2KjQ03Vtfm6y4T3CaJsi7E6QI5MkvKB16y4CmjA=
+	b=RfdcL7MGlHeJU99Qtq7rmI3JCByFYQJA6KjVJvJX6ZD5hMvcCauBcakigBEFYVp8B
+	 MzahnENiwofIhC26x3pXgNFD59Ggxm6GItXwR/QsA2qpvEy/k/QutkcvAqnBANBT+m
+	 vI1fqfd+ZSGH8vgbDy6Ap9HTwkdxbwvaaZUnNJZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392545AbgFSPRs (ORCPT
+        id S2392553AbgFSPRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389741AbgFSPRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:36 -0400
+        id S2392519AbgFSPRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B8421919;
-        Fri, 19 Jun 2020 15:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC95206DB;
+        Fri, 19 Jun 2020 15:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579855;
-        bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
+        s=default; t=1592579860;
+        bh=hqTYac1zqlyJDPaAEG6Fyc+y1JupKz26eb4ITX31SLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXXYJaFjwV5ruqG0DCO55eo9DcwyQlh1jwf32Khaspace2eEVsy1wLaqWCRcXcint
-         OPluPdoE8v1SJgrJBRqCETYPLF/BjM1hoR2YdKfhX2+Jbqvgu8dcpBScoTcdECU+9W
-         qvLRPQ14opHliX+fZboWygDVZNjfluMEHJaCxrmo=
+        b=leAzHyOg79VsEBrn36ZVAbjeL+th7yduoQ4LEz2gBaI3hGjg93TLqhsHSur8xs+2Q
+         k0WzeiJNqR+BFtm+H/XadjZyEkqORT28a5jjQMZSUaycJPf6MFBXfrmVgwYiOsftES
+         +g2YRFMSL3Z0Ddni8CvpcGiqVGRL93SULRQ5vUyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 030/376] arm64: cacheflush: Fix KGDB trap detection
-Date:   Fri, 19 Jun 2020 16:29:08 +0200
-Message-Id: <20200619141711.780398678@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 032/376] libperf evlist: Fix a refcount leak
+Date:   Fri, 19 Jun 2020 16:29:10 +0200
+Message-Id: <20200619141711.872753519@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,62 +69,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
+[ Upstream commit 4599d292128d89e4cf866a0ea9a9b047a2de8418 ]
 
-flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
-trap handler is running because issuing IPIs is unsafe (and not needed)
-in this execution context. However the current test, based on
-kgdb_connected is flawed: it both over-matches and under-matches.
+Memory leaks found by applying LLVM's libfuzzer on the tools/perf
+parse_events function.
 
-The over match occurs because kgdb_connected is set when gdb attaches
-to the stub and remains set during normal running. This is relatively
-harmelss because in almost all cases irq_disabled() will be false.
-
-The under match is more serious. When kdb is used instead of kgdb to access
-the debugger then kgdb_connected is not set in all the places that the
-debug core updates sw breakpoints (and hence flushes the icache). This
-can lead to deadlock.
-
-Fix by replacing the ad-hoc check with the proper kgdb macro. This also
-allows us to drop the #ifdef wrapper.
-
-Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200319023101.82458-2-irogers@google.com
+[ Did a minor adjustment due to some other previous patch having already set evlist->all_cpus to NULL at perf_evlist__exit() ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cacheflush.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/lib/perf/evlist.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index e6cca3d4acf7..ce50c1f1f1ea 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * IPI all online CPUs so that they undergo a context synchronization
- 	 * event and are forced to refetch the new instructions.
- 	 */
--#ifdef CONFIG_KGDB
-+
- 	/*
- 	 * KGDB performs cache maintenance with interrupts disabled, so we
- 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * the patching operation, so we don't need extra IPIs here anyway.
- 	 * In which case, add a KGDB-specific bodge and return early.
- 	 */
--	if (kgdb_connected && irqs_disabled())
-+	if (in_dbg_master())
- 		return;
--#endif
-+
- 	kick_all_cpus_sync();
- }
- 
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 5b9f2ca50591..62130d28652d 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -125,6 +125,7 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
+ void perf_evlist__exit(struct perf_evlist *evlist)
+ {
+ 	perf_cpu_map__put(evlist->cpus);
++	perf_cpu_map__put(evlist->all_cpus);
+ 	perf_thread_map__put(evlist->threads);
+ 	evlist->cpus = NULL;
+ 	evlist->threads = NULL;
 -- 
 2.25.1
 
