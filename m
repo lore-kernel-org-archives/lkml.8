@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D33BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1328C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A414217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DCC218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578389;
-	bh=2HALglx0FG3o8HOaRDw3kpLZKN5CEh0HYtvhNQ4yCBU=;
+	s=default; t=1592578392;
+	bh=wNE4d/y/KwReZvgM0w+QmOl4/gIlUfiYZGCFEF3hM5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMGy2OVSUegcmzSBmq+/8ZGI6ANhigovFDdqYp7SJAyr9uaMCd8JBEFUY/eiY68Me
-	 q3+0/J5Tr14Z20jj0hw1uRl3OGKekPIk0LdgU7qFIgND195cSh6HS5czM2xG4w5mLH
-	 mN2YMC5Rz0oNcbub8h8gWjIVSpcmnflIofJg2wY4=
+	b=AcnWf9Y7atuhgiKzilD3Bi6pb9fWMM88dUiJWIzONTjxmlJs4Czei51KIf7lz9Z8E
+	 5whQTQkPE6hIeJ8aWLlJposGKwtYW71DYjbM0+9zQ3huGvqVM/1Fc19AHgwvKmytyv
+	 qJJXrw8BbFDxj4+yVQMufY4VJgrKqEd8Fe+sE3w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389680AbgFSOxG (ORCPT
+        id S2389667AbgFSOxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389632AbgFSOwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:54 -0400
+        id S2389690AbgFSOxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B659217D8;
-        Fri, 19 Jun 2020 14:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF06721852;
+        Fri, 19 Jun 2020 14:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578374;
-        bh=2HALglx0FG3o8HOaRDw3kpLZKN5CEh0HYtvhNQ4yCBU=;
+        s=default; t=1592578387;
+        bh=wNE4d/y/KwReZvgM0w+QmOl4/gIlUfiYZGCFEF3hM5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5jPfHaSTR3sII61vuXq2/AWA9z9OrGav5Zg6aMiKqU4io7B7g4tpfjb9IIJyytdU
-         oXLPvAQrT/0CVKpvpJfim0+ZtxGE6GhZwEYOvJoAC1b62xDTNlugN44X1UcfFgeYUm
-         gf+R01MYujs6W5cmR2whM7fbNQj6tX13k5Ru0Dro=
+        b=us6aRXz+pV/UAQbaFy1Edtk7cnT7+wKHTwisnaxatPf4imjkt9WiCGmyIDbHGR51C
+         IK7qhTALa/AkAH3ucDYpC0zstb6ogy4j26m+UANDHPNxOPJfANa25Kqr5KrS3x/aw2
+         XmPAnK83d1Q5k153iDm0iCbdUIkavHYn46AyTxKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4.14 187/190] w1: omap-hdq: cleanup to add missing newline for some dev_dbg
-Date:   Fri, 19 Jun 2020 16:33:52 +0200
-Message-Id: <20200619141643.202024661@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 162/190] PCI: Program MPS for RCiEP devices
+Date:   Fri, 19 Jun 2020 16:33:27 +0200
+Message-Id: <20200619141641.854318422@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,69 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Ashok Raj <ashok.raj@intel.com>
 
-commit 5e02f3b31704e24537697bce54f8156bdb72b7a6 upstream.
+commit aa0ce96d72dd2e1b0dfd0fb868f82876e7790878 upstream.
 
-Otherwise it will corrupt the console log during debugging.
+Root Complex Integrated Endpoints (RCiEPs) do not have an upstream bridge,
+so pci_configure_mps() previously ignored them, which may result in reduced
+performance.
 
-Fixes: 7b5362a603a1 ("w1: omap_hdq: Fix some error/debug handling.")
+Instead, program the Max_Payload_Size of RCiEPs to the maximum supported
+value (unless it is limited for the PCIE_BUS_PEER2PEER case).  This also
+affects the subsequent programming of Max_Read_Request_Size because Linux
+programs MRRS based on the MPS value.
+
+Fixes: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()")
+Link: https://lore.kernel.org/r/1585343775-4019-1-git-send-email-ashok.raj@intel.com
+Tested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Link: https://lore.kernel.org/r/cd0d55749a091214106575f6e1d363c6db56622f.1590255176.git.hns@goldelico.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/w1/masters/omap_hdq.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/probe.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -176,7 +176,7 @@ static int hdq_write_byte(struct hdq_dat
- 	/* check irqstatus */
- 	if (!(*status & OMAP_HDQ_INT_STATUS_TXCOMPLETE)) {
- 		dev_dbg(hdq_data->dev, "timeout waiting for"
--			" TXCOMPLETE/RXCOMPLETE, %x", *status);
-+			" TXCOMPLETE/RXCOMPLETE, %x\n", *status);
- 		ret = -ETIMEDOUT;
- 		goto out;
- 	}
-@@ -187,7 +187,7 @@ static int hdq_write_byte(struct hdq_dat
- 			OMAP_HDQ_FLAG_CLEAR, &tmp_status);
- 	if (ret) {
- 		dev_dbg(hdq_data->dev, "timeout waiting GO bit"
--			" return to zero, %x", tmp_status);
-+			" return to zero, %x\n", tmp_status);
- 	}
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1557,13 +1557,33 @@ static void pci_configure_mps(struct pci
+ 	struct pci_dev *bridge = pci_upstream_bridge(dev);
+ 	int mps, p_mps, rc;
  
- out:
-@@ -203,7 +203,7 @@ static irqreturn_t hdq_isr(int irq, void
- 	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
- 	hdq_data->hdq_irqstatus = hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
- 	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
--	dev_dbg(hdq_data->dev, "hdq_isr: %x", hdq_data->hdq_irqstatus);
-+	dev_dbg(hdq_data->dev, "hdq_isr: %x\n", hdq_data->hdq_irqstatus);
+-	if (!pci_is_pcie(dev) || !bridge || !pci_is_pcie(bridge))
++	if (!pci_is_pcie(dev))
+ 		return;
  
- 	if (hdq_data->hdq_irqstatus &
- 		(OMAP_HDQ_INT_STATUS_TXCOMPLETE | OMAP_HDQ_INT_STATUS_RXCOMPLETE
-@@ -311,7 +311,7 @@ static int omap_hdq_break(struct hdq_dat
- 	tmp_status = hdq_data->hdq_irqstatus;
- 	/* check irqstatus */
- 	if (!(tmp_status & OMAP_HDQ_INT_STATUS_TIMEOUT)) {
--		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x",
-+		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x\n",
- 				tmp_status);
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -338,7 +338,7 @@ static int omap_hdq_break(struct hdq_dat
- 			&tmp_status);
- 	if (ret)
- 		dev_dbg(hdq_data->dev, "timeout waiting INIT&GO bits"
--			" return to zero, %x", tmp_status);
-+			" return to zero, %x\n", tmp_status);
+ 	/* MPS and MRRS fields are of type 'RsvdP' for VFs, short-circuit out */
+ 	if (dev->is_virtfn)
+ 		return;
  
- out:
- 	mutex_unlock(&hdq_data->hdq_mutex);
++	/*
++	 * For Root Complex Integrated Endpoints, program the maximum
++	 * supported value unless limited by the PCIE_BUS_PEER2PEER case.
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		if (pcie_bus_config == PCIE_BUS_PEER2PEER)
++			mps = 128;
++		else
++			mps = 128 << dev->pcie_mpss;
++		rc = pcie_set_mps(dev, mps);
++		if (rc) {
++			pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
++				 mps);
++		}
++		return;
++	}
++
++	if (!bridge || !pci_is_pcie(bridge))
++		return;
++
+ 	mps = pcie_get_mps(dev);
+ 	p_mps = pcie_get_mps(bridge);
+ 
 
 
