@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF51C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63798C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A753C21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2C521841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580202;
-	bh=KT/3CO6F1Y/I0XkJN8sD4P2ewKtBu/xnwku614W1EWE=;
+	s=default; t=1592580208;
+	bh=Snd7PMcynuCJPLlRp2/soooBq43eZjoArhY5AeZ/2bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzW76gi8HLH63GoEeQT/rC5y1GziU5uAuUKNamw3ioKo93bcPiI43srZNaPCw1Be8
-	 //iCWyXljfoieH+TlzhbkQZYG6zdugt81+MFDK4L5YgAV99nw0T8wmpw/IB4e7X/HL
-	 v73zUDKYsvKvTnc8/5gSxHFDStIqmywRySse+RV4=
+	b=DY6JYezmaH3mvMIElzIt1eheQH1RiPsDVH0aLULjpT6ITaOJIsSTWoBYPkbIIos6C
+	 uMytDxIJm/0dSGUmPAkXnPBEYy28gfvfEknFeWKu6imkvAhV5IEspl2KhSDMabjSa9
+	 H8KSRM08nWxEnSNLSZDay9RZykzWFx+0vT5uIpqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393166AbgFSPXV (ORCPT
+        id S2392693AbgFSPX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404111AbgFSPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:37 -0400
+        id S2404230AbgFSPTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F1B206DB;
-        Fri, 19 Jun 2020 15:19:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8636421835;
+        Fri, 19 Jun 2020 15:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579976;
-        bh=KT/3CO6F1Y/I0XkJN8sD4P2ewKtBu/xnwku614W1EWE=;
+        s=default; t=1592579987;
+        bh=Snd7PMcynuCJPLlRp2/soooBq43eZjoArhY5AeZ/2bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oidivbZeaxFrIE7XuBneUa9b61gJnAtsthE0u/jg4/S6tcBzneT68P/Y4513lbptw
-         XQfBt8fUHs1XdV/LEDjyMAvImlUf0vV+E3NU/bqlzv2c/WnicgXfhdLwWfgylPfr7m
-         M/N1FkO9AMqRgOR+lbIEpue9N/Rdsafa6Wbdx8Nw=
+        b=luVjmuYZqUvv138SM2ik311lswPU3NpVQrkt6g1Tl1vPZC9NJ61d80N//nH/RKoeH
+         uTpXWyp5NvKTSSfOkB3m/qfJFWuNqnmlhH1Je/UK/Erm2Z7W/1WfcFTEWjXcGgWDvv
+         UxcNjUFtEYW1v5ZqtY9Yfp0X7DKrJnLPDacECIjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 075/376] spi: dw: Fix Rx-only DMA transfers
-Date:   Fri, 19 Jun 2020 16:29:53 +0200
-Message-Id: <20200619141713.903566681@linuxfoundation.org>
+Subject: [PATCH 5.7 050/376] Bluetooth: Add SCO fallback for invalid LMP parameters error
+Date:   Fri, 19 Jun 2020 16:29:28 +0200
+Message-Id: <20200619141712.722258430@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -68,51 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Hsin-Yu Chao <hychao@chromium.org>
 
-[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
+[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
 
-Tx-only DMA transfers are working perfectly fine since in this case
-the code just ignores the Rx FIFO overflow interrupts. But it turns
-out the SPI Rx-only transfers are broken since nothing pushing any
-data to the shift registers, so the Rx FIFO is left empty and the
-SPI core subsystems just returns a timeout error. Since DW DMAC
-driver doesn't support something like cyclic write operations of
-a single byte to a device register, the only way to support the
-Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-This is what we intend to fix in this commit by setting the
-SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
+Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
+with invalid parameter at the first SCO request expecting AG to
+attempt another SCO request with the use of "safe settings" for
+given codec, base on section 5.7.1.2 of HFP 1.7 specification.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
+to the SCO fallback case. Verified with below log:
+
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 13
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x0380
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Number of Completed Packets (0x13) plen 5
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
+        Handle: 0
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x00
+        Retransmission window: 0x02
+        RX packet length: 0
+        TX packet length: 0
+        Air mode: Transparent (0x03)
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 8
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x03c8
+          EV3 may be used
+          2-EV3 may not be used
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 5
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Success (0x00)
+        Handle: 257
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x06
+        Retransmission window: 0x04
+        RX packet length: 30
+        TX packet length: 30
+        Air mode: Transparent (0x03)
+
+Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 1 +
+ net/bluetooth/hci_event.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index dbf9b8d5cebe..5725c37544f2 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -531,6 +531,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 			dws->dma_inited = 0;
- 		} else {
- 			master->can_dma = dws->dma_ops->can_dma;
-+			master->flags |= SPI_CONTROLLER_MUST_TX;
- 		}
- 	}
- 
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 0a591be8b0ae..b11f8d391ad8 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4292,6 +4292,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
+ 	case 0x11:	/* Unsupported Feature or Parameter Value */
+ 	case 0x1c:	/* SCO interval rejected */
+ 	case 0x1a:	/* Unsupported Remote Feature */
++	case 0x1e:	/* Invalid LMP Parameters */
+ 	case 0x1f:	/* Unspecified error */
+ 	case 0x20:	/* Unsupported LMP Parameter value */
+ 		if (conn->out) {
 -- 
 2.25.1
 
