@@ -2,76 +2,132 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F11C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE22C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0992168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A792168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583771;
+	bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DTJEaM7ffLicJkJH3vZ3kYABq/ytPK+SKPRY2EZCbBAGIkm/r4Yci0692JJABdalV
+	 Ugd99Ocsd6LlDnCgxIZCT/toKkboTWO2Z8QRXEz9bilot5JSXQsMjOF4FrOcglWOPC
+	 3xpVOGIwI66lb87IPw5bXCs6OiETTvOp5lFYAOX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394726AbgFSQWr (ORCPT
+        id S2390597AbgFSO76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:22:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44716 "EHLO mga12.intel.com"
+        Fri, 19 Jun 2020 10:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390605AbgFSO77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:59 -0400
-IronPort-SDR: s9Ln8jwyzbYMCwryS+Kw6gomDxvowyIMB8rsXXgpD2c7CJDk/BInl/WbCPaKziBiNPPDo8xl8w
- H3OYTBH8QKUA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="122705944"
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="122705944"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:59:59 -0700
-IronPort-SDR: /T6ngN+opaAFXMejP3TTq62vo8pm+WnfTUYczWbNBvC4xRqN1aZ7ku9HDnlgBbpoo7JBSjH8x7
- S2IChbxjWy/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="352743642"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2020 07:59:59 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.209]) by
- ORSMSX110.amr.corp.intel.com ([169.254.10.232]) with mapi id 14.03.0439.000;
- Fri, 19 Jun 2020 07:59:59 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "willy@infradead.org" <willy@infradead.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
-Subject: Re: Parallel compilation performance regression
-Thread-Topic: Parallel compilation performance regression
-Thread-Index: AQHWRcuWKh0BKGrzv0a8mEFl49sTbajflSCAgADpOYA=
-Date:   Fri, 19 Jun 2020 14:59:58 +0000
-Message-ID: <bf968a2887536459293eaeb40d354fb365b1438d.camel@intel.com>
-References: <a1bafab884bb60250840a8721b78f4b5d3a6c2ed.camel@intel.com>
-         <20200619010513.GW8681@bombadil.infradead.org>
-In-Reply-To: <20200619010513.GW8681@bombadil.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.209.131.127]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5A74B23BC1E18E46A84DF283D16CBD32@intel.com>
-Content-Transfer-Encoding: base64
+        id S2390568AbgFSO7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD5321973;
+        Fri, 19 Jun 2020 14:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578790;
+        bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rblfrh5fxY6dMjjQ335dTTeutn74mUMH86p0c0/369EF/2eUyGY4OLqVWNdOj+eL6
+         VVIXfc51GdakcOFyF1/b6xaWottdgJsIDsQMcHLsnOcDyITpcvPEz+jUqGubpDslR0
+         L16JJfwo2gUw5pIPgX6T4kPK/Tdx1u8vfCbRXs+w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 127/267] media: platform: fcp: Set appropriate DMA parameters
+Date:   Fri, 19 Jun 2020 16:31:52 +0200
+Message-Id: <20200619141654.922135292@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA2LTE4IGF0IDE4OjA1IC0wNzAwLCBNYXR0aGV3IFdpbGNveCB3cm90ZToN
-Cj4gT24gVGh1LCBKdW4gMTgsIDIwMjAgYXQgMTE6NTI6NTVQTSArMDAwMCwgRGVycmljaywgSm9u
-YXRoYW4gd3JvdGU6DQo+ID4gSGkgRGF2aWQsDQo+ID4gDQo+ID4gSSd2ZSBiZWVuIGV4cGVyaWVu
-Y2luZyBhIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gd2hlbiBydW5uaW5nIGEgcGFyYWxsZWwNCj4g
-PiBjb21waWxhdGlvbiAoZWcsIG1ha2UgLWo3Mikgb24gcmVjZW50IGtlcm5lbHMuDQo+IA0KPiBJ
-IGJldCB5b3UncmUgdXNpbmcgYSB2ZXJzaW9uIG9mIG1ha2Ugd2hpY2ggcHJlZGF0ZXMgNC4zOg0K
-PiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9y
-dmFsZHMvbGludXguZ2l0L2NvbW1pdC8/aWQ9MGRkYWQyMWQzZTk5Yzc0M2EzYWE0NzMxMjFkYzU1
-NjE2NzllMjZiYg0KPiANCg0KSSBhbSENCg0KIyBtYWtlIC0tdmVyc2lvbg0KR05VIE1ha2UgNC4y
-LjENCg0KDQpUaGFuayB5b3UgTWF0dGhldyENCg==
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+
+Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
+enable extra validation on DMA operations ensuring that the size
+restraints are met.
+
+When using the FCP in conjunction with the VSP1/DU, and display frames,
+the size of the DMA operations is larger than the default maximum
+segment size reported by the DMA core (64K). With the DMA debug enabled,
+this produces a warning such as the following:
+
+"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
+claims to support [len=3145728] [max=65536]"
+
+We have no specific limitation on the segment size which isn't already
+handled by the VSP1/DU which actually handles the DMA allcoations and
+buffer management, so define a maximum segment size of up to 4GB (a 32
+bit mask).
+
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/rcar-fcp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
+index 43c78620c9d8..5c6b00737fe7 100644
+--- a/drivers/media/platform/rcar-fcp.c
++++ b/drivers/media/platform/rcar-fcp.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+@@ -21,6 +22,7 @@
+ struct rcar_fcp_device {
+ 	struct list_head list;
+ 	struct device *dev;
++	struct device_dma_parameters dma_parms;
+ };
+ 
+ static LIST_HEAD(fcp_devices);
+@@ -136,6 +138,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
+ 
+ 	fcp->dev = &pdev->dev;
+ 
++	fcp->dev->dma_parms = &fcp->dma_parms;
++	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
++
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	mutex_lock(&fcp_lock);
+-- 
+2.25.1
+
+
+
