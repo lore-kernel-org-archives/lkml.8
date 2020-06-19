@@ -2,116 +2,169 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0382BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5E520B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D417520786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581133;
-	bh=Gx8XEJrUY+UQgsOhYjPiQZPfYJT6E8ZKlV3KYExBEBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pRSwr7TwK3zQ3f+wUgIB2sRz06SUHvAtIzbZo5RggQA/T9Hgfoy2OW8OqNS+JTJ1N
-	 W2A6c1eJHMRUvIh58Kkj4pUK1lnTUaN6WaPFwLO7mp2H5DxwZ4WnpgUD8QJTfOD1Ze
-	 C3BCg6O/Xn6dBpzIEbZgUJVWImIf+BKC7MAo5Jxc=
+	s=default; t=1592581138;
+	bh=u/SGjul9L8yvIwQLf0aUzCJ7rcHYtEU3h8ZQ5UY7iUc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wQD5pcMScgbRA5FZl56TnF3pxJwykvZpW8g1+Wra7tqRp3d/JB+XXdN2pqnglbMeG
+	 Q0LE2XbsYd4a6NsJdPnycHZ0RnVvJCaNRq61eybLmHycbI2uEH77kiU6J52cZWUPV6
+	 34gUfmO/X9bv4zsNBQ9/bpB4p1cCRSch2cU6RgAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391823AbgFSPiv (ORCPT
+        id S2404625AbgFSP31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405031AbgFSPih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:38:37 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB11C06174E;
-        Fri, 19 Jun 2020 08:38:37 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c185so9310260qke.7;
-        Fri, 19 Jun 2020 08:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xDsiCr50KHpvcCpO0nUudPI1dP66NxE/zmDA74OV+SQ=;
-        b=W2kw6LlHwZt19yql7h4ub2wb8X0IY0e+1i5N4AL4XUjcJvVeVp3YsvEAVfGIgM4lZ6
-         UHwZvje1K2zuJ6grTj9+kJmE4QPj9xfa6thkJEEjipTQzC5E80gdAY9/vap9znOfauSs
-         W8YyuYpxuh5TuUlohv7P4RC5+nF9dw7mCLg8VSj7pBvWxVD+C9tJFbqdqOUeAFeWxszN
-         a5P6UKE7d7WUwrxSqrzEC32ei1M6kitWCQs52yWgGgwi6ZO4TE+6tBVNySQIA4tslO5C
-         otPlsDK/47Mo7ZPWV/mj5aw4mpfyj6ibUYhZ18NRNH0wUQmRa8mEpl6pGL23RAuXAuyE
-         Bvaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=xDsiCr50KHpvcCpO0nUudPI1dP66NxE/zmDA74OV+SQ=;
-        b=MbA5IexONyUMfXFTyQW9J429xMgKxhrTQVxn0OE/4dDq6P82BrUwXH7Wbe654ZLESp
-         900v0nq4znQwWy/jZHRnCfYijv0v8mi4zX8shja0nTfsqjBHvGvoh32HOfy1W1/3z35C
-         cVE59bDBygVp8OScC8VI1/IwQNxf5hIV9IwFbxUZmn1wyD4yUyS7AOUQEUjPSfW1zJhh
-         7zqq2wylAxk8k+F/UD27gRu3WY4CDYInUabtACYdsznM+rWeKjRraP6a4kxVOuGlwxPr
-         z70B6BFkkrXxbEvTKyTAlielGElbOFrxMGJnENKkB6/a+OmbVDHwMIw/zzelkE6ZV7qY
-         vn1g==
-X-Gm-Message-State: AOAM533gU1xQj2J0GPPIOL8tn6GzaUZ4So/MuAdTgfaHYrMrCUV3cwK+
-        g/759/0Lk97ifw8tXBk6TDc=
-X-Google-Smtp-Source: ABdhPJwTaHYw+/QMBJOOvL1dRABq9I9lwQlVbVLTvWAVyCxF+jAlFuH4heIR+Y3rCx8ivtN1SaNSYQ==
-X-Received: by 2002:a05:620a:15f4:: with SMTP id p20mr3822901qkm.283.1592581115643;
-        Fri, 19 Jun 2020 08:38:35 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:736f])
-        by smtp.gmail.com with ESMTPSA id h19sm6874625qkj.109.2020.06.19.08.38.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 08:38:34 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 11:38:33 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Ian Kent <raven@themaw.net>
+        Fri, 19 Jun 2020 11:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404589AbgFSP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B129221D80;
+        Fri, 19 Jun 2020 15:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580529;
+        bh=u/SGjul9L8yvIwQLf0aUzCJ7rcHYtEU3h8ZQ5UY7iUc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A0XFYB8BQEEthTtWE5GfWO0E1N6/R5LiiafbOfebwtv+5gpM7m53OWRSEccPnijhY
+         DFtUEDGNrN1WKCypEFrMcf/Hq6vl1BBI8YzQ1a8VdtoS7bJQglHtd4bBA9TOOQlnnG
+         qDTcaMcplfdVkDBOWgkW6RyNMTYxmIm2MPR/ZL2k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200619153833.GA5749@mtj.thefacebook.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.7 277/376] ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
+Date:   Fri, 19 Jun 2020 16:33:15 +0200
+Message-Id: <20200619141723.446976459@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Ian.
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-On Wed, Jun 17, 2020 at 03:37:43PM +0800, Ian Kent wrote:
-> The series here tries to reduce the locking needed during path walks
-> based on the assumption that there are many path walks with a fairly
-> large portion of those for non-existent paths, as described above.
-> 
-> That was done by adding kernfs negative dentry caching (non-existent
-> paths) to avoid continual alloc/free cycle of dentries and a read/write
-> semaphore introduced to increase kernfs concurrency during path walks.
-> 
-> With these changes we still need kernel parameters of udev.children-max=2048
-> and systemd.default_timeout_start_sec=300 for the fastest boot times of
-> under 5 minutes.
+commit 6cc7c266e5b47d3cd2b5bb7fd3aac4e6bb2dd1d2 upstream.
 
-I don't have strong objections to the series but the rationales don't seem
-particularly strong. It's solving a suspected problem but only half way. It
-isn't clear whether this can be the long term solution for the problem
-machine and whether it will benefit anyone else in a meaningful way either.
+If the template field 'd' is chosen and the digest to be added to the
+measurement entry was not calculated with SHA1 or MD5, it is
+recalculated with SHA1, by using the passed file descriptor. However, this
+cannot be done for boot_aggregate, because there is no file descriptor.
 
-I think Greg already asked this but how are the 100,000+ memory objects
-used? Is that justified in the first place?
+This patch adds a call to ima_calc_boot_aggregate() in
+ima_eventdigest_init(), so that the digest can be recalculated also for the
+boot_aggregate entry.
 
-Thanks.
+Cc: stable@vger.kernel.org # 3.13.x
+Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- 
-tejun
+---
+ security/integrity/ima/ima.h              |    3 ++-
+ security/integrity/ima/ima_crypto.c       |    6 +++---
+ security/integrity/ima/ima_init.c         |    2 +-
+ security/integrity/ima/ima_template_lib.c |   18 ++++++++++++++++++
+ 4 files changed, 24 insertions(+), 5 deletions(-)
+
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -52,6 +52,7 @@ extern int ima_policy_flag;
+ extern int ima_hash_algo;
+ extern int ima_appraise;
+ extern struct tpm_chip *ima_tpm_chip;
++extern const char boot_aggregate_name[];
+ 
+ /* IMA event related data */
+ struct ima_event_data {
+@@ -140,7 +141,7 @@ int ima_calc_buffer_hash(const void *buf
+ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 			      struct ima_template_desc *desc, int num_fields,
+ 			      struct ima_digest_data *hash);
+-int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
++int ima_calc_boot_aggregate(struct ima_digest_data *hash);
+ void ima_add_violation(struct file *file, const unsigned char *filename,
+ 		       struct integrity_iint_cache *iint,
+ 		       const char *op, const char *cause);
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -665,8 +665,8 @@ static void __init ima_pcrread(u32 idx,
+  * hash algorithm for reading the TPM PCRs as for calculating the boot
+  * aggregate digest as stored in the measurement list.
+  */
+-static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+-					      struct crypto_shash *tfm)
++static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
++				       struct crypto_shash *tfm)
+ {
+ 	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
+ 	int rc;
+@@ -694,7 +694,7 @@ static int __init ima_calc_boot_aggregat
+ 	return rc;
+ }
+ 
+-int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
++int ima_calc_boot_aggregate(struct ima_digest_data *hash)
+ {
+ 	struct crypto_shash *tfm;
+ 	u16 crypto_id, alg_id;
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -19,7 +19,7 @@
+ #include "ima.h"
+ 
+ /* name for boot aggregate entry */
+-static const char boot_aggregate_name[] = "boot_aggregate";
++const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
+ 
+ /* Add the boot aggregate to the IMA measurement list and extend
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -286,6 +286,24 @@ int ima_eventdigest_init(struct ima_even
+ 		goto out;
+ 	}
+ 
++	if ((const char *)event_data->filename == boot_aggregate_name) {
++		if (ima_tpm_chip) {
++			hash.hdr.algo = HASH_ALGO_SHA1;
++			result = ima_calc_boot_aggregate(&hash.hdr);
++
++			/* algo can change depending on available PCR banks */
++			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
++				result = -EINVAL;
++
++			if (result < 0)
++				memset(&hash, 0, sizeof(hash));
++		}
++
++		cur_digest = hash.hdr.digest;
++		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
++		goto out;
++	}
++
+ 	if (!event_data->file)	/* missing info to re-calculate the digest */
+ 		return -EINVAL;
+ 
+
+
