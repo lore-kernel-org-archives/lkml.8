@@ -2,103 +2,122 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D15AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D847820786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580850;
-	bh=bAf65E3ga0SJKOAJCczAPgrFCM/j3BGNsKF5UllZPlw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCIEsKALMY+5noHxeRg+j1dB6zvKz/FLDiRFsmNHtvV6h89UUT4XA5vSwP69jJ1wC
-	 j1VPgJx90R8vvANhAZkCVFXaYiv3vX+5LvWcZTjXqKnTgYaGBSsWqFFAjyI7G9gqCV
-	 0b6ooP6gITqsH74FFikz5pILDead8aKiQ9La0OfE=
+	by mail.kernel.org (Postfix) with ESMTP id 3245C20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R89A4Vk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404935AbgFSPeJ (ORCPT
+        id S2391076AbgFSPeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404675AbgFSPc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jun 2020 11:34:17 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50714 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404901AbgFSPeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:34:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592580845;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1gjUns75l8t6S6FnUcYsN6ZlE6IET04KazBXsahJkg8=;
+        b=R89A4Vk1fiBeltHWigJoNwYNpFI/7x3JzBZIGYRejPjtRqZwhEvH/aye5EvgwfEDcWHCzr
+        w78g5PPSjhAkkUkWcP+2OavZGo7GhLyvVdloDeXAc2iMAorfPJSs5J6I8K/bBWj2WndLpn
+        apzsgtdEcqEnCJ+RHNJnxOnPu8I7vZA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-NbuglgpSPkKbOHTyzRHHIQ-1; Fri, 19 Jun 2020 11:34:00 -0400
+X-MC-Unique: NbuglgpSPkKbOHTyzRHHIQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6F121973;
-        Fri, 19 Jun 2020 15:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580776;
-        bh=bAf65E3ga0SJKOAJCczAPgrFCM/j3BGNsKF5UllZPlw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDccz0CFVYiflYSPlF2lfrea9LrsuEIR+PfIaHKjyGGPQzyedZfk9ji9P82/V3rpj
-         a73v81ePMpMzhlmH3JtuZv1O6y0V44Z97U3eN+R4eI7Ajrq9A2mqIlnwAnFWgv0ya/
-         awvhQMB6m8n4+xbmJeKSpl3BE+LMViPkX0uI79Jk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 348/376] block: nr_sects_write(): Disable preemption on seqcount write
-Date:   Fri, 19 Jun 2020 16:34:26 +0200
-Message-Id: <20200619141726.799900818@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44B44801503;
+        Fri, 19 Jun 2020 15:33:59 +0000 (UTC)
+Received: from agerstmayr-thinkpad.redhat.com (unknown [10.40.196.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 915942CE8A;
+        Fri, 19 Jun 2020 15:33:51 +0000 (UTC)
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Michael Petlan <mpetlan@redhat.com>,
+        Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf flamegraph: explicitly set utf-8 encoding
+Date:   Fri, 19 Jun 2020 17:32:31 +0200
+Message-Id: <20200619153232.203537-1-agerstmayr@redhat.com>
+In-Reply-To: <20200619130745.153113-1-agerstmayr@redhat.com>
+References: <20200619130745.153113-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
+on some platforms the default encoding is not utf-8,
+which causes an UnicodeDecodeError when reading the flamegraph template
+and writing the flamegraph
 
-commit 15b81ce5abdc4b502aa31dff2d415b79d2349d2f upstream.
-
-For optimized block readers not holding a mutex, the "number of sectors"
-64-bit value is protected from tearing on 32-bit architectures by a
-sequence counter.
-
-Disable preemption before entering that sequence counter's write side
-critical section. Otherwise, the read side can preempt the write side
-section and spin for the entire scheduler tick. If the reader belongs to
-a real-time scheduling class, it can spin forever and the kernel will
-livelock.
-
-Fixes: c83f6bf98dc1 ("block: add partition resize function to blkpg ioctl")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 ---
- block/blk.h |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -470,9 +470,11 @@ static inline sector_t part_nr_sects_rea
- static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
- {
- #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
-+	preempt_disable();
- 	write_seqcount_begin(&part->nr_sects_seq);
- 	part->nr_sects = size;
- 	write_seqcount_end(&part->nr_sects_seq);
-+	preempt_enable();
- #elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPTION)
- 	preempt_disable();
- 	part->nr_sects = size;
+changelog v2: also write to stdout with utf-8 encoding
 
+ tools/perf/scripts/python/flamegraph.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+index 61f3be9add6b..65780013f745 100755
+--- a/tools/perf/scripts/python/flamegraph.py
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -17,6 +17,7 @@
+ from __future__ import print_function
+ import sys
+ import os
++import io
+ import argparse
+ import json
+ 
+@@ -81,7 +82,7 @@ class FlameGraphCLI:
+ 
+         if self.args.format == "html":
+             try:
+-                with open(self.args.template) as f:
++                with io.open(self.args.template, encoding="utf-8") as f:
+                     output_str = f.read().replace("/** @flamegraph_json **/",
+                                                   json_str)
+             except IOError as e:
+@@ -93,11 +94,12 @@ class FlameGraphCLI:
+             output_fn = self.args.output or "stacks.json"
+ 
+         if output_fn == "-":
+-            sys.stdout.write(output_str)
++            with io.open(sys.stdout.fileno(), "w", encoding="utf-8", closefd=False) as out:
++                out.write(output_str)
+         else:
+             print("dumping data to {}".format(output_fn))
+             try:
+-                with open(output_fn, "w") as out:
++                with io.open(output_fn, "w", encoding="utf-8") as out:
+                     out.write(output_str)
+             except IOError as e:
+                 print("Error writing output file: {}".format(e), file=sys.stderr)
+-- 
+2.25.4
 
