@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64396217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8FD217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584015;
-	bh=/sfETGudfvtXrKEqBs/kMint8AgPuzqGMFoW0I246Kw=;
+	s=default; t=1592584018;
+	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=krbYIDm+hio0OFzwUt+iUNRjN1xsbM0+XOZ0D3LXq2a3Vvg75HgbFnwzztwOzJocb
-	 JzlrrlvKZTiBw6KnzfWpjJnNTWS90BIJmR4GgNuBnzVyO4OxQ80VNvXNfasTSU3hSm
-	 GsJ4Pgn1JX7it64ClvdZ9GzqTyONzA6nK8oTVVLo=
+	b=oDF9joDYj9jACpfni0lCzEIG3JEZNihbN4s8N4FOIGR0Cc/ALHXp39F5FdTl+S408
+	 zQs4YdCKWZw5V3AUJS9mySMeq7SuSj0Lfb67weXWfFSPUrClDa3x3/+K26y7XY2W2z
+	 6mjZKzR6jC3mv/6JupMAt8qBvdd0lqL41ar4y2/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbgFSO4l (ORCPT
+        id S2390099AbgFSO4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbgFSO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:56:28 -0400
+        id S2389392AbgFSO4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A47D217D8;
-        Fri, 19 Jun 2020 14:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF802158C;
+        Fri, 19 Jun 2020 14:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578585;
-        bh=/sfETGudfvtXrKEqBs/kMint8AgPuzqGMFoW0I246Kw=;
+        s=default; t=1592578578;
+        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Frj0380adKK0zwnyJJhaCuEGb+u8W31BABx6xOxAh/JaNbuu8ysG1GDnRai5SFDO
-         WQgBGBLqxFeOy5ynL/OlOPn2vxHfrwUl2Cg/niXF/A3Z4FrJ2Tmir8nVmJKaed8amM
-         7WkGSbhrRbH2PRmJxjoFgNSGFnyMaucAXtu08OW0=
+        b=UinJH23+5k9vWTENHDz/2sb8okp0HErAMdsfi1OA0GN1sj+ddbTV8R/UBnpW5JFpn
+         QeoAouLY5Vp3Iln1CldhXtzOje2SOpzym0Re3M7F5KGbALA+e9do5GAsN5dZ5gjwlX
+         HU4u1Gc+uqE6VByq3IFtQX0c2i5Rs2Eg9IphoiNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 078/267] ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-Date:   Fri, 19 Jun 2020 16:31:03 +0200
-Message-Id: <20200619141652.630602163@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 075/267] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
+Date:   Fri, 19 Jun 2020 16:31:00 +0200
+Message-Id: <20200619141652.500182542@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,152 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Xing Li <lixing@loongson.cn>
 
-commit abeaa85054ff8cfe8b99aafc5c70ea067e5d0908 upstream.
+commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
 
-Free wmi later after cmd urb has been killed, as urb cb will access wmi.
+If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
+VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
+functions such as _kvm_mips_host_tlb_inv().
 
-the case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000000002fc05a1d61a68@google.com
-BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500
-drivers/net/wireless/ath/ath9k/wmi.c:215
-Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
+The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
+still use the old definition.
 
-Call Trace:
-<IRQ>
-ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
-ath9k_htc_rx_msg+0x2da/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:459
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-3-hqjagain@gmail.com
+Cc: Stable <stable@vger.kernel.org>
+Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Signed-off-by: Xing Li <lixing@loongson.cn>
+[Huacai: Improve commit messages]
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c      |    5 +++--
- drivers/net/wireless/ath/ath9k/hif_usb.h      |    1 +
- drivers/net/wireless/ath/ath9k/htc_drv_init.c |   10 +++++++---
- drivers/net/wireless/ath/ath9k/wmi.c          |    5 ++++-
- drivers/net/wireless/ath/ath9k/wmi.h          |    3 ++-
- 5 files changed, 17 insertions(+), 7 deletions(-)
+ arch/mips/include/asm/kvm_host.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -973,7 +973,7 @@ err:
- 	return -ENOMEM;
- }
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -274,7 +274,11 @@ enum emulation_result {
+ #define MIPS3_PG_SHIFT		6
+ #define MIPS3_PG_FRAME		0x3fffffc0
  
--static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
- {
- 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
-@@ -1341,8 +1341,9 @@ static void ath9k_hif_usb_disconnect(str
- 
- 	if (hif_dev->flags & HIF_USB_READY) {
- 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
--		ath9k_htc_hw_free(hif_dev->htc_handle);
- 		ath9k_hif_usb_dev_deinit(hif_dev);
-+		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
-+		ath9k_htc_hw_free(hif_dev->htc_handle);
- 	}
- 
- 	usb_set_intfdata(interface, NULL);
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -133,5 +133,6 @@ struct hif_device_usb {
- 
- int ath9k_hif_usb_init(void);
- void ath9k_hif_usb_exit(void);
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev);
- 
- #endif /* HTC_USB_H */
---- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -933,8 +933,9 @@ err_init:
- int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 			   u16 devid, char *product, u32 drv_info)
- {
--	struct ieee80211_hw *hw;
-+	struct hif_device_usb *hif_dev;
- 	struct ath9k_htc_priv *priv;
-+	struct ieee80211_hw *hw;
- 	int ret;
- 
- 	hw = ieee80211_alloc_hw(sizeof(struct ath9k_htc_priv), &ath9k_htc_ops);
-@@ -969,7 +970,10 @@ int ath9k_htc_probe_device(struct htc_ta
- 	return 0;
- 
- err_init:
--	ath9k_deinit_wmi(priv);
-+	ath9k_stop_wmi(priv);
-+	hif_dev = (struct hif_device_usb *)htc_handle->hif_dev;
-+	ath9k_hif_usb_dealloc_urbs(hif_dev);
-+	ath9k_destoy_wmi(priv);
- err_free:
- 	ieee80211_free_hw(hw);
- 	return ret;
-@@ -984,7 +988,7 @@ void ath9k_htc_disconnect_device(struct
- 			htc_handle->drv_priv->ah->ah_flags |= AH_UNPLUGGED;
- 
- 		ath9k_deinit_device(htc_handle->drv_priv);
--		ath9k_deinit_wmi(htc_handle->drv_priv);
-+		ath9k_stop_wmi(htc_handle->drv_priv);
- 		ieee80211_free_hw(htc_handle->drv_priv->hw);
- 	}
- }
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -112,14 +112,17 @@ struct wmi *ath9k_init_wmi(struct ath9k_
- 	return wmi;
- }
- 
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
- {
- 	struct wmi *wmi = priv->wmi;
- 
- 	mutex_lock(&wmi->op_mutex);
- 	wmi->stopped = true;
- 	mutex_unlock(&wmi->op_mutex);
-+}
- 
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
-+{
- 	kfree(priv->wmi);
- }
- 
---- a/drivers/net/wireless/ath/ath9k/wmi.h
-+++ b/drivers/net/wireless/ath/ath9k/wmi.h
-@@ -179,7 +179,6 @@ struct wmi {
- };
- 
- struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv);
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv);
- int ath9k_wmi_connect(struct htc_target *htc, struct wmi *wmi,
- 		      enum htc_endpoint_id *wmi_ctrl_epid);
- int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
-@@ -189,6 +188,8 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum
- void ath9k_wmi_event_tasklet(unsigned long data);
- void ath9k_fatal_work(struct work_struct *work);
- void ath9k_wmi_event_drain(struct ath9k_htc_priv *priv);
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv);
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv);
- 
- #define WMI_CMD(_wmi_cmd)						\
- 	do {								\
++#if defined(CONFIG_64BIT)
++#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
++#else
+ #define VPN2_MASK		0xffffe000
++#endif
+ #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
+ #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
+ #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
 
 
