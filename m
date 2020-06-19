@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E66A217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5156320DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578115;
-	bh=2Q9Yr7e7ItrZAW0q4ARj2n/qHLvZhPdCDaCzDRgnIQQ=;
+	s=default; t=1592578117;
+	bh=xaKaHoYc/W9XElwQ0MqMdSYCMVYe5Jt6cQyWuW9Y+lQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieXO+cS31F6pf5bvrzlTnEDHpmpK5ahW/7IBpUZMBYtZLRAD67xlL+76M/GOuFGzM
-	 dFXDbpfGrdGm/ujbzWX3KelWM83p1xCYqZWOzadx0GqCixEGma/fURNqYlXpJ46UXC
-	 JxWVLmrPymojMQxMHGwWE9++8WS33QRAfcXjV/74=
+	b=MCrc0OMwM1Wu7ycW5ehssSMVVl7Gkz0ZAsesd5PO96LRZ7VepupxliZtoLnhbwFPv
+	 JUMHZEpMexK48TmTtOOFZNOEmUDwyAyqMnY5UtyurHRDvHXKmdybJtbkoG9+yNAoNf
+	 IeGn45U+0SAbx9DrR59s4lM0GLgNMGAcPcIcqlUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389085AbgFSOsc (ORCPT
+        id S2389099AbgFSOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389058AbgFSOsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:08 -0400
+        id S2389060AbgFSOsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 048D02083B;
-        Fri, 19 Jun 2020 14:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4D9E2083B;
+        Fri, 19 Jun 2020 14:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578088;
-        bh=2Q9Yr7e7ItrZAW0q4ARj2n/qHLvZhPdCDaCzDRgnIQQ=;
+        s=default; t=1592578093;
+        bh=xaKaHoYc/W9XElwQ0MqMdSYCMVYe5Jt6cQyWuW9Y+lQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MF1KGPc08ag4+VlATIxf4OdWep0RyyrXes5r5Go2WKgeWgK0ql1jLnWR4L/Hr+/dk
-         Lj+KOGvsL2Xxaf7B3g0qWC2fU0YzUh15wRh3+vj88tMS+Xnlrqg7LcGHwNPC0QKw2G
-         s58yCnoJsQk/enCs3Yu2Puxvp0JmTWtjSs16uvZ0=
+        b=P3jS9FTb96dCAiYWWDhOMnw7Jwd9FH5HEwQrW1bC+dpTSxUlMgjubUUxJj/tYmXdN
+         MjXTh95lbBOnH5GYqOfv42FpSSCvq+UWaYna9qB9AhdlSSZEc8jwfmDRSBpDofJ0tj
+         1+T3QOwUmYxhnWaczdSzPVl0t8dSlFGAAaXwXPts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/190] media: si2157: Better check for running tuner in init
-Date:   Fri, 19 Jun 2020 16:32:03 +0200
-Message-Id: <20200619141637.487063922@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 079/190] objtool: Ignore empty alternatives
+Date:   Fri, 19 Jun 2020 16:32:04 +0200
+Message-Id: <20200619141637.534899943@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,59 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Julien Thierry <jthierry@redhat.com>
 
-[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
+[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
 
-Getting the Xtal trim property to check if running is less error prone.
-Reset if_frequency if state is unknown.
+The .alternatives section can contain entries with no original
+instructions. Objtool will currently crash when handling such an entry.
 
-Replaces the previous "garbage check".
+Just skip that entry, but still give a warning to discourage useless
+entries.
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/tuners/si2157.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ tools/objtool/check.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index e35b1faf0ddc..c826997f5433 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -84,24 +84,23 @@ static int si2157_init(struct dvb_frontend *fe)
- 	struct si2157_cmd cmd;
- 	const struct firmware *fw;
- 	const char *fw_name;
--	unsigned int uitmp, chip_id;
-+	unsigned int chip_id, xtal_trim;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5685fe2c7a7d..247fbb5f6a38 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -778,6 +778,12 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
  
- 	dev_dbg(&client->dev, "\n");
- 
--	/* Returned IF frequency is garbage when firmware is not running */
--	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
-+	/* Try to get Xtal trim property, to verify tuner still running */
-+	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
- 	cmd.wlen = 4;
- 	cmd.rlen = 4;
- 	ret = si2157_cmd_execute(client, &cmd);
--	if (ret)
--		goto err;
- 
--	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
--	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
-+	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
- 
--	if (uitmp == dev->if_frequency / 1000)
-+	if (ret == 0 && xtal_trim < 16)
- 		goto warm;
- 
-+	dev->if_frequency = 0; /* we no longer know current tuner state */
+ 		if (special_alt->group) {
++			if (!special_alt->orig_len) {
++				WARN_FUNC("empty alternative entry",
++					  orig_insn->sec, orig_insn->offset);
++				continue;
++			}
 +
- 	/* power up */
- 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
- 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+ 			ret = handle_group_alt(file, special_alt, orig_insn,
+ 					       &new_insn);
+ 			if (ret)
 -- 
 2.25.1
 
