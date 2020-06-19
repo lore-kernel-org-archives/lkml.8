@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B21CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107B4208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1243E20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577502;
-	bh=eqFjqFU3qXiE3XO3dLPjq9Xs//ztRq5SoN7u/f5nz7w=;
+	s=default; t=1592577506;
+	bh=jJAuHfsEWXZKFASwgw4Xo+bzhzlKTDQqmMhdwufUCYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oF2afKRXO21JbVF+8FDbAqBwdz3/gx/1rADYv+yLUhykvgE+pdxIdJRJbPTVH91C+
-	 Gy6px1SM3ntZTc+FH/Yt5n+TEwePRNu/92+zCHwVrBzSx7KwHaJshVKDpdkLSzQOsV
-	 xJiz4CY/3jZAKWqRYmqwtCBpnERsq4FlzaTHs1EY=
+	b=OflB081AdqpqHyr+0ku4HmOWExGpkKrVn9IyuwAIsJVB3NGhE4gqWffosj0jGDEC8
+	 OZ+xLgkjlOlp+knPFQ08m8fefnLQC7Q7i6zHNLCoZhMZjU5WCQkoeWxZzkqOyqc3kh
+	 bQRwZwnSpNy5NOnBFrc+nL2vUOPSP6E3svc3W1Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbgFSOiU (ORCPT
+        id S2387518AbgFSOiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:38:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387839AbgFSOiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:14 -0400
+        id S1733291AbgFSOiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D02CA20CC7;
-        Fri, 19 Jun 2020 14:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA2820CC7;
+        Fri, 19 Jun 2020 14:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577493;
-        bh=eqFjqFU3qXiE3XO3dLPjq9Xs//ztRq5SoN7u/f5nz7w=;
+        s=default; t=1592577488;
+        bh=jJAuHfsEWXZKFASwgw4Xo+bzhzlKTDQqmMhdwufUCYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ew972gEjp+hTFoxwAlkrMXhrflZVQ3tOv4cQSWHw6R3FojTQr1KQS7xn8ENmEIdow
-         AIAchdio+3OEUumzY/fg3xX64HIiWQT8k9T4ieppWLYD38WNHZMpxYBTKpEdw+cdf4
-         bwS5909LvLYzFhgafAiiaHX9qTHEC3Q/8R0KSFyY=
+        b=IIghxc5eM0y1e9LKWf/HoEBVt4EkOl49skwXmUD1JWgYph+KONKdYEMpRVU6Wvc7k
+         KV1ZhY00XTrYGI+TstYi/Y7DDj19j8O2y7HjMyXAGWUI8o7AwRvznHhsG0IqFwTdue
+         QMUTPPXXjUF6cVA9S7spMkbozWGF7pcoknFi8EuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 073/101] ixgbe: fix signed-integer-overflow warning
-Date:   Fri, 19 Jun 2020 16:33:02 +0200
-Message-Id: <20200619141617.850446048@linuxfoundation.org>
+Subject: [PATCH 4.4 031/101] spi: bcm2835: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:32:20 +0200
+Message-Id: <20200619141615.722934389@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -62,54 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
+[ Upstream commit 9dd277ff92d06f6aa95b39936ad83981d781f49b ]
 
-ubsan report this warning, fix it by adding a unsigned suffix.
+The BCM2835 SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+bcm2835_spi_remove() before unregistering the SPI controller via
+devres_release_all().
 
-UBSAN: signed-integer-overflow in
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
-65535 * 65537 cannot be represented in type 'int'
-CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
-Workqueue: ixgbe ixgbe_service_task [ixgbe]
-Call trace:
- dump_backtrace+0x0/0x3f0
- show_stack+0x28/0x38
- dump_stack+0x154/0x1e4
- ubsan_epilogue+0x18/0x60
- handle_overflow+0xf8/0x148
- __ubsan_handle_mul_overflow+0x34/0x48
- ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
- ixgbe_service_task+0xc20/0x1f78 [ixgbe]
- process_one_work+0x8f0/0xf18
- worker_thread+0x430/0x6d0
- kthread+0x218/0x238
- ret_from_fork+0x10/0x18
+This order is incorrect:  bcm2835_spi_remove() tears down the DMA
+channels and turns off the SPI controller, including its interrupts
+and clock.  The SPI controller is thus no longer usable.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+When the SPI controller is subsequently unregistered, it unbinds all
+its slave devices.  If their drivers need to access the SPI bus,
+e.g. to quiesce their interrupts, unbinding will fail.
+
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed
+after unbinding of slaves.
+
+Fix by using the non-devm variant spi_register_controller().  Note that
+the struct spi_controller as well as the driver-private data are not
+freed until after bcm2835_spi_remove() has finished, so accessing them
+is safe.
+
+Fixes: 247263dba208 ("spi: bcm2835: use devm_spi_register_master()")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.13+
+Link: https://lore.kernel.org/r/2397dd70cdbe95e0bc4da2b9fca0f31cb94e5aed.1589557526.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index cd2afe92f1da..e10808b3d118 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -2185,7 +2185,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 25daebd6f410..27680b336454 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -798,7 +798,7 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 		goto out_clk_disable;
  	}
  
- 	/* Configure pause time (2 TCs per register) */
--	reg = hw->fc.pause_time * 0x00010001;
-+	reg = hw->fc.pause_time * 0x00010001U;
- 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
- 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
+-	err = devm_spi_register_master(&pdev->dev, master);
++	err = spi_register_master(master);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
+ 		goto out_clk_disable;
+@@ -818,6 +818,8 @@ static int bcm2835_spi_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct bcm2835_spi *bs = spi_master_get_devdata(master);
  
++	spi_unregister_master(master);
++
+ 	/* Clear FIFOs, and disable the HW block */
+ 	bcm2835_wr(bs, BCM2835_SPI_CS,
+ 		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
 -- 
 2.25.1
 
