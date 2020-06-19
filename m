@@ -2,150 +2,131 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C370C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00336C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5845217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2998217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584130;
+	bh=iA6IPZ+8Tod7dXsCMS4bm29UsmZAqdxGD/VBkEX85WA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o6e7pgGqSq9m9d2yUADCqDW8cRzis/QLcSGCl+YuOXwKMAro2aJePP/deOz400XRl
+	 qICfxwk3se86Azo4LNmzhTzY9hyy90ihdl4oS911Vorphet2AJ2kp52K8ZFWf9xQVJ
+	 thQ4JE1q7CBdeP+QuQRst0LgAXy6dt8yw3ObeViY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbgFSQ2q (ORCPT
+        id S2404769AbgFSQ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394953AbgFSQ2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:28:30 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB33C06174E;
-        Fri, 19 Jun 2020 09:28:30 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 15E0B2A54CC
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+        Fri, 19 Jun 2020 12:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389567AbgFSOzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE742206F7;
+        Fri, 19 Jun 2020 14:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578523;
+        bh=iA6IPZ+8Tod7dXsCMS4bm29UsmZAqdxGD/VBkEX85WA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gApwQ8fUuMkPGQUol59wztbqLeKv//5cxY6FZgS+f4i4MAiTJsgWnRJsxKsoV7GRc
+         4+prbIyD+jy3kFCkx/XZ0bfSWWm7TM+IfkifuLRTnMZLgfCMeyCaxXrIrB3My9EpPI
+         L0TeeTHqdOOZ8GpvsInaJPSODDApBhHfiHm3lzgw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        kernel@collabora.com
-Subject: [PATCH] tty/sysrq: Add alternative SysRq key
-Date:   Fri, 19 Jun 2020 18:28:19 +0200
-Message-Id: <20200619162819.715-1-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511180145.GU89269@dtor-ws>
-References: <20200511180145.GU89269@dtor-ws>
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 024/267] perf probe: Accept the instance number of kretprobe event
+Date:   Fri, 19 Jun 2020 16:30:09 +0200
+Message-Id: <20200619141650.031116312@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exist machines which don't have SysRq key at all, e.g. chromebooks.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-This patch allows configuring an alternative key to act as SysRq. Devices
-which declare KEY_SYSRQ in their 'keybit' bitmap continue using KEY_SYSRQ,
-but other devices use the alternative SysRq key instead, by default F10.
-Which key is actually used can be modified with sysrq's module parameter.
+[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
+on kprobe_events") introduced to show the instance number of kretprobe
+events, the length of the 1st format of the kprobe event will not 1, but
+it can be longer.  This caused a parser error in perf-probe.
+
+Skip the length check the 1st format of the kprobe event to accept this
+instance number.
+
+Without this fix:
+
+  # perf probe -a vfs_read%return
+  Added new event:
+    probe:vfs_read__return (on vfs_read%return)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read__return -aR sleep 1
+
+  # perf probe -l
+  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
+    Error: Failed to show event list.
+
+And with this fixes:
+
+  # perf probe -a vfs_read%return
+  ...
+  # perf probe -l
+    probe:vfs_read__return (on vfs_read%return)
+
+Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
+Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
+Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/sysrq.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ tools/perf/util/probe-event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 0dc3878794fd..e1d271c84746 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -604,6 +604,7 @@ EXPORT_SYMBOL(handle_sysrq);
- 
- #ifdef CONFIG_INPUT
- static int sysrq_reset_downtime_ms;
-+static unsigned short alternative_sysrq_key = KEY_F10;
- 
- /* Simple translation table for the SysRq keys */
- static const unsigned char sysrq_xlate[KEY_CNT] =
-@@ -621,6 +622,7 @@ struct sysrq_state {
- 	unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];
- 	unsigned int alt;
- 	unsigned int alt_use;
-+	unsigned short sysrq_key;
- 	bool active;
- 	bool need_reinject;
- 	bool reinjecting;
-@@ -770,10 +772,10 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- 
- 		/* Simulate press and release of Alt + SysRq */
- 		input_inject_event(handle, EV_KEY, alt_code, 1);
--		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
-+		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 1);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
- 
--		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
-+		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 0);
- 		input_inject_event(handle, EV_KEY, alt_code, 0);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
- 
-@@ -805,6 +807,7 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
- 		}
- 		break;
- 
-+key_sysrq:
- 	case KEY_SYSRQ:
- 		if (value == 1 && sysrq->alt != KEY_RESERVED) {
- 			sysrq->active = true;
-@@ -825,11 +828,15 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
- 		 * triggering print screen function.
- 		 */
- 		if (sysrq->active)
--			clear_bit(KEY_SYSRQ, sysrq->handle.dev->key);
-+			clear_bit(sysrq->sysrq_key, sysrq->handle.dev->key);
- 
- 		break;
- 
- 	default:
-+		/* handle non-default sysrq key */
-+		if (code == sysrq->sysrq_key)
-+			goto key_sysrq;
-+
- 		if (sysrq->active && value && value != 2) {
- 			sysrq->need_reinject = false;
- 			__handle_sysrq(sysrq_xlate[code], true);
-@@ -924,6 +931,14 @@ static int sysrq_connect(struct input_handler *handler,
- 	sysrq->handle.private = sysrq;
- 	timer_setup(&sysrq->keyreset_timer, sysrq_do_reset, 0);
- 
-+	if (test_bit(KEY_SYSRQ, dev->keybit)) {
-+		sysrq->sysrq_key = KEY_SYSRQ;
-+		pr_info("%s: using default sysrq key [%x]\n", dev->name, KEY_SYSRQ);
-+	} else {
-+		sysrq->sysrq_key = alternative_sysrq_key;
-+		pr_info("%s: Using alternative sysrq key: [%x]\n", dev->name, sysrq->sysrq_key);
-+	}
-+
- 	error = input_register_handle(&sysrq->handle);
- 	if (error) {
- 		pr_err("Failed to register input sysrq handler, error %d\n",
-@@ -1032,6 +1047,13 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
- 
- module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
- 
-+module_param(alternative_sysrq_key, ushort, 0644);
-+MODULE_PARM_DESC(alternative_sysrq_key,
-+	"Alternative SysRq key for input devices that don't have SysRq key. F10 by default.\n"
-+	"Example\n"
-+	"Using F9 as SysRq:\n"
-+	"sysrq.alternative_sysrq_key=0x43\n");
-+
- #else
- 
- static inline void sysrq_register_handler(void)
-
-base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index a22e1f538aea..4dd79e08cb7b 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1753,8 +1753,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
+ 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
+ 	fmt2_str = strtok_r(NULL, "/", &fmt);
+ 	fmt3_str = strtok_r(NULL, " \t", &fmt);
+-	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
+-	    || fmt3_str == NULL) {
++	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
+ 		semantic_error("Failed to parse event name: %s\n", argv[0]);
+ 		ret = -EINVAL;
+ 		goto out;
 -- 
-2.17.1
+2.25.1
+
+
 
