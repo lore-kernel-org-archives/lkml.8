@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD902C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD901C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF30320DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12BA217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578100;
-	bh=kZ2JT7pJzNcsSRPkYpNNMCMcIXuq+V0mJeRqmsklpBE=;
+	s=default; t=1592578109;
+	bh=jB0JHajaiSD8nMrmh1e+MEqgjkNC208Fvh9HNwxgcUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLFxCCZB2S5Kt5NAmYK1rSwzK/CnkY3+ZTdGqOWXKeiozWVGI0lJtSQQrKb0TiYNN
-	 tJyhVG4pkehmJ9JxZy+IRcmkoAj66Wi6DMkxhigZ7Qib+54v0RtNnHUjBjjYZqF+Dm
-	 vr55Eypkjh/u4Ge/yptGgUdqFw1wk3br+1yaUVT4=
+	b=aZoH1JoFwnFiX4zzprWYoWUZeyYSudAO0d3xtbXqYGEPS3wMwuAHmidDJwoQgoLy0
+	 +vNWv/QchWtdAaN3cF0IF6jlKGrGkR8Vti9pT4/63dz6w/Wgm/gD3EJDlV9/4sxSlI
+	 zC9j52Ut/SJtwDz6q5ZiwLYH5kEVDp4ubJZXvLbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbgFSOsS (ORCPT
+        id S2389073AbgFSOsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388368AbgFSOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:00 -0400
+        id S2389040AbgFSOsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C182083B;
-        Fri, 19 Jun 2020 14:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C2C2083B;
+        Fri, 19 Jun 2020 14:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578080;
-        bh=kZ2JT7pJzNcsSRPkYpNNMCMcIXuq+V0mJeRqmsklpBE=;
+        s=default; t=1592578083;
+        bh=jB0JHajaiSD8nMrmh1e+MEqgjkNC208Fvh9HNwxgcUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZEYRCWHQc69LiXYIiSAR2RjfyufNOjVsaEnjFbjbFhBQxykfHklTwvF7T5I62UJR
-         tW86+AMAS0vN30eE2ZbganbDtACnUuM8hgu14H9y3uZl38+vsOSAlUncf90KhXjPze
-         V3jg5aQ9t8EPalBtDh94regGCXRkCMtQfLJrBDdY=
+        b=LbmrbKZy2kEEd8Mea6C1PRxgMkbCfVHgjc8ZtbE3GCNKUOqyQ51JWUS6WRRORlVvK
+         PaX3vqUgFkmzxVc24fVX/fOYCYtxGZUNeQLpxJNdKHaaJ6IjFck6XbaruCSWZeHJJ/
+         j7T1KZ+VWZBlr5OF7OI5AfQ3bktqnvuwPB3yE8MQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 075/190] ACPI: GED: use correct trigger type field in _Exx / _Lxx handling
-Date:   Fri, 19 Jun 2020 16:32:00 +0200
-Message-Id: <20200619141637.329915429@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 076/190] drm: bridge: adv7511: Extend list of audio sample rates
+Date:   Fri, 19 Jun 2020 16:32:01 +0200
+Message-Id: <20200619141637.375833152@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,37 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Bogdan Togorean <bogdan.togorean@analog.com>
 
-commit e5c399b0bd6490c12c0af2a9eaa9d7cd805d52c9 upstream.
+[ Upstream commit b97b6a1f6e14a25d1e1ca2a46c5fa3e2ca374e22 ]
 
-Commit ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler
-methods") added a reference to the 'triggering' field of either the
-normal or the extended ACPI IRQ resource struct, but inadvertently used
-the wrong pointer in the latter case. Note that both pointers refer to the
-same union, and the 'triggering' field appears at the same offset in both
-struct types, so it currently happens to work by accident. But let's fix
-it nonetheless
+ADV7511 support sample rates up to 192kHz. CTS and N parameters should
+be computed accordingly so this commit extend the list up to maximum
+supported sample rate.
 
-Fixes: ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler methods")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200413113513.86091-2-bogdan.togorean@analog.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/evged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/evged.c
-+++ b/drivers/acpi/evged.c
-@@ -97,7 +97,7 @@ static acpi_status acpi_ged_request_inte
- 		trigger = p->triggering;
- 	} else {
- 		gsi = pext->interrupts[0];
--		trigger = p->triggering;
-+		trigger = pext->triggering;
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+index 67469c26bae8..45a027d7a1e4 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+@@ -20,13 +20,15 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
+ {
+ 	switch (fs) {
+ 	case 32000:
+-		*n = 4096;
++	case 48000:
++	case 96000:
++	case 192000:
++		*n = fs * 128 / 1000;
+ 		break;
+ 	case 44100:
+-		*n = 6272;
+-		break;
+-	case 48000:
+-		*n = 6144;
++	case 88200:
++	case 176400:
++		*n = fs * 128 / 900;
+ 		break;
  	}
  
- 	irq = r.start;
+-- 
+2.25.1
+
 
 
