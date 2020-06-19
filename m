@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28699C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A6DC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4E021D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CBB2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579947;
-	bh=CicGRjGSOTBsUj/Eqh9polVEPmrcjtOxTk5wOZR5tgE=;
+	s=default; t=1592579977;
+	bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pcl3X3yxfFIyUqzGWrB5Y6gpkUz4pf11wRJ1gsCA6IsBAO2WYlO0/eV3pIzxjdOkS
-	 X4JWpPmq5DaZXEMje8G/Ve8lCoxLDbymmhOw70sPCimqwgq1ahUpQH9+/sjm2NYNyn
-	 tbt2yJ/VhBtIX1uZto5jGh40cto6lMFjhJvB5JDM=
+	b=fV2PiQCIRmWNBVOEOlcYFrCZRybEqlMsCkcW63duVoLc0bxKzqYSgXozQZjWjWKKx
+	 CEWcC5fwGuBdVoFNtqcSDk7ZYID6kU0j/lUmQmm2gzt1NC+YWRZDFXoJmVx6lNrvf6
+	 KufW+RPlwTOBiRCYp12JVnJYhiRuYAHkHHmPjda0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404116AbgFSPQy (ORCPT
+        id S2404002AbgFSPTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47436 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403865AbgFSPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:50 -0400
+        id S2392581AbgFSPSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412D321582;
-        Fri, 19 Jun 2020 15:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 091342158C;
+        Fri, 19 Jun 2020 15:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579809;
-        bh=CicGRjGSOTBsUj/Eqh9polVEPmrcjtOxTk5wOZR5tgE=;
+        s=default; t=1592579889;
+        bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG2siLLwqgwfcFrGo3/Lpl8YPw9ekAZdVAMw/5fGtSiaXRYxJslp8Ud4qZaSFwern
-         hubJ5bhfsWHpMTXcbGndOntqqhcSmJdRrCXQtb+OqkEzUD+92BPFQJDAir6T29CoHR
-         m+vs/1EgV4d5tPSNc3lAoKznpCZbFkHx0IZMfgac=
+        b=ksLv37xgrhD6L5Nhhpb8Cb9LJTk+eIVVWy/Qs8l5OeuuT5z+2luLMJMf5Q0diaepw
+         IpFIwp2BYdGV4FIo+R2WVs6i+rCaEkIosUvvSljSKfEFqKEGFp56mT/V4j1laDovd1
+         Nj7JvGF2whCpDgQTWjbqxmmd1uatORgDnByDkU+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
+        Tomohito Esaki <etom@igel.co.jp>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Daniel Stone <daniels@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 002/376] drm/amdgpu: fix and cleanup amdgpu_gem_object_close v4
-Date:   Fri, 19 Jun 2020 16:28:40 +0200
-Message-Id: <20200619141710.475464835@linuxfoundation.org>
+Subject: [PATCH 5.7 042/376] drm: rcar-du: Set primary plane zpos immutably at initializing
+Date:   Fri, 19 Jun 2020 16:29:20 +0200
+Message-Id: <20200619141712.348108192@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,105 +64,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Tomohito Esaki <etom@igel.co.jp>
 
-[ Upstream commit 82c416b13cb7d22b96ec0888b296a48dff8a09eb ]
+[ Upstream commit 7982471d01aac33994276bf567c8f1f3a137648a ]
 
-The problem is that we can't add the clear fence to the BO
-when there is an exclusive fence on it since we can't
-guarantee the the clear fence will complete after the
-exclusive one.
+According to drm_plane_create_zpos_property() function documentation,
+all planes zpos range should be set if zpos property is supported.
+However, the rcar-du driver didn't set primary plane zpos range. Since
+the primary plane's zpos is fixed, set it immutably.
 
-To fix this refactor the function and also add the exclusive
-fence as shared to the resv object.
-
-v2: fix warning
-v3: add excl fence as shared instead
-v4: squash in fix for fence handling in amdgpu_gem_object_close
-
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: xinhui pan <xinhui.pan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>
+Reported-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+Signed-off-by: Tomohito Esaki <etom@igel.co.jp>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Daniel Stone <daniels@collabora.com>
+[Turn continue into if ... else ...]
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 43 ++++++++++++++-----------
- 1 file changed, 25 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/rcar-du/rcar_du_plane.c | 16 +++++++++-------
+ drivers/gpu/drm/rcar-du/rcar_du_vsp.c   | 14 ++++++++------
+ 2 files changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 4277125a79ee..32f36c940abb 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -161,16 +161,17 @@ void amdgpu_gem_object_close(struct drm_gem_object *obj,
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_plane.c b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
+index c6430027169f..a0021fc25b27 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_plane.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
+@@ -785,13 +785,15 @@ int rcar_du_planes_init(struct rcar_du_group *rgrp)
  
- 	struct amdgpu_bo_list_entry vm_pd;
- 	struct list_head list, duplicates;
-+	struct dma_fence *fence = NULL;
- 	struct ttm_validate_buffer tv;
- 	struct ww_acquire_ctx ticket;
- 	struct amdgpu_bo_va *bo_va;
--	int r;
-+	long r;
+ 		drm_plane_create_alpha_property(&plane->plane);
  
- 	INIT_LIST_HEAD(&list);
- 	INIT_LIST_HEAD(&duplicates);
- 
- 	tv.bo = &bo->tbo;
--	tv.num_shared = 1;
-+	tv.num_shared = 2;
- 	list_add(&tv.head, &list);
- 
- 	amdgpu_vm_get_pd_bo(vm, &list, &vm_pd);
-@@ -178,28 +179,34 @@ void amdgpu_gem_object_close(struct drm_gem_object *obj,
- 	r = ttm_eu_reserve_buffers(&ticket, &list, false, &duplicates);
- 	if (r) {
- 		dev_err(adev->dev, "leaking bo va because "
--			"we fail to reserve bo (%d)\n", r);
-+			"we fail to reserve bo (%ld)\n", r);
- 		return;
- 	}
- 	bo_va = amdgpu_vm_bo_find(vm, bo);
--	if (bo_va && --bo_va->ref_count == 0) {
--		amdgpu_vm_bo_rmv(adev, bo_va);
+-		if (type == DRM_PLANE_TYPE_PRIMARY)
+-			continue;
 -
--		if (amdgpu_vm_ready(vm)) {
--			struct dma_fence *fence = NULL;
-+	if (!bo_va || --bo_va->ref_count)
-+		goto out_unlock;
- 
--			r = amdgpu_vm_clear_freed(adev, vm, &fence);
--			if (unlikely(r)) {
--				dev_err(adev->dev, "failed to clear page "
--					"tables on GEM object close (%d)\n", r);
--			}
-+	amdgpu_vm_bo_rmv(adev, bo_va);
-+	if (!amdgpu_vm_ready(vm))
-+		goto out_unlock;
- 
--			if (fence) {
--				amdgpu_bo_fence(bo, fence, true);
--				dma_fence_put(fence);
--			}
--		}
-+	fence = dma_resv_get_excl(bo->tbo.base.resv);
-+	if (fence) {
-+		amdgpu_bo_fence(bo, fence, true);
-+		fence = NULL;
+-		drm_object_attach_property(&plane->plane.base,
+-					   rcdu->props.colorkey,
+-					   RCAR_DU_COLORKEY_NONE);
+-		drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
++		if (type == DRM_PLANE_TYPE_PRIMARY) {
++			drm_plane_create_zpos_immutable_property(&plane->plane,
++								 0);
++		} else {
++			drm_object_attach_property(&plane->plane.base,
++						   rcdu->props.colorkey,
++						   RCAR_DU_COLORKEY_NONE);
++			drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
++		}
  	}
-+
-+	r = amdgpu_vm_clear_freed(adev, vm, &fence);
-+	if (r || !fence)
-+		goto out_unlock;
-+
-+	amdgpu_bo_fence(bo, fence, true);
-+	dma_fence_put(fence);
-+
-+out_unlock:
-+	if (unlikely(r < 0))
-+		dev_err(adev->dev, "failed to clear page "
-+			"tables on GEM object close (%ld)\n", r);
- 	ttm_eu_backoff_reservation(&ticket, &list);
- }
  
+ 	return 0;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+index 5e4faf258c31..f1a81c9b184d 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+@@ -392,12 +392,14 @@ int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
+ 		drm_plane_helper_add(&plane->plane,
+ 				     &rcar_du_vsp_plane_helper_funcs);
+ 
+-		if (type == DRM_PLANE_TYPE_PRIMARY)
+-			continue;
+-
+-		drm_plane_create_alpha_property(&plane->plane);
+-		drm_plane_create_zpos_property(&plane->plane, 1, 1,
+-					       vsp->num_planes - 1);
++		if (type == DRM_PLANE_TYPE_PRIMARY) {
++			drm_plane_create_zpos_immutable_property(&plane->plane,
++								 0);
++		} else {
++			drm_plane_create_alpha_property(&plane->plane);
++			drm_plane_create_zpos_property(&plane->plane, 1, 1,
++						       vsp->num_planes - 1);
++		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
