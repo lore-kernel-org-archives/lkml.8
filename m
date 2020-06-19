@@ -2,125 +2,214 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB373C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA538C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70222083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35FA217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tkb7Ld0w"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ch2tH6sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgFSVUY (ORCPT
+        id S1727836AbgFSVVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgFSVUX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:20:23 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E27C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:20:22 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so4426577pls.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:20:22 -0700 (PDT)
+        Fri, 19 Jun 2020 17:21:30 -0400
+Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:22112
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726965AbgFSVV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:21:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KgWOhWjr+Lh4ZCgd4PO7mxpVE6PlQllQwY1c+Ce1B5w1qf9f0NzqRZB/ZRgKzqpUjUcin/Z5BDNwM7d3Fqt5FyCfLSFfVj63Z7VtqXytVEs6AV2ZSqt1Oobhble1ZWZLHMrmFxr0FYQ8hETq4KZ5AT806W2KWwLDAt+fn9vggtZ5Rth7RPw5xwGbEuaDU0GiI3heW1FITdIUMt6b4hCIIUivkfOcrtYp+Dr2galix/kAJg47eXv0/pB6Ni6rfCcObbquPjikKcMEFr7MtKO3qosOKv8p89t9+1vAwpRPlDqKih+GEofC2BL3C/G+GpFpx3247OaxEqunefRLZjgWSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UsNP3XbVRSA6wGFLl6AzI1Fn6dyS2+l6lwsBZ+xrlZE=;
+ b=mYwfdroxIhFXt3TdPR/btSAGYf6gjdaL160/Qp3M16tO094jvp4e6vZBgNkhkwT8/mKQ/jHbIaH3KixRm9USiqEC43ONbwr9XgFjR61qzkyEZbK2K3Q2shwU6O0tm+1JVl7q8ChqV/loBELAD9CXC0F9r/w44GAsJ7fF/1wWOlySyZ/BuZdI7Vjb6mfU3XUre6JL9x1o1SlEAW/PedIGwOLLhPWNg8Crm6rFmVdDLs76U7nnwjdVfU3K2KpNX38dw5EiZiIWrKzGt6aRCCyqTHvw7188eslAR89+OnnMbESd7VYmC38UMG04Vsq6Icj484fUDnDqPOD5jatGTTNhEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1ao9q37LQ0LytZ2kfKG3wHimj3h6i1wrVhNw32iRbFs=;
-        b=Tkb7Ld0wi9nF7ATlws2JBYfEWa59uVvt2ClnmP9ieabbYZjOte6+lbcgq2PEaZ1zrn
-         Yds/3eiSECrIVK3ravRRPH5oKuD2S/uHQry5xNALw12JSTJMQlu57NIDkMM26URGAzdb
-         /3CsO5DR4ErzUIzvmsJdfrcio7BN2OaYDez+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1ao9q37LQ0LytZ2kfKG3wHimj3h6i1wrVhNw32iRbFs=;
-        b=Qb/U9Ebmhvfxg+1gniZAEZcq/dJMyp0deh7PPWpYl4c9HZKkhNenay8FkQSldIXZmS
-         sfwmSeVVAGH3Y5bzqm1BMpJwzsSOdS0W2vQ7EYfmYtSMh0nCsbwKlypMwbPHRtXNvORP
-         M+5YpYw0m0fKFCHnv5X2rrgrj5UMj49BKYfaK0CxXXdnMIb7PHI2aL6NhzZoLt1wZx2e
-         cqXd9aRikq/qehu6DpB61y4p/B0DIBU7wk0pV6N9j+P2N263bdXfX7jrw4MOquvuTIAO
-         0wpkfyZXVoIkoXfgdcykgMlPsS7vjpcu7VCxt78DwnKMPl3CPg5sGibG5ZcCvBUyzTW8
-         Xf5w==
-X-Gm-Message-State: AOAM532svJYOugLLdk0aaA5EQJXf+PnpXaety0ywJXwuU/tNb2FBb/xf
-        jqjibfcHP4UAt3PiWoqsVnpc6w==
-X-Google-Smtp-Source: ABdhPJykzkkGjRz28We2Mh/OfAmlnCSPOYZM7UkFgmBPDhfZhjfRzYZnmMZpQIbXGzCeVPLECON35g==
-X-Received: by 2002:a17:902:e901:: with SMTP id k1mr9632688pld.92.1592601622268;
-        Fri, 19 Jun 2020 14:20:22 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id g17sm5885290pju.11.2020.06.19.14.20.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 14:20:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm_tis_spi: Prefer async probe
-Date:   Fri, 19 Jun 2020 14:20:01 -0700
-Message-Id: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-MIME-Version: 1.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UsNP3XbVRSA6wGFLl6AzI1Fn6dyS2+l6lwsBZ+xrlZE=;
+ b=ch2tH6sLXQ/v/scgokO2/tk7nP5Lo9nZrVF4StMSSbUqDQo8nF1kYBmzcR45WqVKpbX6EOd/Ja4HTjbp2f+HtyaDD+n/HmCDJAC6RUxavE1ITt4uqJlM6h94z6aXWRl38Ro4RS5KJNG3N2OxAhQ4mEhwzcSCWUbRoACxSE4bJcQ=
+Authentication-Results: vivo.com; dkim=none (message not signed)
+ header.d=none;vivo.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SA0PR12MB4574.namprd12.prod.outlook.com (2603:10b6:806:94::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Fri, 19 Jun
+ 2020 21:21:26 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 21:21:26 +0000
+Subject: Re: [PATCH] drm/amd: fix potential memleak in err branch
+To:     Bernard Zhao <bernard@vivo.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+References: <20200619114533.2612-1-bernard@vivo.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <3f7e1ac8-c613-8650-56d6-715d39d5f372@amd.com>
+Date:   Fri, 19 Jun 2020 17:21:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200619114533.2612-1-bernard@vivo.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: YQXPR01CA0088.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::17) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.2.100] (142.116.63.128) by YQXPR01CA0088.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c00:41::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Fri, 19 Jun 2020 21:21:25 +0000
+X-Originating-IP: [142.116.63.128]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 45ce2caf-c039-413e-b962-08d81496b96a
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4574:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4574A1A5FC3E08446E59463392980@SA0PR12MB4574.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iASdIAzRPxSe+bnlcmn/Imnv/CV8n1hePhpy05ChHiiD6zeL3xsNL0g7t9pQ/9aSuQRBlLVIKPSAwR6WB6GZpxUabcaKhMhlH4dDDdZpJe6Riv1BITDqLuoxJ42Tr10a3kXLwemSo5UwJy0mdqQq6ohg/4fg24QSaNHpXgg+ZWXu1aONBtNJo9SekPJdRABRHZXWdwCVcUd2E1EhmTz6kkxx1ptuiJ9xXYLuUdoKcPKmHSJq7xg0zIu9OARnLxrhqaJCVF8pO7qsTCHF9Wxv9Y69iskaq13RoXiEkxzH0srIvLtDgeHC2mlF0tHlkuu9wMMqWNvTK6ENtHMH2aBGawOu9YAr6wRHke4Gr9Zw6yEO8Yz/cWjXCMBn22ewB6BtboxXnmgNboG/HIbUJ7VDv7B0jiazfWsbu+sjbnwnW+U=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(2616005)(26005)(956004)(66476007)(66556008)(44832011)(66946007)(31696002)(5660300002)(36756003)(16526019)(186003)(86362001)(31686004)(4326008)(6486002)(16576012)(316002)(966005)(8676002)(83380400001)(2906002)(478600001)(8936002)(110136005)(52116002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: YL80xVBpoO1y8io1kkfnUyj0LvgN+FYdXlJzE3ejoDZhiRDnslQ/j9bnPi/bjRGFPL2abtPYjag5et6GcE+D8SrWMUV2nHz8FiQB5IgGbyMQgCxSR/ju6otF+aYSKgvu17lPSxE3yTfGPcBlHe8ABNc2xCetnpoINEB8tGpc3Gent1GXMLN46sSNSEBHyG5LB967H/8Dgzlws7Pe9DmjVI3LjAIgvqX76rAeHjubU6ux321JQzI/MvP72svGL4ZHJRnQ+67Klroq7JpVnBNNvk+QMqkKZ4MNpLSjmcBbf25L6scV/rOPIuy2/UoA/kbyNLzqb2JMGfDmzGiNGyX0pciLaT6dqwxz02IJNQ6WmPaY8GOfFGCFnSfMNW+c3/cuPV/0zD8khACxxVTeGMyK5qVVsKXalGzX3xt3WMjaDSvW278JJKcdCPjMYH6fh4240Etflupo+LfAtszf550f9vLj0xSWWjLqDY4N3+46+XoIOqDyAzDSCBEthzLe4uoP
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45ce2caf-c039-413e-b962-08d81496b96a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 21:21:26.5421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UJ/TVsSvrQUeZ1VcHZKFo3O/b8shHyE3BRWBhKGgl26+EgSqCo6eAb8ujLByWU0dUf25X0UlMZuHmadmjtzKCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a Chromebook I'm working on I noticed a big (~1 second) delay
-during bootup where nothing was happening.  Right around this big
-delay there were messages about the TPM:
+Hi Bernard,
 
-[    2.311352] tpm_tis_spi spi0.0: TPM ready IRQ confirmed on attempt 2
-[    3.332790] tpm_tis_spi spi0.0: Cr50 firmware version: ...
+I just applied a patch from another contributor for the kfd_topology
+part of this. See
+https://cgit.freedesktop.org/~agd5f/linux/commit/?h=amd-staging-drm-next&id=fc0fe8138309fee303bd12991f12b23f01bbf58c
 
-I put a few printouts in and saw that tpm_tis_spi_init() (specifically
-tpm_chip_register() in that function) was taking the lion's share of
-this time, though ~115 ms of the time was in cr50_print_fw_version().
+Please rebase your patch on that. I believe that should only leave the
+fixes in kfd_process.c.
 
-Let's make a one-line change to prefer async probe for tpm_tis_spi.
-There's no reason we need to block other drivers from probing while we
-load.
+Thanks,
+  Felix
 
-NOTES:
-* It's possible that other hardware runs through the init sequence
-  faster than Cr50 and this isn't such a big problem for them.
-  However, even if they are faster they are still doing _some_
-  transfers over a SPI bus so this should benefit everyone even if to
-  a lesser extent.
-* It's possible that there are extra delays in the code that could be
-  optimized out.  I didn't dig since once I enabled async probe they
-  no longer impacted me.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/char/tpm/tpm_tis_spi_main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
-index d96755935529..422766445373 100644
---- a/drivers/char/tpm/tpm_tis_spi_main.c
-+++ b/drivers/char/tpm/tpm_tis_spi_main.c
-@@ -288,6 +288,7 @@ static struct spi_driver tpm_tis_spi_driver = {
- 		.pm = &tpm_tis_pm,
- 		.of_match_table = of_match_ptr(of_tis_spi_match),
- 		.acpi_match_table = ACPI_PTR(acpi_tis_spi_match),
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.probe = tpm_tis_spi_driver_probe,
- 	.remove = tpm_tis_spi_remove,
--- 
-2.27.0.111.gc72c7da667-goog
-
+Am 2020-06-19 um 7:45 a.m. schrieb Bernard Zhao:
+> The function kobject_init_and_add alloc memory like:
+> kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+> ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+> ->kmalloc_slab, in err branch this memory not free. If use
+> kmemleak, this path maybe catched.
+> These changes are to add kobject_put in kobject_init_and_add
+> failed branch, fix potential memleak.
+>
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> ---
+>  drivers/gpu/drm/amd/amdkfd/kfd_process.c  |  2 ++
+>  drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+>  2 files changed, 17 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> index d27221ddcdeb..5ee4d6cfb16d 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> @@ -124,6 +124,7 @@ void kfd_procfs_init(void)
+>  	if (ret) {
+>  		pr_warn("Could not create procfs proc folder");
+>  		/* If we fail to create the procfs, clean up */
+> +		kobject_put(procfs.kobj);
+>  		kfd_procfs_shutdown();
+>  	}
+>  }
+> @@ -428,6 +429,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
+>  					   (int)process->lead_thread->pid);
+>  		if (ret) {
+>  			pr_warn("Creating procfs pid directory failed");
+> +			kobject_put(process->kobj);
+>  			goto out;
+>  		}
+>  
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> index bb77f7af2b6d..dc3c4149f860 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> @@ -632,8 +632,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>  
+>  	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+>  			sys_props.kobj_nodes, "%d", id);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		kobject_put(dev->kobj_node);
+>  		return ret;
+> +	}
+>  
+>  	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+>  	if (!dev->kobj_mem)
+> @@ -680,8 +682,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>  			return -ENOMEM;
+>  		ret = kobject_init_and_add(mem->kobj, &mem_type,
+>  				dev->kobj_mem, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(mem->kobj);
+>  			return ret;
+> +		}
+>  
+>  		mem->attr.name = "properties";
+>  		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -699,8 +703,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>  			return -ENOMEM;
+>  		ret = kobject_init_and_add(cache->kobj, &cache_type,
+>  				dev->kobj_cache, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(cache->kobj);
+>  			return ret;
+> +		}
+>  
+>  		cache->attr.name = "properties";
+>  		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -718,8 +724,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>  			return -ENOMEM;
+>  		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+>  				dev->kobj_iolink, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(iolink->kobj);
+>  			return ret;
+> +		}
+>  
+>  		iolink->attr.name = "properties";
+>  		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -798,8 +806,10 @@ static int kfd_topology_update_sysfs(void)
+>  		ret = kobject_init_and_add(sys_props.kobj_topology,
+>  				&sysprops_type,  &kfd_device->kobj,
+>  				"topology");
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(sys_props.kobj_topology);
+>  			return ret;
+> +		}
+>  
+>  		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+>  				sys_props.kobj_topology);
