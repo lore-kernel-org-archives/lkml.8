@@ -2,168 +2,104 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE70DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5846C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7D92080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8853A20888
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 01:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgFSBtv (ORCPT
+        id S1730603AbgFSBv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 21:49:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64170 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgFSBtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 21:49:49 -0400
-IronPort-SDR: wo6ntfP6xkM2Q9/S8w2vfF3sJb6bZlmcq+24MxuHpc3mKwa2nXwBxJmnNmtMhSmyvofzt023q5
- DxBAc1BnFc/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204278417"
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="204278417"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 18:49:48 -0700
-IronPort-SDR: tNMuHpL0YNrkKeZH7o0UKcLSqqrgBujcaCTyzBa//YEFzlT6aMS28Z3VeAUoQWvzYKjigbFpYU
- GOaWwaKuMN/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="352588309"
-Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 18 Jun 2020 18:49:47 -0700
-Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jm6A7-0000Xk-34; Fri, 19 Jun 2020 01:49:47 +0000
-Date:   Fri, 19 Jun 2020 09:49:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/fsgsbase] BUILD SUCCESS
- 5e7ec8578fa3dada50c50f5b234fa8d154b76349
-Message-ID: <5eec1994.cr9X9I1MhOEaETEs%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jun 2020 21:51:59 -0400
+Received: from lucky1.263xmail.com ([211.157.147.130]:57270 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgFSBv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 21:51:58 -0400
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id ABE87CA699;
+        Fri, 19 Jun 2020 09:51:52 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P15426T140189185066752S1592531511027415_;
+        Fri, 19 Jun 2020 09:51:52 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <e06d658c216d5f17574a771ae9beedb1>
+X-RL-SENDER: finley.xiao@rock-chips.com
+X-SENDER: xf@rock-chips.com
+X-LOGIN-NAME: finley.xiao@rock-chips.com
+X-FST-TO: xf@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Finley Xiao <finley.xiao@rock-chips.com>
+To:     xf@rock-chips.com, heiko@sntech.de, amit.kachhap@gmail.com,
+        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        javi.merino@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com
+Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, huangtao@rock-chips.com,
+        tony.xie@rock-chips.com, cl@rock-chips.com,
+        Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
+Date:   Fri, 19 Jun 2020 09:51:26 +0800
+Message-Id: <20200619015126.15002-1-finley.xiao@rock-chips.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/fsgsbase
-branch HEAD: 5e7ec8578fa3dada50c50f5b234fa8d154b76349  selftests/x86/fsgsbase: Test ptracer-induced GS base write with FSGSBASE
+The function cpu_power_to_freq is used to find a frequency and set the
+cooling device to consume at most the power to be converted. For example,
+if the power to be converted is 80mW, and the em table is as follow.
+struct em_cap_state table[] = {
+	/* KHz     mW */
+	{ 1008000, 36, 0 },
+	{ 1200000, 49, 0 },
+	{ 1296000, 59, 0 },
+	{ 1416000, 72, 0 },
+	{ 1512000, 86, 0 },
+};
+The target frequency should be 1416000KHz, not 1512000KHz.
 
-elapsed time: 720m
-
-configs tested: 98
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a002-20200618
-i386                 randconfig-a006-20200618
-i386                 randconfig-a001-20200618
-i386                 randconfig-a004-20200618
-i386                 randconfig-a005-20200618
-i386                 randconfig-a003-20200618
-x86_64               randconfig-a001-20200618
-x86_64               randconfig-a003-20200618
-x86_64               randconfig-a006-20200618
-x86_64               randconfig-a002-20200618
-x86_64               randconfig-a005-20200618
-x86_64               randconfig-a004-20200618
-i386                 randconfig-a011-20200618
-i386                 randconfig-a015-20200618
-i386                 randconfig-a014-20200618
-i386                 randconfig-a013-20200618
-i386                 randconfig-a016-20200618
-i386                 randconfig-a012-20200618
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-
+Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/thermal/cpufreq_cooling.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index 9e124020519f..6c0e1b053126 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -123,12 +123,12 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+ {
+ 	int i;
+ 
+-	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
+-		if (power > cpufreq_cdev->em->table[i].power)
++	for (i = cpufreq_cdev->max_level; i >= 0; i--) {
++		if (power >= cpufreq_cdev->em->table[i].power)
+ 			break;
+ 	}
+ 
+-	return cpufreq_cdev->em->table[i + 1].frequency;
++	return cpufreq_cdev->em->table[i].frequency;
+ }
+ 
+ /**
+-- 
+2.11.0
+
+
+
