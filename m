@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B33C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E7A218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0ED21919
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580472;
-	bh=p8Gls/ngFCUygskBhXNN6w/ZchaZ+PQkKrIpXKkCKEo=;
+	s=default; t=1592580474;
+	bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FYiyn2P2ensiHq6BQqcOuVPELJi3w0AI5NCU/L+gVImeoB4B27/EqalEm5J8BLun6
-	 jR0DIN5rIb5gb92EolRsi3LoW3ew7c+oZyhQ3p7YQTzdX4av3jaJiqznjC2y5s/QUM
-	 OgQPf/Csxl8uso4WsiiVRm/uz/Kpbjs1io9mHlmA=
+	b=M/LqlR/mwqY0oyXCRtbMjJIlCasBuO0/qVKjojR+e7s9dVdomLYXVZOmoW0XuD9MJ
+	 LymYXsNvlBsvfx3R+IW4FLzJ3Vb3+pT/ER1ppmLr4zaD7LnUOoeOSQzfWHwgekwc9X
+	 wSQPaeNi2a+QtowE3O4n0KyiTFD8+HW/8ZoCeOIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbgFSP1u (ORCPT
+        id S2404439AbgFSP1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58488 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393501AbgFSP0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:40 -0400
+        id S2404349AbgFSP0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6152921582;
-        Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 009C320734;
+        Fri, 19 Jun 2020 15:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580400;
-        bh=p8Gls/ngFCUygskBhXNN6w/ZchaZ+PQkKrIpXKkCKEo=;
+        s=default; t=1592580402;
+        bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uEw/WpkMSSAH3iaR2VMItRG2kKV6SMi/78ktxbYfORs9OGPouDdZ7EkC58E/qph8B
-         kCRiW3XuQtDNMa8ZUvb7fk3mc68noMIKjfCBriDGi0YF3J/aXUR9Q8yrW9jZtgjeHJ
-         tH4rCB9X7tcBo9ZonUZMx8+fNd8D8e4MqPvfINu0=
+        b=zA4RGa9Gg0CUj6R5H8buNfYKcLM+gmHDBAHSYYbJNeMtYm80ad3WOFcWJ9EWybPKm
+         NeL6DbJRpr6hc5u8WybLJNMS/Oz9G3gc/+6011VCIRqEL+WpSooI5hWZDqVAmluS6b
+         6c/XStp6fkGlDV+1OzReLHKX0f3TGaCMb9+Ik83A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 234/376] ice: fix potential double free in probe unrolling
-Date:   Fri, 19 Jun 2020 16:32:32 +0200
-Message-Id: <20200619141721.400066073@linuxfoundation.org>
+Subject: [PATCH 5.7 235/376] ixgbe: fix signed-integer-overflow warning
+Date:   Fri, 19 Jun 2020 16:32:33 +0200
+Message-Id: <20200619141721.446779064@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,47 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit bc3a024101ca497bea4c69be4054c32a5c349f1d ]
+[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
 
-If ice_init_interrupt_scheme fails, ice_probe will jump to clearing up
-the interrupts. This can lead to some static analysis tools such as the
-compiler sanitizers complaining about double free problems.
+ubsan report this warning, fix it by adding a unsigned suffix.
 
-Since ice_init_interrupt_scheme already unrolls internally on failure,
-there is no need to call ice_clear_interrupt_scheme when it fails. Add
-a new unroll label and use that instead.
+UBSAN: signed-integer-overflow in
+drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
+65535 * 65537 cannot be represented in type 'int'
+CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
+Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
+Workqueue: ixgbe ixgbe_service_task [ixgbe]
+Call trace:
+ dump_backtrace+0x0/0x3f0
+ show_stack+0x28/0x38
+ dump_stack+0x154/0x1e4
+ ubsan_epilogue+0x18/0x60
+ handle_overflow+0xf8/0x148
+ __ubsan_handle_mul_overflow+0x34/0x48
+ ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
+ ixgbe_service_task+0xc20/0x1f78 [ixgbe]
+ process_one_work+0x8f0/0xf18
+ worker_thread+0x430/0x6d0
+ kthread+0x218/0x238
+ ret_from_fork+0x10/0x18
 
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 545817dbff67..69e50331e08e 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3298,7 +3298,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	if (err) {
- 		dev_err(dev, "ice_init_interrupt_scheme failed: %d\n", err);
- 		err = -EIO;
--		goto err_init_interrupt_unroll;
-+		goto err_init_vsi_unroll;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+index 0bd1294ba517..39c5e6fdb72c 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+@@ -2243,7 +2243,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
  	}
  
- 	/* Driver is mostly up */
-@@ -3387,6 +3387,7 @@ err_msix_misc_unroll:
- 	ice_free_irq_msix_misc(pf);
- err_init_interrupt_unroll:
- 	ice_clear_interrupt_scheme(pf);
-+err_init_vsi_unroll:
- 	devm_kfree(dev, pf->vsi);
- err_init_pf_unroll:
- 	ice_deinit_pf(pf);
+ 	/* Configure pause time (2 TCs per register) */
+-	reg = hw->fc.pause_time * 0x00010001;
++	reg = hw->fc.pause_time * 0x00010001U;
+ 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
+ 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
+ 
 -- 
 2.25.1
 
