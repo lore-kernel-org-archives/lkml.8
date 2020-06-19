@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D520C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21813C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA212193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0080421BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578951;
-	bh=xxUjlhi8/WByqG1Pmjnz44v+8zF0P2hZJkQQenoOhaA=;
+	s=default; t=1592578958;
+	bh=yDzdQagMiPCsGwTRjlDi8kGm1xIFobVPoGqLuxP5K1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g9de1CDoiMQtiFCfc0CMYDN16cZeYLAiGS1lbMj3Dzaaw5EfqEsB3obgqJZpSZrXG
-	 2eXhmOZTO+qAH/YIBTGIla/sea12n8J4vKSsMIVgQn9GX0/AcHYEemg1OntQrO6mXp
-	 q32aTapqFObSyJEKXGiO3uSaVkhPnPhGQcWcwmRA=
+	b=bzvsViTuX653WovoG8CEgJ1C+xVh1sfSODBGAloWi3Nuie0zT/w3l485qMi9twEB0
+	 SsUSQROpP+TKfFBKAS4PDjAvUY/TMPnvZhUiDo56LsmhJQMtNSmhPkzwuwZ2ccG/z/
+	 XjUcLbZlytCwQyPWyX8ykuX3MmFGEHGr5g037uqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390503AbgFSPC0 (ORCPT
+        id S2390851AbgFSPCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390753AbgFSPB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:56 -0400
+        id S2390757AbgFSPB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9672D2193E;
-        Fri, 19 Jun 2020 15:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D528C20776;
+        Fri, 19 Jun 2020 15:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578916;
-        bh=xxUjlhi8/WByqG1Pmjnz44v+8zF0P2hZJkQQenoOhaA=;
+        s=default; t=1592578918;
+        bh=yDzdQagMiPCsGwTRjlDi8kGm1xIFobVPoGqLuxP5K1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=knxf76yKaJjCrk1DO2t3RVaAlMPVGZxn2qDSqRsFFx0hRpeBhre6WLe7oKuQhNFqY
-         QPSr7QWqytibyR8yrFe6HbL7Aij3olGixui4YmwbpZnnjSBnAK6Wsa54wP7S9aec4x
-         mps58hYWuiB97eJ1XBfO3WIeDSt4xVDR1A2m0F0o=
+        b=jw1kZhu5kG3OMg2rlAMw2/px/B889i2NylGxlAS+8d35s2kQG/HiokYrIxa8bEAYI
+         T2XtckVQafMwUzutHaFztiV1zcNpYgQORg6ALRc8ckR/2hW8/4ufzZagg7eB3E3wpW
+         476/iO+1F2O8Nf0vH48J1hl1Y9nUWTwxiPimSux0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Brian Woods <brian.woods@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Guenter Roeck <linux@roeck-us.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 205/267] pci:ipmi: Move IPMI PCI class id defines to pci_ids.h
-Date:   Fri, 19 Jun 2020 16:33:10 +0200
-Message-Id: <20200619141658.569061824@linuxfoundation.org>
+        Clemens Ladisch <clemens@ladisch.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        linux-hwmon@vger.kernel.org, linux-pci@vger.kernel.org,
+        Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 206/267] hwmon/k10temp, x86/amd_nb: Consolidate shared device IDs
+Date:   Fri, 19 Jun 2020 16:33:11 +0200
+Message-Id: <20200619141658.615718247@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,49 +68,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Woods, Brian <Brian.Woods@amd.com>
 
-[ Upstream commit 05c3d056086a6217a77937b7fa0df35ec75715e6 ]
+[ Upstream commit dedf7dce4cec5c0abe69f4fa6938d5100398220b ]
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Consolidate shared PCI_DEVICE_IDs that were scattered through k10temp
+and amd_nb, and move them into pci_ids.
+
+Signed-off-by: Brian Woods <brian.woods@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Clemens Ladisch <clemens@ladisch.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Jean Delvare <jdelvare@suse.com>
+CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
+CC: <linux-hwmon@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>
+CC: Pu Wen <puwen@hygon.cn>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/20181106200754.60722-2-brian.woods@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_pci.c | 5 -----
- include/linux/pci_ids.h         | 4 ++++
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ arch/x86/kernel/amd_nb.c | 3 +--
+ drivers/hwmon/k10temp.c  | 9 +--------
+ include/linux/pci_ids.h  | 2 ++
+ 3 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
-index 022e03634ce2..9e9700b1a8e6 100644
---- a/drivers/char/ipmi/ipmi_si_pci.c
-+++ b/drivers/char/ipmi/ipmi_si_pci.c
-@@ -18,11 +18,6 @@ module_param_named(trypci, si_trypci, bool, 0);
- MODULE_PARM_DESC(trypci, "Setting this to zero will disable the"
- 		 " default scan of the interfaces identified via pci");
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index b481b95bd8f6..bf440af5ff9c 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -11,13 +11,12 @@
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/spinlock.h>
++#include <linux/pci_ids.h>
+ #include <asm/amd_nb.h>
  
--#define PCI_CLASS_SERIAL_IPMI		0x0c07
--#define PCI_CLASS_SERIAL_IPMI_SMIC	0x0c0700
--#define PCI_CLASS_SERIAL_IPMI_KCS	0x0c0701
--#define PCI_CLASS_SERIAL_IPMI_BT	0x0c0702
+ #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
+ #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
+-#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+-#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ 
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index 2cef0c37ff6f..bc6871c8dd4e 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -23,6 +23,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/pci_ids.h>
+ #include <asm/amd_nb.h>
+ #include <asm/processor.h>
+ 
+@@ -41,14 +42,6 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ #define PCI_DEVICE_ID_AMD_15H_M70H_NB_F3	0x15b3
+ #endif
+ 
+-#ifndef PCI_DEVICE_ID_AMD_17H_DF_F3
+-#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+-#endif
 -
- #define PCI_DEVICE_ID_HP_MMC 0x121A
- 
- static void ipmi_pci_cleanup(struct si_sm_io *io)
+-#ifndef PCI_DEVICE_ID_AMD_17H_M10H_DF_F3
+-#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3	0x15eb
+-#endif
+-
+ /* CPUID function 0x80000001, ebx */
+ #define CPUID_PKGTYPE_MASK	0xf0000000
+ #define CPUID_PKGTYPE_F		0x00000000
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index f4e278493f5b..861ee391dc33 100644
+index 861ee391dc33..857cfd6281a0 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -117,6 +117,10 @@
- #define PCI_CLASS_SERIAL_USB_DEVICE	0x0c03fe
- #define PCI_CLASS_SERIAL_FIBER		0x0c04
- #define PCI_CLASS_SERIAL_SMBUS		0x0c05
-+#define PCI_CLASS_SERIAL_IPMI		0x0c07
-+#define PCI_CLASS_SERIAL_IPMI_SMIC	0x0c0700
-+#define PCI_CLASS_SERIAL_IPMI_KCS	0x0c0701
-+#define PCI_CLASS_SERIAL_IPMI_BT	0x0c0702
- 
- #define PCI_BASE_CLASS_WIRELESS			0x0d
- #define PCI_CLASS_WIRELESS_RF_CONTROLLER	0x0d10
+@@ -545,6 +545,8 @@
+ #define PCI_DEVICE_ID_AMD_16H_NB_F4	0x1534
+ #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F3 0x1583
+ #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F4 0x1584
++#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
++#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
 -- 
 2.25.1
 
