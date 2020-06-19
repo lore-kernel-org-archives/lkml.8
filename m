@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D180C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C56121532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098CE2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582858;
-	bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
+	s=default; t=1592582860;
+	bh=6pPFugxbQhag+Gcg3s4zYYrpngAtaHNVwPKm2oVb/40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUbXgWz6CYHCfCVfJ/OnqfkFAnc0r1q0s7XiN9iYhNh5Vk4e5YrLiosfsOV9lg1xO
-	 BjSDtOuDRGrxKN8thaX+3Mk4wisTYqsoXzvmVLxTiTWS3J2EMakLIhM240fGCW9hNs
-	 2ll1bd1w3PIIOiQxApV1q6v7UWgLggEBb9ar3FAw=
+	b=vFz9yNR/I6GvBy54kNlrWf03xV6wOdKP/BqYSIS2z54ATT+St8fdC/cFXRjyH3Grc
+	 UY0lgP+Jwnadvnq/MFz3ZuvjuEtx9Jmg+tKE7SAeb+L/Ucu7hLA1zauq2pjB6h0jDR
+	 9/jmt6sZ/o5WVA8Mzz6dtBYgnyI+VWn+LhIgnaWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394262AbgFSQHf (ORCPT
+        id S2391771AbgFSPIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391741AbgFSPIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:43 -0400
+        id S2391741AbgFSPIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4473420776;
-        Fri, 19 Jun 2020 15:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9463820776;
+        Fri, 19 Jun 2020 15:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579322;
-        bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
+        s=default; t=1592579312;
+        bh=6pPFugxbQhag+Gcg3s4zYYrpngAtaHNVwPKm2oVb/40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIGd2fnjETmLgsHu+QwfVHWYTk28JsQvZ1pbdXVIwUa3sW9KbVBh8KvP5uNnwUEgY
-         +PDVgx+41tFueABsb1Xu8AtzfNysEGp4sQTidSs6zZ3hy7mo5e9z2M442Le4vL38co
-         i0un1LUJRkUXBLdKcKNvn4sSlfbnhr1Y5mw55RV0=
+        b=DSUfyt27TJCgRzGmZbszrbUIa8cbm6w2KrOu0FX4wgqEa60MoPJMxtPz+X1JO2lJt
+         0/mRcxzpFWeBL46IKTTgfX7NPKL9SPPxZSBnkanJ8wXJXpevTHLrFB/AAKaUVQw8MZ
+         XSYZDCwtSwv3TEKBmMhOGpawrLqKep5W7bcBHifg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/261] regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l
-Date:   Fri, 19 Jun 2020 16:31:13 +0200
-Message-Id: <20200619141652.891515304@linuxfoundation.org>
+Subject: [PATCH 5.4 086/261] selinux: fix error return code in policydb_read()
+Date:   Fri, 19 Jun 2020 16:31:37 +0200
+Message-Id: <20200619141654.009625482@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,51 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 906746ba26d0b45688f4c3b730c35f765dc958ba ]
+[ Upstream commit 4c09f8b6913a779ca0c70ea8058bf21537eebb3b ]
 
-Fix typos in pm8150 l13/l16/l17 and pm8150l ldo8 supplies.
+Fix to return negative error code -ENOMEM from the kvcalloc() error
+handling case instead of 0, as done elsewhere in this function.
 
-Fixes: 06369bcc15a1 ("regulator: qcom-rpmh: Add support for SM8150")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200415053708.717623-1-bjorn.andersson@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: acdf52d97f82 ("selinux: convert to kvmalloc")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ security/selinux/ss/policydb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 0246b6f99fb5..f11e4bfbc91b 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -832,11 +832,11 @@ static const struct rpmh_vreg_init_data pm8150_vreg_data[] = {
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
- 	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
- 	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l6-l17"),
--	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
- 	{},
- };
-@@ -857,7 +857,7 @@ static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
- 	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
--	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8"),
- 	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
+diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
+index 1260f5fb766e..dd7aabd94a92 100644
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -2496,6 +2496,7 @@ int policydb_read(struct policydb *p, void *fp)
+ 	if (rc)
+ 		goto bad;
+ 
++	rc = -ENOMEM;
+ 	p->type_attr_map_array = kvcalloc(p->p_types.nprim,
+ 					  sizeof(*p->type_attr_map_array),
+ 					  GFP_KERNEL);
 -- 
 2.25.1
 
