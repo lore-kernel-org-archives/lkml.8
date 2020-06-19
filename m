@@ -2,52 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E992CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09211C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A7D2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA54A2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579638;
-	bh=vnJnuGcOif0ZQt2pk1jhNRe0T23Cva12UBps7k4pmTo=;
+	s=default; t=1592579648;
+	bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwvIydnAQWMtgLp4rebKGQ4cswWQV2W6cVpzNnfT+6R7uquwStayffHKdN36vMDXV
-	 lFhPb20ETkDyZMm2oP4ZkWESIPqPylU2576/B4HqRFDSm/Ynbku7faA2czjhNeV3Hl
-	 cat8g4vJYWZiRs7lzXV3d3Jur6JyKvgUMeZScOz8=
+	b=Dp8UAgfbws55ypejWJiNMYEHuj6Iyb4ZRWQ8+BWam+2of+ldBIYy2FXwCZhAcq0Xg
+	 1/DzsQD7VcqAz92SzY2OSvzKdcJ+dzf9JmEejaMt4n23JWWor4VCloKArxR4734/Ll
+	 VC1ik94HPMYi/pdNcEHpWpohMI6lujjkCTonhnv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392294AbgFSPN6 (ORCPT
+        id S2392304AbgFSPOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44292 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389288AbgFSPNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:45 -0400
+        id S2392283AbgFSPNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5B20776;
-        Fri, 19 Jun 2020 15:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A37A62158C;
+        Fri, 19 Jun 2020 15:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579625;
-        bh=vnJnuGcOif0ZQt2pk1jhNRe0T23Cva12UBps7k4pmTo=;
+        s=default; t=1592579633;
+        bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AmrFZGnKzn2iXdKqYlSszlQKxCu+UlGazTj33uZs7qI9yQKsu9ZfqdY4wFTao1P7
-         NhFiEmA5qGYpTfNrXoqPmL7n8/VEViOtHdluFdvnW8J6WAXo+7P5k25JJngDwuv+Gm
-         Vnf+cXap5GlT2bBzFd8VSXxM0kF82+P8NvpjhUuo=
+        b=hZ2vV3Rwq9P9RIzTqLWVPnIPf+AscuT94d1bDp7MSq5AMCykRQqifNZhfCRy8hlG2
+         SC89aiTf62DTxpxK8A/eFuxkntVQcolw6b79dZ2pBp8fDWcI+xmMj1FR1XWtUSXH80
+         ZSG3+Oh7LgfoKGxHvdaS2GHhBPChqaDP3aJXrCT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 188/261] PCI: vmd: Add device id for VMD device 8086:9A0B
-Date:   Fri, 19 Jun 2020 16:33:19 +0200
-Message-Id: <20200619141658.920530144@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.4 208/261] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Fri, 19 Jun 2020 16:33:39 +0200
+Message-Id: <20200619141659.867970637@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,48 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit ec11e5c213cc20cac5e8310728b06793448b9f6d ]
+commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
 
-This patch adds support for this VMD device which supports the bus
-restriction mode.
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+
+Since device can only be runtime suspended when there's no link partner,
+we can skip reading register and let the following logic set speed and
+duplex with correct status.
+
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
+
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
+
+CC: stable <stable@vger.kernel.org>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/controller/vmd.c | 2 ++
- include/linux/pci_ids.h      | 1 +
- 2 files changed, 3 insertions(+)
+ drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a35d3f3996d7..afc1a3d240b5 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -854,6 +854,8 @@ static const struct pci_device_id vmd_ids[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
- 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
-+		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 228f66347620..dae9ffe4478f 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3008,6 +3008,7 @@
- #define PCI_DEVICE_ID_INTEL_84460GX	0x84ea
- #define PCI_DEVICE_ID_INTEL_IXP4XX	0x8500
- #define PCI_DEVICE_ID_INTEL_IXP2800	0x9004
-+#define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
- #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -143,7 +143,8 @@ static int igb_get_link_ksettings(struct
+ 	u32 speed;
+ 	u32 supported, advertising;
  
- #define PCI_VENDOR_ID_SCALEMP		0x8686
--- 
-2.25.1
-
+-	status = rd32(E1000_STATUS);
++	status = pm_runtime_suspended(&adapter->pdev->dev) ?
++		 0 : rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
+ 
+ 		supported = (SUPPORTED_10baseT_Half |
 
 
