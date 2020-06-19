@@ -2,56 +2,56 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD87C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D74C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6E420771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F2D20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582096;
-	bh=sFg5RpJdn4Zf+1Sc6Km2wWkYZjZb20V+2z6/fcV0ukY=;
+	s=default; t=1592582098;
+	bh=PUyU3U9isDmaYsYKg2rpQuCuvr/2DQIyf+WB6GzmRyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bd03Rjs/Y2szc/8331xXgKOJFOlOvrDgTaEQL1jn76Qz3P8L95DBK7oS+y4VlgYFO
-	 jjlo6BC0Y5T/J4g7ySpROzRH11pqN4NJbfEBv+1lZcetNh9/mTO6MBEvqwLKwNaNxk
-	 iAu/V6Q/eHHvSP2qwyjVICg4aS9dimkKP6zz5MDE=
+	b=tAJF2kRDv2GMAfUtBDxLwSKMoyAc4TYSK3WsKhjWfeRpGsB/58WPONXhLW0eAPwK+
+	 hDTfVjNugA3yMu7XVQ6eUz02lqYvpd17xy39e/zZzBGDGpWolAqiujIq5Zv9mjKEFP
+	 ReXrjtMVLkWzXHW7NiWLLhPslF4tEtWSLb6FBQS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392850AbgFSPVd (ORCPT
+        id S2404287AbgFSPy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46988 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404074AbgFSPQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:27 -0400
+        id S2392847AbgFSPVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D4BA2158C;
-        Fri, 19 Jun 2020 15:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F65520B80;
+        Fri, 19 Jun 2020 15:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579786;
-        bh=sFg5RpJdn4Zf+1Sc6Km2wWkYZjZb20V+2z6/fcV0ukY=;
+        s=default; t=1592580093;
+        bh=PUyU3U9isDmaYsYKg2rpQuCuvr/2DQIyf+WB6GzmRyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRtcwsf7JB3YBEeatqCylBpp1amdLEqb4KPKYq+5vVxr8tdQ1uhJuY1KQrnGc0B3X
-         KqkFp1r1bM3Vjt7Ag7wz4XzDceedXbO0oRogas+odgLmiiF6M79hUZQq1xWp8J4td6
-         EY1GHmVlQv9gM6jPKlWcXUAAL4pJ39PHMdhe2VxY=
+        b=obJdKiZyLhU7H6mjI+Xa/DpqRuNej+vVNCjyaT+RXC99QMCmDrhuZGAF20xrLc4/Z
+         7L7lUN4ZBBCy0ZqLlLet6BgArev2W94h4/Aml2Tj2/t0FaoIXHyzv6KvdA5EI0Z48S
+         kTe3B7A0kl6AtD9O/8QuLc1catB7bf7Tksr3nztM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 5.4 258/261] perf probe: Fix to check blacklist address correctly
-Date:   Fri, 19 Jun 2020 16:34:29 +0200
-Message-Id: <20200619141702.241854622@linuxfoundation.org>
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 112/376] dpaa2-eth: fix return codes used in ndo_setup_tc
+Date:   Fri, 19 Jun 2020 16:30:30 +0200
+Message-Id: <20200619141715.650232510@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,119 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
+[ Upstream commit b89c1e6bdc73f5775e118eb2ab778e75b262b30c ]
 
-Fix to check kprobe blacklist address correctly with relocated address
-by adjusting debuginfo address.
+Drivers ndo_setup_tc call should return -EOPNOTSUPP, when it cannot
+support the qdisc type. Other return values will result in failing the
+qdisc setup.  This lead to qdisc noop getting assigned, which will
+drop all TX packets on the interface.
 
-Since the address in the debuginfo is same as objdump, it is different
-from relocated kernel address with KASLR.  Thus, 'perf probe' always
-misses to catch the blacklisted addresses.
-
-Without this patch, 'perf probe' can not detect the blacklist addresses
-on a KASLR enabled kernel.
-
-  # perf probe kprobe_dispatcher
-  Failed to write event: Invalid argument
-    Error: Failed to add events.
-  #
-
-With this patch, it correctly shows the error message.
-
-  # perf probe kprobe_dispatcher
-  kprobe_dispatcher is blacklisted function, skip it.
-  Probe point 'kprobe_dispatcher' not found.
-    Error: Failed to add events.
-  #
-
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: ab1e6de2bd49 ("dpaa2-eth: Add mqprio support")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Tested-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-event.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -102,7 +102,7 @@ void exit_probe_symbol_maps(void)
- 	symbol__exit();
- }
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index d97c320a2dc0..569e06d2bab2 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2018,7 +2018,7 @@ static int dpaa2_eth_setup_tc(struct net_device *net_dev,
+ 	int i;
  
--static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-+static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
- {
- 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
- 	struct kmap *kmap;
-@@ -114,6 +114,10 @@ static struct ref_reloc_sym *kernel_get_
- 	kmap = map__kmap(map);
- 	if (!kmap)
- 		return NULL;
-+
-+	if (pmap)
-+		*pmap = map;
-+
- 	return kmap->ref_reloc_sym;
- }
+ 	if (type != TC_SETUP_QDISC_MQPRIO)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
  
-@@ -125,7 +129,7 @@ static int kernel_get_symbol_address_by_
- 	struct map *map;
+ 	mqprio->hw = TC_MQPRIO_HW_OFFLOAD_TCS;
+ 	num_queues = dpaa2_eth_queue_count(priv);
+@@ -2030,7 +2030,7 @@ static int dpaa2_eth_setup_tc(struct net_device *net_dev,
+ 	if (num_tc  > dpaa2_eth_tc_count(priv)) {
+ 		netdev_err(net_dev, "Max %d traffic classes supported\n",
+ 			   dpaa2_eth_tc_count(priv));
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
  
- 	/* ref_reloc_sym is just a label. Need a special fix*/
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
- 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
- 	else {
-@@ -745,6 +749,7 @@ post_process_kernel_probe_trace_events(s
- 				       int ntevs)
- {
- 	struct ref_reloc_sym *reloc_sym;
-+	struct map *map;
- 	char *tmp;
- 	int i, skipped = 0;
- 
-@@ -753,7 +758,7 @@ post_process_kernel_probe_trace_events(s
- 		return post_process_offline_probe_trace_events(tevs, ntevs,
- 						symbol_conf.vmlinux_name);
- 
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (!reloc_sym) {
- 		pr_warning("Relocated base symbol is not found!\n");
- 		return -EINVAL;
-@@ -764,9 +769,13 @@ post_process_kernel_probe_trace_events(s
- 			continue;
- 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
- 			continue;
--		/* If we found a wrong one, mark it by NULL symbol */
-+		/*
-+		 * If we found a wrong one, mark it by NULL symbol.
-+		 * Since addresses in debuginfo is same as objdump, we need
-+		 * to convert it to addresses on memory.
-+		 */
- 		if (kprobe_warn_out_range(tevs[i].point.symbol,
--					  tevs[i].point.address)) {
-+			map__objdump_2mem(map, tevs[i].point.address))) {
- 			tmp = NULL;
- 			skipped++;
- 		} else {
-@@ -2922,7 +2931,7 @@ static int find_probe_trace_events_from_
- 	/* Note that the symbols in the kmodule are not relocated */
- 	if (!pev->uprobes && !pev->target &&
- 			(!pp->retprobe || kretprobe_offset_is_supported())) {
--		reloc_sym = kernel_get_ref_reloc_sym();
-+		reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 		if (!reloc_sym) {
- 			pr_warning("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
+ 	if (!num_tc) {
+-- 
+2.25.1
+
 
 
