@@ -2,148 +2,109 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0D32078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9w0UgrA"
+	by mail.kernel.org (Postfix) with ESMTP id B58682071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592564192;
+	bh=lV1+A7bMoEGDBQ8uA1/9V3ySmJlveKx+p0zRy9lWR3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IiHSV6zinq2KWsnw5YBmudmKL0VxdKDJIxZfEie3SA1PVoYzxfVDnYTlfZlXm4RLU
+	 kCUltEqGJquQJjonpPV4abggbuXdGwahCEoYXFfrT+8vdAeZFnvvpI4yMt8JONkZH7
+	 Atf8ouyI9qggfbq21gBRColGCRbTVIM68KrMg5FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbgFSKyD (ORCPT
+        id S1732555AbgFSK4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:54:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29361 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732362AbgFSKyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:54:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592564041;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gdQ8Sg66vaxNDmevYTckcfDoJ9SswGIMhylYcGrksuc=;
-        b=J9w0UgrAkx6Tvzxf0j6HnrEZVLe0lZLE7ARLIcnojYT2Ovc6JrsPHSm07aR0G5DsRFDrIe
-        cNuAUdMKmBzXEJliT+peLbW9z9Af8Y0Kmbtb5rg25acJZpBUjaeyzlN2Ma1WS44OeRP+Mt
-        VudbH8DVpPEnQra2sBINEZJbme2bSE0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-YFcwuSBwOsaTDTKRq44ATQ-1; Fri, 19 Jun 2020 06:54:00 -0400
-X-MC-Unique: YFcwuSBwOsaTDTKRq44ATQ-1
-Received: by mail-ed1-f70.google.com with SMTP id i11so3550002edx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 03:53:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gdQ8Sg66vaxNDmevYTckcfDoJ9SswGIMhylYcGrksuc=;
-        b=IBIW4+cPFADaANXz7rq2J6z/PrkoDyJpAgZp1Z6OjOkydplLcQmzevObVZLekckGTb
-         jQBA+hooSUIFq50NPjCkGCoRNB2yD4aprMSTmnnch2EA1FV/8d+1PZK4toLfSQ3Y3Jvr
-         dWWzC/hvng8FBCmxrA0lIBdmbOpJZIXsnCEdDmsU0KRj1Gd98j7313oGgm/yi8rpADyc
-         cekIjmHMHZZEm6CuOgKGZNs6m8Pk+G4t9FmscmKVx5h4aHCnma+txs2YRIlJwstLuTUz
-         pKsookkkeorG7A1Rd/zeobwM/+a8hKY8Ye9pNapdpUh0RD0xk62gCRu+0aKyuZAyDyOZ
-         HHxQ==
-X-Gm-Message-State: AOAM532qP9WaFD2HKzeVA7HIHa33tRVBmKWcJh2lHnQMBQVo/E9V2iDH
-        kei+WCzrrCvA/qSXpf8qg8leaQh7BqxaRP/r8lx0Nz+vCDIrh0gfdMMOFz7Bujdp2SXJIILE5WC
-        6La6MZRqssdAQKf1TqZGMpTv3
-X-Received: by 2002:a17:906:509:: with SMTP id j9mr2930026eja.341.1592564038940;
-        Fri, 19 Jun 2020 03:53:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxvYAp7naqhZIhEIjyBLPebsfBBXZOA4zXA8IgV3Ya3qCOmwBM8aXvA7YgD5Lwl876KuyvRWA==
-X-Received: by 2002:a17:906:509:: with SMTP id j9mr2930007eja.341.1592564038692;
-        Fri, 19 Jun 2020 03:53:58 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id o20sm4438607ejx.102.2020.06.19.03.53.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 03:53:58 -0700 (PDT)
-Subject: Re: [PATCH 1/8] USB: rename USB quirk to USB_QUIRK_ENDPOINT_IGNORE
-To:     Bastien Nocera <hadess@hadess.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Richard Dodd <richard.o.dodd@gmail.com>,
-        Jonathan Cox <jonathan@jdcox.net>,
-        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Nishad Kamdar <nishadkamdar@gmail.com>
-References: <20200618094300.1887727-1-gregkh@linuxfoundation.org>
- <20200618094300.1887727-2-gregkh@linuxfoundation.org>
- <484c84b62140f6536f841e7027ddd9ddcf179a72.camel@hadess.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <62b8ddc4-8d26-1160-6934-fe6a68231938@redhat.com>
-Date:   Fri, 19 Jun 2020 12:53:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 06:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732362AbgFSK4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:56:21 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE88A2070A;
+        Fri, 19 Jun 2020 10:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592564181;
+        bh=lV1+A7bMoEGDBQ8uA1/9V3ySmJlveKx+p0zRy9lWR3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pgwsv5aJtotabI2+zSJ7wHUq4N42CoxNVJGMzfX6UzU/YPThQpKRVLnDN3UAmzTs6
+         WqxQaGQU3ToNaal7MfirJJD9yTzcqKrpte1lJ+tNmAQ/K6PZQlzN26lcuP6LKpdQRB
+         B4hu1N48nRwqYrGhx9ZW9IszvzcwExuuKUUY6a1Y=
+Received: by pali.im (Postfix)
+        id 9E2FD820; Fri, 19 Jun 2020 12:56:18 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 12:56:18 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Indicate error in 'val' when config read
+ fails
+Message-ID: <20200619105618.aksoivu4gb5ex3s3@pali>
+References: <20200601130315.18895-1-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <484c84b62140f6536f841e7027ddd9ddcf179a72.camel@hadess.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601130315.18895-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bastien,
+Hello Lorenzo! Could you please review this patch?
 
-On 6/19/20 12:50 PM, Bastien Nocera wrote:
-> On Thu, 2020-06-18 at 11:42 +0200, Greg Kroah-Hartman wrote:
->> The USB core has a quirk flag to ignore specific endpoints, so rename
->> it
->> to be more obvious what this quirk does.
->>
->> Cc: Johan Hovold <johan@kernel.org>
->> Cc: Alan Stern <stern@rowland.harvard.edu>
->> Cc: Richard Dodd <richard.o.dodd@gmail.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> Cc: Jonathan Cox <jonathan@jdcox.net>
->> Cc: Bastien Nocera <hadess@hadess.net>
->> Cc: "Thiébaud Weksteen" <tweek@google.com>
->> Cc: Nishad Kamdar <nishadkamdar@gmail.com>
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Monday 01 June 2020 15:03:15 Pali Rohár wrote:
+> Most callers of config read do not check for return value. But most of the
+> ones that do, checks for error indication in 'val' variable.
 > 
-> If the driver API change below is agreeable, you can add my:
-> Reviewed-by: Bastien Nocera <hadess@hadess.net>
-
-A note for future reference, not sure what you mean with driver
-API here. If you mean the in kernel API, the kernel rules are
-that we are always free to change that (Linux does not have a
-stable driver API).
-
-So if a header does not sit under include/uapi (indicating that
-it is an userspace API) then a change like this is fine.
-
-Regards,
-
-Hans
-
-
-
-> Good job.
+> This patch updates error handling in advk_pcie_rd_conf() function. If PIO
+> transfer fails then 'val' variable is set to 0xffffffff which indicates
+> failture.
 > 
-> <snip>
->> diff --git a/include/linux/usb/quirks.h b/include/linux/usb/quirks.h
->> index 22c1f579afe3..5e4c497f54d6 100644
->> --- a/include/linux/usb/quirks.h
->> +++ b/include/linux/usb/quirks.h
->> @@ -69,7 +69,7 @@
->>   /* Hub needs extra delay after resetting its port. */
->>   #define USB_QUIRK_HUB_SLOW_RESET		BIT(14)
->>   
->> -/* device has blacklisted endpoints */
->> -#define USB_QUIRK_ENDPOINT_BLACKLIST		BIT(15)
->> +/* device has endpoints that should be ignored */
->> +#define USB_QUIRK_ENDPOINT_IGNORE		BIT(15)
->>   
->>   #endif /* __LINUX_USB_QUIRKS_H */
-> 
-> 
-> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
 
+I should add credit for Bjorn as he found this issue
+
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 53a4cfd7d377..783a7f1f2c44 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -691,8 +691,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+>  	advk_writel(pcie, 1, PIO_START);
+>  
+>  	ret = advk_pcie_wait_pio(pcie);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		*val = 0xffffffff;
+>  		return PCIBIOS_SET_FAILED;
+> +	}
+>  
+>  	advk_pcie_check_pio_status(pcie);
+>  
+> -- 
+> 2.20.1
+> 
