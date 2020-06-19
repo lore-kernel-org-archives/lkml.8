@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33149C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA85D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13164217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578027;
-	bh=1agQLpU96I/Z1eZ2SSbkIm3F4bpuIkrZ67czfsmpJnA=;
+	s=default; t=1592578035;
+	bh=cjtOOLNEuALwIBJrGKv7Ssx2HLiGt3mZGPIrD7T4nGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJQn2UIqowdnyamp8q1R804xQ29edU2dAQyUJEVdwA7/E0Wk2vd+El1ekz+Hrwq/J
-	 O3bLYd/mxLhufhWFNbrtH06KOBkJL0PAGHDud7H1gyugLynZVptxcF2wkiU1gXtk4L
-	 35c8vlrPOPYonX82zgqRRrmFZUwNGqmQWqRg/CRY=
+	b=MAmKNMCmiUrwxRXppKmK+9UQoZeO9xjBPS9CQCCo47f9D+LgQ/R1ymi0SFvI5qzhq
+	 hc2caY1rzfH2CxcpN/82iffzHs/chM72L39nptVRLw/79Wfr8FgTqpDO97OAiGA+lL
+	 lucqSPZfvANHYnXE52yBH93nWckVwfcA6sX9FvXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbgFSOrF (ORCPT
+        id S2388924AbgFSOrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388504AbgFSOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:58 -0400
+        id S2388506AbgFSOrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E342E20DD4;
-        Fri, 19 Jun 2020 14:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CEB2168B;
+        Fri, 19 Jun 2020 14:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578018;
-        bh=1agQLpU96I/Z1eZ2SSbkIm3F4bpuIkrZ67czfsmpJnA=;
+        s=default; t=1592578021;
+        bh=cjtOOLNEuALwIBJrGKv7Ssx2HLiGt3mZGPIrD7T4nGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIibIbWUsv8Aih67QkVjYAD+fQJsJ7Qh7DC6unBDififBlv7BemhEIKPfeKA26LHH
-         2u41k8xSZ+NdCZRh9PzAup8OzJ4ZZ2oLYyGIyrTVKTJLSq+dQgRFQjaJhw2csPdKze
-         sZoqwc5JJbM30Ne6yUe4dlQ8GG+5b0HmIl7jrh6Q=
+        b=syDTnFNlGD0NXwZKJUcOmPD60gsCADyYZsdxlsBMwGt2thn11Bsa69HzGcUCxiEyc
+         TTNp7YswS9riKxB3mNqrjqOQGwi/nQXuTH1Rma+ao5AjxWDWkDIGqTzoUdzmgJeRtL
+         UZscOaE8aDcKjl3As2DiqNTTZ0K5U+4JHbyxoQNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
+        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         virtualization@lists.linux-foundation.org,
-        Gonglei <arei.gonglei@huawei.com>,
         "Longpeng(Mike)" <longpeng2@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/190] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
-Date:   Fri, 19 Jun 2020 16:31:35 +0200
-Message-Id: <20200619141636.082797324@linuxfoundation.org>
+Subject: [PATCH 4.14 051/190] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
+Date:   Fri, 19 Jun 2020 16:31:36 +0200
+Message-Id: <20200619141636.134555490@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -68,18 +67,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Longpeng(Mike) <longpeng2@huawei.com>
 
-[ Upstream commit b02989f37fc5e865ceeee9070907e4493b3a21e2 ]
+[ Upstream commit d90ca42012db2863a9a30b564a2ace6016594bda ]
 
-The system will crash when the users insmod crypto/tcrypt.ko with mode=38
-( testing "cts(cbc(aes))" ).
+The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
+testcases in tcrypto.ko.
 
-Usually the next entry of one sg will be @sg@ + 1, but if this sg element
-is part of a chained scatterlist, it could jump to the start of a new
-scatterlist array. Fix it by sg_next() on calculation of src/dst
-scatterlist.
+For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
+crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
+case and get a wrong at then end.
+
+  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
+  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
+  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
+  (pp: plaintext  cc:ciphertext)
+
+Fix this issue by limit the length of dest buffer.
 
 Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
 Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Jason Wang <jasowang@redhat.com>
@@ -87,57 +92,26 @@ Cc: "David S. Miller" <davem@davemloft.net>
 Cc: virtualization@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Signed-off-by: Gonglei <arei.gonglei@huawei.com>
 Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
+Link: https://lore.kernel.org/r/20200602070501.2023-4-longpeng2@huawei.com
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 772d2b3137c6..fee78ec46bae 100644
+index fee78ec46bae..e6b889ce395e 100644
 --- a/drivers/crypto/virtio/virtio_crypto_algs.c
 +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -354,13 +354,18 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 	int err;
- 	unsigned long flags;
- 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
--	int i;
- 	u64 dst_len;
- 	unsigned int num_out = 0, num_in = 0;
- 	int sg_total;
- 	uint8_t *iv;
-+	struct scatterlist *sg;
+@@ -411,6 +411,7 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 		goto free;
+ 	}
  
- 	src_nents = sg_nents_for_len(req->src, req->nbytes);
-+	if (src_nents < 0) {
-+		pr_err("Invalid number of src SG.\n");
-+		return src_nents;
-+	}
-+
- 	dst_nents = sg_nents(req->dst);
++	dst_len = min_t(unsigned int, req->nbytes, dst_len);
+ 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
+ 			req->nbytes, dst_len);
  
- 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
-@@ -441,12 +446,12 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 	vc_sym_req->iv = iv;
- 
- 	/* Source data */
--	for (i = 0; i < src_nents; i++)
--		sgs[num_out++] = &req->src[i];
-+	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
-+		sgs[num_out++] = sg;
- 
- 	/* Destination data */
--	for (i = 0; i < dst_nents; i++)
--		sgs[num_out + num_in++] = &req->dst[i];
-+	for (sg = req->dst; sg; sg = sg_next(sg))
-+		sgs[num_out + num_in++] = sg;
- 
- 	/* Status */
- 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
 -- 
 2.25.1
 
