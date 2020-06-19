@@ -2,143 +2,221 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82376C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CABC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6404120773
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D2620888
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 02:27:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSB7ZTw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgFSCVM (ORCPT
+        id S1729525AbgFSC1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 22:21:12 -0400
-Received: from mx.wingtech.com ([180.166.216.14]:58313 "EHLO mail.wingtech.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726517AbgFSCVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 22:21:12 -0400
-Received: from mx.wingtech.com ([192.168.2.43])
-        by mail.wingtech.com  with SMTP id 05J2L8ju011296-05J2L8jv011296
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:21:08 +0800
-Received: from 192.168.51.143 (HELO ZHAOWUYUN); Fri, 19 Jun 2020 10:21:05 +0800
-From:   "Zac" <zhaowuyun@wingtech.com>
-To:     "'Chao Yu'" <yuchao0@huawei.com>, <jaegeuk@kernel.org>
-Cc:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592484487-12072-1-git-send-email-zhaowuyun@wingtech.com> <4a2d19c4-1ede-0172-fe50-c8464ee341df@huawei.com>
-In-Reply-To: <4a2d19c4-1ede-0172-fe50-c8464ee341df@huawei.com>
-Subject: =?gb2312?B?u9i4tDogW1BBVENIXSBmMmZzLXRvb2xzOiBzZXQgY29sZCBmbGFnIA==?=
-        =?gb2312?B?Zm9yIG5vbi1kaXIgbm9kZQ==?=
-Date:   Fri, 19 Jun 2020 10:21:07 +0800
-Message-ID: <000001d645e0$4aa645d0$dff2d170$@wingtech.com>
+        Thu, 18 Jun 2020 22:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbgFSC1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 22:27:35 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA182C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 19:27:32 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r18so3808679pgk.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 19:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=1NQyD9WrJsbI510glYgHlSP0TyLa8enW/S/MPeeFMi8=;
+        b=iSB7ZTw+y0hCECv5tinmjWIPeUtBXssd1nCzvz4v0Ji07pHfe4hOOuinagdLEsBnl3
+         1yvnOogYr4IdD4GKi+hlWXiXUcBp+mI1mL0rQnbc5LiAwqrSjyiV+ePIuyZGXynZj/kA
+         MsOHM8PJTRRZfUNM9zxlB+rjPg44kU5qgB+H1jJ9cyDYvWo1c8ZmTgkKLupeID2Q/nHK
+         KS2/2XoHlKRQXxal9WCrDhn7AYRQzNByypRXA3NWxWldotqEMAZIh6VkflS8HSQ21XgB
+         KKf0sLNo8kZ+iQKLWmNZafoS1eN4KpmYVWogKmmLYWx36Y+RjG6YCMKZa0wgaqvm3cM5
+         yX+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1NQyD9WrJsbI510glYgHlSP0TyLa8enW/S/MPeeFMi8=;
+        b=Y7dlCcsF8p6ZznqdN78I202WWKqtd4Rk8Wmj++9iePB8MCwesNNZcKubXLucYY2/2a
+         A8lcPvvsg5FfiOWeUl5X8BM5+riQ3PLudCstyB4bxs0MV4i/ctODbTX2LgrhfYxp+PhL
+         jVEZTk56Qo8UJhl1lLOwypeF8GsO6ckmu+zy/8yDssa6b6TowdfyCLQsNSzVmc3KZWDj
+         OQc5MkmtzaYH67FBrhkxZYXddAMT9NdJ/DNLWTeWhc+yq66W+cNH9/LkVbfnnGPWoJUH
+         FiWasYxJzuVczHkrBzSsQfezH13U0sbSsL3AGuNhjCsODc6ChgE/HTIlnWyyF4lQ2rVB
+         RVaw==
+X-Gm-Message-State: AOAM531vA8tqzbJknV3p93b5fgncze4Co0IBCGZYUCz1tCvOrBLhjViC
+        l8W7TX849FNSBLFKt6wNnD680w==
+X-Google-Smtp-Source: ABdhPJwPV/l1romnvuaB3bf+oXNo9TD61AfC0QGCLewyWOibz0ocQr1j4hIskA+JR5hNdLoitEbUKQ==
+X-Received: by 2002:a65:6496:: with SMTP id e22mr1264866pgv.63.1592533652044;
+        Thu, 18 Jun 2020 19:27:32 -0700 (PDT)
+Received: from ?IPv6:240e:362:4d1:900:683e:57c:525:a3cd? ([240e:362:4d1:900:683e:57c:525:a3cd])
+        by smtp.gmail.com with ESMTPSA id a8sm1181029pga.64.2020.06.18.19.27.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 19:27:31 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>
+References: <20200615235217.GA1921846@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <c5d7b2f1-6b32-d965-3b60-eb70a26e02b4@linaro.org>
+Date:   Fri, 19 Jun 2020 10:26:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="gb2312"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQF0xRpWUfEou3rvdx9uok8+PtRkbQEd45q7qZlDPFA=
-Content-Language: zh-cn
+In-Reply-To: <20200615235217.GA1921846@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2020/6/18 20:48, zhaowuyun@wingtech.com wrote:
-> > From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> 
-> Thanks for the patch. :)
-> 
-> Please add commit message here.
+Hi, Bjorn
 
-OK
+On 2020/6/16 上午7:52, Bjorn Helgaas wrote:
+> On Sat, Jun 13, 2020 at 10:30:56PM +0800, Zhangfei Gao wrote:
+>> On 2020/6/11 下午9:44, Bjorn Helgaas wrote:
+>>> +++ b/drivers/iommu/iommu.c
+>>>>>>>>>>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+>>>>>>>>>>> fwnode_handle *iommu_fwnode,
+>>>>>>>>>>>              fwspec->iommu_fwnode = iommu_fwnode;
+>>>>>>>>>>>              fwspec->ops = ops;
+>>>>>>>>>>>              dev_iommu_fwspec_set(dev, fwspec);
+>>>>>>>>>>> +
+>>>>>>>>>>> +       if (dev_is_pci(dev))
+>>>>>>>>>>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+>>>>>>>>>>> +
+>>>>>>>>>>>
+>>>>>>>>>>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+>>>>>>>>>>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+>>>>>>>>>>> Will send this when 5.8-rc1 is open.
+>>>>>>>>>> Wait, this whole fixup approach seems wrong to me.  No matter how you
+>>>>>>>>>> do the fixup, it's still a fixup, which means it requires ongoing
+>>>>>>>>>> maintenance.  Surely we don't want to have to add the Vendor/Device ID
+>>>>>>>>>> for every new AMBA device that comes along, do we?
+>>>>>>>>>>
+>>>>>>>>> Here the fake pci device has standard PCI cfg space, but physical
+>>>>>>>>> implementation is base on AMBA
+>>>>>>>>> They can provide pasid feature.
+>>>>>>>>> However,
+>>>>>>>>> 1, does not support tlp since they are not real pci devices.
+>>>>>>>>> 2. does not support pri, instead support stall (provided by smmu)
+>>>>>>>>> And stall is not a pci feature, so it is not described in struct pci_dev,
+>>>>>>>>> but in struct iommu_fwspec.
+>>>>>>>>> So we use this fixup to tell pci system that the devices can support stall,
+>>>>>>>>> and hereby support pasid.
+>>>>>>>> This did not answer my question.  Are you proposing that we update a
+>>>>>>>> quirk every time a new AMBA device is released?  I don't think that
+>>>>>>>> would be a good model.
+>>>>>>> Yes, you are right, but we do not have any better idea yet.
+>>>>>>> Currently we have three fake pci devices, which support stall and pasid.
+>>>>>>> We have to let pci system know the device can support pasid, because of
+>>>>>>> stall feature, though not support pri.
+>>>>>>> Do you have any other ideas?
+>>>>>> It sounds like the best way would be to allocate a PCI capability for it, so
+>>>>>> detection can be done through config space, at least in future devices,
+>>>>>> or possibly after a firmware update if the config space in your system
+>>>>>> is controlled by firmware somewhere.  Once there is a proper mechanism
+>>>>>> to do this, using fixups to detect the early devices that don't use that
+>>>>>> should be uncontroversial. I have no idea what the process or timeline
+>>>>>> is to add new capabilities into the PCIe specification, or if this one
+>>>>>> would be acceptable to the PCI SIG at all.
+>>>>> That sounds like a possibility.  The spec already defines a
+>>>>> Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
+>>>>> be a candidate.
+>>>> Will investigate this, thanks Bjorn
+>>> FWIW, there's also a Vendor-Specific Capability that can appear in the
+>>> first 256 bytes of config space (the Vendor-Specific Extended
+>>> Capability must appear in the "Extended Configuration Space" from
+>>> 0x100-0xfff).
+>> Unfortunately our silicon does not have either Vendor-Specific Capability or
+>> Vendor-Specific Extended Capability.
+>>
+>> Studied commit 8531e283bee66050734fb0e89d53e85fd5ce24a4
+>> Looks this method requires adding member (like can_stall) to struct pci_dev,
+>> looks difficult.
+> The problem is that we don't want to add device IDs every time a new
+> chip comes out.  Adding one or two device IDs for silicon that's
+> already released is not a problem as long as you have a strategy for
+> *future* devices so they don't require a quirk.
+>
+>>>>>> If detection cannot be done through PCI config space, the next best
+>>>>>> alternative is to pass auxiliary data through firmware. On DT based
+>>>>>> machines, you can list non-hotpluggable PCIe devices and add custom
+>>>>>> properties that could be read during device enumeration. I assume
+>>>>>> ACPI has something similar, but I have not done that.
+>>>> Yes, thanks Arnd
+>>>>> ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
+>>>>> like this better than a PCI capability because the property you need
+>>>>> to expose is not a PCI property.
+>>>> _DSM may not workable, since it is working in runtime.
+>>>> We need stall information in init stage, neither too early (after allocation
+>>>> of iommu_fwspec)
+>>>> nor too late (before arm_smmu_add_device ).
+>>> I'm not aware of a restriction on when _DSM can be evaluated.  I'm
+>>> looking at ACPI v6.3, sec 9.1.1.  Are you seeing something different?
+>> DSM method seems requires vendor specific guid, and code would be vendor
+>> specific.
+> _DSM indeed requires a vendor-specific UUID, precisely *because*
+> vendors are free to define their own functionality without requiring
+> changes to the ACPI spec.  From the spec (ACPI v6.3, sec 9.1.1):
+>
+>    New UUIDs may also be created by OEMs and IHVs for custom devices
+>    and other interface or device governing bodies (e.g. the PCI SIG),
+>    as long as the UUID is different from other published UUIDs.
+Have studied _DSM method, two issues we met comparing using quirk.
 
-> >
-> > Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-> > ---
-> >  fsck/dir.c  |  1 +
-> >  fsck/node.c |  1 +
-> >  fsck/node.h | 11 +++++++++++
-> >  3 files changed, 13 insertions(+)
-> >
-> > diff --git a/fsck/dir.c b/fsck/dir.c
-> > index 5f4f75e..dc03c98 100644
-> > --- a/fsck/dir.c
-> > +++ b/fsck/dir.c
-> > @@ -522,6 +522,7 @@ static void init_inode_block(struct f2fs_sb_info
-> *sbi,
-> >  	node_blk->footer.nid = cpu_to_le32(de->ino);
-> >  	node_blk->footer.flag = 0;
-> >  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> > +	set_cold_node(node_blk, S_ISDIR(mode));
-> >
-> >  	if (S_ISDIR(mode)) {
-> >  		make_empty_dir(sbi, node_blk);
-> > diff --git a/fsck/node.c b/fsck/node.c
-> > index 229a99c..1d291ca 100644
-> > --- a/fsck/node.c
-> > +++ b/fsck/node.c
-> > @@ -79,6 +79,7 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
-> >  	node_blk->footer.ino = f2fs_inode->footer.ino;
-> >  	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> >  	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> > +	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
-> 
-> How about wrapping these node footer fields assignment into a function?
-> then
-> we can reuse this in other places.
-> 
-> void set_node_footer(nid, ino, ofs, ver, is_dir)
-> {
-> 	node_blk->footer.nid = cpu_to_le32(nid);
-> 	node_blk->footer.ino = f2fs_inode->footer.ino;
-> 	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> 	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> 	set_cold_node(node_blk, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
-> }
+1. Need change definition of either pci_host_bridge or pci_dev, like 
+adding member can_stall,
+while pci system does not know stall now.
 
-Ok, That's good.
+a, pci devices do not have uuid: uuid need be described in dsdt, while 
+pci devices are not defined in dsdt.
+     so we have to use host bridge.
 
-> >
-> >  	type = CURSEG_COLD_NODE;
-> >  	if (IS_DNODE(node_blk)) {
-> > diff --git a/fsck/node.h b/fsck/node.h
-> > index 6bce1fb..99139b1 100644
-> > --- a/fsck/node.h
-> > +++ b/fsck/node.h
-> > @@ -161,6 +161,17 @@ static inline int is_node(struct f2fs_node
-> *node_blk, int type)
-> >  	return le32_to_cpu(node_blk->footer.flag) & (1 << type);
-> >  }
-> 
-> Beside this, I think we need to use set_node_footer() in:
-> - f2fs_write_root_inode
-> - f2fs_write_qf_inode
-> - f2fs_write_lpf_inode
-> 
-> as well to fix mkfs bugs.
+b,  Parsing dsdt is in in pci subsystem.
+Like drivers/acpi/pci_root.c:
+        obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), 
+&pci_acpi_dsm_guid, 1,
+                                 IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
 
-the root inode and the lpf inode is dir, need to set cold flag? 
+After parsing DSM in pci, we need record this info.
+Currently, can_stall info is recorded in iommu_fwspec,
+which is allocated in iommu_fwspec_init and called by 
+iort_iommu_configure for uefi.
 
-> Thanks,
-> 
-> >
-> > +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
-> > +{
-> > +	unsigned int flag = le32_to_cpu(rn->footer.flag);
-> > +
-> > +	if (is_dir)
-> > +		flag &= ~(0x1 << COLD_BIT_SHIFT);
-> > +	else
-> > +		flag |= (0x1 << COLD_BIT_SHIFT);
-> > +	rn->footer.flag = cpu_to_le32(flag);
-> > +}
-> > +
-> >  #define is_fsync_dnode(node_blk)	is_node(node_blk, FSYNC_BIT_SHIFT)
-> >  #define is_dent_dnode(node_blk)		is_node(node_blk,
-> DENT_BIT_SHIFT)
-> >
-> >
+2. Guest kernel also need support sva.
+Using quirk, the guest can boot with sva enabled, since quirk is 
+self-contained by kernel.
+If using  _DSM, a specific uefi or dtb has to be provided,
+currently we can useQEMU_EFI.fd from apt install qemu-efi
 
+
+Thanks
