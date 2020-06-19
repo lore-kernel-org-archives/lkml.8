@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C04AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2024BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A27020771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0429220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbgFSOIU (ORCPT
+        id S1733122AbgFSOI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:08:20 -0400
+        Fri, 19 Jun 2020 10:08:27 -0400
 Received: from mga06.intel.com ([134.134.136.31]:54754 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732664AbgFSOIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:08:12 -0400
-IronPort-SDR: gqdNO5M3buUCSL4y89x9MD/ftDaIreOTe/md5Sy9BKVye/GbzMpyW1utIsFKls3W0rBlGeYI+y
- JG+247KrTJdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452847"
+        id S1733053AbgFSOIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:08:15 -0400
+IronPort-SDR: qHRjxId5GObV0pb3HVZCfG8QR4xD4HKDsubd19lqtLKg+l4ky3O6YjPdALF2LGCjLEsyGjN3+L
+ QljAxw9fgACA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452857"
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="204452847"
+   d="scan'208";a="204452857"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:54 -0700
-IronPort-SDR: PnVWfXuPALwh/PjQq0QuHrILt08Iqr8P3huu6m8a/XVGByeGDa/QpMC4uxKkpv35iTNq1oCstC
- spGOcnpUrdVA==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:58 -0700
+IronPort-SDR: /8Y+618efKQYMA2brf0bZVtN3OnmcvtkMBWjElnl4GRny/lbzbqpD+1n3WVabhEh1BmKJJ6x77
+ fX8ohHK1zfSA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="383837462"
+   d="scan'208";a="383837483"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:54 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:58 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -45,9 +45,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 10/21] perf/x86/intel: Check Arch LBR MSRs
-Date:   Fri, 19 Jun 2020 07:03:58 -0700
-Message-Id: <1592575449-64278-11-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 13/21] perf/core: Factor out functions to allocate/free the task_ctx_data
+Date:   Fri, 19 Jun 2020 07:04:01 -0700
+Message-Id: <1592575449-64278-14-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
 References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
@@ -58,89 +58,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The KVM may not support the MSRs of Architecture LBR. Accessing the
-MSRs may cause #GP and crash the guest.
+The method to allocate/free the task_ctx_data is going to be changed in
+the following patch. Currently, the task_ctx_data is allocated/freed in
+several different places. To avoid repeatedly modifying the same codes
+in several different places, alloc_task_ctx_data() and
+free_task_ctx_data() are factored out to allocate/free the
+task_ctx_data. The modification only needs to be applied once.
 
-The MSRs have to be checked at guest boot time.
-
-Only using the max number of Architecture LBR depth to check the
-MSR_ARCH_LBR_DEPTH should be good enough. The max number can be
-calculated by 8 * the position of the last set bit of LBR_DEPTH value
-in CPUID enumeration.
-
-Co-developed-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++--
- arch/x86/events/perf_event.h |  5 +++++
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ kernel/events/core.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index b236cff..c3372bd 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4145,6 +4145,8 @@ static bool check_msr(unsigned long msr, u64 mask)
- 
- 	if (is_lbr_from(msr))
- 		val_tmp = lbr_from_signext_quirk_wr(val_tmp);
-+	else if (msr == MSR_ARCH_LBR_DEPTH)
-+		val_tmp = x86_pmu_get_max_arch_lbr_nr();
- 
- 	if (wrmsrl_safe(msr, val_tmp) ||
- 	    rdmsrl_safe(msr, &val_new))
-@@ -5188,8 +5190,23 @@ __init int intel_pmu_init(void)
- 	 * Check all LBT MSR here.
- 	 * Disable LBR access if any LBR MSRs can not be accessed.
- 	 */
--	if (x86_pmu.lbr_nr && !check_msr(x86_pmu.lbr_tos, 0x3UL))
--		x86_pmu.lbr_nr = 0;
-+	if (x86_pmu.lbr_nr) {
-+		if (x86_pmu.arch_lbr) {
-+			u64 mask = 1;
-+
-+			if (x86_pmu.arch_lbr_cpl)
-+				mask |= ARCH_LBR_CTL_CPL;
-+			if (x86_pmu.arch_lbr_filter)
-+				mask |= ARCH_LBR_CTL_FILTER;
-+			if (x86_pmu.arch_lbr_call_stack)
-+				mask |= ARCH_LBR_CTL_STACK;
-+			if (!check_msr(MSR_ARCH_LBR_CTL, mask))
-+				x86_pmu.lbr_nr = 0;
-+			if (!check_msr(MSR_ARCH_LBR_DEPTH, 0))
-+				x86_pmu.lbr_nr = 0;
-+		} else if (!check_msr(x86_pmu.lbr_tos, 0x3UL))
-+			x86_pmu.lbr_nr = 0;
-+	}
- 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
- 		if (!(check_msr(x86_pmu.lbr_from + i, 0xffffUL) &&
- 		      check_msr(x86_pmu.lbr_to + i, 0xffffUL)))
-@@ -5206,6 +5223,9 @@ __init int intel_pmu_init(void)
- 	 */
- 	if (x86_pmu.extra_regs) {
- 		for (er = x86_pmu.extra_regs; er->msr; er++) {
-+			/* Skip Arch LBR which is already verified */
-+			if (x86_pmu.arch_lbr && (er->idx == EXTRA_REG_LBR))
-+				continue;
- 			er->extra_msr_access = check_msr(er->msr, 0x11UL);
- 			/* Disable LBR select mapping */
- 			if ((er->idx == EXTRA_REG_LBR) && !er->extra_msr_access)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index cbfc55b..7112c51 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -853,6 +853,11 @@ static inline bool x86_pmu_has_lbr_callstack(void)
- 		x86_pmu.lbr_sel_map[PERF_SAMPLE_BRANCH_CALL_STACK_SHIFT] > 0;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 633b4ae..a9bfe32 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1234,12 +1234,22 @@ static void get_ctx(struct perf_event_context *ctx)
+ 	refcount_inc(&ctx->refcount);
  }
  
-+static inline int x86_pmu_get_max_arch_lbr_nr(void)
++static void *alloc_task_ctx_data(struct pmu *pmu)
 +{
-+	return fls(x86_pmu.arch_lbr_depth_mask) * 8;
++	return kzalloc(pmu->task_ctx_size, GFP_KERNEL);
 +}
 +
- DECLARE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
++static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
++{
++	kfree(task_ctx_data);
++}
++
+ static void free_ctx(struct rcu_head *head)
+ {
+ 	struct perf_event_context *ctx;
  
- int x86_perf_event_set_period(struct perf_event *event);
+ 	ctx = container_of(head, struct perf_event_context, rcu_head);
+-	kfree(ctx->task_ctx_data);
++	free_task_ctx_data(ctx->pmu, ctx->task_ctx_data);
+ 	kfree(ctx);
+ }
+ 
+@@ -4467,7 +4477,7 @@ find_get_context(struct pmu *pmu, struct task_struct *task,
+ 		goto errout;
+ 
+ 	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
+-		task_ctx_data = kzalloc(pmu->task_ctx_size, GFP_KERNEL);
++		task_ctx_data = alloc_task_ctx_data(pmu);
+ 		if (!task_ctx_data) {
+ 			err = -ENOMEM;
+ 			goto errout;
+@@ -4525,11 +4535,11 @@ find_get_context(struct pmu *pmu, struct task_struct *task,
+ 		}
+ 	}
+ 
+-	kfree(task_ctx_data);
++	free_task_ctx_data(pmu, task_ctx_data);
+ 	return ctx;
+ 
+ errout:
+-	kfree(task_ctx_data);
++	free_task_ctx_data(pmu, task_ctx_data);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -12406,8 +12416,7 @@ inherit_event(struct perf_event *parent_event,
+ 	    !child_ctx->task_ctx_data) {
+ 		struct pmu *pmu = child_event->pmu;
+ 
+-		child_ctx->task_ctx_data = kzalloc(pmu->task_ctx_size,
+-						   GFP_KERNEL);
++		child_ctx->task_ctx_data = alloc_task_ctx_data(pmu);
+ 		if (!child_ctx->task_ctx_data) {
+ 			free_event(child_event);
+ 			return ERR_PTR(-ENOMEM);
 -- 
 2.7.4
 
