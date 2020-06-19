@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E48C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E31C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFCD2100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C2B2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584243;
-	bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+	s=default; t=1592584248;
+	bh=8K0DiG5m3/Kac9wy/hVtWgjJWdFjzTJoSPEQSyGP45k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/X+k7bqGTprhuo9KtMyp34Y5aOTawYJ0Vl3F5xL90ETBLYnyycV9gYe9kjXrgsG5
-	 s9wv86udvxxE9WtyFohB0TdLDN4Bt9JeB1TKcYyYmO+JVaTehZmUDmBpJogNPRIZWz
-	 n6q7//RurmOi9D4mtRtMC+i/7+/co+cbY258xVfY=
+	b=vh5anDjUslMv2eadsEI9V3WrFC8ahqjq887k81iub36fRCqatZgsB/lFe25pZZ63H
+	 RvU05QToYdECcWo2xs7dz/fiidMi4yPc6RpXwqDV0n8yepAv4gofJ9ywriiymRipWf
+	 KPCU1EAIXv5S+r5uy+cHYhnjf/tTk1/d5OA18heU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389699AbgFSOx1 (ORCPT
+        id S2395026AbgFSQar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389722AbgFSOxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:15 -0400
+        id S2389689AbgFSOxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B858D21852;
-        Fri, 19 Jun 2020 14:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA00218AC;
+        Fri, 19 Jun 2020 14:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578395;
-        bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+        s=default; t=1592578402;
+        bh=8K0DiG5m3/Kac9wy/hVtWgjJWdFjzTJoSPEQSyGP45k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLa1JPYg2hT5eO6xjRgWjp6STpljnqCjbM7qbCec/+kKaDwQEMNcs7oGGeFQmvaAs
-         ex3T1IE1Ro/HAOYHPWPguPkQS99n4YwcuEf+SYP4YX2+Tykksf+FUsiKoULfFG/xSY
-         pG+X0J/8WUcxVIg0HrWDNqzcK0cQRp2rRZwU+o/w=
+        b=WmDS5LBFjA0KlJuuKzj2kx/s01dV8yg5p8aMWsSitg1TZw5zn1c+EXawlG3OfQjVQ
+         qhC6AJ5vq2p/2nQ/Ce3l4s/4R3donM9O+wax1wc3a7GV/n303KoO6Yw8ilDfK5/g32
+         8p22gUwo6YUL9mIboi2J2dCFSQnWjhMNMJxqDZ4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 165/190] carl9170: remove P2P_GO support
-Date:   Fri, 19 Jun 2020 16:33:30 +0200
-Message-Id: <20200619141642.010554389@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 001/267] ipv6: fix IPV6_ADDRFORM operation logic
+Date:   Fri, 19 Jun 2020 16:29:46 +0200
+Message-Id: <20200619141648.919524762@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,77 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
+[ Upstream commit 79a1f0ccdbb4ad700590f61b00525b390cb53905 ]
 
-This patch follows up on a bug-report by Frank Schäfer that
-discovered P2P GO wasn't working with wpa_supplicant.
-This patch removes part of the broken P2P GO support but
-keeps the vif switchover code in place.
+Socket option IPV6_ADDRFORM supports UDP/UDPLITE and TCP at present.
+Previously the checking logic looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol != IPPROTO_TCP)
+	break;
 
-Cc: <stable@vger.kernel.org>
-Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
-Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
+After commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation"), TCP
+was blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+	break;
+else
+	break;
+
+Then after commit 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+UDP/UDPLITE were blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+
+if (sk->sk_protocol != IPPROTO_TCP)
+	break;
+
+Fix it by using Eric's code and simply remove the break in TCP check, which
+looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+else
+	break;
+
+Fixes: 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
- drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
- 2 files changed, 5 insertions(+), 20 deletions(-)
+ net/ipv6/ipv6_sockglue.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -351,9 +351,7 @@ static int carl9170_fw(struct ar9170 *ar
- 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
- 
- 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
--			if_comb_types |=
--				BIT(NL80211_IFTYPE_AP) |
--				BIT(NL80211_IFTYPE_P2P_GO);
-+			if_comb_types |= BIT(NL80211_IFTYPE_AP);
- 
- #ifdef CONFIG_MAC80211_MESH
- 			if_comb_types |=
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
- 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
- 	    (vif->type != NL80211_IFTYPE_AP));
- 
--	/* While the driver supports HW offload in a single
--	 * P2P client configuration, it doesn't support HW
--	 * offload in the favourit, concurrent P2P GO+CLIENT
--	 * configuration. Hence, HW offload will always be
--	 * disabled for P2P.
-+	/* The driver used to have P2P GO+CLIENT support,
-+	 * but since this was dropped and we don't know if
-+	 * there are any gremlins lurking in the shadows,
-+	 * so best we keep HW offload disabled for P2P.
- 	 */
- 	ar->disable_offload |= vif->p2p;
- 
-@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
- 			if (vif->type == NL80211_IFTYPE_STATION)
- 				break;
- 
--			/* P2P GO [master] use-case
--			 * Because the P2P GO station is selected dynamically
--			 * by all participating peers of a WIFI Direct network,
--			 * the driver has be able to change the main interface
--			 * operating mode on the fly.
--			 */
--			if (main_vif->p2p && vif->p2p &&
--			    vif->type == NL80211_IFTYPE_AP) {
--				old_main = main_vif;
--				break;
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -185,14 +185,15 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
 -			}
--
- 			err = -EBUSY;
- 			rcu_read_unlock();
- 
+-			if (sk->sk_protocol == IPPROTO_TCP &&
+-			    sk->sk_prot != &tcpv6_prot) {
+-				retv = -EBUSY;
++			} else if (sk->sk_protocol == IPPROTO_TCP) {
++				if (sk->sk_prot != &tcpv6_prot) {
++					retv = -EBUSY;
++					break;
++				}
++			} else {
+ 				break;
+ 			}
+-			if (sk->sk_protocol != IPPROTO_TCP)
+-				break;
++
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
