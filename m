@@ -2,55 +2,56 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7F7C4345B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2972121D90
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDE321924
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579950;
-	bh=BMwQ/I/EzCiYY1exzqKiW4buRsydzJwRZlgQRqiVsO8=;
+	s=default; t=1592579958;
+	bh=QuoBDlOG+q9cbsVlRBNhjGsPqBmixamSe5Z/+tuJ2Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQQKTuMFQBUhYfVHnaGiOuo1vaWLDFJTEvY9Ktb9oZq849rr2qMNKtSm5QfjvwE77
-	 y9TBkl0cQUyaNLE4t4E8lpl3DMzp5w2TpcyxyKo1b9YVh987cAEIm4xD13dNgrmhZY
-	 C0bqiofRjlAFE36Z0aCRMpxub6bvRevtLn0uzFj4=
+	b=Wmf8824ZYEPC9QSZaGuGrH6urVuTug8RVOGBNEdCMyhEv/6oGXZF85MPNSSjaskfU
+	 EP0f0Ei5NxidICsgUdJFcZR5xTLwVyC+bdIcWSGX1TBdkd7S/2M8C7GKIwZ60VR1Wd
+	 IuxNyEEN6YN+P+1hDRpNAGKPPGuIMJMnP5nX7Hyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392387AbgFSPPO (ORCPT
+        id S2392220AbgFSPTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391800AbgFSPO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:59 -0400
+        id S2392570AbgFSPR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7474206FA;
-        Fri, 19 Jun 2020 15:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9F9A206DB;
+        Fri, 19 Jun 2020 15:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579698;
-        bh=BMwQ/I/EzCiYY1exzqKiW4buRsydzJwRZlgQRqiVsO8=;
+        s=default; t=1592579876;
+        bh=QuoBDlOG+q9cbsVlRBNhjGsPqBmixamSe5Z/+tuJ2Jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nxq+uOvePpH84vJHtg0gWI5OOxDH+6QUYKqoEgJcYiGProxQthOzP2OmCxyvgz1Ho
-         aDu/J6ppXo1+3aZyFijWPTmu/1esPl6Um5aDApzu62JSbWjDRf/c8OTV28RbQjuOii
-         GuJ9f6/0msELt7uxR1XdG5wh68uxRUab8Rt1jNe8=
+        b=sMd3IZRAqjm2Z65ZQy6OOBEOrNUf472UgxTDiNfERmYoKqME6fBkt925zKpuKM1W5
+         lrbMb4vuircOQ9KWctNopSulNFb3fMFY1Gt1ifYEFhLGSn822+H7qHmBFDm5LFvEOk
+         FAQ57Ah09+PYiw100us5oqBMngNLW0OP2oN3MGPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 233/261] powerpc/kasan: Fix shadow pages allocation failure
-Date:   Fri, 19 Jun 2020 16:34:04 +0200
-Message-Id: <20200619141701.046413635@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Weiping Zhang <zhangweiping@didiglobal.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 037/376] block: alloc map and request for new hardware queue
+Date:   Fri, 19 Jun 2020 16:29:15 +0200
+Message-Id: <20200619141712.111559575@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,73 +61,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit d2a91cef9bbdeb87b7449fdab1a6be6000930210 upstream.
+[ Upstream commit fd689871bbfbb41cd77379d3e9e5f4def0f7d6c6 ]
 
-Doing kasan pages allocation in MMU_init is too early, kernel doesn't
-have access yet to the entire memory space and memblock_alloc() fails
-when the kernel is a bit big.
+Alloc new map and request for new hardware queue when increse
+hardware queue count. Before this patch, it will show a
+warning for each new hardware queue, but it's not enough, these
+hctx have no maps and reqeust, when a bio was mapped to these
+hardware queue, it will trigger kernel panic when get request
+from these hctx.
 
-Do it from kasan_init() instead.
+Test environment:
+ * A NVMe disk supports 128 io queues
+ * 96 cpus in system
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/c24163ee5d5f8cdf52fefa45055ceb35435b8f15.1589866984.git.christophe.leroy@csgroup.eu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+A corner case can always trigger this panic, there are 96
+io queues allocated for HCTX_TYPE_DEFAULT type, the corresponding kernel
+log: nvme nvme0: 96/0/0 default/read/poll queues. Now we set nvme write
+queues to 96, then nvme will alloc others(32) queues for read, but
+blk_mq_update_nr_hw_queues does not alloc map and request for these new
+added io queues. So when process read nvme disk, it will trigger kernel
+panic when get request from these hardware context.
 
+Reproduce script:
+
+nr=$(expr `cat /sys/block/nvme0n1/device/queue_count` - 1)
+echo $nr > /sys/module/nvme/parameters/write_queues
+echo 1 > /sys/block/nvme0n1/device/reset_controller
+dd if=/dev/nvme0n1 of=/dev/null bs=4K count=1
+
+[ 8040.805626] ------------[ cut here ]------------
+[ 8040.805627] WARNING: CPU: 82 PID: 12921 at block/blk-mq.c:2578 blk_mq_map_swqueue+0x2b6/0x2c0
+[ 8040.805627] Modules linked in: nvme nvme_core nf_conntrack_netlink xt_addrtype br_netfilter overlay xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nft_counter nf_nat_tftp nf_conntrack_tftp nft_masq nf_tables_set nft_fib_inet nft_f
+ib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack tun bridge nf_defrag_ipv6 nf_defrag_ipv4 stp llc ip6_tables ip_tables nft_compat rfkill ip_set nf_tables nfne
+tlink sunrpc intel_rapl_msr intel_rapl_common skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass ipmi_ssif crct10dif_pclmul crc32_pclmul iTCO_wdt iTCO_vendor_support ghash_clmulni_intel intel_
+cstate intel_uncore raid0 joydev intel_rapl_perf ipmi_si pcspkr mei_me ioatdma sg ipmi_devintf mei i2c_i801 dca lpc_ich ipmi_msghandler acpi_power_meter acpi_pad xfs libcrc32c sd_mod ast i2c_algo_bit drm_vram_helper drm_ttm_helper ttm d
+rm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops
+[ 8040.805637]  ahci drm i40e libahci crc32c_intel libata t10_pi wmi dm_mirror dm_region_hash dm_log dm_mod [last unloaded: nvme_core]
+[ 8040.805640] CPU: 82 PID: 12921 Comm: kworker/u194:2 Kdump: loaded Tainted: G        W         5.6.0-rc5.78317c+ #2
+[ 8040.805640] Hardware name: Inspur SA5212M5/YZMB-00882-104, BIOS 4.0.9 08/27/2019
+[ 8040.805641] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
+[ 8040.805642] RIP: 0010:blk_mq_map_swqueue+0x2b6/0x2c0
+[ 8040.805643] Code: 00 00 00 00 00 41 83 c5 01 44 39 6d 50 77 b8 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 8b bb 98 00 00 00 89 d6 e8 8c 81 03 00 eb 83 <0f> 0b e9 52 ff ff ff 0f 1f 00 0f 1f 44 00 00 41 57 48 89 f1 41 56
+[ 8040.805643] RSP: 0018:ffffba590d2e7d48 EFLAGS: 00010246
+[ 8040.805643] RAX: 0000000000000000 RBX: ffff9f013e1ba800 RCX: 000000000000003d
+[ 8040.805644] RDX: ffff9f00ffff6000 RSI: 0000000000000003 RDI: ffff9ed200246d90
+[ 8040.805644] RBP: ffff9f00f6a79860 R08: 0000000000000000 R09: 000000000000003d
+[ 8040.805645] R10: 0000000000000001 R11: ffff9f0138c3d000 R12: ffff9f00fb3a9008
+[ 8040.805645] R13: 000000000000007f R14: ffffffff96822660 R15: 000000000000005f
+[ 8040.805645] FS:  0000000000000000(0000) GS:ffff9f013fa80000(0000) knlGS:0000000000000000
+[ 8040.805646] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 8040.805646] CR2: 00007f7f397fa6f8 CR3: 0000003d8240a002 CR4: 00000000007606e0
+[ 8040.805647] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 8040.805647] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 8040.805647] PKRU: 55555554
+[ 8040.805647] Call Trace:
+[ 8040.805649]  blk_mq_update_nr_hw_queues+0x31b/0x390
+[ 8040.805650]  nvme_reset_work+0xb4b/0xeab [nvme]
+[ 8040.805651]  process_one_work+0x1a7/0x370
+[ 8040.805652]  worker_thread+0x1c9/0x380
+[ 8040.805653]  ? max_active_store+0x80/0x80
+[ 8040.805655]  kthread+0x112/0x130
+[ 8040.805656]  ? __kthread_parkme+0x70/0x70
+[ 8040.805657]  ret_from_fork+0x35/0x40
+[ 8040.805658] ---[ end trace b5f13b1e73ccb5d3 ]---
+[ 8229.365135] BUG: kernel NULL pointer dereference, address: 0000000000000004
+[ 8229.365165] #PF: supervisor read access in kernel mode
+[ 8229.365178] #PF: error_code(0x0000) - not-present page
+[ 8229.365191] PGD 0 P4D 0
+[ 8229.365201] Oops: 0000 [#1] SMP PTI
+[ 8229.365212] CPU: 77 PID: 13024 Comm: dd Kdump: loaded Tainted: G        W         5.6.0-rc5.78317c+ #2
+[ 8229.365232] Hardware name: Inspur SA5212M5/YZMB-00882-104, BIOS 4.0.9 08/27/2019
+[ 8229.365253] RIP: 0010:blk_mq_get_tag+0x227/0x250
+[ 8229.365265] Code: 44 24 04 44 01 e0 48 8b 74 24 38 65 48 33 34 25 28 00 00 00 75 33 48 83 c4 40 5b 5d 41 5c 41 5d 41 5e c3 48 8d 68 10 4c 89 ef <44> 8b 60 04 48 89 ee e8 dd f9 ff ff 83 f8 ff 75 c8 e9 67 fe ff ff
+[ 8229.365304] RSP: 0018:ffffba590e977970 EFLAGS: 00010246
+[ 8229.365317] RAX: 0000000000000000 RBX: ffff9f00f6a79860 RCX: ffffba590e977998
+[ 8229.365333] RDX: 0000000000000000 RSI: ffff9f012039b140 RDI: ffffba590e977a38
+[ 8229.365349] RBP: 0000000000000010 R08: ffffda58ff94e190 R09: ffffda58ff94e198
+[ 8229.365365] R10: 0000000000000011 R11: ffff9f00f6a79860 R12: 0000000000000000
+[ 8229.365381] R13: ffffba590e977a38 R14: ffff9f012039b140 R15: 0000000000000001
+[ 8229.365397] FS:  00007f481c230580(0000) GS:ffff9f013f940000(0000) knlGS:0000000000000000
+[ 8229.365415] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 8229.365428] CR2: 0000000000000004 CR3: 0000005f35e26004 CR4: 00000000007606e0
+[ 8229.365444] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 8229.365460] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 8229.365476] PKRU: 55555554
+[ 8229.365484] Call Trace:
+[ 8229.365498]  ? finish_wait+0x80/0x80
+[ 8229.365512]  blk_mq_get_request+0xcb/0x3f0
+[ 8229.365525]  blk_mq_make_request+0x143/0x5d0
+[ 8229.365538]  generic_make_request+0xcf/0x310
+[ 8229.365553]  ? scan_shadow_nodes+0x30/0x30
+[ 8229.365564]  submit_bio+0x3c/0x150
+[ 8229.365576]  mpage_readpages+0x163/0x1a0
+[ 8229.365588]  ? blkdev_direct_IO+0x490/0x490
+[ 8229.365601]  read_pages+0x6b/0x190
+[ 8229.365612]  __do_page_cache_readahead+0x1c1/0x1e0
+[ 8229.365626]  ondemand_readahead+0x182/0x2f0
+[ 8229.365639]  generic_file_buffered_read+0x590/0xab0
+[ 8229.365655]  new_sync_read+0x12a/0x1c0
+[ 8229.365666]  vfs_read+0x8a/0x140
+[ 8229.365676]  ksys_read+0x59/0xd0
+[ 8229.365688]  do_syscall_64+0x55/0x1d0
+[ 8229.365700]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Tested-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/kasan.h      |    2 --
- arch/powerpc/mm/init_32.c             |    2 --
- arch/powerpc/mm/kasan/kasan_init_32.c |    4 +++-
- 3 files changed, 3 insertions(+), 5 deletions(-)
+ block/blk-mq.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -27,11 +27,9 @@
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index a7785df2c944..b1772de26a74 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2521,18 +2521,6 @@ static void blk_mq_map_swqueue(struct request_queue *q)
+ 	 * If the cpu isn't present, the cpu is mapped to first hctx.
+ 	 */
+ 	for_each_possible_cpu(i) {
+-		hctx_idx = set->map[HCTX_TYPE_DEFAULT].mq_map[i];
+-		/* unmapped hw queue can be remapped after CPU topo changed */
+-		if (!set->tags[hctx_idx] &&
+-		    !__blk_mq_alloc_rq_map(set, hctx_idx)) {
+-			/*
+-			 * If tags initialization fail for some hctx,
+-			 * that hctx won't be brought online.  In this
+-			 * case, remap the current ctx to hctx[0] which
+-			 * is guaranteed to always have tags allocated
+-			 */
+-			set->map[HCTX_TYPE_DEFAULT].mq_map[i] = 0;
+-		}
  
- #ifdef CONFIG_KASAN
- void kasan_early_init(void);
--void kasan_mmu_init(void);
- void kasan_init(void);
- #else
- static inline void kasan_init(void) { }
--static inline void kasan_mmu_init(void) { }
- #endif
+ 		ctx = per_cpu_ptr(q->queue_ctx, i);
+ 		for (j = 0; j < set->nr_maps; j++) {
+@@ -2541,6 +2529,18 @@ static void blk_mq_map_swqueue(struct request_queue *q)
+ 						HCTX_TYPE_DEFAULT, i);
+ 				continue;
+ 			}
++			hctx_idx = set->map[j].mq_map[i];
++			/* unmapped hw queue can be remapped after CPU topo changed */
++			if (!set->tags[hctx_idx] &&
++			    !__blk_mq_alloc_rq_map(set, hctx_idx)) {
++				/*
++				 * If tags initialization fail for some hctx,
++				 * that hctx won't be brought online.  In this
++				 * case, remap the current ctx to hctx[0] which
++				 * is guaranteed to always have tags allocated
++				 */
++				set->map[j].mq_map[i] = 0;
++			}
  
- #endif /* __ASSEMBLY */
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -175,8 +175,6 @@ void __init MMU_init(void)
- 	btext_unmap();
- #endif
- 
--	kasan_mmu_init();
--
- 	setup_kup();
- 
- 	/* Shortly after that, the entire linear mapping will be available */
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -129,7 +129,7 @@ static void __init kasan_remap_early_sha
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
- }
- 
--void __init kasan_mmu_init(void)
-+static void __init kasan_mmu_init(void)
- {
- 	int ret;
- 	struct memblock_region *reg;
-@@ -156,6 +156,8 @@ void __init kasan_mmu_init(void)
- 
- void __init kasan_init(void)
- {
-+	kasan_mmu_init();
-+
- 	kasan_remap_early_shadow_ro();
- 
- 	clear_page(kasan_early_shadow_page);
+ 			hctx = blk_mq_map_queue_type(q, j, i);
+ 			ctx->hctxs[j] = hctx;
+-- 
+2.25.1
+
 
 
