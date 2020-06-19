@@ -2,72 +2,113 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C696C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91989C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E426220C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7004720DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388792AbgFSUCz (ORCPT
+        id S2388927AbgFSUDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:02:55 -0400
-Received: from ms.lwn.net ([45.79.88.28]:55524 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgFSUCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:02:54 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 28CD52B8;
-        Fri, 19 Jun 2020 20:02:54 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 14:02:53 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 02/22] docs: thermal: convert cpu-idle-cooling.rst to
- ReST
-Message-ID: <20200619140253.148c3a8d@lwn.net>
-In-Reply-To: <7640755514809a7b5fe2756f3702613865877dcb.1592203650.git.mchehab+huawei@kernel.org>
-References: <cover.1592203650.git.mchehab+huawei@kernel.org>
-        <7640755514809a7b5fe2756f3702613865877dcb.1592203650.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        Fri, 19 Jun 2020 16:03:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37896 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388821AbgFSUDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 16:03:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C3BBB80045E4;
+        Fri, 19 Jun 2020 20:03:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fHwk4qyxZKn9; Fri, 19 Jun 2020 23:03:12 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-mips@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 2/3] serial: 8250_dw: Simplify the ref clock rate setting procedure
+Date:   Fri, 19 Jun 2020 23:02:50 +0300
+Message-ID: <20200619200251.9066-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 08:50:07 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Really instead of twice checking the clk_round_rate() return value
+we could do it once, and if it isn't error the clock rate can be changed.
+By doing so we decrease a number of ret-value tests and remove a weird
+goto-based construction implemented in the dw8250_set_termios() method.
 
-> Despite being named with .rst extension, this file doesn't
-> match the ReST standard. It actually causes a crash at
-> Sphinx:
-> 
-> 	Sphinx parallel build error:
-> 	docutils.utils.SystemMessage: /devel/v4l/docs/Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
-> 
-> Add needed markups for it to be properly parsed.
-> 
-> While here, add it to the thermal index.rst.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 
-Applied (though I took out the line about adding it to index.rst since
-this patch doesn't do that...)
+---
 
-Thanks,
+Changelog v3:
+- This is a new patch.
+---
+ drivers/tty/serial/8250/8250_dw.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-jon
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index aab3cccc6789..12866083731d 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -282,20 +282,13 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
+ 
+ 	clk_disable_unprepare(d->clk);
+ 	rate = clk_round_rate(d->clk, baud * 16);
+-	if (rate < 0)
+-		ret = rate;
+-	else if (rate == 0)
+-		ret = -ENOENT;
+-	else
++	if (rate > 0) {
+ 		ret = clk_set_rate(d->clk, rate);
++		if (!ret)
++			p->uartclk = rate;
++	}
+ 	clk_prepare_enable(d->clk);
+ 
+-	if (ret)
+-		goto out;
+-
+-	p->uartclk = rate;
+-
+-out:
+ 	p->status &= ~UPSTAT_AUTOCTS;
+ 	if (termios->c_cflag & CRTSCTS)
+ 		p->status |= UPSTAT_AUTOCTS;
+-- 
+2.26.2
+
