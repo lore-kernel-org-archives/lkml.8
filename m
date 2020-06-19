@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1DF21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2B021852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584191;
-	bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
+	s=default; t=1592584199;
+	bh=xE1FbHT2U1jiB8tncTe6OdJ5hY7F51zVSxoS6ThAvyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1vnhTZWYBdCBbLZWTktdW7wzctTn2aPnFgz2cfTiMyv496Da1uUV1qeGLxNTO311
-	 jzjiJxa2T/th4ATuNtVmaUNiPbcG6xBhs1rzB2WEyXVXofuJiQeiNrf77a8OFe0fjg
-	 5WCkLHszKnZtqykBJdL5OtYBgbfb5E42QL/c/CyU=
+	b=y+Ya87pH4L3TkSi//JwXS75EXYcpLHk4OejeWPj6BIYiEpNcbC4gjmUohP64XzW2u
+	 h7lcpzQE8oeI2zKg7SjoJORCEy3dKR/d8c3N/m8W8/fZLT57Kesx18LLe86RewKzn9
+	 2nfsMFObQdKeZvlWBsQM6v08JBTqHc6+D9Zaqlf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390119AbgFSQ3u (ORCPT
+        id S2393860AbgFSQ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389836AbgFSOyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:16 -0400
+        id S2388842AbgFSOyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60A421941;
-        Fri, 19 Jun 2020 14:54:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4450521852;
+        Fri, 19 Jun 2020 14:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578456;
-        bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
+        s=default; t=1592578453;
+        bh=xE1FbHT2U1jiB8tncTe6OdJ5hY7F51zVSxoS6ThAvyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxEDa4xnqjRTEF0X56qGEVbFXSHz2eQmL11J7mJY1ve9Ar7+MnKEN6i/GXG7Uodd2
-         cKKQV7S+9ADa4vn01JXSx+obpd0ZYk6op1HtE1QtZshZtAeqplmHaxKZTpY+GJD1jp
-         T7K/FMv362oOPZDldGx0+fAXQ9oBCWyDoek7Xz2w=
+        b=BBfgQ+ffdzt21f0t/U5DwhFSgsXfhRdEMXg1z66cXy/NZWUazf3RnHZcXALnwekp2
+         a8rfahZBxfJjKjDiyKXcm5MYF/558mtTfK0bCscJ8h7hrqZBaQwTVh6Dhdim4+M7Oy
+         uVtj4rDR/b+22Z4X6sC/f/1HnrplLiGU/CzxQ5p0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 029/267] x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
-Date:   Fri, 19 Jun 2020 16:30:14 +0200
-Message-Id: <20200619141650.264075524@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 020/267] powerpc/xive: Clear the page tables for the ESB IO mapping
+Date:   Fri, 19 Jun 2020 16:30:05 +0200
+Message-Id: <20200619141649.848315690@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,45 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+From: Cédric Le Goater <clg@kaod.org>
 
-commit 1574051e52cb4b5b7f7509cfd729b76ca1117808 upstream.
+[ Upstream commit a101950fcb78b0ba20cd487be6627dea58d55c2b ]
 
-The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
-registers (undocumented in the public spec) where BAR 0 is supposed to be,
-which results in messages like this:
+Commit 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the
+machine crash handler") fixed an issue in the FW assisted dump of
+machines using hash MMU and the XIVE interrupt mode under the POWER
+hypervisor. It forced the mapping of the ESB page of interrupts being
+mapped in the Linux IRQ number space to make sure the 'crash kexec'
+sequence worked during such an event. But it didn't handle the
+un-mapping.
 
-  pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
+This mapping is now blocking the removal of a passthrough IO adapter
+under the POWER hypervisor because it expects the guest OS to have
+cleared all page table entries related to the adapter. If some are
+still present, the RTAS call which isolates the PCI slot returns error
+9001 "valid outstanding translations".
 
-Mark these MROM functions as having non-compliant BARs so we don't try to
-probe any of them.  There are no other BARs on these devices.
+Remove these mapping in the IRQ data cleanup routine.
 
-See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
-May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
+Under KVM, this cleanup is not required because the ESB pages for the
+adapter interrupts are un-mapped from the guest by the hypervisor in
+the KVM XIVE native device. This is now redundant but it's harmless.
 
-[bhelgaas: commit log, add 0xa26d]
-Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the machine crash handler")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200429075122.1216388-2-clg@kaod.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/fixup.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/sysdev/xive/common.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
+diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
+index 1c31a08cdd54..2aa9f3de223c 100644
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/msi.h>
++#include <linux/vmalloc.h>
  
- /*
-  * Device [1022:7808]
+ #include <asm/prom.h>
+ #include <asm/io.h>
+@@ -933,12 +934,16 @@ EXPORT_SYMBOL_GPL(is_xive_irq);
+ void xive_cleanup_irq_data(struct xive_irq_data *xd)
+ {
+ 	if (xd->eoi_mmio) {
++		unmap_kernel_range((unsigned long)xd->eoi_mmio,
++				   1u << xd->esb_shift);
+ 		iounmap(xd->eoi_mmio);
+ 		if (xd->eoi_mmio == xd->trig_mmio)
+ 			xd->trig_mmio = NULL;
+ 		xd->eoi_mmio = NULL;
+ 	}
+ 	if (xd->trig_mmio) {
++		unmap_kernel_range((unsigned long)xd->trig_mmio,
++				   1u << xd->esb_shift);
+ 		iounmap(xd->trig_mmio);
+ 		xd->trig_mmio = NULL;
+ 	}
+-- 
+2.25.1
+
 
 
