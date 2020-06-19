@@ -2,103 +2,116 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ACDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40CD21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JubHsdyN"
+	by mail.kernel.org (Postfix) with ESMTP id 7C38221707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583581;
+	bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=y5LfpoaBGoio7ekeKzZn44ItirKycFwN0rdLmwwWLHo058dCu2so2U7Pd2faA4DFr
+	 O4NLrMqHGeD7QkyiVNvUswbH58GDSa9+Xm82qCH5x/2qe6oapTdd4laGHtBjU/Ewsw
+	 n1xI1mjJOucPlmw9MbMBZmK4/T8TXg0m0WxZle9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405653AbgFSQTb (ORCPT
+        id S2390729AbgFSPBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:19:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49442 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390777AbgFSQSY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:18:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIFpK008140;
-        Fri, 19 Jun 2020 11:18:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592583496;
-        bh=qGP6MS6+eG2DFpGVz1IWcoA6j9uBqfJ/c06oHe2JZGk=;
-        h=From:To:CC:Subject:Date;
-        b=JubHsdyNuL+CBY1m5AuqIfsbDEcOLDsJKcXUkqoCF7t29DDyKSK4OCt8nLu8/evaB
-         iHdv5L5fVJWXM3c/NDNWSyK/mgdOhSdcofw1idFBiSQdUJV6KiqawOVTHjglM5XhHN
-         3MaHalTAjHjyCi6KExoKVBFo0N/BeWbn7CLek6ss=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JGIFI1026425
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 11:18:15 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
- Jun 2020 11:18:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 19 Jun 2020 11:18:15 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIF2Y034554;
-        Fri, 19 Jun 2020 11:18:15 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v9 0/5] RGMII Internal delay common property
-Date:   Fri, 19 Jun 2020 11:18:08 -0500
-Message-ID: <20200619161813.2716-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 19 Jun 2020 11:01:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390678AbgFSPBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3307B20734;
+        Fri, 19 Jun 2020 15:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578860;
+        bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ID/WVkzO0Lhuu0qtfH3sSzlToIEjH+0HORgX62Uw4y2bE8jjJKrfXsxQp1fEVjL4x
+         gOPElzjNpVAGBVf0hZrJ7/Mk0EdCpT4L63Ws7PY+OSQfK0Z68Rqf1RzgLkjurNOeZb
+         bddQYo5UsmIzlZUhkKu6J79c/e/4Oq9AlrgupFsg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 155/267] wcn36xx: Fix error handling path in wcn36xx_probe()
+Date:   Fri, 19 Jun 2020 16:32:20 +0200
+Message-Id: <20200619141656.251971234@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-The RGMII internal delay is a common setting found in most RGMII capable PHY
-devices.  It was found that many vendor specific device tree properties exist
-to do the same function. This creates a common property to be used for PHY's
-that have internal delays for the Rx and Tx paths.
+[ Upstream commit a86308fc534edeceaf64670c691e17485436a4f4 ]
 
-If the internal delay is tunable then the caller needs to pass the internal
-delay array and the return will be the index in the array that was found in
-the firmware node.
+In case of error, 'qcom_wcnss_open_channel()' must be undone by a call to
+'rpmsg_destroy_ept()', as already done in the remove function.
 
-If the internal delay is fixed then the caller only needs to indicate which
-delay to return.  There is no need for a fixed delay to add device properties
-since the value is not configurable. Per the ethernet-controller.yaml the
-interface type indicates that the PHY should provide the delay.
+Fixes: 5052de8deff5 ("soc: qcom: smd: Transition client drivers from smd to rpmsg")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200507043619.200051-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/wcn36xx/main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-This series contains examples of both a configurable delay and a fixed delay.
-
-Dan Murphy (5):
-  dt-bindings: net: Add tx and rx internal delays
-  net: phy: Add a helper to return the index for of the internal delay
-  dt-bindings: net: Add RGMII internal delay for DP83869
-  net: dp83869: Add RGMII internal delay configuration
-  net: phy: DP83822: Add setting the fixed internal delay
-
- .../devicetree/bindings/net/ethernet-phy.yaml |  13 +++
- .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
- drivers/net/phy/dp83822.c                     |  79 ++++++++++++--
- drivers/net/phy/dp83869.c                     |  53 +++++++++-
- drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
- include/linux/phy.h                           |   4 +
- 6 files changed, 251 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
+index 79998a3ddb7a..ad051f34e65b 100644
+--- a/drivers/net/wireless/ath/wcn36xx/main.c
++++ b/drivers/net/wireless/ath/wcn36xx/main.c
+@@ -1341,7 +1341,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ 	if (addr && ret != ETH_ALEN) {
+ 		wcn36xx_err("invalid local-mac-address\n");
+ 		ret = -EINVAL;
+-		goto out_wq;
++		goto out_destroy_ept;
+ 	} else if (addr) {
+ 		wcn36xx_info("mac address: %pM\n", addr);
+ 		SET_IEEE80211_PERM_ADDR(wcn->hw, addr);
+@@ -1349,7 +1349,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ 
+ 	ret = wcn36xx_platform_get_resources(wcn, pdev);
+ 	if (ret)
+-		goto out_wq;
++		goto out_destroy_ept;
+ 
+ 	wcn36xx_init_ieee80211(wcn);
+ 	ret = ieee80211_register_hw(wcn->hw);
+@@ -1361,6 +1361,8 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ out_unmap:
+ 	iounmap(wcn->ccu_base);
+ 	iounmap(wcn->dxe_base);
++out_destroy_ept:
++	rpmsg_destroy_ept(wcn->smd_channel);
+ out_wq:
+ 	ieee80211_free_hw(hw);
+ out_err:
 -- 
-2.26.2
+2.25.1
+
+
 
