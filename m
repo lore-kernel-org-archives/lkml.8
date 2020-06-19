@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D74C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE87C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F2D20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7586E20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582098;
-	bh=PUyU3U9isDmaYsYKg2rpQuCuvr/2DQIyf+WB6GzmRyQ=;
+	s=default; t=1592582112;
+	bh=q1B3KQSxSxg9ydVzTPnGVgzi89sxg0AINlENfzb4HD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tAJF2kRDv2GMAfUtBDxLwSKMoyAc4TYSK3WsKhjWfeRpGsB/58WPONXhLW0eAPwK+
-	 hDTfVjNugA3yMu7XVQ6eUz02lqYvpd17xy39e/zZzBGDGpWolAqiujIq5Zv9mjKEFP
-	 ReXrjtMVLkWzXHW7NiWLLhPslF4tEtWSLb6FBQS8=
+	b=z1NKh3EJcv4tMO9C8lh0ZVSkZrQafHzIe+KpLVuRZJ6Q9q/ols0BzffV4Ym/To9vx
+	 z5HVrmnOesrB4gxgqhEmGQUzMZ/Po+2O4HO0XAcLT4VZNYy1vHTjZ0t+3cpQpHtF/g
+	 MXi98OPLT49uJ0/2SYsmASLDEoKt09xJn+7WsTNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgFSPy4 (ORCPT
+        id S2393347AbgFSPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392847AbgFSPVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:33 -0400
+        id S2392510AbgFSPVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F65520B80;
-        Fri, 19 Jun 2020 15:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C54321548;
+        Fri, 19 Jun 2020 15:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580093;
-        bh=PUyU3U9isDmaYsYKg2rpQuCuvr/2DQIyf+WB6GzmRyQ=;
+        s=default; t=1592580090;
+        bh=q1B3KQSxSxg9ydVzTPnGVgzi89sxg0AINlENfzb4HD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obJdKiZyLhU7H6mjI+Xa/DpqRuNej+vVNCjyaT+RXC99QMCmDrhuZGAF20xrLc4/Z
-         7L7lUN4ZBBCy0ZqLlLet6BgArev2W94h4/Aml2Tj2/t0FaoIXHyzv6KvdA5EI0Z48S
-         kTe3B7A0kl6AtD9O/8QuLc1catB7bf7Tksr3nztM=
+        b=C4FVisjsm6Wm6XRcpXHYffT9QKMv/PyRVmJ7Cmo7dlsmp9LsET65ZxWCdSkO4PD75
+         dFB0H51XokAAtVGdGy5iZOmlgjrc9Il0am0NJWxey9gDwBwq8k3xlglD5Fy1n137Z7
+         PNHmyQwSLbrnPuP2eOOjj2Fbx6FLbnUg8HhoJ+qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 112/376] dpaa2-eth: fix return codes used in ndo_setup_tc
-Date:   Fri, 19 Jun 2020 16:30:30 +0200
-Message-Id: <20200619141715.650232510@linuxfoundation.org>
+Subject: [PATCH 5.7 078/376] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
+Date:   Fri, 19 Jun 2020 16:29:56 +0200
+Message-Id: <20200619141714.037516399@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit b89c1e6bdc73f5775e118eb2ab778e75b262b30c ]
+[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
 
-Drivers ndo_setup_tc call should return -EOPNOTSUPP, when it cannot
-support the qdisc type. Other return values will result in failing the
-qdisc setup.  This lead to qdisc noop getting assigned, which will
-drop all TX packets on the interface.
+The value adapter->rss_conf is stored in DMA memory, and it is assigned
+to rssConf, so rssConf->indTableSize can be modified at anytime by
+malicious hardware. Because rssConf->indTableSize is assigned to n,
+buffer overflow may occur when the code "rssConf->indTable[n]" is
+executed.
 
-Fixes: ab1e6de2bd49 ("dpaa2-eth: Add mqprio support")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Tested-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+To fix this possible bug, n is checked after being used.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-index d97c320a2dc0..569e06d2bab2 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -2018,7 +2018,7 @@ static int dpaa2_eth_setup_tc(struct net_device *net_dev,
- 	int i;
- 
- 	if (type != TC_SETUP_QDISC_MQPRIO)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 
- 	mqprio->hw = TC_MQPRIO_HW_OFFLOAD_TCS;
- 	num_queues = dpaa2_eth_queue_count(priv);
-@@ -2030,7 +2030,7 @@ static int dpaa2_eth_setup_tc(struct net_device *net_dev,
- 	if (num_tc  > dpaa2_eth_tc_count(priv)) {
- 		netdev_err(net_dev, "Max %d traffic classes supported\n",
- 			   dpaa2_eth_tc_count(priv));
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	if (!num_tc) {
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 6528940ce5f3..b53bb8bcd47f 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -700,6 +700,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
+ 		*hfunc = ETH_RSS_HASH_TOP;
+ 	if (!p)
+ 		return 0;
++	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
++		return 0;
+ 	while (n--)
+ 		p[n] = rssConf->indTable[n];
+ 	return 0;
 -- 
 2.25.1
 
