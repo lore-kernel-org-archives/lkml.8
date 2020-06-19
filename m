@@ -2,54 +2,56 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DBB206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FFD206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584875;
-	bh=AhNpQWhHCxYM7lPY3Jn9sD12L0YCRe8EumL/sQ5wjjA=;
+	s=default; t=1592584879;
+	bh=ULzMJ230Is2k3ZU3EMjmixjq11fp4tjy5YfjuKNr1PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCsr50Ke0L1EdPN4tANS+GZDtNgN5qjMUxMv5ST1B02b57M6oYmnbuvJkU4U+uHg7
-	 FJ3uA3Fa3D39+e+ZiydgNw31B7D7Q6s86NDHVEx4KlskDbY/rOkxS4nLz5pO+c6giY
-	 DRycW1FYhGaRO1kTIuSLKHXKex1Qn87pBZ0S1WRE=
+	b=rf9/Y2kORkV1NJnNbCRzbt7XUSwxhSYOjJ8ha8qDWC1vVrYnZTD4vo3E0J7TnJSbX
+	 tx+s+EBD/WCsVT77UihZpyceQontDcOoN2bcSaAz5dWuue29cLKSaWXBgC/aUSNyJt
+	 A0KBNA1YYNtorCJWbek0Bz//9TbqFjuhsDUqQgVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbgFSOpO (ORCPT
+        id S2395344AbgFSQlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36248 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbgFSOo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:56 -0400
+        id S2388665AbgFSOpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2811620A8B;
-        Fri, 19 Jun 2020 14:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB7921556;
+        Fri, 19 Jun 2020 14:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577896;
-        bh=AhNpQWhHCxYM7lPY3Jn9sD12L0YCRe8EumL/sQ5wjjA=;
+        s=default; t=1592577912;
+        bh=ULzMJ230Is2k3ZU3EMjmixjq11fp4tjy5YfjuKNr1PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ij0MyKYQFxDK5yL0ttiBO1zzB3r7LRwGzCBVBwUzx0AUHwmmGwnQLDDrWcMI7oaTv
-         8fmbp3Hl3FS7Xi290HCJ5pBSHDlD/XS0q4iInwJZtlMKU6wKbaM4Is3lBsKFFBInI1
-         AwodOYIqwJnm6TvJTxeQCxX8jv/1GC/dTXH73K2k=
+        b=f0Tg1wKX2PTHMnt+F6sPd0eSr247+snjPs7U9jMQdj7ZoO9R0kcgZdd92K5Wp/H5e
+         0Or4Dhic90ftiqDYHJSWlAT02CaOcw4PVjs/uwp2DMi73lk46euUWMzau7HCtcc5nn
+         nHiQPzq3miP15QpdLxrVrt15ZkFaUfuPnL6Kj6vQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4.9 126/128] w1: omap-hdq: cleanup to add missing newline for some dev_dbg
-Date:   Fri, 19 Jun 2020 16:33:40 +0200
-Message-Id: <20200619141626.741118675@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 011/190] sched/fair: Dont NUMA balance for kthreads
+Date:   Fri, 19 Jun 2020 16:30:56 +0200
+Message-Id: <20200619141634.050109030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
-References: <20200619141620.148019466@linuxfoundation.org>
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,69 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 5e02f3b31704e24537697bce54f8156bdb72b7a6 upstream.
+[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
 
-Otherwise it will corrupt the console log during debugging.
+Stefano reported a crash with using SQPOLL with io_uring:
 
-Fixes: 7b5362a603a1 ("w1: omap_hdq: Fix some error/debug handling.")
-Cc: stable@vger.kernel.org
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Link: https://lore.kernel.org/r/cd0d55749a091214106575f6e1d363c6db56622f.1590255176.git.hns@goldelico.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  BUG: kernel NULL pointer dereference, address: 00000000000003b0
+  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+  RIP: 0010:task_numa_work+0x4f/0x2c0
+  Call Trace:
+   task_work_run+0x68/0xa0
+   io_sq_thread+0x252/0x3d0
+   kthread+0xf9/0x130
+   ret_from_fork+0x35/0x40
 
+which is task_numa_work() oopsing on current->mm being NULL.
+
+The task work is queued by task_tick_numa(), which checks if current->mm is
+NULL at the time of the call. But this state isn't necessarily persistent,
+if the kthread is using use_mm() to temporarily adopt the mm of a task.
+
+Change the task_tick_numa() check to exclude kernel threads in general,
+as it doesn't make sense to attempt ot balance for kthreads anyway.
+
+Reported-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/masters/omap_hdq.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -204,7 +204,7 @@ static int hdq_write_byte(struct hdq_dat
- 	/* check irqstatus */
- 	if (!(*status & OMAP_HDQ_INT_STATUS_TXCOMPLETE)) {
- 		dev_dbg(hdq_data->dev, "timeout waiting for"
--			" TXCOMPLETE/RXCOMPLETE, %x", *status);
-+			" TXCOMPLETE/RXCOMPLETE, %x\n", *status);
- 		ret = -ETIMEDOUT;
- 		goto out;
- 	}
-@@ -215,7 +215,7 @@ static int hdq_write_byte(struct hdq_dat
- 			OMAP_HDQ_FLAG_CLEAR, &tmp_status);
- 	if (ret) {
- 		dev_dbg(hdq_data->dev, "timeout waiting GO bit"
--			" return to zero, %x", tmp_status);
-+			" return to zero, %x\n", tmp_status);
- 	}
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0b4e997fea1a..4d8add44fffb 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2643,7 +2643,7 @@ void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
  
- out:
-@@ -231,7 +231,7 @@ static irqreturn_t hdq_isr(int irq, void
- 	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
- 	hdq_data->hdq_irqstatus = hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
- 	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
--	dev_dbg(hdq_data->dev, "hdq_isr: %x", hdq_data->hdq_irqstatus);
-+	dev_dbg(hdq_data->dev, "hdq_isr: %x\n", hdq_data->hdq_irqstatus);
- 
- 	if (hdq_data->hdq_irqstatus &
- 		(OMAP_HDQ_INT_STATUS_TXCOMPLETE | OMAP_HDQ_INT_STATUS_RXCOMPLETE
-@@ -339,7 +339,7 @@ static int omap_hdq_break(struct hdq_dat
- 	tmp_status = hdq_data->hdq_irqstatus;
- 	/* check irqstatus */
- 	if (!(tmp_status & OMAP_HDQ_INT_STATUS_TIMEOUT)) {
--		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x",
-+		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x\n",
- 				tmp_status);
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -366,7 +366,7 @@ static int omap_hdq_break(struct hdq_dat
- 			&tmp_status);
- 	if (ret)
- 		dev_dbg(hdq_data->dev, "timeout waiting INIT&GO bits"
--			" return to zero, %x", tmp_status);
-+			" return to zero, %x\n", tmp_status);
- 
- out:
- 	mutex_unlock(&hdq_data->hdq_mutex);
+ 	/*
+-- 
+2.25.1
+
 
 
