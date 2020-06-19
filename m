@@ -2,51 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23A2C218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA00321924
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579673;
-	bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
+	s=default; t=1592579681;
+	bh=iAdilQ1RqAgjiQ0N5XyUt7TDMJFSe7K4KSOU67ZV/U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FX1pl4YUOFUeVK+pGWF6BgRP/wHOtdFZt1T1CPoArziKhFssgNCxsEhe3bXz/ODjq
-	 lKLfbzB7y0dEpDM6GjB9CB7kJGpGxOT605QCxzFBohOO3vDjNXrc4xHVYy6VsqeMid
-	 qX8zKrCK0Fdbf2AAbLuaNCaOKm9Sjkq8hEeXSu3I=
+	b=YILfwOTnpyCs/UnZio/kaEKgR3mnNHW8/DQc/5+Ynee93GjOKYRt9mVU3WFSkGrQ8
+	 Cx1sbeG14fuDU73cjEY5xAl4LZVv23UWTmIzMG22tZRBonsq+ShxptuMsHD7WCK7wg
+	 37Wtd+SIs2GvvQdZ93DubvFpa0/pX5CBp51F7tyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbgFSPOb (ORCPT
+        id S2392320AbgFSPOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390083AbgFSPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:10 -0400
+        id S2392303AbgFSPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5D42158C;
-        Fri, 19 Jun 2020 15:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A3CB206FA;
+        Fri, 19 Jun 2020 15:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579649;
-        bh=PfzJCVDK9V9rMaGp3ZQwzgzgVUD0NoaOUgkrbzkxG9g=;
+        s=default; t=1592579655;
+        bh=iAdilQ1RqAgjiQ0N5XyUt7TDMJFSe7K4KSOU67ZV/U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0j/QmYSO3UpnG9rSxZe4Y7uAbTbMBi19KcwjX51PzLvMGoPLyVlC7ftfzs798ERxi
-         6t4hyYej8g36arjCWE8f8gvX5fHwR5a3aAEcP8sS6iqbOtsxU4SyK9oOXYWrYt29cl
-         DaLO6p5kvSy+qVdrKC88I6thtmheFvElKZBvnn/4=
+        b=s7tA8D3/lD+fXwdCp38RvyJDkWe2Ru93i/ZgRxn/2ZxPJP3FvMb8L7VAV1RcbmDGh
+         m6K2zZH6DdEBv1dwm1UmSfdeoChGaC1sJbG66XENPHINC9qn8N/RMRfxwj7zgxrYGH
+         3f2lQqc/hWrnjTR/2mX1xao3OvbHWJ1a5vD+JdEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 214/261] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
-Date:   Fri, 19 Jun 2020 16:33:45 +0200
-Message-Id: <20200619141700.137301275@linuxfoundation.org>
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 189/261] x86/amd_nb: Add Family 19h PCI IDs
+Date:   Fri, 19 Jun 2020 16:33:20 +0200
+Message-Id: <20200619141658.970090299@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,151 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-commit b577a279914085c6b657c33e9f39ef56d96a3302 upstream.
+[ Upstream commit b3f79ae45904ae987a7c06a9e8d6084d7b73e67f ]
 
-Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
-mask") started writing the eint wakeup mask from the pinctrl driver.
-Unfortunately, it made the assumption that the private retention data
-was always a regmap while in the case of s5pv210 it is a raw pointer
-to the clock base (as the eint wakeup mask not in the PMU as with newer
-Exynos platforms).
+Add the new PCI Device 18h IDs for AMD Family 19h systems. Note that
+Family 19h systems will not have a new PCI root device ID.
 
-Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200110015651.14887-4-Yazen.Ghannam@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c |   73 ++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+ arch/x86/kernel/amd_nb.c | 3 +++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -40,6 +40,8 @@ struct exynos_irq_chip {
- 	u32 eint_pend;
- 	u32 eint_wake_mask_value;
- 	u32 eint_wake_mask_reg;
-+	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
-+				     struct exynos_irq_chip *irq_chip);
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 251c795b4eb3..69aed0ebbdfc 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -22,6 +22,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
++#define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
+ 
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -52,6 +53,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
+ 	{}
  };
- 
- static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
-@@ -342,6 +344,47 @@ static int exynos_wkup_irq_set_wake(stru
- 	return 0;
- }
- 
-+static void
-+exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+{
-+	struct regmap *pmu_regs;
-+
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+	pmu_regs = drvdata->retention_ctrl->priv;
-+	dev_info(drvdata->dev,
-+		 "Setting external wakeup interrupt mask: 0x%x\n",
-+		 irq_chip->eint_wake_mask_value);
-+
-+	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
-+		     irq_chip->eint_wake_mask_value);
-+}
-+
-+static void
-+s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
-+				    struct exynos_irq_chip *irq_chip)
-+
-+{
-+	void __iomem *clk_base;
-+
-+	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
-+		dev_warn(drvdata->dev,
-+			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
-+		return;
-+	}
-+
-+
-+	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
-+
-+	__raw_writel(irq_chip->eint_wake_mask_value,
-+		     clk_base + irq_chip->eint_wake_mask_reg);
-+}
-+
- /*
-  * irq_chip for wakeup interrupts
-  */
-@@ -360,8 +403,9 @@ static const struct exynos_irq_chip s5pv
- 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
--	/* Only difference with exynos4210_wkup_irq_chip: */
-+	/* Only differences with exynos4210_wkup_irq_chip: */
- 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
+ EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+@@ -66,6 +68,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
  };
- 
- static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
-@@ -380,6 +424,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
-@@ -398,6 +443,7 @@ static const struct exynos_irq_chip exyn
- 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
- 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
- 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
- /* list of external wakeup controllers supported */
-@@ -574,27 +620,6 @@ int exynos_eint_wkup_init(struct samsung
- 	return 0;
- }
- 
--static void
--exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
--				    struct exynos_irq_chip *irq_chip)
--{
--	struct regmap *pmu_regs;
--
--	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
--		dev_warn(drvdata->dev,
--			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
--		return;
--	}
--
--	pmu_regs = drvdata->retention_ctrl->priv;
--	dev_info(drvdata->dev,
--		 "Setting external wakeup interrupt mask: 0x%x\n",
--		 irq_chip->eint_wake_mask_value);
--
--	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
--		     irq_chip->eint_wake_mask_value);
--}
--
- static void exynos_pinctrl_suspend_bank(
- 				struct samsung_pinctrl_drv_data *drvdata,
- 				struct samsung_pin_bank *bank)
-@@ -626,8 +651,8 @@ void exynos_pinctrl_suspend(struct samsu
- 		else if (bank->eint_type == EINT_TYPE_WKUP) {
- 			if (!irq_chip) {
- 				irq_chip = bank->irq_chip;
--				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
--								    irq_chip);
-+				irq_chip->set_eint_wakeup_mask(drvdata,
-+							       irq_chip);
- 			} else if (bank->irq_chip != irq_chip) {
- 				dev_warn(drvdata->dev,
- 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index dae9ffe4478f..6693cf561cd1 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -549,6 +549,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
++#define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+-- 
+2.25.1
+
 
 
