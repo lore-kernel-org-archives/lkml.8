@@ -2,116 +2,111 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E52C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822B32078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A8F2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWpfndfl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vhka6UDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733165AbgFSO07 (ORCPT
+        id S1733123AbgFSOaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:26:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28394 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726321AbgFSO06 (ORCPT
+        Fri, 19 Jun 2020 10:30:09 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39810 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgFSOaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592576817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QawtTit9ilWBfcWzRJGBgzMme6mDC3U2WVp0QdlTe14=;
-        b=HWpfndflNhEA7Bph0TxIAIikhPncaZpEbZHedE1rnMRR50f8SrPgtHIydbpHFT133Gc88L
-        Md9MtxAkif/DE7OEDwdbUVu43+bkNlD1aV1Kcfd7TrBGkNF0A5Poy5sSv/OsQK8RUu6N2S
-        5qJAKVcMQU0PZ4XkogPpyM0e0U55nFU=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-p15f9i4mNXe6Kfn9-ptMag-1; Fri, 19 Jun 2020 10:26:54 -0400
-X-MC-Unique: p15f9i4mNXe6Kfn9-ptMag-1
-Received: by mail-il1-f198.google.com with SMTP id c11so6532406ilq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:26:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QawtTit9ilWBfcWzRJGBgzMme6mDC3U2WVp0QdlTe14=;
-        b=lCo1/iRHb5hAAfsV/7Fzf6AewhCR/LsOjyb5J8rBgkFzJ0LtJZC8pjR9/Sh3U09Q6q
-         QplrKCD9J6JzroK9m6CnZNP1y0Tmeh0gpYfE3Zw9BSw9QBhn0Pnai9ZTTT1e3BAM5I0C
-         jjQuxzxQwhUGdYFvyNUsIlnyMexmg+gjEtTgpZyzKhF5URldzljD77KrSylD0vGG9Ish
-         +9IUYwMsJ0sRMuAVkhY5m1jsbIcz63UpR5ihVLRMvWiiRMWYoBfQNZ5h9Pxj9gGUrC6e
-         bUnLD2OFmlO3aj0Vk0Qrs/m+1Ctw+ka25XFdIG2hs+vL066AzVRlVirpOo7VgLlBOsfE
-         6CHg==
-X-Gm-Message-State: AOAM533z8y42h/NaC6rlk6DMSX5mEhG5XwbeNzYbgbulmMxa0C36KoAb
-        8ZuoZLyuIQUvguJLGPyn3Gqoat9nOZ3O+EFEWLej84qGc6rPmdXDRijIe+UxKMF+QirAfDhT1lg
-        bb96kxoInoPpYEYPYnBLCkzYUoktuhpe1v/BWhX0C
-X-Received: by 2002:a02:c802:: with SMTP id p2mr4036675jao.111.1592576814338;
-        Fri, 19 Jun 2020 07:26:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxE/w+ErfwfWnr9Fmkf3RuosFy1XAP5JEuenfnPBYSO5RmXN0kjlDcBgmUhw/LWSMNkY9RoyHSyRPMpN29Oi/w=
-X-Received: by 2002:a02:c802:: with SMTP id p2mr4036653jao.111.1592576813953;
- Fri, 19 Jun 2020 07:26:53 -0700 (PDT)
+        Fri, 19 Jun 2020 10:30:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JEC1ot170432;
+        Fri, 19 Jun 2020 14:30:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=oAnixyfYUA6sbi0KFf5DGg/bzPC/rAgOKQf2fzRJfxs=;
+ b=Vhka6UDtAR2GnkYivPdxfpnzT4sf7oAOwxuL5q5ap9b7vYExHuAjtQpgQCIiVmNeC1yk
+ RHEhnlmLN2R999grd1Not9tqIefiJoIbWs8hpfWvYFc52SM3OgE2YgB9KAFWtmzQMVc3
+ GhWNxvouOnWxbveurkLJFu2WzAqq2nIhY1KcLz77wBd8kb9mE0aszLfXl5LkRPXKM7+t
+ r/LY47uUi8djpJfUt1x6516eWNPJGqBczMQSgPfHMYqO19g4MGNgYB6NSduwIPuBu3l3
+ 3LAWQq+s6sysCZG5NVkyEIfxPdRPtgBzste/cb/3wFER1MyJnr5mHxKsJDMaBVoSq1ZR uQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31q660712c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jun 2020 14:30:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JEDrdi123628;
+        Fri, 19 Jun 2020 14:29:59 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31q662utq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 14:29:59 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05JETmhr017000;
+        Fri, 19 Jun 2020 14:29:48 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jun 2020 07:29:47 -0700
+Date:   Fri, 19 Jun 2020 17:29:40 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] drm/virtio: Fix an IS_ERR() vs NULL check in
+ virtio_gpu_object_shmem_init()
+Message-ID: <20200619142940.GB267142@mwanda>
 MIME-Version: 1.0
-References: <20200608210058.37352-1-jarod@redhat.com> <20200610185910.48668-1-jarod@redhat.com>
- <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
-In-Reply-To: <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
-From:   Jarod Wilson <jarod@redhat.com>
-Date:   Fri, 19 Jun 2020 10:26:43 -0400
-Message-ID: <CAKfmpSczw6P=EoxPNmG=475AHiSTzC3vzuHvFBC6=PCfXVRCSQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 0/4] bonding: initial support for hardware
- crypto offload
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006190106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 clxscore=1011 mlxlogscore=999 suspectscore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006190106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 6:26 AM Jeff Kirsher
-<jeffrey.t.kirsher@intel.com> wrote:
->
-> On Wed, Jun 10, 2020 at 1:18 PM Jarod Wilson <jarod@redhat.com> wrote:
-> >
-> > This is an initial functional implementation for doing pass-through of
-> > hardware encryption from bonding device to capable slaves, in active-backup
-> > bond setups. This was developed and tested using ixgbe-driven Intel x520
-> > interfaces with libreswan and a transport mode connection, primarily using
-> > netperf, with assorted connection failures forced during transmission. The
-> > failover works quite well in my testing, and overall performance is right
-> > on par with offload when running on a bare interface, no bond involved.
-> >
-> > Caveats: this is ONLY enabled for active-backup, because I'm not sure
-> > how one would manage multiple offload handles for different devices all
-> > running at the same time in the same xfrm, and it relies on some minor
-> > changes to both the xfrm code and slave device driver code to get things
-> > to behave, and I don't have immediate access to any other hardware that
-> > could function similarly, but the NIC driver changes are minimal and
-> > straight-forward enough that I've included what I think ought to be
-> > enough for mlx5 devices too.
-> >
-> > v2: reordered patches, switched (back) to using CONFIG_XFRM_OFFLOAD
-> > to wrap the code additions and wrapped overlooked additions.
-> >
-> > Jarod Wilson (4):
-> >   xfrm: bail early on slave pass over skb
-> >   ixgbe_ipsec: become aware of when running as a bonding slave
-> >   mlx5: become aware of when running as a bonding slave
-> >   bonding: support hardware encryption offload to slaves
-...
-> Was this ever sent to netdev (the more appropriate ML)?
+The drm_gem_shmem_get_pages_sgt() function returns error pointers on
+error, it never returns NULL.
 
-I believe so, but I'd neglected to notice net-next was closed at the
-time, so I was holding on to it to resubmit once net-next is opened
-back up.
+Fixes: d323bb44e4d2 ("drm/virtio: Call the right shmem helpers")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_object.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index 346cef5ce251..0cd5ecf4b3c0 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -151,9 +151,9 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
+ 		return -EINVAL;
+ 
+ 	shmem->pages = drm_gem_shmem_get_pages_sgt(&bo->base.base);
+-	if (!shmem->pages) {
++	if (IS_ERR(shmem->pages)) {
+ 		drm_gem_shmem_unpin(&bo->base.base);
+-		return -EINVAL;
++		return PTR_ERR(shmem->pages);
+ 	}
+ 
+ 	if (use_dma_api) {
 -- 
-Jarod Wilson
-jarod@redhat.com
+2.27.0
 
