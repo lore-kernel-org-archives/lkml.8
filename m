@@ -2,117 +2,93 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6918FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2AD20C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462ED20C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MMmRJ8t4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ha9Efugf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390816AbgFSTvt (ORCPT
+        id S2388248AbgFSTxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44466 "EHLO
+        Fri, 19 Jun 2020 15:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390725AbgFSTvq (ORCPT
+        with ESMTP id S2387750AbgFSTxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:51:46 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70531C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:51:45 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q198so2288469qka.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:51:45 -0700 (PDT)
+        Fri, 19 Jun 2020 15:53:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D671C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:53:50 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id h185so4871905pfg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=zP3mPfj8fYVGpA7X3i9lQw/wDhwl6Nv+h6HgzhW86WQ=;
-        b=MMmRJ8t4j4VSr9X/gdvrRhfckKKnEPttgsjRqD7r42N3dR4TTyyqhwnzRR2Zmqw9vU
-         /eO8RZr/A4nHSOyE8HOfUMCXLr5V4yKzT96SAI89H9oM6ivtb11eu4o1b5IwFl/nQYDG
-         BnpCLEibfwPpM+qQe2fTwD8TqkotDnif2MXx2+W5OqJhUu02J9GSkKwpu8Dh9btmlQsW
-         HfPeSb4neRXQnhdWbAQBoeJfQU5yXw4BH7QCQBZFfTz7zBx/ENEemRvnCmMQHQcSOvEj
-         0arcTcBmJyDOK1t36aFed0to462HbPkMSNhWvaHJO5I28iu9xV3xW3atg8lfxqqFsEQb
-         IKQg==
+        bh=anG95SJd4AOjTnI4MV3+T4SvuNW+x6NMVdWZoSy8e08=;
+        b=ha9EfugfFqrYvP9ncS5JDX/+xka+I18knexTDvSEUg3ZZbryI7a/FLIh6rXbkvHOES
+         h9ujOx/D0LNG/bvHVXHGHYuGvaBOEvr390y7KSfwiaD/IR/aV/nVT/jKrFqWjIHCUjyp
+         pKx8tPOkcfw+AMC9k4Y1o7kg3qc1QC/Tvgvsg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=zP3mPfj8fYVGpA7X3i9lQw/wDhwl6Nv+h6HgzhW86WQ=;
-        b=UOWpabkPCbAQbK7v3jPoH4V6jy80oUeaGbw3yHgJEO008hTD5ZPMxs0e2XnepUHR4B
-         EARx/IN5Tl2FPX8Nq7Bm3hluSF+PUvKzN9+++miQN4xPVTL8EhskvvMbEFbCbHOTuXPA
-         K+aDzWFmGjan4YQ1xYblzJ9/2WQRxDS4OSBNI0t5d425ZbpxUuS6he7IXQYwEiqjaZwJ
-         +/kJzF0B2cA2zFi3Hhcuemd5F0M7GrN4GFuB0eDLz+Eqf+VL7WRcK9Vpf9exqgkImVST
-         gfhVAfprjrifYVgy/Ky5ur2rYbbCY1rw9yDRZ+osA6ZsmDhkh40jTGKtQaLFCJC7ZmEA
-         5Meg==
-X-Gm-Message-State: AOAM53189NrgNJPG4KLNGYqCXGuMAPmzFVuU6gBoF2tmHnpyi6QiYFxA
-        0V5eiYoutm3fxk9u46o73sIMgw==
-X-Google-Smtp-Source: ABdhPJyeNbiGf5pDE6/nVlB6izIza9irK+wIFfmkUW9Wq6/rfhl4M8xllFEi5LwJ5619wnq0QRE14Q==
-X-Received: by 2002:a37:b401:: with SMTP id d1mr5401845qkf.206.1592596304691;
-        Fri, 19 Jun 2020 12:51:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id a81sm7609057qkb.24.2020.06.19.12.51.44
+        bh=anG95SJd4AOjTnI4MV3+T4SvuNW+x6NMVdWZoSy8e08=;
+        b=IVYJcZ9TlEUcXkieYUJYVJ7I8RLIM8S+PYWheGZOizgxkkgpeY4Oe2l1uiwYF9c6VO
+         TTnnWeMMqVY7woGAoXJkhpYTd8jDMN1RwkBpQq3G3CT17Qxd30usKJjQpT31hUUQiqA6
+         CA+PZZ2mKEp7cb1AfgD1lDvEiivviBlbeQU1ltOTIsb6WN+1Ah/bL5Nc1YsRX7kcoegZ
+         cWknYagkMa9z7gqVBuxrGL9MPrKiuzUNGbvKAQ2pt/OpYtzQlpnzxluKh2wP0f+9U8P5
+         763D5tvIwZTX76wXGdcB/aWzCEdnpTwanJf2o/r12ekeMwuXNmAbCVbvB3GcZHRaTF0y
+         OzAw==
+X-Gm-Message-State: AOAM531MTpFBEM/fI77D7qQrtSNA65s91+1B81Q6A/oWOgxlBeH6mnTj
+        gqd7sXeqDS9/f1ppf/Lbsq/Mpw==
+X-Google-Smtp-Source: ABdhPJzHp+ulgh26iR+Xv3g/K0aOiw7U9M6bVmBEmxiFXk8mFx/tiNvkiTra7x6B5etHiCFnYsht0g==
+X-Received: by 2002:a62:5c03:: with SMTP id q3mr9555744pfb.58.1592596428586;
+        Fri, 19 Jun 2020 12:53:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h20sm6473821pfo.105.2020.06.19.12.53.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 12:51:44 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jmN39-00B0gQ-Jd; Fri, 19 Jun 2020 16:51:43 -0300
-Date:   Fri, 19 Jun 2020 16:51:43 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Alex Deucher <alexdeucher@gmail.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200619195143.GS6578@ziepe.ca>
-References: <20200618172338.GM6578@ziepe.ca>
- <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
- <20200619180935.GA10009@redhat.com>
- <CADnq5_Pw_85Kzh1of=MbDi4g9POeF3jO4AJ7p2FjY5XZW0=vsQ@mail.gmail.com>
- <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
+        Fri, 19 Jun 2020 12:53:47 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 12:53:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Will Drewry <wad@chromium.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] seccomp: Use -1 marker for end of mode 1 syscall list
+Message-ID: <202006191253.B00874B22@keescook>
+References: <202006191236.AC3E22AAB@keescook>
+ <CALCETrXM5gneAC40RLWyjnCeHE6JFVOKnM0ooKLooGGaVV1KOA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
+In-Reply-To: <CALCETrXM5gneAC40RLWyjnCeHE6JFVOKnM0ooKLooGGaVV1KOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 03:30:32PM -0400, Felix Kuehling wrote:
-> We have a potential problem with CPU updating page tables while the GPU
-> is retrying on page table entries because 64 bit CPU transactions don't
-> arrive in device memory atomically.
+On Fri, Jun 19, 2020 at 12:42:14PM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 19, 2020 at 12:37 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The terminator for the mode 1 syscalls list was a 0, but that could be
+> > a valid syscall number (e.g. x86_64 __NR_read). By luck, __NR_read was
+> > listed first and the loop construct would not test it, so there was no
+> > bug. However, this is fragile. Replace the terminator with -1 instead,
+> > and make the variable name for mode 1 syscall lists more descriptive.
+> 
+> Could the architecture instead supply the length of the list?
 
-Except for 32 bit platforms atomicity is guarenteed if you use uncached
-writeq() to aligned addresses..
+It could, but I didn't like the way the plumbing for that looked.
 
-The linux driver model breaks of the writeX() stuff is not atomic.
-
-Jason
+-- 
+Kees Cook
