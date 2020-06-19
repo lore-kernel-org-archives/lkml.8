@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96586C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713FC217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8435F2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583345;
-	bh=rtbIHQjDReviVKNyg33EFXRysUUCSl3GNJoN1aNxlRs=;
+	s=default; t=1592583350;
+	bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2rXEYKZWHStU5WMb+3tt1kAJKimkTg9xmAt6C5kC6z6YkWDkmSOxOL4AilemsWZm
-	 sLA8serjfxu5YFYHR2eCD9UvmB+xSELQqvupwAASZoub3GoVrujl/2XzTxN3fftZeY
-	 jghB6JNKhXHcEZzMz0ECJmHGOPc1LKgJzeV0NbdA=
+	b=tK+K3vFcnb5t7Vh69sCo7paiNGP69TAWAVfOP8snNLrTxqqinJL49/KrXw1rJUJSH
+	 dfXmj+5KIgQyc99pXnkuTCO6Ca5Xu4FKQqa9Pnp4pV/VE+u+/5jsl2MKZqG4k6EEvj
+	 G/T6e8xjf6ZDNdOobhOnw1EvE2bx2ZcxCRuYcG60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391018AbgFSPDd (ORCPT
+        id S2391166AbgFSQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59986 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:15:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390962AbgFSPDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:13 -0400
+        id S2389254AbgFSPD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB76C21974;
-        Fri, 19 Jun 2020 15:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C6B2206DB;
+        Fri, 19 Jun 2020 15:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578991;
-        bh=rtbIHQjDReviVKNyg33EFXRysUUCSl3GNJoN1aNxlRs=;
+        s=default; t=1592579009;
+        bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vugKJQL3ub59VZ6SbnTbArbobvlPZ7cAJGF7DUdfambwurSXXwJ+GP5Q6gOCkZIu+
-         1mNEb17eGlS10q7GKj7vyCEoZmLNhbwV2uLwm/aB7R5At+npDTfZcBzkkC/CpvSjnB
-         KROvlv4jZMU56IHzWKpisb2ZIZF+upBvOtSEjLWs=
+        b=h1x0h04PACZJe82gth7XV45WmgIHiKn2v33Oc8x6QVyvuffWC7mp7rT78ow5+3Gth
+         b/9ecOZrcX2jAE+09889RMOM98OKPEteVY99/BSEfIVj7qRexvS6X69cONbKEufEOB
+         ZNiRyNxftswWGHH4ppkxgMcZ5KIc4mnXdyNKkjik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 4.19 235/267] media: go7007: fix a miss of snd_card_free
-Date:   Fri, 19 Jun 2020 16:33:40 +0200
-Message-Id: <20200619141659.979207377@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.19 241/267] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Fri, 19 Jun 2020 16:33:46 +0200
+Message-Id: <20200619141700.258235248@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,86 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 9453264ef58638ce8976121ac44c07a3ef375983 upstream.
+commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
 
-go7007_snd_init() misses a snd_card_free() in an error path.
-Add the missed call to fix it.
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-[Salvatore Bonaccorso: Adjust context for backport to versions which do
-not contain c0decac19da3 ("media: use strscpy() instead of strlcpy()")
-and ba78170ef153 ("media: go7007: Fix misuse of strscpy")]
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+
+Since device can only be runtime suspended when there's no link partner,
+we can skip reading register and let the following logic set speed and
+duplex with correct status.
+
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
+
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
+
+CC: stable <stable@vger.kernel.org>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/go7007/snd-go7007.c |   35 ++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/go7007/snd-go7007.c
-+++ b/drivers/media/usb/go7007/snd-go7007.c
-@@ -244,22 +244,18 @@ int go7007_snd_init(struct go7007 *go)
- 	gosnd->capturing = 0;
- 	ret = snd_card_new(go->dev, index[dev], id[dev], THIS_MODULE, 0,
- 			   &gosnd->card);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_snd;
-+
- 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
- 			&go7007_snd_device_ops);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	ret = snd_pcm_new(gosnd->card, "go7007", 0, 0, 1, &gosnd->pcm);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	strlcpy(gosnd->card->driver, "go7007", sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->shortname, go->name, sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->longname, gosnd->card->shortname,
-@@ -270,11 +266,8 @@ int go7007_snd_init(struct go7007 *go)
- 			&go7007_snd_capture_ops);
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -143,7 +143,8 @@ static int igb_get_link_ksettings(struct
+ 	u32 speed;
+ 	u32 supported, advertising;
  
- 	ret = snd_card_register(gosnd->card);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
+-	status = rd32(E1000_STATUS);
++	status = pm_runtime_suspended(&adapter->pdev->dev) ?
++		 0 : rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
  
- 	gosnd->substream = NULL;
- 	go->snd_context = gosnd;
-@@ -282,6 +275,12 @@ int go7007_snd_init(struct go7007 *go)
- 	++dev;
- 
- 	return 0;
-+
-+free_card:
-+	snd_card_free(gosnd->card);
-+free_snd:
-+	kfree(gosnd);
-+	return ret;
- }
- EXPORT_SYMBOL(go7007_snd_init);
- 
+ 		supported = (SUPPORTED_10baseT_Half |
 
 
