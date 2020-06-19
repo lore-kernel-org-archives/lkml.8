@@ -2,124 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB86AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEDA20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A427520B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0v7YfgMV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VuI4Xr4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391420AbgFSU40 (ORCPT
+        id S2391536AbgFSU4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54384 "EHLO
+        Fri, 19 Jun 2020 16:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389280AbgFSU4Z (ORCPT
+        with ESMTP id S2389280AbgFSU4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:56:25 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD8DC0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:25 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y17so4387516plb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:25 -0700 (PDT)
+        Fri, 19 Jun 2020 16:56:31 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD1FC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:31 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n9so4402628plk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gBOXJkfJCu0sdxn7ZdsBsc6b9MlbPo9DaUYf2xdlizc=;
-        b=0v7YfgMVZh9Y1bQFnGqY5KlUmOzZp79g6dWctU09tV4oV4CJu/DLfQp6Albxi1cpzG
-         80PscWWcOO8/UqVDfBaWquzCdx4EWyCv9ed1v8K6iLa4SnHb97YAToaAAiIkTAccZRXX
-         /FNHI/0LdYYzoeH0SDLMRrnqIXGth5LxByqPsHu7cO40w7JWeIALreOMAEY226m5qGsX
-         tpu3otL2KMzXnyehxMkHSAeI8uvRqIgZzLj0ZtQSnVJJAQIOQtTggMTT+Y/gDppELARu
-         3X1H1Ecf8w33rdgb9jYm8nt8RDXLN18k5KdeSQNuVKwXEyAkRCVfdsCi+MDJ/XpVKJmw
-         +apQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=6ZywDktM8pXlb5fMixw8rrzeWS4t9uFID6XIjv74YaI=;
+        b=VuI4Xr4X0Pm3ZLkLxP9KgFz1iQK+tNUvZUmzaR1YcSNHYG5cg2Ths1TAPJAjczSlz9
+         kGNClG4tj2wgp4rcnJaS83as67DEjWLSS9EX8W+2FYHPV+3NR0eIS326w2ttGJM+6xqW
+         6z9iQpxVU6sxlaNXLxJZLTObHOgm72L9wQHEVdJ3ElibtoOS4Vt1ovwv6q3v9ToWreYJ
+         Z+4+2AXg46fCGpaPuDxhQO+xTOsmOeIG/uLz4m51MZPXGQzzn9XpI3X/4tLmJhafcchN
+         XfG9ZHJYhtiMymiRlFlIYwlw+qk8FP51l6J+9PJDgfc0ookZBiNwNf1YVdMUrBbGfEzn
+         Ewig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gBOXJkfJCu0sdxn7ZdsBsc6b9MlbPo9DaUYf2xdlizc=;
-        b=l8v6iNd0v5CRp41fq3e25a2U6Lr9cjsSrizDZ91/seuU9Njp4GeOCvCLSu8B3Zo2SS
-         wbbTWByw3XNNKjrHy676Uu7eCgmz0PrE3IDod5BQ27ItRMnPRO2YkeQUWTrxQQkEVKMC
-         KQTALRwS60Ub1H/PV/Rf2kADXiKDtNYFWTJXiUiJePIxpQs5U/6dRClP3XWqIMdPPUPj
-         qphx+1PAjZx2sMovdBtC+UBfzCOCeCEC9RLqy5rOlKfP11DWMcIr+49WneNbxNFsIX6A
-         qUwko1+6AICnMnTsiphCfA6iSc84bKjz3SUy5pOdMXEwJphS8fMi7q+iONpDPCToF6wZ
-         by0g==
-X-Gm-Message-State: AOAM530mqlR1IZg0PSxgz+1qJdKh+GDTLoqcb0zDfhvb47yTfMYanLzb
-        UVpKutPcTZ0db4S6X3YjZbRqXw==
-X-Google-Smtp-Source: ABdhPJxUaBhu1790cFJrBeounLiHhQSO3mNlP5GXa//tvqNcmE/bl/EP50d1xWTrZ7mWJGc7znJWBg==
-X-Received: by 2002:a17:90a:4d87:: with SMTP id m7mr4973909pjh.26.1592600184803;
-        Fri, 19 Jun 2020 13:56:24 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21c1::1762? ([2620:10d:c090:400::5:a8e1])
-        by smtp.gmail.com with ESMTPSA id n2sm6674047pfd.125.2020.06.19.13.56.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 13:56:24 -0700 (PDT)
-Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com
-References: <20200605175536.19681-1-andrealmeid@collabora.com>
- <20200619134503.60ab689b@lwn.net>
- <cdab3be8-0d39-5085-34b5-7bf11cc7fb60@infradead.org>
- <a9b6447f-1b24-5f71-3661-c6ea5fe8ba6e@kernel.dk>
- <d99e90ae-27b8-163e-c90f-53778116ac10@collabora.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0066df94-d726-7f24-93d0-0a6329d68163@kernel.dk>
-Date:   Fri, 19 Jun 2020 14:56:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=6ZywDktM8pXlb5fMixw8rrzeWS4t9uFID6XIjv74YaI=;
+        b=G4INaCnr/uitBXtUGIHASe15gn1Ia8URxUZa6W0XC0aaPlOxwP64ba4yKf4MQjCJ78
+         sPIeBBzj9zlIoJMV/Ns5gsOYn7dV+NR/yRjJVYPw5MLlPoRBrmrdO5OqChh6JqaiWRbr
+         Z79ZpNVOqlJublkzMmKM7A6GvhhAL3GVvlq/t83P9gm+Xk+9BtgNLLWMdrKlMN6L8tiF
+         St6fTmKKnEoqJoYOthFbHXMwx4+Yjw/X6qeseTrDkZyFv79VbzO3PFrrgHdd3q8U8mEt
+         FiL13PcBrj4PIG78KTVLs7pFFrw8gQNtie4t6Gr5uZXspqNQYYZS68fNLpPpzGJLKWA3
+         AutA==
+X-Gm-Message-State: AOAM532O5xkcsO6Vb3spLAzXIiiIj3FlWK9OV5bUBwIjuFZXNH8YaLYa
+        flMUGO8IEjADTtXi6oAi9/PVtg==
+X-Google-Smtp-Source: ABdhPJzhQVw6JDXXU9VTCJdrrtZbR9c4S55qPEclhLyoE6Jr2jZT95JIsmWaWnPBg6D2eplPm/7UZw==
+X-Received: by 2002:a17:902:968b:: with SMTP id n11mr9392874plp.331.1592600190725;
+        Fri, 19 Jun 2020 13:56:30 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id b7sm6530221pfo.202.2020.06.19.13.56.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 13:56:28 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 13:56:28 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Yang Shi <shy828301@gmail.com>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: kernel BUG at mm/huge_memory.c:2613!
+In-Reply-To: <20200619185540.GB217189@carbon.lan>
+Message-ID: <alpine.DEB.2.22.394.2006191354080.26224@chino.kir.corp.google.com>
+References: <20200619001938.GA135965@carbon.dhcp.thefacebook.com> <CAHbLzkrDcn-GQOrAM=m7+2g5_J6obsz4K50Oqb-1RD5p1iWTPQ@mail.gmail.com> <20200619011449.GC135965@carbon.dhcp.thefacebook.com> <20200619024026.GB21081@redhat.com>
+ <20200619185540.GB217189@carbon.lan>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <d99e90ae-27b8-163e-c90f-53778116ac10@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 2:51 PM, André Almeida wrote:
-> On 6/19/20 5:49 PM, Jens Axboe wrote:
->> On 6/19/20 1:47 PM, Randy Dunlap wrote:
->>> On 6/19/20 12:45 PM, Jonathan Corbet wrote:
->>>> On Fri,  5 Jun 2020 14:55:36 -0300
->>>> André Almeida <andrealmeid@collabora.com> wrote:
->>>>
->>>>> Create a documentation providing a background and explanation around the
->>>>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
->>>>>
->>>>> The reference for writing this documentation was the source code and
->>>>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
->>>>> Systems", by Axboe et al.
->>>>>
->>>>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
->>>>> ---
->>>>> Changes from v1:
->>>>> - Fixed typos
->>>>> - Reworked blk_mq_hw_ctx
->>>>
->>>> Jens, what's your pleasure on this one?  Should I take it, or do you want
->>>> it...?
->>>
->>> I wouldn't mind seeing a v3.
->>
->> Agree - Jon, I'd be happy with you taking it once a v3 is posted with the
->> remaining issues ironed out.
->>
-> 
-> Just sent a v3 some minutes ago, please check it out :)
+On Fri, 19 Jun 2020, Roman Gushchin wrote:
 
-Just did, see email :-)
+> [   40.287524] BUG: unable to handle page fault for address: ffffa77b833df000
+> [   40.287529] #PF: supervisor write access in kernel mode
+> [   40.287531] #PF: error_code(0x000b) - reserved bit violation
+> [   40.287532] PGD 40d14e067 P4D 40d14e067 PUD 40d14f067 PMD 3ec54d067
+> PTE 80001688033d9163
+> [   40.287538] Oops: 000b [#2] SMP NOPTI
+> [   40.287542] CPU: 9 PID: 1986 Comm: pulseaudio Tainted: G      D
+>       5.8.0-rc1+ #697
+> [   40.287544] Hardware name: Gigabyte Technology Co., Ltd.
+> AB350-Gaming/AB350-Gaming-CF, BIOS F25 01/16/2019
+> [   40.287550] RIP: 0010:__memset+0x24/0x30
+> [   40.287553] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89
+> d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48
+> 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89
+> d1 f3
+> [   40.287556] RSP: 0018:ffffa77b827a7e08 EFLAGS: 00010216
+> [   40.287558] RAX: 0000000000000000 RBX: ffff90f77dced800 RCX: 00000000000008a0
+> [   40.287560] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa77b833df000
+> [   40.287561] RBP: ffff90f7898c7000 R08: ffff90f78c507768 R09: ffffa77b833df000
+> [   40.287563] R10: ffffa77b833df000 R11: ffff90f7839f2d40 R12: 0000000000000000
+> [   40.287564] R13: ffff90f76a802e00 R14: ffffffffc0cb8880 R15: ffff90f770f4e700
+> [   40.287567] FS:  00007f3d8e8df880(0000) GS:ffff90f78ee40000(0000)
+> knlGS:0000000000000000
+> [   40.287569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   40.287570] CR2: ffffa77b833df000 CR3: 00000003fa556000 CR4: 00000000003406e0
+> [   40.287572] Call Trace:
+> [   40.287584]  snd_pcm_hw_params+0x3fd/0x490 [snd_pcm]
+> [   40.287593]  snd_pcm_common_ioctl+0x1c5/0x1110 [snd_pcm]
+> [   40.287601]  ? snd_pcm_info_user+0x64/0x80 [snd_pcm]
+> [   40.287608]  snd_pcm_ioctl+0x23/0x30 [snd_pcm]
+> [   40.287613]  ksys_ioctl+0x82/0xc0
+> [   40.287617]  __x64_sys_ioctl+0x16/0x20
+> [   40.287622]  do_syscall_64+0x4d/0x90
+> [   40.287627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
--- 
-Jens Axboe
+Hi Roman,
 
+If you have CONFIG_AMD_MEM_ENCRYPT set, this should be resolved by
+
+commit dbed452a078d56bc7f1abecc3edd6a75e8e4484e
+Author: David Rientjes <rientjes@google.com>
+Date:   Thu Jun 11 00:25:57 2020 -0700
+
+    dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL
+
+Or you might want to wait for 5.8-rc2 instead which includes this fix.
