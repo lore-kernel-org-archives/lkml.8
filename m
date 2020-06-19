@@ -2,150 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88879C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0504AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D95206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC436206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i9Y/1Yow"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxpJGkQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394004AbgFSPlW (ORCPT
+        id S2394017AbgFSPlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:41:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20681 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393866AbgFSPkF (ORCPT
+        Fri, 19 Jun 2020 11:41:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392034AbgFSPld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592581203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tVRPCFY21ubrTOvxf4j2vFglhRKZ9hHO+8Y6VHRuBL4=;
-        b=i9Y/1YowGwFGPhqJwUVZmXxCJnYY9r7E+oEbxPV6NFxBXQmUDbzVuFj5ZphxBDMW7H1Nzo
-        TrPwdhIrXRdgkCy/1fqdxj9ON+jomCL++xsJQtWbJbIOcomtpyIQdq2IX+oIgzakm15DKC
-        xmHuVFhyZtmi1dmox1MTgvGVHz2+SIU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-5GQGJmfBPC6tPmnOMHOUhw-1; Fri, 19 Jun 2020 11:39:58 -0400
-X-MC-Unique: 5GQGJmfBPC6tPmnOMHOUhw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C84A1800EBB;
-        Fri, 19 Jun 2020 15:39:56 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-112-254.ams2.redhat.com [10.36.112.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F12060BF4;
-        Fri, 19 Jun 2020 15:39:54 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
-        babu.moger@amd.com
-Subject: [PATCH v2 06/11] KVM: VMX: introduce vmx_need_pf_intercept
-Date:   Fri, 19 Jun 2020 17:39:20 +0200
-Message-Id: <20200619153925.79106-7-mgamal@redhat.com>
-In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
-References: <20200619153925.79106-1-mgamal@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Fri, 19 Jun 2020 11:41:33 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC257C06174E;
+        Fri, 19 Jun 2020 08:41:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id e12so7986269eds.2;
+        Fri, 19 Jun 2020 08:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KpGjicrxstQUYFzwH57Owwl0NACRgRYZg/C23NotbfM=;
+        b=BxpJGkQ4EyWZYKrHVs9D3CbDeJqQRk3exCmnoWFYqLtMrJrOzEmFi7JsMtRtqwOssX
+         B6q14V/pGZcaqo60fUj+FmmYx7HqLvCAZt7vEImL7miykkkNM1DnVcylTXeDNtwD9p77
+         OWl5YeyETIfxzgz98ThTioo4GiVwdSnA1Ih939YXO08Iz8CzSXUUWAkHGnsYU3YT5Leq
+         ms8exHAG2GGpOLgG5F6ofHyHzmwTw7A4Guzz+giBCPAxlfkIe1z4Z5uFgokYnl06HZqf
+         YXrJe3HoucXtNOF68hV74d66kH8hy4eGe5xVac0rvcY7aBXUNc/nvp9nMCO3B1/El8Fm
+         KsKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KpGjicrxstQUYFzwH57Owwl0NACRgRYZg/C23NotbfM=;
+        b=le99rDZsmIyD4u1X4qKabwaVJCXlwHx/vrK4eTSsQDTRaLiwABb2/vlQNDYDhozQAF
+         RrZuhDTN4StQJk7ulsYw39/RtFrXVStBFq0lZI1pLgJdbaD8ZnkODt7WPorqMGedhbaB
+         zNPA+2QI5oLG2DHD4eA3Z7MeXkzGmYUsSe5Kh8lGPUkJ/tfLQghj87gALhjh3uKrjTw8
+         7Ue3ijgPbc7a9f5hehwwClG7LIyS2rIxrfwegVRkG+iFteL501ARUF4ipg3VRJV5UbFp
+         iTM8FPW4sm19fXIB9cd0g7nxeJmnNMCkumafEpZjJmmFelm1ejZH8KoMdYwl0xO+bxgl
+         VZnA==
+X-Gm-Message-State: AOAM5335r23v1UFPCZ5zzvQ5DsOJ8vnxi9QuB+uTktOjg1GdZKXcO5JC
+        HbKdwQnpXu8JWdtjk3qWR+A=
+X-Google-Smtp-Source: ABdhPJyYW80P4JxYyH5IZgoMk06IUj/9QxWDqEbg72RU4bolBoWA1gKoeJUJ8FDv5cd+n+mjcx2XrQ==
+X-Received: by 2002:aa7:c541:: with SMTP id s1mr3993960edr.167.1592581291714;
+        Fri, 19 Jun 2020 08:41:31 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.gmail.com with ESMTPSA id ew9sm4986163ejb.121.2020.06.19.08.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 08:41:31 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bvanassche@acm.org
+Cc:     beanhuo@micron.com
+Subject: [PATCH v2 0/2] scsi: remove scsi_sdb_cache
+Date:   Fri, 19 Jun 2020 17:41:15 +0200
+Message-Id: <20200619154117.10262-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Bean Huo <beanhuo@micron.com>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 28 +++++++++++++++++-----------
- arch/x86/kvm/vmx/vmx.c    |  2 +-
- arch/x86/kvm/vmx/vmx.h    |  5 +++++
- 3 files changed, 23 insertions(+), 12 deletions(-)
+Changelog:
+v1 -- v2:
+    1. split patch
+    2. fix more coding errors in the scsi_lib.c
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index d1af20b050a8..328411919518 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2433,22 +2433,28 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 
- 	/*
- 	 * Whether page-faults are trapped is determined by a combination of
--	 * 3 settings: PFEC_MASK, PFEC_MATCH and EXCEPTION_BITMAP.PF.
--	 * If enable_ept, L0 doesn't care about page faults and we should
--	 * set all of these to L1's desires. However, if !enable_ept, L0 does
--	 * care about (at least some) page faults, and because it is not easy
--	 * (if at all possible?) to merge L0 and L1's desires, we simply ask
--	 * to exit on each and every L2 page fault. This is done by setting
--	 * MASK=MATCH=0 and (see below) EB.PF=1.
-+	 * 3 settings: PFEC_MASK, PFEC_MATCH and EXCEPTION_BITMAP.PF.  If L0
-+	 * doesn't care about page faults then we should set all of these to
-+	 * L1's desires. However, if L0 does care about (some) page faults, it
-+	 * is not easy (if at all possible?) to merge L0 and L1's desires, we
-+	 * simply ask to exit on each and every L2 page fault. This is done by
-+	 * setting MASK=MATCH=0 and (see below) EB.PF=1.
- 	 * Note that below we don't need special code to set EB.PF beyond the
- 	 * "or"ing of the EB of vmcs01 and vmcs12, because when enable_ept,
- 	 * vmcs01's EB.PF is 0 so the "or" will take vmcs12's value, and when
- 	 * !enable_ept, EB.PF is 1, so the "or" will always be 1.
- 	 */
--	vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK,
--		enable_ept ? vmcs12->page_fault_error_code_mask : 0);
--	vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH,
--		enable_ept ? vmcs12->page_fault_error_code_match : 0);
-+	if (vmx_need_pf_intercept(&vmx->vcpu)) {
-+		/*
-+		 * TODO: if both L0 and L1 need the same MASK and MATCH,
-+		 * go ahead and use it?
-+		 */
-+		vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK, 0);
-+		vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH, 0);
-+	} else {
-+		vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK, vmcs12->page_fault_error_code_mask);
-+		vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH, vmcs12->page_fault_error_code_match);
-+	}
- 
- 	if (cpu_has_vmx_apicv()) {
- 		vmcs_write64(EOI_EXIT_BITMAP0, vmcs12->eoi_exit_bitmap0);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f82c42ac87f9..46d522ee5cb1 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -783,7 +783,7 @@ void update_exception_bitmap(struct kvm_vcpu *vcpu)
- 		eb |= 1u << BP_VECTOR;
- 	if (to_vmx(vcpu)->rmode.vm86_active)
- 		eb = ~0;
--	if (enable_ept)
-+	if (!vmx_need_pf_intercept(vcpu))
- 		eb &= ~(1u << PF_VECTOR);
- 
- 	/* When we are running a nested L2 guest and L1 specified for it a
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 8a83b5edc820..5e2da15fe94f 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -552,6 +552,11 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
- 		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
- }
- 
-+static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
-+{
-+	return !enable_ept;
-+}
-+
- void dump_vmcs(void);
- 
- #endif /* __KVM_X86_VMX_H */
+Bean Huo (2):
+  scsi: remove scsi_sdb_cache
+  scsi: fix coding style errors in scsi_lib.c
+
+ drivers/scsi/scsi.c      |  3 ---
+ drivers/scsi/scsi_lib.c  | 58 +++++++++++++++-------------------------
+ drivers/scsi/scsi_priv.h |  1 -
+ 3 files changed, 21 insertions(+), 41 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
