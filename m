@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D599C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA5C217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F10921707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584054;
-	bh=5O60frDLooh+Wxctq/Vho1DS6s2cYV6GIPhqgLOjqWA=;
+	s=default; t=1592584064;
+	bh=sEyPBX/2ABg1iOUO8DjDGTuDa2o2eCIGcPiRsVtlttI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMmNdh28UauqRKAvp6/vfFjz2cnHYcFC8lZDyeggi7sivswFsHN21cm9fZwXCsfkY
-	 GhxbFawvT/0TIewq2m4n5ZUspZpzbsU+wgyGy52VR71YczxqMqVtAg/W+vdMpRk+te
-	 U7I0dtDxqd+1adHrUWbecjP7YIUJaA9qsZbFpnbw=
+	b=Sxk39PnVCd5cdLVxRlXu4kU3fiedZVtR81nX2d+wGw0P0ttqz3jqOo/BijbTUpdY0
+	 enIWzPouyQj/cvzttwlY2FrUT9i1Ij3FlhAndJCVn063UJFckzgKYRFbFIMULyObtJ
+	 alIZO7+/J7KzehUSyzI/s452G713buEWr1uSmdZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394886AbgFSQ1c (ORCPT
+        id S2394899AbgFSQ1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50814 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390010AbgFSOzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:51 -0400
+        id S2389344AbgFSOzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37893206F7;
-        Fri, 19 Jun 2020 14:55:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C68206F7;
+        Fri, 19 Jun 2020 14:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578551;
-        bh=5O60frDLooh+Wxctq/Vho1DS6s2cYV6GIPhqgLOjqWA=;
+        s=default; t=1592578541;
+        bh=sEyPBX/2ABg1iOUO8DjDGTuDa2o2eCIGcPiRsVtlttI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrfLjJ+qQ8JA3OJHJTYPTQviGYkr13G8fYeVZqVerypoSJOCixt6ecZGnvSFgsDVW
-         yoDnmtyDZEpdbdvPOv87HqsSKvJnqC2F6mMW53bBY5l+BmaxxSPHhc1v1nC4fD8G7Z
-         j1fN+y6tkFpXJGX8xWSIWv9PI9b/bIqkxYzKJ7c4=
+        b=OBGlovdBSBoMPSpovWTP92NtIl6jEVzb3OTYjf7Xp7x9D2Emo2RApxEmbCtVxpTXj
+         BbsECMDY3aOPjocsn5NE6fk3CBlEqwKG80f/aXqUqvFKKTfyl6EfY6HhLWP4jyAjmS
+         +Kouc8nizD2WVKA06k/eWoP3PINT6CtxdoM3X/48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        "Longpeng(Mike)" <longpeng2@huawei.com>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/267] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
-Date:   Fri, 19 Jun 2020 16:30:51 +0200
-Message-Id: <20200619141652.052136865@linuxfoundation.org>
+Subject: [PATCH 4.19 062/267] spi: pxa2xx: Balance runtime PM enable/disable on error
+Date:   Fri, 19 Jun 2020 16:30:47 +0200
+Message-Id: <20200619141651.852981946@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -65,53 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit d90ca42012db2863a9a30b564a2ace6016594bda ]
+[ Upstream commit 1274204542f683e1d8491ebe9cc86284d5a8ebcc ]
 
-The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
-testcases in tcrypto.ko.
+Don't undo the PM initialization if we error out before we managed to
+initialize it. The call to pm_runtime_disable() without being preceded
+by pm_runtime_enable() would disturb the balance of the Force.
 
-For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
-crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
-case and get a wrong at then end.
+In practice, this happens if we fail to allocate any of the GPIOS ("cs",
+"ready") due to -EPROBE_DEFER because we're getting probled before the
+GPIO driver.
 
-  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
-  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
-  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
-  (pp: plaintext  cc:ciphertext)
-
-Fix this issue by limit the length of dest buffer.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-4-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20190719122713.3444318-1-lkundrak@v3.sk
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-pxa2xx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index e9a8485c4929..ab4700e4b409 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -424,6 +424,7 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 		goto free;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index d6c30bd1583f..6551188fea23 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1742,14 +1742,16 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 	status = spi_register_controller(master);
+ 	if (status != 0) {
+ 		dev_err(&pdev->dev, "problem registering spi master\n");
+-		goto out_error_clock_enabled;
++		goto out_error_pm_runtime_enabled;
  	}
  
-+	dst_len = min_t(unsigned int, req->nbytes, dst_len);
- 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
- 			req->nbytes, dst_len);
+ 	return status;
  
+-out_error_clock_enabled:
++out_error_pm_runtime_enabled:
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++
++out_error_clock_enabled:
+ 	clk_disable_unprepare(ssp->clk);
+ 
+ out_error_dma_irq_alloc:
 -- 
 2.25.1
 
