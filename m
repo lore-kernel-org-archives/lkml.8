@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB408C433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF83C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B9F21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D2A217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579982;
-	bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
+	s=default; t=1592580003;
+	bh=0dgaXx1o/v3uoLpNkiitvqOB3bdGazxh/NQXbfODV44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EE3yh6Yk2QslkbTDzBlXq1NRdWmLUZNYr1NpE5P/Isl2TFk+Zb5HsCDXMUU8IC6oi
-	 HDRFCxwK9wjl/+W15GNSPx6ECbc+fiRcgh3P43WXt2EfiaARrX29nlA2uJKjqq5Oh8
-	 mGWiNIXYRpku/tIK1a4D8KYNB/fQQD/yl5duxU4Q=
+	b=eI5xDCKfPglDTLUgYlvmK4/QkncvNY8rmkFRixKuuYgX6fjGZSuv3n+qkkLqQ4/gK
+	 7RQrK/5jtlEpeBFOAPTPiZUz1tCQrpnbHrNR9eUNjjRvYCDq5ForEmW9JNHxY0KxIu
+	 MwLHZmszBv33n6F79e3lRMM+A5SwN4T+Wc8SK6hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404219AbgFSPTl (ORCPT
+        id S2392653AbgFSPUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392580AbgFSPSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:07 -0400
+        id S2390347AbgFSPRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B5B1206DB;
-        Fri, 19 Jun 2020 15:18:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F62F206DB;
+        Fri, 19 Jun 2020 15:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579886;
-        bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
+        s=default; t=1592579873;
+        bh=0dgaXx1o/v3uoLpNkiitvqOB3bdGazxh/NQXbfODV44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u02SCYxedC8XWS9CEPTWX+S10ZSaDCo4XqjMkzxfDJa4VDGHMchQFymAp/4I+UXy6
-         1yRm8phDoxQNXshlqDhaeUJdp4amG9lNwRleVZ4mvshErUYdVDiB5UyK2RKdbxEuL1
-         lFZIey0zmBYHVIWYwVlJszAy68uOS3zoRec9S+mI=
+        b=JSyjkdpT21GGH8XO3hAMsd+T6otdz4CrQALBRrzN09J/ZDD83JvCkJgwz2U/beER9
+         i8xVIEEU2BsVlIswVu59exPrweJr0mWZ+1T1yIgzz3Z8q8Tx25uys5yBi/L0kszzRh
+         AvU/JiZNAfckvrqPljI1HHz5HphzkwyTvBgUO7dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Weiping Zhang <zhangweiping@didiglobal.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 041/376] block: reset mapping if failed to update hardware queue count
-Date:   Fri, 19 Jun 2020 16:29:19 +0200
-Message-Id: <20200619141712.301458749@linuxfoundation.org>
+        stable@vger.kernel.org, Kurt Kennett <kurt_kennett@hotmail.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 036/376] ACPICA: Dispatcher: add status checks
+Date:   Fri, 19 Jun 2020 16:29:14 +0200
+Message-Id: <20200619141712.062231634@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,68 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit aa880ad690ab6d4c53934af85fb5a43e69ecb0f5 ]
+[ Upstream commit 6bfe5344b2956d0bee116f1c640aef05e5cddd76 ]
 
-When we increase hardware queue count, blk_mq_update_queue_map will
-reset the mapping between cpu and hardware queue base on the hardware
-queue count(set->nr_hw_queues). The mapping cannot be reset if it
-encounters error in blk_mq_realloc_hw_ctxs, but the fallback flow will
-continue using it, then blk_mq_map_swqueue will touch a invalid memory,
-because the mapping points to a wrong hctx.
+ACPICA commit 3244c1eeba9f9fb9ccedb875f7923a3d85e0c6aa
 
-blktest block/030:
+The status chekcs are used to to avoid NULL pointer dereference on
+field objects
 
-null_blk: module loaded
-Increasing nr_hw_queues to 8 fails, fallback to 1
-==================================================================
-BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x2f2/0x830
-Read of size 8 at addr 0000000000000128 by task nproc/8541
-
-CPU: 5 PID: 8541 Comm: nproc Not tainted 5.7.0-rc4-dbg+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
-Call Trace:
-dump_stack+0xa5/0xe6
-__kasan_report.cold+0x65/0xbb
-kasan_report+0x45/0x60
-check_memory_region+0x15e/0x1c0
-__kasan_check_read+0x15/0x20
-blk_mq_map_swqueue+0x2f2/0x830
-__blk_mq_update_nr_hw_queues+0x3df/0x690
-blk_mq_update_nr_hw_queues+0x32/0x50
-nullb_device_submit_queues_store+0xde/0x160 [null_blk]
-configfs_write_file+0x1c4/0x250 [configfs]
-__vfs_write+0x4c/0x90
-vfs_write+0x14b/0x2d0
-ksys_write+0xdd/0x180
-__x64_sys_write+0x47/0x50
-do_syscall_64+0x6f/0x310
-entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Tested-by: Bart van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://github.com/acpica/acpica/commit/3244c1ee
+Reported-by: Kurt Kennett <kurt_kennett@hotmail.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/dsfield.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b1772de26a74..98a702761e2c 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3353,8 +3353,8 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
+index c901f5aec739..5725baec60f3 100644
+--- a/drivers/acpi/acpica/dsfield.c
++++ b/drivers/acpi/acpica/dsfield.c
+@@ -514,13 +514,20 @@ acpi_ds_create_field(union acpi_parse_object *op,
+ 	info.region_node = region_node;
  
- 	prev_nr_hw_queues = set->nr_hw_queues;
- 	set->nr_hw_queues = nr_hw_queues;
--	blk_mq_update_queue_map(set);
- fallback:
-+	blk_mq_update_queue_map(set);
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
- 		blk_mq_realloc_hw_ctxs(set, q);
- 		if (q->nr_hw_queues != set->nr_hw_queues) {
+ 	status = acpi_ds_get_field_names(&info, walk_state, arg->common.next);
++	if (ACPI_FAILURE(status)) {
++		return_ACPI_STATUS(status);
++	}
++
+ 	if (info.region_node->object->region.space_id ==
+-	    ACPI_ADR_SPACE_PLATFORM_COMM
+-	    && !(region_node->object->field.internal_pcc_buffer =
+-		 ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
+-				      length))) {
+-		return_ACPI_STATUS(AE_NO_MEMORY);
++	    ACPI_ADR_SPACE_PLATFORM_COMM) {
++		region_node->object->field.internal_pcc_buffer =
++		    ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
++					 length);
++		if (!region_node->object->field.internal_pcc_buffer) {
++			return_ACPI_STATUS(AE_NO_MEMORY);
++		}
+ 	}
++
+ 	return_ACPI_STATUS(status);
+ }
+ 
 -- 
 2.25.1
 
