@@ -2,142 +2,210 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6816DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21717C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA942100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02402100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592599592;
-	bh=QWW3Pc2nkVQcPEUVIs2w0eFz6CG8ELy300KMMrItfEs=;
-	h=Date:From:Cc:Subject:References:In-Reply-To:To:List-ID:From;
-	b=WY5W0hdWaOv3pOVmLvpEWL3XhqI3jaGuf676YUuX2KASX+heO/H8OS0Zu2+uZCTv6
-	 grZP82lcykBDBCm0YseqRssqMx2oM+i+XL7zvgbvkyUbVSqdQy1Jf/IExYqGaq4kMK
-	 Q0K6Qql5dP9+T9D35gH0XwZC6t9EcKrJ5Ilnuyoo=
+	s=default; t=1592599658;
+	bh=M3Y9qjq1IYVGWHeSUHNlJod1XBpYY7djWBt6/Vj9Qow=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qrWH/8oBfxVh9uRgt+kRzyEIjtwfRvh7+eraqzP+Ypqp+A2NSpOTquHKFVGTk6PGW
+	 3mXMNWuf5CYgVBs4fsiTpYnt6BppxOrrwMBhH9PfUZKnAeGBNVDqxzr8JqnSYb6RlY
+	 4mCnOTNzCkE4K6HnsEVJz0ynvSB+aRD6HS1Lvc5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390356AbgFSUqb (ORCPT
+        id S2390673AbgFSUrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:46:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45820 "EHLO
+        Fri, 19 Jun 2020 16:47:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46253 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388929AbgFSUqa (ORCPT
+        with ESMTP id S2390439AbgFSUrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:46:30 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a127so4906098pfa.12;
-        Fri, 19 Jun 2020 13:46:29 -0700 (PDT)
+        Fri, 19 Jun 2020 16:47:35 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b16so4902043pfi.13;
+        Fri, 19 Jun 2020 13:47:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+ig1uMooEc7hJ7T4tJda0UtWOL236yx/7EtI4v6obG4=;
-        b=SI2YpQ7h0RMWuvuoFd1z5sbCGXsvbiuGDddv+bvOzcZMLDHxe0rAs6xY8u0lSjGoEy
-         KSuIyXT5q0iWZwQ7wWzzdgV1XI018+CSZZrYRhj+nnSx+pw1GoltC/LPceM1J0jOoEoU
-         aDTJn03MrW9670CvSu+PxBpxVVGCHQAcbkQaTUCNIOIrOG1bfqvyPh4EfaecupqfSh6+
-         kEaZfqnaCM4t0nmbw8V3syVb4lC1vJhql/yZvyrvoJurdiWVM5CcjtyBfKgRFYtoEPhu
-         ECf5kC8DkF/yYAlqxekF4CsGeHNvJZpI6dExZZhiUb6FKomHd981O7Y2P0hS7lHYYhco
-         NoRg==
-X-Gm-Message-State: AOAM532Roo6s/Rw8pXRoxuP6cpGGlI9Zh6ReHv2mvlKxk9dbheyC0D9u
-        hdeMfIX9+kHnnWkRt38ZXCs=
-X-Google-Smtp-Source: ABdhPJzKNPWlIV0nmO+CTspxV1ueBsq/MLwS42z81TaqEce+i1mqYn5aUJ4K080LEjB7u0IDfz6xvA==
-X-Received: by 2002:aa7:8145:: with SMTP id d5mr9453904pfn.196.1592599589431;
-        Fri, 19 Jun 2020 13:46:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IR8sE8tegFIZFEE9c+9scyuraOZnu4HrFVBH9bLfdFU=;
+        b=BWiTdHtVZURnZz2zUnOZRqyEN4IAj8ni9Tx+85K0mzyck6nx7/CCv6SvE7adtf3suG
+         jpgRAH27IUQTZvs9JlHlv6jIoFuiV/4S0O3sreJ8VJyQDHljXrMyj/WS7ntduWJXVjFG
+         C854TL7m2c1Pg7C2dEu6HMPGrMyi5ioYSyY3HrWvgNM3RlvysGxr6RsURbZsoCdudp97
+         t0E5y434Zn9KVKkLlIWtH+9P0gkD9mRS9cJNX3F8x/oujX4FEeFqZRE+X0BE/YgX5LJJ
+         7dv7bCrcFUaZeEWv3ATSzj0phS0tEYJulSSSFI49A0sk2OXBOXGgiKtJbdWjV6ESQnJ3
+         HkxA==
+X-Gm-Message-State: AOAM5302q1wELOyZ1DKDZcD2JlLsf+fJGB3m7FSSqi6xyPSGICJPiivQ
+        uYxO+HCaDwhCVIwTUKWFwQQ=
+X-Google-Smtp-Source: ABdhPJyVHEmV58NGZTznpaBP/xgk4sbNqpUUFbscfauH7CNuFRiXIQShxRF2mjNHNu7Ts1PNNvwYJQ==
+X-Received: by 2002:a63:20d:: with SMTP id 13mr629527pgc.166.1592599654228;
+        Fri, 19 Jun 2020 13:47:34 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n9sm6138891pjj.23.2020.06.19.13.46.27
+        by smtp.gmail.com with ESMTPSA id 127sm4494638pgf.5.2020.06.19.13.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 13:46:27 -0700 (PDT)
+        Fri, 19 Jun 2020 13:47:32 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id CAC654063E; Fri, 19 Jun 2020 20:46:26 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 20:46:26 +0000
+        id 2A5FE40B6C; Fri, 19 Jun 2020 20:47:32 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
-Cc:     gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
-        dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, serge@hallyn.com, christian.brauner@ubuntu.com,
-        slyfox@gentoo.org, ast@kernel.org, keescook@chromium.org,
-        josh@joshtriplett.org, ravenexp@gmail.com, chainsaw@gentoo.org,
-        linux-fsdevel@vger.kernel.org, bridge@lists.linux-foundation.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] kmod/umh: a few fixes
-Message-ID: <20200619204626.GK11244@42.do-not-panic.com>
-References: <20200610154923.27510-1-mcgrof@kernel.org>
- <20200617174348.70710c3ecb14005fb1b9ec39@linux-foundation.org>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v7 1/8] block: add docs for gendisk / request_queue refcount helpers
+Date:   Fri, 19 Jun 2020 20:47:23 +0000
+Message-Id: <20200619204730.26124-2-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200619204730.26124-1-mcgrof@kernel.org>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617174348.70710c3ecb14005fb1b9ec39@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:43:48PM -0700, Andrew Morton wrote:
-> On Wed, 10 Jun 2020 15:49:18 +0000 "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
-> 
-> > Tiezhu Yang had sent out a patch set with a slew of kmod selftest
-> > fixes, and one patch which modified kmod to return 254 when a module
-> > was not found. This opened up pandora's box about why that was being
-> > used for and low and behold its because when UMH_WAIT_PROC is used
-> > we call a kernel_wait4() call but have never unwrapped the error code.
-> > The commit log for that fix details the rationale for the approach
-> > taken. I'd appreciate some review on that, in particular nfs folks
-> > as it seems a case was never really hit before.
-> > 
-> > This goes boot tested, selftested with kmod, and 0-day gives its
-> > build blessings.
-> 
-> Any thoughts on which kernel version(s) need some/all of these fixes?
+This adds documentation for the gendisk / request_queue refcount
+helpers.
 
-Well, in so far as fixes, this is the real important part:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ block/blk-core.c | 13 +++++++++++++
+ block/genhd.c    | 50 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 62 insertions(+), 1 deletion(-)
 
-* request_module() used to fail with an error code of
-  256 when a module was not found. Now it properly
-  returns 1.
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 62a4904db921..a0760aac110a 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -321,6 +321,13 @@ void blk_clear_pm_only(struct request_queue *q)
+ }
+ EXPORT_SYMBOL_GPL(blk_clear_pm_only);
+ 
++/**
++ * blk_put_queue - decrement the request_queue refcount
++ * @q: the request_queue structure to decrement the refcount for
++ *
++ * Decrements the refcount of the request_queue kobject. When this reaches 0
++ * we'll have blk_release_queue() called.
++ */
+ void blk_put_queue(struct request_queue *q)
+ {
+ 	kobject_put(&q->kobj);
+@@ -598,6 +605,12 @@ struct request_queue *blk_alloc_queue(make_request_fn make_request, int node_id)
+ }
+ EXPORT_SYMBOL(blk_alloc_queue);
+ 
++/**
++ * blk_get_queue - increment the request_queue refcount
++ * @q: the request_queue structure to increment the refcount for
++ *
++ * Increment the refcount of the request_queue kobject.
++ */
+ bool blk_get_queue(struct request_queue *q)
+ {
+ 	if (likely(!blk_queue_dying(q))) {
+diff --git a/block/genhd.c b/block/genhd.c
+index 1a7659327664..f741613d731f 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -876,6 +876,20 @@ static void invalidate_partition(struct gendisk *disk, int partno)
+ 	bdput(bdev);
+ }
+ 
++/**
++ * del_gendisk - remove the gendisk
++ * @disk: the struct gendisk to remove
++ *
++ * Removes the gendisk and all its associated resources. This deletes the
++ * partitions associated with the gendisk, and unregisters the associated
++ * request_queue.
++ *
++ * This is the counter to the respective __device_add_disk() call.
++ *
++ * The final removal of the struct gendisk happens when its refcount reaches 0
++ * with put_disk(), which should be called after del_gendisk(), if
++ * __device_add_disk() was used.
++ */
+ void del_gendisk(struct gendisk *disk)
+ {
+ 	struct disk_part_iter piter;
+@@ -1514,6 +1528,23 @@ int disk_expand_part_tbl(struct gendisk *disk, int partno)
+ 	return 0;
+ }
+ 
++/**
++ * disk_release - releases all allocated resources of the gendisk
++ * @dev: the device representing this disk
++ *
++ * This function releases all allocated resources of the gendisk.
++ *
++ * The struct gendisk refcount is incremented with get_gendisk() or
++ * get_disk_and_module(), and its refcount is decremented with
++ * put_disk_and_module() or put_disk(). Once the refcount reaches 0 this
++ * function is called.
++ *
++ * Drivers which used __device_add_disk() have a gendisk with a request_queue
++ * assigned. Since the request_queue sits on top of the gendisk for these
++ * drivers we also call blk_put_queue() for them, and we expect the
++ * request_queue refcount to reach 0 at this point, and so the request_queue
++ * will also be freed prior to the disk.
++ */
+ static void disk_release(struct device *dev)
+ {
+ 	struct gendisk *disk = dev_to_disk(dev);
+@@ -1727,6 +1758,13 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
+ }
+ EXPORT_SYMBOL(__alloc_disk_node);
+ 
++/**
++ * get_disk_and_module - increments the gendisk and gendisk fops module refcount
++ * @disk: the struct gendisk to to increment the refcount for
++ *
++ * This increments the refcount for the struct gendisk, and the gendisk's
++ * fops module owner.
++ */
+ struct kobject *get_disk_and_module(struct gendisk *disk)
+ {
+ 	struct module *owner;
+@@ -1747,6 +1785,13 @@ struct kobject *get_disk_and_module(struct gendisk *disk)
+ }
+ EXPORT_SYMBOL(get_disk_and_module);
+ 
++/**
++ * put_disk - decrements the gendisk refcount
++ * @disk: the struct gendisk to to decrement the refcount for
++ *
++ * This decrements the refcount for the struct gendisk. When this reaches 0
++ * we'll have disk_release() called.
++ */
+ void put_disk(struct gendisk *disk)
+ {
+ 	if (disk)
+@@ -1754,7 +1799,10 @@ void put_disk(struct gendisk *disk)
+ }
+ EXPORT_SYMBOL(put_disk);
+ 
+-/*
++/**
++ * put_disk_and_module - decrements the module and gendisk refcount
++ * @disk: the struct gendisk to to decrement the refcount for
++ *
+  * This is a counterpart of get_disk_and_module() and thus also of
+  * get_gendisk().
+  */
+-- 
+2.26.2
 
-* fs/nfsd/nfs4recover.c: we never were disabling the
-  upcall as the error code of -ENOENT or -EACCES was
-  *never* properly checked for error code
-
-Since the request_module() fix is only affecting userspace
-for the kmod tests, through the kmod test driver, ie, we don't expose
-this to userspace in any other place, I don't see that as critical.
-Let me be clear, we have a test_kmod driver which exposes knobs
-and one of the knobs lets userspace query the return value of a
-request_module() call, and we use this test_kmod driver to stress
-test kmod loader. Let us also recall that the fix is *iff* an error
-*did* occur. I *cannot* think of a reason why this would be critical
-to merge to older stable kernels for this reason for request_module()'s
-sake.
-
-Bruce, Chuck:
-
-But... for NFS... I'd like the NFS folks to really look at that
-and tell us is some folks really should care about that. I also
-find it perplexing there was a comment in place there to *ensure*
-the error was checked for, and so it seemed someone cared for that
-condition.
-
-> >  drivers/block/drbd/drbd_nl.c         | 20 +++++------
-> >  fs/nfsd/nfs4recover.c                |  2 +-
-> >  include/linux/sched/task.h           | 13 ++++++++
-> >  kernel/kmod.c                        |  5 ++-
-> >  kernel/umh.c                         |  4 +--
-> >  lib/test_kmod.c                      |  2 +-
-> >  net/bridge/br_stp_if.c               | 10 ++----
-> >  security/keys/request_key.c          |  2 +-
-> >  tools/testing/selftests/kmod/kmod.sh | 50 +++++++++++++++++++++++-----
-> 
-> I'm not really sure who takes kmod changes - I'll grab these unless
-> someone shouts at me.
-
-Greg usually takes it, but as usual, thanks for picking up the slack ;)
-
-  Luis
