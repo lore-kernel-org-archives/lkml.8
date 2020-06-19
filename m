@@ -2,52 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26933C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011EA20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA5A207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582512;
-	bh=s90weQLx3+eky0D7QCfbXXrH6aktND1Y69vgtQvMBVw=;
+	s=default; t=1592582521;
+	bh=Bf6R4OXQmwOPzh2F3AIfgMkFhYq8r6LTdwCLKRgapjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xncfLIZ60FSYKbJeDbGn+NhtPV1kTv/LY909obPJk6MhLy4AwsJE8Ph0GZEbJ2Uaj
-	 vbcV82kF31BtnanMIE60AGRlbGZVauXMbufvP6Lkymol3DSkJm3ZbM4FQkSgPHOCvd
-	 tDYrmqL2YeOklqj8ssqYvPuTVY5edMMwUgW3X3I8=
+	b=k5YEyHiuHssBxpPDPu92pMBwDB2tRY0dB+ZnhCcKpAQ7bDG5pfK5uLkK1xdNouLLE
+	 EtpwH3R7zNhAT4Ek8VoobXGk/gPdnCuYWiKJt3OTSONW1DfRcOioFRTMvoKJhdlpja
+	 cvOqXBTYCrKYGkC1OR9MZ+5wjuPli0Nsx2C1bUeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394187AbgFSQBo (ORCPT
+        id S2389152AbgFSQB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389396AbgFSPNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:10 -0400
+        id S2391155AbgFSPNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64DFA21582;
-        Fri, 19 Jun 2020 15:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153B120776;
+        Fri, 19 Jun 2020 15:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579589;
-        bh=s90weQLx3+eky0D7QCfbXXrH6aktND1Y69vgtQvMBVw=;
+        s=default; t=1592579584;
+        bh=Bf6R4OXQmwOPzh2F3AIfgMkFhYq8r6LTdwCLKRgapjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hgwr3Sh7YUR7uvx8W8NR3pMDms9dWHgZlKrUOK1RTCMrmr7afyQgTJ5zBDUgquTh+
-         7Fdy1OOy54f1XczL2uCtbIM1SmqnL/G/CaN6Bqs2ndfapbY7k9ZzbU6H8ti0qE3oDl
-         V2FxZ8KjTpiE/wxG+7Non194GehaRPxiP3SsnIRU=
+        b=tJTM9DlOmqKYS58k8Wph+4f4O+vfmKV1q0BGpknFEhm4S0XfAdJj71uUrOZgI+sqB
+         0FX6pHFfH02ArM2MBcdcbFOL1AqkrtRn5ftX72iJxg6gFuKE5jmoW8XStUvZcHmcBW
+         tp1OYGQ6IsdTrwsn2r5sbXZEQOuYI6UjU3M6fcMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 162/261] btrfs: send: emit file capabilities after chown
-Date:   Fri, 19 Jun 2020 16:32:53 +0200
-Message-Id: <20200619141657.655619309@linuxfoundation.org>
+Subject: [PATCH 5.4 160/261] btrfs: free alien device after device add
+Date:   Fri, 19 Jun 2020 16:32:51 +0200
+Message-Id: <20200619141657.551784813@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,154 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
+commit 7f551d969037cc128eca60688d9c5a300d84e665 upstream.
 
-Whenever a chown is executed, all capabilities of the file being touched
-are lost.  When doing incremental send with a file with capabilities,
-there is a situation where the capability can be lost on the receiving
-side. The sequence of actions bellow shows the problem:
+When an old device has new fsid through 'btrfs device add -f <dev>' our
+fs_devices list has an alien device in one of the fs_devices lists.
 
-  $ mount /dev/sda fs1
-  $ mount /dev/sdb fs2
+By having an alien device in fs_devices, we have two issues so far
 
-  $ touch fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
-  $ btrfs send fs1/snap_init | btrfs receive fs2
+1. missing device does not not show as missing in the userland
 
-  $ chgrp adm fs1/foo.bar
-  $ setcap cap_sys_nice+ep fs1/foo.bar
+2. degraded mount will fail
 
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
-  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+Both issues are caused by the fact that there's an alien device in the
+fs_devices list. (Alien means that it does not belong to the filesystem,
+identified by fsid, or does not contain btrfs filesystem at all, eg. due
+to overwrite).
 
-  $ btrfs send fs1/snap_complete | btrfs receive fs2
-  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+A device can be scanned/added through the control device ioctls
+SCAN_DEV, DEVICES_READY or by ADD_DEV.
 
-At this point, only a chown was emitted by "btrfs send" since only the
-group was changed. This makes the cap_sys_nice capability to be dropped
-from fs2/snap_incremental/foo.bar
+And device coming through the control device is checked against the all
+other devices in the lists, but this was not the case for ADD_DEV.
 
-To fix that, only emit capabilities after chown is emitted. The current
-code first checks for xattrs that are new/changed, emits them, and later
-emit the chown. Now, __process_new_xattr skips capabilities, letting
-only finish_inode_if_needed to emit them, if they exist, for the inode
-being processed.
+This patch fixes both issues above by removing the alien device.
 
-This behavior was being worked around in "btrfs receive" side by caching
-the capability and only applying it after chown. Now, xattrs are only
-emmited _after_ chown, making that workaround not needed anymore.
-
-Link: https://github.com/kdave/btrfs-progs/issues/202
-CC: stable@vger.kernel.org # 4.4+
-Suggested-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ fs/btrfs/volumes.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -23,6 +23,7 @@
- #include "btrfs_inode.h"
- #include "transaction.h"
- #include "compression.h"
-+#include "xattr.h"
- 
- /*
-  * Maximum number of references an extent can have in order for us to attempt to
-@@ -4536,6 +4537,10 @@ static int __process_new_xattr(int num,
- 	struct fs_path *p;
- 	struct posix_acl_xattr_header dummy_acl;
- 
-+	/* Capabilities are emitted by finish_inode_if_needed */
-+	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
-+		return 0;
-+
- 	p = fs_path_alloc();
- 	if (!p)
- 		return -ENOMEM;
-@@ -5098,6 +5103,64 @@ static int send_extent_data(struct send_
- 	return 0;
- }
- 
-+/*
-+ * Search for a capability xattr related to sctx->cur_ino. If the capability is
-+ * found, call send_set_xattr function to emit it.
-+ *
-+ * Return 0 if there isn't a capability, or when the capability was emitted
-+ * successfully, or < 0 if an error occurred.
-+ */
-+static int send_capabilities(struct send_ctx *sctx)
-+{
-+	struct fs_path *fspath = NULL;
-+	struct btrfs_path *path;
-+	struct btrfs_dir_item *di;
-+	struct extent_buffer *leaf;
-+	unsigned long data_ptr;
-+	char *buf = NULL;
-+	int buf_len;
-+	int ret = 0;
-+
-+	path = alloc_path_for_send();
-+	if (!path)
-+		return -ENOMEM;
-+
-+	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
-+				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
-+	if (!di) {
-+		/* There is no xattr for this inode */
-+		goto out;
-+	} else if (IS_ERR(di)) {
-+		ret = PTR_ERR(di);
-+		goto out;
-+	}
-+
-+	leaf = path->nodes[0];
-+	buf_len = btrfs_dir_data_len(leaf, di);
-+
-+	fspath = fs_path_alloc();
-+	buf = kmalloc(buf_len, GFP_KERNEL);
-+	if (!fspath || !buf) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
-+	if (ret < 0)
-+		goto out;
-+
-+	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
-+	read_extent_buffer(leaf, buf, data_ptr, buf_len);
-+
-+	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
-+			strlen(XATTR_NAME_CAPS), buf, buf_len);
-+out:
-+	kfree(buf);
-+	fs_path_free(fspath);
-+	btrfs_free_path(path);
-+	return ret;
-+}
-+
- static int clone_range(struct send_ctx *sctx,
- 		       struct clone_root *clone_root,
- 		       const u64 disk_byte,
-@@ -6001,6 +6064,10 @@ static int finish_inode_if_needed(struct
- 			goto out;
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -2769,8 +2769,18 @@ int btrfs_init_new_device(struct btrfs_f
+ 		ret = btrfs_commit_transaction(trans);
  	}
  
-+	ret = send_capabilities(sctx);
-+	if (ret < 0)
-+		goto out;
+-	/* Update ctime/mtime for libblkid */
++	/*
++	 * Now that we have written a new super block to this device, check all
++	 * other fs_devices list if device_path alienates any other scanned
++	 * device.
++	 * We can ignore the return value as it typically returns -EINVAL and
++	 * only succeeds if the device was an alien.
++	 */
++	btrfs_forget_devices(device_path);
 +
- 	/*
- 	 * If other directory inodes depended on our current directory
- 	 * inode's move/rename, now do their move/rename operations.
++	/* Update ctime/mtime for blkid or udev */
+ 	update_dev_time(device_path);
++
+ 	return ret;
+ 
+ error_sysfs:
 
 
