@@ -2,163 +2,212 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40848C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26933C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1860E20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011EA20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582510;
-	bh=ETv2/IVQMXutub0remuOAhix575L/fyUUGoOmT5ULPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fMlghoYXVY0F7tc1VzHRNYb3ofeJN/vp0n/5HgkczxI8DSGTKBw7yHTfaOzuUucO2
-	 ir7jZPg4QdbejNTEkr24oLAH1Qzrd8pDe6oLV1i9R+kcbSwSrTkPXXWzG/IxcaOUW5
-	 rgbEusNREe7OSjxa/OBb/xmMwq/X4anGNOP5Ousg=
+	s=default; t=1592582512;
+	bh=s90weQLx3+eky0D7QCfbXXrH6aktND1Y69vgtQvMBVw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xncfLIZ60FSYKbJeDbGn+NhtPV1kTv/LY909obPJk6MhLy4AwsJE8Ph0GZEbJ2Uaj
+	 vbcV82kF31BtnanMIE60AGRlbGZVauXMbufvP6Lkymol3DSkJm3ZbM4FQkSgPHOCvd
+	 tDYrmqL2YeOklqj8ssqYvPuTVY5edMMwUgW3X3I8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404248AbgFSQBr (ORCPT
+        id S2394187AbgFSQBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:01:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33714 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392228AbgFSQBl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:01:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l11so10219054wru.0;
-        Fri, 19 Jun 2020 09:01:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=igRhbYLV+7PJ6N9DkBcYUmMXd50ZJc1tlq0/bt0/vSM=;
-        b=nXEjci27uYDnoG14W1QNAqoNXY4/B4lcikwcOWWT8xah2FV7c6zCaXca63OkQw2tYL
-         QHJOKqIcZh0PLCBc/TPsLlAaCN0tkc42l0fWMspGcYHZ9vt6Kn3z3Fnz9NTmQvWRDFLg
-         vXGTGsNZK4z6HvJV2eKYEcsLzk1w6AES21hjTMNlm4g1jNKCRZJ11cZr9Vff2SHiW8dX
-         urYMeLd9cbKN0aELd52Hu2CpdO9ZLJkh4UZttb33hQJ1xMz/XcNnqBoh5N9cYtwQinGx
-         EjFhjHS9fBf8bdakfVeeQWHblC31lZStkgRXuJxi8a6LKAFLzuqVSSbi3hhcSbpd4pEd
-         lczg==
-X-Gm-Message-State: AOAM5316dh20f99sfSFm7Sv9rRgAsKZmaBp/yA7Ype66BVwYclQFJsce
-        +AUN5rBcAvEoYfI01ZEsHR0=
-X-Google-Smtp-Source: ABdhPJy0TMbHM+GevwodxJNTOFiPbd2ph++ENu2/j8I0jK2Jsh2xokMWVgPO3ifJPex7Syt3C5rCQQ==
-X-Received: by 2002:a5d:5605:: with SMTP id l5mr4704895wrv.318.1592582498803;
-        Fri, 19 Jun 2020 09:01:38 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id o82sm7393169wmo.40.2020.06.19.09.01.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:01:37 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:01:36 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
- spinlock
-Message-ID: <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-8-parri.andrea@gmail.com>
+        Fri, 19 Jun 2020 12:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389396AbgFSPNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64DFA21582;
+        Fri, 19 Jun 2020 15:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579589;
+        bh=s90weQLx3+eky0D7QCfbXXrH6aktND1Y69vgtQvMBVw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Hgwr3Sh7YUR7uvx8W8NR3pMDms9dWHgZlKrUOK1RTCMrmr7afyQgTJ5zBDUgquTh+
+         7Fdy1OOy54f1XczL2uCtbIM1SmqnL/G/CaN6Bqs2ndfapbY7k9ZzbU6H8ti0qE3oDl
+         V2FxZ8KjTpiE/wxG+7Non194GehaRPxiP3SsnIRU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 162/261] btrfs: send: emit file capabilities after chown
+Date:   Fri, 19 Jun 2020 16:32:53 +0200
+Message-Id: <20200619141657.655619309@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617164642.37393-8-parri.andrea@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc SCSI maintainers
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-This patch should go via the hyperv tree because a later patch is
-dependent on it. It requires and ack from SCSI maintainers though.
+commit 89efda52e6b6930f80f5adda9c3c9edfb1397191 upstream.
 
-Thanks,
-Wei.
+Whenever a chown is executed, all capabilities of the file being touched
+are lost.  When doing incremental send with a file with capabilities,
+there is a situation where the capability can be lost on the receiving
+side. The sequence of actions bellow shows the problem:
 
-On Wed, Jun 17, 2020 at 06:46:41PM +0200, Andrea Parri (Microsoft) wrote:
-> storvsc uses the spinlock of the hv_device's primary channel to
-> serialize modifications of stor_chns[] performed by storvsc_do_io()
-> and storvsc_change_target_cpu(), when it could/should use a (per-)
-> storvsc_device spinlock: this change untangles the synchronization
-> mechanism for the (storvsc-specific) stor_chns[] array from the
-> "generic" VMBus code and data structures, clarifying the scope of
-> this synchronization mechanism.
-> 
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/scsi/storvsc_drv.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index 072ed87286578..8ff21e69a8be8 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -462,6 +462,11 @@ struct storvsc_device {
->  	 * Mask of CPUs bound to subchannels.
->  	 */
->  	struct cpumask alloced_cpus;
-> +	/*
-> +	 * Serializes modifications of stor_chns[] from storvsc_do_io()
-> +	 * and storvsc_change_target_cpu().
-> +	 */
-> +	spinlock_t lock;
->  	/* Used for vsc/vsp channel reset process */
->  	struct storvsc_cmd_request init_request;
->  	struct storvsc_cmd_request reset_request;
-> @@ -639,7 +644,7 @@ static void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old,
->  		return;
->  
->  	/* See storvsc_do_io() -> get_og_chn(). */
-> -	spin_lock_irqsave(&device->channel->lock, flags);
-> +	spin_lock_irqsave(&stor_device->lock, flags);
->  
->  	/*
->  	 * Determines if the storvsc device has other channels assigned to
-> @@ -676,7 +681,7 @@ static void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old,
->  	WRITE_ONCE(stor_device->stor_chns[new], channel);
->  	cpumask_set_cpu(new, &stor_device->alloced_cpus);
->  
-> -	spin_unlock_irqrestore(&device->channel->lock, flags);
-> +	spin_unlock_irqrestore(&stor_device->lock, flags);
->  }
->  
->  static void handle_sc_creation(struct vmbus_channel *new_sc)
-> @@ -1433,14 +1438,14 @@ static int storvsc_do_io(struct hv_device *device,
->  			}
->  		}
->  	} else {
-> -		spin_lock_irqsave(&device->channel->lock, flags);
-> +		spin_lock_irqsave(&stor_device->lock, flags);
->  		outgoing_channel = stor_device->stor_chns[q_num];
->  		if (outgoing_channel != NULL) {
-> -			spin_unlock_irqrestore(&device->channel->lock, flags);
-> +			spin_unlock_irqrestore(&stor_device->lock, flags);
->  			goto found_channel;
->  		}
->  		outgoing_channel = get_og_chn(stor_device, q_num);
-> -		spin_unlock_irqrestore(&device->channel->lock, flags);
-> +		spin_unlock_irqrestore(&stor_device->lock, flags);
->  	}
->  
->  found_channel:
-> @@ -1881,6 +1886,7 @@ static int storvsc_probe(struct hv_device *device,
->  	init_waitqueue_head(&stor_device->waiting_to_drain);
->  	stor_device->device = device;
->  	stor_device->host = host;
-> +	spin_lock_init(&stor_device->lock);
->  	hv_set_drvdata(device, stor_device);
->  
->  	stor_device->port_number = host->host_no;
-> -- 
-> 2.25.1
-> 
+  $ mount /dev/sda fs1
+  $ mount /dev/sdb fs2
+
+  $ touch fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_init
+  $ btrfs send fs1/snap_init | btrfs receive fs2
+
+  $ chgrp adm fs1/foo.bar
+  $ setcap cap_sys_nice+ep fs1/foo.bar
+
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_complete
+  $ btrfs subvolume snapshot -r fs1 fs1/snap_incremental
+
+  $ btrfs send fs1/snap_complete | btrfs receive fs2
+  $ btrfs send -p fs1/snap_init fs1/snap_incremental | btrfs receive fs2
+
+At this point, only a chown was emitted by "btrfs send" since only the
+group was changed. This makes the cap_sys_nice capability to be dropped
+from fs2/snap_incremental/foo.bar
+
+To fix that, only emit capabilities after chown is emitted. The current
+code first checks for xattrs that are new/changed, emits them, and later
+emit the chown. Now, __process_new_xattr skips capabilities, letting
+only finish_inode_if_needed to emit them, if they exist, for the inode
+being processed.
+
+This behavior was being worked around in "btrfs receive" side by caching
+the capability and only applying it after chown. Now, xattrs are only
+emmited _after_ chown, making that workaround not needed anymore.
+
+Link: https://github.com/kdave/btrfs-progs/issues/202
+CC: stable@vger.kernel.org # 4.4+
+Suggested-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/send.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -23,6 +23,7 @@
+ #include "btrfs_inode.h"
+ #include "transaction.h"
+ #include "compression.h"
++#include "xattr.h"
+ 
+ /*
+  * Maximum number of references an extent can have in order for us to attempt to
+@@ -4536,6 +4537,10 @@ static int __process_new_xattr(int num,
+ 	struct fs_path *p;
+ 	struct posix_acl_xattr_header dummy_acl;
+ 
++	/* Capabilities are emitted by finish_inode_if_needed */
++	if (!strncmp(name, XATTR_NAME_CAPS, name_len))
++		return 0;
++
+ 	p = fs_path_alloc();
+ 	if (!p)
+ 		return -ENOMEM;
+@@ -5098,6 +5103,64 @@ static int send_extent_data(struct send_
+ 	return 0;
+ }
+ 
++/*
++ * Search for a capability xattr related to sctx->cur_ino. If the capability is
++ * found, call send_set_xattr function to emit it.
++ *
++ * Return 0 if there isn't a capability, or when the capability was emitted
++ * successfully, or < 0 if an error occurred.
++ */
++static int send_capabilities(struct send_ctx *sctx)
++{
++	struct fs_path *fspath = NULL;
++	struct btrfs_path *path;
++	struct btrfs_dir_item *di;
++	struct extent_buffer *leaf;
++	unsigned long data_ptr;
++	char *buf = NULL;
++	int buf_len;
++	int ret = 0;
++
++	path = alloc_path_for_send();
++	if (!path)
++		return -ENOMEM;
++
++	di = btrfs_lookup_xattr(NULL, sctx->send_root, path, sctx->cur_ino,
++				XATTR_NAME_CAPS, strlen(XATTR_NAME_CAPS), 0);
++	if (!di) {
++		/* There is no xattr for this inode */
++		goto out;
++	} else if (IS_ERR(di)) {
++		ret = PTR_ERR(di);
++		goto out;
++	}
++
++	leaf = path->nodes[0];
++	buf_len = btrfs_dir_data_len(leaf, di);
++
++	fspath = fs_path_alloc();
++	buf = kmalloc(buf_len, GFP_KERNEL);
++	if (!fspath || !buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = get_cur_path(sctx, sctx->cur_ino, sctx->cur_inode_gen, fspath);
++	if (ret < 0)
++		goto out;
++
++	data_ptr = (unsigned long)(di + 1) + btrfs_dir_name_len(leaf, di);
++	read_extent_buffer(leaf, buf, data_ptr, buf_len);
++
++	ret = send_set_xattr(sctx, fspath, XATTR_NAME_CAPS,
++			strlen(XATTR_NAME_CAPS), buf, buf_len);
++out:
++	kfree(buf);
++	fs_path_free(fspath);
++	btrfs_free_path(path);
++	return ret;
++}
++
+ static int clone_range(struct send_ctx *sctx,
+ 		       struct clone_root *clone_root,
+ 		       const u64 disk_byte,
+@@ -6001,6 +6064,10 @@ static int finish_inode_if_needed(struct
+ 			goto out;
+ 	}
+ 
++	ret = send_capabilities(sctx);
++	if (ret < 0)
++		goto out;
++
+ 	/*
+ 	 * If other directory inodes depended on our current directory
+ 	 * inode's move/rename, now do their move/rename operations.
+
+
