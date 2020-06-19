@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B33C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0ED21919
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C15820734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580474;
-	bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
+	s=default; t=1592580478;
+	bh=6qFB+xmqfN7wt3Btr+n50UrRMA+WUXiQ88tCbhKAgm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/LqlR/mwqY0oyXCRtbMjJIlCasBuO0/qVKjojR+e7s9dVdomLYXVZOmoW0XuD9MJ
-	 LymYXsNvlBsvfx3R+IW4FLzJ3Vb3+pT/ER1ppmLr4zaD7LnUOoeOSQzfWHwgekwc9X
-	 wSQPaeNi2a+QtowE3O4n0KyiTFD8+HW/8ZoCeOIs=
+	b=quPDqTki5TKzi/Dmow0btsOo0TOv6hSZjqeSpvBmHthcVktlO+5sI96ljzCBeDJlq
+	 rCqyPfYNqsxboG8AcxV9d1zbY/cU1cfoAr5xvx7pGFjH+Bsq10RpDjNyvGkZP/TDIK
+	 ZyrrgVAaihWdF9ZRb1t4vRl7lg+S/E8QpXJUzkt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404439AbgFSP1x (ORCPT
+        id S2404450AbgFSP15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404349AbgFSP0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:43 -0400
+        id S2393304AbgFSP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 009C320734;
-        Fri, 19 Jun 2020 15:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E8421582;
+        Fri, 19 Jun 2020 15:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580402;
-        bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
+        s=default; t=1592580405;
+        bh=6qFB+xmqfN7wt3Btr+n50UrRMA+WUXiQ88tCbhKAgm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zA4RGa9Gg0CUj6R5H8buNfYKcLM+gmHDBAHSYYbJNeMtYm80ad3WOFcWJ9EWybPKm
-         NeL6DbJRpr6hc5u8WybLJNMS/Oz9G3gc/+6011VCIRqEL+WpSooI5hWZDqVAmluS6b
-         6c/XStp6fkGlDV+1OzReLHKX0f3TGaCMb9+Ik83A=
+        b=tHcy31PIp4zTjths5IxpD6ennokxBpCNxH8OxSd+DSn3na9KoodJvt8vL5pFjJj44
+         8Qelp0plIjgQeoi73JQ3yJcu/DdnOuQ50kkOh5bVLQfzRBosWLNGwIQ5TQYnyUR6ex
+         4tAKqz1Dkd/BKMSMKVwtCQ16873gtgC8gkp1kWGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 235/376] ixgbe: fix signed-integer-overflow warning
-Date:   Fri, 19 Jun 2020 16:32:33 +0200
-Message-Id: <20200619141721.446779064@linuxfoundation.org>
+Subject: [PATCH 5.7 236/376] iwlwifi: mvm: fix aux station leak
+Date:   Fri, 19 Jun 2020 16:32:34 +0200
+Message-Id: <20200619141721.494826630@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,54 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
+[ Upstream commit f327236df2afc8c3c711e7e070f122c26974f4da ]
 
-ubsan report this warning, fix it by adding a unsigned suffix.
+When mvm is initialized we alloc aux station with aux queue.
+We later free the station memory when driver is stopped, but we
+never free the queue's memory, which casues a leak.
 
-UBSAN: signed-integer-overflow in
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
-65535 * 65537 cannot be represented in type 'int'
-CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
-Workqueue: ixgbe ixgbe_service_task [ixgbe]
-Call trace:
- dump_backtrace+0x0/0x3f0
- show_stack+0x28/0x38
- dump_stack+0x154/0x1e4
- ubsan_epilogue+0x18/0x60
- handle_overflow+0xf8/0x148
- __ubsan_handle_mul_overflow+0x34/0x48
- ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
- ixgbe_service_task+0xc20/0x1f78 [ixgbe]
- process_one_work+0x8f0/0xf18
- worker_thread+0x430/0x6d0
- kthread+0x218/0x238
- ret_from_fork+0x10/0x18
+Add a proper de-initialization of the station.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200529092401.0121c5be55e9.Id7516fbb3482131d0c9dfb51ff20b226617ddb49@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c  |  5 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c   | 18 +++++++++++++-----
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h   |  6 +++---
+ 3 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index 0bd1294ba517..39c5e6fdb72c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -2243,7 +2243,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 7aa1350b093e..cf3c46c9b1ee 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -1209,14 +1209,13 @@ void __iwl_mvm_mac_stop(struct iwl_mvm *mvm)
+ 	 */
+ 	flush_work(&mvm->roc_done_wk);
  
- 	/* Configure pause time (2 TCs per register) */
--	reg = hw->fc.pause_time * 0x00010001;
-+	reg = hw->fc.pause_time * 0x00010001U;
- 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
- 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
++	iwl_mvm_rm_aux_sta(mvm);
++
+ 	iwl_mvm_stop_device(mvm);
  
+ 	iwl_mvm_async_handlers_purge(mvm);
+ 	/* async_handlers_list is empty and will stay empty: HW is stopped */
+ 
+-	/* the fw is stopped, the aux sta is dead: clean up driver state */
+-	iwl_mvm_del_aux_sta(mvm);
+-
+ 	/*
+ 	 * Clear IN_HW_RESTART and HW_RESTART_REQUESTED flag when stopping the
+ 	 * hw (as restart_complete() won't be called in this case) and mac80211
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 56ae72debb96..07ca8c91499d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -2080,16 +2080,24 @@ int iwl_mvm_rm_snif_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ 	return ret;
+ }
+ 
+-void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm)
+ {
+-	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+-}
++	int ret;
+ 
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm)
+-{
+ 	lockdep_assert_held(&mvm->mutex);
+ 
++	iwl_mvm_disable_txq(mvm, NULL, mvm->aux_queue, IWL_MAX_TID_COUNT, 0);
++	ret = iwl_mvm_rm_sta_common(mvm, mvm->aux_sta.sta_id);
++	if (ret)
++		IWL_WARN(mvm, "Failed sending remove station\n");
+ 	iwl_mvm_dealloc_int_sta(mvm, &mvm->aux_sta);
++
++	return ret;
++}
++
++void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++{
++	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+ }
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+index 8d70093847cb..da2d1ac01229 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -541,7 +541,7 @@ int iwl_mvm_sta_tx_agg(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 		       int tid, u8 queue, bool start);
+ 
+ int iwl_mvm_add_aux_sta(struct iwl_mvm *mvm);
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm);
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm);
+ 
+ int iwl_mvm_alloc_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
+ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 -- 
 2.25.1
 
