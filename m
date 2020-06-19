@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB60C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B049C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90EB21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C77221556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577931;
-	bh=rJ6qWfDyRHcxsYASqxaiCs+SO1NYI3B32WFsKYDkMbY=;
+	s=default; t=1592577933;
+	bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1l01Gcy4+hE5EJqkN3q/JPimU2O9elSPT3+FD6fktd/hgG/O85s2L3EaHtfexct1
-	 Ua/lFwCgSy0owAbNLswJwoddFzJ8/mf3aJnPrLyKDStfTZZtu21lbJO+Qq5rU5dxAg
-	 Rb2AmKNA1njARQyxIsxZ+PfcppRmpF8M6W4JioSU=
+	b=ZoejvdzJQ4aMLDXxjw9hyCqpnloab8nnbgPWWpQ+y6gWY3Xnorx+M0xKzNFP2r8iJ
+	 8tC+6eOUkNXwnol++e9Tv7lIGlcbg+rlINtCk1pkljefs2xtVJxpwM/u+0AtAam1Bn
+	 ERMi7MGQUY0e39B34xKDHJg9fSwzybWDkidRU8OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388705AbgFSOp2 (ORCPT
+        id S2388710AbgFSOpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36796 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbgFSOpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:15 -0400
+        id S2388682AbgFSOpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EEA82083B;
-        Fri, 19 Jun 2020 14:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B75420A8B;
+        Fri, 19 Jun 2020 14:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577915;
-        bh=rJ6qWfDyRHcxsYASqxaiCs+SO1NYI3B32WFsKYDkMbY=;
+        s=default; t=1592577917;
+        bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sd4B9zJR/GSU9BoG7uaFJSJxOf1CP64JQtpFIq58e2M4mDtmw1cflSLwmvrNjCL+g
-         KJRR2gd0wbwD9qDmAoyext9nYcuS77zzAOG8p383K68hZZcxljhEnoR29n+KGstZAj
-         JVFsdszPr1lEkgPMotA+VVG8I7eA4yHZDmlRH+b8=
+        b=AzJjvtghmIISWZqF8XLNy6rtUY1OkAmBUUcmmMglDEwZ0Adp2wLW0iXplE/HQYHNg
+         R/mZKYaJjRrxwm7xvu4YmJ+EkcWK80yn3cDlbhYnBBcgPcqhbfNBUrGSpIMOWv0tcV
+         MjdL/hQ5kdbsH2X6OjTscBstyqFjXV9oc9nIlvnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Kadioglu <denk@eclipso.email>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/190] Input: synaptics - add a second working PNP_ID for Lenovo T470s
-Date:   Fri, 19 Jun 2020 16:30:57 +0200
-Message-Id: <20200619141634.099047143@linuxfoundation.org>
+Subject: [PATCH 4.14 013/190] drivers/net/ibmvnic: Update VNIC protocol version reporting
+Date:   Fri, 19 Jun 2020 16:30:58 +0200
+Message-Id: <20200619141634.133139918@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,35 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Kadioglu <denk@eclipso.email>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
+[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
 
-The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
-instead of the already included PNP ID "LEN006c". However, my touchpad
-seems to work well without any problems using RMI. So this patch adds the
-other PNP ID.
+VNIC protocol version is reported in big-endian format, but it
+is not byteswapped before logging. Fix that, and remove version
+comparison as only one protocol version exists at this time.
 
-Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
-Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 2bca84f4c2b2..85db184321f7 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -173,6 +173,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
- 	"LEN006c", /* T470s */
-+	"LEN007a", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 956fbb164e6f..85c11dafb4cd 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -3560,12 +3560,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
+ 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
+ 			break;
+ 		}
+-		dev_info(dev, "Partner protocol version is %d\n",
+-			 crq->version_exchange_rsp.version);
+-		if (be16_to_cpu(crq->version_exchange_rsp.version) <
+-		    ibmvnic_version)
+-			ibmvnic_version =
++		ibmvnic_version =
+ 			    be16_to_cpu(crq->version_exchange_rsp.version);
++		dev_info(dev, "Partner protocol version is %d\n",
++			 ibmvnic_version);
+ 		send_cap_queries(adapter);
+ 		break;
+ 	case QUERY_CAPABILITY_RSP:
 -- 
 2.25.1
 
