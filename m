@@ -2,53 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B64C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083BC21927
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987EE217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583926;
-	bh=N751oS8NC36Y0dt+fAPASAJvAAoD3/nSM5jly+El1lA=;
+	s=default; t=1592583933;
+	bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9/kIv3eY6CJDNo7F4zOD/nGa76rmy+K7pbGt01SybdLR2x+7OnhcTesrV1D8Z3Pv
-	 1qgXv+tjuhMQEgNxFBqfm1z+cgj5nyz84fkU+FlV5xFYtLtUV7HVvAGgRHkHqcIZMm
-	 dupJFvVhy3ZcjQuNCBE117tAjuDJTB1n1QwlKJDY=
+	b=oYZz3gti1rTi9eJgBTw3MxQH2PQIu2UfpG1L0qAXMkYiN6xs3/rYkr8gZzJHIiiWd
+	 lJa89UMiiePg4PKsU24sXwH6GwmXQb7ozr/OrkvvgQG+JLs7UsffdLmYd+rcfRqPW1
+	 pQj20sesA2QWlFuT8KF1PiM/CuISJPoaSkX0sdVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394832AbgFSQZY (ORCPT
+        id S2394837AbgFSQZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53014 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:25:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390271AbgFSO5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:36 -0400
+        id S2390256AbgFSO5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1687217D8;
-        Fri, 19 Jun 2020 14:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F38121924;
+        Fri, 19 Jun 2020 14:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578656;
-        bh=N751oS8NC36Y0dt+fAPASAJvAAoD3/nSM5jly+El1lA=;
+        s=default; t=1592578653;
+        bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbanjMaqEC8AZcyOLfzmeWF1D0IOXb5mP482Eizy/YDxDqiIBA9lLOBtPd9eN5id+
-         P3WqyZ68ui8kKpZrrsPoxyTN4m4e/NfKvoj0aOaVd1ID7rUvm2dkGqH5r9iAa3h86g
-         nD10A4FW1HVyimy995lZsAW/ixHW78M6uGfImSsk=
+        b=mSf+kM1MCcsJaThx/rZ7pQXDG7abrsWNl5Wh1jePrzHbGJ7lDNI6Zub6/MGx3d9eY
+         Pv/DgPg5yPUvSYvTzTM9dKzbl4gZaVbW3762nft6P//NEIgDwkloNEkhtvD+T5wGQ2
+         /yF9G6cnDZdNrWukbZ/97CwN44448FBXrqrAGSV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 105/267] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
-Date:   Fri, 19 Jun 2020 16:31:30 +0200
-Message-Id: <20200619141653.896871181@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Andi Shyti <andi.shyti@intel.com>
+Subject: [PATCH 4.19 087/267] agp/intel: Reinforce the barrier after GTT updates
+Date:   Fri, 19 Jun 2020 16:31:12 +0200
+Message-Id: <20200619141653.051360365@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,48 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
+commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
 
-The ixgbe driver have another memory model when compiled on archs with
-PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
-two halves, but instead increment rx_buffer->page_offset by truesize of
-packet (which include headroom and tailroom for skb_shared_info).
+After changing the timing between GTT updates and execution on the GPU,
+we started seeing sporadic failures on Ironlake. These were narrowed
+down to being an insufficiently strong enough barrier/delay after
+updating the GTT and scheduling execution on the GPU. By forcing the
+uncached read, and adding the missing barrier for the singular
+insert_page (relocation paths), the sporadic failures go away.
 
-This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
-which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
-to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
-veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
+Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
+Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Andi Shyti <andi.shyti@intel.com>
+Cc: stable@vger.kernel.org # v4.0+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Maintainers notice: This fix have been queued to Jeff.
-
-Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/agp/intel-gtt.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 8177276500f5..7d723b70fcf6 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2258,7 +2258,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
- 	rx_buffer->page_offset ^= truesize;
- #else
- 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
--				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-+				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
-+				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
- 				SKB_DATA_ALIGN(size);
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -846,6 +846,7 @@ void intel_gtt_insert_page(dma_addr_t ad
+ 			   unsigned int flags)
+ {
+ 	intel_private.driver->write_entry(addr, pg, flags);
++	readl(intel_private.gtt + pg);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -871,7 +872,7 @@ void intel_gtt_insert_sg_entries(struct
+ 			j++;
+ 		}
+ 	}
+-	wmb();
++	readl(intel_private.gtt + j - 1);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -1105,6 +1106,7 @@ static void i9xx_cleanup(void)
  
- 	rx_buffer->page_offset += truesize;
--- 
-2.25.1
-
+ static void i9xx_chipset_flush(void)
+ {
++	wmb();
+ 	if (intel_private.i9xx_flush_page)
+ 		writel(1, intel_private.i9xx_flush_page);
+ }
 
 
