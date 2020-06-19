@@ -2,112 +2,87 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6192C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF502080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FTMyTBMM"
+	by mail.kernel.org (Postfix) with ESMTP id 5F4F2208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbgFSK0f (ORCPT
+        id S1732399AbgFSK2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
+        Fri, 19 Jun 2020 06:28:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732283AbgFSK0e (ORCPT
+        with ESMTP id S1732283AbgFSK2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:26:34 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AC2C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 03:26:33 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id g18so6729493qtu.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 03:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g6sl0V6oSF+ayLjJO92Gb6jDxQHsMRD4h3oSfs3nUus=;
-        b=FTMyTBMM0WhdezxS9cKagR+7bmzV4MCbxW+PeNlxLWAYveMypleF5j5yWeEHqCKSnm
-         Pql+E4txHJ/+BYxTlolI+gp6gz+Rr4pcpAJVEJV/OWJX7GknKspi92ixJwxzvo8XSOZm
-         nBiK3GgbVeH6mM994YVAK7LfXOWApaDMGWl9zN1q5WgjCzSVHANhEWkOkaOeZd8VxvIg
-         pVzxKNGTZ15ZjJTWhX6IhxBwRpqwiYLMzhzTCTaqdxsaBh3Xoe0PQez+US73lnbzga4Q
-         1LoxLLp/0JUMPdZp8uPek7N1kQcfPH345HVhNXBs3keIO/eOMrEXvkEkmcwBF113jYTK
-         KjUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g6sl0V6oSF+ayLjJO92Gb6jDxQHsMRD4h3oSfs3nUus=;
-        b=fNVN4xODYLJHgc53HCghfviPwxVk3UXlszCDdsVSD4W25bjgKcjzChfmNULj8mwr2u
-         yDgZ4T+HnQcRmThNgyxzkadYQo2Pxh6YcuQaoEOGma5vd5oy0+fitpNub0kmeF1UYfXF
-         oJuV4xZ0gHakYQtHLR9HFNp831+m8VRHaDi1GyBUOwguasf2rEoY3+Vt5kMMsZhDVv3M
-         ZjK76SYnbmchXGznDQ7s/4OPENQFEco6D1CuasSkePW4jDLEHOUEY9kxf6L7OHZR8kHg
-         YuS4MCm4H0XGL8kltaUkMwrrXTwSfG1mgjXPwDZr1CbkYwbIllMBrFdLOfe8mAItV+Vf
-         iY0w==
-X-Gm-Message-State: AOAM5330Nd/ed1IoAkBEXhHcxi/F/m/YO//bc4UAh/RfZUJnPFo1v4vm
-        QGiRFV7xIbE9qXxp6G9tMUZDd7ivxi2fZCKvqAw=
-X-Google-Smtp-Source: ABdhPJw4L0mljF2l27HpeZcatzsAaqywsSlC0wRli/G07dmQg0qAaoKE064RDeqMRqbuMOQry3QQFMjUP6vC6W4vX34=
-X-Received: by 2002:ac8:6a08:: with SMTP id t8mr2571945qtr.271.1592562392543;
- Fri, 19 Jun 2020 03:26:32 -0700 (PDT)
+        Fri, 19 Jun 2020 06:28:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019C1C0613EE;
+        Fri, 19 Jun 2020 03:28:05 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 23DE72A51F7
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 0/7] arm64: dts: mediatek: Add support for Lenovo IdeaPad Duet Chromebook
+Date:   Fri, 19 Jun 2020 12:27:50 +0200
+Message-Id: <20200619102757.1358675-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200608210058.37352-1-jarod@redhat.com> <20200610185910.48668-1-jarod@redhat.com>
-In-Reply-To: <20200610185910.48668-1-jarod@redhat.com>
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Date:   Fri, 19 Jun 2020 03:26:21 -0700
-Message-ID: <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 0/4] bonding: initial support for hardware
- crypto offload
-To:     Jarod Wilson <jarod@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 1:18 PM Jarod Wilson <jarod@redhat.com> wrote:
->
-> This is an initial functional implementation for doing pass-through of
-> hardware encryption from bonding device to capable slaves, in active-backup
-> bond setups. This was developed and tested using ixgbe-driven Intel x520
-> interfaces with libreswan and a transport mode connection, primarily using
-> netperf, with assorted connection failures forced during transmission. The
-> failover works quite well in my testing, and overall performance is right
-> on par with offload when running on a bare interface, no bond involved.
->
-> Caveats: this is ONLY enabled for active-backup, because I'm not sure
-> how one would manage multiple offload handles for different devices all
-> running at the same time in the same xfrm, and it relies on some minor
-> changes to both the xfrm code and slave device driver code to get things
-> to behave, and I don't have immediate access to any other hardware that
-> could function similarly, but the NIC driver changes are minimal and
-> straight-forward enough that I've included what I think ought to be
-> enough for mlx5 devices too.
->
-> v2: reordered patches, switched (back) to using CONFIG_XFRM_OFFLOAD
-> to wrap the code additions and wrapped overlooked additions.
->
-> Jarod Wilson (4):
->   xfrm: bail early on slave pass over skb
->   ixgbe_ipsec: become aware of when running as a bonding slave
->   mlx5: become aware of when running as a bonding slave
->   bonding: support hardware encryption offload to slaves
->
->  drivers/net/bonding/bond_main.c               | 127 +++++++++++++++++-
->  .../net/ethernet/intel/ixgbe/ixgbe_ipsec.c    |  39 ++++--
->  .../mellanox/mlx5/core/en_accel/ipsec.c       |   6 +
->  include/net/bonding.h                         |   3 +
->  include/net/xfrm.h                            |   1 +
->  net/xfrm/xfrm_device.c                        |  34 ++---
->  6 files changed, 183 insertions(+), 27 deletions(-)
+These series adds basic support for the Lenovo IdeaPad Duet Chromebook, a
+2-in-1 detachable devices using the MediaTek MT8183 SoC. The first patch
+only adds the new compatible names in the mediatek binding. The second
+patch, adds the missing compatible to instantiate the PMIC regulators.
+The next patch adds missing devices to support better the board and fixes
+some warnings found running dtbs_check. And finally, the latest
+introduces support for the board itself.
 
-Was this ever sent to netdev (the more appropriate ML)?
+All the patches has been tested on Lenovo IdeaPad Duet Chromebook with
+the patches applied on top of 5.8-rc1 and with serial console, booting
+without problems and being able to go to the login prompt.
+
+Best regards,
+  Enric
+
+Enric Balletbo i Serra (7):
+  dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
+  arm64: dts: mt6358: Add the compatible for the regulators
+  arm64: dts: mt8183: Add MediaTek's peripheral configuration controller
+  arm64: dts: mt8183: Fix unit name warnings
+  arm64: dts: mt8183-evb: Fix unit name warnings
+  arm64: dts: mt8183: Add USB3.0 support
+  arm64: dts: mt8183: Add krane-sku176 board
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   5 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ arch/arm64/boot/dts/mediatek/mt6358.dtsi      |   2 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   4 +-
+ .../mediatek/mt8183-kukui-krane-sku176.dts    |  18 +
+ .../boot/dts/mediatek/mt8183-kukui-krane.dtsi | 343 ++++++++
+ .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 788 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  68 +-
+ 8 files changed, 1225 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
 
 -- 
-Cheers,
-Jeff
+2.27.0
+
