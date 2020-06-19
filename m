@@ -2,88 +2,100 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50CD7208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fsiqp5Bf"
+	by mail.kernel.org (Postfix) with ESMTP id 277D220B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592587913;
+	bh=9mCNxE/8rXZYK27gbI7jREQY5FMFSwoWsy4EMvaeG3Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kS2UNqcCvNp/5ujUWxp/dnqDZcTcSZUcVdn56Rs9bYXelCrZ3lsMOg0ZJAzT+gisG
+	 utf480iONxLmlO2jDBYbw/8jwFgnjLjept9cEI+CtJ6dKWLKM9irJxWMqrnX6ahP57
+	 4quX+qPEe4kPKzf5IXfOOSkVibDgvXGufV2tKgsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391478AbgFSRbh (ORCPT
+        id S2392654AbgFSRbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732343AbgFSRbh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:31:37 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3AFC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 10:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UGQYAy353h8usQVvoM8ZQptssTrkQAxhrWa3SGPOXCg=; b=fsiqp5BfJvmIshAQeSR6UH4L1M
-        R+O+x1YUSNeVrjNEAszs+DmO1vQICJ+VHQBSNfga4LH1s8W+yzm8nquE3G+PhLGuJrQJkjuQ1s4tz
-        D7kXk1GfOkjmUgupg/Wkc/GDRmYoKiLs+6OF0rEda59MCMbJNB2Ae5Yr2dF+n43ztn0X0dpRcCe1K
-        52wJbR2fJE7EYrRYVcp3z726n7i67i93HQz6LoryyqxfNiPwjMll5igno6C2fccVn5zr9Xy58avYJ
-        tHTkG642Sl/j1g9xQolnxBvJHTMddV/N3t1M5YQ+WoxGbeQPGguh/Kn1OraQnsnNiQ6ru4k6AmMp3
-        SW+EDHVw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmKqw-0003Ny-SX; Fri, 19 Jun 2020 17:30:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 19 Jun 2020 13:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392026AbgFSRbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:31:51 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9C55E3079CB;
-        Fri, 19 Jun 2020 19:30:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 68F0321390E42; Fri, 19 Jun 2020 19:30:55 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 19:30:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Fix initialization of strut uclamp_rq
-Message-ID: <20200619173055.GA576888@hirez.programming.kicks-ass.net>
-References: <20200618195525.7889-1-qais.yousef@arm.com>
- <20200618195525.7889-2-qais.yousef@arm.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB66720809;
+        Fri, 19 Jun 2020 17:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592587911;
+        bh=9mCNxE/8rXZYK27gbI7jREQY5FMFSwoWsy4EMvaeG3Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=unM1SajPAWGLO2RLvI4NOTywsFTs4JNz5ftkv1P4abcHdAiYJlLxxftqMzWVVdRYW
+         8LjabTaptFybYvdAORjLyRqioXRM8AthFwJhxSQKnZS4mxwSJlt2gbuQfd6hqSpuZf
+         2xrtAHAexLBnyUEGA3p6bjBJm9CePmO0zvcTHIao=
+Date:   Fri, 19 Jun 2020 12:37:15 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ethernet: ti: am65-cpsw-qos: Use struct_size() in
+ devm_kzalloc()
+Message-ID: <20200619173715.GA6998@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618195525.7889-2-qais.yousef@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 08:55:24PM +0100, Qais Yousef wrote:
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _size_.
 
-> +	for_each_clamp_id(clamp_id) {
-> +		memset(uc_rq[clamp_id].bucket,
-> +		       0,
-> +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
-> +
-> +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-I think you can replace all that with:
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/ti/am65-cpsw-qos.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-		*uc_rq = (struct uclamp_rq){
-			.value = uclamp_none(clamp_id),
-		};
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-qos.c b/drivers/net/ethernet/ti/am65-cpsw-qos.c
+index 32eac04468bb..3bdd4dbcd2ff 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-qos.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-qos.c
+@@ -505,7 +505,6 @@ static int am65_cpsw_set_taprio(struct net_device *ndev, void *type_data)
+ 	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
+ 	struct tc_taprio_qopt_offload *taprio = type_data;
+ 	struct am65_cpsw_est *est_new;
+-	size_t size;
+ 	int ret = 0;
+ 
+ 	if (taprio->cycle_time_extension) {
+@@ -513,10 +512,9 @@ static int am65_cpsw_set_taprio(struct net_device *ndev, void *type_data)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	size = sizeof(struct tc_taprio_sched_entry) * taprio->num_entries +
+-	       sizeof(struct am65_cpsw_est);
+-
+-	est_new = devm_kzalloc(&ndev->dev, size, GFP_KERNEL);
++	est_new = devm_kzalloc(&ndev->dev,
++			       struct_size(est_new, taprio.entries, taprio->num_entries),
++			       GFP_KERNEL);
+ 	if (!est_new)
+ 		return -ENOMEM;
+ 
+-- 
+2.27.0
 
-it's shorter and is free or weird line-breaks :-)
-
-> +	}
