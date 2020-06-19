@@ -2,117 +2,107 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD74C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2525C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F29D20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0B320776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khk/dVYT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mz1i2VF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733200AbgFSOJ0 (ORCPT
+        id S1733008AbgFSOKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgFSOJX (ORCPT
+        Fri, 19 Jun 2020 10:10:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22101 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731492AbgFSOKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:09:23 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C31DC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:09:23 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id q2so5672996vsr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WSN+a2RVNGMBSxMoxwqKpJqZZbVxq/HTpK1YQsoLOvQ=;
-        b=khk/dVYTi6EwwazULEZ22xn6wr4m9EWCJc0ruPwHDfNSiO2Ghl8ifOFklLvezpLcLj
-         HLL91p161trSUnoVwYgLI5bdzH7DDL2CV9BHH7W1sPkkOfYES78xqlXzDQ0yLSr9oFX3
-         0tqtaO8x+IJnZFtS7DD1JQHcCegeTaJVZf1odfIhadequ2cjDsyNXEYSB8nXyWDjCyi7
-         GUgFP1QIqXLuPjIg6b8mMDNwksmfJUx49MWjS6lhD7vJnhY0Rc3QOe9RUUGDoPHg0Ykt
-         gQci6L6xS840ab1z2MW5iBFt9vmZvor/RxNyTScU3A+dmyFC9uAI5aA6CRtQNd9LtYjd
-         A4rw==
+        Fri, 19 Jun 2020 10:10:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592575850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OQGcTYNZ0qd2ZL6M4exRQEolMRV74PfXhnhqE6+gOjU=;
+        b=Mz1i2VF0PEpcBRCqa+5zDlCsNhfJ3YkAi8W1udqWJTnGXSQQ8aFK/oqymL0ZeKjbLQMc43
+        cvW6EJpKvZaT2Y8pE0/tx8JfQGPyW+Fo7AKJkNpRClvq7tffu74qyGx5MLUTCA4YGqXFsj
+        COVqkUNNU3smWcPMjEYyfkH6rp4u0Mw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-NasKLmzNMPGBZG120J0lrQ-1; Fri, 19 Jun 2020 10:10:46 -0400
+X-MC-Unique: NasKLmzNMPGBZG120J0lrQ-1
+Received: by mail-wr1-f72.google.com with SMTP id o12so2370090wrj.23
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:10:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WSN+a2RVNGMBSxMoxwqKpJqZZbVxq/HTpK1YQsoLOvQ=;
-        b=tI9HgjWPffiNyiNS8De5LM9X4JjHR2THuOZ57aRN1CGt/FMx8RQjSMQoe7fT1AjIp0
-         MxR2jVlh7Og/rlaUIHfknDI6r/3URU2GM0ayCxJdP/SALR1QVXHVlZGuUc4d7m81Oy95
-         hdwkbhSmSZebD1rlT4q1AWqdc+dG+nvlfggR6973AMZtT9t6gPh7TLiRzUuAOhnV6oHJ
-         FyJ9VW0VgopbE41yK8m/dO9yl2/0ygaGyH1okwhCs2BEqveZpeVUlWjNCt9CWfDK6SzT
-         DFqItNfDeIhL1X8Y3gmHS5BI8Sja3w+tNPlwHDMTkObU6SFnkiBGLxC9FlMdJ6rrdmLW
-         ETNA==
-X-Gm-Message-State: AOAM531XOXvtxqveK2ueQtl/wo4sAYOfHMGVifobeiLiYTNyeUsByRE0
-        O3f9BkrbjHWLzX9KYDmPGJ8czeVJ45MdkwNrqx8=
-X-Google-Smtp-Source: ABdhPJwaU8EKkHibn0F4QFCG8an0FYGeNjzihahv6zqla/Y73Ma4JM6yScH+GXFH+vMBDQsiN+yKoefvaa9GtQbEi60=
-X-Received: by 2002:a67:d597:: with SMTP id m23mr7913365vsj.209.1592575762106;
- Fri, 19 Jun 2020 07:09:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
- <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com> <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
- <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
-In-Reply-To: <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 15:09:09 +0100
-Message-ID: <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OQGcTYNZ0qd2ZL6M4exRQEolMRV74PfXhnhqE6+gOjU=;
+        b=YkYXFr1LQcfAXDEHa7dP6ORtmzIGepwje3Bt64PP0rTcuNr6rX2I/qEksZFQBmG6Kv
+         FKTS41LKv46+7bogjk+9W8FsHL/4rDr7HKWVdt+Ru9PrB1GrHE3Q9sN923Jab7Lx/sW6
+         UdS0UDS1iOVuEj7Nj+PXo4Wyn6nOuSosTZT+unY9eIqpzTOMkpo0YFLDT9oWqUwwJQYN
+         d7Z4UUJC0bhj28Q0CWPYUZw1ByeMSDgU6CrQpt3+zdOhgVKmpYspxixjzZhQCzevlCPI
+         moWivZhV/zrc3NDGl4Kjr19+iF4ZUKg6jaVRLNEaQZvdBkHqRGeRpIAY8l7ftPz/rB9F
+         epoA==
+X-Gm-Message-State: AOAM531dSjeq6nTwQcuutRKbLOr4DHpcopJlbqjpsBHbAsZucCiu/afz
+        57Vtfmbu62nR8zaR26Q7R5kYCDonhqf8Zb3kSlbSv6dlq97M4UK174g62I9NFiXF7QGM5P/Ek8n
+        El9fqtuS4YQeX7qI7kmC0mz+E
+X-Received: by 2002:a1c:4e1a:: with SMTP id g26mr3416507wmh.148.1592575845677;
+        Fri, 19 Jun 2020 07:10:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx2lf9yJVDZ3TMxLfmzqD+pzoOr6W+H3pQlOKmVqwKx1RlwQw91jzYg+uud8qh9pLidgwOIBw==
+X-Received: by 2002:a1c:4e1a:: with SMTP id g26mr3416482wmh.148.1592575845471;
+        Fri, 19 Jun 2020 07:10:45 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e1d2:138e:4eff:42cb? ([2001:b07:6468:f312:e1d2:138e:4eff:42cb])
+        by smtp.gmail.com with ESMTPSA id e12sm7410682wro.52.2020.06.19.07.10.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:10:44 -0700 (PDT)
+Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
+To:     Igor Mammedov <imammedo@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
+ <20200619143626.1b326566@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3e025538-297b-74e5-f1b1-2193b614978b@redhat.com>
+Date:   Fri, 19 Jun 2020 16:10:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200619143626.1b326566@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 14:58, Dave Hansen <dave.hansen@intel.com> wrote:
-> > Right, but for the most part you'd agree that a machine with
-> > functioning TME and encrypted swap partition is more secure than a
-> > machine without TME?
->
-> Nope.  There might be zero memory connected to the memory controller
-> that supports TME.
+On 19/06/20 14:36, Igor Mammedov wrote:
+> qemu-kvm -m 2G -smp 4,maxcpus=8  -monitor stdio
+> (qemu) device_add qemu64-x86_64-cpu,socket-id=4,core-id=0,thread-id=0
+> 
+> in guest fails with:
+> 
+>  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
+> 
+> which makes me suspect that  INIT/SIPI wasn't delivered
+> 
+> Is it a know issue?
+> 
 
-So you're saying that a machine with TME available and enabled is not
-considered more secure than a machine without TME?
+No, it isn't.  I'll revert.
 
-What I want to do is have a sliding scale of TME not available < TME
-available but disabled < TME available and enabled < TME available,
-enabled and being used. The extra nugget of data gets me from state 2
-to state 3.
+Paolo
 
-> > Can I use TME if the CPU supports it, but the platform has disabled
-> > it? How do I know that my system is actually *using* the benefits the
-> > TME feature provides?
->
-> You must have a system with UEFI 2.8, ensure TME is enabled, then make
-> sure the OS parses EFI_MEMORY_CPU_CRYPTO, then ensure you request that
-> you data be placed in a region marked with EFI_MEMORY_CPU_CRYPTO, and
-> that it be *kept* there (hint: NUMA APIs don't do this).
-
-So my take-away from that is that it's currently impossible to
-actually say if your system is *actually* using TME.
-
-Richard.
