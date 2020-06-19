@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0328C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D2C207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D612158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582551;
-	bh=X3PS0/wxR6yCVnl4QRI7pF8veBWqdjftrrWWgoB0L+4=;
+	s=default; t=1592582555;
+	bh=5zDBVAFJrwyDxCfgdBXSmgfoQKxnhCZ1XUdjhqvLSnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+i4pU4Shuqq/0AVjzP4gzwKDJBDsYW8JIxjAaCD789ZI2XklSqmxAtWu5739MraT
-	 +Fi/wZGJ8blB3recBmE6/sFGHSYcf/17IcwShYFDT+jt1EkKLDev4yADkpRj9szNl4
-	 Lr0FBPjUIVogwmyMgycFxhEuC6pK4ob7XspzTjgE=
+	b=zQUbjtoD9Q3Ek1VFJ/t20opxgXopadtrj81PnApnqyOajBpDv2SoOwf4s7Dua3guQ
+	 qsuCz30Qk5iXacXPnxy2h7gvldxYfjqaQkJAE4KPmo+L1L3aHPSHzxXrfPxBic9qxk
+	 ZjowO3BOdL+fMwtHJ5JSXCZ9nCCpM4C6kROX/nJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394195AbgFSQCa (ORCPT
+        id S2391809AbgFSPMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403893AbgFSPMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:43 -0400
+        id S2403893AbgFSPM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0678206FA;
-        Fri, 19 Jun 2020 15:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 490A1218AC;
+        Fri, 19 Jun 2020 15:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579563;
-        bh=X3PS0/wxR6yCVnl4QRI7pF8veBWqdjftrrWWgoB0L+4=;
+        s=default; t=1592579547;
+        bh=5zDBVAFJrwyDxCfgdBXSmgfoQKxnhCZ1XUdjhqvLSnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMN+WL83I75bTUNnftWgFr/MwN8LX3a9mCUne0Xp0PaQK5sz7L/wbR+3n0bEwcKDI
-         WGp6vSnYG/dXgPHu0f60u1tVR9PZyP7gGU+a7qlaDll+iWHyU14kYvz61jTQ3gDZR1
-         pamrgwtKNyDgkSNc2T92R6Y6/cMfsLV16ZjHgJic=
+        b=0spGQOXo0Oweie5vVrwzeMU0gBDc1PKoB3W9hBB/MfNhPucxEzAc4zcRJuz9sMrSi
+         y89+QYUNY3J7MNbvGyH1RRnzGUbhlYQI/QqsbrHfdnNxU6WG/deJ0Z7lSHFTXApVCv
+         ImLm0JbyfKuQhj3lgt8DtVGJagtpPzwkNl8vRgvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 5.4 182/261] ext4: fix error pointer dereference
-Date:   Fri, 19 Jun 2020 16:33:13 +0200
-Message-Id: <20200619141658.643736204@linuxfoundation.org>
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.4 176/261] ima: Evaluate error in init_ima()
+Date:   Fri, 19 Jun 2020 16:33:07 +0200
+Message-Id: <20200619141658.356242269@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,65 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 8418897f1bf87da0cb6936489d57a4320c32c0af upstream.
+commit e144d6b265415ddbdc54b3f17f4f95133effa5a8 upstream.
 
-Don't pass error pointers to brelse().
+Evaluate error in init_ima() before register_blocking_lsm_notifier() and
+return if not zero.
 
-commit 7159a986b420 ("ext4: fix some error pointer dereferences") has fixed
-some cases, fix the remaining one case.
-
-Once ext4_xattr_block_find()->ext4_sb_bread() failed, error pointer is
-stored in @bs->bh, which will be passed to brelse() in the cleanup
-routine of ext4_xattr_set_handle(). This will then cause a NULL panic
-crash in __brelse().
-
-BUG: unable to handle kernel NULL pointer dereference at 000000000000005b
-RIP: 0010:__brelse+0x1b/0x50
-Call Trace:
- ext4_xattr_set_handle+0x163/0x5d0
- ext4_xattr_set+0x95/0x110
- __vfs_setxattr+0x6b/0x80
- __vfs_setxattr_noperm+0x68/0x1b0
- vfs_setxattr+0xa0/0xb0
- setxattr+0x12c/0x1a0
- path_setxattr+0x8d/0xc0
- __x64_sys_setxattr+0x27/0x30
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-In this case, @bs->bh stores '-EIO' actually.
-
-Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: stable@kernel.org # 2.6.19
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/1587628004-95123-1-git-send-email-jefflexu@linux.alibaba.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org # 5.3.x
+Fixes: b16942455193 ("ima: use the lsm policy update notifier")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/xattr.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -1820,8 +1820,11 @@ ext4_xattr_block_find(struct inode *inod
- 	if (EXT4_I(inode)->i_file_acl) {
- 		/* The inode already has an extended attribute block. */
- 		bs->bh = ext4_sb_bread(sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
--		if (IS_ERR(bs->bh))
--			return PTR_ERR(bs->bh);
-+		if (IS_ERR(bs->bh)) {
-+			error = PTR_ERR(bs->bh);
-+			bs->bh = NULL;
-+			return error;
-+		}
- 		ea_bdebug(bs->bh, "b_count=%d, refcount=%d",
- 			atomic_read(&(bs->bh->b_count)),
- 			le32_to_cpu(BHDR(bs->bh)->h_refcount));
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -712,6 +712,9 @@ static int __init init_ima(void)
+ 		error = ima_init();
+ 	}
+ 
++	if (error)
++		return error;
++
+ 	error = register_blocking_lsm_notifier(&ima_lsm_policy_notifier);
+ 	if (error)
+ 		pr_warn("Couldn't register LSM notifier, error %d\n", error);
 
 
