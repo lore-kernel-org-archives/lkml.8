@@ -2,199 +2,179 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D298AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42CD20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A287B206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpfkSBnZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PO9cecDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbgFSH3T (ORCPT
+        id S1730701AbgFSHai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:29:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53079 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730599AbgFSH3S (ORCPT
+        Fri, 19 Jun 2020 03:30:38 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7271 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729740AbgFSHah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:29:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592551756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I4S66t3bFBiXC3/NacHByHSFWv56WO9n+Qt501pepyU=;
-        b=GpfkSBnZWe1n6WzwL6Z05rJIvE8bIElekK5qpW9SRB7D7KP2sA+qNSHt2aNNHBokiUTs42
-        hNDyq5grqBtDaxNO4a5mqLKQ3zMJQgeWlUQI5Pg2KXTGYRDjR2x2GQ4Em0FAXv2YtBhVoT
-        UXpbm/1T1lS2uJVdcIdtX6VKQNS0wHg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-qGr9ZZVMOFeFaZphOI4qbQ-1; Fri, 19 Jun 2020 03:29:12 -0400
-X-MC-Unique: qGr9ZZVMOFeFaZphOI4qbQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACD5F18585A3;
-        Fri, 19 Jun 2020 07:29:10 +0000 (UTC)
-Received: from T590 (ovpn-12-44.pek2.redhat.com [10.72.12.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E15381000239;
-        Fri, 19 Jun 2020 07:29:03 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 15:28:59 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-ID: <20200619072859.GA205278@T590>
-References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
- <20200618125438.GA191266@T590>
- <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
- <20200618231901.GA196099@T590>
- <20200619141239.56f6dda0976453b790190ff7@kernel.org>
+        Fri, 19 Jun 2020 03:30:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eec69380000>; Fri, 19 Jun 2020 00:28:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jun 2020 00:30:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jun 2020 00:30:37 -0700
+Received: from [10.2.62.75] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
+ 2020 07:30:37 +0000
+Subject: Re: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to
+ pin_user_pages*()
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     Juergen Gross <jgross@suse.com>, <sstabellini@kernel.org>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
+        <paul@xen.org>
+References: <1592363698-4266-1-git-send-email-jrdr.linux@gmail.com>
+ <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com>
+ <CAFqt6zbJD+k9xkV9Se0nL2qKfnea3mRrWJ4gzPmPJBquYk4M+w@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <fe2a1d23-7abd-86a9-4aec-2c14fb11cdea@nvidia.com>
+Date:   Fri, 19 Jun 2020 00:30:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619141239.56f6dda0976453b790190ff7@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CAFqt6zbJD+k9xkV9Se0nL2qKfnea3mRrWJ4gzPmPJBquYk4M+w@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592551736; bh=Fe6+LEcBGqkmcut7uJjH2j1++zsWFrmLLtaEG5FehVs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PO9cecDSmGNiqNB9v5SItJ0pP9uHG0j0hqx1mly0Bozfnb61r+QlkigFmHiTrjnVA
+         50uX8ugVzjFrQw9jzH7jZsAMEl15fvx3mdu/9Gcq7OD00kQJskp6KzIJUGz6hc8OL4
+         KMekN5uR3E7Z+Wc/XpK5k89x0TIpuvw7DQYHPhudM544WumvUaJGuay2QtZFqcmFd5
+         DsfAD52xAevCZE4moN72e/Vm5ogJR7OQldT//bYwFB+jBy/UHz24CJjD2BdN3Uj6/l
+         9Z/5BV/dhjoeF3QGmiYjbHENP6qry3q39uhEjU5fcIBe5nxaOlx4cz3UlErPqcrUsb
+         ZWF0KVgCIk6xg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
-
-On Fri, Jun 19, 2020 at 02:12:39PM +0900, Masami Hiramatsu wrote:
-> Hi Ming,
-> 
-> On Fri, 19 Jun 2020 07:19:01 +0800
-> Ming Lei <ming.lei@redhat.com> wrote:
-> 
-> > > I'm using 5.4 on ubuntu and can not reproduce it with kprobe_event.
-> > > 
-> > > root@devnote2:/sys/kernel/tracing# uname -a
-> > > Linux devnote2 5.4.0-37-generic #41-Ubuntu SMP Wed Jun 3 18:57:02 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-> > > root@devnote2:/sys/kernel/tracing# echo p __blkdev_put > kprobe_events 
-> > > root@devnote2:/sys/kernel/tracing# echo 1 > events/kprobes/p___blkdev_put_0/enable 
-> > > root@devnote2:/sys/kernel/tracing# cat trace
-> > > # tracer: nop
-> > > #
-> > > # entries-in-buffer/entries-written: 0/0   #P:8
-> > > #
-> > > #                              _-----=> irqs-off
-> > > #                             / _----=> need-resched
-> > > #                            | / _---=> hardirq/softirq
-> > > #                            || / _--=> preempt-depth
-> > > #                            ||| /     delay
-> > > #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> > > #              | |       |   ||||       |         |
-> > > root@devnote2:/sys/kernel/tracing# blockdev --getbsz /dev/nvme0n1
-> > > 4096
-> > > root@devnote2:/sys/kernel/tracing# cat trace
-> > > # tracer: nop
-> > > #
-> > > # entries-in-buffer/entries-written: 1/1   #P:8
-> > > #
-> > > #                              _-----=> irqs-off
-> > > #                             / _----=> need-resched
-> > > #                            | / _---=> hardirq/softirq
-> > > #                            || / _--=> preempt-depth
-> > > #                            ||| /     delay
-> > > #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> > > #              | |       |   ||||       |         |
-> > >            <...>-111740 [002] .... 301734.476991: p___blkdev_put_0: (__blkdev_put+0x0/0x1e0)
-> > > 
-> > > Hmm, maybe some issue in the latest kernel...?
-> > 
-> > Hello Masami,
-> > 
-> > I am testing the latest upstream kernel, your trace actually reproduces
-> > this issue.
-> 
-> OK.
-> 
-> > 
-> > After 'blockdev --getbsz /dev/nvme0n1' returns, __blkdev_put() should
-> > have been called two times(one for partition, and the other for disk),
-> > however kprobe trace just shows one time of calling this function.
-> > 
-> > If trace_printk() is added at the entry of __blkdev_put() manually,
-> > you will see that __blkdev_put() is called two times in 'blockdev
-> > --getbsz /dev/nvme0n1'.
-> 
-> OK, let me check again on the latest kernel.
-> Here I tested with qemu.
-> 
-> root@devnote2:/sys/kernel/debug/tracing# uname -a
-> Linux devnote2 5.8.0-rc1+ #26 SMP PREEMPT Fri Jun 19 12:12:53 JST 2020 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> And we have a (virtual) sda with 1 partition.
-> 
-> root@devnote2:/sys/kernel/debug/tracing# cat /proc/partitions 
-> major minor  #blocks  name
-> 
->    8        0      10240 sda
->    8        1       9216 sda1
-> 
-> OK, then let's make events (for sure)
-> 
-> root@devnote2:/sys/kernel/debug/tracing# echo p __blkdev_put >> kprobe_events 
-> root@devnote2:/sys/kernel/debug/tracing# echo r __blkdev_put >> kprobe_events 
-> root@devnote2:/sys/kernel/debug/tracing# echo p blkdev_put >> kprobe_events 
-> 
-> There are 3 events in the kernel, blkdev_put() and __blkdev_put() and
-> the return of __blkdev_put().
-> Then enable it and access to */dev/sda* (a disk)
-> 
-> root@devnote2:/sys/kernel/debug/tracing# echo 1 > events/kprobes/enable 
-> root@devnote2:/sys/kernel/debug/tracing# blockdev --getbsz /dev/sda
-> 4096
-> root@devnote2:/sys/kernel/debug/tracing# echo 0 > events/kprobes/enable 
-> root@devnote2:/sys/kernel/debug/tracing# cat trace 
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 3/3   #P:8
-> #
-> #                              _-----=> irqs-off
-> #                             / _----=> need-resched
-> #                            | / _---=> hardirq/softirq
-> #                            || / _--=> preempt-depth
-> #                            ||| /     delay
-> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> #              | |       |   ||||       |         |
->         blockdev-185   [002] ...1    72.604266: p_blkdev_put_0: (blkdev_put+0x0/0x130)
->         blockdev-185   [002] ...1    72.604276: p___blkdev_put_0: (__blkdev_put+0x0/0x220)
->         blockdev-185   [002] d..2    72.604288: r___blkdev_put_0: (blkdev_put+0x50/0x130 <- __blkdev_put)
-> 
-> So the __blkdev_put() is called once from blkdev_put().
-> Next, we do same trace with accessing */dev/sda1* (a partition).
-> 
-> root@devnote2:/sys/kernel/debug/tracing# echo > trace 
-> root@devnote2:/sys/kernel/debug/tracing# echo 1 > events/kprobes/enable 
-
-I can't find 'events/kprobes' in my VM with upstream kernel, also not found
-the dir under fedora31(5.5.15-200) & rhel8(v4.18 based).
-
-Could you share me how to enable the kprobes event? I guess some kernel
-config options are required.
-
-> root@devnote2:/sys/kernel/debug/tracing# blockdev --getbsz /dev/sda1 
-> 4096
-> root@devnote2:/sys/kernel/debug/tracing# echo 0 > events/kprobes/enable 
-
-I used samples/kprobes/kprobe_example.c by replacing __do_fork with
-__blkdev_put for confirming this issue, and only one __blkdev_put trace is
-observed in dmesg log when running 'blockdev --getbsz /dev/sda1'.
+On 2020-06-18 20:12, Souptick Joarder wrote:
+> On Wed, Jun 17, 2020 at 11:29 PM Boris Ostrovsky
+> <boris.ostrovsky@oracle.com> wrote:
+>>
+>> On 6/16/20 11:14 PM, Souptick Joarder wrote:
+>>> In 2019, we introduced pin_user_pages*() and now we are converting
+>>> get_user_pages*() to the new API as appropriate. [1] & [2] could
+>>> be referred for more information.
 
 
-Thanks,
-Ming
+Ideally, the commit description should say which case, in
+pin_user_pages.rst, that this is.
 
+
+>>>
+>>> [1] Documentation/core-api/pin_user_pages.rst
+>>>
+>>> [2] "Explicit pinning of user-space pages":
+>>>          https://lwn.net/Articles/807108/
+>>>
+>>> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+>>> Cc: John Hubbard <jhubbard@nvidia.com>
+>>> ---
+>>> Hi,
+>>>
+>>> I have compile tested this patch but unable to run-time test,
+>>> so any testing help is much appriciated.
+>>>
+>>> Also have a question, why the existing code is not marking the
+>>> pages dirty (since it did FOLL_WRITE) ?
+>>
+>>
+>> Indeed, seems to me it should. Paul?
+
+Definitely good to get an answer from an expert in this code, but
+meanwhile, it's reasonable to just mark them dirty. Below...
+
+>>
+>>
+>>>
+>>>   drivers/xen/privcmd.c | 7 ++-----
+>>>   1 file changed, 2 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+>>> index a250d11..543739e 100644
+>>> --- a/drivers/xen/privcmd.c
+>>> +++ b/drivers/xen/privcmd.c
+>>> @@ -594,7 +594,7 @@ static int lock_pages(
+>>>                if (requested > nr_pages)
+>>>                        return -ENOSPC;
+>>>
+>>> -             pinned = get_user_pages_fast(
+>>> +             pinned = pin_user_pages_fast(
+>>>                        (unsigned long) kbufs[i].uptr,
+>>>                        requested, FOLL_WRITE, pages);
+>>>                if (pinned < 0)
+>>> @@ -614,10 +614,7 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+>>>        if (!pages)
+>>>                return;
+>>>
+>>> -     for (i = 0; i < nr_pages; i++) {
+>>> -             if (pages[i])
+>>> -                     put_page(pages[i]);
+>>> -     }
+>>> +     unpin_user_pages(pages, nr_pages);
+
+
+...so just use unpin_user_pages_dirty_lock() here, I think.
+
+
+>>
+>>
+>> Why are you no longer checking for valid pages?
+> 
+> My understanding is, in case of lock_pages() end up returning partial
+> mapped pages,
+> we should pass no. of partial mapped pages to unlock_pages(), not nr_pages.
+> This will avoid checking extra check to validate the pages[i].
+> 
+> and if lock_pages() returns 0 in success, anyway we have all the pages[i] valid.
+> I will try to correct it in v2.
+> 
+> But I agree, there is no harm to check for pages[i] and I believe,
+
+
+Generally, it *is* harmful to do unnecessary checks, in most code, but especially
+in most kernel code. If you can convince yourself that the check for null pages
+is redundant here, then please let's remove that check. The code becomes then
+becomes shorter, simpler, and faster.
+
+
+> unpin_user_pages()
+> is the right place to do so.
+> 
+> John any thought ?
+
+
+So far I haven't seen any cases to justify changing the implementation of
+unpin_user_pages().
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
