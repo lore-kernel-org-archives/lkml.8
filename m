@@ -2,194 +2,138 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8698DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 627C9217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6835E214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2nbBG26"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9dc5Ch5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731538AbgFSIjV (ORCPT
+        id S1731605AbgFSIj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
+        Fri, 19 Jun 2020 04:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbgFSIjL (ORCPT
+        with ESMTP id S1730983AbgFSIjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:39:11 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7954EC06174E;
-        Fri, 19 Jun 2020 01:39:09 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k6so3661366pll.9;
-        Fri, 19 Jun 2020 01:39:09 -0700 (PDT)
+        Fri, 19 Jun 2020 04:39:16 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F939C0613EE;
+        Fri, 19 Jun 2020 01:39:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j1so4146162pfe.4;
+        Fri, 19 Jun 2020 01:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=L28cv7twV2yh6p41RcWTWUh/uCTipz3Gzk18dy2mE4M=;
-        b=R2nbBG260Wwzq714SM9NV+seeSIeBK/X5RJVXiCL46MohnSHqVl/Cx1e+WGc41dwtR
-         1cEqnG5tVWA147BSR5mkccIujtq9yATbPghrJwe5vIs+detL3JLEP63VYyNkvbmw5QlE
-         zwgA0i+Aw2DoT1zA0TyILUOrEzGheWG9bfLtlkJHW1LZjjFpObvYwDoB9VwcihqrwBWE
-         nxuerHDOgCQ3vNoJ4EpSTvo1wOdc6uZvwgEs5Mj+CyrNM0JtyJ9F9dHfEcdjR2hN5dW9
-         ZOBo7I35HSHcSU1XdZ8Qo+EjGhEoyNCDXT06/IgWQW8ZW7GsT5LMwki5we7g6s50tUAS
-         yPTQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LfTeBjhR0kC/kK7WQYyTyG0IANM/qncZSxXBu+sRGtY=;
+        b=T9dc5Ch5gxUc1jDKbjX71G2VmmZw1r7BEgF7KmxF4vnRI4P9j/V/WlaCptYKUtMpyR
+         ivyJF2sc2mdUCSzFXIHeak5h1NO87TdMi/W6nBe4iWCmJrqta935EtSaBNOrTL3IwZAO
+         oOkacdPcf6+R/gyEKdGw0gbicWVBdqDKEwf/hOQx5kVEXKc6fKzismDwvgX4JDNcbby+
+         BoN5/dXiv2+guMQ4K20gWJQbEooxbr1h9BsXtv8vJfuK0/Ku4eGTmCPWMm+NrY3DpeUQ
+         Iz5pVcaJqdpbjjMdikNdH2k+6S6TgL580Q6O4DPStdEpjkRKTPw9xUQxmmPTSBaqAZ1G
+         7MLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=L28cv7twV2yh6p41RcWTWUh/uCTipz3Gzk18dy2mE4M=;
-        b=TVAGtQje6wXSYEqphMGYkUwI5szOijhXB+kagS3J6B2r02ZuR47sZviNg7MeMakpCm
-         9/QCTIXgQmuZhlkOkR+4QOaiH1Rr96ZwzvXZlXuxyWZ7AeaZ+9GkZ0kEibPaoS5Ea+2a
-         Su0aWsbbThX8fIvGiVuyO1QDiH5Wrz8MsCZzUDHCKbQV2OIrpZ7bSU4cM1zZ5j3zuYew
-         zpbxPgAj5JnBBWTEcRWS7Y0gPpcrQq3kzYzxw//R84f/pNx9h94VVa+9UkOA498kv9Kf
-         d/NDIpCW7RATy7GfggJPO787LhMwJlawHGmuGhaUDEu2j+uNVb0m3FbWmX1zvWqerG0n
-         y17A==
-X-Gm-Message-State: AOAM533xh1IwYeh5N9vTBfBIPJhlEKTJGJ7G4/clz0z0Yuz3pEbm5uwv
-        S3ZmvhFLjh8okGN2xPWbubYcBmyDOvU=
-X-Google-Smtp-Source: ABdhPJwNBHxrCRL/AvcB/ZLmdrcd5TBYTdnJFBTF6alBEmFMqQALp5xHzzf4ePSi1AKcit586SY6qQ==
-X-Received: by 2002:a17:90b:430f:: with SMTP id ih15mr2412889pjb.61.1592555949042;
-        Fri, 19 Jun 2020 01:39:09 -0700 (PDT)
-Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
-        by smtp.gmail.com with ESMTPSA id u24sm4437183pga.47.2020.06.19.01.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 01:39:08 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2 v4] exfat: add error check when updating dir-entries
-Date:   Fri, 19 Jun 2020 17:38:55 +0900
-Message-Id: <20200619083855.15789-2-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200619083855.15789-1-kohada.t2@gmail.com>
-References: <20200619083855.15789-1-kohada.t2@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LfTeBjhR0kC/kK7WQYyTyG0IANM/qncZSxXBu+sRGtY=;
+        b=CkOkTc28sbiZsfW2p4fcdOiaiH5IFBl+7VvHBTBeKOKe8nqrb4J4/jqO6cApmZf8Hg
+         YCcRc1rExO8qi9EOMjN2Z8hNwNRUyR2vvHma50Nkl/xLXJkAZJrW4Vq8h7jGwZ89TzEP
+         Zd1Cm6aWRh5bc3l4fG8vwZbZaHIHWLD9mdFHX0GuTCXGj1a5AZjj0BKXAvWoJcUUgU87
+         ktCMr31x5UDKGECxTcxDAdCszYjube9QHs6cwc53WJNzjgVESBzemtNBNSzDkIvvZpab
+         HK7aW3hlwQ/0SE7KxbM4RaGdURjzyiGllFBkmXdRUZ8gIswkEt2aChZrXsLzRdt8Gzx8
+         qbJA==
+X-Gm-Message-State: AOAM532hxXTUD/48FTxcuYuBlQGzwWRfumu3WiWGu+fblCuTzzf9mQVb
+        d0+EirILI5i0+mBrpv9C9qw47kHcx0oxy9NHWt4=
+X-Google-Smtp-Source: ABdhPJxj+EHwZq+iO64fyDjYHgaXsf4TlDuik/wYP0ViFcx7bNlgX9UOQvCtKXgl3wBWGY7ZlfeZoULLrRn60mWoUR0=
+X-Received: by 2002:a63:f042:: with SMTP id s2mr2179441pgj.4.1592555956013;
+ Fri, 19 Jun 2020 01:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+ <202006160420.iatdr9ab%lkp@intel.com> <CACG_h5qUZsR7Zd9a+BQJqyuJZBrv-en+gC-sgcV+xV+A5ZOBhA@mail.gmail.com>
+In-Reply-To: <CACG_h5qUZsR7Zd9a+BQJqyuJZBrv-en+gC-sgcV+xV+A5ZOBhA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 19 Jun 2020 11:38:59 +0300
+Message-ID: <CAHp75Ve_=LwV6fO3ESgbCOVDVr=C5wrnAJX9od9evFvHU5-Krw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error check when synchronously updating dir-entries.
+On Fri, Jun 19, 2020 at 10:02 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
 
-Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - Split into 'write multiple sectors at once'
-   and 'add error check when updating dir-entries'
-Changes in v3
- - Rebase to latest exfat-dev
-Changes in v4
- - Based on 'exfat: write multiple sectors at once' v4
+...
 
- fs/exfat/dir.c      | 3 ++-
- fs/exfat/exfat_fs.h | 2 +-
- fs/exfat/file.c     | 5 ++++-
- fs/exfat/inode.c    | 8 +++++---
- 4 files changed, 12 insertions(+), 6 deletions(-)
+> > config: sparc64-randconfig-s032-20200615 (attached as .config)
+> > compiler: sparc64-linux-gcc (GCC) 9.3.0
+> > reproduce:
+> >         # apt-get install sparse
+> >         # sparse version: v0.6.2-rc1-3-g55607964-dirty
+> >         # save the attached .config to linux build tree
+> >         make W=1 C=1 ARCH=sparc64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 7c2e29632634..2dc6fe695cb6 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -604,7 +604,7 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 	es->modified = true;
- }
- 
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- {
- 	int i, err = 0;
- 
-@@ -617,6 +617,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- 		else
- 			brelse(es->bh[i]);
- 	kfree(es);
-+	return err;
- }
- 
- static int exfat_walk_fat_chain(struct super_block *sb,
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index cbb00ee97183..da677c85314f 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -459,7 +459,7 @@ struct exfat_dentry *exfat_get_dentry_cached(struct exfat_entry_set_cache *es,
- 		int num);
- struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
- 		struct exfat_chain *p_dir, int entry, unsigned int type);
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
- int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
- 
- /* inode.c */
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index fce03f318787..37c8f04c1f8a 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -153,6 +153,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		struct timespec64 ts;
- 		struct exfat_dentry *ep, *ep2;
- 		struct exfat_entry_set_cache *es;
-+		int err;
- 
- 		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -187,7 +188,9 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		}
- 
- 		exfat_update_dir_chksum_with_entry_set(es);
--		exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		if (err)
-+			return err;
- 	}
- 
- 	/* cut off from the FAT chain */
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index cf9ca6c4d046..1e851f172e0c 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -77,8 +77,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
- 	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
- 
- 	exfat_update_dir_chksum_with_entry_set(es);
--	exfat_free_dentry_set(es, sync);
--	return 0;
-+	return exfat_free_dentry_set(es, sync);
- }
- 
- int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
-@@ -222,6 +221,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 		if (ei->dir.dir != DIR_DELETED && modified) {
- 			struct exfat_dentry *ep;
- 			struct exfat_entry_set_cache *es;
-+			int err;
- 
- 			es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -240,7 +240,9 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 				ep->dentry.stream.valid_size;
- 
- 			exfat_update_dir_chksum_with_entry_set(es);
--			exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			if (err)
-+				return err;
- 
- 		} /* end of if != DIR_DELETED */
- 
+...
+
+> > sparse warnings: (new ones prefixed by >>)
+> >
+> > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> >    include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
+> > >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+> > >> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
+
+> It seems to me that to reproduce this warning, I have to use the
+> sparc64 compiler. I have installed 'sparc64-linux-gnu-gcc' on my
+> computer.
+
+Sparse is not a compiler.
+
+> I have to specify that this compiler needs to be used for build
+> process. How/ Where do I specify this?
+>
+> I have downloaded the config.gz (has config file) and placed it at the
+> root of the linux kernel project tree. But the Makefile STILL has
+> 'gcc' as the compiler. When I build, it is the 'gcc' compiler being
+> used and not 'sparc64-linux-gnu-gcc'. I know I can manually change the
+> Makefile to use sparc64 compiler, but I think there must be some more
+> elegant way to do this, perhaps using make menuconfig?
+
+If you wish to run a compilation, download a compiler from [1], and,
+after adding its bin/ folder to PATH, run
+make CROSS_COMPILE=sparc64-linux- ARCH=sparc64 ... # first generate .config
+
+> Kindly illuminate as to how shall I reproduce the compiler warning.
+
+> > 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @638           map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> > 803024b6c8a375 Syed Nayyar Waris      2020-06-15 @639           map[index + 1] |= (value >> space);
+
+Hmm... I think I sent a reply [2] where I explained how space can be
+64. Do you agree with analysis?
+
+[1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/
+[2]: https://lore.kernel.org/lkml/20200616081428.GP2428291@smile.fi.intel.com/
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
