@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED08AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF6BE21548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC164217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580191;
-	bh=YTANZPruMdfvSrcCUEMGloogkU0s++47yJ9qS7/zSro=;
+	s=default; t=1592580198;
+	bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUKFJXC41igq9MnM0IYpzP6fJZTMX7/5/bYRItVhN1AK8lUuX/guNr2OnFej9KwS0
-	 FXKfcExxnAOdaGeMbh1dVcrgyydAIYK1JyZ+28h+xB1J5pdAKrKqe9EKG4RukejON+
-	 6ZHLye6jBBaZaSZ5qW6x81u+g6vvQDgtCC4PUA+Q=
+	b=tf508kyCNGkLsAmTftIV78VH2qeN2mv8AD+4uhbqZlx4DttePIbj8sspuk4IReZO/
+	 HJDGEe8mIcR6yALsI5DBKDgSu2Z/94nkOmxzZUJckmGpFhvf5WWCgVs7Pi2lghjgW6
+	 d8Hjrww8zWFE6rGHiziZZSwBidAFlj8wvkEBI2fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgFSPXK (ORCPT
+        id S2393152AbgFSPXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:23:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392010AbgFSPTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:35 -0400
+        id S2392406AbgFSPTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964C721582;
-        Fri, 19 Jun 2020 15:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC7F206DB;
+        Fri, 19 Jun 2020 15:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579974;
-        bh=YTANZPruMdfvSrcCUEMGloogkU0s++47yJ9qS7/zSro=;
+        s=default; t=1592579971;
+        bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMDv7s4Bsg54NkkWQeDmx8Eoh9Yk76teKiVI/teoJ49+gaGTjl4YNixlGZmRZLMn3
-         dz2BHefqRDkvhb4/LbmAM1+atSFiF2htTjbuekB48UFBAwlKVIwYnV8UVNgHTPJKVF
-         bXYqX0QcknPa2fxFeDzUrTgSBPNzvibqBKpIU4Bk=
+        b=BosjqeSf1QikeWpeKes9xGoD5Ws0c3krhw6JKdIU+9RYMi//ZKEqSm/J7p/rYIkHY
+         RXSu20iDzvVxB9/ckuQL1i7i9oSJ4jjUIeL5z+UVHpqiIUxv07Mimi12i7mJxYCIU5
+         Jb+PuUCj67n3yFcT1s7vMBS8KCGUJEAhmAcdBHTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zijun Hu <zijuhu@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 074/376] Bluetooth: hci_qca: Fix suspend/resume functionality failure
-Date:   Fri, 19 Jun 2020 16:29:52 +0200
-Message-Id: <20200619141713.856607857@linuxfoundation.org>
+Subject: [PATCH 5.7 073/376] Bluetooth: btmtkuart: Improve exception handling in btmtuart_probe()
+Date:   Fri, 19 Jun 2020 16:29:51 +0200
+Message-Id: <20200619141713.807949518@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,53 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zijun Hu <zijuhu@codeaurora.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit feac90d756c03b03b83fabe83571bd88ecc96b78 ]
+[ Upstream commit 4803c54ca24923a30664bea2a7772db6e7303c51 ]
 
-@dev parameter of qca_suspend()/qca_resume() represents
-serdev_device, but it is mistook for hci_dev and causes
-succedent unexpected memory access.
+Calls of the functions clk_disable_unprepare() and hci_free_dev()
+were missing for the exception handling.
+Thus add the missed function calls together with corresponding
+jump targets.
 
-Fix by taking @dev as serdev_device.
-
-Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Fixes: 055825614c6b ("Bluetooth: btmtkuart: add an implementation for clock osc property")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/bluetooth/btmtkuart.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 439392b1c043..0b1036e5e963 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1953,8 +1953,9 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index e11169ad8247..8a81fbca5c9d 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	if (btmtkuart_is_standalone(bdev)) {
+ 		err = clk_prepare_enable(bdev->osc);
+ 		if (err < 0)
+-			return err;
++			goto err_hci_free_dev;
  
- static int __maybe_unused qca_suspend(struct device *dev)
- {
--	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
--	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-+	struct hci_uart *hu = &qcadev->serdev_hu;
- 	struct qca_data *qca = hu->priv;
- 	unsigned long flags;
- 	int ret = 0;
-@@ -2033,8 +2034,9 @@ error:
+ 		if (bdev->boot) {
+ 			gpiod_set_value_cansleep(bdev->boot, 1);
+@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
  
- static int __maybe_unused qca_resume(struct device *dev)
- {
--	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
--	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-+	struct hci_uart *hu = &qcadev->serdev_hu;
- 	struct qca_data *qca = hu->priv;
+ 		/* Power on */
+ 		err = regulator_enable(bdev->vcc);
+-		if (err < 0) {
+-			clk_disable_unprepare(bdev->osc);
+-			return err;
+-		}
++		if (err < 0)
++			goto err_clk_disable_unprepare;
  
- 	clear_bit(QCA_SUSPENDING, &qca->flags);
+ 		/* Reset if the reset-gpios is available otherwise the board
+ 		 * -level design should be guaranteed.
+@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	err = hci_register_dev(hdev);
+ 	if (err < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+-		hci_free_dev(hdev);
+ 		goto err_regulator_disable;
+ 	}
+ 
+@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ err_regulator_disable:
+ 	if (btmtkuart_is_standalone(bdev))
+ 		regulator_disable(bdev->vcc);
++err_clk_disable_unprepare:
++	if (btmtkuart_is_standalone(bdev))
++		clk_disable_unprepare(bdev->osc);
++err_hci_free_dev:
++	hci_free_dev(hdev);
+ 
+ 	return err;
+ }
 -- 
 2.25.1
 
