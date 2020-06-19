@@ -2,88 +2,174 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC546C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F99C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D72320C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592596482;
-	bh=6Adp22+mTbZpiR77ZXXW0mIcODohmhmRvdI0E24ULMc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PVMrGioks21nwB9g7TzxWmII+4CLScv9FWj1PeKfMsOL/pa9P6F53XxgWwVz/rwLv
-	 3IJaRdSyIuvtcdLLUg7IFwxqfQRmMqmFPg3MApAOk2q5F/gUH4DRDTs72aSUBRNrP5
-	 Z2B3O9r4VC2pR9BrPmSqatqd3TJ2AK/b0/zweyWw=
+	by mail.kernel.org (Postfix) with ESMTP id 3B21220C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="amN9JafW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391247AbgFSTyl (ORCPT
+        id S2391037AbgFSTzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391181AbgFSTyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:54:40 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3322321531
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592596479;
-        bh=6Adp22+mTbZpiR77ZXXW0mIcODohmhmRvdI0E24ULMc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W+OT2Lyuu3JFeuDsJLl/JoJcERMmL3CmPFRxZTfzGoNnqE3n3ZiRjRtlVdMbSKpL+
-         Gvf20ylq6kFMec2wcpSnK2Mw9Xe8liINuvYLlGRVgOuNKp7RS9Kmqkl1YOCyDLiosU
-         9/KBWTEJoFR7RQW9JahBKMKSzXvMhupfUnVJyqs4=
-Received: by mail-wm1-f52.google.com with SMTP id g75so1401441wme.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:54:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531OrjnhTdMnpobQO2UF03OkdI7TlnwfXhmi9mLJZfz/bEENkBFW
-        dE7iEfpo8oI+zB+Zhkfc70wUZw3zn1IGotcjYgorpQ==
-X-Google-Smtp-Source: ABdhPJzykM/IIUrAFqtXVr16O2awFY2UEkEuRFlEF9GtzvBqoRQGXhGpzp9EF88Mtp3MWoA+4cQKtx8FjWFfHBcm80s=
-X-Received: by 2002:a1c:2402:: with SMTP id k2mr1154043wmk.138.1592596477811;
- Fri, 19 Jun 2020 12:54:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <202006191236.AC3E22AAB@keescook> <CALCETrXM5gneAC40RLWyjnCeHE6JFVOKnM0ooKLooGGaVV1KOA@mail.gmail.com>
- <202006191253.B00874B22@keescook>
-In-Reply-To: <202006191253.B00874B22@keescook>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 19 Jun 2020 12:54:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrUfsRy+SmQi9FCYKR-Nvm0=NKHXtk+O-ozk962B5-7Yyw@mail.gmail.com>
-Message-ID: <CALCETrUfsRy+SmQi9FCYKR-Nvm0=NKHXtk+O-ozk962B5-7Yyw@mail.gmail.com>
-Subject: Re: [PATCH] seccomp: Use -1 marker for end of mode 1 syscall list
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
+        Fri, 19 Jun 2020 15:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390834AbgFSTzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:55:40 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC774C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:55:39 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w90so8124727qtd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iG/5poalED/7VvSow3wimfYmMiRP/QtWwEKtwUawqmQ=;
+        b=amN9JafWL7REIgsG4g8OIqFlIlTlu1gJ4PcPJxw/L2LrqG+b/m+K9h46XOj035Kkef
+         TsRqrMbDxejbLCKISjpgVIvIvH7KHxmqfLRppOe1JNXqfsUFcxa8bn0PHmGiIQh/MjLu
+         UuMd6uihuWcp1/Cjglk/qvCxbaToMFKCgnOjW98TkQq1CnFA7XBucfvRktJqaYLyZbJL
+         Qy2zeXt+RF9aZKE2Fh7cJ+gITSFerrfdPNhqoA8Ybh6njFwj+0WTTmZp0R2d3r4yQcc7
+         0W0chyQB7bKAO0rPcYlw7T6gZe3V/Kuht69pjetjB2C5veX71/wW5Hb5ATTmGDza23KL
+         22Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iG/5poalED/7VvSow3wimfYmMiRP/QtWwEKtwUawqmQ=;
+        b=df+Ao7ZMoA7pyx/XnD4fW1SQjgnPqiLmTRxLijAg/34nc8t1m/fcJALrXmz8hZdU1+
+         1N0pjHof1m4HDcNNHRFNqBax0gZaNj662qdvqAP3Chn7JSp6obKEt6Ww5lNPcVAJ1mIy
+         26Ur54BIUnaHLqIuwnQ8cbRJnTT3pKQazb/9plKAZ14X3Fe9e1LUfjCMtMEJ67ocnQZu
+         3HkegxiLd+PNl0E7nlmq0bdaKS3rbhznCnJ1oBrdkFxgmBU7ZXo4VKNSBoBEWkjIvrMt
+         x6scmo9uunqguTShwUofpU6I8u/xXRD4IeMbvNL4IHcLBw5QBnayswmfNhWsYdSsnMLZ
+         RrCA==
+X-Gm-Message-State: AOAM533dC96FNTDWXeouf34UvTQSm+0HTqZh/006sP5ATn6PLGSB94GO
+        XUPhWJ0QGll7DWSkouOXqi/sSQ==
+X-Google-Smtp-Source: ABdhPJyHrX1Mu0x40IEM5APsAGFiOIM0Ueh1NwUrby9aTJ1iJ4sadbDDvULedBTEjFxxXMxRl6BLIg==
+X-Received: by 2002:ac8:4143:: with SMTP id e3mr5021341qtm.28.1592596538972;
+        Fri, 19 Jun 2020 12:55:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id l127sm620014qkc.117.2020.06.19.12.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 12:55:38 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmN6w-00B0jt-2Q; Fri, 19 Jun 2020 16:55:38 -0300
+Date:   Fri, 19 Jun 2020 16:55:38 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Will Drewry <wad@chromium.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619195538.GT6578@ziepe.ca>
+References: <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+ <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:53 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Jun 19, 2020 at 12:42:14PM -0700, Andy Lutomirski wrote:
-> > On Fri, Jun 19, 2020 at 12:37 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > The terminator for the mode 1 syscalls list was a 0, but that could be
-> > > a valid syscall number (e.g. x86_64 __NR_read). By luck, __NR_read was
-> > > listed first and the loop construct would not test it, so there was no
-> > > bug. However, this is fragile. Replace the terminator with -1 instead,
-> > > and make the variable name for mode 1 syscall lists more descriptive.
+On Fri, Jun 19, 2020 at 03:48:49PM -0400, Felix Kuehling wrote:
+> Am 2020-06-19 um 2:18 p.m. schrieb Jason Gunthorpe:
+> > On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
+> >> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+> >>> On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+> >>>
+> >>>> The madness is only that device B's mmu notifier might need to wait
+> >>>> for fence_B so that the dma operation finishes. Which in turn has to
+> >>>> wait for device A to finish first.
+> >>> So, it sound, fundamentally you've got this graph of operations across
+> >>> an unknown set of drivers and the kernel cannot insert itself in
+> >>> dma_fence hand offs to re-validate any of the buffers involved?
+> >>> Buffers which by definition cannot be touched by the hardware yet.
+> >>>
+> >>> That really is a pretty horrible place to end up..
+> >>>
+> >>> Pinning really is right answer for this kind of work flow. I think
+> >>> converting pinning to notifers should not be done unless notifier
+> >>> invalidation is relatively bounded. 
+> >>>
+> >>> I know people like notifiers because they give a bit nicer performance
+> >>> in some happy cases, but this cripples all the bad cases..
+> >>>
+> >>> If pinning doesn't work for some reason maybe we should address that?
+> >> Note that the dma fence is only true for user ptr buffer which predate
+> >> any HMM work and thus were using mmu notifier already. You need the
+> >> mmu notifier there because of fork and other corner cases.
+> > I wonder if we should try to fix the fork case more directly - RDMA
+> > has this same problem and added MADV_DONTFORK a long time ago as a
+> > hacky way to deal with it.
 > >
-> > Could the architecture instead supply the length of the list?
->
-> It could, but I didn't like the way the plumbing for that looked.
+> > Some crazy page pin that resolved COW in a way that always kept the
+> > physical memory with the mm that initiated the pin?
+> >
+> > (isn't this broken for O_DIRECT as well anyhow?)
+> >
+> > How does mmu_notifiers help the fork case anyhow? Block fork from
+> > progressing?
+> 
+> How much the mmu_notifier blocks fork progress depends, on quickly we
+> can preempt GPU jobs accessing affected memory. If we don't have
+> fine-grained preemption capability (graphics), the best we can do is
+> wait for the GPU jobs to complete. We can also delay submission of new
+> GPU jobs to the same memory until the MMU notifier is done. Future jobs
+> would use the new page addresses.
+> 
+> With fine-grained preemption (ROCm compute), we can preempt GPU work on
+> the affected adders space to minimize the delay seen by fork.
+> 
+> With recoverable device page faults, we can invalidate GPU page table
+> entries, so device access to the affected pages stops immediately.
+> 
+> In all cases, the end result is, that the device page table gets updated
+> with the address of the copied pages before the GPU accesses the COW
+> memory again.Without the MMU notifier, we'd end up with the GPU
+> corrupting memory of the other process.
 
-Fair enough.
+The model here in fork has been wrong for a long time, and I do wonder
+how O_DIRECT manages to not be broken too.. I guess the time windows
+there are too small to get unlucky.
 
->
-> --
-> Kees Cook
+If you have a write pin on a page then it should not be COW'd into the
+fork'd process but copied with the originating page remaining with the
+original mm. 
+
+I wonder if there is some easy way to achive that - if that is the
+main reason to use notifiers then it would be a better solution.
+
+Jason
