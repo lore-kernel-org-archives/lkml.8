@@ -2,256 +2,163 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A09E206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00344206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cIsUKbLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389784AbgFSTk7 (ORCPT
+        id S2389841AbgFSTlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:40:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5489 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389754AbgFSTk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:40:59 -0400
-IronPort-SDR: sGbDhK0mdSq2n1IRyeAZlH9h7/WcfBavljg5lQFS6/ck5nZ2S1jd0xGje63K7H9jtRO7wFp9Mi
- tdkWLnHiYzXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="122803455"
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="122803455"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 12:40:58 -0700
-IronPort-SDR: u5yDurmMPH9Uw7WrfUn4lkWgdcvB/6TZIcBhQg5IseWS6u2agKLKyZryZpc5N9GjnE1fKoDXV/
- Dfe4WbAAnNvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="278106180"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 12:40:58 -0700
-Received: from [10.251.1.53] (kliang2-mobl.ccr.corp.intel.com [10.251.1.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 19 Jun 2020 15:41:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41923 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389792AbgFSTlL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:41:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592595669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Klk9Yg7QmsaodI3YdZuK3PWnbqv8FErJIsczXrZ686s=;
+        b=cIsUKbLvN3OOXS4YEU2jy8e7vfJncjJOds3LHLaXTH+S3XEtwTFzLkkG0B00n6thLnXX7E
+        hmq9I9WFXUlOeyLU9uNGyca4vyOTaIsSfmdXnrQx/YpLzZptLDaMl+YjDdbQnmCuxyZgHA
+        9HDyjJYn7hwtrH44XrpLkYPKooKehn4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-kZZ2RrShMPqb7khPp6FD2g-1; Fri, 19 Jun 2020 15:41:05 -0400
+X-MC-Unique: kZZ2RrShMPqb7khPp6FD2g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 248ED580279;
-        Fri, 19 Jun 2020 12:40:56 -0700 (PDT)
-Subject: Re: [PATCH 12/21] perf/x86/intel/lbr: Support Architectural LBR
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com
-References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
- <1592575449-64278-13-git-send-email-kan.liang@linux.intel.com>
- <20200619190823.GG576888@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <e026c2c7-0187-e2c8-8a1a-58b4b1a66134@linux.intel.com>
-Date:   Fri, 19 Jun 2020 15:40:54 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA8D41800D42;
+        Fri, 19 Jun 2020 19:41:00 +0000 (UTC)
+Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8665619D7B;
+        Fri, 19 Jun 2020 19:40:58 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 15:40:56 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619194056.GA13117@redhat.com>
+References: <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <CADnq5_Pw_85Kzh1of=MbDi4g9POeF3jO4AJ7p2FjY5XZW0=vsQ@mail.gmail.com>
+ <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619190823.GG576888@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 03:30:32PM -0400, Felix Kuehling wrote:
+> 
+> Am 2020-06-19 um 3:11 p.m. schrieb Alex Deucher:
+> > On Fri, Jun 19, 2020 at 2:09 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> >> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+> >>> On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+> >>>
+> >>>> The madness is only that device B's mmu notifier might need to wait
+> >>>> for fence_B so that the dma operation finishes. Which in turn has to
+> >>>> wait for device A to finish first.
+> >>> So, it sound, fundamentally you've got this graph of operations across
+> >>> an unknown set of drivers and the kernel cannot insert itself in
+> >>> dma_fence hand offs to re-validate any of the buffers involved?
+> >>> Buffers which by definition cannot be touched by the hardware yet.
+> >>>
+> >>> That really is a pretty horrible place to end up..
+> >>>
+> >>> Pinning really is right answer for this kind of work flow. I think
+> >>> converting pinning to notifers should not be done unless notifier
+> >>> invalidation is relatively bounded.
+> >>>
+> >>> I know people like notifiers because they give a bit nicer performance
+> >>> in some happy cases, but this cripples all the bad cases..
+> >>>
+> >>> If pinning doesn't work for some reason maybe we should address that?
+> >> Note that the dma fence is only true for user ptr buffer which predate
+> >> any HMM work and thus were using mmu notifier already. You need the
+> >> mmu notifier there because of fork and other corner cases.
+> >>
+> >> For nouveau the notifier do not need to wait for anything it can update
+> >> the GPU page table right away. Modulo needing to write to GPU memory
+> >> using dma engine if the GPU page table is in GPU memory that is not
+> >> accessible from the CPU but that's never the case for nouveau so far
+> >> (but i expect it will be at one point).
+> >>
+> >>
+> >> So i see this as 2 different cases, the user ptr case, which does pin
+> >> pages by the way, where things are synchronous. Versus the HMM cases
+> >> where everything is asynchronous.
+> >>
+> >>
+> >> I probably need to warn AMD folks again that using HMM means that you
+> >> must be able to update the GPU page table asynchronously without
+> >> fence wait. The issue for AMD is that they already update their GPU
+> >> page table using DMA engine. I believe this is still doable if they
+> >> use a kernel only DMA engine context, where only kernel can queue up
+> >> jobs so that you do not need to wait for unrelated things and you can
+> >> prioritize GPU page table update which should translate in fast GPU
+> >> page table update without DMA fence.
+> > All devices which support recoverable page faults also have a
+> > dedicated paging engine for the kernel driver which the driver already
+> > makes use of.  We can also update the GPU page tables with the CPU.
+> 
+> We have a potential problem with CPU updating page tables while the GPU
+> is retrying on page table entries because 64 bit CPU transactions don't
+> arrive in device memory atomically.
+> 
+> We are using SDMA for page table updates. This currently goes through a
+> the DRM GPU scheduler to a special SDMA queue that's used by kernel-mode
+> only. But since it's based on the DRM GPU scheduler, we do use dma-fence
+> to wait for completion.
 
+Yeah my worry is mostly that some cross dma fence leak into it but
+it should never happen realy, maybe there is a way to catch if it
+does and print a warning.
 
-On 6/19/2020 3:08 PM, Peter Zijlstra wrote:
-> On Fri, Jun 19, 2020 at 07:04:00AM -0700, kan.liang@linux.intel.com wrote:
-> 
->> +static void intel_pmu_arch_lbr_enable(bool pmi)
->> +{
->> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +	u64 debugctl, lbr_ctl = 0, orig_debugctl;
->> +
->> +	if (pmi)
->> +		return;
->> +
->> +	if (cpuc->lbr_ctl)
->> +		lbr_ctl = cpuc->lbr_ctl->config & x86_pmu.lbr_ctl_mask;
->> +	/*
->> +	 * LBR callstack does not work well with FREEZE_LBRS_ON_PMI.
->> +	 * If FREEZE_LBRS_ON_PMI is set, PMI near call/return instructions
->> +	 * may be missed, that can lead to confusing results.
->> +	 */
->> +	rdmsrl(MSR_IA32_DEBUGCTLMSR, debugctl);
->> +	orig_debugctl = debugctl;
->> +	if (lbr_ctl & ARCH_LBR_CALL_STACK)
->> +		debugctl &= ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
->> +	else
->> +		debugctl |= DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
->> +	if (orig_debugctl != debugctl)
->> +		wrmsrl(MSR_IA32_DEBUGCTLMSR, debugctl);
->> +
->> +	wrmsrl(MSR_ARCH_LBR_CTL, lbr_ctl | ARCH_LBR_CTL_LBREN);
->> +}
-> 
-> This is nearly a duplicate of the old one, surely we can do better?
+So yes you can use dma fence, as long as they do not have cross-dep.
+Another expectation is that they complete quickly and usualy page
+table update do.
 
-It's similar, but we have to deal with different MSRs and bits.
+Cheers,
+Jérôme
 
-> 
->> +static void intel_pmu_arch_lbr_restore(void *ctx)
->> +{
->> +	struct x86_perf_task_context_arch_lbr *task_ctx = ctx;
->> +	struct x86_perf_arch_lbr_entry *entries = task_ctx->entries;
->> +	int i;
->> +
->> +	/* Fast reset the LBRs before restore if the call stack is not full. */
->> +	if (!entries[x86_pmu.lbr_nr - 1].lbr_from)
->> +		intel_pmu_arch_lbr_reset();
->> +
->> +	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->> +		if (!entries[i].lbr_from)
->> +			break;
->> +		wrlbr_from(i, entries[i].lbr_from);
->> +		wrlbr_to(i, entries[i].lbr_to);
->> +		wrmsrl(MSR_ARCH_LBR_INFO_0 + i, entries[i].lbr_info);
->> +	}
->> +}
-> 
-> This too looks very much like the old one.
-
-The difference is the reset part.
-For the previous platforms, we restore the saved LBRs first, then reset 
-the unsaved LBR MSRs one by one.
-Now, for Arch LBR, we have a fast reset method. We reset all LBRs (if we 
-know there are unsaved items) first, then restore the saved LBRs.
-That would improve the performance for the application with short call 
-stack.
-
-> 
->> +static void intel_pmu_arch_lbr_save(void *ctx)
->> +{
->> +	struct x86_perf_task_context_arch_lbr *task_ctx = ctx;
->> +	struct x86_perf_arch_lbr_entry *entries = task_ctx->entries;
->> +	int i;
->> +
->> +	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->> +		entries[i].lbr_from = rdlbr_from(i);
->> +		/* Only save valid branches. */
->> +		if (!entries[i].lbr_from)
->> +			break;
->> +		entries[i].lbr_to = rdlbr_to(i);
->> +		rdmsrl(MSR_ARCH_LBR_INFO_0 + i, entries[i].lbr_info);
->> +	}
->> +
->> +	/* LBR call stack is not full. Reset is required in restore. */
->> +	if (i < x86_pmu.lbr_nr)
->> +		entries[x86_pmu.lbr_nr - 1].lbr_from = 0;
->> +}
-> 
-> And again..
-> 
->> +static void __intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc, int index,
->> +				      u64 from, u64 to, u64 info)
->> +{
->> +	u64 mis = 0, pred = 0, in_tx = 0, abort = 0, type = 0;
->> +	u32 br_type, to_plm;
->> +	u16 cycles = 0;
->> +
->> +	if (x86_pmu.arch_lbr_mispred) {
->> +		mis = !!(info & ARCH_LBR_INFO_MISPRED);
->> +		pred = !mis;
->> +	}
->> +	in_tx = !!(info & ARCH_LBR_INFO_IN_TSX);
->> +	abort = !!(info & ARCH_LBR_INFO_TSX_ABORT);
->> +	if (x86_pmu.arch_lbr_timed_lbr &&
->> +	    (info & ARCH_LBR_INFO_CYC_CNT_VALID))
->> +		cycles = (info & ARCH_LBR_INFO_CYC_CNT);
->> +
->> +	/*
->> +	 * Parse the branch type recorded in LBR_x_INFO MSR.
->> +	 * Doesn't support OTHER_BRANCH decoding for now.
->> +	 * OTHER_BRANCH branch type still rely on software decoding.
->> +	 */
->> +	if (x86_pmu.arch_lbr_br_type) {
->> +		br_type = (info & ARCH_LBR_INFO_BR_TYPE) >> ARCH_LBR_INFO_BR_TYPE_OFFSET;
->> +
->> +		if (br_type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
->> +			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
->> +			type = arch_lbr_br_type_map[br_type] | to_plm;
->> +		}
->> +	}
->> +
->> +	cpuc->lbr_entries[index].from		 = from;
->> +	cpuc->lbr_entries[index].to		 = to;
->> +	cpuc->lbr_entries[index].mispred	 = mis;
->> +	cpuc->lbr_entries[index].predicted	 = pred;
->> +	cpuc->lbr_entries[index].in_tx		 = in_tx;
->> +	cpuc->lbr_entries[index].abort		 = abort;
->> +	cpuc->lbr_entries[index].cycles		 = cycles;
->> +	cpuc->lbr_entries[index].type		 = type;
->> +	cpuc->lbr_entries[index].reserved	 = 0;
->> +}
->> +
->> +static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
->> +{
->> +	u64 from, to, info;
->> +	int i;
->> +
->> +	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->> +		from = rdlbr_from(i);
->> +		to   = rdlbr_to(i);
->> +
->> +		/*
->> +		 * Read LBR entries until invalid entry (0s) is detected.
->> +		 */
->> +		if (!from)
->> +			break;
->> +
->> +		rdmsrl(MSR_ARCH_LBR_INFO_0 + i, info);
->> +
->> +		__intel_pmu_arch_lbr_read(cpuc, i, from, to, info);
->> +	}
->> +
->> +	cpuc->lbr_stack.nr = i;
->> +}
-> 
->> +static void intel_pmu_store_pebs_arch_lbrs(struct pebs_lbr *pebs_lbr,
->> +					   struct cpu_hw_events *cpuc)
->> +{
->> +	struct pebs_lbr_entry *lbr;
->> +	int i;
->> +
->> +	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->> +		lbr = &pebs_lbr->lbr[i];
->> +
->> +		/*
->> +		 * Read LBR entries until invalid entry (0s) is detected.
->> +		 */
->> +		if (!lbr->from)
->> +			break;
->> +
->> +		__intel_pmu_arch_lbr_read(cpuc, i, lbr->from,
->> +					  lbr->to, lbr->info);
->> +	}
->> +
->> +	cpuc->lbr_stack.nr = i;
->> +	intel_pmu_lbr_filter(cpuc);
->> +}
-> 
-> Unless I'm reading cross-eyed again, that too is very similar to what we
-> already had.
-> 
-
-I will try to factor out the common codes for thses functions as many as 
-possible.
-
-
-Thanks,
-Kan
