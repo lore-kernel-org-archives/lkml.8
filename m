@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 739D0217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2448C2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578420;
-	bh=bGLWixPhjL+vxRiSlHeu3NEuwsW0UJMOZztKFqiUYug=;
+	s=default; t=1592578430;
+	bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KO+WjgHijRI/bmGZoTbgdAAhxaxC9xfk9zGbZJnkza7rKdKeH+YE80YDH2sTp/2Ku
-	 BAFkWLC8MtdgKbF3JRCBODef+d8vea3esq2t+PKm6SUZ3LcANjfe9dthx4OJgtPJYz
-	 9SfIVfUmfPpuJQeSS2x6XREU8WaPhvGRpNPUMPS0=
+	b=gCYL41aFbWxbJjYbJPpmZwtriYnSHPAu4PVNn7QlcPEZwexHylT4dPHGWr/IHh/1S
+	 /C1ACn4e856752USxqaNPjsMZIvK7JHy64WNacz+RcLS8VdeaxkaUzBJbCL4OMbz1L
+	 wjt/E9NKpzi5oWK5nUdxnVVnl7R8+L24jyg28xbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbgFSOxi (ORCPT
+        id S2389760AbgFSOxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389731AbgFSOxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:53:34 -0400
+        id S2388056AbgFSOxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5419A21852;
-        Fri, 19 Jun 2020 14:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E4FE2184D;
+        Fri, 19 Jun 2020 14:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578413;
-        bh=bGLWixPhjL+vxRiSlHeu3NEuwsW0UJMOZztKFqiUYug=;
+        s=default; t=1592578419;
+        bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEYSiQIiMiLvgvD7lvb9j2r5d30vvCHdy0X4sQcq4i7wZX0ywW0ONgELnZaTFNWTf
-         f2Zne0pfDG4ASwEoeNSj/JIvouQonjqt9vzhsQNxKYUBVyum/ul7ZDcDUkURE/BA1T
-         txfb1A0XjboFkmhleWxM17WJdFXORjvFCTBhHCnk=
+        b=LRmQ3t659e6zXAk0TUYNfrV2O0gdLr1cbZ0glZCaC8pwcjEuy8ogxX1GoOGGXtyP5
+         rJ7yq1fJCOawT5pkwZCrLQRX54dWC8FHZW5QWGr4k3WMqOqqLtKI6lWpD4+k6Ba4TN
+         4hvIGOmdUBRv4tQZzDVbkCW8OyC1Bcv5rvlXvv2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Vikash Bansal <bvikas@vmware.com>
-Subject: [PATCH 4.19 013/267] btrfs: Detect unbalanced tree with empty leaf before crashing btree operations
-Date:   Fri, 19 Jun 2020 16:29:58 +0200
-Message-Id: <20200619141649.495092948@linuxfoundation.org>
+        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 015/267] Input: mms114 - fix handling of mms345l
+Date:   Fri, 19 Jun 2020 16:30:00 +0200
+Message-Id: <20200619141649.589413506@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,124 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 62fdaa52a3d00a875da771719b6dc537ca79fce1 upstream.
+[ Upstream commit 3f8f770575d911c989043d8f0fb8dec96360c41c ]
 
-[BUG]
-With crafted image, btrfs will panic at btree operations:
+MMS345L is another first generation touch screen from Melfas,
+which uses the same registers as MMS152.
 
-  kernel BUG at fs/btrfs/ctree.c:3894!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 0 PID: 1138 Comm: btrfs-transacti Not tainted 5.0.0-rc8+ #9
-  RIP: 0010:__push_leaf_left+0x6b6/0x6e0
-  RSP: 0018:ffffc0bd4128b990 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffffa0a4ab8f0e38 RCX: 0000000000000000
-  RDX: ffffa0a280000000 RSI: 0000000000000000 RDI: ffffa0a4b3814000
-  RBP: ffffc0bd4128ba38 R08: 0000000000001000 R09: ffffc0bd4128b948
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000240
-  R13: ffffa0a4b556fb60 R14: ffffa0a4ab8f0af0 R15: ffffa0a4ab8f0af0
-  FS: 0000000000000000(0000) GS:ffffa0a4b7a00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f2461c80020 CR3: 000000022b32a006 CR4: 00000000000206f0
-  Call Trace:
-  ? _cond_resched+0x1a/0x50
-  push_leaf_left+0x179/0x190
-  btrfs_del_items+0x316/0x470
-  btrfs_del_csums+0x215/0x3a0
-  __btrfs_free_extent.isra.72+0x5a7/0xbe0
-  __btrfs_run_delayed_refs+0x539/0x1120
-  btrfs_run_delayed_refs+0xdb/0x1b0
-  btrfs_commit_transaction+0x52/0x950
-  ? start_transaction+0x94/0x450
-  transaction_kthread+0x163/0x190
-  kthread+0x105/0x140
-  ? btrfs_cleanup_transaction+0x560/0x560
-  ? kthread_destroy_worker+0x50/0x50
-  ret_from_fork+0x35/0x40
-  Modules linked in:
-  ---[ end trace c2425e6e89b5558f ]---
+However, using I2C_M_NOSTART for it causes errors when reading:
 
-[CAUSE]
-The offending csum tree looks like this:
+	i2c i2c-0: sendbytes: NAK bailout.
+	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
 
-  checksum tree key (CSUM_TREE ROOT_ITEM 0)
-  node 29741056 level 1 items 14 free 107 generation 19 owner CSUM_TREE
-	  ...
-	  key (EXTENT_CSUM EXTENT_CSUM 85975040) block 29630464 gen 17
-	  key (EXTENT_CSUM EXTENT_CSUM 89911296) block 29642752 gen 17 <<<
-	  key (EXTENT_CSUM EXTENT_CSUM 92274688) block 29646848 gen 17
-	  ...
+The driver works fine as soon as I2C_M_NOSTART is removed.
 
-  leaf 29630464 items 6 free space 1 generation 17 owner CSUM_TREE
-	  item 0 key (EXTENT_CSUM EXTENT_CSUM 85975040) itemoff 3987 itemsize 8
-		  range start 85975040 end 85983232 length 8192
-	  ...
-  leaf 29642752 items 0 free space 3995 generation 17 owner 0
-		      ^ empty leaf            invalid owner ^
-
-  leaf 29646848 items 1 free space 602 generation 17 owner CSUM_TREE
-	  item 0 key (EXTENT_CSUM EXTENT_CSUM 92274688) itemoff 627 itemsize 3368
-		  range start 92274688 end 95723520 length 3448832
-
-So we have a corrupted csum tree where one tree leaf is completely
-empty, causing unbalanced btree, thus leading to unexpected btree
-balance error.
-
-[FIX]
-For this particular case, we handle it in two directions to catch it:
-- Check if the tree block is empty through btrfs_verify_level_key()
-  So that invalid tree blocks won't be read out through
-  btrfs_search_slot() and its variants.
-
-- Check 0 tree owner in tree checker
-  NO tree is using 0 as its tree owner, detect it and reject at tree
-  block read time.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202821
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Vikash Bansal <bvikas@vmware.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200405170904.61512-1-stephan@gerhold.net
+[dtor: removed separate mms345l handling, made everyone use standard
+transfer mode, propagated the 10bit addressing flag to the read part of the
+transfer as well.]
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c      |   10 ++++++++++
- fs/btrfs/tree-checker.c |    6 ++++++
- 2 files changed, 16 insertions(+)
+ drivers/input/touchscreen/mms114.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -438,6 +438,16 @@ int btrfs_verify_level_key(struct btrfs_
- 	 */
- 	if (btrfs_header_generation(eb) > fs_info->last_trans_committed)
- 		return 0;
-+
-+	/* We have @first_key, so this @eb must have at least one item */
-+	if (btrfs_header_nritems(eb) == 0) {
-+		btrfs_err(fs_info,
-+		"invalid tree nritems, bytenr=%llu nritems=0 expect >0",
-+			  eb->start);
-+		WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
-+		return -EUCLEAN;
-+	}
-+
- 	if (found_level)
- 		btrfs_node_key_to_cpu(eb, &found_key, 0);
- 	else
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -509,6 +509,12 @@ static int check_leaf(struct btrfs_fs_in
- 				    owner);
- 			return -EUCLEAN;
- 		}
-+		/* Unknown tree */
-+		if (owner == 0) {
-+			generic_err(fs_info, leaf, 0,
-+				"invalid owner, root 0 is not defined");
-+			return -EUCLEAN;
-+		}
- 		key.objectid = owner;
- 		key.type = BTRFS_ROOT_ITEM_KEY;
- 		key.offset = (u64)-1;
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index a5ab774da4cc..fca908ba4841 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -91,15 +91,15 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
+ 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
+ 		BUG();
+ 
+-	/* Write register: use repeated start */
++	/* Write register */
+ 	xfer[0].addr = client->addr;
+-	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
++	xfer[0].flags = client->flags & I2C_M_TEN;
+ 	xfer[0].len = 1;
+ 	xfer[0].buf = &buf;
+ 
+ 	/* Read data */
+ 	xfer[1].addr = client->addr;
+-	xfer[1].flags = I2C_M_RD;
++	xfer[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
+ 	xfer[1].len = len;
+ 	xfer[1].buf = val;
+ 
+@@ -428,10 +428,8 @@ static int mms114_probe(struct i2c_client *client,
+ 	const void *match_data;
+ 	int error;
+ 
+-	if (!i2c_check_functionality(client->adapter,
+-				I2C_FUNC_PROTOCOL_MANGLING)) {
+-		dev_err(&client->dev,
+-			"Need i2c bus that supports protocol mangling\n");
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		dev_err(&client->dev, "Not supported I2C adapter\n");
+ 		return -ENODEV;
+ 	}
+ 
+-- 
+2.25.1
+
 
 
