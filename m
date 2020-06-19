@@ -2,63 +2,150 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B094E20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE582080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgFSDpK (ORCPT
+        id S1725826AbgFSELR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbgFSDpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:45:09 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1CEC06174E;
-        Thu, 18 Jun 2020 20:45:09 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B5655120ED49C;
-        Thu, 18 Jun 2020 20:45:08 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 20:45:08 -0700 (PDT)
-Message-Id: <20200618.204508.1827331900997451321.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: bcm_sf2: Fix node reference count
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200618034245.29928-1-f.fainelli@gmail.com>
-References: <20200618034245.29928-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 19 Jun 2020 00:11:17 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59966 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbgFSELQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 00:11:16 -0400
+IronPort-SDR: KjJDAL7SjhyJdgqvO3VaWVVUDWV6fADej+9RWWsxCaXUGlXsdw9m8nsdJ+k5DnflnThySLU46U
+ mEkfuXLdOqeQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="141893226"
+X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
+   d="scan'208";a="141893226"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 21:11:16 -0700
+IronPort-SDR: ijoVSOFsEpcPf/krIe/BqzPpbVKnwovBMe1HczWyovo2POeLgy2eyVzHd/0Ldx53QBSqo8ncwy
+ gTIJDE6QnsSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
+   d="scan'208";a="318010626"
+Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Jun 2020 21:11:14 -0700
+Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jm8N0-0000eh-8k; Fri, 19 Jun 2020 04:11:14 +0000
+Date:   Fri, 19 Jun 2020 12:10:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/next] BUILD SUCCESS
+ 2cb3e01520e4c6cd28ac8301e4616c62c313a833
+Message-ID: <5eec3ac8.cCoUw8kOva85LYPL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:45:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Wed, 17 Jun 2020 20:42:44 -0700
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
+branch HEAD: 2cb3e01520e4c6cd28ac8301e4616c62c313a833  lib/test_vmalloc.c: Add test cases for kvfree_rcu()
 
-> of_find_node_by_name() will do an of_node_put() on the "from" argument.
-> With CONFIG_OF_DYNAMIC enabled which checks for device_node reference
-> counts, we would be getting a warning like this:
- ...
-> Fix this by adding a of_node_get() to increment the reference count
-> prior to the call.
-> 
-> Fixes: afa3b592953b ("net: dsa: bcm_sf2: Ensure correct sub-node is parsed")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+elapsed time: 721m
 
-Applied and queued up for v5.7 -stable, thanks.
+configs tested: 80
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nios2                            allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+h8300                            allyesconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+um                               allmodconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
