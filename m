@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB62C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62A5021707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD56421707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584040;
-	bh=2wK3x9Xyezua4jwnu29bAlX1TuakhDFi6UQptDI5vIw=;
+	s=default; t=1592584046;
+	bh=1A5mgssrvA3C+KZPzFjWGfGOyB9XKTvZZzMVoOXwNnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVOIQJ15QI8exGp1EevmMK2OOL08rRXpuJn7bB1CCrWqb5C9RnvmmImgIRYm6GfKu
-	 45lXXSK4Lp3JKyd7CSc5jy6GHUcGMZVR0121rDISHi1IB8+BESt66L5bru9RwwXheA
-	 ostezOl7at5aEVMkTWpdKeTUrZ8NauGyepyqszac=
+	b=QcrnSXC+Mdan/H9ubgUbJO6Zls8fwdx8GYu1m8FvuAGYrMLq1zCd1QkG4SGX62CT5
+	 AQzfxOE4UsXwwEgpZn6mYqq/4Tg9uXajO7qaNo4um5gJKr9XhOfqpLpiG2M55/sK2G
+	 m6KVpgRHLu2pO12IndEzitDvm8qPTffXK7ty8ROU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390042AbgFSO4K (ORCPT
+        id S2394717AbgFSQ1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389659AbgFSOz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:59 -0400
+        id S2390025AbgFSO4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4F2217D9;
-        Fri, 19 Jun 2020 14:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 800BC2158C;
+        Fri, 19 Jun 2020 14:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578559;
-        bh=2wK3x9Xyezua4jwnu29bAlX1TuakhDFi6UQptDI5vIw=;
+        s=default; t=1592578565;
+        bh=1A5mgssrvA3C+KZPzFjWGfGOyB9XKTvZZzMVoOXwNnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/LCtPuRPlloSqBzSx7DdbzyD6IZWiXV/85xPPPCcfmRWektibyf/bjKzAnvlVxu7
-         SyFp+ZlRIKJa8S9+6Kf1PVuBDS5dzIznXJKPigR/SN7w65IPZLY7hF/bovZFykrLED
-         7nEAd7iHC9B9SssLwWe9L+An3vttFCr4ZWQz7XyM=
+        b=zW1N8YuNp+ILdDpnnjo4JQBNzxFgBt3XPwyFb9fLWWTZvQmchyWlYes+m61Gj5hpL
+         21M2JMM6Oq+TOTQkk3oXgDIfTixvph9NszcePOkfTZbAqV2GTAjys2vUV3teQf8TfG
+         7DMaT6I3kAtwNnioPohNKQH5C4XvryhlqnMwaJbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.19 069/267] proc: Use new_inode not new_inode_pseudo
-Date:   Fri, 19 Jun 2020 16:30:54 +0200
-Message-Id: <20200619141652.207568902@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 071/267] KVM: nSVM: fix condition for filtering async PF
+Date:   Fri, 19 Jun 2020 16:30:56 +0200
+Message-Id: <20200619141652.304477872@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,83 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit ef1548adada51a2f32ed7faef50aa465e1b4c5da upstream.
+commit a3535be731c2a343912578465021f50937f7b099 upstream.
 
-Recently syzbot reported that unmounting proc when there is an ongoing
-inotify watch on the root directory of proc could result in a use
-after free when the watch is removed after the unmount of proc
-when the watcher exits.
-
-Commit 69879c01a0c3 ("proc: Remove the now unnecessary internal mount
-of proc") made it easier to unmount proc and allowed syzbot to see the
-problem, but looking at the code it has been around for a long time.
-
-Looking at the code the fsnotify watch should have been removed by
-fsnotify_sb_delete in generic_shutdown_super.  Unfortunately the inode
-was allocated with new_inode_pseudo instead of new_inode so the inode
-was not on the sb->s_inodes list.  Which prevented
-fsnotify_unmount_inodes from finding the inode and removing the watch
-as well as made it so the "VFS: Busy inodes after unmount" warning
-could not find the inodes to warn about them.
-
-Make all of the inodes in proc visible to generic_shutdown_super,
-and fsnotify_sb_delete by using new_inode instead of new_inode_pseudo.
-The only functional difference is that new_inode places the inodes
-on the sb->s_inodes list.
-
-I wrote a small test program and I can verify that without changes it
-can trigger this issue, and by replacing new_inode_pseudo with
-new_inode the issues goes away.
+Async page faults have to be trapped in the host (L1 in this case),
+since the APF reason was passed from L0 to L1 and stored in the L1 APF
+data page.  This was completely reversed: the page faults were passed
+to the guest, a L2 hypervisor.
 
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/000000000000d788c905a7dfa3f4@google.com
-Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
-Fixes: 0097875bd415 ("proc: Implement /proc/thread-self to point at the directory of the current thread")
-Fixes: 021ada7dff22 ("procfs: switch /proc/self away from proc_dir_entry")
-Fixes: 51f0885e5415 ("vfs,proc: guarantee unique inodes in /proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/inode.c       |    2 +-
- fs/proc/self.c        |    2 +-
- fs/proc/thread_self.c |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/svm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -451,7 +451,7 @@ const struct inode_operations proc_link_
- 
- struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
- {
--	struct inode *inode = new_inode_pseudo(sb);
-+	struct inode *inode = new_inode(sb);
- 
- 	if (inode) {
- 		inode->i_ino = de->low_ino;
---- a/fs/proc/self.c
-+++ b/fs/proc/self.c
-@@ -42,7 +42,7 @@ int proc_setup_self(struct super_block *
- 	inode_lock(root_inode);
- 	self = d_alloc_name(s->s_root, "self");
- 	if (self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
---- a/fs/proc/thread_self.c
-+++ b/fs/proc/thread_self.c
-@@ -42,7 +42,7 @@ int proc_setup_thread_self(struct super_
- 	inode_lock(root_inode);
- 	thread_self = d_alloc_name(s->s_root, "thread-self");
- 	if (thread_self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = thread_self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3229,8 +3229,8 @@ static int nested_svm_exit_special(struc
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
+-		/* When we're shadowing, trap PFs, but not async PF */
+-		if (!npt_enabled && svm->vcpu.arch.apf.host_apf_reason == 0)
++		/* Trap async PF even if not shadowing */
++		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	default:
 
 
