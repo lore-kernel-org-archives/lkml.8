@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89716C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA35FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6463421556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF96B21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582253;
-	bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
+	s=default; t=1592582255;
+	bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pFDrB3wqMuNwTNACfpe53ZyBPUn2P3pUQsQSowJZVUrM165P8Y0auPOvP1DZG/PyF
-	 drGD1u4AO4r4KVbqifwYp2348Zl06cywA2LYfO3s20T0u6b9XBMBzJiGzSBmvOAH6T
-	 7atycBX7MS5YnJLtnB0IOOeRdVsU1Ye2Fx8n75dA=
+	b=RXWUo0OnnviNQ4IpT6mWDiRkWX/Zt2iK/v2fg7MPpiju6HRwNLwP3UIWk/cjC920O
+	 ChhWvmHDjMKNj9jIjqSTRXZez7F7K/r0k6/8kmQfKYhECHhArNn5WCXnvsGiZmsENB
+	 t/SI7Q5NOHmPyWrDSL9ugUjXA/ZxfaJTkvL3N4yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392671AbgFSP5b (ORCPT
+        id S2392729AbgFSP5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388925AbgFSPUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:11 -0400
+        id S2392646AbgFSPUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A452206DB;
-        Fri, 19 Jun 2020 15:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50DD42158C;
+        Fri, 19 Jun 2020 15:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580010;
-        bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
+        s=default; t=1592580003;
+        bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pf3YGu/760m0OOGABnQ6FxTQP3TdD1UO48fT4XshoHOI34Yd/dTCK46OGFtxWSJqy
-         trRIfyKfw34Q3n77FZYH8Q30qkZjXrc6Bv2N1V/f34qnA3B/VX8xtjTHERk8ZCPbNk
-         BgeXajphTCwgKGkdyfIZH1G6DqSwNfjE0Dl0afKY=
+        b=BFlEdOLXyhKdW+rBWaJAAzCdFPhmg/vks6HxEYyqTHhBRe7ZEIbi4qjDDbYkX+2Ps
+         JiYg/NFHwtwvqU2m2n+2iK+FM+GbORR796UdeRPsfMSjjDTBRK1awn2FhlpF+AN2em
+         pshHZqRlMrPLI1FGkHXTLbqV5g7Q+91mNH7UVP4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mansur Alisha Shaik <mansur@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 089/376] media: venus: core: remove CNOC voting while device suspend
-Date:   Fri, 19 Jun 2020 16:30:07 +0200
-Message-Id: <20200619141714.556804588@linuxfoundation.org>
+Subject: [PATCH 5.7 046/376] cpuidle: psci: Fixup execution order when entering a domain idle state
+Date:   Fri, 19 Jun 2020 16:29:24 +0200
+Message-Id: <20200619141712.538262919@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,62 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mansur Alisha Shaik <mansur@codeaurora.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 07f8f22a33a9e3e9955e24a84e2f856dcc8c31c4 ]
+[ Upstream commit 8b7ce5e49049ca78c238f03d70569a73da049f32 ]
 
-The Venus driver is voting Configuration NoC during .probe but not clear
-voting in .suspend. Because of this NoC is up during shutdown also. As a
-consequence the whole device could leak energy while in .suspend.
+Moving forward, platforms are going to need to execute specific "last-man"
+operations before a domain idle state can be entered. In one way or the
+other, these operations needs to be triggered while walking the
+hierarchical topology via runtime PM and genpd, as it's at that point the
+last-man becomes known.
 
-So correct this by moving voting in .resume and unvoting
-in .suspend
+Moreover, executing last-man operations needs to be done after the CPU PM
+notifications are sent through cpu_pm_enter(), as otherwise it's likely
+that some notifications would fail. Therefore, let's re-order the sequence
+in psci_enter_domain_idle_state(), so cpu_pm_enter() gets called prior
+pm_runtime_put_sync().
 
-Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: ce85aef570df ("cpuidle: psci: Manage runtime PM in the idle path")
+Reported-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/cpuidle/cpuidle-psci.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 194b10b98767..13fa5076314c 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -242,10 +242,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+index bae9140a65a5..d0fb585073c6 100644
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -58,6 +58,10 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
+ 	u32 state;
+ 	int ret;
  
--	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
--	if (ret)
--		return ret;
--
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
- 		return ret;
-@@ -350,6 +346,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, 0);
++	ret = cpu_pm_enter();
 +	if (ret)
-+		return ret;
++		return -1;
 +
- 	if (pm_ops->core_power)
- 		ret = pm_ops->core_power(dev, POWER_OFF);
+ 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
+ 	pm_runtime_put_sync_suspend(pd_dev);
  
-@@ -368,6 +368,10 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 			return ret;
- 	}
+@@ -65,10 +69,12 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
+ 	if (!state)
+ 		state = states[idx];
  
-+	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
-+	if (ret)
-+		return ret;
+-	ret = psci_enter_state(idx, state);
++	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+ 
+ 	pm_runtime_get_sync(pd_dev);
+ 
++	cpu_pm_exit();
 +
- 	return hfi_core_resume(core, false);
- }
- 
+ 	/* Clear the domain state to start fresh when back from idle. */
+ 	psci_set_domain_state(0);
+ 	return ret;
 -- 
 2.25.1
 
