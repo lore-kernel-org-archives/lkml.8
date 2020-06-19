@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72626C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9D221941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453FF21974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579216;
-	bh=MkhQdYmlwhdXAwRMV4INdW/RGVcDVH26f6kH/J+KPUo=;
+	s=default; t=1592579219;
+	bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fLibV5V3r+/NHq2wBrNwmlCId75Hq7lubAh90mGyi6Nt2y6VZuJSP11915quh5Cq3
-	 v7ij2fMxZ8vLAg/B9XRx3AJh09DmKSp45Eqdr5cueI4ABocm6tuOlmGBCUPLZVfzS+
-	 f1DbJ2yMhI9+zaLevt6aOQzpiZe5XAtDgd+b99hE=
+	b=QgkThFx3Xd3IvaeNxK2K2sPA8bj3IVOhV2hyiEcdbh4Mc/g604T7DJ8t1EVyTM8AS
+	 KE5/Ikp20pPuNtFqSdHHm/WNjajKasrOJbA47SuaHmFMsLlHkzFKRMT17/ZpLOVxm8
+	 Z3tWqOrUi6agEWHH+p/ayzVwSAIugSnZCekqE4FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391497AbgFSPGy (ORCPT
+        id S2391513AbgFSPG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35886 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390684AbgFSPGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:41 -0400
+        id S2391088AbgFSPGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B8821BE5;
-        Fri, 19 Jun 2020 15:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7171121941;
+        Fri, 19 Jun 2020 15:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579201;
-        bh=MkhQdYmlwhdXAwRMV4INdW/RGVcDVH26f6kH/J+KPUo=;
+        s=default; t=1592579205;
+        bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=miXsB+G1nN0Q6RZ+uSZwDA8VOQ8T9NFeQDVLyqdfCV9MNpCwJ/yEp4utrceDMrqJ0
-         eky0bfRGQfqU3tOF5HXTy22pFMqDWZGc3iMepkBwBmVi4cEUE0bu7YDoRISKUufSjH
-         nmHnjoJ983UMVorO41OOpNTnwHdz/pwSqOL+zHGo=
+        b=NK9nSkqCX5DQKwz3IF+DHL7Kn366YQAwlB+vjQPvcsCZgIWIzeicDIF+FTFDI/81q
+         I0Yunxqxot0agvSe0pE5yE5DAHNlS2D5CsDQbNOVE4HECWWPaQBkdxBVYQSCnM5tSk
+         ArGs55p4Wpvg2h70e+sO94to9IHqBTMyWTwq0mfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/261] btrfs: account for trans_block_rsv in may_commit_transaction
-Date:   Fri, 19 Jun 2020 16:30:56 +0200
-Message-Id: <20200619141652.087010489@linuxfoundation.org>
+Subject: [PATCH 5.4 047/261] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
+Date:   Fri, 19 Jun 2020 16:30:58 +0200
+Message-Id: <20200619141652.180953938@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,53 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit bb4f58a747f0421b10645fbf75a6acc88da0de50 ]
+[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
 
-On ppc64le with 64k page size (respectively 64k block size) generic/320
-was failing and debug output showed we were getting a premature ENOSPC
-with a bunch of space in btrfs_fs_info::trans_block_rsv.
+Recent work with KASan exposed the folling hard-coded bitmask
+in arch/arm/mm/proc-macros.S:
 
-This meant there were still open transaction handles holding space, yet
-the flusher didn't commit the transaction because it deemed the freed
-space won't be enough to satisfy the current reserve ticket. Fix this
-by accounting for space in trans_block_rsv when deciding whether the
-current transaction should be committed or not.
+  bic     rd, sp, #8128
+  bic     rd, rd, #63
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Tested-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This forms the bitmask 0x1FFF that is coinciding with
+(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
+that THREAD_SIZE is always 8K (8192).
+
+As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
+this bug.
+
+Fix it by this little oneline suggested by Ard:
+
+  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
+
+Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
+
+We have to also include <linux/const.h> since the THREAD_SIZE
+expands to use the _AC() macro.
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/space-info.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/mm/proc-macros.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
-index e8a4b0ebe97f..5b47e3c44c8f 100644
---- a/fs/btrfs/space-info.c
-+++ b/fs/btrfs/space-info.c
-@@ -462,6 +462,7 @@ static int may_commit_transaction(struct btrfs_fs_info *fs_info,
- 	struct reserve_ticket *ticket = NULL;
- 	struct btrfs_block_rsv *delayed_rsv = &fs_info->delayed_block_rsv;
- 	struct btrfs_block_rsv *delayed_refs_rsv = &fs_info->delayed_refs_rsv;
-+	struct btrfs_block_rsv *trans_rsv = &fs_info->trans_block_rsv;
- 	struct btrfs_trans_handle *trans;
- 	u64 bytes_needed;
- 	u64 reclaim_bytes = 0;
-@@ -524,6 +525,11 @@ static int may_commit_transaction(struct btrfs_fs_info *fs_info,
- 	spin_lock(&delayed_refs_rsv->lock);
- 	reclaim_bytes += delayed_refs_rsv->reserved;
- 	spin_unlock(&delayed_refs_rsv->lock);
-+
-+	spin_lock(&trans_rsv->lock);
-+	reclaim_bytes += trans_rsv->reserved;
-+	spin_unlock(&trans_rsv->lock);
-+
- 	if (reclaim_bytes >= bytes_needed)
- 		goto commit;
- 	bytes_needed -= reclaim_bytes;
+diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
+index 5461d589a1e2..60ac7c5999a9 100644
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -5,6 +5,7 @@
+  *  VMA_VM_FLAGS
+  *  VM_EXEC
+  */
++#include <linux/const.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
+ 
+@@ -30,7 +31,7 @@
+  * act_mm - get current->active_mm
+  */
+ 	.macro	act_mm, rd
+-	bic	\rd, sp, #8128
++	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
+ 	bic	\rd, \rd, #63
+ 	ldr	\rd, [\rd, #TI_TASK]
+ 	.if (TSK_ACTIVE_MM > IMM12_MASK)
 -- 
 2.25.1
 
