@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3564EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7BFA20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B562070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577626;
-	bh=7MF0b77oC01ynraHWDZg4g8n84cneXiha1iL8XpCBbA=;
+	s=default; t=1592577630;
+	bh=MavuaE6RpHO1pjmAVmuBsMf1W73U+3iUQqhX42rPWaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CY7+JErR3MgzuwkiyMGB63/9aEJ/J8Y9udL+TeGfVPYre2ZeKPsuJtadEaMBqjgDo
-	 SrIOMZernZOZjzMuYJabYU3zUlwk8s4Z5uDm2Vvo4QJ/AKPFkz2mTq+IekOlFhzbvp
-	 yEGTVbzhXAZ+V/GP9+sVLXZ00g0vEg2sld20BfDY=
+	b=GAHPY/FyLTADpz09bdm+vE9RBELXRi3CC+4h6A6Qox+9iYsPV6YT2SW6+wudJUPxA
+	 NCXuZN//5BOcZadraw3wF2Mr10yip/AnXQzOCtysvz5dCvxyu6chZiQPhZ4INwSpX4
+	 h9SERu4itZ0I6GLSyZbXI6FXehYJOZW25taHt+vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbgFSOkY (ORCPT
+        id S2388149AbgFSOk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388121AbgFSOkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:40:15 -0400
+        id S2388099AbgFSOkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E37982070A;
-        Fri, 19 Jun 2020 14:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 370FF20773;
+        Fri, 19 Jun 2020 14:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577615;
-        bh=7MF0b77oC01ynraHWDZg4g8n84cneXiha1iL8XpCBbA=;
+        s=default; t=1592577617;
+        bh=MavuaE6RpHO1pjmAVmuBsMf1W73U+3iUQqhX42rPWaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqUU8A7zaclLnvhMJHZKI+69X0pW3sV973p2ar598b2CQ9oob9yhP6VuPBbJdr4Sw
-         I1qkPQkG51IMwsIdMnzcNII894Xz0f+35H3XjIni8qYUMN3KumirkVId+gC53TOMTx
-         CjXiO6xdy+tIbs29pvUwK6MB6Dt64burerkesnr8=
+        b=beKqaWlRG9UNvuOM7xuZYzgOech0BvaV3I2Zms2USAuShbB6MplnDX5E+/ufsH2zD
+         xt2ZhI8OJ0VCbfay8gYx/J1h4lXaS6EQxjOQepleUbUYCwUGhqCDrs3sKtjW1+vh91
+         S5YFf2VGnzK6oR7K0cftUDGiggK39owzEcAn6Ir8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 002/128] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
-Date:   Fri, 19 Jun 2020 16:31:36 +0200
-Message-Id: <20200619141620.272273240@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 020/128] cgroup, blkcg: Prepare some symbols for module and !CONFIG_CGROUP usages
+Date:   Fri, 19 Jun 2020 16:31:54 +0200
+Message-Id: <20200619141621.241491386@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,48 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+commit 9b0eb69b75bccada2d341d7e7ca342f0cb1c9a6a upstream.
 
-When proxy mode is enabled the vxlan device might reply to Neighbor
-Solicitation (NS) messages on behalf of remote hosts.
+btrfs is going to use css_put() and wbc helpers to improve cgroup
+writeback support.  Add dummy css_get() definition and export wbc
+helpers to prepare for module and !CONFIG_CGROUP builds.
 
-In case the NS message includes the "Source link-layer address" option
-[1], the vxlan device will use the specified address as the link-layer
-destination address in its reply.
+[only backport the export of __inode_attach_wb for stable kernels - gregkh]
 
-To avoid an infinite loop, break out of the options parsing loop when
-encountering an option with length zero and disregard the NS message.
-
-This is consistent with the IPv6 ndisc code and RFC 4886 which states
-that "Nodes MUST silently discard an ND packet that contains an option
-with length zero" [2].
-
-[1] https://tools.ietf.org/html/rfc4861#section-4.3
-[2] https://tools.ietf.org/html/rfc4861#section-4.6
-
-Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vxlan.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1521,6 +1521,10 @@ static struct sk_buff *vxlan_na_create(s
- 	daddr = eth_hdr(request)->h_source;
- 	ns_olen = request->len - skb_transport_offset(request) - sizeof(*ns);
- 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
-+		if (!ns->opt[i + 1]) {
-+			kfree_skb(reply);
-+			return NULL;
-+		}
- 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
- 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
- 			break;
+---
+ fs/fs-writeback.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -269,6 +269,7 @@ void __inode_attach_wb(struct inode *ino
+ 	if (unlikely(cmpxchg(&inode->i_wb, NULL, wb)))
+ 		wb_put(wb);
+ }
++EXPORT_SYMBOL_GPL(__inode_attach_wb);
+ 
+ /**
+  * locked_inode_to_wb_and_lock_list - determine a locked inode's wb and lock it
 
 
