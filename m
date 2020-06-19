@@ -2,113 +2,126 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50538C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D47C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283A920DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D586207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4hvC2zg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCnrqAUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733008AbgFSNuy (ORCPT
+        id S1731131AbgFSNxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
+        Fri, 19 Jun 2020 09:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732996AbgFSNuw (ORCPT
+        with ESMTP id S1725806AbgFSNx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:50:52 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94B0C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:50:51 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id p187so2305450vkf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:50:51 -0700 (PDT)
+        Fri, 19 Jun 2020 09:53:29 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EA0C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:53:27 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id g3so9248754ilq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cs9rHN+ukMIaMJlUYaI39CwkiITSRhR5qkZwx/24CtA=;
-        b=f4hvC2zgvY/9Xm1sUqc4FA7w5Er1wnYUj1EeTMHfYU9puCuHxVqQH7WrSj7k3ufm5t
-         cgagqX8+cUX2XNbdblQPQLhRScPrzxVRizVgSKIG3oAFX4UhuiWScrJd95vkJJ1MdpRm
-         yZS0c39FT1PVKug2z7NsJn+qqrwkC9RA+Tm6gYKsuqgpuFX2ahdGVRzcryYFBtdKKVgt
-         DQgMHPZmnq/ll189Oprw11+YkufOB9QBCal1Puh6e1wXZwI67wNJGgp/ucPEIAQheZRi
-         mW+/C2rpQItGCItdBjqZeKN1Oko5lbX7eQbUGMjPb8mxN9JRZWuXCuFXXWPkWBfStHXH
-         f3aw==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=N67LFZCCD5XjDCH+/cowa2h90QhFRw4fTnac82tg+S0=;
+        b=jCnrqAUmFuCAL+lYQKPmfG+RSpbVe341x6DhN50zY9zZg3WGROrar6WYLEo0xBMWiv
+         kZw8t2G7XryhOgFMeq4E6lQJqtX0I0BtGXjILiG+JkX1czJGH6BxXa8fVCKPU9ofhBsG
+         6cWP3f80gV6BsF9ZH8TxLT3jSB0BPVqrj7Njwm8bFE1km/FulpmZLF6AJfP9r4KdYGkm
+         VfCXjS75AZMEMjaNOAyUwwqf+ZzWb4BH9gFD1lb0lACV3VbpHVwYCAJfxNUALWmprVE7
+         ON7fiNBxFc20X+1plGRtMtS14QiGxbr697k/vxEd9Z5AM229caBhYuMMM/hyl8tREnOl
+         d18w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cs9rHN+ukMIaMJlUYaI39CwkiITSRhR5qkZwx/24CtA=;
-        b=PTBmaeOnYCQG3h42t+tZbIeZi1dA8c7Tq56TEhydwuk8t0xsfz+riF4/d1kTVoJvR+
-         MJIqHvQ08a6hM1uf2X4rTB62Y/ejfd6X+O5aRdCu34uG/6FoealMWm6/DOWAIi9ANSbo
-         5s0t/uWEQAmhYIHssa28io8ZJor3gX+OttvUAIVD6Y/KlGfvz/sEDY96SfTL2USQHWGl
-         AXdLXi7d+W7jqlf3ZJQ7aEb/aqevlKubWcTynRM60hHtHpMJx1A97NVnUtnlV6jrMA9D
-         SE9D+Ii8QPXaw1bXDfyX+SuUzf1uiv2LPq8sbyXq6J0DLWxIHPq7h58i6u5WHN5Kzoe8
-         qfLA==
-X-Gm-Message-State: AOAM533shpJLHdI0gFgWQFsCW/zSgKnVlOI2Zg2OlZdu4KX7BpghihlT
-        4LJ2SnEjpougeMlXt71oN5nAShxW6EDW7AOgVsE=
-X-Google-Smtp-Source: ABdhPJxA0hgv7n00F0TDM8wy+W7eiypFgaYlek8S5vuGB0Kw2yBYud72M+PLRngkDXz897D3kyMArML53zSLkC2Ky/o=
-X-Received: by 2002:ac5:ccf0:: with SMTP id k16mr7343756vkn.95.1592574650355;
- Fri, 19 Jun 2020 06:50:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=N67LFZCCD5XjDCH+/cowa2h90QhFRw4fTnac82tg+S0=;
+        b=LExFGtilsMOl8zj1M8m3v/DwFKYKAEDQhttMpEhtjriBnBjtg8+naRW6YGYMX1OaCd
+         cHPlqKlY7BYY1Yk15V2Eyi6ByhKy6TZgZ7XtqnJisPExUEbfJ1TLuLvtFcpa9dL5iUYw
+         jdDh6ysKtY+7kyjQrQE+m2h1AN3U9txlfq5eVz13Dc/vNWtJuRglaXtRTLgKRYSyqykN
+         N9dojVhJp6whcaVNjjVvpoU4BejFmSb4aJRT/vamMOKEv6glC6LD3gwLupLxrBEVo5rE
+         VXs6+fZXqhlGHV7L8Hz7+Zp9TXtHNKYa1AgmpIgVfuUwcrx0ufiPRtbfqxkzJTSIIDNC
+         ehuQ==
+X-Gm-Message-State: AOAM530FJxG9ILG+p55ZG4m/fVYW8fJJLCA1yniI7zQABbVJZh0xp8Kv
+        hk/ijPVxXQo3tyqTqYZcL5D+1IPYe60fSRQixaF+MQtq
+X-Google-Smtp-Source: ABdhPJz5wJm7PvbG7mK/lT7vcDxFPXQ2NBF92Fb0POy4J/ALxQT2SugkAt0pnwrZS5AYGsaxbMMTdL2Xt4CoyRG7U2k=
+X-Received: by 2002:a92:940f:: with SMTP id c15mr3891903ili.204.1592574805857;
+ Fri, 19 Jun 2020 06:53:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <20200618220139.GH27951@zn.tnic> <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
- <20200619074053.GA32683@zn.tnic> <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
- <20200619132243.GC32683@zn.tnic> <CAD2FfiEr0kRWp2ut_PVqVDEVZqwESUxv=fxM9wUgi3n=ZCzPcQ@mail.gmail.com>
- <20200619134432.GE32683@zn.tnic>
-In-Reply-To: <20200619134432.GE32683@zn.tnic>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 14:50:39 +0100
-Message-ID: <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200619125721.15946-1-sedat.dilek@gmail.com> <20200619132627.GD222848@elver.google.com>
+In-Reply-To: <20200619132627.GD222848@elver.google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 19 Jun 2020 15:53:14 +0200
+Message-ID: <CA+icZUU7tz3yPyB317yZR6ksMDT-4SbvF7kHnQ+GV-v+O5eKGQ@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Improve small stylistic detail in compiler-clang.h
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 14:44, Borislav Petkov <bp@alien8.de> wrote:
-> Yes, this is what I'm proposing with clearing the flag in /proc/cpuinfo.
-> The needed information is there:
-> 1. TME in CPUID
-> 2. TME *not* in /proc/cpuinfo
+On Fri, Jun 19, 2020 at 3:26 PM Marco Elver <elver@google.com> wrote:
+>
+> On Fri, Jun 19, 2020 at 02:57PM +0200, Sedat Dilek wrote:
+> > Commit 5cbaefe9743bf14c9d3106db0cc19f8cb0a3ca22
+> > ("kcsan: Improve various small stylistic details")
+> >
+> > ...forgot to improve a stylistic detail that was already done at
+> > another place in compiler-clang.h file.
+> >
+> > Fixes: 5cbaefe9743b ("kcsan: Improve various small stylistic details")
+> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > ---
+> >  include/linux/compiler-clang.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> > index ee37256ec8bd..c47141b185fe 100644
+> > --- a/include/linux/compiler-clang.h
+> > +++ b/include/linux/compiler-clang.h
+> > @@ -25,7 +25,7 @@
+> >  #endif
+> >
+> >  #if __has_feature(thread_sanitizer)
+> > -/* emulate gcc's __SANITIZE_THREAD__ flag */
+> > +/* Emulate GCC's __SANITIZE_THREAD__ flag */
+>
+> Yeah, it's inconsistent, but if you look at the rest of the file, none
+> of it looks particularly pretty.
+>
+> This change isn't really affecting KCSAN, but is a stylistic change
+> confined to compiler-clang.h: while we're here, we could just bunch a
+> couple of them into one patch and make it "compiler-clang.h: Improve
+> comments style" or something.
+>
+> 1. These sentences probably want a '.' at the end.
+>
+> 2. Make all comments start with a capital letter, and punctuate
+>    correctly.
+>
+> 3. Multi-line comments should have the first line just '/*' and the
+>    second line starts the text.
+>
 
-No, it's not a boolean at all. If the platform disable is a BIOS
-configuration we don't know if TME isn't available because the CPU
-doesn't support it or because the firmware has disabled it. In the
-latter case, a firmware update or firmware configuration change might
-actually enable it. If the user installs a CPU with TME support and
-then we tell the user "your system doesn't support TME" then we're
-going to have some very confused users unless we can differentiate the
-two cases.
+More improvements :-).
 
-> Along with proper ABI definition, design,
-> documentation and all that belongs to a proper interface with userspace.
+I just fell over this one when looking through KCSAN commits in Linux v5.8-rc1+.
 
-I don't think Daniels patch was a "final version" and I'm sure
-follow-ups can add this kind of thing. At the moment it's just people
-telling him "you don't need this" when as a potential consumer I'm
-saying we really do.
-
-Richard.
+- Sedat -
