@@ -2,52 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF64C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D7021707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4C42168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583174;
-	bh=3xz76eFH3Rk6ECGnzWsr2A5OJGdDAjvgNxRKMAjuu2c=;
+	s=default; t=1592583176;
+	bh=seEWA6TD6thz/bf8AymmfY2DgRiKDddkUcwLl6ycTeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1x9eT0SV79937bXrC509ycGi1HtXEB+a1ABCdJbWa1o/gvkt+Mo/YLN1WeOd4D8b+
-	 m0nA+tPqWRrUgA+lHeUNNdtjBtvZThMP5QLHRms97nAtIu0S/8amAagLjhF/mcz1ou
-	 XAYs22PRPlKQ2hAtHOKCWejEHku25pro9lhufOx8=
+	b=NL127gZAd9QDiyObeqKu5OVDSq2HY97HBueUjnAJgt19Fl5PLjTJTvYm6FzIVIzhH
+	 egqjk0sBKpyVsp7DkTsvcz/YpiW0D/KFTpZ12R7AfCptxeImO5+Cb9kxQT2Xwm0rg1
+	 Z6IUYUohTOXdIjdgtbfbG0zwaJw4FyhswKWkFrEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391132AbgFSPE0 (ORCPT
+        id S2389372AbgFSPET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391123AbgFSPEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:21 -0400
+        id S2390621AbgFSPEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1946E2193E;
-        Fri, 19 Jun 2020 15:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4373121D7D;
+        Fri, 19 Jun 2020 15:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579060;
-        bh=3xz76eFH3Rk6ECGnzWsr2A5OJGdDAjvgNxRKMAjuu2c=;
+        s=default; t=1592579046;
+        bh=seEWA6TD6thz/bf8AymmfY2DgRiKDddkUcwLl6ycTeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtaQF16x8x8TtoNmajBAQsFBQcyz452I8zaezPy2IajXIEuV41jKUuqBPXnhugJ3A
-         On8LKmq93MgBiXxvV5HUMEsaw28tCN33h3q0E+YpsAnmq/vq/C6qbPf7qQr9wPrHgd
-         mFBLffGq6n9Y40gsEzihQ1NEhHYsHA7sYxWgbn/Y=
+        b=LIzintNEKSt0sq+v/WBbFM/+UTEJlXy9Cmz6oBsi8DvIzzfzTq8ZrFLb1yW2KpcHe
+         i897lWHzZLD3NJScqU/eCK5QxaqSnqv7Osp+BFQ1+peelQyY6gcdxJLjAsC8NMsFXY
+         0TI11hQ/nFh77b8cW/j1BlPO9BavOpLBFFgxqWKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 261/267] mtd: rawnand: brcmnand: fix hamming oob layout
-Date:   Fri, 19 Jun 2020 16:34:06 +0200
-Message-Id: <20200619141701.183626966@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 225/267] PCI: Make ACS quirk implementations more uniform
+Date:   Fri, 19 Jun 2020 16:33:30 +0200
+Message-Id: <20200619141659.498894885@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,43 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Álvaro Fernández Rojas <noltari@gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-commit 130bbde4809b011faf64f99dddc14b4b01f440c3 upstream.
+[ Upstream commit c8de8ed2dcaac82e5d76d467dc0b02e0ee79809b ]
 
-First 2 bytes are used in large-page nand.
+The ACS quirks differ in needless ways, which makes them look more
+different than they really are.
 
-Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200512075733.745374-2-noltari@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reorder the ACS flags in order of definitions in the spec:
 
+  PCI_ACS_SV   Source Validation
+  PCI_ACS_TB   Translation Blocking
+  PCI_ACS_RR   P2P Request Redirect
+  PCI_ACS_CR   P2P Completion Redirect
+  PCI_ACS_UF   Upstream Forwarding
+  PCI_ACS_EC   P2P Egress Control
+  PCI_ACS_DT   Direct Translated P2P
+
+(PCIe r5.0, sec 7.7.8.2) and use similar code structure in all.  No
+functional change intended.
+
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/quirks.c | 41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -911,11 +911,14 @@ static int brcmnand_hamming_ooblayout_fr
- 		if (!section) {
- 			/*
- 			 * Small-page NAND use byte 6 for BBI while large-page
--			 * NAND use byte 0.
-+			 * NAND use bytes 0 and 1.
- 			 */
--			if (cfg->page_size > 512)
--				oobregion->offset++;
--			oobregion->length--;
-+			if (cfg->page_size > 512) {
-+				oobregion->offset += 2;
-+				oobregion->length -= 2;
-+			} else {
-+				oobregion->length--;
-+			}
- 		}
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 502dca568d6c..ae62c0b058dd 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4333,18 +4333,18 @@ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
  
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+ {
++	if (!pci_quirk_cavium_acs_match(dev))
++		return -ENOTTY;
++
+ 	/*
+-	 * Cavium root ports don't advertise an ACS capability.  However,
++	 * Cavium Root Ports don't advertise an ACS capability.  However,
+ 	 * the RTL internally implements similar protection as if ACS had
+-	 * Request Redirection, Completion Redirection, Source Validation,
++	 * Source Validation, Request Redirection, Completion Redirection,
+ 	 * and Upstream Forwarding features enabled.  Assert that the
+ 	 * hardware implements and enables equivalent ACS functionality for
+ 	 * these flags.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
+-
+-	if (!pci_quirk_cavium_acs_match(dev))
+-		return -ENOTTY;
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+ 	return acs_flags ? 0 : 1;
+ }
+@@ -4362,7 +4362,7 @@ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
+ }
+ 
+ /*
+- * Many Intel PCH root ports do provide ACS-like features to disable peer
++ * Many Intel PCH Root Ports do provide ACS-like features to disable peer
+  * transactions and validate bus numbers in requests, but do not provide an
+  * actual PCIe ACS capability.  This is the list of device IDs known to fall
+  * into that category as provided by Intel in Red Hat bugzilla 1037684.
+@@ -4410,37 +4410,34 @@ static bool pci_quirk_intel_pch_acs_match(struct pci_dev *dev)
+ 	return false;
+ }
+ 
+-#define INTEL_PCH_ACS_FLAGS (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV)
++#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
+ 
+ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	u16 flags = dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK ?
+-		    INTEL_PCH_ACS_FLAGS : 0;
+-
+ 	if (!pci_quirk_intel_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+-	return acs_flags & ~flags ? 0 : 1;
++	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
++		acs_flags &= ~(INTEL_PCH_ACS_FLAGS);
++
++	return acs_flags ? 0 : 1;
+ }
+ 
+ /*
+- * These QCOM root ports do provide ACS-like features to disable peer
++ * These QCOM Root Ports do provide ACS-like features to disable peer
+  * transactions and validate bus numbers in requests, but do not provide an
+  * actual PCIe ACS capability.  Hardware supports source validation but it
+  * will report the issue as Completer Abort instead of ACS Violation.
+- * Hardware doesn't support peer-to-peer and each root port is a root
+- * complex with unique segment numbers.  It is not possible for one root
+- * port to pass traffic to another root port.  All PCIe transactions are
+- * terminated inside the root port.
++ * Hardware doesn't support peer-to-peer and each Root Port is a Root
++ * Complex with unique segment numbers.  It is not possible for one Root
++ * Port to pass traffic to another Root Port.  All PCIe transactions are
++ * terminated inside the Root Port.
+  */
+ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+-	int ret = acs_flags & ~flags ? 0 : 1;
+-
+-	pci_info(dev, "Using QCOM ACS Quirk (%d)\n", ret);
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+-	return ret;
++	return acs_flags ? 0 : 1;
+ }
+ 
+ /*
+-- 
+2.25.1
+
 
 
