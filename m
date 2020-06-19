@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97080C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B348721527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625D221527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592599662;
-	bh=ezmY6GG7N7R5TA87zG71AETUtzEOHo2C5MHAftMq7+Q=;
+	s=default; t=1592599667;
+	bh=JIvSaQCuTivG77Ol+r11lGBAkb1PDMgs80TnxNHRlsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxZhFSIBVIxKqEIobUEqoY6QFqoQ8HDmRyE6qkDe8b/F7YVz0zLo2FkyEYB13Hknt
-	 kwFBHi5Uk+a5bzi9fcShXW56320z0kvejmTkOhkAEPafAYfbKdHS5wIbgJYYP2eSx5
-	 FtFYMu1EmtRm48/3ZEB9emekn1fleCpnufxgxo9o=
+	b=0rmAh1BIo6NC44G9zPBu9yPDQiD5WsXgWp42MCa6lMOv4h4jEJ6cl3ykkdfaVYEfb
+	 a4Pj0c9LKtV/lc08tQgIqV8TnhNBodL/zWLRwLT8bY3JYam7dqDRDJgc/x2mYcJpKX
+	 Y6/a3Q3Nnk31k82eTYb0XYWjCUoQiVcdExOpfYl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391013AbgFSUrk (ORCPT
+        id S2391170AbgFSUrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:47:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34728 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390467AbgFSUrf (ORCPT
+        Fri, 19 Jun 2020 16:47:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39886 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390831AbgFSUri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:47:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v14so4995438pgl.1;
-        Fri, 19 Jun 2020 13:47:35 -0700 (PDT)
+        Fri, 19 Jun 2020 16:47:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d66so4927060pfd.6;
+        Fri, 19 Jun 2020 13:47:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZlpRC/Mpz8aVWhkWOBV4KQndGPE3w8KEQwXgj5xVC8o=;
-        b=XT6D8W6pqVvesiZxqE2XkjaJbUJvhUSR5bL4gLRW/8wuxUcCVLK9/hzJsvkk85hMJw
-         DY2Ei+Yp5ne19uG4eWUvIlrQZiwDWo7pLdha/6A78NKLJ+RfXjz38G5rGao5htcEe5gz
-         kLmiu+37NdDH5Sr9THVC1t51XIs9+1hV2zQ9eYXCyJ+HtnvnmoPWyNaU3v/COnBCZj9u
-         +fX7cdY+gxlohFCVT75beacYUt77slhDqtLQHs2ooJGz+9MBx4kcISH2IoYA5mtwyXvt
-         O1SD8vA6OTOds1wkpc4+QfgI8sVgEOKZ5yrYVznh3yNViIBtrX0ppskjjcloZvp+oZyh
-         SVwQ==
-X-Gm-Message-State: AOAM5306gm1SxP/WO2PBX2BcITyHGiyC4HeL+/Q0HY+RId+YyQxm9Uw8
-        m1JqZEAeCy0dGtE5SWDLCb4=
-X-Google-Smtp-Source: ABdhPJyEOMPI7dRp2zsaFrfUBNU9hX4Hv01VXR4E79Tt8FRLBZbwnTJwnov/PttgARJDYchOL+CQpw==
-X-Received: by 2002:aa7:952a:: with SMTP id c10mr10162941pfp.252.1592599655068;
-        Fri, 19 Jun 2020 13:47:35 -0700 (PDT)
+        bh=jH2CPsvsaNzRGDf+QoUv0Reklj4c8N9GM5jBSfoalww=;
+        b=EtMRTWjSA/XS/Sj0DF7zU5HchaXyxTbxxShmaD0xKI2F5Bwav1WbC/6+ykbZDAZpY5
+         3F8TGjiOgxE6YEqxXA6Gpr+w+yeHcORkGlc1hW7eujvW2NK8ndMTJVkv67VtyFG8U722
+         I5wU4dpAaMivjvD1RvZhRakdQL6zubdLzvz6oypQXckaKdx3y4WFFEedMXd9I+KbJlFw
+         96GWjcugF+szq5tzOCxckol7oXOn0EmBmRh47+iUzDDbaM8U0bzGHkZxAwbfIH9Gp9QX
+         OHLWXqnSqI5mVkDitD6GD7YIE+ckxFqt1Sr0H/7DeJDAlggMnx+A4NgXC8JQ1JWru15i
+         GVOw==
+X-Gm-Message-State: AOAM533EQ6oTZ6pqrWTvRuLZOguJQ71BtPhnXki9vIzFyliKVoQnhad5
+        GUU45iVGXAP2OU8xfDE2nrg=
+X-Google-Smtp-Source: ABdhPJw+rxutY1uGOaVhJTaFSz863dhub5gLBJTRgN2o19CWJtfQJo8NFso3QjofJ3IY9132mgZ6aQ==
+X-Received: by 2002:aa7:981d:: with SMTP id e29mr727732pfl.298.1592599657521;
+        Fri, 19 Jun 2020 13:47:37 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v7sm6569138pfn.147.2020.06.19.13.47.32
+        by smtp.gmail.com with ESMTPSA id u14sm7353047pfk.211.2020.06.19.13.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 13:47:32 -0700 (PDT)
+        Fri, 19 Jun 2020 13:47:33 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4556A41C23; Fri, 19 Jun 2020 20:47:32 +0000 (UTC)
+        id 657E241DAA; Fri, 19 Jun 2020 20:47:32 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -60,11 +60,10 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
 Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
         jejb@linux.ibm.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v7 2/8] block: clarify context for refcount increment helpers
-Date:   Fri, 19 Jun 2020 20:47:24 +0000
-Message-Id: <20200619204730.26124-3-mcgrof@kernel.org>
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v7 4/8] blktrace: annotate required lock on do_blk_trace_setup()
+Date:   Fri, 19 Jun 2020 20:47:26 +0000
+Message-Id: <20200619204730.26124-5-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200619204730.26124-1-mcgrof@kernel.org>
 References: <20200619204730.26124-1-mcgrof@kernel.org>
@@ -75,63 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let us clarify the context under which the helpers to increment the
-refcount for the gendisk and request_queue can be called under. We
-make this explicit on the places where we may sleep with might_sleep().
+Ensure it is clear which lock is required on do_blk_trace_setup().
 
-We don't address the decrement context yet, as that needs some extra
-work and fixes, but will be addressed in the next patch.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Suggested-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- block/blk-core.c | 2 ++
- block/genhd.c    | 6 ++++++
- 2 files changed, 8 insertions(+)
+ kernel/trace/blktrace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a0760aac110a..14c09daf55f3 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -610,6 +610,8 @@ EXPORT_SYMBOL(blk_alloc_queue);
-  * @q: the request_queue structure to increment the refcount for
-  *
-  * Increment the refcount of the request_queue kobject.
-+ *
-+ * Context: Any context.
-  */
- bool blk_get_queue(struct request_queue *q)
- {
-diff --git a/block/genhd.c b/block/genhd.c
-index f741613d731f..1be86b1f43ec 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -985,11 +985,15 @@ static ssize_t disk_badblocks_store(struct device *dev,
-  *
-  * This function gets the structure containing partitioning
-  * information for the given device @devt.
-+ *
-+ * Context: can sleep
-  */
- struct gendisk *get_gendisk(dev_t devt, int *partno)
- {
- 	struct gendisk *disk = NULL;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 7f60029bdaff..7ff2ea5cd05e 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -483,6 +483,8 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	struct dentry *dir = NULL;
+ 	int ret;
  
-+	might_sleep();
++	lockdep_assert_held(&q->blk_trace_mutex);
 +
- 	if (MAJOR(devt) != BLOCK_EXT_MAJOR) {
- 		struct kobject *kobj;
+ 	if (!buts->buf_size || !buts->buf_nr)
+ 		return -EINVAL;
  
-@@ -1764,6 +1768,8 @@ EXPORT_SYMBOL(__alloc_disk_node);
-  *
-  * This increments the refcount for the struct gendisk, and the gendisk's
-  * fops module owner.
-+ *
-+ * Context: Any context.
-  */
- struct kobject *get_disk_and_module(struct gendisk *disk)
- {
 -- 
 2.26.2
 
