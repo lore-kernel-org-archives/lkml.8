@@ -2,165 +2,138 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A40C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC6DD208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1A9208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZ115KcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgFSOXs (ORCPT
+        id S1733109AbgFSOYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:23:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41683 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgFSOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:23:48 -0400
-IronPort-SDR: aUJ3UyTnM8OxtkzcYY8m7AJRbbhadiUMKW9bqPRd7CeINZIcsmb6fTwpxU+KW60KKL25anfxsr
- B8yEZzrivD3g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="122696401"
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="122696401"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:23:47 -0700
-IronPort-SDR: H0rYWEjT24DQvdqrKYWhuzCivThL9qI+9nAubMYJPpC6533NsPkdILM9zGUTYd56cvII5IOjv9
- aw55v61mdARg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="278011719"
-Received: from mcrum-mobl1.amr.corp.intel.com (HELO [10.255.0.127]) ([10.255.0.127])
-  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 07:23:41 -0700
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Richard Hughes <hughsient@gmail.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
- <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
- <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
- <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
- <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
- <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
- <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com>
-Date:   Fri, 19 Jun 2020 07:23:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 10:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733024AbgFSOYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:24:10 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D684C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:24:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g12so3977123pll.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RY8kpVpM7lodY11RSLTnplr/cinEHPu5K7Smg6Q1P2A=;
+        b=bZ115KcWZXs7c4ahUvcb/xbiijlWUHIg/Q6K/9JF6JH2bIF5nB3FELlzmsmvv+YMEN
+         PyDgEY8NOeieSjyTd2BoFpdWV4pVcUZP06Dpqi5+3PxqsZbppXklk8KS4iDya1ykEtzK
+         lZOaRsr2ewTan+s1FzuZqfon33qyjfwlqXn4JDqXHBhBdD9Ifxr1/igYrgNq+End9KvI
+         K1Q0UrJJT0Kc0eY/VBeUlDDF+kVskjcI5feUmzCdn4c1vlrXnFL4TGqV2I4SJocp3dN5
+         lVBwDlpzGd2YLttjB7Q6ffasK4uyTYt7kdYKFpAE78muLB08JbSBZClrmAJoVKSFCOs6
+         4MEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RY8kpVpM7lodY11RSLTnplr/cinEHPu5K7Smg6Q1P2A=;
+        b=Yr7R2I7WRloo96mVBEdD6EzQEBMBJxvVz9w4N+yAPDz8Cgz7VuptOYflChd3apgePu
+         DmkAJi0LzRepFi+01i3mliT7pKLVBmYW4gnqMqBwQMfEm/OiRhlR/1YWCIYSAFPsBFSa
+         eTQFH9qmLX3kJDbABP4QosiVhibe6ZxV3I+/LK1M5vv9qUOrOS9rD8m/F4Rq8PyJlJ4P
+         l+xkOi2dSJUcew5RxqfQb0eTK/6p9lziCtrbPSS9dVDPpy7C/ysXwZTDFvhtwsn2S4dM
+         kTF+GS1dbqtNWswSFVaWvdb4+7A6mUmSmWEy+ZHqKZoUm6iWKyoZ2cP2lVC1IjNSUpLs
+         tg8A==
+X-Gm-Message-State: AOAM5329MnGX/o+WcsEI8RVGyyyVgbuCXlD24XcCv/tm1+/MxUOjeNNN
+        Iotr9QV6N9/70RN6tFpcb4SQWau1k0AzgZBxyS5gPQ==
+X-Google-Smtp-Source: ABdhPJyzkpKpXORnlDfu3HOs2bnsAu2O3ITik2hKPTV4r3qLFoVmfVixc+sjZhhgMJViipGH33mYgymarZBTBL8VVx0=
+X-Received: by 2002:a17:90a:c283:: with SMTP id f3mr3599488pjt.166.1592576649034;
+ Fri, 19 Jun 2020 07:24:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <0000000000005166b905a845e639@google.com> <CAAeHK+zVVHK-XxFCTkRVB8WooDgCRbFRZqR7J8uPCNC0nu9fVQ@mail.gmail.com>
+In-Reply-To: <CAAeHK+zVVHK-XxFCTkRVB8WooDgCRbFRZqR7J8uPCNC0nu9fVQ@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 19 Jun 2020 16:23:57 +0200
+Message-ID: <CAAeHK+xZrVVzmHov1hEr+=qPXXKXUFbQxE9U9LAD+qdRAYb4cw@mail.gmail.com>
+Subject: Re: WARNING in corrupted/usb_submit_urb
+To:     syzbot <syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ingrassia@epigenesys.com, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 7:09 AM, Richard Hughes wrote:
-> On Fri, 19 Jun 2020 at 14:58, Dave Hansen <dave.hansen@intel.com> wrote:
->>> Right, but for the most part you'd agree that a machine with
->>> functioning TME and encrypted swap partition is more secure than a
->>> machine without TME?
->>
->> Nope.  There might be zero memory connected to the memory controller
->> that supports TME.
-> 
-> So you're saying that a machine with TME available and enabled is not
-> considered more secure than a machine without TME?
+On Wed, Jun 17, 2020 at 2:58 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Wed, Jun 17, 2020 at 1:24 PM syzbot
+> <syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=140052c3e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=120d387f677320f6a57c
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16195fd9e00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1610f2c3e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com
+> >
+> > ati_remote 1-1:0.0: Unknown Medion X10 receiver, using default ati_remote Medion keymap
+> > ------------[ cut here ]------------
+> > usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+> > WARNING: CPU: 1 PID: 81 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 81 Comm: kworker/1:1 Not tainted 5.6.0-rc3-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0xef/0x16e lib/dump_stack.c:118
+> >  panic+0x2aa/0x6e1 kernel/panic.c:221
+> >  __warn.cold+0x2f/0x30 kernel/panic.c:582
+> >  report_bug+0x27b/0x2f0 lib/bug.c:195
+> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+> >  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+> >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> > RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+> > Code: 4d 85 ed 74 46 e8 18 ce dd fd 4c 89 f7 e8 d0 5c 17 ff 41 89 d8 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7 e0 e7 3b 86 e8 a0 5f b2 fd <0f> 0b e9 20 f4 ff ff e8 ec cd dd fd 0f 1f 44 00 00 e8 e2 cd dd fd
+> > RSP: 0018:ffff8881d8a0f0b8 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000005166b905a845e639%40google.com.
+>
+> Corrupted report, will be fixed by https://github.com/google/syzkaller/pull/1839
 
-Yes, it is not necessarily more secure.
-
-> What I want to do is have a sliding scale of TME not available < TME
-> available but disabled < TME available and enabled < TME available,
-> enabled and being used. The extra nugget of data gets me from state 2
-> to state 3.
-
-I'd assert that availability tells you nothing if you don't pair it with
-use.
-
-Last night, I asked my kids if they brushed their teeth.  They said:
-"Dad, my toothbrush was available."  They argued that mere availability
-was a better situation than not *having* a toothbrush.  They were
-logically right, of course, but they still got cavities.
-
->>> Can I use TME if the CPU supports it, but the platform has disabled
->>> it? How do I know that my system is actually *using* the benefits the
->>> TME feature provides?
->>
->> You must have a system with UEFI 2.8, ensure TME is enabled, then make
->> sure the OS parses EFI_MEMORY_CPU_CRYPTO, then ensure you request that
->> you data be placed in a region marked with EFI_MEMORY_CPU_CRYPTO, and
->> that it be *kept* there (hint: NUMA APIs don't do this).
-> 
-> So my take-away from that is that it's currently impossible to
-> actually say if your system is *actually* using TME.
-
-Not in a generic way, and it can't be derived from cpuid or MSRs alone.
-
-Let's say I'm buying a fleet of servers.  I know I'm buying some fancy
-Xeon with TME, I know I'm only using DRAM for storing user data, and I
-don't have any accelerators around.  I control and enforce my BIOS
-settings.  I'm pretty sure I'm using TME, but I didn't become sure from
-poking at sysfs.
+#syz invalid
