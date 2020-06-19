@@ -2,120 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637DF21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1BTs/NP"
+	by mail.kernel.org (Postfix) with ESMTP id 0D7492168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583701;
+	bh=Sm4YAHp4XHC6EZVqJn8u3pcBxKj++XEdR2o40i8kAAo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z1gC5cxhoIHnpl2Y+pDl6ybmnhiNHCi2ZX0I0K1S9cXdr+hUDM+JKLAabSgAUvBbL
+	 E71rYCPpusA1gMGdE2wy/DVBaBPSaAGbeoIRXivD4X38G5CviHOlxQ6O8bTlTp5HPH
+	 OY/G856LzlVhZiMy80Aw6+N2h3s908J9+bU2U8h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394693AbgFSQVg (ORCPT
+        id S2405656AbgFSQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:21:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28824 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390661AbgFSPAu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592578846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZKQQ3TSN3kM3Cb8dTgCKmUaoa0Mo3XfrlHvCQ5ywFhw=;
-        b=f1BTs/NPzetpirbEi3J7FSXEXl0YMZQxalxi79y8DuBQA6iaQ6euChvam0dEHSj0Q5wJZG
-        Wt/dJqFNFsVL/iERWBIN8siBcNJpiWL+rRGbvVuJQxoqJe5Ii174ZWEVsZXNj31YDwrqVY
-        NoXXWKkEaiPCoK2Rxs6Iu9/wurtU9zY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-tYa_nW_TODO6rlo-ACXqqw-1; Fri, 19 Jun 2020 11:00:43 -0400
-X-MC-Unique: tYa_nW_TODO6rlo-ACXqqw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 19 Jun 2020 12:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389916AbgFSPAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A757F107ACF4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7843F20776;
         Fri, 19 Jun 2020 15:00:42 +0000 (UTC)
-Received: from gimli.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63A695C1D0;
-        Fri, 19 Jun 2020 15:00:39 +0000 (UTC)
-Subject: [PATCH v2] vfio: Cleanup allowed driver naming
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        cohuck@redhat.com
-Date:   Fri, 19 Jun 2020 09:00:39 -0600
-Message-ID: <159257872055.20595.16949396190256140801.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578843;
+        bh=Sm4YAHp4XHC6EZVqJn8u3pcBxKj++XEdR2o40i8kAAo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rGbEibRfXroAXQho9l/quOtYpLHPcKNefQjxXtoRmYodwB7OjzWZG+1RD/mPXYs07
+         CP64nhNw1WicXyCNe4l0kvI+Gqscf77RUQ8Cg8+j/NEfv4ZKuh0FSr2lHgZp4PvLf7
+         +P+9jtTmyGZLorEmFZNPk9J9ImVzGhJKXDJzWkBM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 177/267] mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
+Date:   Fri, 19 Jun 2020 16:32:42 +0200
+Message-Id: <20200619141657.281096252@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change, avoid non-inclusive naming schemes.
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[ Upstream commit d863cb03fb2aac07f017b2a1d923cdbc35021280 ]
+
+sdhci-msm can support auto cmd12.
+So enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk.
+
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/1587363626-20413-3-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/mmc/host/sdhci-msm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v2: Wrap vfio_dev_driver_allowed to 80 column for consistency,
-    checkpatch no longer warns about this.
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 4cff758767cb..643fd1a1b88b 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1706,7 +1706,9 @@ static const struct sdhci_ops sdhci_msm_ops = {
+ static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+ 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
+ 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
+-		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
++		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
++		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
++
+ 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+ 	.ops = &sdhci_msm_ops,
+ };
+-- 
+2.25.1
 
- drivers/vfio/vfio.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index 580099afeaff..262ab0efd06c 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -627,9 +627,10 @@ static struct vfio_device *vfio_group_get_device(struct vfio_group *group,
-  * that error notification via MSI can be affected for platforms that handle
-  * MSI within the same IOVA space as DMA.
-  */
--static const char * const vfio_driver_whitelist[] = { "pci-stub" };
-+static const char * const vfio_driver_allowed[] = { "pci-stub" };
- 
--static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
-+static bool vfio_dev_driver_allowed(struct device *dev,
-+				    struct device_driver *drv)
- {
- 	if (dev_is_pci(dev)) {
- 		struct pci_dev *pdev = to_pci_dev(dev);
-@@ -638,8 +639,8 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
- 			return true;
- 	}
- 
--	return match_string(vfio_driver_whitelist,
--			    ARRAY_SIZE(vfio_driver_whitelist),
-+	return match_string(vfio_driver_allowed,
-+			    ARRAY_SIZE(vfio_driver_allowed),
- 			    drv->name) >= 0;
- }
- 
-@@ -648,7 +649,7 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
-  * one of the following states:
-  *  - driver-less
-  *  - bound to a vfio driver
-- *  - bound to a whitelisted driver
-+ *  - bound to an otherwise allowed driver
-  *  - a PCI interconnect device
-  *
-  * We use two methods to determine whether a device is bound to a vfio
-@@ -674,7 +675,7 @@ static int vfio_dev_viable(struct device *dev, void *data)
- 	}
- 	mutex_unlock(&group->unbound_lock);
- 
--	if (!ret || !drv || vfio_dev_whitelisted(dev, drv))
-+	if (!ret || !drv || vfio_dev_driver_allowed(dev, drv))
- 		return 0;
- 
- 	device = vfio_group_get_device(group, dev);
 
