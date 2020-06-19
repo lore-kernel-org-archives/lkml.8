@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B3DC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B2AC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72BAC21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB0321D90
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579945;
-	bh=vxJxC9yvGvWy3BLrCCZpHsuyMgC36pPN9F4rCuq7UuU=;
+	s=default; t=1592579946;
+	bh=ekLNBpf31GOaE6htK8WXnUBTXk1rra0US7N5JT8qH1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNalKQB5vVaq8+6ktyNBupubOmHW28+kujCRe7JXQMxDryyc5fulq3LmnBMvV1A8r
-	 2CgsCq+YTu8u8SJXHuZuiHFXMIuoI9Ixv02z44TprYdwPaoKNJCGypir0NFXsfjAaD
-	 7hUUhDbtPGmb5Sx3PrfDG1JVgo2+UwQyJYaVX5PE=
+	b=zb1U42AsZsYk9d9H7ODSiD6ugKGsMLcxOUw4Ls2mz9S34OJf1BpDiTs1qOniTm+I0
+	 hvJkNKDR9epqSK98Sx200AiiuD9aeHi+l6Uc2n9MwVulkIHtzA9d+LV26L0VEiJ0G4
+	 v78EjCSlk/q+2xX9S2wAPyWeZ0WyprTeNHt2yEng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392348AbgFSPRk (ORCPT
+        id S2404152AbgFSPRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404185AbgFSPRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:25 -0400
+        id S2404132AbgFSPRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2B22158C;
-        Fri, 19 Jun 2020 15:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD4F2158C;
+        Fri, 19 Jun 2020 15:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579844;
-        bh=vxJxC9yvGvWy3BLrCCZpHsuyMgC36pPN9F4rCuq7UuU=;
+        s=default; t=1592579828;
+        bh=ekLNBpf31GOaE6htK8WXnUBTXk1rra0US7N5JT8qH1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAIKfajrGsQPjWowaJuLsLUjj2S3tvdgec1uqb/FHM+5zroKbQ4qk98YjDIrR37lX
-         pVABiF5NpKn/ZQzcXrMjN8PXqsVouhW4PsWUosUbQPgY/J7G35DMvPVjmyucnQpDZC
-         h5/ITQYublpFI60ZIR69mkdB3220fY0pT7sGJML4=
+        b=vfqjr4xpyqg2d3LoUriaBMULknDNfuRzVU9cmvqo8qz13UVf5vzASy+mIXm6LfYJD
+         CpUjObWzLiD7YPxtMZc/eaCCid/O5vwlgXR5zhsfdsu+QPzp2MDrv/kQbT7p5fPA6w
+         pdBBBAtzXmVzwgvcTStOIOLUgGI2aS2D0SavhiI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 026/376] net: atlantic: make hw_get_regs optional
-Date:   Fri, 19 Jun 2020 16:29:04 +0200
-Message-Id: <20200619141711.599901744@linuxfoundation.org>
+Subject: [PATCH 5.7 009/376] scripts: sphinx-pre-install: address some issues with Gentoo
+Date:   Fri, 19 Jun 2020 16:28:47 +0200
+Message-Id: <20200619141710.804730523@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,42 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Starovoytov <mstarovoitov@marvell.com>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-[ Upstream commit d0f23741c202c685447050713907f3be39a985ee ]
+[ Upstream commit e45a631742fadd7c9feb5a0049382102e5d43fe7 ]
 
-This patch fixes potential crash in case if hw_get_regs is NULL.
+There are some small misdetections with Gentoo. While they
+don't cause too much trouble, it keeps recomending to
+install things that are already there.
 
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/r/7f631edce102b02ccbdbfb18be1376a86b41373d.1586883286.git.mchehab+huawei@kernel.org
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ scripts/sphinx-pre-install | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index a369705a786a..e5391e0b84f8 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -764,6 +764,9 @@ int aq_nic_get_regs(struct aq_nic_s *self, struct ethtool_regs *regs, void *p)
- 	u32 *regs_buff = p;
- 	int err = 0;
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index fa3fb05cd54b..09b38ee38ce8 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -557,7 +557,8 @@ sub give_gentoo_hints()
+ 			   "media-fonts/dejavu", 2) if ($pdf);
  
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return -EOPNOTSUPP;
-+
- 	regs->version = 1;
+ 	if ($pdf) {
+-		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf"],
++		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
++				    "/usr/share/fonts/noto-cjk/NotoSerifCJK-Regular.ttc"],
+ 				   "media-fonts/noto-cjk", 2);
+ 	}
  
- 	err = self->aq_hw_ops->hw_get_regs(self->aq_hw,
-@@ -778,6 +781,9 @@ err_exit:
+@@ -572,10 +573,10 @@ sub give_gentoo_hints()
+ 	my $portage_imagemagick = "/etc/portage/package.use/imagemagick";
+ 	my $portage_cairo = "/etc/portage/package.use/graphviz";
  
- int aq_nic_get_regs_count(struct aq_nic_s *self)
- {
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return 0;
-+
- 	return self->aq_nic_cfg.aq_hw_caps->mac_regs_count;
- }
+-	if (qx(cat $portage_imagemagick) ne "$imagemagick\n") {
++	if (qx(grep imagemagick $portage_imagemagick 2>/dev/null) eq "") {
+ 		printf("\tsudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'\n")
+ 	}
+-	if (qx(cat $portage_cairo) ne  "$cairo\n") {
++	if (qx(grep graphviz $portage_cairo 2>/dev/null) eq  "") {
+ 		printf("\tsudo su -c 'echo \"$cairo\" > $portage_cairo'\n");
+ 	}
  
 -- 
 2.25.1
