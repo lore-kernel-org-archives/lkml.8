@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24241C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC64321D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9222193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579052;
-	bh=cZPf0UtNWH0uESVxUsiQsfii7dgWe+ZEcCUAOQqq2TY=;
+	s=default; t=1592579063;
+	bh=dtp5uvGLbHw4Xfc/4V3mo3lxqduEex7T+w3FHSLK934=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yb6eTrMTd1wgQc2nVrDbeb8sXLC5599E/r+kwjpeUjhsne8r38aoBEN/r7sOthP6k
-	 3gm9KwIMnIgdqOecEVJ8dtE6RFbdcPnpsx9H/RrRxRpsQOJsn/8gV6R+uYXd4WPxf2
-	 iBD9fDyXOcK0e/CYtXI8oyo6B156sjciuMgTTKWw=
+	b=YXiMC5EnknxcHk1w7QjuT0BVmxAYR7piYmEnFqmbobh8B2T90UX6gjPqXIOzCZuit
+	 g/y71pNPmunwWNAmCmRFpmKd5ZyYwgLff9/74BOd+stb6qGk0JP+9Zr7K8yA/xaFnH
+	 Dui1h5a/Gz+AielUAqeFPCmX0ujPnu/LKOHTNlwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391109AbgFSPEL (ORCPT
+        id S2391124AbgFSPEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391075AbgFSPEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:04 -0400
+        id S2391105AbgFSPEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD5621BE5;
-        Fri, 19 Jun 2020 15:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9AC21BE5;
+        Fri, 19 Jun 2020 15:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579044;
-        bh=cZPf0UtNWH0uESVxUsiQsfii7dgWe+ZEcCUAOQqq2TY=;
+        s=default; t=1592579049;
+        bh=dtp5uvGLbHw4Xfc/4V3mo3lxqduEex7T+w3FHSLK934=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nWODFXpKDCi9roM4K9PX6ibb/jxNzIfPYbbcVvpMNFGBqcv1HWewCU2Z0IGYy+3Hb
-         WhDvzv8cOPudB+peY/bU6oSLkyZldlG1ieSCJPR3gBeE4wOmU/egE/9wGGBCVdvchN
-         O78o5ZQ6ay8ri9bukqgUSMIerA0bXWvaz3UMDw7Y=
+        b=CvhHEv0W1rbwEq0C+Kg1R3dPFYDZmj+PQyU+D+5pm4DpjBLghxN1n60GTtWGVagqn
+         PBHyVNgal/QWPGMPLRvpGqXlPPIAACEwBTlOPg4Bi+jln0B9S7GP75lqgmvWhCIlbg
+         o7ffc0GKzbMyuUeAZ/jdHREYgZnbckCrYChefzIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 224/267] serial: 8250_pci: Move Pericom IDs to pci_ids.h
-Date:   Fri, 19 Jun 2020 16:33:29 +0200
-Message-Id: <20200619141659.452856976@linuxfoundation.org>
+Subject: [PATCH 4.19 216/267] PCI: mediatek: Add controller support for MT7629
+Date:   Fri, 19 Jun 2020 16:33:21 +0200
+Message-Id: <20200619141659.084933223@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,57 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
 
-[ Upstream commit 62a7f3009a460001eb46984395280dd900bc4ef4 ]
+[ Upstream commit 0cccd42e6193e168cbecc271dae464e4a53fd7b3 ]
 
-Move the IDs to pci_ids.h so it can be used by next patch.
+MT7629 is an ARM platform SoC which has the same PCIe IP as MT7622.
 
-Link: https://lore.kernel.org/r/20200508065343.32751-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
+The HW default value of its PCI host controller Device ID is invalid,
+fix it to match the hardware implementation.
+
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+[lorenzo.pieralisi@arm.com: commit log/minor spelling update]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_pci.c | 6 ------
- include/linux/pci_ids.h            | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+ include/linux/pci_ids.h                |  1 +
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index bbe5cba21522..02091782bc1e 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -1690,12 +1690,6 @@ pci_wch_ch38x_setup(struct serial_private *priv,
- #define PCIE_DEVICE_ID_WCH_CH384_4S	0x3470
- #define PCIE_DEVICE_ID_WCH_CH382_2S	0x3253
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 1bfbceb9f445..ca06d8bc01e7 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -72,6 +72,7 @@
+ #define PCIE_MSI_VECTOR		0x0c0
  
--#define PCI_VENDOR_ID_PERICOM			0x12D8
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
--
- #define PCI_VENDOR_ID_ACCESIO			0x494f
- #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
- #define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
+ #define PCIE_CONF_VEND_ID	0x100
++#define PCIE_CONF_DEVICE_ID	0x102
+ #define PCIE_CONF_CLASS_ID	0x106
+ 
+ #define PCIE_INT_MASK		0x420
+@@ -134,12 +135,16 @@ struct mtk_pcie_port;
+ /**
+  * struct mtk_pcie_soc - differentiate between host generations
+  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
++ * @need_fix_device_id: whether this host's device ID needed to be fixed or not
++ * @device_id: device ID which this host need to be fixed
+  * @ops: pointer to configuration access functions
+  * @startup: pointer to controller setting functions
+  * @setup_irq: pointer to initialize IRQ functions
+  */
+ struct mtk_pcie_soc {
+ 	bool need_fix_class_id;
++	bool need_fix_device_id;
++	unsigned int device_id;
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
+ 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+@@ -678,6 +683,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	}
+ 
++	if (soc->need_fix_device_id)
++		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
++
+ 	/* 100ms timeout value should be enough for Gen1/2 training */
+ 	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+ 				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+@@ -1213,11 +1221,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+ 	.setup_irq = mtk_pcie_setup_irq,
+ };
+ 
++static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
++	.need_fix_class_id = true,
++	.need_fix_device_id = true,
++	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
++	.ops = &mtk_pcie_ops_v2,
++	.startup = mtk_pcie_startup_port_v2,
++	.setup_irq = mtk_pcie_setup_irq,
++};
++
+ static const struct of_device_id mtk_pcie_ids[] = {
+ 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+ 	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
++	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+ 	{},
+ };
+ 
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 14baae112a54..c0dd2f749d3f 100644
+index b952f1557f5d..a7abaaa9bc27 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -1833,6 +1833,12 @@
- #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
- #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
+@@ -2132,6 +2132,7 @@
+ #define PCI_VENDOR_ID_MYRICOM		0x14c1
  
-+#define PCI_VENDOR_ID_PERICOM			0x12D8
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
-+
- #define PCI_SUBVENDOR_ID_CHASE_PCIFAST		0x12E0
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST4		0x0031
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST8		0x0021
+ #define PCI_VENDOR_ID_MEDIATEK		0x14c3
++#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+ 
+ #define PCI_VENDOR_ID_TITAN		0x14D2
+ #define PCI_DEVICE_ID_TITAN_010L	0x8001
 -- 
 2.25.1
 
