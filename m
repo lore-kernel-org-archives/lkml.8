@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21744C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C400C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5886217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5DE21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577872;
-	bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
+	s=default; t=1592577879;
+	bh=GxwRv2tbHq5ZnBVPYPhzElcHE23j1SRyKV5iDO0mFho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G50V+Uq/j4axsX8oJivoNbH+tM68P+Wk9NJvMxmr9S8wEQBSdx+Z+29ftDfTLli+Q
-	 0iVQhv1Tgv7Xt8mtZ55yadbaOVK/7EA66keLpLenpIkP1D3u2RJiNo9agXlZW8+THO
-	 E0mCXg3UZrmhRCIi5Nq4ITNKy6JosqzGSiAhbPyo=
+	b=NY/jnyt27/KteEknYImuFbDmOsZUR2l7cuF1Yj+KETwdhkJNca8NGUfKWQ9knGSND
+	 3bc1Va3dvIGhpyMZYhHD+dxbG4LrXgseugctEOt+f4QST2UVmsq7BOpMEOTfmK36zf
+	 j8RZQbAbAPxtaz4N5l1x6ZQUulmTa/Vn8PuycIgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388573AbgFSOo2 (ORCPT
+        id S2388587AbgFSOog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388537AbgFSOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:10 -0400
+        id S2387581AbgFSOoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDECD2168B;
-        Fri, 19 Jun 2020 14:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D5D21582;
+        Fri, 19 Jun 2020 14:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577850;
-        bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
+        s=default; t=1592577845;
+        bh=GxwRv2tbHq5ZnBVPYPhzElcHE23j1SRyKV5iDO0mFho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxFkBOlV18//lQoAgtHzg91rc7XBOyRwW6YFl+gPDBkQLRHN0JIsqpnJAWOdYKbs/
-         aScuqPK7Ol567+FsBoQaK7SOdBOr2g5AbJA8j8w3u374e/brDKnzdh6DluECfX8nVr
-         AeJXrAzPQ3Ub/dV0G3/AKUxeiZO/Q/f5x4gSte5s=
+        b=0V5rjDPKRWkZc0sKqxBDzT+P09503m8PkfIbpg28McxpYcVgKhi6R9FVUSsgPwT7I
+         Y3wv366EQDJXaZeoheEefjSWcs9J2VsTeGwIWy/RUX/133pYmdlfGYGdvcohd1HUoH
+         4ViJkYQ7T6G6Xm2ik1ubGiviAVWAAGJPdvPUIv1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 114/128] power: vexpress: add suppress_bind_attrs to true
-Date:   Fri, 19 Jun 2020 16:33:28 +0200
-Message-Id: <20200619141626.163662700@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 112/128] b43_legacy: Fix connection problem with WPA3
+Date:   Fri, 19 Jun 2020 16:33:26 +0200
+Message-Id: <20200619141626.061902739@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
+commit 6a29d134c04a8acebb7a95251acea7ad7abba106 upstream.
 
-Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
-attributes available via the sysfs, so lets be explicit here and use
-".suppress_bind_attrs = true" to prevent userspace from doing something
-silly.
+Since the driver was first introduced into the kernel, it has only
+handled the ciphers associated with WEP, WPA, and WPA2. It fails with
+WPA3 even though mac80211 can handle those additional ciphers in software,
+b43legacy did not report that it could handle them. By setting MFP_CAPABLE using
+ieee80211_set_hw(), the problem is fixed.
 
-Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+With this change, b43legacy will handle the ciphers it knows in hardware,
+and let mac80211 handle the others in software. It is not necessary to
+use the module parameter NOHWCRYPT to turn hardware encryption off.
+Although this change essentially eliminates that module parameter,
+I am choosing to keep it for cases where the hardware is broken,
+and software encryption is required for all ciphers.
+
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200526155909.5807-3-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/reset/vexpress-poweroff.c |    1 +
+ drivers/net/wireless/broadcom/b43legacy/main.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/power/reset/vexpress-poweroff.c
-+++ b/drivers/power/reset/vexpress-poweroff.c
-@@ -150,6 +150,7 @@ static struct platform_driver vexpress_r
- 	.driver = {
- 		.name = "vexpress-reset",
- 		.of_match_table = vexpress_reset_of_match,
-+		.suppress_bind_attrs = true,
- 	},
- };
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -3835,6 +3835,7 @@ static int b43legacy_wireless_init(struc
+ 	/* fill hw info */
+ 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
+ 	ieee80211_hw_set(hw, SIGNAL_DBM);
++	ieee80211_hw_set(hw, MFP_CAPABLE); /* Allow WPA3 in software */
  
+ 	hw->wiphy->interface_modes =
+ 		BIT(NL80211_IFTYPE_AP) |
 
 
