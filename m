@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C35C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 596642080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DD9204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585235;
-	bh=kq7xnAF9snUBez46/Ih5rjBI7O4wxsDS2jImrawFsYc=;
+	s=default; t=1592585240;
+	bh=esNBolbgB0ugwipiM6dL76rs6BAcVuftApbVE65C3aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOI0laR0PmhrI6ayy3CLGOhrag/8BMztX6WulpvCPoUFGlOFIW+hWGhVL+aAC+0uh
-	 aShKcKvfkMhUQU/CfJyL8SvA9B5sI9oJvTWoTlCI2o/1aM1YLoGYnV+g9PCmHePsm6
-	 UDzApyHlcp/Yh/UVvyzru8NV0J9JHbf2hql5rpBY=
+	b=PVvogOvLB2jU6S7Zmw7HcPqu0Vj8PYHdIcuLjxzKWF2nCYORrVPq+FKSouvothTjZ
+	 qevz0J2IQYFMvzVe1/z6Q2wq/1gpycwSCftuVtGnKob4zbeheddXeb17CEs8jTffZY
+	 duqn8fLrht0ESY7MxkyB94oX8pj3i7HT9nNVFk30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbgFSOl1 (ORCPT
+        id S2388228AbgFSOlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:41:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59770 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388221AbgFSOlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:19 -0400
+        id S1726667AbgFSOlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89A1221527;
-        Fri, 19 Jun 2020 14:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4BD121527;
+        Fri, 19 Jun 2020 14:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577679;
-        bh=kq7xnAF9snUBez46/Ih5rjBI7O4wxsDS2jImrawFsYc=;
+        s=default; t=1592577674;
+        bh=esNBolbgB0ugwipiM6dL76rs6BAcVuftApbVE65C3aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yn5lyytj1cVATiFPD0cupf9E0KL75dtKW2BVygbIXgWPWVDH8en4hS7IPeGvew26U
-         Qu2JHcLTC7LcH6m1hT/hHAQ1BeaZPS9rJCxYEAwcayw+1uoMId/+VYsO0FrlIJ1cV/
-         Z+meDMlkmlqLbY+ikg40izWVJFJISduYlw76wLpw=
+        b=N2dSuKql/DXuGXWy7MvXdpbPMV4gNx5FWl3G4mMaIrSJ75IGoa/C4/WkECyWuRIBm
+         64fSgqXBNbLmbDbdcXhnOblSG6AeUxSDDqAdH8stT4YDDLTp4sxeJIv09WSvpeRHG1
+         a2+ksWPzk2lWUdtkOSfJYBH8QBoUkVQuxvKm6gV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 044/128] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-Date:   Fri, 19 Jun 2020 16:32:18 +0200
-Message-Id: <20200619141622.548236961@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.9 042/128] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+Date:   Fri, 19 Jun 2020 16:32:16 +0200
+Message-Id: <20200619141622.443266315@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,57 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit e4ff08a4d727146bb6717a39a8d399d834654345 upstream.
+commit 3204be4109ad681523e3461ce64454c79278450a upstream.
 
-Write out of slab bounds. We should check epid.
+AArch32 CP1x registers are overlayed on their AArch64 counterparts
+in the vcpu struct. This leads to an interesting problem as they
+are stored in their CPU-local format, and thus a CP1x register
+doesn't "hit" the lower 32bit portion of the AArch64 register on
+a BE host.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
-BUG: KASAN: use-after-free in htc_process_conn_rsp
-drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
-BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
+To workaround this unfortunate situation, introduce a bias trick
+in the vcpu_cp1x() accessors which picks the correct half of the
+64bit register.
 
-Call Trace:
- htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
-[inline]
-ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
+Cc: stable@vger.kernel.org
+Reported-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/include/asm/kvm_host.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -114,6 +114,9 @@ static void htc_process_conn_rsp(struct
- 
- 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
- 		epid = svc_rspmsg->endpoint_id;
-+		if (epid < 0 || epid >= ENDPOINT_MAX)
-+			return;
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -290,8 +290,10 @@ struct kvm_vcpu_arch {
+  * CP14 and CP15 live in the same array, as they are backed by the
+  * same system registers.
+  */
+-#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+-#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
++#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
 +
- 		service_id = be16_to_cpu(svc_rspmsg->service_id);
- 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
- 		endpoint = &target->endpoint[epid];
++#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
++#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
+ 
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ #define vcpu_cp15_64_high(v,r)	vcpu_cp15((v),(r))
 
 
