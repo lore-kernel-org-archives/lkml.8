@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C84C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B48920734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AA020786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585656;
-	bh=jAOr7i8JMKY3fCRc2fj1AtXf+MDqw6dZKe43MFntWFk=;
+	s=default; t=1592585660;
+	bh=x3VIhFR9XLrzX8mIuUYpAdyJJhQHze81tFY+AcmDMk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjaAT6eG5GR8ZykZs8fjkqdt15WB+SdJG2OBMt5ox/VEDSOI8MGzF04R19Dk4yKzS
-	 SmIgxKVB193/HH9mxBEeg6aYd82GT9dm2QQXPWqnL2WqyzEmD1nrOyFPXY1Rxgg1Dj
-	 EREoTOnAxb7cdMGh91cwEGJ5tzWnfJvAGs2fPJ2I=
+	b=DvqtXnpF9oTuGJKfYkpUlEK/2yHVv2uwoiBFq97D/y9JR3/RDH2Oe3iINy6KEjMu9
+	 KAy41aizgU25Om+5KtVV3i8tWG5tPxgztUIFDGwAZqsZedmswpMJD+PoUC5gh6wR7k
+	 JdzNGqyiJB+0W/KM73A9apvVJl1bYaUnHMhA335E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387587AbgFSOgq (ORCPT
+        id S2436568AbgFSQyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52988 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387544AbgFSOgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:36:32 -0400
+        id S2387576AbgFSOgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:36:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3325420CC7;
-        Fri, 19 Jun 2020 14:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8E321548;
+        Fri, 19 Jun 2020 14:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577390;
-        bh=jAOr7i8JMKY3fCRc2fj1AtXf+MDqw6dZKe43MFntWFk=;
+        s=default; t=1592577405;
+        bh=x3VIhFR9XLrzX8mIuUYpAdyJJhQHze81tFY+AcmDMk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUIYBAjocKxcmOMG7WbH6+M+huja77jmKpJIU/lHP/OvnT+VWrY8oAv9dLbrDqG9D
-         uyGD58zJXU1VGhQD64tqtvOhbKJ6Eh2y4EXYhb1/z6HbP2NYLm4kTlHW96t3HbLQpT
-         1xscHARas5ITJzr1qVbl44JbVKMqXPPbjp7Mj7Lc=
+        b=JM1w25jJXv81tqj8eoaIOk46p1h5+YQTjp8awjQ5EQ7YnnLZPi57bXcVqIBbnRI/k
+         pjIJ1QFl7yHIETdtKUk4U9NtU09nMV2UKvMxHeRpV151oau1qTqWDjauP/5+1lzk/m
+         fURNWIqAK4BrsUWXCnjvz3SiYZqk1WncS54vccR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Denis <pro.denis@protonmail.com>,
+        Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 030/101] spi: pxa2xx: Fix controller unregister order
-Date:   Fri, 19 Jun 2020 16:32:19 +0200
-Message-Id: <20200619141615.675453619@linuxfoundation.org>
+Subject: [PATCH 4.4 009/101] ath9k_htc: Silence undersized packet warnings
+Date:   Fri, 19 Jun 2020 16:31:58 +0200
+Message-Id: <20200619141614.491362701@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -62,74 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-[ Upstream commit 32e5b57232c0411e7dea96625c415510430ac079 ]
+[ Upstream commit 450edd2805982d14ed79733a82927d2857b27cac ]
 
-The PXA2xx SPI driver uses devm_spi_register_controller() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-pxa2xx_spi_remove() before unregistering the SPI controller via
-devres_release_all().
+Some devices like TP-Link TL-WN722N produces this kind of messages
+frequently.
 
-This order is incorrect:  pxa2xx_spi_remove() disables the chip,
-rendering the SPI bus inaccessible even though the SPI controller is
-still registered.  When the SPI controller is subsequently unregistered,
-it unbinds all its slave devices.  Because their drivers cannot access
-the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
-in an improper state.
+kernel: ath: phy0: Short RX data len, dropping (dlen: 4)
 
-As a rule, devm_spi_register_controller() must not be used if the
-->remove() hook performs teardown steps which shall be performed after
-unregistering the controller and specifically after unbinding of slaves.
+This warning is useful for developers to recognize that the device
+(Wi-Fi dongle or USB hub etc) is noisy but not for general users. So
+this patch make this warning to debug message.
 
-Fix by reverting to the non-devm variant of spi_register_controller().
-
-An alternative approach would be to use device-managed functions for all
-steps in pxa2xx_spi_remove(), e.g. by calling devm_add_action_or_reset()
-on probe.  However that approach would add more LoC to the driver and
-it wouldn't lend itself as well to backporting to stable.
-
-The improper use of devm_spi_register_controller() was introduced in 2013
-by commit a807fcd090d6 ("spi: pxa2xx: use devm_spi_register_master()"),
-but all earlier versions of the driver going back to 2006 were likewise
-broken because they invoked spi_unregister_master() at the end of
-pxa2xx_spi_remove(), rather than at the beginning.
-
-Fixes: e0c9905e87ac ("[PATCH] SPI: add PXA2xx SSP SPI Driver")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v2.6.17+
-Cc: Tsuchiya Yuto <kitakar@gmail.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206403#c1
-Link: https://lore.kernel.org/r/834c446b1cf3284d2660f1bee1ebe3e737cd02a9.1590408496.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-By: Denis <pro.denis@protonmail.com>
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207539
+Fixes: cd486e627e67 ("ath9k_htc: Discard undersized packets")
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200504214443.4485-1-masashi.honma@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 96ed01cb6489..cfcc5a9a5cc9 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1605,7 +1605,7 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index 0d757ced49ba..91d199481a37 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -998,9 +998,9 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	 * which are not PHY_ERROR (short radar pulses have a length of 3)
+ 	 */
+ 	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
+-		ath_warn(common,
+-			 "Short RX data len, dropping (dlen: %d)\n",
+-			 rs_datalen);
++		ath_dbg(common, ANY,
++			"Short RX data len, dropping (dlen: %d)\n",
++			rs_datalen);
+ 		goto rx_next;
+ 	}
  
- 	/* Register with the SPI framework */
- 	platform_set_drvdata(pdev, drv_data);
--	status = devm_spi_register_master(&pdev->dev, master);
-+	status = spi_register_master(master);
- 	if (status != 0) {
- 		dev_err(&pdev->dev, "problem registering spi master\n");
- 		goto out_error_clock_enabled;
-@@ -1635,6 +1635,8 @@ static int pxa2xx_spi_remove(struct platform_device *pdev)
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
-+	spi_unregister_master(drv_data->master);
-+
- 	/* Disable the SSP at the peripheral and SOC level */
- 	pxa2xx_spi_write(drv_data, SSCR0, 0);
- 	clk_disable_unprepare(ssp->clk);
 -- 
 2.25.1
 
