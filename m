@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D29C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73559C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0024207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9BB207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582540;
-	bh=biZxo7xIfF834z9nqNS71nzofZ7r6Uqho9xZzSIhqPU=;
+	s=default; t=1592582549;
+	bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSOCRmM+IXntnyq0O3OmPK7pcWaM8LGBHuSeLufIgbLGxxPy39klw+Ih2KZ715b5r
-	 jLuqtjDByVD5kgdjhYI6v0dLdfmYaJ/UVmYAwew2AlTy98M/5h7pAIEa2UQhj51H7o
-	 sCSYM/94M8IYa9YLGXtUqC8Fn72XLvUkd8qlPbLM=
+	b=FtnFeB8vfYcKZvMCeWw4uc3+IDEgIr5VVih49FqEh9Kpx7IHyppAltxUg/qMVuzMw
+	 lzkzmsL1Rl8L0QXZdR4mZiACkjCnV0E8XHSen24FKnpKkO+kMqi7bWY4RSHZZ3h7hi
+	 1BLQGbArpEFVu52vDiLlXB0Cjaoqd0SOM11qovD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392845AbgFSQCT (ORCPT
+        id S2403928AbgFSPMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43304 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403941AbgFSPMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:12:49 -0400
+        id S2403915AbgFSPMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7C220776;
-        Fri, 19 Jun 2020 15:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA4DA206FA;
+        Fri, 19 Jun 2020 15:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579568;
-        bh=biZxo7xIfF834z9nqNS71nzofZ7r6Uqho9xZzSIhqPU=;
+        s=default; t=1592579555;
+        bh=RCzbOfWKdsuNjoZhh37a3FIUbTHPuINlTo8uqPP3G9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SM/brplUFzht1cs2f//dYV1ioW+vaK6pOODbkdi+rzh6+3Q7IpyVbwdCeTbhoD789
-         3J6SRnyllPkqvDjTtuKic9V513ErYmk7x0yqmKCPvi0CrnTUDHK2Zn9JNfp4Yx1sAP
-         CkUXgc6l284d/8Y4qGcmBxBlppVZ4gpVh8rkb+WU=
+        b=u7sP31Dc/HqxE3VYuEZI7aOeLrxSUlPYgIPTLDwYfVgvIER6u/kFb5NoKYGOSXNRA
+         S1Uvjsk/pNdECnJ3Be8m5sRYBhR2N/A6RzJbCnkYhjp+Z5EZQne1nKSn8yk0Zwzjq/
+         6F6lq7/a3ScuzxKI/aEoUYa8l9L7r7HJ7fqrF85g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.4 183/261] ext4: fix race between ext4_sync_parent() and rename()
-Date:   Fri, 19 Jun 2020 16:33:14 +0200
-Message-Id: <20200619141658.690517103@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH 5.4 179/261] ima: Remove __init annotation from ima_pcrread()
+Date:   Fri, 19 Jun 2020 16:33:10 +0200
+Message-Id: <20200619141658.504030609@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,109 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 08adf452e628b0e2ce9a01048cfbec52353703d7 upstream.
+commit 8b8c704d913b0fe490af370631a4200e26334ec0 upstream.
 
-'igrab(d_inode(dentry->d_parent))' without holding dentry->d_lock is
-broken because without d_lock, d_parent can be concurrently changed due
-to a rename().  Then if the old directory is immediately deleted, old
-d_parent->inode can be NULL.  That causes a NULL dereference in igrab().
+Commit 6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in
+ima_eventdigest_init()") added a call to ima_calc_boot_aggregate() so that
+the digest can be recalculated for the boot_aggregate measurement entry if
+the 'd' template field has been requested. For the 'd' field, only SHA1 and
+MD5 digests are accepted.
 
-To fix this, use dget_parent() to safely grab a reference to the parent
-dentry, which pins the inode.  This also eliminates the need to use
-d_find_any_alias() other than for the initial inode, as we no longer
-throw away the dentry at each step.
+Given that ima_eventdigest_init() does not have the __init annotation, all
+functions called should not have it. This patch removes __init from
+ima_pcrread().
 
-This is an extremely hard race to hit, but it is possible.  Adding a
-udelay() in between the reads of ->d_parent and its ->d_inode makes it
-reproducible on a no-journal filesystem using the following program:
-
-    #include <fcntl.h>
-    #include <unistd.h>
-
-    int main()
-    {
-        if (fork()) {
-            for (;;) {
-                mkdir("dir1", 0700);
-                int fd = open("dir1/file", O_RDWR|O_CREAT|O_SYNC);
-                write(fd, "X", 1);
-                close(fd);
-            }
-        } else {
-            mkdir("dir2", 0700);
-            for (;;) {
-                rename("dir1/file", "dir2/file");
-                rmdir("dir1");
-            }
-        }
-    }
-
-Fixes: d59729f4e794 ("ext4: fix races in ext4_sync_parent()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200506183140.541194-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes:  6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/fsync.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ security/integrity/ima/ima_crypto.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/fsync.c
-+++ b/fs/ext4/fsync.c
-@@ -44,30 +44,28 @@
-  */
- static int ext4_sync_parent(struct inode *inode)
- {
--	struct dentry *dentry = NULL;
--	struct inode *next;
-+	struct dentry *dentry, *next;
- 	int ret = 0;
- 
- 	if (!ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
- 		return 0;
--	inode = igrab(inode);
-+	dentry = d_find_any_alias(inode);
-+	if (!dentry)
-+		return 0;
- 	while (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY)) {
- 		ext4_clear_inode_state(inode, EXT4_STATE_NEWENTRY);
--		dentry = d_find_any_alias(inode);
--		if (!dentry)
--			break;
--		next = igrab(d_inode(dentry->d_parent));
-+
-+		next = dget_parent(dentry);
- 		dput(dentry);
--		if (!next)
--			break;
--		iput(inode);
--		inode = next;
-+		dentry = next;
-+		inode = dentry->d_inode;
-+
- 		/*
- 		 * The directory inode may have gone through rmdir by now. But
- 		 * the inode itself and its blocks are still allocated (we hold
--		 * a reference to the inode so it didn't go through
--		 * ext4_evict_inode()) and so we are safe to flush metadata
--		 * blocks and the inode.
-+		 * a reference to the inode via its dentry), so it didn't go
-+		 * through ext4_evict_inode()) and so we are safe to flush
-+		 * metadata blocks and the inode.
- 		 */
- 		ret = sync_mapping_buffers(inode->i_mapping);
- 		if (ret)
-@@ -76,7 +74,7 @@ static int ext4_sync_parent(struct inode
- 		if (ret)
- 			break;
- 	}
--	iput(inode);
-+	dput(dentry);
- 	return ret;
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -645,7 +645,7 @@ int ima_calc_buffer_hash(const void *buf
+ 	return calc_buffer_shash(buf, len, hash);
  }
  
+-static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
++static void ima_pcrread(u32 idx, struct tpm_digest *d)
+ {
+ 	if (!ima_tpm_chip)
+ 		return;
 
 
