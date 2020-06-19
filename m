@@ -2,97 +2,149 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D463C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0248E207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CDF207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lblZEhu1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9iEaej+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbgFSH41 (ORCPT
+        id S1730935AbgFSH7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46756 "EHLO
+        Fri, 19 Jun 2020 03:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730875AbgFSH41 (ORCPT
+        with ESMTP id S1730651AbgFSH7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:56:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B48C06174E;
-        Fri, 19 Jun 2020 00:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+6lPoVcKNlDZ05zKLgAxZCl2a/rH2CM1rj4HgNIEc9s=; b=lblZEhu1fj4HGfeB9rhLnm35e9
-        3s57GAEQfeYx9h5CBtLLPeAfKEWKCz18DZbbPCosACUyBaHUXmzsIVHYCRGJVPG9fd8muPAzgwPu1
-        V/71pp368G0BLs+SJP1MgF8kDjX9G90M/thlJtpGLGS6/TUykwIDqd0wDpgWHY4LmSnrbOJwFkW1u
-        bmIqEbVSMPVmLVAbNEJ5TT97yQsdSJgNJgeiBPRVLvomB3zVX+sRq5JZ18lk3/mWl7wLGKMGBZxPo
-        lC7rsgOSIPzShQNsWEImEJA6EBemQePknjzZd+JcfY94JHq401SFPp4B4rNlvgjY1ed3aLR1jCiWB
-        Xru8sLrw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmBsq-000095-Sv; Fri, 19 Jun 2020 07:56:20 +0000
-Date:   Fri, 19 Jun 2020 00:56:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
-        nj.shetty@samsung.com, javier.gonz@samsung.com
-Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
-Message-ID: <20200619075620.GA20581@infradead.org>
-References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
- <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <20200618065634.GB24943@infradead.org>
- <20200618175258.GA4141152@test-zns>
+        Fri, 19 Jun 2020 03:59:10 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6D0C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 00:59:09 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f185so8235207wmf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 00:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LeRTvG0uCKHbriogGBEyjyc5UzHZBdJsborWRefc+F8=;
+        b=d9iEaej+2YgHJdaSbvT+TEKt/f5Ph9RdVJRhp4BntFFPQM3K8gbIZAgab6+Lm7mFdt
+         0lqGhogx0MmOARRhReNaonKMSf9mTA0dVsiqB/SD3TPt6bvSj+VvpDxn33sdzauqsn06
+         zWKGNxoZwlou4EPfRpSJqGF0LdGZmjCUZ4830lf2JbNSy+Ttzj6LJTcCj/r2lbJkzmcZ
+         vf4oaKANCdg50sR9ILHLm5mSKH6Er7Jlz8icc93abTBkIODKgVeFQxOcqt7Xn4gLZkxp
+         VZMRPT6ju3D7H77Vnf4ldp/s/X+puNbm/eDZIrN2JkMPgsCJ66zIf5/v4Ya+Is+JE1VW
+         7nRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LeRTvG0uCKHbriogGBEyjyc5UzHZBdJsborWRefc+F8=;
+        b=IqrIIwM2zpOMIZyT1JO/W1qC1qR25sv6DeMbvHRM2x+2crTblOcGXma+GEQWppyDhW
+         lLWagNKxE8CHUDV2gvoqDtMRpGRE2pdNlh26qhTSFuG0NrbTy4hzk5AxIftZay6h7FWs
+         MSfe+gckcQ+89712EOF+bayqdeKq0YCvZyBTTc737oNG+PX8qFXAC2RZjsqQVW/mcVQ2
+         UgllT19xPSGk6ltChr8T4qofaNeqlaxcYS3FIQBzHiFYdy00rT/9qEreh67/hRQaixkb
+         f0KxXlSht7xigw2CxiBSo4aU0ySJd5V18QxewqpTQA1xsPKNZ59O8I+IKzRBbRL+7VPQ
+         xPgg==
+X-Gm-Message-State: AOAM532aKN1uX2e+uTLA2SGAt88reQHNVSGzx8WvMWLDRQCWJV+F/5mJ
+        H2Bs7AfTcZuvY9CIz8l2oL0=
+X-Google-Smtp-Source: ABdhPJxF4cF5V82JZiJN8gB/gu9ctvnFr1pdscpxJVnUgvJkLIB1x0dIrih1Rc7C4WF2ynX9CUnFrg==
+X-Received: by 2002:a7b:cb56:: with SMTP id v22mr2462594wmj.180.1592553547251;
+        Fri, 19 Jun 2020 00:59:07 -0700 (PDT)
+Received: from kedthinkpad.tpwlan.net ([213.197.144.54])
+        by smtp.gmail.com with ESMTPSA id f11sm6381244wrj.2.2020.06.19.00.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 00:59:05 -0700 (PDT)
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     Qiang Yu <yuq825@gmail.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrey@lebedev.lt
+Subject: [PATCH] drm/lima: Expose job_hang_limit module parameter
+Date:   Fri, 19 Jun 2020 10:58:59 +0300
+Message-Id: <20200619075900.3030696-1-andrey.lebedev@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAKGbVbtYusvURFcUyQtgUycNJPAQyDGDaLXW8qw-x49DqfKmQA@mail.gmail.com>
+References: <CAKGbVbtYusvURFcUyQtgUycNJPAQyDGDaLXW8qw-x49DqfKmQA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618175258.GA4141152@test-zns>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:22:58PM +0530, Kanchan Joshi wrote:
-> I was thinking of raw block-access to zone device rather than pristine file
-> abstraction.
+From: Andrey Lebedev <andrey@lebedev.lt>
 
-Why?
+Some pp or gp jobs can be successfully repeated even after they time outs.
+Introduce lima module parameter to specify number of times a job can hang
+before being dropped.
 
-> And in that context, semantics, at this point, are unchanged
-> (i.e. same as direct writes) while flexibility of async-interface gets
-> added.
-> Synchronous-writes on single-zone sound fine, but synchronous-appends on
-> single-zone do not sound that fine.
+Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+---
 
-Where does synchronous access come into play?
+Now all types are correct (uint).
 
-> > What could be a useful addition is a way for O_APPEND/RWF_APPEND writes
-> > to report where they actually wrote, as that comes close to Zone Append
-> > while still making sense at our usual abstraction level for file I/O.
-> 
-> Thanks for suggesting this. O and RWF_APPEND may not go well with block
-> access as end-of-file will be picked from dev inode.
+ drivers/gpu/drm/lima/lima_drv.c   | 4 ++++
+ drivers/gpu/drm/lima/lima_drv.h   | 1 +
+ drivers/gpu/drm/lima/lima_sched.c | 5 +++--
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-No, but they go really well with zonefs.
+diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+index a831565af813..ab460121fd52 100644
+--- a/drivers/gpu/drm/lima/lima_drv.c
++++ b/drivers/gpu/drm/lima/lima_drv.c
+@@ -19,6 +19,7 @@
+ int lima_sched_timeout_ms;
+ uint lima_heap_init_nr_pages = 8;
+ uint lima_max_error_tasks;
++uint lima_job_hang_limit;
+ 
+ MODULE_PARM_DESC(sched_timeout_ms, "task run timeout in ms");
+ module_param_named(sched_timeout_ms, lima_sched_timeout_ms, int, 0444);
+@@ -29,6 +30,9 @@ module_param_named(heap_init_nr_pages, lima_heap_init_nr_pages, uint, 0444);
+ MODULE_PARM_DESC(max_error_tasks, "max number of error tasks to save");
+ module_param_named(max_error_tasks, lima_max_error_tasks, uint, 0644);
+ 
++MODULE_PARM_DESC(job_hang_limit, "number of times to allow a job to hang before dropping it (default 0)");
++module_param_named(job_hang_limit, lima_job_hang_limit, uint, 0444);
++
+ static int lima_ioctl_get_param(struct drm_device *dev, void *data, struct drm_file *file)
+ {
+ 	struct drm_lima_get_param *args = data;
+diff --git a/drivers/gpu/drm/lima/lima_drv.h b/drivers/gpu/drm/lima/lima_drv.h
+index fdbd4077c768..c738d288547b 100644
+--- a/drivers/gpu/drm/lima/lima_drv.h
++++ b/drivers/gpu/drm/lima/lima_drv.h
+@@ -11,6 +11,7 @@
+ extern int lima_sched_timeout_ms;
+ extern uint lima_heap_init_nr_pages;
+ extern uint lima_max_error_tasks;
++extern uint lima_job_hang_limit;
+ 
+ struct lima_vm;
+ struct lima_bo;
+diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
+index e6cefda00279..1602985dfa04 100644
+--- a/drivers/gpu/drm/lima/lima_sched.c
++++ b/drivers/gpu/drm/lima/lima_sched.c
+@@ -503,8 +503,9 @@ int lima_sched_pipe_init(struct lima_sched_pipe *pipe, const char *name)
+ 
+ 	INIT_WORK(&pipe->recover_work, lima_sched_recover_work);
+ 
+-	return drm_sched_init(&pipe->base, &lima_sched_ops, 1, 0,
+-			      msecs_to_jiffies(timeout), name);
++	return drm_sched_init(&pipe->base, &lima_sched_ops, 1,
++			      lima_job_hang_limit, msecs_to_jiffies(timeout),
++			      name);
+ }
+ 
+ void lima_sched_pipe_fini(struct lima_sched_pipe *pipe)
+-- 
+2.25.1
 
-> But perhaps a new
-> flag like RWF_ZONE_APPEND can help to transform writes (aio or uring)
-> into append without introducing new opcodes.
-
-I don't think this is a good idea.  Zones are a concept for a a very
-specific class of zoned devices.  Trying to shoe-horn this into the
-byte address files / whole device abstraction not only is ugly
-conceptually but also adds the overhead for it to the VFS.
-
-And O_APPEND that returns the written position OTOH makes total sense
-at the file level as well and not just for raw zoned devices.
