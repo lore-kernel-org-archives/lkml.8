@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E109C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CF020B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5000121556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580345;
-	bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
+	s=default; t=1592580351;
+	bh=vYquxl+ManGyj2gJMnWxQGcOa7hy+NmSwUArZP+m8JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VkP1FYkRgephcvxHSGmK+bd4NlgdMFVjWOewovE2jVTuYaLmarusD7nUeh1+jaf1t
-	 SO5kVz53NWbS7JrmaaXkD2nR3fPsl3mVSJYRYxVo2evlf3dLdb5Ujsfp3dlxI84Izf
-	 qAXpy4WjEfzK76L6DrXwv95mEUfui1UuowbBVNuA=
+	b=d3ZLf01Ww9s30A7cVi9G/xoeO2xjkl03i8iqomsnIY0E9RB3/EbWO9wRre/z5/udj
+	 S1mFDtP6YcQ7kaSqxaO9mxiRn9010P/VJENf5GSbWv0DPH+ST5Sl4oGI2Yc/3ZQ4er
+	 YRe6S8GLXQOdqT68GbSPXnWv4WOEQ8Xk35dI4ILQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393453AbgFSPZo (ORCPT
+        id S2393465AbgFSPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393112AbgFSPXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:01 -0400
+        id S2393146AbgFSPXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911E720B80;
-        Fri, 19 Jun 2020 15:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1281D20B80;
+        Fri, 19 Jun 2020 15:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580180;
-        bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
+        s=default; t=1592580185;
+        bh=vYquxl+ManGyj2gJMnWxQGcOa7hy+NmSwUArZP+m8JI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6lJMD60ZNBpJiy4OhFj3+UjhzeZSmvkZq1mlmrLtVqJCmCh+6d/SSXTsYJyL+xIs
-         elWMNs9JF20DEIqf+Np43QU2x39ky42aE1Qy0WoN+ftD4PIziEJkXEw3conHbgZruw
-         T830o024pKz+P20dzFJahW8KSCu1JVdSNwUL83qg=
+        b=EXa29vNPEEUYpsOkpaeDWvQw8E//YywHkUIdg2IA5Q2Vr/wBHMRy9ZcPFZ606Y11k
+         EPNzn02Oc1gkHhN8S1i2Ajq0HBaTIaZTKRzULZjI0anuwo13s5CMUKBYw/H+twq/eX
+         fyBLLLLumw9A4juJt72hJ918tLyydelW6qtK0mjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 145/376] drivers: net: davinci_mdio: fix potential NULL dereference in davinci_mdio_probe()
-Date:   Fri, 19 Jun 2020 16:31:03 +0200
-Message-Id: <20200619141717.196501012@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 155/376] xfs: clean up the error handling in xfs_swap_extents
+Date:   Fri, 19 Jun 2020 16:31:13 +0200
+Message-Id: <20200619141717.658904179@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit e00edb4efbbc07425441a3be2aa87abaf5800d96 ]
+[ Upstream commit 8bc3b5e4b70d28f8edcafc3c9e4de515998eea9e ]
 
-platform_get_resource() may fail and return NULL, so we should
-better check it's return value to avoid a NULL pointer dereference
-since devm_ioremap() does not check input parameters for null.
+Make sure we release resources properly if we cannot clean out the COW
+extents in preparation for an extent swap.
 
-This is detected by Coccinelle semantic patch.
-
-@@
-expression pdev, res, n, t, e, e1, e2;
-@@
-
-res = \(platform_get_resource\|platform_get_resource_byname\)(pdev, t, n);
-+ if (!res)
-+   return -EINVAL;
-... when != res == NULL
-e = devm_ioremap(e1, res->start, e2);
-
-Fixes: 03f66f067560 ("net: ethernet: ti: davinci_mdio: use devm_ioremap()")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 96987eea537d6c ("xfs: cancel COW blocks before swapext")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/davinci_mdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_bmap_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index 38b7f6d35759..702fdc393da0 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -397,6 +397,8 @@ static int davinci_mdio_probe(struct platform_device *pdev)
- 	data->dev = dev;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 4f800f7fe888..cc23a3e23e2d 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -1606,7 +1606,7 @@ xfs_swap_extents(
+ 	if (xfs_inode_has_cow_data(tip)) {
+ 		error = xfs_reflink_cancel_cow_range(tip, 0, NULLFILEOFF, true);
+ 		if (error)
+-			return error;
++			goto out_unlock;
+ 	}
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
- 	data->regs = devm_ioremap(dev, res->start, resource_size(res));
- 	if (!data->regs)
- 		return -ENOMEM;
+ 	/*
 -- 
 2.25.1
 
