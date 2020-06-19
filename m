@@ -2,59 +2,60 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E70C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0867207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801DA207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582630;
-	bh=95mQw3pyXUqcksGZvoa25uW50dFOr48wkL6V9bdfdcY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN3QLzxGqMw3XLDhUTz7IaQhK+xCavNVRtSGfnPiJD7Li80+LD65m4KIxbCdb5kgT
-	 GnCOjN0N8+f8VIZnlyZQlWThlWqeCysKzdqYDWHw5NKWQ4nzdGUx0ALLRb5XoloyzK
-	 vcKFv8Yu4FxtEVdjBM/kXxzCl/hXuENeP23eZZgo=
+	s=default; t=1592582636;
+	bh=liyTA4Cwj4/z7SvWprlbVSALIDf+Z2si5KgMeueUxGQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NkggVI68ZGaR8G1cq8NRqozQHH+rS1n+XkBSkWj4DJBN3CN3TpVxBj72y/qzP+SEr
+	 o8G2pbFhQTyjfHG56mOrMQT4A3Cg2Vs+jz6ZavDnk3RwK6X8vQ7vBEW2HEACQXn4p7
+	 m/8PYAfMksDh6B7lpf+bE5u1+971/ijm4WvITy5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389653AbgFSQDt (ORCPT
+        id S2392090AbgFSPLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391393AbgFSPLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E4D21582;
-        Fri, 19 Jun 2020 15:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579484;
-        bh=95mQw3pyXUqcksGZvoa25uW50dFOr48wkL6V9bdfdcY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWAEr2wPeAU0F1JrCT2V7JIUGPxkiSYrm+liuO3EXfsMg4Drnpczy1jGI35WtmG4U
-         ZCcldDMuxdn2fMxQxOJ5P8dY+PfgoIw8kNOr1nuQjii48IY0nT2JC8d+6nyeY8sqqB
-         ZUljSnsVrHDX3TviZzEfuPnkBgGhwvfawnk8GRAU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 151/261] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date:   Fri, 19 Jun 2020 16:32:42 +0200
-Message-Id: <20200619141657.110792638@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:11:15 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:53361 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391351AbgFSPLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:05 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 05JFA0TO003778;
+        Sat, 20 Jun 2020 00:10:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 05JFA0TO003778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592579401;
+        bh=+TnARtnceYuO5resxwSI80CrcBwzGNK3O4AoiEU1u1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1cPNYMFjZC2GqfERRfi1r/aXkaHG3jYk3jvmIGqIPk0duuZ7tJp33kWmLrSQP49iC
+         STLxvC+m/ml7tBoBOAq82q5ldYJDCWo7nl/krw/0slr7rDhzrG+cBmoE1ulBSCJxMD
+         Pk8TzXkjpPUW2JDw+ht3IbqKDxvh/lQLdqC+uBmEPpIzDBBjE0VEuP7I0L3cE6s3fb
+         Unm3+qfynk0tv27kHre8oos7AH+NObK3Ziu6wMS3ACgK7EQCCCaRpBHereJssV7kgA
+         7pQwlDoa3P215oOZ6sLrZKebVpCLtlIwEqnA0Mljn1jucdaXsfWCowdyQojC44XXx5
+         Z+Ir36/KZxp3g==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Revert "Makefile: install modules.builtin even if CONFIG_MODULES=n"
+Date:   Sat, 20 Jun 2020 00:09:55 +0900
+Message-Id: <20200619150955.13417-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,82 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+This reverts commit e0b250b57dcf403529081e5898a9de717f96b76b,
+which broke build systems that need to install files to a certain
+path, but do not set INSTALL_MOD_PATH when invoking 'make install'.
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+  $ make INSTALL_PATH=/tmp/destdir install
+  mkdir: cannot create directory ‘/lib/modules/5.8.0-rc1+/’: Permission denied
+  Makefile:1342: recipe for target '_builtin_inst_' failed
+  make: *** [_builtin_inst_] Error 1
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
+While modules.builtin is useful also for CONFIG_MODULES=n, this change
+in the behavior is quite unexpected. Maybe "make modules_install"
+can install modules.builtin irrespective of CONFIG_MODULES as Jonas
+originally suggested.
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+Anyway, that commit should be reverted ASAP.
 
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
-
-And now we need to exten the whitelist again with 10 / "Notebook"...
-
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 5acfa08b5dac..cb2a80fdd8f4 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,21 +157,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
+Changes in v2:
+  - add more commit description
+
+ Makefile | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 29abe44ada91..9880e911afe3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1336,16 +1336,6 @@ dt_binding_check: scripts_dtc
+ # ---------------------------------------------------------------------------
+ # Modules
  
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
+-# install modules.builtin regardless of CONFIG_MODULES
+-PHONY += _builtin_inst_
+-_builtin_inst_:
+-	@mkdir -p $(MODLIB)/
+-	@cp -f modules.builtin $(MODLIB)/
+-	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
 -
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
+-PHONY += install
+-install: _builtin_inst_
+-
+ ifdef CONFIG_MODULES
  
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
+ # By default, build modules as well
+@@ -1389,7 +1379,7 @@ PHONY += modules_install
+ modules_install: _modinst_ _modinst_post
+ 
+ PHONY += _modinst_
+-_modinst_: _builtin_inst_
++_modinst_:
+ 	@rm -rf $(MODLIB)/kernel
+ 	@rm -f $(MODLIB)/source
+ 	@mkdir -p $(MODLIB)/kernel
+@@ -1399,6 +1389,8 @@ _modinst_: _builtin_inst_
+ 		ln -s $(CURDIR) $(MODLIB)/build ; \
+ 	fi
+ 	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
++	@cp -f modules.builtin $(MODLIB)/
++	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
+ 
+ # This depmod is only for convenience to give the initial
 -- 
 2.25.1
-
-
 
