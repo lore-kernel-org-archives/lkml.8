@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4247EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00AE32080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178462080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579103;
-	bh=eDxLH4ouDqLNWQDr9hjpdo2YNXdlxYjycEeNZepbj/8=;
+	s=default; t=1592579105;
+	bh=3/6+mYIRxKeP+sGrObHom2baRgiTdP62AWg0s7YeIOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vstpi0sB4edYz6uP+wxmRrV0ZGD9U1CHvAWgb0rrcFJaRXiIvz7sIAtZTKthLV5vb
-	 SdxOMiQWNANU9HUg1G/9yKvAKFGCG+0HsF16ZWw5Afezg+HZYke38ji2Pb3d+lAsE4
-	 pjcH78af+Do8ZYN62yvAFWoY5I48J+ZqjNOBW+hY=
+	b=zmhV0gPj9bXTNcZLiDdZ+Hiw4PY7LJ4B9upnjSPLhH+x/Gvg8pVnMDEb2ahtDqPCv
+	 YvfUF48890eRuTPiTV3iHqw2FR0PeRQbK/yB6OlR6VaPk8z3GAnwQ0Fgyx/jLULP40
+	 OE9H14STibigwFqSJn0TYzXRH+cKDl+ml18zviWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391226AbgFSPFB (ORCPT
+        id S2391235AbgFSPFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391205AbgFSPEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:53 -0400
+        id S2390529AbgFSPFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D11221841;
-        Fri, 19 Jun 2020 15:04:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2366221841;
+        Fri, 19 Jun 2020 15:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579092;
-        bh=eDxLH4ouDqLNWQDr9hjpdo2YNXdlxYjycEeNZepbj/8=;
+        s=default; t=1592579100;
+        bh=3/6+mYIRxKeP+sGrObHom2baRgiTdP62AWg0s7YeIOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqTndp/I4WkocbDSzB+YrYCCOYARRN1mFDKk4/wJUWjSBxYAi2NV8uN3ACsRQm59k
-         rt+UwIg1Z1MNGJb8/U302F9WI1GU3EXmCS3C8uA0QV6DvfkucS4C8ZpPwwm47rOrC5
-         gIs84eYaTraiIVsNcvKBhXbE54h0C7j0+FIFH854=
+        b=cri0Dbe4/4hJknioHZKTwkKPa7PGI7G8AAAWam52gjbM9PQDpKxBx5mUSQ68aSuN3
+         PxZ1/1jyWZtC7CSAakODCLmI9c0PCxQhZDovq31Swcfubk9sS64V6DoqHuszmgF6gm
+         tfGCRHkLIMf9KOoIqLtw/BpOl/kYodTaC1cQP8TM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 256/267] powerpc/64s: Dont let DT CPU features set FSCR_DSCR
-Date:   Fri, 19 Jun 2020 16:34:01 +0200
-Message-Id: <20200619141700.942231187@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Matt Turner <mattst88@gmail.com>
+Subject: [PATCH 4.19 249/267] alpha: fix memory barriers so that they conform to the specification
+Date:   Fri, 19 Jun 2020 16:33:54 +0200
+Message-Id: <20200619141700.631893338@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -58,54 +61,282 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 993e3d96fd08c3ebf7566e43be9b8cd622063e6d upstream.
+commit 54505a1e2083fc54cbe8779b97479f969cd30a00 upstream.
 
-The device tree CPU features binding includes FSCR bit numbers which
-Linux is instructed to set by firmware.
+The commits cd0e00c10672 and 92d7223a7423 broke boot on the Alpha Avanti
+platform. The patches move memory barriers after a write before the write.
+The result is that if there's iowrite followed by ioread, there is no
+barrier between them.
 
-Whether that's a good idea or not, in the case of the DSCR the Linux
-implementation has a hard requirement that the FSCR_DSCR bit not be
-set by default. We use it to track when a process reads/writes to
-DSCR, so it must be clear to begin with.
+The Alpha architecture allows reordering of the accesses to the I/O space,
+and the missing barrier between write and read causes hang with serial
+port and real time clock.
 
-So if firmware tells us to set FSCR_DSCR we must ignore it.
+This patch makes barriers confiorm to the specification.
 
-Currently this does not cause a bug in our DSCR handling because the
-value of FSCR that the device tree CPU features code establishes is
-only used by swapper. All other tasks use the value hard coded in
-init_task.thread.fscr.
+1. We add mb() before readX_relaxed and writeX_relaxed -
+   memory-barriers.txt claims that these functions must be ordered w.r.t.
+   each other. Alpha doesn't order them, so we need an explicit barrier.
+2. We add mb() before reads from the I/O space - so that if there's a
+   write followed by a read, there should be a barrier between them.
 
-However we'd like to fix that in a future commit, at which point this
-will become necessary.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200527145843.2761782-2-mpe@ellerman.id.au
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Fixes: cd0e00c10672 ("alpha: io: reorder barriers to guarantee writeX() and iowriteX() ordering")
+Fixes: 92d7223a7423 ("alpha: io: reorder barriers to guarantee writeX() and iowriteX() ordering #2")
+Cc: stable@vger.kernel.org      # v4.17+
+Acked-by: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Reviewed-by: Maciej W. Rozycki <macro@linux-mips.org>
+Signed-off-by: Matt Turner <mattst88@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/alpha/include/asm/io.h |   74 +++++++++++++++++++++++++++++++++++---------
+ arch/alpha/kernel/io.c      |   60 +++++++++++++++++++++++++++++++----
+ 2 files changed, 112 insertions(+), 22 deletions(-)
 
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -346,6 +346,14 @@ static int __init feat_enable_dscr(struc
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -327,14 +327,18 @@ static inline int __is_mmio(const volati
+ #if IO_CONCAT(__IO_PREFIX,trivial_io_bw)
+ extern inline unsigned int ioread8(void __iomem *addr)
  {
- 	u64 lpcr;
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
+ 	mb();
+ 	return ret;
+ }
  
-+	/*
-+	 * Linux relies on FSCR[DSCR] being clear, so that we can take the
-+	 * facility unavailable interrupt and track the task's usage of DSCR.
-+	 * See facility_unavailable_exception().
-+	 * Clear the bit here so that feat_enable() doesn't set it.
-+	 */
-+	f->fscr_bit_nr = -1;
+ extern inline unsigned int ioread16(void __iomem *addr)
+ {
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -375,7 +379,9 @@ extern inline void outw(u16 b, unsigned
+ #if IO_CONCAT(__IO_PREFIX,trivial_io_lq)
+ extern inline unsigned int ioread32(void __iomem *addr)
+ {
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -420,14 +426,18 @@ extern inline void __raw_writew(u16 b, v
+ 
+ extern inline u8 readb(const volatile void __iomem *addr)
+ {
+-	u8 ret = __raw_readb(addr);
++	u8 ret;
++	mb();
++	ret = __raw_readb(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ extern inline u16 readw(const volatile void __iomem *addr)
+ {
+-	u16 ret = __raw_readw(addr);
++	u16 ret;
++	mb();
++	ret = __raw_readw(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -468,14 +478,18 @@ extern inline void __raw_writeq(u64 b, v
+ 
+ extern inline u32 readl(const volatile void __iomem *addr)
+ {
+-	u32 ret = __raw_readl(addr);
++	u32 ret;
++	mb();
++	ret = __raw_readl(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ extern inline u64 readq(const volatile void __iomem *addr)
+ {
+-	u64 ret = __raw_readq(addr);
++	u64 ret;
++	mb();
++	ret = __raw_readq(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -504,14 +518,44 @@ extern inline void writeq(u64 b, volatil
+ #define outb_p		outb
+ #define outw_p		outw
+ #define outl_p		outl
+-#define readb_relaxed(addr)	__raw_readb(addr)
+-#define readw_relaxed(addr)	__raw_readw(addr)
+-#define readl_relaxed(addr)	__raw_readl(addr)
+-#define readq_relaxed(addr)	__raw_readq(addr)
+-#define writeb_relaxed(b, addr)	__raw_writeb(b, addr)
+-#define writew_relaxed(b, addr)	__raw_writew(b, addr)
+-#define writel_relaxed(b, addr)	__raw_writel(b, addr)
+-#define writeq_relaxed(b, addr)	__raw_writeq(b, addr)
 +
- 	feat_enable(f);
++extern u8 readb_relaxed(const volatile void __iomem *addr);
++extern u16 readw_relaxed(const volatile void __iomem *addr);
++extern u32 readl_relaxed(const volatile void __iomem *addr);
++extern u64 readq_relaxed(const volatile void __iomem *addr);
++
++#if IO_CONCAT(__IO_PREFIX,trivial_io_bw)
++extern inline u8 readb_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readb(addr);
++}
++
++extern inline u16 readw_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readw(addr);
++}
++#endif
++
++#if IO_CONCAT(__IO_PREFIX,trivial_io_lq)
++extern inline u32 readl_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readl(addr);
++}
++
++extern inline u64 readq_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readq(addr);
++}
++#endif
++
++#define writeb_relaxed	writeb
++#define writew_relaxed	writew
++#define writel_relaxed	writel
++#define writeq_relaxed	writeq
  
- 	lpcr = mfspr(SPRN_LPCR);
+ #define mmiowb()
+ 
+--- a/arch/alpha/kernel/io.c
++++ b/arch/alpha/kernel/io.c
+@@ -16,21 +16,27 @@
+ unsigned int
+ ioread8(void __iomem *addr)
+ {
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ unsigned int ioread16(void __iomem *addr)
+ {
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ unsigned int ioread32(void __iomem *addr)
+ {
+-	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
++	unsigned int ret;
++	mb();
++	ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -148,28 +154,36 @@ EXPORT_SYMBOL(__raw_writeq);
+ 
+ u8 readb(const volatile void __iomem *addr)
+ {
+-	u8 ret = __raw_readb(addr);
++	u8 ret;
++	mb();
++	ret = __raw_readb(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ u16 readw(const volatile void __iomem *addr)
+ {
+-	u16 ret = __raw_readw(addr);
++	u16 ret;
++	mb();
++	ret = __raw_readw(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ u32 readl(const volatile void __iomem *addr)
+ {
+-	u32 ret = __raw_readl(addr);
++	u32 ret;
++	mb();
++	ret = __raw_readl(addr);
+ 	mb();
+ 	return ret;
+ }
+ 
+ u64 readq(const volatile void __iomem *addr)
+ {
+-	u64 ret = __raw_readq(addr);
++	u64 ret;
++	mb();
++	ret = __raw_readq(addr);
+ 	mb();
+ 	return ret;
+ }
+@@ -207,6 +221,38 @@ EXPORT_SYMBOL(writew);
+ EXPORT_SYMBOL(writel);
+ EXPORT_SYMBOL(writeq);
+ 
++/*
++ * The _relaxed functions must be ordered w.r.t. each other, but they don't
++ * have to be ordered w.r.t. other memory accesses.
++ */
++u8 readb_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readb(addr);
++}
++
++u16 readw_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readw(addr);
++}
++
++u32 readl_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readl(addr);
++}
++
++u64 readq_relaxed(const volatile void __iomem *addr)
++{
++	mb();
++	return __raw_readq(addr);
++}
++
++EXPORT_SYMBOL(readb_relaxed);
++EXPORT_SYMBOL(readw_relaxed);
++EXPORT_SYMBOL(readl_relaxed);
++EXPORT_SYMBOL(readq_relaxed);
+ 
+ /*
+  * Read COUNT 8-bit bytes from port PORT into memory starting at SRC.
 
 
