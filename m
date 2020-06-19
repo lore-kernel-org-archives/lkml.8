@@ -6,60 +6,66 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A46F206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB88206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390051AbgFSTmm (ORCPT
+        id S2390099AbgFSTpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:42:42 -0400
-Received: from ms.lwn.net ([45.79.88.28]:55412 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389884AbgFSTmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:42:42 -0400
+        Fri, 19 Jun 2020 15:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389863AbgFSTpF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:45:05 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC6AC06174E;
+        Fri, 19 Jun 2020 12:45:04 -0700 (PDT)
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8289723B;
-        Fri, 19 Jun 2020 19:42:41 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 13:42:40 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 6209723B;
+        Fri, 19 Jun 2020 19:45:04 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 13:45:03 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     jens.wiklander@linaro.org, maxim.uvarov@linaro.org,
-        jarkko.sakkinen@linux.intel.com, tee-dev@lists.linaro.org,
+To:     =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@collabora.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org
-Subject: Re: [PATCH v2] Documentation: tee: Document TEE kernel interface
-Message-ID: <20200619134240.6c5b93d4@lwn.net>
-In-Reply-To: <1591253979-29067-1-git-send-email-sumit.garg@linaro.org>
-References: <1591253979-29067-1-git-send-email-sumit.garg@linaro.org>
+        kernel@collabora.com, krisman@collabora.com, rdunlap@infradead.org
+Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
+Message-ID: <20200619134503.60ab689b@lwn.net>
+In-Reply-To: <20200605175536.19681-1-andrealmeid@collabora.com>
+References: <20200605175536.19681-1-andrealmeid@collabora.com>
 Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  4 Jun 2020 12:29:39 +0530
-Sumit Garg <sumit.garg@linaro.org> wrote:
+On Fri,  5 Jun 2020 14:55:36 -0300
+André Almeida <andrealmeid@collabora.com> wrote:
 
-> Update documentation with TEE bus infrastructure which provides an
-> interface for kernel client drivers to communicate with corresponding
-> Trusted Application.
+> Create a documentation providing a background and explanation around the
+> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
 > 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> The reference for writing this documentation was the source code and
+> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+> Systems", by Axboe et al.
+> 
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
 > ---
-> 
-> Changes in v2:
-> - Add TEE client driver example snippet.
-> 
->  Documentation/tee.txt | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> Changes from v1:
+> - Fixed typos
+> - Reworked blk_mq_hw_ctx
 
-Applied, thanks.
+Jens, what's your pleasure on this one?  Should I take it, or do you want
+it...?
+
+Thanks,
 
 jon
