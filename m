@@ -2,137 +2,95 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC05FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A55222158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577992;
-	bh=cl+Qa9of2+ImP93BrZEA1KX/57I+CEY5bH/50wtml6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvLrazMBX/GO7UW93PGqVwKIie84ekHGNCWHZszJXRPyHbmmxpjy5h3Iw1o7PHAV9
-	 /5243ZMn2yWRckiMwr52V/bGY9ykwZ7UWDNBaz6BeC8R437nwU+WkKjOJh7B/4mKEp
-	 Aan9Zn3jkO1BHWNpPti2Kq122f13MN3V6WtmbxgY=
+	by mail.kernel.org (Postfix) with ESMTP id 9867920A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cVyekK6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388841AbgFSOqa (ORCPT
+        id S2388849AbgFSOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388830AbgFSOqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388831AbgFSOqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 10:46:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD2E220A8B;
-        Fri, 19 Jun 2020 14:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577981;
-        bh=cl+Qa9of2+ImP93BrZEA1KX/57I+CEY5bH/50wtml6Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=suyE28OSANH0dKyfeaUxjIKd+cMZR6s8yEdZTCyaJo69/RTSE11hKnEAAKG24Vgrw
-         dTro8aihn7grS/NI/zLoV3cT2rIoKmjRaVlwzNoB/VoDJELAd0eKYp8v/ojsTxD8oA
-         tFoZ2gNUsOgOjyrPb9C1wwWmeUErexeYIewk4aAI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 037/190] KVM: x86/mmu: Consolidate "is MMIO SPTE" code
-Date:   Fri, 19 Jun 2020 16:31:22 +0200
-Message-Id: <20200619141635.432266855@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C88C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:20 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b4so9102705qkn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+s6pkBRDM30YuGdJhldYKeWDIO48yG6flkbbQQFbzXo=;
+        b=cVyekK6gNaex1l33w5CHjg7QMVi68Sw9rhx+fP+2dHuJ9VuuQAjQuvPC0embsAEdll
+         pL39qxS6t4Z72V7EuzIFUxGRiUy0R9xd48CMucaUVTTfLG6KJuB1lp1lfDG99zhzwayW
+         RiNI4sAMzD5UAnCVeEJWJkrrLXz2X5a1+EHq7MfcAf4QEvRW11cPPhA2vSJJXwgq8+AN
+         wSG6JToEpWDGOJRIkVr0GSgtT9FzIJgJ3aJeeIbBu9wiiXvhrQHVX2R98vmzUHyZ8cjv
+         lNeHlLryFxqhdOjBqQ+153TWRlnSTkOAXNDtxCU6bs6aX/NcBxp1dDa0Y7/0d+TcX9er
+         bwfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+s6pkBRDM30YuGdJhldYKeWDIO48yG6flkbbQQFbzXo=;
+        b=neBrbNm/WRBh1E00NRTKZLyxyCiIMQwCgZbRoCTqKB1VYL0ZX1p35qkbDT4QLvnNfy
+         YfYCWqoaeGZphazEDBr5xACsHAy2YcfpwOthKH99wkFZj1esgh1rcsLrmsAaWF4XC3Oa
+         pwml7IBlyhBf/oVJ5pJ9jPKnH1cbq9dkncJtq2GBjERo4Mw6HabZFfFdzd2wheWDnzo0
+         vETR1+T178G3bfB4Erxy1qtle/ibDaRTZd9ps8sjVIk5AWFqsuGZ8BOUXImz6QcS1Exj
+         4FVEgrtx8KsIZ1p1/oZxYQpPmhKTg7APEdLJmU8inz8zo2IV+rMkL/hTZmCZcoDoPDTS
+         +hBA==
+X-Gm-Message-State: AOAM533Q7A8/BOSx9WXSbwCug+P2/As8fTiBkpSs5b2Ne5ciCom4OVQE
+        FoxQiy69G5e31xW5F5dnJ8WKrQ==
+X-Google-Smtp-Source: ABdhPJygwoh996Fm9/gdg5XwxRwtTBWoa4pQqIYXEJJKN05JlUNfo4ySIZl5kXOYWSFVrRj4BFCHdg==
+X-Received: by 2002:a05:620a:205e:: with SMTP id d30mr3855514qka.450.1592577979603;
+        Fri, 19 Jun 2020 07:46:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 6sm6469489qkl.26.2020.06.19.07.46.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 07:46:19 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmIHa-00AoSr-JK; Fri, 19 Jun 2020 11:46:18 -0300
+Date:   Fri, 19 Jun 2020 11:46:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Bo YU <tsu.yubo@gmail.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        ledford@redhat.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] RDMA/rtrs: fix potential resources leaks
+Message-ID: <20200619144618.GO6578@ziepe.ca>
+References: <20200619131017.pr7eoca2bzdtlbk4@debian.debian-2>
+ <CAMGffEntL4XkF6bCuhUDP+AOBO4mpKK1pTe3NgPUW86ySyy7Wg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMGffEntL4XkF6bCuhUDP+AOBO4mpKK1pTe3NgPUW86ySyy7Wg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Fri, Jun 19, 2020 at 03:16:57PM +0200, Jinpu Wang wrote:
+> Hi, Bo,
+> On Fri, Jun 19, 2020 at 3:10 PM Bo YU <tsu.yubo@gmail.com> wrote:
+> >
+> > Dev is returned from allocation function kzalloc but it does not
+> > free it in out_err path.
+> If allocation failed, kzalloc return NULL, nothing to free.
 
-[ Upstream commit 26c44a63a291893e0a00f01e96b6e1d0310a79a9 ]
+You should re-organize this to not confuse coverity.
 
-Replace the open-coded "is MMIO SPTE" checks in the MMU warnings
-related to software-based access/dirty tracking to make the code
-slightly more self-documenting.
+IS_ERR_OR_NULL should rarely be used and is the problem here
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kvm/mmu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 2e558c814883..d8878266553c 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -280,6 +280,11 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value)
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_set_mmio_spte_mask);
- 
-+static bool is_mmio_spte(u64 spte)
-+{
-+	return (spte & shadow_mmio_mask) == shadow_mmio_value;
-+}
-+
- static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
- {
- 	return sp->role.ad_disabled;
-@@ -287,7 +292,7 @@ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
- 
- static inline bool spte_ad_enabled(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return !(spte & shadow_acc_track_value);
- }
- 
-@@ -298,13 +303,13 @@ static bool is_nx_huge_page_enabled(void)
- 
- static inline u64 spte_shadow_accessed_mask(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return spte_ad_enabled(spte) ? shadow_accessed_mask : 0;
- }
- 
- static inline u64 spte_shadow_dirty_mask(u64 spte)
- {
--	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
-+	MMU_WARN_ON(is_mmio_spte(spte));
- 	return spte_ad_enabled(spte) ? shadow_dirty_mask : 0;
- }
- 
-@@ -374,11 +379,6 @@ static void mark_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, u64 gfn,
- 	mmu_spte_set(sptep, mask);
- }
- 
--static bool is_mmio_spte(u64 spte)
--{
--	return (spte & shadow_mmio_mask) == shadow_mmio_value;
--}
--
- static gfn_t get_mmio_spte_gfn(u64 spte)
- {
- 	u64 gpa = spte & shadow_nonpresent_or_rsvd_lower_gfn_mask;
--- 
-2.25.1
-
-
-
+Jason
