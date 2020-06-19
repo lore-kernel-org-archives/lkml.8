@@ -2,87 +2,114 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2665C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C735AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7952D20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9634920786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592581015;
+	bh=7LFZjE6VzhV8QzbPwumbo7+c/KPcY+V7r3MsGoHhnmA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oDtm7okkR0MPK9o2kT9FG3i08k/tfI2yKhm1jL2sbaGDJPnCGl24rdFMS1s78MWfB
+	 CxB+LefzlfxSsrzBPdAIrt/sl0a7pkBiw+kYizm6PgvNGboNp/o4aadxgD7sjqpr0z
+	 2Fs+wCGsEHsQN6uGqqEAs1+cB+VMz+VOHHfkLRR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405103AbgFSPgq (ORCPT
+        id S2405108AbgFSPgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:36:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39845 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404995AbgFSPgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:36:21 -0400
-Received: from ip-109-41-0-196.web.vodafone.de ([109.41.0.196] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jmJ3w-0000bE-6e; Fri, 19 Jun 2020 15:36:16 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Serge Hallyn <serge@hallyn.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 0/3] nsproxy: support CLONE_NEWTIME with setns()
-Date:   Fri, 19 Jun 2020 17:35:56 +0200
-Message-Id: <20200619153559.724863-1-christian.brauner@ubuntu.com>
+        Fri, 19 Jun 2020 11:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404817AbgFSPav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 818C320734;
+        Fri, 19 Jun 2020 15:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592580651;
+        bh=7LFZjE6VzhV8QzbPwumbo7+c/KPcY+V7r3MsGoHhnmA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KtGDm+dVjQiaBbxJzknsyea77DbWAyvwaj3kEc1Qx9waUIY5gzi4NRPqFVFOYc5ag
+         ITFH0049asqHEHxZGWBfs1hiBjW9ucqIEhunI8ZS6PmO70BhBrrGIDR+VLciemAuc8
+         +Q/p/IUzNGU+rjkOfmOtbPX9X7WcLSZ12s7GUoUs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.7 330/376] kernel/cpu_pm: Fix uninitted local in cpu_pm
+Date:   Fri, 19 Jun 2020 16:34:08 +0200
+Message-Id: <20200619141725.954930518@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+From: Douglas Anderson <dianders@chromium.org>
 
-So far setns() was missing time namespace support. This was partially
-due to it simply not being implemented but also because
-vdso_join_timens() could still fail which made switching to multiple
-namespaces atomically problematic. This series first fixes
-vdso_join_timens() to never fail, introduces timens_commit() and finally
-adds CLONE_NEWTIME support for setns().
+commit b5945214b76a1f22929481724ffd448000ede914 upstream.
 
-Please note, that arm is currently in the process of adding
-vdso_join_timens() support (cf. [1]) so it might make sense to split the
-vdso_join_timens() change out and route it to mainline as a fix so both
-my series and the arm support can be rebased on top of it. I've Cced the
-relevant people and I'm also replying to the arm thread now.
+cpu_pm_notify() is basically a wrapper of notifier_call_chain().
+notifier_call_chain() doesn't initialize *nr_calls to 0 before it
+starts incrementing it--presumably it's up to the callers to do this.
 
-[1]: https://lore.kernel.org/lkml/20200602180259.76361-1-avagin@gmail.com/
+Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
+This potentially means you could get too many or two few calls to
+CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
+luck of the stack.
 
-Thanks!
-Christian
+Let's fix this.
 
-Christian Brauner (3):
-  timens: make vdso_join_timens() always succeed
-  timens: add timens_commit() helper
-  nsproxy: support CLONE_NEWTIME with setns()
+Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
+Cc: stable@vger.kernel.org
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- arch/x86/entry/vdso/vma.c      |  6 ++----
- include/linux/time_namespace.h | 13 +++++++++----
- kernel/nsproxy.c               | 21 +++++++++++++++++++--
- kernel/time/namespace.c        | 22 ++++++++--------------
- 4 files changed, 38 insertions(+), 24 deletions(-)
+---
+ kernel/cpu_pm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+--- a/kernel/cpu_pm.c
++++ b/kernel/cpu_pm.c
+@@ -80,7 +80,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_unregister_noti
+  */
+ int cpu_pm_enter(void)
+ {
+-	int nr_calls;
++	int nr_calls = 0;
+ 	int ret = 0;
+ 
+ 	ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
+@@ -131,7 +131,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_exit);
+  */
+ int cpu_cluster_pm_enter(void)
+ {
+-	int nr_calls;
++	int nr_calls = 0;
+ 	int ret = 0;
+ 
+ 	ret = cpu_pm_notify(CPU_CLUSTER_PM_ENTER, -1, &nr_calls);
 
-base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
--- 
-2.27.0
 
