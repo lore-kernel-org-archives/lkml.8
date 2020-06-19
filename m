@@ -2,97 +2,90 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42236C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED212080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxw0YkMG"
+	by mail.kernel.org (Postfix) with ESMTP id 455322080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592562211;
+	bh=83+sXFoflRuZHwP/XSFWwh5Bw+aJkOhKPwddfQde9jQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DqMQsBc9X8LlJRueQ3vXX+HqjA6MJ2N2M1kri/SGvQXNapcvHUUMfYvO7OUc7rBtO
+	 KHPvtsUrwNBSNncPepLy+TsNJZ0i7QHMgDf3oKVLdzYfm30JQOONIosxkHXR89/2Kn
+	 6TgrwBRhFyR6hxnkYA+j6AT3RMwrE8wOCQda540k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732326AbgFSKVk (ORCPT
+        id S1732362AbgFSKX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgFSKVg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:21:36 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88D1C06174E;
-        Fri, 19 Jun 2020 03:21:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so3770285pls.2;
-        Fri, 19 Jun 2020 03:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VDgnugb2CfGt3bUYZDqOMdc5K2WdlITSMtpr2WMgIQk=;
-        b=Gxw0YkMGFFlUAfxi+H2GeiY0SMotDXQV2unlQJpfrz+VAWp6WXBfkS0QWXz+OpUN57
-         5whyNR2mhL8N4hQsSJc8CPNzASO7USsO827S4pidIlN4RtRTvORKCkyUA7KK4jpte0ir
-         FlszD9T+l9oECvPSzc8muP1YbPkipToRR25IDZxFIT6ufbNmzuBTvZjHUfTxKUOGQEb0
-         mbkLbzmE5wQEjLphu9VrI/5whdR8zO85m9eRiH7azOyNjl1/hiIqOBDUe8/NJ4NjrJhy
-         gLHXp4j7jHxJlGZgad4+hUiTutvkHkjpIxPAG5aVd+j5VRVMT7lLgQJT3DueJR47HG3c
-         uW0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VDgnugb2CfGt3bUYZDqOMdc5K2WdlITSMtpr2WMgIQk=;
-        b=sA40/ExyX5IQ8LuphmO/OBDi9ICoxp8avF4h1ReDO4BhrGql5A0dv50AMS0XOd7MPU
-         RXQirAHwPy61flCe7GCotu9G5y7i/dtatNsD2RLi/brVVEl0VdhYetkooPbvqutIrgM7
-         K8tBXFYt1LJ1z+815yv3TEp4ZRqPQDz++f7W/4CwCFdDvuIY/ZD1Yxezwg35qP50zBlq
-         Q/ty5CMdAIKoZtDyRAF2bOOb8EjUsvz1zRGOU1XFBjtALqtbz6bBHgSgYlw73JGyiPyi
-         oj+7AbBSWQZn2FQXCUs95AUVXg1JfE5ZOgOGCLijduHD/0/d2Af+wJmXNAHogCwvnHD2
-         VgcA==
-X-Gm-Message-State: AOAM5301WBRHG/BwS9SIgBJk9e/3wOOaiJ6I5lhzpK0MM6sJE4/yovzN
-        Ov9X/w8FRCzY0RNHWsa7qCQ=
-X-Google-Smtp-Source: ABdhPJySZmZUheczzUUdNhskXaNolTLzBWtGhah6JUkwzXvdPP05AlmWVmDWTfjEWIkEeMcyZmXgUw==
-X-Received: by 2002:a17:902:fe01:: with SMTP id g1mr7714083plj.254.1592562095934;
-        Fri, 19 Jun 2020 03:21:35 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id o207sm5609202pfd.56.2020.06.19.03.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 03:21:35 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Fri, 19 Jun 2020 19:21:32 +0900
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v1 0/6] console: unify return codes from ->setup() hook
-Message-ID: <20200619102132.GB310968@jagdpanzerIV.localdomain>
-References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
- <20200619093917.GK3617@alley>
- <20200619094726.GD2428291@smile.fi.intel.com>
+        Fri, 19 Jun 2020 06:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732332AbgFSKXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:23:19 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296D92080C;
+        Fri, 19 Jun 2020 10:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592562199;
+        bh=83+sXFoflRuZHwP/XSFWwh5Bw+aJkOhKPwddfQde9jQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FDhMjjqHWbvePWaOg8IDnYjyicZTMLupM2NJTlyUGnqpgPUUNVkI5Wcg5yIUyixYS
+         NzB3tLB34+YAWkRBlwh4J7Gdx5GxLsV8k3rc92Uj1L3lG5TlFTjSrDb1t/K6bAx1eo
+         J2wXA/bVH2junYFyK61CEPJljjbnKh7TgETAXTxc=
+Date:   Fri, 19 Jun 2020 11:23:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mani@kernel.org
+Subject: Re: [PATCH] spi: spidev: fix missing octal defines
+Message-ID: <20200619102317.GB5396@sirena.org.uk>
+References: <20200619074345.4041673-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
 Content-Disposition: inline
-In-Reply-To: <20200619094726.GD2428291@smile.fi.intel.com>
+In-Reply-To: <20200619074345.4041673-1-vkoul@kernel.org>
+X-Cookie: Robot, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/19 12:47), Andy Shevchenko wrote:
-> On Fri, Jun 19, 2020 at 11:39:18AM +0200, Petr Mladek wrote:
-> > On Thu 2020-06-18 19:47:45, Andy Shevchenko wrote:
-[..]
-> > I am going to push it the following week via printk tree unless
-> > anybody complains.
-> 
-> Thanks, Petr, I guess you may also incorporate Sergey's patch
-> he proposed. Sergey, are you going to submit it officially?
 
-I can send a patch, unless Petr has objections.
+--kORqDWCi7qDJ0mEj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	-ss
+On Fri, Jun 19, 2020 at 01:13:45PM +0530, Vinod Koul wrote:
+> Commit 896fa735084e ("spi: spidev_test: Add support for Octal mode data
+> transfers") adds support for octal mode but failed to update userspace
+> header with octal defines causing build error for the spidev tool
+
+This was already fixed.
+
+--kORqDWCi7qDJ0mEj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7skhQACgkQJNaLcl1U
+h9D9yAf/XQvacdfyrPIV1ZmRYSjHGdp+H4uWcdjRGdw6nf+FF/1s+kF2b0vazZYE
+LjXHCVrqf/cm9IjclGr+GCsuoUHWc5TS4r6VveICtEAyZsSU8+voN3LzW+Uhz2Nu
+ppSeRp9hhFXSCzfmjP6wWjIKK06ATEdjbMw7KXhvISPTTwxGCYHiYpZopUseN9oC
+OhwhCJJN/5mQ1OHqG2sr31WA71xn23FHw1E8MeAn1jnEjFsqdwHBQXAGD83MK9Ze
+CHXmc33QFXW3Q6a9dJMCaJOt+rNkypJCmVZHJNLre6linqnGtfVW0/aMnYTgzSJy
+6ghwaEKKfT4OWIcCGhE14Nzff/Keyg==
+=45Bw
+-----END PGP SIGNATURE-----
+
+--kORqDWCi7qDJ0mEj--
