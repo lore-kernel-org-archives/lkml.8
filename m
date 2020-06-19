@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2732C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF07C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 796112168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839BD21527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577515;
-	bh=SOZVP6U+P1pcTgKXAWFsdPaMTyQq9HXmm1GkAlSLfN0=;
+	s=default; t=1592577525;
+	bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IuJKVcH2B5ZdOAhPpYqZVkvgEdgGf9mzPMu9yQe0aJtGwtNBUcN2DwIf9kgUQ4YX
-	 WCOPUuJ34tkUtpxVzghd3byD4HATjc64ywc8/4wfk/5kcHkPmMFg0aYk1cslyyJ6We
-	 yOBaQWM7R4dXMfJ8pu2OTXAHvDu0cdas3SoMelzI=
+	b=u5LaDa04Tt3EwDXoAypnH0zs4W0JIedvDNGEswK2xRYX+hHYMxTNuZ43A4mZAWzCS
+	 bAvoU7CmlsOEaS/UAWoEF8Av7WgepcHdagxFngqjvh84n6KT5IHyBm9HfFWw7+qIEK
+	 ZGaUwqT2ItiwNuo5m2tBbvdUTIgyruRC/J6kw4XQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbgFSOi3 (ORCPT
+        id S2387455AbgFSOim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387863AbgFSOiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:21 -0400
+        id S1733263AbgFSOiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A766B21527;
-        Fri, 19 Jun 2020 14:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037F8208B8;
+        Fri, 19 Jun 2020 14:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577501;
-        bh=SOZVP6U+P1pcTgKXAWFsdPaMTyQq9HXmm1GkAlSLfN0=;
+        s=default; t=1592577503;
+        bh=YgsRd3RmLnVM1wIbfeCexFiwLKDhAcn/ht2Pqp1VxRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eI/OMaiaRRPjOMkhhrB6O2Wmb5m1CrriC6MIoPHSWXml6nsztRp3lhVodyzSdf1v/
-         ptXq4VZgmnNYobTrIx5gQtu3/NoXiTVfnvDE/2NgCF+AeLJBbd+oL2snPFLguVpdqo
-         E89a7dAE0LTNo1v31d6tB5U2a4ovnzxcQYfuawqM=
+        b=M/48W09YnPyNygCB9U2ytLchTgfMr2XjG/163ThWRyVp954T+UQ2E2G+ZhMosKGby
+         V3Adt/rweSCIWjiTXCVM6TILPB+fdGnY8S1WyR7Wr3bAlP7VUuYRt4sgHK0P6OV3ZP
+         M30HZxC18/H8OF+y2HpCEOCDwqXzw8C2HMwXYQsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        David.Laight@aculab.com (big endian system concerns),
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 4.4 076/101] ima: Fix ima digest hash table key calculation
-Date:   Fri, 19 Jun 2020 16:33:05 +0200
-Message-Id: <20200619141617.986580358@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.4 077/101] ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
+Date:   Fri, 19 Jun 2020 16:33:06 +0200
+Message-Id: <20200619141618.042142094@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -61,54 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
 
-commit 1129d31b55d509f15e72dc68e4b5c3a4d7b4da8d upstream.
+commit c36a71b4e35ab35340facdd6964a00956b9fef0a upstream.
 
-Function hash_long() accepts unsigned long, while currently only one byte
-is passed from ima_hash_key(), which calculates a key for ima_htable.
+If eh->eh_max is 0, EXT_MAX_EXTENT/INDEX would evaluate to unsigned
+(-1) resulting in illegal memory accesses. Although there is no
+consistent repro, we see that generic/019 sometimes crashes because of
+this bug.
 
-Given that hashing the digest does not give clear benefits compared to
-using the digest itself, remove hash_long() and return the modulus
-calculated on the first two bytes of the digest with the number of slots.
-Also reduce the depth of the hash table by doubling the number of slots.
+Ran gce-xfstests smoke and verified that there were no regressions.
 
-Cc: stable@vger.kernel.org
-Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Acked-by: David.Laight@aculab.com (big endian system concerns)
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+Link: https://lore.kernel.org/r/20200421023959.20879-2-harshadshirwadkar@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima.h |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/ext4/ext4_extents.h |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -34,7 +34,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 =
- #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
- #define IMA_EVENT_NAME_LEN_MAX	255
+--- a/fs/ext4/ext4_extents.h
++++ b/fs/ext4/ext4_extents.h
+@@ -169,10 +169,13 @@ struct ext4_ext_path {
+ 	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
+ #define EXT_LAST_INDEX(__hdr__) \
+ 	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_entries) - 1)
+-#define EXT_MAX_EXTENT(__hdr__) \
+-	(EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
++#define EXT_MAX_EXTENT(__hdr__)	\
++	((le16_to_cpu((__hdr__)->eh_max)) ? \
++	((EXT_FIRST_EXTENT((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) \
++					: 0)
+ #define EXT_MAX_INDEX(__hdr__) \
+-	(EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)
++	((le16_to_cpu((__hdr__)->eh_max)) ? \
++	((EXT_FIRST_INDEX((__hdr__)) + le16_to_cpu((__hdr__)->eh_max) - 1)) : 0)
  
--#define IMA_HASH_BITS 9
-+#define IMA_HASH_BITS 10
- #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
- 
- #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
-@@ -131,9 +131,10 @@ struct ima_h_table {
- };
- extern struct ima_h_table ima_htable;
- 
--static inline unsigned long ima_hash_key(u8 *digest)
-+static inline unsigned int ima_hash_key(u8 *digest)
+ static inline struct ext4_extent_header *ext_inode_hdr(struct inode *inode)
  {
--	return hash_long(*digest, IMA_HASH_BITS);
-+	/* there is no point in taking a hash of part of a digest */
-+	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
- }
- 
- /* LIM API function definitions */
 
 
