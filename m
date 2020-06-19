@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF8920732
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D2320732
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585148;
-	bh=AoCJP4443lKj4hyl1GTi/yV8cWeVgsfTrVCN5IgjCE8=;
+	s=default; t=1592585150;
+	bh=ZhES9g6JZkBHuzDLtCGpUSXbE4R5logbbPHzNDpTULU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xi9259TCjqzTE9gXgIfDJH0Jk4vCSRataXAy52+gVYYfc471Ta8xoplDpYgyp6pJr
-	 okrXZgS1lkohFTRKytTqmTiQyKk18IQt365aF0DO2ylHfKxm5SC7A083A3pR4Yx8DA
-	 vj1eQEg/Bs4eLNq7PlIAQB2M4bmZFDfVzat05XY0=
+	b=A+4JzTCxq0i/OpmaKf4oDimA8ZFHAqKK1pqCesXTVsbYzX2K3ri0AegUmBaKtD/ff
+	 Z7DEPeEh+5zmP6QIvTyzpuCcoGuWHhKAPYlecc18TgkA7SS3b/aIKqnOapc0Wg0UBS
+	 daw4NedQjlln5n+DoGfkc0dbdjXqIqi6bx0SWkyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgFSOlr (ORCPT
+        id S2405007AbgFSQpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387470AbgFSOlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:35 -0400
+        id S2388298AbgFSOlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FAF12070A;
-        Fri, 19 Jun 2020 14:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 267B120CC7;
+        Fri, 19 Jun 2020 14:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577695;
-        bh=AoCJP4443lKj4hyl1GTi/yV8cWeVgsfTrVCN5IgjCE8=;
+        s=default; t=1592577709;
+        bh=ZhES9g6JZkBHuzDLtCGpUSXbE4R5logbbPHzNDpTULU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qw6JWJreidvE1Kd2g2GT0T08FxtpjbAVJOzUlEinGNu2xfkHrLkkLmmqEeBmXN8Bk
-         0ZgtYefhDHzmdpgFwaIF29L4Oyg7QKePQBsPn/ceNC5wX/5wbH3dlULfEf3oEveJM7
-         wuP95CKRKlVKrdea/uDACx1mt43eIry2axh5H5ro=
+        b=eH0Ye2TgqOPwtr527vUfA9EhbcYHUMbr9yURDpTybqTyCn91Rns3VF3x4nMvYLSDP
+         uLRHBJAgigDtKK2hIPbEsaPb5LOSkkiC2wl9fHMjEyJC77EmXJ8oMkDmUoFSMCmWRq
+         B40LykVtf6AwjVKmu4eo5QTVxmSCuROAW/F3SAN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Andi Shyti <andi.shyti@intel.com>
-Subject: [PATCH 4.9 051/128] agp/intel: Reinforce the barrier after GTT updates
-Date:   Fri, 19 Jun 2020 16:32:25 +0200
-Message-Id: <20200619141622.889134311@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 027/128] x86/speculation: Avoid force-disabling IBPB based on STIBP and enhanced IBRS.
+Date:   Fri, 19 Jun 2020 16:32:01 +0200
+Message-Id: <20200619141621.611616160@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,55 +61,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
+[ Upstream commit 21998a351512eba4ed5969006f0c55882d995ada ]
 
-After changing the timing between GTT updates and execution on the GPU,
-we started seeing sporadic failures on Ironlake. These were narrowed
-down to being an insufficiently strong enough barrier/delay after
-updating the GTT and scheduling execution on the GPU. By forcing the
-uncached read, and adding the missing barrier for the singular
-insert_page (relocation paths), the sporadic failures go away.
+When STIBP is unavailable or enhanced IBRS is available, Linux
+force-disables the IBPB mitigation of Spectre-BTB even when simultaneous
+multithreading is disabled. While attempts to enable IBPB using
+prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, ...) fail with
+EPERM, the seccomp syscall (or its prctl(PR_SET_SECCOMP, ...) equivalent)
+which are used e.g. by Chromium or OpenSSH succeed with no errors but the
+application remains silently vulnerable to cross-process Spectre v2 attacks
+(classical BTB poisoning). At the same time the SYSFS reporting
+(/sys/devices/system/cpu/vulnerabilities/spectre_v2) displays that IBPB is
+conditionally enabled when in fact it is unconditionally disabled.
 
-Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
-Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Andi Shyti <andi.shyti@intel.com>
-Cc: stable@vger.kernel.org # v4.0+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+STIBP is useful only when SMT is enabled. When SMT is disabled and STIBP is
+unavailable, it makes no sense to force-disable also IBPB, because IBPB
+protects against cross-process Spectre-BTB attacks regardless of the SMT
+state. At the same time since missing STIBP was only observed on AMD CPUs,
+AMD does not recommend using STIBP, but recommends using IBPB, so disabling
+IBPB because of missing STIBP goes directly against AMD's advice:
+https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf
 
+Similarly, enhanced IBRS is designed to protect cross-core BTB poisoning
+and BTB-poisoning attacks from user space against kernel (and
+BTB-poisoning attacks from guest against hypervisor), it is not designed
+to prevent cross-process (or cross-VM) BTB poisoning between processes (or
+VMs) running on the same core. Therefore, even with enhanced IBRS it is
+necessary to flush the BTB during context-switches, so there is no reason
+to force disable IBPB when enhanced IBRS is available.
+
+Enable the prctl control of IBPB even when STIBP is unavailable or enhanced
+IBRS is available.
+
+Fixes: 7cc765a67d8e ("x86/speculation: Enable prctl mode for spectre_v2_user")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/agp/intel-gtt.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c | 87 ++++++++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 37 deletions(-)
 
---- a/drivers/char/agp/intel-gtt.c
-+++ b/drivers/char/agp/intel-gtt.c
-@@ -845,6 +845,7 @@ void intel_gtt_insert_page(dma_addr_t ad
- 			   unsigned int flags)
- {
- 	intel_private.driver->write_entry(addr, pg, flags);
-+	readl(intel_private.gtt + pg);
- 	if (intel_private.driver->chipset_flush)
- 		intel_private.driver->chipset_flush();
- }
-@@ -870,7 +871,7 @@ void intel_gtt_insert_sg_entries(struct
- 			j++;
- 		}
- 	}
--	wmb();
-+	readl(intel_private.gtt + j - 1);
- 	if (intel_private.driver->chipset_flush)
- 		intel_private.driver->chipset_flush();
- }
-@@ -1104,6 +1105,7 @@ static void i9xx_cleanup(void)
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 82549060b824..2ab65f0ec56d 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -580,7 +580,9 @@ early_param("nospectre_v1", nospectre_v1_cmdline);
+ static enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init =
+ 	SPECTRE_V2_NONE;
  
- static void i9xx_chipset_flush(void)
- {
-+	wmb();
- 	if (intel_private.i9xx_flush_page)
- 		writel(1, intel_private.i9xx_flush_page);
+-static enum spectre_v2_user_mitigation spectre_v2_user __ro_after_init =
++static enum spectre_v2_user_mitigation spectre_v2_user_stibp __ro_after_init =
++	SPECTRE_V2_USER_NONE;
++static enum spectre_v2_user_mitigation spectre_v2_user_ibpb __ro_after_init =
+ 	SPECTRE_V2_USER_NONE;
+ 
+ #ifdef RETPOLINE
+@@ -726,15 +728,6 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 		break;
+ 	}
+ 
+-	/*
+-	 * At this point, an STIBP mode other than "off" has been set.
+-	 * If STIBP support is not being forced, check if STIBP always-on
+-	 * is preferred.
+-	 */
+-	if (mode != SPECTRE_V2_USER_STRICT &&
+-	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
+-		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+-
+ 	/* Initialize Indirect Branch Prediction Barrier */
+ 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
+@@ -757,23 +750,36 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
+ 			static_key_enabled(&switch_mm_always_ibpb) ?
+ 			"always-on" : "conditional");
++
++		spectre_v2_user_ibpb = mode;
+ 	}
+ 
+-	/* If enhanced IBRS is enabled no STIBP required */
+-	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++	/*
++	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
++	 * required.
++	 */
++	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return;
+ 
+ 	/*
+-	 * If SMT is not possible or STIBP is not available clear the STIBP
+-	 * mode.
++	 * At this point, an STIBP mode other than "off" has been set.
++	 * If STIBP support is not being forced, check if STIBP always-on
++	 * is preferred.
++	 */
++	if (mode != SPECTRE_V2_USER_STRICT &&
++	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
++		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
++
++	/*
++	 * If STIBP is not available, clear the STIBP mode.
+ 	 */
+-	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
++	if (!boot_cpu_has(X86_FEATURE_STIBP))
+ 		mode = SPECTRE_V2_USER_NONE;
++
++	spectre_v2_user_stibp = mode;
++
+ set_mode:
+-	spectre_v2_user = mode;
+-	/* Only print the STIBP mode when SMT possible */
+-	if (smt_possible)
+-		pr_info("%s\n", spectre_v2_user_strings[mode]);
++	pr_info("%s\n", spectre_v2_user_strings[mode]);
  }
+ 
+ static const char * const spectre_v2_strings[] = {
+@@ -1013,7 +1019,7 @@ void arch_smt_update(void)
+ {
+ 	mutex_lock(&spec_ctrl_mutex);
+ 
+-	switch (spectre_v2_user) {
++	switch (spectre_v2_user_stibp) {
+ 	case SPECTRE_V2_USER_NONE:
+ 		break;
+ 	case SPECTRE_V2_USER_STRICT:
+@@ -1246,14 +1252,16 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
+ {
+ 	switch (ctrl) {
+ 	case PR_SPEC_ENABLE:
+-		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 			return 0;
+ 		/*
+ 		 * Indirect branch speculation is always disabled in strict
+ 		 * mode.
+ 		 */
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
+@@ -1264,10 +1272,12 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
+ 		 * Indirect branch speculation is always allowed when
+ 		 * mitigation is force disabled.
+ 		 */
+-		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 			return -EPERM;
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return 0;
+ 		task_set_spec_ib_disable(task);
+ 		if (ctrl == PR_SPEC_FORCE_DISABLE)
+@@ -1298,7 +1308,8 @@ void arch_seccomp_spec_mitigate(struct task_struct *task)
+ {
+ 	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
+ 		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+-	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
++	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP)
+ 		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+ }
+ #endif
+@@ -1327,22 +1338,24 @@ static int ib_prctl_get(struct task_struct *task)
+ 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
+ 		return PR_SPEC_NOT_AFFECTED;
+ 
+-	switch (spectre_v2_user) {
+-	case SPECTRE_V2_USER_NONE:
++	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 		return PR_SPEC_ENABLE;
+-	case SPECTRE_V2_USER_PRCTL:
+-	case SPECTRE_V2_USER_SECCOMP:
++	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
++		return PR_SPEC_DISABLE;
++	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_PRCTL ||
++	    spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_PRCTL ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP) {
+ 		if (task_spec_ib_force_disable(task))
+ 			return PR_SPEC_PRCTL | PR_SPEC_FORCE_DISABLE;
+ 		if (task_spec_ib_disable(task))
+ 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
+ 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
+-	case SPECTRE_V2_USER_STRICT:
+-	case SPECTRE_V2_USER_STRICT_PREFERRED:
+-		return PR_SPEC_DISABLE;
+-	default:
++	} else
+ 		return PR_SPEC_NOT_AFFECTED;
+-	}
+ }
+ 
+ int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
+@@ -1583,7 +1596,7 @@ static char *stibp_state(void)
+ 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return "";
+ 
+-	switch (spectre_v2_user) {
++	switch (spectre_v2_user_stibp) {
+ 	case SPECTRE_V2_USER_NONE:
+ 		return ", STIBP: disabled";
+ 	case SPECTRE_V2_USER_STRICT:
+-- 
+2.25.1
+
 
 
