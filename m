@@ -2,171 +2,87 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C98AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A84F20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B86207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lnm/XM7D"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="pFmK8XsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391010AbgFSReq (ORCPT
+        id S2392797AbgFSRfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:34:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31897 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732307AbgFSReq (ORCPT
+        Fri, 19 Jun 2020 13:35:17 -0400
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:18144 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389388AbgFSRfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:34:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592588084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FSCXX8Dn6TNSzzYA9q3ZlYEoSdRai2clmlWhOcdNdrI=;
-        b=Lnm/XM7D0nU77eahJTS44OuwgtGC+fmw5vddS7mgcwf9b9r19kOJu3ACk0jmtZiXGf/zzP
-        XP3fqTanSfZGoArtWGsYCKnS2mIBTHNan8tVUnEQTkT1FAF4rkQACBHdoZBmhtQFxtxONi
-        jmCxNkBHa+kWhaEPQFuX6+Q56i5Ho2Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-9R5IdaOZOGmaUKDeMk5i2w-1; Fri, 19 Jun 2020 13:34:43 -0400
-X-MC-Unique: 9R5IdaOZOGmaUKDeMk5i2w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B824E800053;
-        Fri, 19 Jun 2020 17:34:41 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-113-94.phx2.redhat.com [10.3.113.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 178775D9E5;
-        Fri, 19 Jun 2020 17:34:37 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 13:34:36 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] Sched: Add a tracepoint to track rq->nr_running
-Message-ID: <20200619173436.GF36031@lorien.usersys.redhat.com>
-References: <20200619141120.1476-1-pauld@redhat.com>
- <20200619124641.7f94ad14@oasis.local.home>
+        Fri, 19 Jun 2020 13:35:16 -0400
+Date:   Fri, 19 Jun 2020 17:35:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1592588112; bh=xt9FcSDY9Nl6m6FCtdnFPbr4ruQnPLHweIaO3/bHk1k=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=pFmK8XsU1mVJCZhek4tdw6HeYYIApc5F2XOqjfO4gclb/IVLX/mXnov8jppqk5MiZ
+         Sbk4cGaqJSqhrTTMrMZFbsbAWd3ED8RDbx7zTbueVuEyUZ0ah2kdXJDAk1zjPRPbpK
+         ayrT0oVmeM5g3ENuqIu9WLzYjRMjLSG7P6iaxz5szFy+makwHbUkdi3bhLlSLo9ZFu
+         tfEcDsxjsoQcCIlr8oZ6uWaO7STPnokRXCDuMo99iVXW823/EMOFAsya0Rys8rrUh1
+         M2/31zNktwSEh0tACX0nevon9pfoh+To+GFjKXXwet7ZrTXiutgYdkhjbrpFgYoxLO
+         RnPdSetDnL8Lg==
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Tom Herbert <therbert@google.com>,
+        Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH net 1/3] net: ethtool: add missing string for NETIF_F_GSO_TUNNEL_REMCSUM
+Message-ID: <wuvYA00G85-nqZH7xAkdeYgG5fFJE1_Ti_tYpIfzCx_UieXNc4cqFZYSgZmoMeIVqwnsDeraex63OVQ_lM4ixemMVjQCyvdBWfPU4fmxr44=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619124641.7f94ad14@oasis.local.home>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:46:41PM -0400 Steven Rostedt wrote:
-> On Fri, 19 Jun 2020 10:11:20 -0400
-> Phil Auld <pauld@redhat.com> wrote:
-> 
-> > 
-> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> > index ed168b0e2c53..a6d9fe5a68cf 100644
-> > --- a/include/trace/events/sched.h
-> > +++ b/include/trace/events/sched.h
-> > @@ -634,6 +634,10 @@ DECLARE_TRACE(sched_overutilized_tp,
-> >  	TP_PROTO(struct root_domain *rd, bool overutilized),
-> >  	TP_ARGS(rd, overutilized));
-> >  
-> > +DECLARE_TRACE(sched_update_nr_running_tp,
-> > +	TP_PROTO(int cpu, int change, unsigned int nr_running),
-> > +	TP_ARGS(cpu, change, nr_running));
-> > +
-> >  #endif /* _TRACE_SCHED_H */
-> >  
-> >  /* This part must be outside protection */
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 9a2fbf98fd6f..6f28fdff1d48 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -6,7 +6,10 @@
-> >   *
-> >   *  Copyright (C) 1991-2002  Linus Torvalds
-> >   */
-> > +
-> > +#define SCHED_CREATE_TRACE_POINTS
-> >  #include "sched.h"
-> > +#undef SCHED_CREATE_TRACE_POINTS
-> 
-> Because of the macro magic, and really try not to have trace events
-> defined in any headers. Otherwise, we have weird defines like you are
-> doing, and it doesn't fully protect it if a C file adds this header and
-> defines CREATE_TRACE_POINTS first.
-> 
-> 
-> >  
-> >  #include <linux/nospec.h>
-> >  
-> > @@ -21,9 +24,6 @@
-> >  
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -75,6 +75,15 @@
-> >  #include "cpupri.h"
-> >  #include "cpudeadline.h"
-> >  
-> > +#ifdef SCHED_CREATE_TRACE_POINTS
-> > +#define CREATE_TRACE_POINTS
-> > +#endif
-> > +#include <trace/events/sched.h>
-> > +
-> > +#ifdef SCHED_CREATE_TRACE_POINTS
-> > +#undef CREATE_TRACE_POINTS
-> > +#endif
-> > +
-> >  #ifdef CONFIG_SCHED_DEBUG
-> >  # define SCHED_WARN_ON(x)	WARN_ONCE(x, #x)
-> >  #else
-> > @@ -1959,6 +1968,7 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
-> >  	unsigned prev_nr = rq->nr_running;
-> >  
-> >  	rq->nr_running = prev_nr + count;
-> > +	trace_sched_update_nr_running_tp(cpu_of(rq), count, rq->nr_running);
-> 
-> Instead of having sched.h define CREATE_TRACE_POINTS, I would have the
-> following:
-> 
-> 	if (trace_sched_update_nr_running_tp_enabled()) {
-> 		call_trace_sched_update_nr_runnig(rq, count);
-> 	}
-> 
-> Then in sched/core.c:
-> 
-> void trace_sched_update_nr_running(struct rq *rq, int count)
-> {
-> 	trace_sched_update_nr_running_tp(cpu_of(rq), count, rq->nr_running);
-> }
-> 
-> The trace_*_enabled() above uses static branches, where the if turns to
-> a nop (pass through) when disabled and a jmp when enabled (same logic
-> that trace points use themselves).
-> 
-> Then you don't need this macro dance, and risk having another C file
-> define CREATE_TRACE_POINTS and spend hours debugging why it suddenly
-> broke.
->
+Commit e585f2363637 ("udp: Changes to udp_offload to support remote
+checksum offload") added new GSO type and a corresponding netdev
+feature, but missed Ethtool's 'netdev_features_strings' table.
+Give it a name so it will be exposed to userspace and become available
+for manual configuration.
 
-Awesome, thanks Steve. I was really hoping there was a better way to do
-that. I try it this way. 
+Fixes: e585f2363637 ("udp: Changes to udp_offload to support remote
+checksum offload")
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+---
+ net/ethtool/common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 47f63526818e..aaecfc916a4d 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -40,6 +40,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT][=
+ETH_GSTRING_LEN] =3D {
+ =09[NETIF_F_GSO_UDP_TUNNEL_BIT] =3D=09 "tx-udp_tnl-segmentation",
+ =09[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] =3D "tx-udp_tnl-csum-segmentation",
+ =09[NETIF_F_GSO_PARTIAL_BIT] =3D=09 "tx-gso-partial",
++=09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT] =3D "tx-tunnel-remcsum-segmentation",
+ =09[NETIF_F_GSO_SCTP_BIT] =3D=09 "tx-sctp-segmentation",
+ =09[NETIF_F_GSO_ESP_BIT] =3D=09=09 "tx-esp-segmentation",
+ =09[NETIF_F_GSO_UDP_L4_BIT] =3D=09 "tx-udp-segmentation",
+--=20
+2.27.0
 
-Cheers,
-Phil
-
-> -- Steve
-> 
-
--- 
 
