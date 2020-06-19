@@ -2,191 +2,168 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B15C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68F420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C844F21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O69A1rMT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc6uaCkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbgFSM7z (ORCPT
+        id S1732962AbgFSNA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:59:55 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46517 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732914AbgFSM7r (ORCPT
+        Fri, 19 Jun 2020 09:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728851AbgFSNAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:59:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592571585;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6OOTbSmkrm6a8IBLmjd/E1d5lvsMPWU7Am+L2V6PD5E=;
-        b=O69A1rMTYeFaF8pBU8qRUIwpJuhRECmPTo4wd1Q9XwOIIGu61kNyXsvnsoTXlUxgCV6UJ4
-        SX/OviLt08D/rJ/VPf7CldKFmFEB4n72ErGXmjMQiq15FvRRnohkJ76Z4OWt9hgZ9P2jY1
-        RnwBx0LoiRcxeb8MATYXKwlD7/bsa0s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-OlMdhTkKPLivMvqyemq6fQ-1; Fri, 19 Jun 2020 08:59:42 -0400
-X-MC-Unique: OlMdhTkKPLivMvqyemq6fQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 310EF19057A0;
-        Fri, 19 Jun 2020 12:59:41 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-137.ams2.redhat.com [10.36.113.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D20D35D9CA;
-        Fri, 19 Jun 2020 12:59:36 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
-Date:   Fri, 19 Jun 2020 14:59:22 +0200
-Message-Id: <20200619125923.22602-4-david@redhat.com>
-In-Reply-To: <20200619125923.22602-1-david@redhat.com>
-References: <20200619125923.22602-1-david@redhat.com>
+        Fri, 19 Jun 2020 09:00:18 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B357FC06174E;
+        Fri, 19 Jun 2020 06:00:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q11so9626252wrp.3;
+        Fri, 19 Jun 2020 06:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ljPyNN/Qwakhqe+XqUeYOBqoxf7hProQtLOxnDnQs48=;
+        b=Gc6uaCkqyn8M5NULiegeLR+e+X1JkduCf6rQvSXt8Nl16hZHSKp2biDEJ8StKzqR/r
+         1Wcjd6LIBwveF4quZvhVEW1BvqnKkGvhoT4QbYs+t14SeTniS5Jpo561hQW3anupFQ+h
+         EFw3T4P2N4ooBB930lvjBYYc3LowpM2sdscZQr0c2LD91eS9EEuWp/4whuZVEGXRXAE6
+         jxzIEcdC933SSrQBX4e4nzYKv9MIi2LI5lpgVjanijHeT/MApW5lCMIkXQhgiNfqqJHU
+         SwW/fGCEkhxW25+gw/NVDAGvNI3BwUOureUH9XB37sQTh7bgE+2mqxcONVvzg7O2n6kQ
+         vDuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ljPyNN/Qwakhqe+XqUeYOBqoxf7hProQtLOxnDnQs48=;
+        b=CvMx+mkD62Dq04psuMvzSbQcqlPFBs31c2evxVd2nbU1hXWSqA79UmHs9tJvufBqkx
+         YnkBF5PAEoTW2ucmY4tKkc2+FwfJ/tnkiNjMsM+uId+n3wLOeKCLv5Y6CnLWcn/YTl31
+         UT6MPitT6oOr+hbCQ96qM2XMSY6cMdkry+BAQq5ufJqm5DHu6ApeoIjVgRHciaCEG9BI
+         1f+fuDdtLkMWb5uj8dnhjrtG0wQZUL5yzyigIS64S9Hlos3V7VT9kgoW+Owj1qCn2qxT
+         zMfC8Y8fOb8V1+z2CIsScK9UThDSv9Dqx1qI8N7BB7ycQGCBrNrQPdA2u0Ya/w3z7tw5
+         OGdQ==
+X-Gm-Message-State: AOAM532L4FFcfaUrhsCIJlIbOfzgKNLhbFk/srsYpH0kMrd5YGy9Mokl
+        gXxWDEqNneecRNLTDX2OCzE=
+X-Google-Smtp-Source: ABdhPJx/JZS/Eblefk0zI3gb+uu+uT/5gLoiMz5ESaB+mWGa/RKum9IKOsU9NdFWwNFwyMESL8EE2Q==
+X-Received: by 2002:a05:6000:341:: with SMTP id e1mr4003694wre.1.1592571616385;
+        Fri, 19 Jun 2020 06:00:16 -0700 (PDT)
+Received: from ?IPv6:2001:a61:253c:8201:b2fb:3ef8:ca:1604? ([2001:a61:253c:8201:b2fb:3ef8:ca:1604])
+        by smtp.gmail.com with ESMTPSA id e15sm7147479wme.9.2020.06.19.06.00.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 06:00:15 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        christian@brauner.io
+Subject: Re: [PATCH] symlink.7: document magic-links more completely
+To:     Aleksa Sarai <cyphar@cyphar.com>
+References: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
+ <20200610055319.26374-1-cyphar@cyphar.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <fe72a276-a977-2589-ee83-d6ac8a21fbfa@gmail.com>
+Date:   Fri, 19 Jun 2020 15:00:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200610055319.26374-1-cyphar@cyphar.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e900a918b098 ("mm: shuffle initial free memory to improve
-memory-side-cache utilization") promised "autodetection of a
-memory-side-cache (to be added in a follow-on patch)" over a year ago.
+Hello Aleksa,
 
-The original series included patches [1], however, they were dropped
-during review [2] to be followed-up later.
+On 6/10/20 7:53 AM, Aleksa Sarai wrote:
+> Hi Michael,
+> 
+> Sorry for the delay and here is the patch I promised in this thread.
 
-Due to lack of platforms that publish an HMAT, autodetection is currently
-not implemented. However, manual activation is actively used [3]. Let's
-simplify for now and re-add when really (ever?) needed.
+Thanks!
 
-[1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
-[2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
-[3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
+Patch applied.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/shuffle.c | 28 ++--------------------------
- mm/shuffle.h | 17 -----------------
- 2 files changed, 2 insertions(+), 43 deletions(-)
+Cheers,
 
-diff --git a/mm/shuffle.c b/mm/shuffle.c
-index dd13ab851b3ee..9b5cd4b004b0f 100644
---- a/mm/shuffle.c
-+++ b/mm/shuffle.c
-@@ -10,33 +10,11 @@
- #include "shuffle.h"
- 
- DEFINE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
--static unsigned long shuffle_state __ro_after_init;
--
--/*
-- * Depending on the architecture, module parameter parsing may run
-- * before, or after the cache detection. SHUFFLE_FORCE_DISABLE prevents,
-- * or reverts the enabling of the shuffle implementation. SHUFFLE_ENABLE
-- * attempts to turn on the implementation, but aborts if it finds
-- * SHUFFLE_FORCE_DISABLE already set.
-- */
--__meminit void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
--{
--	if (ctl == SHUFFLE_FORCE_DISABLE)
--		set_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state);
--
--	if (test_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state)) {
--		if (test_and_clear_bit(SHUFFLE_ENABLE, &shuffle_state))
--			static_branch_disable(&page_alloc_shuffle_key);
--	} else if (ctl == SHUFFLE_ENABLE
--			&& !test_and_set_bit(SHUFFLE_ENABLE, &shuffle_state))
--		static_branch_enable(&page_alloc_shuffle_key);
--}
- 
- static bool shuffle_param;
- static int shuffle_show(char *buffer, const struct kernel_param *kp)
- {
--	return sprintf(buffer, "%c\n", test_bit(SHUFFLE_ENABLE, &shuffle_state)
--			? 'Y' : 'N');
-+	return sprintf(buffer, "%c\n", shuffle_param ? 'Y' : 'N');
- }
- 
- static __meminit int shuffle_store(const char *val,
-@@ -47,9 +25,7 @@ static __meminit int shuffle_store(const char *val,
- 	if (rc < 0)
- 		return rc;
- 	if (shuffle_param)
--		page_alloc_shuffle(SHUFFLE_ENABLE);
--	else
--		page_alloc_shuffle(SHUFFLE_FORCE_DISABLE);
-+		static_branch_enable(&page_alloc_shuffle_key);
- 	return 0;
- }
- module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
-diff --git a/mm/shuffle.h b/mm/shuffle.h
-index 4d79f03b6658f..71b784f0b7c3e 100644
---- a/mm/shuffle.h
-+++ b/mm/shuffle.h
-@@ -4,23 +4,10 @@
- #define _MM_SHUFFLE_H
- #include <linux/jump_label.h>
- 
--/*
-- * SHUFFLE_ENABLE is called from the command line enabling path, or by
-- * platform-firmware enabling that indicates the presence of a
-- * direct-mapped memory-side-cache. SHUFFLE_FORCE_DISABLE is called from
-- * the command line path and overrides any previous or future
-- * SHUFFLE_ENABLE.
-- */
--enum mm_shuffle_ctl {
--	SHUFFLE_ENABLE,
--	SHUFFLE_FORCE_DISABLE,
--};
--
- #define SHUFFLE_ORDER (MAX_ORDER-1)
- 
- #ifdef CONFIG_SHUFFLE_PAGE_ALLOCATOR
- DECLARE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
--extern void page_alloc_shuffle(enum mm_shuffle_ctl ctl);
- extern void __shuffle_free_memory(pg_data_t *pgdat);
- extern bool shuffle_pick_tail(void);
- static inline void shuffle_free_memory(pg_data_t *pgdat)
-@@ -58,10 +45,6 @@ static inline void shuffle_zone(struct zone *z)
- {
- }
- 
--static inline void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
--{
--}
--
- static inline bool is_shuffle_order(int order)
- {
- 	return false;
+Michael
+
+
+> --8<---------------------------------------------------------------------8<--
+> 
+> Traditionally, magic-links have not been a well-understood topic in
+> Linux. This helps clarify some of the terminology used in openat2.2.
+> 
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  man7/symlink.7 | 31 ++++++++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 9 deletions(-)
+> 
+> diff --git a/man7/symlink.7 b/man7/symlink.7
+> index 07b1db3a3764..ed99bc4236f1 100644
+> --- a/man7/symlink.7
+> +++ b/man7/symlink.7
+> @@ -84,6 +84,21 @@ as they are implemented on Linux and other systems,
+>  are outlined here.
+>  It is important that site-local applications also conform to these rules,
+>  so that the user interface can be as consistent as possible.
+> +.SS Magic-links
+> +There is a special class of symlink-like objects known as "magic-links" which
+> +can be found in certain pseudo-filesystems such as
+> +.BR proc (5)
+> +(examples include
+> +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
+> +Unlike normal symlinks, magic-links are not resolved through
+> +pathname-expansion, but instead act as direct references to the kernel's own
+> +representation of a file handle. As such, these magic-links allow users to
+> +access files which cannot be referenced with normal paths (such as unlinked
+> +files still referenced by a running program.)
+> +.PP
+> +Because they can bypass ordinary
+> +.BR mount_namespaces (7)-based
+> +restrictions, magic-links have been used as attack vectors in various exploits.
+>  .SS Symbolic link ownership, permissions, and timestamps
+>  The owner and group of an existing symbolic link can be changed
+>  using
+> @@ -99,16 +114,14 @@ of a symbolic link can be changed using
+>  or
+>  .BR lutimes (3).
+>  .PP
+> -On Linux, the permissions of a symbolic link are not used
+> -in any operations; the permissions are always
+> -0777 (read, write, and execute for all user categories),
+>  .\" Linux does not currently implement an lchmod(2).
+> -and can't be changed.
+> -(Note that there are some "magic" symbolic links in the
+> -.I /proc
+> -directory tree\(emfor example, the
+> -.IR /proc/[pid]/fd/*
+> -files\(emthat have different permissions.)
+> +On Linux, the permissions of an ordinary symbolic link are not used in any
+> +operations; the permissions are always 0777 (read, write, and execute for all
+> +user categories), and can't be changed.
+> +.PP
+> +However, magic-links do not follow this rule. They can have a non-0777 mode,
+> +though this mode is not currently used in any permission checks.
+> +
+>  .\"
+>  .\" The
+>  .\" 4.4BSD
+> 
+
+
 -- 
-2.26.2
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
