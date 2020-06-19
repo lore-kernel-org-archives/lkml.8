@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C36C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF00AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801D321556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8672421707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577853;
-	bh=CKXR5bFgG4e+fZKnYrDM91gLHrg3ercLirNdGpAG5Dk=;
+	s=default; t=1592577858;
+	bh=L3YK4HhwSLCxtVLyXo4PKwaZSioEb4283EpfEjbdwFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/6E+I8zcGVX4zpzn2t0hDzlB77CNHYTasI7OSEgo7mAwuV1oTS5ZV2Q6miIrOx/P
-	 I0N56SyY6YjA+fTHWY0m1BJyyR3BcaqYcHlMYmAmfrhdH9KN0ZqMAs1wxujhSlYSKw
-	 L2WMrKNEP2nsmlfEE1rdVWihGxJJv+ReQtwAYaL0=
+	b=IgH8h+qcBruO+3qrIHQZ1xSlQOIVmNa5v3aTJVqNpWKwlfWZ5DF0KZi8Vbid9eOfu
+	 s/h3d8QKGONNxGJy2ZPKd+nmQpJU7KhZbeIvgALP6Ivf37MH4kkcgmd6BCKLaqoBjr
+	 erFp24qbzlbjIyeeRRZ0H0bXVPvwvOtfIG7uet1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbgFSOoL (ORCPT
+        id S2388547AbgFSOoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35026 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388507AbgFSOnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:51 -0400
+        id S2388511AbgFSOnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EDF21582;
-        Fri, 19 Jun 2020 14:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2493221556;
+        Fri, 19 Jun 2020 14:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577830;
-        bh=CKXR5bFgG4e+fZKnYrDM91gLHrg3ercLirNdGpAG5Dk=;
+        s=default; t=1592577832;
+        bh=L3YK4HhwSLCxtVLyXo4PKwaZSioEb4283EpfEjbdwFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ccYo4r52PiW2I6Afgm3NhTlqUvjuil3Z7FSz7VC30cLhbNWpbn+kG2Qd5EfbK/Hoq
-         K+v/9dZ/RnQmDPvEA3cbDN/C4xRSYnv79AJJ81FuZBhkwVmlm/5to46AUXfsOMtjt6
-         cjnprJA9HFZWCOeZ0Mv6P9F/9hkjVIxNMgzUMNGw=
+        b=xBoAoHQkc125SPDodIpYOd/OOJu0WbAECjoH4OuXgH2cQy/2OIrUkIsVUCwusg+RJ
+         0lL021LT+0mj7j14dJPmcbyCn/dzoNSkNb0kaTyFNdKTUKKHOTFBaSYfDP4M0zi5GB
+         40C9oAIiWaT3VcBZ1CZJTcVFq4g4a2DENN7hENh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/128] macvlan: Skip loopback packets in RX handler
-Date:   Fri, 19 Jun 2020 16:33:03 +0200
-Message-Id: <20200619141624.849346206@linuxfoundation.org>
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.9 107/128] e1000e: Relax condition to trigger reset for ME workaround
+Date:   Fri, 19 Jun 2020 16:33:21 +0200
+Message-Id: <20200619141625.801951252@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,102 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
 
-[ Upstream commit 81f3dc9349ce0bf7b8447f147f45e70f0a5b36a6 ]
+commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
 
-Ignore loopback-originatig packets soon enough and don't try to process L2
-header where it doesn't exist. The very similar br_handle_frame() in bridge
-code performs exactly the same check.
+It's an error if the value of the RX/TX tail descriptor does not match
+what was written. The error condition is true regardless the duration
+of the interference from ME. But the driver only performs the reset if
+E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
+transpired. The extra condition can lead to inconsistency between the
+state of hardware as expected by the driver.
 
-This is an example of such ICMPv6 packet:
+Fix this by dropping the check for number of delay iterations.
 
-skb len=96 headroom=40 headlen=96 tailroom=56
-mac=(40,0) net=(40,40) trans=80
-shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
-csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
-hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
-dev name=etha01.212 feat=0x0x0000000040005000
-skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
-skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
-skb headroom: 00000020: 02 40 43 80 00 00 86 dd
-skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
-skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
-skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
-skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
-skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
-skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
-skb tailroom: 00000000: ...
-skb tailroom: 00000010: ...
-skb tailroom: 00000020: ...
-skb tailroom: 00000030: ...
+While at it, also make __ew32_prepare() static as it's not used
+anywhere else.
 
-Call Trace, how it happens exactly:
- ...
- macvlan_handle_frame+0x321/0x425 [macvlan]
- ? macvlan_forward_source+0x110/0x110 [macvlan]
- __netif_receive_skb_core+0x545/0xda0
- ? enqueue_task_fair+0xe5/0x8e0
- ? __netif_receive_skb_one_core+0x36/0x70
- __netif_receive_skb_one_core+0x36/0x70
- process_backlog+0x97/0x140
- net_rx_action+0x1eb/0x350
- ? __hrtimer_run_queues+0x136/0x2e0
- __do_softirq+0xe3/0x383
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.4+0x4e/0x50
- netif_rx_ni+0x60/0xd0
- dev_loopback_xmit+0x83/0xf0
- ip6_finish_output2+0x575/0x590 [ipv6]
- ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
- ? __ip6_make_skb+0x38d/0x680 [ipv6]
- ? ip6_output+0x6c/0x140 [ipv6]
- ip6_output+0x6c/0x140 [ipv6]
- ip6_send_skb+0x1e/0x60 [ipv6]
- rawv6_sendmsg+0xc4b/0xe10 [ipv6]
- ? proc_put_long+0xd0/0xd0
- ? rw_copy_check_uvector+0x4e/0x110
- ? sock_sendmsg+0x36/0x40
- sock_sendmsg+0x36/0x40
- ___sys_sendmsg+0x2b6/0x2d0
- ? proc_dointvec+0x23/0x30
- ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
- ? dev_forward_change+0x130/0x130 [ipv6]
- ? _raw_spin_unlock+0x12/0x30
- ? proc_sys_call_handler.isra.14+0x9f/0x110
- ? __call_rcu+0x213/0x510
- ? get_max_files+0x10/0x10
- ? trace_hardirqs_on+0x2c/0xe0
- ? __sys_sendmsg+0x63/0xa0
- __sys_sendmsg+0x63/0xa0
- do_syscall_64+0x6c/0x1e0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+CC: stable <stable@vger.kernel.org>
+Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
+ drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 4f582ce929f2..9dda2dc6b5e7 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -421,6 +421,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
- 	int ret;
- 	rx_handler_result_t handle_res;
+--- a/drivers/net/ethernet/intel/e1000e/e1000.h
++++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+@@ -589,7 +589,6 @@ static inline u32 __er32(struct e1000_hw
  
-+	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
-+	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
-+		return RX_HANDLER_PASS;
-+
- 	port = macvlan_port_get_rcu(skb->dev);
- 	if (is_multicast_ether_addr(eth->h_dest)) {
- 		unsigned int hash;
--- 
-2.25.1
-
+ #define er32(reg)	__er32(hw, E1000_##reg)
+ 
+-s32 __ew32_prepare(struct e1000_hw *hw);
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
+ 
+ #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -136,14 +136,12 @@ static const struct e1000_reg_info e1000
+  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
+  * and try again a number of times.
+  **/
+-s32 __ew32_prepare(struct e1000_hw *hw)
++static void __ew32_prepare(struct e1000_hw *hw)
+ {
+ 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
+ 
+ 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
+ 		udelay(50);
+-
+-	return i;
+ }
+ 
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
+@@ -624,11 +622,11 @@ static void e1000e_update_rdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = rx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, rx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
++	if (unlikely(i != readl(rx_ring->tail))) {
+ 		u32 rctl = er32(RCTL);
+ 
+ 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
+@@ -641,11 +639,11 @@ static void e1000e_update_tdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = tx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, tx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
++	if (unlikely(i != readl(tx_ring->tail))) {
+ 		u32 tctl = er32(TCTL);
+ 
+ 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
 
 
