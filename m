@@ -2,57 +2,58 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C06C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C80920771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BDF20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582118;
-	bh=DLm3HKqtq7WOPN88gpHMGYl78gKgJxuxjEldkXM1B6I=;
+	s=default; t=1592582122;
+	bh=h1T8WN4lKVZU17Fkg6U+9UkbB+FzXtXp0Ckcu6/lPss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcT23eNwgk/pKd7FiB5GddBGEYpf4n42qDAqVBwwaBdceEbC7dXd152BrXYZ4wEuo
-	 H5/6q1uAc9XGCDn1Fx6qsfy1oPn0q6M62MNuhNasRNikh0xec4aonujPKZcJUC/jSC
-	 uC4lvpbVj1+/wgDKBFxmG8hO9iZYukQj7vHnKVcM=
+	b=2ehh6bgavUwJtd2IBOPebSxmK+ioeyp49gwS5OPIUEaFzxAa8gLiDV+ne/YK83C+M
+	 jrWLc9ni/YzDcJTmvO5T8VNc8+WSQbSmCkFS3bltbMdg+w6zXBT/KOfAWbXzn2+/WS
+	 efkfHSei9b4zVICpz7hqlD4R9xxYFVz1zTjxLgnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392843AbgFSPVW (ORCPT
+        id S2393195AbgFSPzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392485AbgFSPQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:40 -0400
+        id S2390633AbgFSPV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD072080C;
-        Fri, 19 Jun 2020 15:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A91F20B80;
+        Fri, 19 Jun 2020 15:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579799;
-        bh=DLm3HKqtq7WOPN88gpHMGYl78gKgJxuxjEldkXM1B6I=;
+        s=default; t=1592580088;
+        bh=h1T8WN4lKVZU17Fkg6U+9UkbB+FzXtXp0Ckcu6/lPss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNBV8Wwh8UXhiQLfhz9YUHfFDrW4xmhJZPBumzuh7usLzy1ySl6UEHpGBFLk+255J
-         lnzavpORwhZmKq+AJB6mX1FQkqm8KzJWmS1AqWTlt5jN3pjbZFarCkiUlLBsaJs9/T
-         L5eg7kruANGh9cbwJx+YQi0WZS1uHqT3GpkOsQc8=
+        b=Fzdc6GVr/+rR/3nVwnKWBZiM248AO/k3ZNZnkhsqB61i7duVhQzUBhVXO8Fz/6MZ/
+         ZkjjlE0+pkMDM6wCkVBsKdS9/rUOW4XmGsLD+/KPJ2vjBlRxxBOvcGFl8kxUmyjPll
+         k54zKHkwf2BNtUKOsFZKKlYuBs+xZrEQa8v4MzP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 001/376] ACPI: GED: use correct trigger type field in _Exx / _Lxx handling
-Date:   Fri, 19 Jun 2020 16:28:39 +0200
-Message-Id: <20200619141710.427881447@linuxfoundation.org>
+        stable@vger.kernel.org, Alvin Lee <alvin.lee2@amd.com>,
+        Yongqiang Sun <yongqiang.sun@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 087/376] drm/amd/display: Revert to old formula in set_vtg_params
+Date:   Fri, 19 Jun 2020 16:30:05 +0200
+Message-Id: <20200619141714.460253808@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,37 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Alvin Lee <alvin.lee2@amd.com>
 
-commit e5c399b0bd6490c12c0af2a9eaa9d7cd805d52c9 upstream.
+[ Upstream commit a1a0e61f3c43c610f0a3c109348c14ce930c1977 ]
 
-Commit ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler
-methods") added a reference to the 'triggering' field of either the
-normal or the extended ACPI IRQ resource struct, but inadvertently used
-the wrong pointer in the latter case. Note that both pointers refer to the
-same union, and the 'triggering' field appears at the same offset in both
-struct types, so it currently happens to work by accident. But let's fix
-it nonetheless
+[Why]
+New formula + cursor change causing underflow
+on certain configs
 
-Fixes: ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler methods")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[How]
+Rever to old formula
 
+Signed-off-by: Alvin Lee <alvin.lee2@amd.com>
+Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/evged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/evged.c
-+++ b/drivers/acpi/evged.c
-@@ -94,7 +94,7 @@ static acpi_status acpi_ged_request_inte
- 		trigger = p->triggering;
- 	} else {
- 		gsi = pext->interrupts[0];
--		trigger = p->triggering;
-+		trigger = pext->triggering;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
+index 17d96ec6acd8..ec0ab42becba 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
+@@ -299,6 +299,7 @@ void optc1_set_vtg_params(struct timing_generator *optc,
+ 	uint32_t asic_blank_end;
+ 	uint32_t v_init;
+ 	uint32_t v_fp2 = 0;
++	int32_t vertical_line_start;
  
- 	irq = r.start;
+ 	struct optc *optc1 = DCN10TG_FROM_TG(optc);
+ 
+@@ -315,8 +316,9 @@ void optc1_set_vtg_params(struct timing_generator *optc,
+ 			patched_crtc_timing.v_border_top;
+ 
+ 	/* if VSTARTUP is before VSYNC, FP2 is the offset, otherwise 0 */
+-	if (optc1->vstartup_start > asic_blank_end)
+-		v_fp2 = optc1->vstartup_start - asic_blank_end;
++	vertical_line_start = asic_blank_end - optc1->vstartup_start + 1;
++	if (vertical_line_start < 0)
++		v_fp2 = -vertical_line_start;
+ 
+ 	/* Interlace */
+ 	if (REG(OTG_INTERLACE_CONTROL)) {
+-- 
+2.25.1
+
 
 
