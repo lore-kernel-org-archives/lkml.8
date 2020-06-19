@@ -2,129 +2,142 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B56C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA72C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145A52166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="If3FdC3p"
+	by mail.kernel.org (Postfix) with ESMTP id 7E26121532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592582834;
+	bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tsiT2mB14cYzCiGKUi5YZMgGaupanI69CaakqTqesk2XRMIPzTtOYFb69uc7j1vPL
+	 3a3VScQXg3RHXVHSi4d+1BKqxc3/aBT/Vo89RnT9uSy3LxBP5qXJVSD0flGyzn4XTh
+	 kOH4WoGnfOvixiEMwkZne6g4n2CGIP2mxEBJshxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392126AbgFSQHC (ORCPT
+        id S2405566AbgFSQHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:07:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45871 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405537AbgFSQFz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:05:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592582753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nYKuiXa6JqSlFakb02F9N/z/khfKW7nv0ZKU3o10xCg=;
-        b=If3FdC3pC2JY56xaHH+XCevdoh7aOir+1448pNF6p4RfwgXYf7BhzkNC/xKyozzSEwbh14
-        UY6IlWT6O8MosJYg5LJzQjbrET3U+XK+uVSbtpGp6T1LoYCyvlbvJVHqbJGtu+RaudH/N5
-        ocnxaWg9OzocXsff7Uq4FQWDwlpZQpQ=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-W9KU2JuPP1u_V_3sPe3wkQ-1; Fri, 19 Jun 2020 12:05:52 -0400
-X-MC-Unique: W9KU2JuPP1u_V_3sPe3wkQ-1
-Received: by mail-qv1-f70.google.com with SMTP id a4so7013124qvl.18
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:05:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nYKuiXa6JqSlFakb02F9N/z/khfKW7nv0ZKU3o10xCg=;
-        b=h/lE6EsVciTVjzO8QiLTX7Yh+kWmvQijDrW5t5vl9Jfv3kacy5B3r6yKFCZOw/GtDp
-         gcBa7yFlfWDQDiCk2phnalX3CZ9w02xgo7oaTxAtgx3Z7DmQ4AS232t2PMdckLOnquU6
-         pq+WvlLIqbc1+Su53Sp6Il+i8aS24ExKdWWwSyxoLKdRSjUam34iQn0x+XFYKqR7wd0Y
-         14GhKznv3bj72XfI/VDJHfUjvF/BaHeaKdopp72p+M8mNUhkrAh1Xm/2KELvDpck2S12
-         2s1rlxSegEFE9hmUWmjRSKVzZJAJYM5bXe6VXrA2gVfteFFKLaCH2LoTxZtiFHpSTrDn
-         AR/Q==
-X-Gm-Message-State: AOAM533ladMPCKAkiTfP6plig65q/sFxnZY511hYgamtPaQCoi9rOFOQ
-        I/lYosIAaXS+5Bqk3wztamYNh2QrEfWlf0Gojvq0a96W8gnUbIiHeryjKMaQMlq2UY5BTXUOlCo
-        QU1FVftytdCamejGPNyw6aCEq
-X-Received: by 2002:a05:620a:3cc:: with SMTP id r12mr4302275qkm.44.1592582751524;
-        Fri, 19 Jun 2020 09:05:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJySAqeFc3bvWBPkc6npddWja9I+KCezM5DnLrSAgO76qm+hQxaisHscRU59a9ognA5IwopVqQ==
-X-Received: by 2002:a05:620a:3cc:: with SMTP id r12mr4302251qkm.44.1592582751313;
-        Fri, 19 Jun 2020 09:05:51 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id g11sm6412604qkk.123.2020.06.19.09.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:05:50 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, peterx@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH 06/26] mm/csky: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:05:18 -0400
-Message-Id: <20200619160538.8641-7-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
-References: <20200619160538.8641-1-peterx@redhat.com>
+        Fri, 19 Jun 2020 12:07:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391844AbgFSPJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:09:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A423D21974;
+        Fri, 19 Jun 2020 15:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579343;
+        bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VtNBeinP5TvCeDsB56h9zH+RHsp5IjXkgzxFahSsgWoiFwjUS+sgk5u7EhqNGm1FC
+         iHG7Wj0sQJkDwvkPENln2NCk05ygfr8deJJ5ubdYYdesluSbm/POdBuV+b6GKDvPmZ
+         UtKRbe7/JNp0gKBJXGF3hEyyP5kv0vFmM5ocYyb4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 100/261] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
+Date:   Fri, 19 Jun 2020 16:31:51 +0200
+Message-Id: <20200619141654.652759246@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+From: Hans de Goede <hdegoede@redhat.com>
 
-CC: Guo Ren <guoren@kernel.org>
-CC: linux-csky@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
+[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
+
+Split the sparse keymap into 2 separate keymaps, a buttons and a switches
+keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
+
+This is a preparation patch for not telling userspace that we have switches
+when we do not have them (and for doing the same for the buttons).
+
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/mm/fault.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
-index b14f97d3cb15..a3e0aa3ebb79 100644
---- a/arch/csky/mm/fault.c
-+++ b/arch/csky/mm/fault.c
-@@ -151,7 +151,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 	 * the fault.
- 	 */
- 	fault = handle_mm_fault(vma, address, write ? FAULT_FLAG_WRITE : 0,
--				NULL);
-+				regs);
- 	if (unlikely(fault & VM_FAULT_ERROR)) {
- 		if (fault & VM_FAULT_OOM)
- 			goto out_of_memory;
-@@ -161,16 +161,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 			goto bad_area;
- 		BUG();
- 	}
--	if (fault & VM_FAULT_MAJOR) {
--		tsk->maj_flt++;
--		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs,
--			      address);
--	} else {
--		tsk->min_flt++;
--		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs,
--			      address);
--	}
--
- 	up_read(&mm->mmap_sem);
- 	return;
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 3b3789bb8ec5..2ab3dbd26b5e 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -39,14 +39,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++};
++
++static const struct key_entry intel_vbtn_switchmap[] = {
+ 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+ 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+-	{ KE_END },
+ };
+ 
++#define KEYMAP_LEN \
++	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++
+ struct intel_vbtn_priv {
++	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
+ 	bool wakeup_mode;
+ };
+@@ -54,13 +60,29 @@ struct intel_vbtn_priv {
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	int ret;
++	int ret, keymap_len = 0;
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
++		       ARRAY_SIZE(intel_vbtn_keymap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++	}
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
++		       ARRAY_SIZE(intel_vbtn_switchmap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
++	}
++
++	priv->keymap[keymap_len].type = KE_END;
+ 
+ 	priv->input_dev = devm_input_allocate_device(&device->dev);
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+ 	if (ret)
+ 		return ret;
  
 -- 
-2.26.2
+2.25.1
+
+
 
