@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF89C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8610120809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE272158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582271;
-	bh=Nzj33yMcNsTqDcHz96UKV5DTW8bq53Qh/4LF7am2yZs=;
+	s=default; t=1592582276;
+	bh=xww3ha3RV/sRMp/8nxc5RDnUU7jjFcQdrVOpE9QJWXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQEJKqA8I2L5zOr39EExx2aRcfyJ+hE94JNrd/e9untiSGBXI3xGtKS7CUZtQig52
-	 3zK08lYhPU/VHJrHs5ouE3nEa2HbgCfyOsXnwZ0F5Ay8ErcHl5FQtTPoSeBv6PEPrp
-	 En+VHp2EqkRCTPlfVyoe82BzN5II74HejFSMaus0=
+	b=E3cADFVn+wHCQXww6RL3WwLcUNf8BpLuI78zRrLsq4RLLMj/PddC57WNbmlzxxmT/
+	 UZcQ75ZnYqxem7Vnz96hqV9n3gaJYRIJCJNhNh8Tp4xtQQrQzPbPSQd2Is1GBIyp1E
+	 VZHIzt9QrR8hsqoyEpqv6YdiiqzEhN/qSKSh1y4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392628AbgFSP5t (ORCPT
+        id S2389766AbgFSPT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392630AbgFSPT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:19:58 -0400
+        id S2392583AbgFSPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66015217A0;
-        Fri, 19 Jun 2020 15:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0901206DB;
+        Fri, 19 Jun 2020 15:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579997;
-        bh=Nzj33yMcNsTqDcHz96UKV5DTW8bq53Qh/4LF7am2yZs=;
+        s=default; t=1592579895;
+        bh=xww3ha3RV/sRMp/8nxc5RDnUU7jjFcQdrVOpE9QJWXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+HJQnPYVk/3ycXUahn2dH7yrid1GlF27G0nfcwkegCNo064ZNBz1rD6/vNoGEWCK
-         KzqwjOH9DTp7bww+1xPBJWun+XyIV/xVAOa2Brd3/MvIeinrO+FDNTbSDSOHIQg9WK
-         QHAOqjOtbyR2DGp7r2m3RPQ5gIloiBadiaMKHJds=
+        b=Y5BhCUsx2ZXS3jpbirQy7lukob21IPkRz1wUUo15ut9ddgcZNveiI6yumJ2cnstu7
+         eiOm1EpfgD0+h+OHjB1sxbtbSsi4N+PKKoGcSwwGmMa314+fiI5BA9CJQcsEWqGYWs
+         VjYTVcllYDDq/42QEoqe+q0YsuNKgs8xdQbZR9lo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, "Frank Ch. Eigler" <fche@redhat.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        James Morris <jmorris@namei.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 054/376] ath11k: Fix some resource leaks in error path in ath11k_thermal_register()
-Date:   Fri, 19 Jun 2020 16:29:32 +0200
-Message-Id: <20200619141712.909592912@linuxfoundation.org>
+Subject: [PATCH 5.7 043/376] lockdown: Allow unprivileged users to see lockdown status
+Date:   Fri, 19 Jun 2020 16:29:21 +0200
+Message-Id: <20200619141712.397384086@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jeremy Cline <jcline@redhat.com>
 
-[ Upstream commit 25ca180ad380a0c7286442a922e7fbcc6a9f6083 ]
+[ Upstream commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c ]
 
-If 'thermal_cooling_device_register()' fails, we must undo what has been
-allocated so far. So we must go to 'err_thermal_destroy' instead of
-returning directly
+A number of userspace tools, such as systemtap, need a way to see the
+current lockdown state so they can gracefully deal with the kernel being
+locked down. The state is already exposed in
+/sys/kernel/security/lockdown, but is only readable by root. Adjust the
+permissions so unprivileged users can read the state.
 
-In case of error in 'ath11k_thermal_register()', the previous
-'thermal_cooling_device_register()' call must also be undone. Move the
-'ar->thermal.cdev = cdev' a few lines above in order for this to be done
-in 'ath11k_thermal_unregister()' which is called in the error handling
-path.
-
-Fixes: 2a63bbca06b2 ("ath11k: add thermal cooling device support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200513201454.258111-1-christophe.jaillet@wanadoo.fr
+Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
+Cc: Frank Ch. Eigler <fche@redhat.com>
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: James Morris <jmorris@namei.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/thermal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ security/lockdown/lockdown.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/thermal.c b/drivers/net/wireless/ath/ath11k/thermal.c
-index 259dddbda2c7..5a7e150c621b 100644
---- a/drivers/net/wireless/ath/ath11k/thermal.c
-+++ b/drivers/net/wireless/ath/ath11k/thermal.c
-@@ -174,9 +174,12 @@ int ath11k_thermal_register(struct ath11k_base *sc)
- 		if (IS_ERR(cdev)) {
- 			ath11k_err(sc, "failed to setup thermal device result: %ld\n",
- 				   PTR_ERR(cdev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err_thermal_destroy;
- 		}
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 5a952617a0eb..87cbdc64d272 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -150,7 +150,7 @@ static int __init lockdown_secfs_init(void)
+ {
+ 	struct dentry *dentry;
  
-+		ar->thermal.cdev = cdev;
-+
- 		ret = sysfs_create_link(&ar->hw->wiphy->dev.kobj, &cdev->device.kobj,
- 					"cooling_device");
- 		if (ret) {
-@@ -184,7 +187,6 @@ int ath11k_thermal_register(struct ath11k_base *sc)
- 			goto err_thermal_destroy;
- 		}
- 
--		ar->thermal.cdev = cdev;
- 		if (!IS_REACHABLE(CONFIG_HWMON))
- 			return 0;
- 
+-	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
++	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
+ 					&lockdown_ops);
+ 	return PTR_ERR_OR_ZERO(dentry);
+ }
 -- 
 2.25.1
 
