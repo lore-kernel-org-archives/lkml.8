@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2688C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC85420809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD542067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584752;
-	bh=G9JCdUl7GSSDm+UDRH8Khp6PG1HH7a9Evvm9/yGrlUE=;
+	s=default; t=1592584757;
+	bh=HjIIrdyaQ83b1V7S2LAZQuZL99+VB1+436lKSf7nNBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BtB4jI6x+vgXjooeKtlnubWgHEuAGOMhiNy9vr2sy4clkNR5UAAp+6anICwcUJP7A
-	 kHVxq6vO3zxp6/4qMh5oY3lSb5dm3PuWyE/qtACanT3ENOOGdB7J1kDR/YbAS27x9S
-	 PdyH5UfX5bUu/3Bkfmlhed3Fi6rMDdJrN9DN/1Bo=
+	b=0i/AMJyjOwIT3Sq88seERujSvwidhYWf+JQcOBtPCZNKJHZilrhhSR9jLGPE4gVWN
+	 ddymxTWBFZBF5WfjIPcZ3lWi79+img9W5cIphf6xcDMa3RybygAcza5plTGlRzDZUI
+	 6KS+SDwyxzdR6JYkiM2oclMdNW9FGAWQjZOtKGzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395260AbgFSQjL (ORCPT
+        id S2388856AbgFSOqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388867AbgFSOqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:43 -0400
+        id S2388836AbgFSOqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963B82083B;
-        Fri, 19 Jun 2020 14:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F48420DD4;
+        Fri, 19 Jun 2020 14:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578003;
-        bh=G9JCdUl7GSSDm+UDRH8Khp6PG1HH7a9Evvm9/yGrlUE=;
+        s=default; t=1592577984;
+        bh=HjIIrdyaQ83b1V7S2LAZQuZL99+VB1+436lKSf7nNBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUuG5EKhhCFUeAACeM+wUXS4i+ZKfu5+2Ao2GNAOT0VF4RGG7QDkmMSWrAwo7MNOT
-         wS9g8k1fIDI9U8Zb+m4KOBqYBn1git1xEk5I1Z4d004yiPt1IaeeTc98S/eANwebCk
-         Dur9HVBcHQJHpyni/+94ztdeV0ZvfIQ74rG6nDd8=
+        b=ScxYP0Fngg86ExrNg4OsU2SivT/j80XmT/OwhKhCiqIO2O1kIqz32LPHEMSrr0w/V
+         nD0DP0ZXLc+wMqOrJ8uBJkO3NRhaDkCx3N5KMni17i1KiMC8wont2VXMMrD0fAnURY
+         Xo5kFxc2brhD+UMRre3kbd9I18JCrW/0sr/2ZGac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/190] spi: No need to assign dummy value in spi_unregister_controller()
-Date:   Fri, 19 Jun 2020 16:31:30 +0200
-Message-Id: <20200619141635.843592227@linuxfoundation.org>
+Subject: [PATCH 4.14 038/190] KVM: x86: only do L1TF workaround on affected processors
+Date:   Fri, 19 Jun 2020 16:31:23 +0200
+Message-Id: <20200619141635.473250358@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,46 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit ebc37af5e0a134355ea2b62ed4141458bdbd5389 ]
+[ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
 
-The device_for_each_child() doesn't require the returned value to be checked.
-Thus, drop the dummy variable completely and have no warning anymore:
+KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
+in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
+in an L1TF attack.  This works as long as there are 5 free bits between
+MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
+access triggers a reserved-bit-set page fault.
 
-drivers/spi/spi.c: In function ‘spi_unregister_controller’:
-drivers/spi/spi.c:2480:6: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
-  int dummy;
-      ^~~~~
+The bit positions however were computed wrongly for AMD processors that have
+encryption support.  In this case, x86_phys_bits is reduced (for example
+from 48 to 43, to account for the C bit at position 47 and four bits used
+internally to store the SEV ASID and other stuff) while x86_cache_bits in
+would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
+and bit 51 are set.  Then low_phys_bits would also cover some of the
+bits that are set in the shadow_mmio_value, terribly confusing the gfn
+caching mechanism.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To fix this, avoid splitting gfns as long as the processor does not have
+the L1TF bug (which includes all AMD processors).  When there is no
+splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
+the overlap.  This fixes "npt=0" operation on EPYC processors.
+
+Thanks to Maxim Levitsky for bisecting this bug.
+
+Cc: stable@vger.kernel.org
+Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kvm/mmu.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 56035637d8f6..8cc1b21d00d3 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2264,7 +2264,6 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index d8878266553c..7220ab210dcf 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -275,6 +275,8 @@ static bool is_executable_pte(u64 spte);
+ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value)
  {
- 	struct spi_controller *found;
- 	int id = ctlr->bus_num;
--	int dummy;
+ 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
++	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
++	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
+ 	shadow_mmio_value = mmio_value | SPTE_SPECIAL_MASK;
+ 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
+ }
+@@ -467,16 +469,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
+ 	 * the most significant bits of legal physical address space.
+ 	 */
+ 	shadow_nonpresent_or_rsvd_mask = 0;
+-	low_phys_bits = boot_cpu_data.x86_cache_bits;
+-	if (boot_cpu_data.x86_cache_bits <
+-	    52 - shadow_nonpresent_or_rsvd_mask_len) {
++	low_phys_bits = boot_cpu_data.x86_phys_bits;
++	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
++	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
++			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
++		low_phys_bits = boot_cpu_data.x86_cache_bits
++			- shadow_nonpresent_or_rsvd_mask_len;
+ 		shadow_nonpresent_or_rsvd_mask =
+-			rsvd_bits(boot_cpu_data.x86_cache_bits -
+-				  shadow_nonpresent_or_rsvd_mask_len,
+-				  boot_cpu_data.x86_cache_bits - 1);
+-		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
+-	} else
+-		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
++			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
++	}
  
- 	/* First make sure that this controller was ever added */
- 	mutex_lock(&board_lock);
-@@ -2278,7 +2277,7 @@ void spi_unregister_controller(struct spi_controller *ctlr)
- 	list_del(&ctlr->list);
- 	mutex_unlock(&board_lock);
- 
--	dummy = device_for_each_child(&ctlr->dev, NULL, __unregister);
-+	device_for_each_child(&ctlr->dev, NULL, __unregister);
- 	device_unregister(&ctlr->dev);
- 	/* free bus id */
- 	mutex_lock(&board_lock);
+ 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
+ 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
 -- 
 2.25.1
 
