@@ -2,119 +2,184 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D89DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0726C207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF19E206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOZbgypl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgFSJYL convert rfc822-to-8bit (ORCPT
+        id S1730751AbgFSJ0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60272 "EHLO
+        Fri, 19 Jun 2020 05:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFSJYK (ORCPT
+        with ESMTP id S1727926AbgFSJ0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:24:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584D9C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:24:10 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jmDFj-0003J1-B5; Fri, 19 Jun 2020 11:24:03 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jmDFc-0005gQ-2L; Fri, 19 Jun 2020 11:23:56 +0200
-Message-ID: <8eca5ec8f892f38d2b174c4d4b26c7d4fbdd69c4.camel@pengutronix.de>
-Subject: Re: [PATCH v4 2/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
-        simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, krzk@kernel.org,
-        gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 19 Jun 2020 11:23:55 +0200
-In-Reply-To: <20200619085124.4029400-3-noltari@gmail.com>
-References: <20200619085124.4029400-1-noltari@gmail.com>
-         <20200619085124.4029400-3-noltari@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 19 Jun 2020 05:26:11 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1105C0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h22so4066521pjf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Vf4ohuWrMr6Ie8GDWlHSJlKxCEowfJaXNdmYfwVJvPc=;
+        b=jOZbgyplTYdCwtTeEcFO8ao/1IeWpEdkro9XqPz5EJ39CEsiECBlBL5OofeK8Lwhdj
+         2gLiKCqlqC1tnJxGddrWrfF/XWxxnqyLOhx1yoUm0s9ovbZjUeJP9p0tkXVS9ucNU5vH
+         FHcRbu9FGV/GhFMDTiPxiYqtpNNHr7NaOOqM4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Vf4ohuWrMr6Ie8GDWlHSJlKxCEowfJaXNdmYfwVJvPc=;
+        b=X1Lh06mM9EnkKmMWacGhwRUFlMTv0XexXIv37v1q+ZDsmXN/myvDaV7WZY0Hk3domQ
+         4UIBFNYiebUhZFN7/6bh0mdl/PwljGATEUUV0fKiPfU7zTKneB/A8QNAe05FTSulIMZq
+         PuTus4aOO1Cdpb+yz31asHtf9/hln7v7rWWF7c17KaDZNZkZt/P2LPnauIYwf5ynpVZL
+         FRz3WkeJ22Sm+4Lr3t4yDNX+rvBwuUG1UNyWD6VuYiuZtvewYuXVhXDt59ZuGkKq+kKH
+         9ahN7EaMVtweXx33/WU2BJyX8DNXddof0tgeQpXwjtVPj2RNkLaJY4wyw6ZxziC3cA7C
+         6CSQ==
+X-Gm-Message-State: AOAM533P3wMSp6rksvNTO5bHmWHArWVlsMS85DQVoFc+Zfba0sZy7xjV
+        gnylqVGOzC8zP+U7DGrbhBlOTccqnxg=
+X-Google-Smtp-Source: ABdhPJxjHsNZeQt5FvCcMCd8wr+B8WtJxmN74WGei/ANeOiFzi/Yi8987MSgZQkKyyETYu7yUepo5g==
+X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr7621006pls.106.1592558769148;
+        Fri, 19 Jun 2020 02:26:09 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y136sm5440917pfg.55.2020.06.19.02.26.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 02:26:08 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org> <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com> <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org> <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com> <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org> <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com> <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
+Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Fri, 19 Jun 2020 02:26:07 -0700
+Message-ID: <159255876756.62212.4221488367063412094@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
+Quoting Maulik Shah (2020-06-18 03:03:03)
+> On 6/16/2020 5:27 PM, Stephen Boyd wrote:
+> > Quoting Maulik Shah (2020-06-01 04:38:25)
+> >> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
+> >>> Quoting Maulik Shah (2020-05-29 02:20:32)
+> >>>> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
+> >>>>> Quoting Maulik Shah (2020-05-23 10:11:13)
+> >>>>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_dat=
+a *d)
+> >>>>>>            if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> >>>>>>                    return;
+> >>>>>>    =20
+> >>>>>> +       pdc_enable_intr(d, true);
+> >>>>>>            irq_chip_unmask_parent(d);
+> >>>>>>     }
+> >>>>>>    =20
+> >>>>> I find these two hunks deeply confusing. I'm not sure what the
+> >>>>> maintainers think though. I hope it would be simpler to always enab=
+le
+> >>>>> the hwirqs in the pdc when an irq is requested and only disable it =
+in
+> >>>>> the pdc when the system goes to suspend and the pdc pin isn't for a=
+n irq
+> >>>>> that's marked for wakeup. Does that break somehow?
+> >>>> PDC monitors interrupts during CPUidle as well, in cases where deepe=
+st
+> >>>> low power mode happened from cpuidle where GIC is not active.
+> >>>> If we keep PDC IRQ always enabled/unmasked during idle and then
+> >>>> disable/mask when entering to suspend, it will break cpuidle.
+> >>> How does it break cpuidle? The irqs that would be enabled/unmasked in
+> >>> pdc would only be the irqs that the kernel has setup irq handlers for
+> >>> (from request_irq() and friends).  We want those irqs to keep working
+> >>> during cpuidle and wake the CPU from the deepest idle states.
+> >>>> I hope it would be simpler to always enable
+> >>>> the hwirqs in the pdc when an irq is requested and only disable it in
+> >>>> the pdc when the system goes to suspend and the pdc pin isn't for an=
+ irq
+> >>>> that's marked for wakeup
+> >>>> How does it break cpuidle?
+> >> Consider a scenario..
+> >> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/all=
+oc happens
+> >> 2. Client driver disable's irq. (lazy disable is there, so in HW its s=
+till unmasked) but disabled in SW.
+> >> 3. Device enters deep CPUidle low power modes where only PDC monitors =
+IRQ.
+> >> 4. This IRQ can still wakeup from CPUidle since it was monitored by PD=
+C.
+> >> 5. From handler, it comes to know that IRQ is disabled in SW, so it re=
+ally invokes irq_mask callback now to disable in HW.
+> >> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets =
+masked only during suspend, all other times its enabled)
+> >> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from=
+ deep cpuidle states.
+> > Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
+> > it keeps waking up the CPU because it isn't masked at the PDC after the
+> > first time it interrupts? Is this a power problem?
+> yes it can be a power problem.
+> >   Because from a
+> > correctness standpoint we don't really care. It woke up the CPU because
+> > it happened, and the GIC can decide to ignore it or not by masking it at
+> > the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
+> > the irq at the GIC level. Is that not true?
+>=20
+> once PDC detects IRQ, it directly doesn't wake up CPU. it replays IRQ to =
 
-On Fri, 2020-06-19 at 10:51 +0200, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  v4: several improvements:
->   - Use devm_platform_ioremap_resource.
->   - Code cleanups.
->   - Improve device mode config:
->     - Move USBH_SWAP_CONTROL device mode value to variant variable.
->     - Set USBH_UTMI_CONTROL1 register value (variant variable).
->  v3: introduce changes suggested by Florian:
->   - Add support for device mode.
->  v2: introduce changes suggested by Florian:
->   - Drop OF dependency (use device_get_match_data).
->   - Drop __initconst from variant tables.
->   - Use devm_clk_get_optional.
-> 
->  drivers/phy/broadcom/Kconfig            |   9 +
->  drivers/phy/broadcom/Makefile           |   1 +
->  drivers/phy/broadcom/phy-bcm63xx-usbh.c | 457 ++++++++++++++++++++++++
->  3 files changed, 467 insertions(+)
->  create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
-> 
-[...]
-> diff --git a/drivers/phy/broadcom/phy-bcm63xx-usbh.c b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-> new file mode 100644
-> index 000000000000..79f913d86def
-> --- /dev/null
-> +++ b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-[...]
-> +static int __init bcm63xx_usbh_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct bcm63xx_usbh_phy	*usbh;
-> +	const struct bcm63xx_usbh_phy_variant *variant;
-> +	struct phy *phy;
-> +	struct phy_provider *phy_provider;
-> +
-> +	usbh = devm_kzalloc(dev, sizeof(*usbh), GFP_KERNEL);
-> +	if (!usbh)
-> +		return -ENOMEM;
-> +
-> +	variant = device_get_match_data(dev);
-> +	if (!variant)
-> +		return -EINVAL;
-> +	usbh->variant = variant;
-> +
-> +	usbh->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(usbh->base))
-> +		return PTR_ERR(usbh->base);
-> +
-> +	usbh->reset = devm_reset_control_get(dev, NULL);
+> GIC.
+>=20
+> since at GIC its masked, GIC doesn't forward to cpu to immediatly wake=20
+> it up.
+>=20
+> however after PDC detecting IRQ, it exits low power mode and=20
+> watchdog/timer can wakeup upon expiry.
 
-Please use devm_reset_control_get_exclusive() instead.
+Ok. So the only problem is some screaming irq that really wants to be
+handled but the driver that requested it has disabled it at runtime. The
+IRQ keeps kicking the CPUs out of deep idle and then eventually the
+timer tick happens and we've run the CPUs in a shallower idle state for
+this time? Presumably we'd like to have these irqs be lazily masked at
+the PDC so that they can become pending when they first arrive but not
+block deep idle states if they're interrupting often while being
+handled.
 
-regards
-Philipp
+On the other hand, we want irq wake state to be the only factor in irqs
+being unmasked at the PDC on the entry to suspend. Purely
+masking/unmasking at the PDC when the irq is masked in software doesn't
+work because suspend/resume will break for disabled but wake enabled
+irqs. But doing that makes idle work easily because we can assume during
+idle that leaving it unmasked until it fires and then masking it in the
+PDC until it is handled gives us good deep idle states in the face of
+screaming irqs.
+
+What are the actual requirements? Here is my attempt to boil this
+discussion down into a few bullet points:
+
+ 1. During system suspend, wake enabled irqs should be enabled in PDC
+ and all other irqs should be disabled in PDC.
+
+ 2. During idle, enabled irqs must be enabled in PDC, unless they're
+ pending in which case they should be masked in the PDC so as to not
+ wake up the CPU from deep idle states
+
+ 3. During non-idle, non-suspend, enabled irqs must be enabled in PDC.
+
+Or is #3 actually false and PDC has no bearing on this?
