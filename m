@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8815621582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9340B20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578884;
-	bh=PmVvxGTJmxMA0UqbyZ/Czlx6OPNQU2bDHRb1ShfxYrM=;
+	s=default; t=1592578887;
+	bh=6ZTilro9TUJ7Kc4+PNa3OIDDZnDEfHbZlo9JY75x6is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDzRKL8irOmpdE+isYfMPTAo0Ke+or8QE0h1KI31hcgFO9Whthl2b+kOjRgIExt4i
-	 5KnF7zAbJ/laLpRth+nzgjpj7FOsyXbsShmT9QN2u3drCZLZnsJDFvTvy99vMFqgJq
-	 IkaG1ZL1JYi38qM4QslPIlqxSrYNba2sDSTMmDQc=
+	b=jlisjz6LIVUdTQTYINMXp7pE8l2e7XPD+n5OiPQxI8p3VxI0tydP0AN9fvNIXw08S
+	 VZYyXfHh87BobtYZgnv2g5tX5SCIwWTmB2qgcA32ty8At4SHwBTIl7xGhZhQy7kUXj
+	 e1tMMxhtJM6JEgRhfoXhBOLsC8Q3Kgnl8rDsZy74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390700AbgFSPBX (ORCPT
+        id S2390709AbgFSPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390643AbgFSPAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390277AbgFSPAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:00:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E97E520734;
-        Fri, 19 Jun 2020 15:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DC7C20776;
+        Fri, 19 Jun 2020 15:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578832;
-        bh=PmVvxGTJmxMA0UqbyZ/Czlx6OPNQU2bDHRb1ShfxYrM=;
+        s=default; t=1592578835;
+        bh=6ZTilro9TUJ7Kc4+PNa3OIDDZnDEfHbZlo9JY75x6is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qUNsLi+aAXG8QgOkeqokr9ixSc+gI8TjHppE6V3F3ak6XKzVwGhnRJREL1Y6qpN8u
-         pjPT+V7+flSsQUdjWglDG2ieyHO/1K6I0X51gXYf6O2NVkkGEfNBB9sYgKx1+OjGYs
-         vvkq5xmyG9FOHdBLuos5LuLxtisKyM4LfE5ZWEjw=
+        b=DqikAN4be4pw8T2hsirdId30QjnDoSYpd+8NdDA0He3wd0qDOqS2ZqPMIg5r7DLti
+         O7v3VZB18IOvPQkBQQ0HDy8Z6ZUMjXWonO103ZuekU4O8iEKSVwihbWMeUXUSPP4eH
+         EWLcC9zXmcSMzfNGO4zuRtNa+/vUs4ZOmpRcwZFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 173/267] macvlan: Skip loopback packets in RX handler
-Date:   Fri, 19 Jun 2020 16:32:38 +0200
-Message-Id: <20200619141657.089039945@linuxfoundation.org>
+Subject: [PATCH 4.19 174/267] PCI: Dont disable decoding when mmio_always_on is set
+Date:   Fri, 19 Jun 2020 16:32:39 +0200
+Message-Id: <20200619141657.136698762@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,100 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 81f3dc9349ce0bf7b8447f147f45e70f0a5b36a6 ]
+[ Upstream commit b6caa1d8c80cb71b6162cb1f1ec13aa655026c9f ]
 
-Ignore loopback-originatig packets soon enough and don't try to process L2
-header where it doesn't exist. The very similar br_handle_frame() in bridge
-code performs exactly the same check.
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-This is an example of such ICMPv6 packet:
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-skb len=96 headroom=40 headlen=96 tailroom=56
-mac=(40,0) net=(40,40) trans=80
-shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
-csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
-hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
-dev name=etha01.212 feat=0x0x0000000040005000
-skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
-skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
-skb headroom: 00000020: 02 40 43 80 00 00 86 dd
-skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
-skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
-skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
-skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
-skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
-skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
-skb tailroom: 00000000: ...
-skb tailroom: 00000010: ...
-skb tailroom: 00000020: ...
-skb tailroom: 00000030: ...
-
-Call Trace, how it happens exactly:
- ...
- macvlan_handle_frame+0x321/0x425 [macvlan]
- ? macvlan_forward_source+0x110/0x110 [macvlan]
- __netif_receive_skb_core+0x545/0xda0
- ? enqueue_task_fair+0xe5/0x8e0
- ? __netif_receive_skb_one_core+0x36/0x70
- __netif_receive_skb_one_core+0x36/0x70
- process_backlog+0x97/0x140
- net_rx_action+0x1eb/0x350
- ? __hrtimer_run_queues+0x136/0x2e0
- __do_softirq+0xe3/0x383
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.4+0x4e/0x50
- netif_rx_ni+0x60/0xd0
- dev_loopback_xmit+0x83/0xf0
- ip6_finish_output2+0x575/0x590 [ipv6]
- ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
- ? __ip6_make_skb+0x38d/0x680 [ipv6]
- ? ip6_output+0x6c/0x140 [ipv6]
- ip6_output+0x6c/0x140 [ipv6]
- ip6_send_skb+0x1e/0x60 [ipv6]
- rawv6_sendmsg+0xc4b/0xe10 [ipv6]
- ? proc_put_long+0xd0/0xd0
- ? rw_copy_check_uvector+0x4e/0x110
- ? sock_sendmsg+0x36/0x40
- sock_sendmsg+0x36/0x40
- ___sys_sendmsg+0x2b6/0x2d0
- ? proc_dointvec+0x23/0x30
- ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
- ? dev_forward_change+0x130/0x130 [ipv6]
- ? _raw_spin_unlock+0x12/0x30
- ? proc_sys_call_handler.isra.14+0x9f/0x110
- ? __call_rcu+0x213/0x510
- ? get_max_files+0x10/0x10
- ? trace_hardirqs_on+0x2c/0xe0
- ? __sys_sendmsg+0x63/0xa0
- __sys_sendmsg+0x63/0xa0
- do_syscall_64+0x6c/0x1e0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 225bfc808112..349123592af0 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -451,6 +451,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
- 	int ret;
- 	rx_handler_result_t handle_res;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index fa4c386c8cd8..a21c04d8a40b 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1634,7 +1634,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
  
-+	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
-+	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
-+		return RX_HANDLER_PASS;
-+
- 	port = macvlan_port_get_rcu(skb->dev);
- 	if (is_multicast_ether_addr(eth->h_dest)) {
- 		unsigned int hash;
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
 -- 
 2.25.1
 
