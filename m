@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1908EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96539206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B5B206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581394;
-	bh=Xx/TqlwllxnIqxMPUReU/yMw8FZJ0xccZjMf4q8KM2E=;
+	s=default; t=1592581397;
+	bh=KNfO35iPHZp9nM2fIPPOABKvCwIRqbqzPl/v/G3GlKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyZuQs4x1hrZ79s5Zv3MqSXY5ZH2kpt25dL+d62BvD668+wln+vvvN06DtUCMThHC
-	 ypO6hzlZLjzCSMKpKs0EOvRYf19ZUwcmJNCoEkLTzRdNJx71PB1ua15iXFOj60xH2C
-	 U8YgzKlqQSqHetHK/oEz4n9cJ1IgOkCJqdmFehGg=
+	b=ANdH6xQJlNXqvtqzLsOWYgOAc/TeHST2FbVhzM8uCdWZei5oZD6xCsrdokbF/pgAC
+	 44hC3mmNGmdcQwu5zbX3pMtLkNgEqfxO/6QUs3HR1MffQnK+4HNDzdLrFzWCzfxVzB
+	 QPyr8H6JC4Bd5CjvCjcnBr5b5lKBcBdZLkMdDNRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404544AbgFSP2V (ORCPT
+        id S2393649AbgFSPnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393580AbgFSP1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:41 -0400
+        id S2404546AbgFSP2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7AE21D6C;
-        Fri, 19 Jun 2020 15:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D3D721941;
+        Fri, 19 Jun 2020 15:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580460;
-        bh=Xx/TqlwllxnIqxMPUReU/yMw8FZJ0xccZjMf4q8KM2E=;
+        s=default; t=1592580501;
+        bh=KNfO35iPHZp9nM2fIPPOABKvCwIRqbqzPl/v/G3GlKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6wwvV/qE5Dj7gj4gk1Ez18qhPhUSTsu5cgQF2lAMtvrm/4tl/k/60kSZGz+eHEi1
-         9wOtqiRMlHBEw4ikfhJZ8C+OVWlYbAUxMurAKds25fRYm6qNikavEE13cMsdeGnx7y
-         VW0X3mdi54ImY4Ic8vLuJ91F82LZmd93ulqWtT08=
+        b=wb+LqWWTXk8EWW9VE9j125PSWyLQiexU5EXxRAie/6gxDz/VJw7OGvLwODuqO6AIi
+         sCE66S3zZD/zsS9exuN0obsnSbl/qgzwdJQKYBGuGgA3PPhuVVN2DdQkKOXviN/gga
+         MFvOsztLfpBYhWOGA/Ch3y4/nCyf0rpFJHuNL1AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 258/376] btrfs: fix a race between scrub and block group removal/allocation
-Date:   Fri, 19 Jun 2020 16:32:56 +0200
-Message-Id: <20200619141722.538630638@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 246/376] platform/x86: asus_wmi: Reserve more space for struct bias_args
+Date:   Fri, 19 Jun 2020 16:32:44 +0200
+Message-Id: <20200619141721.970397798@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,270 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Chris Chiu <chiu@endlessm.com>
 
-commit 2473d24f2b77da0ffabcbb916793e58e7f57440b upstream.
+[ Upstream commit 7b91f1565fbfbe5a162d91f8a1f6c5580c2fc1d0 ]
 
-When scrub is verifying the extents of a block group for a device, it is
-possible that the corresponding block group gets removed and its logical
-address and device extents get used for a new block group allocation.
-When this happens scrub incorrectly reports that errors were detected
-and, if the the new block group has a different profile then the old one,
-deleted block group, we can crash due to a null pointer dereference.
-Possibly other unexpected and weird consequences can happen as well.
+On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
+working due to the ASUS WMI driver fails to be loaded. The ACPI error
+as follows leads to the failure of asus_wmi_evaluate_method.
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
+  No Local Variables are initialized for Method [WMNB]
+  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
 
-Consider the following sequence of actions that leads to the null pointer
-dereference crash when scrub is running in parallel with balance:
+The DSDT for the WMNB part shows that 5 DWORD required for local
+variables and the 3rd variable IIA3 hit the buffer limit.
 
-1) Balance sets block group X to read-only mode and starts relocating it.
-   Block group X is a metadata block group, has a raid1 profile (two
-   device extents, each one in a different device) and a logical address
-   of 19424870400;
+Method (WMNB, 3, Serialized)
+{ ..
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    CreateDWordField (Arg2, 0x0C, IIA3)
+    CreateDWordField (Arg2, 0x10, IIA4)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    If ((Local0 == 0x54494E49))
+  ..
+}
 
-2) Scrub is running and finds device extent E, which belongs to block
-   group X. It enters scrub_stripe() to find all extents allocated to
-   block group X, the search is done using the extent tree;
+The limitation is determined by the input acpi_buffer size passed
+to the wmi_evaluate_method. Since the struct bios_args is the data
+structure used as input buffer by default for all ASUS WMI calls,
+the size needs to be expanded to fix the problem.
 
-3) Balance finishes relocating block group X and removes block group X;
-
-4) Balance starts relocating another block group and when trying to
-   commit the current transaction as part of the preparation step
-   (prepare_to_relocate()), it blocks because scrub is running;
-
-5) The scrub task finds the metadata extent at the logical address
-   19425001472 and marks the pages of the extent to be read by a bio
-   (struct scrub_bio). The extent item's flags, which have the bit
-   BTRFS_EXTENT_FLAG_TREE_BLOCK set, are added to each page (struct
-   scrub_page). It is these flags in the scrub pages that tells the
-   bio's end io function (scrub_bio_end_io_worker) which type of extent
-   it is dealing with. At this point we end up with 4 pages in a bio
-   which is ready for submission (the metadata extent has a size of
-   16Kb, so that gives 4 pages on x86);
-
-6) At the next iteration of scrub_stripe(), scrub checks that there is a
-   pause request from the relocation task trying to commit a transaction,
-   therefore it submits the pending bio and pauses, waiting for the
-   transaction commit to complete before resuming;
-
-7) The relocation task commits the transaction. The device extent E, that
-   was used by our block group X, is now available for allocation, since
-   the commit root for the device tree was swapped by the transaction
-   commit;
-
-8) Another task doing a direct IO write allocates a new data block group Y
-   which ends using device extent E. This new block group Y also ends up
-   getting the same logical address that block group X had: 19424870400.
-   This happens because block group X was the block group with the highest
-   logical address and, when allocating Y, find_next_chunk() returns the
-   end offset of the current last block group to be used as the logical
-   address for the new block group, which is
-
-        18351128576 + 1073741824 = 19424870400
-
-   So our new block group Y has the same logical address and device extent
-   that block group X had. However Y is a data block group, while X was
-   a metadata one, and Y has a raid0 profile, while X had a raid1 profile;
-
-9) After allocating block group Y, the direct IO submits a bio to write
-   to device extent E;
-
-10) The read bio submitted by scrub reads the 4 pages (16Kb) from device
-    extent E, which now correspond to the data written by the task that
-    did a direct IO write. Then at the end io function associated with
-    the bio, scrub_bio_end_io_worker(), we call scrub_block_complete()
-    which calls scrub_checksum(). This later function checks the flags
-    of the first page, and sees that the bit BTRFS_EXTENT_FLAG_TREE_BLOCK
-    is set in the flags, so it assumes it has a metadata extent and
-    then calls scrub_checksum_tree_block(). That functions returns an
-    error, since interpreting data as a metadata extent causes the
-    checksum verification to fail.
-
-    So this makes scrub_checksum() call scrub_handle_errored_block(),
-    which determines 'failed_mirror_index' to be 1, since the device
-    extent E was allocated as the second mirror of block group X.
-
-    It allocates BTRFS_MAX_MIRRORS scrub_block structures as an array at
-    'sblocks_for_recheck', and all the memory is initialized to zeroes by
-    kcalloc().
-
-    After that it calls scrub_setup_recheck_block(), which is responsible
-    for filling each of those structures. However, when that function
-    calls btrfs_map_sblock() against the logical address of the metadata
-    extent, 19425001472, it gets a struct btrfs_bio ('bbio') that matches
-    the current block group Y. However block group Y has a raid0 profile
-    and not a raid1 profile like X had, so the following call returns 1:
-
-       scrub_nr_raid_mirrors(bbio)
-
-    And as a result scrub_setup_recheck_block() only initializes the
-    first (index 0) scrub_block structure in 'sblocks_for_recheck'.
-
-    Then scrub_recheck_block() is called by scrub_handle_errored_block()
-    with the second (index 1) scrub_block structure as the argument,
-    because 'failed_mirror_index' was previously set to 1.
-    This scrub_block was not initialized by scrub_setup_recheck_block(),
-    so it has zero pages, its 'page_count' member is 0 and its 'pagev'
-    page array has all members pointing to NULL.
-
-    Finally when scrub_recheck_block() calls scrub_recheck_block_checksum()
-    we have a NULL pointer dereference when accessing the flags of the first
-    page, as pavev[0] is NULL:
-
-    static void scrub_recheck_block_checksum(struct scrub_block *sblock)
-    {
-        (...)
-        if (sblock->pagev[0]->flags & BTRFS_EXTENT_FLAG_DATA)
-            scrub_checksum_data(sblock);
-        (...)
-    }
-
-    Producing a stack trace like the following:
-
-    [542998.008985] BUG: kernel NULL pointer dereference, address: 0000000000000028
-    [542998.010238] #PF: supervisor read access in kernel mode
-    [542998.010878] #PF: error_code(0x0000) - not-present page
-    [542998.011516] PGD 0 P4D 0
-    [542998.011929] Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
-    [542998.012786] CPU: 3 PID: 4846 Comm: kworker/u8:1 Tainted: G    B   W         5.6.0-rc7-btrfs-next-58 #1
-    [542998.014524] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-    [542998.016065] Workqueue: btrfs-scrub btrfs_work_helper [btrfs]
-    [542998.017255] RIP: 0010:scrub_recheck_block_checksum+0xf/0x20 [btrfs]
-    [542998.018474] Code: 4c 89 e6 ...
-    [542998.021419] RSP: 0018:ffffa7af0375fbd8 EFLAGS: 00010202
-    [542998.022120] RAX: 0000000000000000 RBX: ffff9792e674d120 RCX: 0000000000000000
-    [542998.023178] RDX: 0000000000000001 RSI: ffff9792e674d120 RDI: ffff9792e674d120
-    [542998.024465] RBP: 0000000000000000 R08: 0000000000000067 R09: 0000000000000001
-    [542998.025462] R10: ffffa7af0375fa50 R11: 0000000000000000 R12: ffff9791f61fe800
-    [542998.026357] R13: ffff9792e674d120 R14: 0000000000000001 R15: ffffffffc0e3dfc0
-    [542998.027237] FS:  0000000000000000(0000) GS:ffff9792fb200000(0000) knlGS:0000000000000000
-    [542998.028327] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [542998.029261] CR2: 0000000000000028 CR3: 00000000b3b18003 CR4: 00000000003606e0
-    [542998.030301] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    [542998.031316] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    [542998.032380] Call Trace:
-    [542998.032752]  scrub_recheck_block+0x162/0x400 [btrfs]
-    [542998.033500]  ? __alloc_pages_nodemask+0x31e/0x460
-    [542998.034228]  scrub_handle_errored_block+0x6f8/0x1920 [btrfs]
-    [542998.035170]  scrub_bio_end_io_worker+0x100/0x520 [btrfs]
-    [542998.035991]  btrfs_work_helper+0xaa/0x720 [btrfs]
-    [542998.036735]  process_one_work+0x26d/0x6a0
-    [542998.037275]  worker_thread+0x4f/0x3e0
-    [542998.037740]  ? process_one_work+0x6a0/0x6a0
-    [542998.038378]  kthread+0x103/0x140
-    [542998.038789]  ? kthread_create_worker_on_cpu+0x70/0x70
-    [542998.039419]  ret_from_fork+0x3a/0x50
-    [542998.039875] Modules linked in: dm_snapshot dm_thin_pool ...
-    [542998.047288] CR2: 0000000000000028
-    [542998.047724] ---[ end trace bde186e176c7f96a ]---
-
-This issue has been around for a long time, possibly since scrub exists.
-The last time I ran into it was over 2 years ago. After recently fixing
-fstests to pass the "--full-balance" command line option to btrfs-progs
-when doing balance, several tests started to more heavily exercise balance
-with fsstress, scrub and other operations in parallel, and therefore
-started to hit this issue again (with btrfs/061 for example).
-
-Fix this by having scrub increment the 'trimming' counter of the block
-group, which pins the block group in such a way that it guarantees neither
-its logical address nor device extents can be reused by future block group
-allocations until we decrement the 'trimming' counter. Also make sure that
-on each iteration of scrub_stripe() we stop scrubbing the block group if
-it was removed already.
-
-A later patch in the series will rename the block group's 'trimming'
-counter and its helpers to a more generic name, since now it is not used
-exclusively for pinning while trimming anymore.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/scrub.c |   38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -3046,7 +3046,8 @@ out:
- static noinline_for_stack int scrub_stripe(struct scrub_ctx *sctx,
- 					   struct map_lookup *map,
- 					   struct btrfs_device *scrub_dev,
--					   int num, u64 base, u64 length)
-+					   int num, u64 base, u64 length,
-+					   struct btrfs_block_group *cache)
- {
- 	struct btrfs_path *path, *ppath;
- 	struct btrfs_fs_info *fs_info = sctx->fs_info;
-@@ -3284,6 +3285,20 @@ static noinline_for_stack int scrub_stri
- 				break;
- 			}
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index bb7c529d7d16..cd212ee210e2 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -116,6 +116,8 @@ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
+ 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
++	u32 arg4;
++	u32 arg5;
+ } __packed;
  
-+			/*
-+			 * If our block group was removed in the meanwhile, just
-+			 * stop scrubbing since there is no point in continuing.
-+			 * Continuing would prevent reusing its device extents
-+			 * for new block groups for a long time.
-+			 */
-+			spin_lock(&cache->lock);
-+			if (cache->removed) {
-+				spin_unlock(&cache->lock);
-+				ret = 0;
-+				goto out;
-+			}
-+			spin_unlock(&cache->lock);
-+
- 			extent = btrfs_item_ptr(l, slot,
- 						struct btrfs_extent_item);
- 			flags = btrfs_extent_flags(l, extent);
-@@ -3457,7 +3472,7 @@ static noinline_for_stack int scrub_chun
- 		if (map->stripes[i].dev->bdev == scrub_dev->bdev &&
- 		    map->stripes[i].physical == dev_offset) {
- 			ret = scrub_stripe(sctx, map, scrub_dev, i,
--					   chunk_offset, length);
-+					   chunk_offset, length, cache);
- 			if (ret)
- 				goto out;
- 		}
-@@ -3555,6 +3570,23 @@ int scrub_enumerate_chunks(struct scrub_
- 			goto skip;
- 
- 		/*
-+		 * Make sure that while we are scrubbing the corresponding block
-+		 * group doesn't get its logical address and its device extents
-+		 * reused for another block group, which can possibly be of a
-+		 * different type and different profile. We do this to prevent
-+		 * false error detections and crashes due to bogus attempts to
-+		 * repair extents.
-+		 */
-+		spin_lock(&cache->lock);
-+		if (cache->removed) {
-+			spin_unlock(&cache->lock);
-+			btrfs_put_block_group(cache);
-+			goto skip;
-+		}
-+		btrfs_get_block_group_trimming(cache);
-+		spin_unlock(&cache->lock);
-+
-+		/*
- 		 * we need call btrfs_inc_block_group_ro() with scrubs_paused,
- 		 * to avoid deadlock caused by:
- 		 * btrfs_inc_block_group_ro()
-@@ -3609,6 +3641,7 @@ int scrub_enumerate_chunks(struct scrub_
- 		} else {
- 			btrfs_warn(fs_info,
- 				   "failed setting block group ro: %d", ret);
-+			btrfs_put_block_group_trimming(cache);
- 			btrfs_put_block_group(cache);
- 			scrub_pause_off(fs_info);
- 			break;
-@@ -3695,6 +3728,7 @@ int scrub_enumerate_chunks(struct scrub_
- 			spin_unlock(&cache->lock);
- 		}
- 
-+		btrfs_put_block_group_trimming(cache);
- 		btrfs_put_block_group(cache);
- 		if (ret)
- 			break;
+ /*
+-- 
+2.25.1
+
 
 
