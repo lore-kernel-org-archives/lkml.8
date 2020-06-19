@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70999C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4350AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E78020809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2058220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584586;
-	bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
+	s=default; t=1592584587;
+	bh=R8GShnj3OVytMBRlD8iKVc+bZrURK3zjJSAhd6W6V9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxFCO3H4OBcKx/euOekA6ytIIyBJ2oXnPbpiFnWl9ylwUX8Xq7CPR3WzNtXyIha96
-	 xf5XStAFqpPGsk/IbT9Kf1ZPt7hyTxnrEaJ6Yc4+KF6TD9pEyMTzgRkO1WsYQZqUOr
-	 aRTYqYpc4gwPN/ro4z83gI4gNbeFDTT0Aj3LHQRo=
+	b=u4QAy+95mLseskqym56DacNxMWzlGqPXX8et6HZcNyJkqbc9Al+wm3W5l9/5w2C/6
+	 +niMJmX3oCIgpbadH7VCz5wB7knLwtX3kktEC1ri+/vhJEcHOWTzojmzEJCkUUD17M
+	 FHMxtJcrgfWNlCilRZhZNfZS4dpyYwb0JhFtG0v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395286AbgFSQgZ (ORCPT
+        id S2395280AbgFSQgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:36:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389195AbgFSOtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:09 -0400
+        id S2389158AbgFSOtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250352158C;
-        Fri, 19 Jun 2020 14:49:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD83521835;
+        Fri, 19 Jun 2020 14:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578149;
-        bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
+        s=default; t=1592578154;
+        bh=R8GShnj3OVytMBRlD8iKVc+bZrURK3zjJSAhd6W6V9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BXkRcPsjjHZbg++neV+3vH/3QR0xVO7WBlE85XdZcMYCkt1AqByQmo34TshBGtPKg
-         xzxD35v4YkyxINMZJhq4/rIvH2uC1oqyfmkJtxKl/NVYKNLcrYCPFHymgdpzz76Sbd
-         nxutiVfIstmypNis4zav44xrKFhAgzkjZM7CvoQI=
+        b=yArwRUKIFdWnOyIerZCpWZ1fNiKePg7LX/HVQN6kqFkrlx15F2LhutAWR4OeXwiuO
+         RmMF29b5qQK98SlIwKDnze6LDg+U/mcnpQQeK/tCc/vEdK1AaVLEz9RIWKedJKEp3+
+         paTc/sPTkN7S4CiD1RbDID40uIcc8Kepnxw0A/ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, teroincn@gmail.com,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/190] media: platform: fcp: Set appropriate DMA parameters
-Date:   Fri, 19 Jun 2020 16:32:27 +0200
-Message-Id: <20200619141638.677857052@linuxfoundation.org>
+Subject: [PATCH 4.14 104/190] audit: fix a net reference leak in audit_list_rules_send()
+Date:   Fri, 19 Jun 2020 16:32:29 +0200
+Message-Id: <20200619141638.782540805@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -63,69 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+[ Upstream commit 3054d06719079388a543de6adb812638675ad8f5 ]
 
-Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
-enable extra validation on DMA operations ensuring that the size
-restraints are met.
+If audit_list_rules_send() fails when trying to create a new thread
+to send the rules it also fails to cleanup properly, leaking a
+reference to a net structure.  This patch fixes the error patch and
+renames audit_send_list() to audit_send_list_thread() to better
+match its cousin, audit_send_reply_thread().
 
-When using the FCP in conjunction with the VSP1/DU, and display frames,
-the size of the DMA operations is larger than the default maximum
-segment size reported by the DMA core (64K). With the DMA debug enabled,
-this produces a warning such as the following:
-
-"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
-claims to support [len=3145728] [max=65536]"
-
-We have no specific limitation on the segment size which isn't already
-handled by the VSP1/DU which actually handles the DMA allcoations and
-buffer management, so define a maximum segment size of up to 4GB (a 32
-bit mask).
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reported-by: teroincn@gmail.com
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-fcp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/audit.c       |  2 +-
+ kernel/audit.h       |  2 +-
+ kernel/auditfilter.c | 16 +++++++---------
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-index 2988031d285d..0047d144c932 100644
---- a/drivers/media/platform/rcar-fcp.c
-+++ b/drivers/media/platform/rcar-fcp.c
-@@ -12,6 +12,7 @@
-  */
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 53224f399038..6faaa908544a 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -853,7 +853,7 @@ main_queue:
+ 	return 0;
+ }
  
- #include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-@@ -24,6 +25,7 @@
- struct rcar_fcp_device {
- 	struct list_head list;
- 	struct device *dev;
-+	struct device_dma_parameters dma_parms;
+-int audit_send_list(void *_dest)
++int audit_send_list_thread(void *_dest)
+ {
+ 	struct audit_netlink_list *dest = _dest;
+ 	struct sk_buff *skb;
+diff --git a/kernel/audit.h b/kernel/audit.h
+index 9b110ae17ee3..1007773b0b81 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -248,7 +248,7 @@ struct audit_netlink_list {
+ 	struct sk_buff_head q;
  };
  
- static LIST_HEAD(fcp_devices);
-@@ -139,6 +141,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
+-int audit_send_list(void *_dest);
++int audit_send_list_thread(void *_dest);
  
- 	fcp->dev = &pdev->dev;
+ extern int selinux_audit_rule_update(void);
  
-+	fcp->dev->dma_parms = &fcp->dma_parms;
-+	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
-+
- 	pm_runtime_enable(&pdev->dev);
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 16cf396ea738..f26f4cb5d08d 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1137,11 +1137,8 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+  */
+ int audit_list_rules_send(struct sk_buff *request_skb, int seq)
+ {
+-	u32 portid = NETLINK_CB(request_skb).portid;
+-	struct net *net = sock_net(NETLINK_CB(request_skb).sk);
+ 	struct task_struct *tsk;
+ 	struct audit_netlink_list *dest;
+-	int err = 0;
  
- 	mutex_lock(&fcp_lock);
+ 	/* We can't just spew out the rules here because we might fill
+ 	 * the available socket buffer space and deadlock waiting for
+@@ -1149,25 +1146,26 @@ int audit_list_rules_send(struct sk_buff *request_skb, int seq)
+ 	 * happen if we're actually running in the context of auditctl
+ 	 * trying to _send_ the stuff */
+ 
+-	dest = kmalloc(sizeof(struct audit_netlink_list), GFP_KERNEL);
++	dest = kmalloc(sizeof(*dest), GFP_KERNEL);
+ 	if (!dest)
+ 		return -ENOMEM;
+-	dest->net = get_net(net);
+-	dest->portid = portid;
++	dest->net = get_net(sock_net(NETLINK_CB(request_skb).sk));
++	dest->portid = NETLINK_CB(request_skb).portid;
+ 	skb_queue_head_init(&dest->q);
+ 
+ 	mutex_lock(&audit_filter_mutex);
+ 	audit_list_rules(seq, &dest->q);
+ 	mutex_unlock(&audit_filter_mutex);
+ 
+-	tsk = kthread_run(audit_send_list, dest, "audit_send_list");
++	tsk = kthread_run(audit_send_list_thread, dest, "audit_send_list");
+ 	if (IS_ERR(tsk)) {
+ 		skb_queue_purge(&dest->q);
++		put_net(dest->net);
+ 		kfree(dest);
+-		err = PTR_ERR(tsk);
++		return PTR_ERR(tsk);
+ 	}
+ 
+-	return err;
++	return 0;
+ }
+ 
+ int audit_comparator(u32 left, u32 op, u32 right)
 -- 
 2.25.1
 
