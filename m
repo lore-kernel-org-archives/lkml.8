@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7064D21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973092166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582841;
-	bh=FnRMOEIPw0Jmq2vCdbN2xV/1mRpWx72lg9XT0VL3xVM=;
+	s=default; t=1592582843;
+	bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OkAr3nEOXyYzygF4mDoICT3MDtjY1psxke6GXkSfDrkEUFAX/UnyAIQnpsKB+N7Tg
-	 weA74uotE1pFB0QqyJ9g9T+vLuKzVqygDQeetEX4aTGPignU5d0z8/jrj9racC+QnB
-	 hmhFSvysOqKIH87eYuzfe5VGBpslzE/LrybJoz7A=
+	b=LTkYdwbA5z23FjjaVmCq7uyOP7AwVk8sygtGhpSl6/sDHomfP70qfYtCZ7C0n8xI/
+	 woyxf0SZMdqtzmmVXtPirfY0Z8IviYfewnbRSQWIdcf+X9OWOBbN4JOXuz+38PCKGD
+	 TGE013Q7JcSWSVPtWyCYLFHaPRUIofAukIiGHhpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391844AbgFSQHS (ORCPT
+        id S2391812AbgFSPIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391831AbgFSPI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:58 -0400
+        id S2391802AbgFSPIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6362520776;
-        Fri, 19 Jun 2020 15:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1989921852;
+        Fri, 19 Jun 2020 15:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579338;
-        bh=FnRMOEIPw0Jmq2vCdbN2xV/1mRpWx72lg9XT0VL3xVM=;
+        s=default; t=1592579327;
+        bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPStGUyAiPkN11UrSzWvUAnzTTRTROTrRuVRcPakjw8ZRkWsfLzRPhsU8M4tC0aXd
-         obHCHR89wD6enCq4dxWFfUrkehHw/4lpWn003L0UT4V+5zY42bTvrGIlcfYhSwFz/6
-         trP+gZFQ8mdRPBVakR48lkZwpjzRSZ9+TK0N/bwc=
+        b=aBmp6UienM90+iG6Inu51GO6bYL+MiUeaP+/2GyUCNbp4WjJIzeaqtnF2gSeDcbN3
+         BQoz9jkGR7swFw/IYMM40v2e90lib8n8EkOACPMTFYehkGTDMpDsfwgWcHp4JIaDh7
+         9PmsYxC+DcAX6cwhNjoM2Rtj4ZQoZPYzNTgmUpEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/261] xfs: fix duplicate verification from xfs_qm_dqflush()
-Date:   Fri, 19 Jun 2020 16:31:49 +0200
-Message-Id: <20200619141654.567282822@linuxfoundation.org>
+Subject: [PATCH 5.4 064/261] e1000: Distribute switch variables for initialization
+Date:   Fri, 19 Jun 2020 16:31:15 +0200
+Message-Id: <20200619141652.979383204@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -63,48 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 629dcb38dc351947ed6a26a997d4b587f3bd5c7e ]
+[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
 
-The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
-read verifier by checking the dquot in the on-disk buffer. Instead,
-verify the in-core variant before it is flushed to the buffer.
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-Fixes: 7224fa482a6d ("xfs: add full xfs_dqblk verifier")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
+
+drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
+drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
+ 3143 |     unsigned int pull_size;
+      |                  ^~~~~~~~~
+
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_dquot.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index aeb95e7391c1..3cbf248af51f 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1116,13 +1116,12 @@ xfs_qm_dqflush(
- 	dqb = bp->b_addr + dqp->q_bufoffset;
- 	ddqp = &dqb->dd_diskdq;
- 
--	/*
--	 * A simple sanity check in case we got a corrupted dquot.
--	 */
--	fa = xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
-+	/* sanity check the in-core structure before we flush */
-+	fa = xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id),
-+			      0);
- 	if (fa) {
- 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
--				be32_to_cpu(ddqp->d_id), fa);
-+				be32_to_cpu(dqp->q_core.d_id), fa);
- 		xfs_buf_relse(bp);
- 		xfs_dqfunlock(dqp);
- 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 86493fea56e4..f93ed70709c6 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -3140,8 +3140,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+ 		if (skb->data_len && hdr_len == len) {
+ 			switch (hw->mac_type) {
++			case e1000_82544: {
+ 				unsigned int pull_size;
+-			case e1000_82544:
++
+ 				/* Make sure we have room to chop off 4 bytes,
+ 				 * and that the end alignment will work out to
+ 				 * this hardware's requirements
+@@ -3162,6 +3163,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 				}
+ 				len = skb_headlen(skb);
+ 				break;
++			}
+ 			default:
+ 				/* do nothing */
+ 				break;
 -- 
 2.25.1
 
