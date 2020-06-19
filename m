@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB7D20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213E021548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582044;
-	bh=SWWGoQsVVAyjX/AN81bixPfF8lDzZ/UMYuq0YgzmvUs=;
+	s=default; t=1592582052;
+	bh=9Xe4Sx5w74/rmD8c1252EWSqEacJPDGX8bb4wGGi3ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivoNmIuH4/d+4JVrrRRvw6jcTzABBUQmNoYkUgTMgFEXWNJvITT8Y05yDF8cm76or
-	 DY4o4WBHtbdyZTV5iQbUDv+qcNTm5kFXGD61iCMBa8RfETKJOdqEA7/k1eA9MsW5cl
-	 oToOMzwxXZIKDDr5ybfhUGL4D9jk/sECFOUKqEL0=
+	b=ItoK0bP3r/WNFd1BL0ucRC/2l/eqFQiYE7GZxtM15DcPsRFfLMmU97JarvjNDGnzU
+	 I2M49uzKuwosw9A0TnVrZUv6hkHVgJcVkukrYvEX/LHT3dYM+sYZ4YN8dFUiGBuz9d
+	 DgUJ2bANstPU3qpp7GGM4Y0DSm4oYGJSXOvUGdOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392544AbgFSPyC (ORCPT
+        id S2389891AbgFSPyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392943AbgFSPWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:03 -0400
+        id S2388811AbgFSPWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA55920B80;
-        Fri, 19 Jun 2020 15:22:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D0D21927;
+        Fri, 19 Jun 2020 15:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580122;
-        bh=SWWGoQsVVAyjX/AN81bixPfF8lDzZ/UMYuq0YgzmvUs=;
+        s=default; t=1592580119;
+        bh=9Xe4Sx5w74/rmD8c1252EWSqEacJPDGX8bb4wGGi3ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAPQ0senfd3k1MlMvgoUxFJJIit0iDF7vZHmexCYQDPzMyfA1FI0pguWzftEyVav9
-         wMlA+YU01cgAhSHcXmT1fio3FD2qWz3lP2xpgCjE3zfIP+l13FTBG88hc0nprN6Eio
-         RUTPc5KD/clqMdTM2I0CAA5gKFF011MNvN/CHjFE=
+        b=nKe2TS/1r45fjiyASEUfCNBXMtcDxGpLvxQBflgzXyx/H5CEJxESWm9AiLuXAT6GG
+         iXnnvSM2mJwPEETwE7szEDaXLN+qToCtFBb4VFDyMWHpe8jk7VaHnAc5h1rHL5z9Rw
+         IdXHlqddSldpZztq0ZWjnOx0bR28jnXvmqgeSbAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 113/376] bcache: remove a duplicate ->make_request_fn assignment
-Date:   Fri, 19 Jun 2020 16:30:31 +0200
-Message-Id: <20200619141715.697548215@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 130/376] drm/bridge: fix stack usage warning on old gcc
+Date:   Fri, 19 Jun 2020 16:30:48 +0200
+Message-Id: <20200619141716.488320804@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,33 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit a91b2014fc31dc6eaa02ca33aa3b4d1b6e4a0207 ]
+[ Upstream commit 78b0d99a68ecdc84728c99f4fef71942e9ecf35a ]
 
-The make_request_fn pointer should only be assigned by blk_alloc_queue.
-Fix a left over manual initialization.
+Some older versions of gcc badly optimize code that passes
+an inline function argument into another function by reference,
+causing huge stack usage:
 
-Fixes: ff27668ce809 ("bcache: pass the make_request methods to blk_queue_make_request")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+drivers/gpu/drm/bridge/tc358768.c: In function 'tc358768_bridge_pre_enable':
+drivers/gpu/drm/bridge/tc358768.c:840:1: error: the frame size of 2256 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+
+Use a temporary variable as a workaround and add a comment pointing
+to the gcc bug.
+
+Fixes: ff1ca6397b1d ("drm/bridge: Add tc358768 driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200428215408.4111675-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/request.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358768.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
-index 71a90fbec314..77d1a2697517 100644
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -1372,7 +1372,6 @@ void bch_flash_dev_request_init(struct bcache_device *d)
- {
- 	struct gendisk *g = d->disk;
+diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
+index 1b39e8d37834..6650fe4cfc20 100644
+--- a/drivers/gpu/drm/bridge/tc358768.c
++++ b/drivers/gpu/drm/bridge/tc358768.c
+@@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
  
--	g->queue->make_request_fn		= flash_dev_make_request;
- 	g->queue->backing_dev_info->congested_fn = flash_dev_congested;
- 	d->cache_miss				= flash_dev_cache_miss;
- 	d->ioctl				= flash_dev_ioctl;
+ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+ {
++	/* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
++	int tmpval = val;
+ 	size_t count = 2;
+ 
+ 	if (priv->error)
+@@ -187,7 +189,7 @@ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+ 	if (reg < 0x100 || reg >= 0x600)
+ 		count = 1;
+ 
+-	priv->error = regmap_bulk_write(priv->regmap, reg, &val, count);
++	priv->error = regmap_bulk_write(priv->regmap, reg, &tmpval, count);
+ }
+ 
+ static void tc358768_read(struct tc358768_priv *priv, u32 reg, u32 *val)
 -- 
 2.25.1
 
