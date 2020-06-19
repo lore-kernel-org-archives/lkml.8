@@ -2,118 +2,102 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE425C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF91C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA6D720771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86296208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L0o8zXrC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVieVKFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbgFSNfA (ORCPT
+        id S1731794AbgFSNhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:35:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52724 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732655AbgFSNe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:34:58 -0400
-Received: from zn.tnic (p200300ec2f0bac004d57d24caa4a0e33.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ac00:4d57:d24c:aa4a:e33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EB6C81EC03D0;
-        Fri, 19 Jun 2020 15:34:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592573697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=u1GbBe13gJ4BTiGHsY3PCYbsBzZ3KFyUO+55Ve0pR54=;
-        b=L0o8zXrCdiGsWBnTPoYSrRxtzWeXTGACHWMrRpLgDbX6BXPrI8HiyVTYCS/RWukSK4Ofsz
-        mbhXGH1l8VKsrOmCeBqf6jsf864MZlN3BDKOWZwlCpmWGTWb6asrbx8jZetpKzaSerQOhE
-        CcGVMpI6l/Hfh8bLprQOFcIpSAjqt54=
-Date:   Fri, 19 Jun 2020 15:34:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [Nouveau] 2dd4d163cd9c ("drm/nouveau: remove open-coded version
- of remove_conflicting_pci_framebuffers()")
-Message-ID: <20200619133449.GD32683@zn.tnic>
-References: <20200618200106.GF27951@zn.tnic>
- <CAKb7UviibvRfqJgtLkePEuXFa6mQfi4h=7eeW+YQxB-StVjjrA@mail.gmail.com>
- <20200618203907.GG27951@zn.tnic>
+        Fri, 19 Jun 2020 09:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgFSNhv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:37:51 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5A0C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:37:51 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id t26so3174134ual.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IzzMT40vU3nueiT6DTpLBRPxebRBMtj1EnEAC0klTTQ=;
+        b=lVieVKFHIMbkGfDsT0YsJFX6JvJ5/tl5Mcqj1yjwqAnYaMHyuiRLjnES4khXrwMv2R
+         26/St6t75HDZ1mdPFMMUda1uJTm8an7A4TxxAUZjUHN5jp4gio8XMweS3SoktVO7yUwI
+         oNm1nqAiAXpRbKm6CGu4Pf5wN/2XiuXYTrV/RuG81Id6nLi/1W4PfCZPm2RBSvVn4PAN
+         odLO2RWclqOqmJh9ueiL1GOcE+NjhpOLXznaVpCuyfYsyRRvp43AeaXinRLNfjARg3o8
+         PBo0nPTXwasf09Wrub66tUkO9FePfJ+j5f/isJNxG9u2i+MX8CESWrVdbxyRbBGN1WHc
+         6VqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IzzMT40vU3nueiT6DTpLBRPxebRBMtj1EnEAC0klTTQ=;
+        b=H17NvpvyD5EintDiYrWt/Rn+Sc48vxLzG3aBl+LAmJ3+Daq+rbTT98DyD8SIp5dZpw
+         sVpvLZDlnbJWRHikHhLmr7svjr7XAMy9c660QA5Z8eFlZSIW2v9aL2orfBlnVg/JUI+h
+         qr9Dv3wg89/Euaa4uh3087w2upXwmyINdscKvXHn9l4AwHnXSkmk2DIrPoIN7s52JDrz
+         6dsHz8pEvj4g3sFsmOobz+I3jpY9u0/1byfzcj/+m+qeWOcIS3lQMAZdWdxb6owBeAR7
+         pRt7ruzUXVEOYMVwcXnGCbqqjXjjkNNtpqiYtKIIWLzAqI26QhBnyuq/fNGa4Anwyjbl
+         R9jA==
+X-Gm-Message-State: AOAM530DtJaU8o5B0ufOG+87dqCPua8RxYWmB8Jju/hjtfKsFvU59HIS
+        kSfW+0R/6LBAAbMbXVo4mZ8NERQUsTIw/Y/Qc+M=
+X-Google-Smtp-Source: ABdhPJwqP4cpSQgvarPxYyjwPQGxxrCrpQXZojI2NIRRKdDcJEEr8HedRcOSMfFudxTnsQb7cw1+GTx84HgvyTzcGM0=
+X-Received: by 2002:a9f:2375:: with SMTP id 108mr2738865uae.74.1592573869965;
+ Fri, 19 Jun 2020 06:37:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200618203907.GG27951@zn.tnic>
+References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
+ <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
+ <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
+ <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
+In-Reply-To: <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Fri, 19 Jun 2020 14:37:38 +0100
+Message-ID: <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Daniel Gutson <daniel@eclypsium.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:39:07PM +0200, Borislav Petkov wrote:
-> I'll redo the bisection tomorrow, on a fresh head, to check.
+On Fri, 19 Jun 2020 at 14:33, Dave Hansen <dave.hansen@intel.com> wrote:
+> On top of that, the kernel can just swap data out to unencrypted storage.
 
-Ok, just did it again, similar bisection log, points at the same commit.
+Right, but for the most part you'd agree that a machine with
+functioning TME and encrypted swap partition is more secure than a
+machine without TME?
 
-The commit before it:
+> So, I really wonder what folks want from this flag in the first place.
+> It really tells you _nothing_.
 
-fb172f5fe880 ("drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions")
+Can I use TME if the CPU supports it, but the platform has disabled
+it? How do I know that my system is actually *using* the benefits the
+TME feature provides?
 
-boots ok but
-
-2dd4d163cd9c ("drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()")
-
-doesn't.
-
-Ideas?
-
-git bisect start
-# good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-# bad: [5e857ce6eae7ca21b2055cca4885545e29228fe2] Merge branch 'hch' (maccess patches from Christoph Hellwig)
-git bisect bad 5e857ce6eae7ca21b2055cca4885545e29228fe2
-# bad: [a98f670e41a99f53acb1fb33cee9c6abbb2e6f23] Merge tag 'media/v5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-git bisect bad a98f670e41a99f53acb1fb33cee9c6abbb2e6f23
-# bad: [5be993432821750f382809df5e20bf4c129b24f7] mm/hugetlb: define a generic fallback for arch_clear_hugepage_flags()
-git bisect bad 5be993432821750f382809df5e20bf4c129b24f7
-# good: [cfa3b8068b09f25037146bfd5eed041b78878bee] Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-git bisect good cfa3b8068b09f25037146bfd5eed041b78878bee
-# good: [a1fb548962397bb8609bb46e566809a9a1b30044] Merge tag 'drm-intel-next-2020-04-30' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
-git bisect good a1fb548962397bb8609bb46e566809a9a1b30044
-# bad: [750a02ab8d3c49ca7d23102be90d3d1db19e2827] Merge tag 'for-5.8/block-2020-06-01' of git://git.kernel.dk/linux-block
-git bisect bad 750a02ab8d3c49ca7d23102be90d3d1db19e2827
-# good: [e20bb857dea2f620ff37ae541ed8aee70e3c89f1] Merge tag 'exynos-drm-next-for-v5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into drm-next
-git bisect good e20bb857dea2f620ff37ae541ed8aee70e3c89f1
-# good: [e6e7abffe386b614a194ec32457a00c304c980f4] blk-mq: simplify the blk_mq_get_request calling convention
-git bisect good e6e7abffe386b614a194ec32457a00c304c980f4
-# bad: [7dbbdd37f2ae7dd4175ba3f86f4335c463b18403] drm/nouveau: use correct conflicting framebuffer API
-git bisect bad 7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
-# bad: [0f85bbb6ae517d9a4308527188afe35c2012bbc9] drm/nouveau/device: use regular PRI accessors in chipset detection
-git bisect bad 0f85bbb6ae517d9a4308527188afe35c2012bbc9
-# good: [fa4f4c213f5f7807360c41f2501a3031a9940f3a] drm/nouveau/kms: Support NVIDIA format modifiers
-git bisect good fa4f4c213f5f7807360c41f2501a3031a9940f3a
-# bad: [e3d8b08904694e9ccae5163d0bb7d35fa66e5bdc] drm/nouveau/svm: map pages after migration
-git bisect bad e3d8b08904694e9ccae5163d0bb7d35fa66e5bdc
-# good: [fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb] drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions
-git bisect good fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb
-# bad: [b950c8c5d082d822b0134d1fc058101ab346e503] drm/nouveau/bios: move ACPI _ROM handling
-git bisect bad b950c8c5d082d822b0134d1fc058101ab346e503
-# bad: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
-git bisect bad 2dd4d163cd9c15432524aa9863155bc03a821361
-# first bad commit: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Richard.
