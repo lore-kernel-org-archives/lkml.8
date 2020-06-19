@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F66C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAA221BE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BC121974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579301;
-	bh=shKfPmny0Xk+z6QTEuZIiryuf3ktSCpn4+P8VnIPKmM=;
+	s=default; t=1592579304;
+	bh=ce0isAu4Cmsi2XbgqA4dLuWU6vjSgdACuLihU0af/wQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H57GrIMEGfeJF12uYfDR+4ihEpUYiJH6ThJ03+Ze6jeVWUU/O9Bcw6ySk0UL2fmkG
-	 7Glxh5XD1sIZvJliLvNW1r41rL54mF+o1P0Ui69pY8d7g9Mkh0s18hnlNrwE9NFhwZ
-	 UDx7OQDhDT2PJoCgetsI7nYsi8PUr7EQ2sDlBbI0=
+	b=ae3qNutqffFfJhj92p+FljeAR7HWL5fvzSW0mLTZuAirots7qRUT+YXtzrkFjNsGi
+	 G5USy98O3SQ5R1gz2URvM74OBa8W/j0g8NPJpm1L9empPuzN4vi9K6AgT8JIF02Re7
+	 5I+mnsKUZthK7FjEIR3NutrEztzO6fsEZS4pvzco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391261AbgFSPIT (ORCPT
+        id S2391727AbgFSPIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391711AbgFSPIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:14 -0400
+        id S2389665AbgFSPIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81D521852;
-        Fri, 19 Jun 2020 15:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1401621852;
+        Fri, 19 Jun 2020 15:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579293;
-        bh=shKfPmny0Xk+z6QTEuZIiryuf3ktSCpn4+P8VnIPKmM=;
+        s=default; t=1592579298;
+        bh=ce0isAu4Cmsi2XbgqA4dLuWU6vjSgdACuLihU0af/wQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w63iFt2Ejs788GYVc8sPkINnFxEKZxjXp4EiSzM5hNY3zp6nwKRFnaYo6WEhjr8CV
-         b05PhB7ByfZnc5xGFDKAFIGdh8hORv4zJBRGVT+8lshPVsKjSji9BmgV7r25byMW8w
-         HaZKOPDK1ZUbrl3KyhbMSnHpqA3BxH4HpQbyAWhA=
+        b=lURm89EKhW3S55x3vE7s26H/RMgwEfCyzkArD+FV9rbe25VTBnCOzIPS0LXKTsmCT
+         I+R1WrDAF1mXjBJCrVWZS4SHzeccaseqsAa/OaD/ERXV/zoSUnl4hBJ4337OhY2JCZ
+         6uI756Tmiig76VRj0xQvOU4xwfaEVGfIPqr2xdJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/261] lib/mpi: Fix 64-bit MIPS build with Clang
-Date:   Fri, 19 Jun 2020 16:31:31 +0200
-Message-Id: <20200619141653.728067309@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 082/261] sched/core: Fix illegal RCU from offline CPUs
+Date:   Fri, 19 Jun 2020 16:31:33 +0200
+Message-Id: <20200619141653.823567855@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,67 +61,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 18f1ca46858eac22437819937ae44aa9a8f9f2fa ]
+[ Upstream commit bf2c59fce4074e55d622089b34be3a6bc95484fb ]
 
-When building 64r6_defconfig with CONFIG_MIPS32_O32 disabled and
-CONFIG_CRYPTO_RSA enabled:
+In the CPU-offline process, it calls mmdrop() after idle entry and the
+subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+lockdep complaining when mmdrop() uses RCU from either memcg or
+debugobjects below.
 
-lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:664:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w0))
-                         ~~~~~~~~~~^~~
-lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:668:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w1))
-                         ~~~~~~~~~~^~~
-2 errors generated.
+Fix it by cleaning up the active_mm state from BP instead. Every arch
+which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
+from AP. The only exception is parisc because it switches them to
+&init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
+but the patch will still work there because it calls mmgrab(&init_mm) in
+smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
 
-This special case for umul_ppmm for MIPS64r6 was added in
-commit bbc25bee37d2b ("lib/mpi: Fix umul_ppmm() for MIPS64r6"), due to
-GCC being inefficient and emitting a __multi3 intrinsic.
+  WARNING: suspicious RCU usage
+  -----------------------------
+  kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
 
-There is no such issue with clang; with this patch applied, I can build
-this configuration without any problems and there are no link errors
-like mentioned in the commit above (which I can still reproduce with
-GCC 9.3.0 when that commit is reverted). Only use this definition when
-GCC is being used.
+  other info that might help us debug this:
 
-This really should have been caught by commit b0c091ae04f67 ("lib/mpi:
-Eliminate unused umul_ppmm definitions for MIPS") when I was messing
-around in this area but I was not testing 64-bit MIPS at the time.
+  RCU used illegally from offline CPU!
+  Call Trace:
+   dump_stack+0xf4/0x164 (unreliable)
+   lockdep_rcu_suspicious+0x140/0x164
+   get_work_pool+0x110/0x150
+   __queue_work+0x1bc/0xca0
+   queue_work_on+0x114/0x120
+   css_release+0x9c/0xc0
+   percpu_ref_put_many+0x204/0x230
+   free_pcp_prepare+0x264/0x570
+   free_unref_page+0x38/0xf0
+   __mmdrop+0x21c/0x2c0
+   idle_task_exit+0x170/0x1b0
+   pnv_smp_cpu_kill_self+0x38/0x2e0
+   cpu_die+0x48/0x64
+   arch_cpu_idle_dead+0x30/0x50
+   do_idle+0x2f4/0x470
+   cpu_startup_entry+0x38/0x40
+   start_secondary+0x7a8/0xa80
+   start_secondary_resume+0x10/0x14
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/885
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Link: https://lkml.kernel.org/r/20200401214033.8448-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/mpi/longlong.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/smp.c |  1 -
+ include/linux/sched/mm.h             |  2 ++
+ kernel/cpu.c                         | 18 +++++++++++++++++-
+ kernel/sched/core.c                  |  5 +++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index 891e1c3549c4..afbd99987cf8 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -653,7 +653,7 @@ do {						\
- 	**************  MIPS/64  **************
- 	***************************************/
- #if (defined(__mips) && __mips >= 3) && W_TYPE_SIZE == 64
--#if defined(__mips_isa_rev) && __mips_isa_rev >= 6
-+#if defined(__mips_isa_rev) && __mips_isa_rev >= 6 && defined(CONFIG_CC_IS_GCC)
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index 13e251699346..b2ba3e95bda7 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
+ 	/* Standard hot unplug procedure */
+ 
+ 	idle_task_exit();
+-	current->active_mm = NULL; /* for sanity */
+ 	cpu = smp_processor_id();
+ 	DBG("CPU%d offline\n", cpu);
+ 	generic_set_cpu_dead(cpu);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a3b510..a132d875d351 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+ 		__mmdrop(mm);
+ }
+ 
++void mmdrop(struct mm_struct *mm);
++
  /*
-  * GCC ends up emitting a __multi3 intrinsic call for MIPS64r6 with the plain C
-  * code below, so we special case MIPS64r6 until the compiler can do better.
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_sem for writing before modifying the
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d7890c1285bf..7527825ac7da 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3,6 +3,7 @@
+  *
+  * This code is licenced under the GPL.
+  */
++#include <linux/sched/mm.h>
+ #include <linux/proc_fs.h>
+ #include <linux/smp.h>
+ #include <linux/init.h>
+@@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
+ 	return bringup_wait_for_ap(cpu);
+ }
+ 
++static int finish_cpu(unsigned int cpu)
++{
++	struct task_struct *idle = idle_thread_get(cpu);
++	struct mm_struct *mm = idle->active_mm;
++
++	/*
++	 * idle_task_exit() will have switched to &init_mm, now
++	 * clean up any remaining active_mm state.
++	 */
++	if (mm != &init_mm)
++		idle->active_mm = &init_mm;
++	mmdrop(mm);
++	return 0;
++}
++
+ /*
+  * Hotplug state machine related functions
+  */
+@@ -1434,7 +1450,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
+ 	[CPUHP_BRINGUP_CPU] = {
+ 		.name			= "cpu:bringup",
+ 		.startup.single		= bringup_cpu,
+-		.teardown.single	= NULL,
++		.teardown.single	= finish_cpu,
+ 		.cant_stop		= true,
+ 	},
+ 	/* Final state before CPU kills itself */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e99d326fa569..4874e1468279 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6177,13 +6177,14 @@ void idle_task_exit(void)
+ 	struct mm_struct *mm = current->active_mm;
+ 
+ 	BUG_ON(cpu_online(smp_processor_id()));
++	BUG_ON(current != this_rq()->idle);
+ 
+ 	if (mm != &init_mm) {
+ 		switch_mm(mm, &init_mm, current);
+-		current->active_mm = &init_mm;
+ 		finish_arch_post_lock_switch();
+ 	}
+-	mmdrop(mm);
++
++	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
+ }
+ 
+ /*
 -- 
 2.25.1
 
