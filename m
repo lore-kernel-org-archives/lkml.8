@@ -2,165 +2,146 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7298CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 507E420DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4391F2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oKJaPgv8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTs7U5IK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732557AbgFSSSx (ORCPT
+        id S1732835AbgFSSXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:18:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731907AbgFSSSw (ORCPT
+        Fri, 19 Jun 2020 14:23:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31707 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731031AbgFSSXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:18:52 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C4BC0613EF
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:18:51 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id k18so702399qke.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1/Hgy08bto/uuUKyMYyyKuV+V6dnJEVWt8WI7nf113M=;
-        b=oKJaPgv8wNzRDCQM/lbllCSa8UopWR/4B3ZObmEr8TAf1+Rds44pV9VzNub4sQdhc2
-         bjSNRQFpC1WEcAOQoeY8RSETmivCfaJ304Nt+yFVJOJ3EAJPutPkzAstPxgxWTthm32r
-         lAh5yy5JF9Zclqktay5+zs6zAs4qsPCMyyTnmAlKngaG1QbMRQj5/aW32rxFtirPl7SN
-         HF7NEkxn7w4GPh8ayZInrb8FNVuIMujbguuDEsHpUspaixZEf7pYVjnwEs3vjnveMg0N
-         FydqN5NJ5K9LZc5hUEs32llHDaDYk5KrqnBUzpPC9LHlhF+AF1cEaShjq0uYpfPfAwu+
-         i2ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1/Hgy08bto/uuUKyMYyyKuV+V6dnJEVWt8WI7nf113M=;
-        b=tLQSWf2O46qyLxJ6V/Hvm7Vtu21dIFmfKajdNIX6K9u87fKTp36/6Frou+0hJgaand
-         SZkNdkCpvaxpqurwuOt8iVebIZ9jBG4ARO5GzLIe2lTePuwaanQPGqG2h9r4zgNO/yvb
-         oN00vJzlEM2gPaug6TjjskQeECVtFY3p06tiTAAIq3RnUs9RRzMbn4HDCwACYNzxNAuU
-         ebd5RPPlhGZUH4lJroVAHmdRjGIzPyzGaVfUVT2p90pYOxPusZXe+J+Ww77/SnEQL50V
-         uMgJGDxA7GpsMLZAVMT0Fj9quzKontOdnCrzLRbO9dfa83O1qQ6d0Gj2gupXRfiziXkE
-         VN9w==
-X-Gm-Message-State: AOAM5329mjHNMJRK1fWCRv3zNVcuWM99cf7NYr0iAi7ZMeHZJItR4TAS
-        Bz3TYr1YkIvxAU86doKRpC5yyg==
-X-Google-Smtp-Source: ABdhPJwp/bC67muLlOI/xSpEwuzExrlyozorQFAY/Wts3lymB2t5b6BHCjSgETZH9nZLtDVxeUxvJg==
-X-Received: by 2002:a37:4e4a:: with SMTP id c71mr4652759qkb.61.1592590730926;
-        Fri, 19 Jun 2020 11:18:50 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id f203sm815339qke.135.2020.06.19.11.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 11:18:50 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jmLbF-00AyFH-UW; Fri, 19 Jun 2020 15:18:49 -0300
-Date:   Fri, 19 Jun 2020 15:18:49 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200619181849.GR6578@ziepe.ca>
-References: <20200617152835.GF6578@ziepe.ca>
- <20200618150051.GS20149@phenom.ffwll.local>
- <20200618172338.GM6578@ziepe.ca>
- <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
- <20200619180935.GA10009@redhat.com>
+        Fri, 19 Jun 2020 14:23:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592590995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=bc8bgBZaKAykX+oT4Ghe9dJSFsYjpNWBpF2Ak/zUniM=;
+        b=iTs7U5IKf334OUKV0eUiJphDWvgtFh60yvxnIENIou96v4TSy2SqIZhJMY8kQT9EgYQkyB
+        Tr6GUxeLcN4lCpe6E5fz1kuiciXAXO+FIjFEOVi9SKGC2GA9NOyhTQUKI0bAt2YdyEwk2g
+        ywkO4Wm2gpcxw++vzscChW9fETv5dkw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-78tk4Hn8OS2BD-oyfUyQKg-1; Fri, 19 Jun 2020 14:23:13 -0400
+X-MC-Unique: 78tk4Hn8OS2BD-oyfUyQKg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2264800053;
+        Fri, 19 Jun 2020 18:23:12 +0000 (UTC)
+Received: from eperezma.remote.csb (ovpn-113-14.ams2.redhat.com [10.36.113.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F73B7C1E4;
+        Fri, 19 Jun 2020 18:23:05 +0000 (UTC)
+From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+To:     mst@redhat.com
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [RFC v9 00/11] vhost: ring format independence
+Date:   Fri, 19 Jun 2020 20:22:51 +0200
+Message-Id: <20200619182302.850-1-eperezma@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619180935.GA10009@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
-> On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
-> > On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
-> > 
-> > > The madness is only that device B's mmu notifier might need to wait
-> > > for fence_B so that the dma operation finishes. Which in turn has to
-> > > wait for device A to finish first.
-> > 
-> > So, it sound, fundamentally you've got this graph of operations across
-> > an unknown set of drivers and the kernel cannot insert itself in
-> > dma_fence hand offs to re-validate any of the buffers involved?
-> > Buffers which by definition cannot be touched by the hardware yet.
-> > 
-> > That really is a pretty horrible place to end up..
-> > 
-> > Pinning really is right answer for this kind of work flow. I think
-> > converting pinning to notifers should not be done unless notifier
-> > invalidation is relatively bounded. 
-> > 
-> > I know people like notifiers because they give a bit nicer performance
-> > in some happy cases, but this cripples all the bad cases..
-> > 
-> > If pinning doesn't work for some reason maybe we should address that?
-> 
-> Note that the dma fence is only true for user ptr buffer which predate
-> any HMM work and thus were using mmu notifier already. You need the
-> mmu notifier there because of fork and other corner cases.
+This adds infrastructure required for supporting
+multiple ring formats.
 
-I wonder if we should try to fix the fork case more directly - RDMA
-has this same problem and added MADV_DONTFORK a long time ago as a
-hacky way to deal with it.
+The idea is as follows: we convert descriptors to an
+independent format first, and process that converting to
+iov later.
 
-Some crazy page pin that resolved COW in a way that always kept the
-physical memory with the mm that initiated the pin?
+Used ring is similar: we fetch into an independent struct first,
+convert that to IOV later.
 
-(isn't this broken for O_DIRECT as well anyhow?)
+The point is that we have a tight loop that fetches
+descriptors, which is good for cache utilization.
+This will also allow all kind of batching tricks -
+e.g. it seems possible to keep SMAP disabled while
+we are fetching multiple descriptors.
 
-How does mmu_notifiers help the fork case anyhow? Block fork from
-progressing?
+For used descriptors, this allows keeping track of the buffer length
+without need to rescan IOV.
 
-> I probably need to warn AMD folks again that using HMM means that you
-> must be able to update the GPU page table asynchronously without
-> fence wait.
+This seems to perform better on UDP stream tests, but a little bit worse on
+RR tests and TCP streams, based on a microbenchmark.
+More testing would be very much appreciated.
 
-It is kind of unrelated to HMM, it just shouldn't be using mmu
-notifiers to replace page pinning..
+changes from v8:
+        - fixes fetch_descs returning "no descriptors available" when
+          only few descriptors were available, stalling the communications.
+        - minor syntax errors in intermediate commits.
+        - skipping checking for sane max_descs if vhost device is not going to
+          use worker like vDPA devices.
 
-> The issue for AMD is that they already update their GPU page table
-> using DMA engine. I believe this is still doable if they use a
-> kernel only DMA engine context, where only kernel can queue up jobs
-> so that you do not need to wait for unrelated things and you can
-> prioritize GPU page table update which should translate in fast GPU
-> page table update without DMA fence.
+changes from v7:
+        - squashed in fixes. no longer hangs but still known
+          to cause data corruption for some people. under debug.
 
-Make sense
+changes from v6:
+        - fixes some bugs introduced in v6 and v5
 
-I'm not sure I saw this in the AMD hmm stuff - it would be good if
-someone would look at that. Every time I do it looks like the locking
-is wrong.
+changes from v5:
+        - addressed comments by Jason: squashed API changes, fixed up discard
 
-Jason
+changes from v4:
+        - added used descriptor format independence
+        - addressed comments by jason
+        - fixed a crash detected by the lkp robot.
+
+changes from v3:
+        - fixed error handling in case of indirect descriptors
+        - add BUG_ON to detect buffer overflow in case of bugs
+                in response to comment by Jason Wang
+        - minor code tweaks
+
+Changes from v2:
+        - fixed indirect descriptor batching
+                reported by Jason Wang
+
+Changes from v1:
+        - typo fixes
+
+Michael S. Tsirkin (11):
+  vhost: option to fetch descriptors through an independent struct
+  vhost: use batched get_vq_desc version
+  vhost/net: pass net specific struct pointer
+  vhost: reorder functions
+  vhost: format-independent API for used buffers
+  vhost/net: convert to new API: heads->bufs
+  vhost/net: avoid iov length math
+  vhost/test: convert to the buf API
+  vhost/scsi: switch to buf APIs
+  vhost/vsock: switch to the buf API
+  vhost: drop head based APIs
+
+ drivers/vhost/net.c   | 174 ++++++++++----------
+ drivers/vhost/scsi.c  |  73 +++++----
+ drivers/vhost/test.c  |  22 +--
+ drivers/vhost/vhost.c | 372 +++++++++++++++++++++++++++---------------
+ drivers/vhost/vhost.h |  44 +++--
+ drivers/vhost/vsock.c |  30 ++--
+ 6 files changed, 435 insertions(+), 280 deletions(-)
+
+-- 
+2.18.1
+
