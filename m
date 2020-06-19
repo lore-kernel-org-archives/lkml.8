@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98136C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6AB921532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746B121532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581735;
-	bh=eVw2k462iJ2Do0ojBFL2gwa0NOUuOVkmrSLmnwCge2o=;
+	s=default; t=1592581745;
+	bh=CvFeTCugHHRONHTP2eRlFRtgrbQbpBoVKDgXt7fTF8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCekI5VGEzm3v7FIRe2Bl2xLa8MdVO1XxkZijI+0ODVIkwXQ2NfK52yUibiuiu4ee
-	 jFzFhrkGhIJEYI0Zcv2Ka9QYTo8YiquKrxyRFIZP1jU9ZuV6VyVJNVenCHe6vrePqH
-	 ng+c6xd05fuZJGKhgE9/655L46QTlSeSqkkh/vjs=
+	b=y1x0Cde6A8T+wxp1cMsFQrz5vTYdsnoooVjgAH7TlSnTVGnynyXL3+hhx+lq5ekqC
+	 kbOjvnTJpyH4oYbTeml4qj1QMMYqEEP4NyyxrK4fjonQfJz+SPORfU98eMn4frW755
+	 iiBwuygCWih9CknStqFqZMS/SzQLg7DDFFG1tqTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393911AbgFSPsy (ORCPT
+        id S2392295AbgFSPr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393399AbgFSPZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:23 -0400
+        id S2393450AbgFSPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A6420734;
-        Fri, 19 Jun 2020 15:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D31D20734;
+        Fri, 19 Jun 2020 15:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580322;
-        bh=eVw2k462iJ2Do0ojBFL2gwa0NOUuOVkmrSLmnwCge2o=;
+        s=default; t=1592580341;
+        bh=CvFeTCugHHRONHTP2eRlFRtgrbQbpBoVKDgXt7fTF8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bMEEVtYKXNo0HioTM4ES94oF8xk+wDFNPyDpESnzOxyEI+zHM0cZkkBhABmKU/p5H
-         3Qh9Gz0c3hTadMhnqDSIQhx2v0rB3G/Rg8TCA40ZpffpPfVNmKLdsddg9XlMAJKscf
-         hEwSXEQXgh8wt6NJ3hH4n7pBZeMWWb/YDHFKHRIE=
+        b=eBxM4y2KReF3tPNe2+/UmdHqUHuCKUkUXLJYdH+hYGYNESg6BqrfXnYlq7jnP0p/T
+         ajpUxFDe0StkjC+qJvT5dtBYQRkyMk1J8pBNilgNb1Rj9CjeEj4PLKf5tbNADU3P17
+         u1ZzYKdRKUyFklFY/oo5P1JrbPdI0ED+gBr0KR/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 205/376] mips: Add udelay lpj numbers adjustment
-Date:   Fri, 19 Jun 2020 16:32:03 +0200
-Message-Id: <20200619141720.041355347@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 182/376] mt76: mt7615: fix mt7615_firmware_own for mt7663e
+Date:   Fri, 19 Jun 2020 16:31:40 +0200
+Message-Id: <20200619141718.967086136@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -67,125 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
+[ Upstream commit becdf0d5d7a46f5ed1f12405ffae4b04764fe27c ]
 
-Loops-per-jiffies is a special number which represents a number of
-noop-loop cycles per CPU-scheduler quantum - jiffies. As you
-understand aside from CPU-specific implementation it depends on
-the CPU frequency. So when a platform has the CPU frequency fixed,
-we have no problem and the current udelay interface will work
-just fine. But as soon as CPU-freq driver is enabled and the cores
-frequency changes, we'll end up with distorted udelay's. In order
-to fix this we have to accordinly adjust the per-CPU udelay_val
-(the same as the global loops_per_jiffy) number. This can be done
-in the CPU-freq transition event handler. We subscribe to that event
-in the MIPS arch time-inititalization method.
+Check the firmware-own configuration has been applied polling
+MT_CONN_HIF_ON_LPCTL register
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
-index 37e9413a393d..caa01457dce6 100644
---- a/arch/mips/kernel/time.c
-+++ b/arch/mips/kernel/time.c
-@@ -18,12 +18,82 @@
- #include <linux/smp.h>
- #include <linux/spinlock.h>
- #include <linux/export.h>
-+#include <linux/cpufreq.h>
-+#include <linux/delay.h>
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index a19fb0cb7794..0d56e0834bde 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -1550,9 +1550,8 @@ static int mt7615_firmware_own(struct mt7615_dev *dev)
  
- #include <asm/cpu-features.h>
- #include <asm/cpu-type.h>
- #include <asm/div64.h>
- #include <asm/time.h>
+ 	mt76_wr(dev, addr, MT_CFG_LPCR_HOST_FW_OWN);
  
-+#ifdef CONFIG_CPU_FREQ
-+
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
-+static unsigned long glb_lpj_ref;
-+static unsigned long glb_lpj_ref_freq;
-+
-+static int cpufreq_callback(struct notifier_block *nb,
-+			    unsigned long val, void *data)
-+{
-+	struct cpufreq_freqs *freq = data;
-+	struct cpumask *cpus = freq->policy->cpus;
-+	unsigned long lpj;
-+	int cpu;
-+
-+	/*
-+	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
-+	 * the loops delay. (Is this possible?)
-+	 */
-+	if (freq->flags & CPUFREQ_CONST_LOOPS)
-+		return NOTIFY_OK;
-+
-+	/* Save the initial values of the lpjes for future scaling. */
-+	if (!glb_lpj_ref) {
-+		glb_lpj_ref = boot_cpu_data.udelay_val;
-+		glb_lpj_ref_freq = freq->old;
-+
-+		for_each_online_cpu(cpu) {
-+			per_cpu(pcp_lpj_ref, cpu) =
-+				cpu_data[cpu].udelay_val;
-+			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
-+		}
-+	}
-+
-+	/*
-+	 * Adjust global lpj variable and per-CPU udelay_val number in
-+	 * accordance with the new CPU frequency.
-+	 */
-+	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
-+	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
-+		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
-+						glb_lpj_ref_freq,
-+						freq->new);
-+
-+		for_each_cpu(cpu, cpus) {
-+			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
-+					    per_cpu(pcp_lpj_ref_freq, cpu),
-+					    freq->new);
-+			cpu_data[cpu].udelay_val = (unsigned int)lpj;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block cpufreq_notifier = {
-+	.notifier_call  = cpufreq_callback,
-+};
-+
-+static int __init register_cpufreq_notifier(void)
-+{
-+	return cpufreq_register_notifier(&cpufreq_notifier,
-+					 CPUFREQ_TRANSITION_NOTIFIER);
-+}
-+core_initcall(register_cpufreq_notifier);
-+
-+#endif /* CONFIG_CPU_FREQ */
-+
- /*
-  * forward reference
-  */
+-	if (is_mt7622(&dev->mt76) &&
+-	    !mt76_poll_msec(dev, MT_CFG_LPCR_HOST,
+-			    MT_CFG_LPCR_HOST_FW_OWN,
++	if (!is_mt7615(&dev->mt76) &&
++	    !mt76_poll_msec(dev, addr, MT_CFG_LPCR_HOST_FW_OWN,
+ 			    MT_CFG_LPCR_HOST_FW_OWN, 3000)) {
+ 		dev_err(dev->mt76.dev, "Timeout for firmware own\n");
+ 		return -EIO;
 -- 
 2.25.1
 
