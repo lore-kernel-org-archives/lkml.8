@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06110C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC1E217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C721A21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578170;
-	bh=rCItgz97uH/w6p0rQznSJvlK8/pyJWrkWMPE1BU7KS0=;
+	s=default; t=1592578177;
+	bh=u9jQ5Wst+t+dyQX8hD+WWjVAKD9bo+Ts/flkudQAhxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEjU5kZmk6iqUib/KLUAd60AHBQXfiQkEIjw+3aU0ahAj9z74L/S2ZShRXHwyC4zQ
-	 oooV6YzpxoZLeGtw9tTP048CYXMievQkA2EXaFj064apzZt4n/cOzalddUBxpe8O+o
-	 hKOjj7CEl52M7d+LCWJM6cTfOrX0qCEuwJOxxvZI=
+	b=ACmm8DV3NnIf3piTlACtlObfCDfVR+BGnyiTO/ggeddFtZIh10uBkoueEzep4uOpO
+	 LbU2d0hGsutBpgzuDgc8bsW98PCtP1nCGba5Cu5tpZfuOTRjKa40S2FIoJpWqdAaTn
+	 FS4Gl8TXjHOqctLXaPscPH19qfg8e38IiIb5SQwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389213AbgFSOt2 (ORCPT
+        id S2389222AbgFSOtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41838 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389192AbgFSOtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:17 -0400
+        id S2389192AbgFSOt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66306217BA;
-        Fri, 19 Jun 2020 14:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6CBB217D8;
+        Fri, 19 Jun 2020 14:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578157;
-        bh=rCItgz97uH/w6p0rQznSJvlK8/pyJWrkWMPE1BU7KS0=;
+        s=default; t=1592578169;
+        bh=u9jQ5Wst+t+dyQX8hD+WWjVAKD9bo+Ts/flkudQAhxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0+3YUvACA4H+9+DKZDjvGAIE9WNjoT0nkUnyW7b1K+3VnIV7gkt3aXJkme/Kb571
-         Uv86AL5WbAEoxIXgcwgB71byrAnoza0HBEVCI+Hxesr9lskmp/P6QumOXN29hRqUUi
-         NOdGiizz//SWU+099YzDrKPhrmnecixooBm354ec=
+        b=e5Q866Pj5NOlyO7pTniy/55LD0l49SqC4vhA2zywYy7aaJXZfb1j1Ly4FuPQSQMuN
+         ouVCFeRPpnqNlFINWOo9WdIGQ05nXPzSyUY+dzor2h/PKRt4NcsGOEICp818HBdllo
+         hkI5vWFx95mByHuKlmI9DC8ERhL8+Gkp4jpsr51M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/190] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Fri, 19 Jun 2020 16:32:30 +0200
-Message-Id: <20200619141638.835664557@linuxfoundation.org>
+Subject: [PATCH 4.14 110/190] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
+Date:   Fri, 19 Jun 2020 16:32:35 +0200
+Message-Id: <20200619141639.098727271@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,41 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+The log_addrs->log_addr_type[i] value is a u8 which is controlled by
+the user and comes from the ioctl.  If it's over 31 then that results in
+undefined behavior (shift wrapping) and that leads to a Smatch static
+checker warning.  We already cap the value later so we can silence the
+warning just by re-ordering the existing checks.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+I think the UBSan checker will also catch this bug at runtime and
+generate a warning.  But otherwise the bug is harmless.
+
+Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/cec/cec-adap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index ed548d06b6dd..a18cceecef88 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -135,7 +135,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index 0d7d687aeea0..061b7824f698 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1624,6 +1624,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 		unsigned j;
  
- 	if (tb[NFTA_NAT_FAMILY] == NULL)
-@@ -202,7 +202,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
+ 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
++		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
++			dprintk(1, "unknown logical address type\n");
++			return -EINVAL;
++		}
+ 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
+ 			dprintk(1, "duplicate logical address type\n");
+ 			return -EINVAL;
+@@ -1644,10 +1648,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 			dprintk(1, "invalid primary device type\n");
+ 			return -EINVAL;
+ 		}
+-		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
+-			dprintk(1, "unknown logical address type\n");
 -			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
- 
- 	return nf_ct_netns_get(ctx->net, family);
+-		}
+ 		for (j = 0; j < feature_sz; j++) {
+ 			if ((features[j] & 0x80) == 0) {
+ 				if (op_is_dev_features)
 -- 
 2.25.1
 
