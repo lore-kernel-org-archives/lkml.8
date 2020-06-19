@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0889C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E695C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED42166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36C0207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582451;
-	bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
+	s=default; t=1592582464;
+	bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A44egbG5AyROaYFHH0X4pw28xds0Sc7wQz8NCjeJlis1lIFmJGe85tX75lFURew03
-	 9mGTL4DXNJx5n65OMKp/YueV6frnN+VQJtc28s+tFjggx1hDyubh32Iiy/KJMOWLqz
-	 ViEttCiyWEqOfFSr98SIgOUpY5oP6nIGMw2CQaYk=
+	b=Wd30DullAxUedRAIF2Q7HfLXlMwbpF2GvbyEegjQAdtPnyctL6qaGSGr4Z9Jhd8Ck
+	 5gsCukq0th8LGtdRApPXyHbn/pay0Ua6c+XoBcF6NG3vwFyNGBuLjH+l/kSLRtgAG1
+	 djWKsKJs9oJBIE2ydQXHUoktpKI88nzNyE8z/Zqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404160AbgFSQAu (ORCPT
+        id S2392818AbgFSQBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44780 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391847AbgFSPON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:13 -0400
+        id S2392279AbgFSPNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4EA420776;
-        Fri, 19 Jun 2020 15:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1BC020776;
+        Fri, 19 Jun 2020 15:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579652;
-        bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
+        s=default; t=1592579630;
+        bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qml4MP7sshma01Z6qeCswqba8MowA7Gmq51/jmmo7msOLgSIH82b73XMYs6jOoa8g
-         6yo/paQdimwYcEgCB5vnPIx34uYNm4sP/yBi1QLv6oDCaZ9sOI4sJhW2pfsbE0ud/D
-         dcYjE338wq6t2SGgP4HV7Z62B2vBzXHGo65KS6EI=
+        b=PTduBa1DUriGPtqRTJm8I5hMdFYRn/X7MNPJoJgy1xKaup8mckkDxR8OtP6SaiHXh
+         us564OGSGZ0y6gYSOThDm3sEtnrZVtFrlsnFLxz+H378hLsKpNcCmGzbZdY6vgIGLZ
+         9Xjf4LgjyiLp+6/I10RIEdYL5EbfQLSPazzGz3Sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 215/261] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
-Date:   Fri, 19 Jun 2020 16:33:46 +0200
-Message-Id: <20200619141700.183401782@linuxfoundation.org>
+        stable@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.4 207/261] clk: mediatek: assign the initial value to clk_init_data of mtk_mux
+Date:   Fri, 19 Jun 2020 16:33:38 +0200
+Message-Id: <20200619141659.823383120@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,72 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+From: Weiyi Lu <weiyi.lu@mediatek.com>
 
-commit f354157a7d184db430c1a564c506434e33b1bec5 upstream.
+commit 571cfadcc628dd5591444f7289e27445ea732f4c upstream.
 
-Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
-are saved and restored over a suspend/resume cycle.  However, the
-EINT_MASK registers are not.
+When some new clock supports are introduced, e.g. [1]
+it might lead to an error although it should be NULL because
+clk_init_data is on the stack and it might have random values
+if using without initialization.
+Add the missing initial value to clk_init_data.
 
-On S5PV210 at the very least, these registers are not retained over
-suspend, leading to the interrupts remaining masked upon resume and
-therefore no interrupts being triggered for the device.  There should
-be no effect on any SoCs that do retain these registers as theoretically
-we would just be re-writing what was already there.
+[1] https://android-review.googlesource.com/c/kernel/common/+/1278046
 
-Fixes: 7ccbc60cd9c2 ("pinctrl: exynos: Handle suspend/resume of GPIO EINT registers")
+Fixes: a3ae549917f1 ("clk: mediatek: Add new clkmux register API")
+Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/1590560749-29136-1-git-send-email-weiyi.lu@mediatek.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/mediatek/clk-mux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -267,6 +267,7 @@ struct exynos_eint_gpio_save {
- 	u32 eint_con;
- 	u32 eint_fltcon0;
- 	u32 eint_fltcon1;
-+	u32 eint_mask;
- };
+--- a/drivers/clk/mediatek/clk-mux.c
++++ b/drivers/clk/mediatek/clk-mux.c
+@@ -160,7 +160,7 @@ struct clk *mtk_clk_register_mux(const s
+ 				 spinlock_t *lock)
+ {
+ 	struct mtk_clk_mux *clk_mux;
+-	struct clk_init_data init;
++	struct clk_init_data init = {};
+ 	struct clk *clk;
  
- /*
-@@ -633,10 +634,13 @@ static void exynos_pinctrl_suspend_bank(
- 						+ 2 * bank->eint_offset);
- 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 						+ 2 * bank->eint_offset + 4);
-+	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
-+						+ bank->eint_offset);
- 
- 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
- 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
- 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
-+	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
- }
- 
- void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
-@@ -678,6 +682,9 @@ static void exynos_pinctrl_resume_bank(
- 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
- 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
-+	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
-+			readl(regs + bank->irq_chip->eint_mask
-+			+ bank->eint_offset), save->eint_mask);
- 
- 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
- 						+ bank->eint_offset);
-@@ -685,6 +692,8 @@ static void exynos_pinctrl_resume_bank(
- 						+ 2 * bank->eint_offset);
- 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 						+ 2 * bank->eint_offset + 4);
-+	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
-+						+ bank->eint_offset);
- }
- 
- void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
+ 	clk_mux = kzalloc(sizeof(*clk_mux), GFP_KERNEL);
 
 
