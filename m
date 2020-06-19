@@ -2,62 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44279C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253F4206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3F421835
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581437;
-	bh=h07Z37vc4lsb8abLGkmrAV4a9DYuCzNCEUwO+VeYHxU=;
+	s=default; t=1592581440;
+	bh=UYYNl0Yb/dq/K1p1LK/ZDi5h3/DWZcAP6Qa7A1d8NYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPD6dUmJqGaeW6QxW/z30pgO3ThbGCPcNiJhOp8h1Gs86J+QxGYSpvJgnTNwrnwSg
-	 yW/+rCZUuHIOhvjhMi9NWnypWEXpMC82A9kLkNyO085V+GZePaTtopJtnEwKfH2YVO
-	 drJsuwDRhz6PqPeJiJBdvtJ2VVxHLNnO2P7P+MJM=
+	b=A7pB1qrxCGd40np9VxE44CBIToJrz8w0UYm72mMpfq9z8gkiclU95hzgN9m/BusiK
+	 tWpyReCwDMNay12SmesmrymfSFlJbS63zFhe6g1MkRGrPQm1HzV52YA9gbo7eSr4qv
+	 jpO20NSaA2msb9vEzpXCY5kTJysaK/Ovfytcnl70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404844AbgFSPn4 (ORCPT
+        id S2393610AbgFSP2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393614AbgFSP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:12 -0400
+        id S2390810AbgFSP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FAE5218AC;
-        Fri, 19 Jun 2020 15:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8768C2186A;
+        Fri, 19 Jun 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580491;
-        bh=h07Z37vc4lsb8abLGkmrAV4a9DYuCzNCEUwO+VeYHxU=;
+        s=default; t=1592580437;
+        bh=UYYNl0Yb/dq/K1p1LK/ZDi5h3/DWZcAP6Qa7A1d8NYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8Kt5FS+05D1WHOnADW6MahbuFqt8/OBJ6+R5ZU8EjgHJsmrIRmCLcKmJWILXgpbQ
-         wYDiDhxT/UsNTbm9O1DuCTn9AY65D9518hWrqnXklB2gvZ3zWLYDtJDJJSlaS9Nl7n
-         FML33pRyXDI5erBg3LMWWqVdXUiH7sLG0fP+kB2M=
+        b=z2TYBrP1KT+Aj+cvHK58xdlZEeBu+YTHwPgi5N3+zeDP6b0SLUdg+46fUC0u6yWQo
+         X66YEg0oxtZ4A82kKNNcZZRmneC+A6t297WQvdcuaVxTbJYFoc8rX/m0oP5ZVFVQZ8
+         RKNg/IePPcRXC275zVq2yH7bv/Em4T2EaUC9zc4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        James Morris <jmorris@namei.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Sasha Levin <sashal@kernel.org>, Yiqian Wei <yiwei@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 269/376] mm: initialize deferred pages with interrupts enabled
-Date:   Fri, 19 Jun 2020 16:33:07 +0200
-Message-Id: <20200619141723.062076316@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 218/376] btrfs: improve global reserve stealing logic
+Date:   Fri, 19 Jun 2020 16:32:16 +0200
+Message-Id: <20200619141720.647795004@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -70,109 +61,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 3d060856adfc59afb9d029c233141334cfaba418 upstream.
+[ Upstream commit 7f9fe614407692f670601a634621138233ac00d7 ]
 
-Initializing struct pages is a long task and keeping interrupts disabled
-for the duration of this operation introduces a number of problems.
+For unlink transactions and block group removal
+btrfs_start_transaction_fallback_global_rsv will first try to start an
+ordinary transaction and if it fails it will fall back to reserving the
+required amount by stealing from the global reserve. This is problematic
+because of all the same reasons we had with previous iterations of the
+ENOSPC handling, thundering herd.  We get a bunch of failures all at
+once, everybody tries to allocate from the global reserve, some win and
+some lose, we get an ENSOPC.
 
-1. jiffies are not updated for long period of time, and thus incorrect time
-   is reported. See proposed solution and discussion here:
-   lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-2. It prevents farther improving deferred page initialization by allowing
-   intra-node multi-threading.
+Fix this behavior by introducing BTRFS_RESERVE_FLUSH_ALL_STEAL. It's
+used to mark unlink reservation. To fix this we need to integrate this
+logic into the normal ENOSPC infrastructure.  We still go through all of
+the normal flushing work, and at the moment we begin to fail all the
+tickets we try to satisfy any tickets that are allowed to steal by
+stealing from the global reserve.  If this works we start the flushing
+system over again just like we would with a normal ticket satisfaction.
+This serializes our global reserve stealing, so we don't have the
+thundering herd problem.
 
-We are keeping interrupts disabled to solve a rather theoretical problem
-that was never observed in real world (See 3a2d7fa8a3d5).
-
-Let's keep interrupts enabled. In case we ever encounter a scenario where
-an interrupt thread wants to allocate large amount of memory this early in
-boot we can deal with that by growing zone (see deferred_grow_zone()) by
-the needed amount before starting deferred_init_memmap() threads.
-
-Before:
-[    1.232459] node 0 initialised, 12058412 pages in 1ms
-
-After:
-[    1.632580] node 0 initialised, 12051227 pages in 436ms
-
-Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
-Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Yiqian Wei <yiwei@redhat.com>
-Cc: <stable@vger.kernel.org>	[4.17+]
-Link: http://lkml.kernel.org/r/20200403140952.17177-3-pasha.tatashin@soleen.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Tested-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmzone.h |    2 ++
- mm/page_alloc.c        |   20 +++++++-------------
- 2 files changed, 9 insertions(+), 13 deletions(-)
+ fs/btrfs/block-group.c |  2 +-
+ fs/btrfs/ctree.h       |  1 +
+ fs/btrfs/inode.c       |  2 +-
+ fs/btrfs/space-info.c  | 37 ++++++++++++++++++++++++++++++++++++-
+ fs/btrfs/space-info.h  |  1 +
+ fs/btrfs/transaction.c | 42 +++++-------------------------------------
+ fs/btrfs/transaction.h |  3 +--
+ 7 files changed, 46 insertions(+), 42 deletions(-)
 
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -678,6 +678,8 @@ typedef struct pglist_data {
- 	/*
- 	 * Must be held any time you expect node_start_pfn,
- 	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
-+	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
-+	 * init.
- 	 *
- 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
- 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1845,6 +1845,13 @@ static int __init deferred_init_memmap(v
- 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
- 	pgdat->first_deferred_pfn = ULONG_MAX;
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 696f47103cfc..233c5663f233 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1175,7 +1175,7 @@ struct btrfs_trans_handle *btrfs_start_trans_remove_block_group(
+ 	free_extent_map(em);
  
-+	/*
-+	 * Once we unlock here, the zone cannot be grown anymore, thus if an
-+	 * interrupt thread must allocate this early in boot, zone must be
-+	 * pre-grown prior to start of deferred page initialization.
-+	 */
-+	pgdat_resize_unlock(pgdat, &flags);
+ 	return btrfs_start_transaction_fallback_global_rsv(fs_info->extent_root,
+-							   num_items, 1);
++							   num_items);
+ }
+ 
+ /*
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 8aa7b9dac405..3510e33706c1 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -2512,6 +2512,7 @@ enum btrfs_reserve_flush_enum {
+ 	BTRFS_RESERVE_FLUSH_LIMIT,
+ 	BTRFS_RESERVE_FLUSH_EVICT,
+ 	BTRFS_RESERVE_FLUSH_ALL,
++	BTRFS_RESERVE_FLUSH_ALL_STEAL,
+ };
+ 
+ enum btrfs_flush_state {
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 320d1062068d..259239b33370 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -3618,7 +3618,7 @@ static struct btrfs_trans_handle *__unlink_start_trans(struct inode *dir)
+ 	 * 1 for the inode ref
+ 	 * 1 for the inode
+ 	 */
+-	return btrfs_start_transaction_fallback_global_rsv(root, 5, 5);
++	return btrfs_start_transaction_fallback_global_rsv(root, 5);
+ }
+ 
+ static int btrfs_unlink(struct inode *dir, struct dentry *dentry)
+diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
+index 3c0e9999bfd7..eee6748c49e4 100644
+--- a/fs/btrfs/space-info.c
++++ b/fs/btrfs/space-info.c
+@@ -862,6 +862,34 @@ static inline int need_do_async_reclaim(struct btrfs_fs_info *fs_info,
+ 		!test_bit(BTRFS_FS_STATE_REMOUNTING, &fs_info->fs_state));
+ }
+ 
++static bool steal_from_global_rsv(struct btrfs_fs_info *fs_info,
++				  struct btrfs_space_info *space_info,
++				  struct reserve_ticket *ticket)
++{
++	struct btrfs_block_rsv *global_rsv = &fs_info->global_block_rsv;
++	u64 min_bytes;
 +
- 	/* Only the highest zone is deferred so find it */
- 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
- 		zone = pgdat->node_zones + zid;
-@@ -1865,8 +1872,6 @@ static int __init deferred_init_memmap(v
- 	while (spfn < epfn)
- 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
- zone_empty:
--	pgdat_resize_unlock(pgdat, &flags);
--
- 	/* Sanity check that the next zone really is unpopulated */
- 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
++	if (global_rsv->space_info != space_info)
++		return false;
++
++	spin_lock(&global_rsv->lock);
++	min_bytes = div_factor(global_rsv->size, 5);
++	if (global_rsv->reserved < min_bytes + ticket->bytes) {
++		spin_unlock(&global_rsv->lock);
++		return false;
++	}
++	global_rsv->reserved -= ticket->bytes;
++	ticket->bytes = 0;
++	list_del_init(&ticket->list);
++	wake_up(&ticket->wait);
++	space_info->tickets_id++;
++	if (global_rsv->reserved < global_rsv->size)
++		global_rsv->full = 0;
++	spin_unlock(&global_rsv->lock);
++
++	return true;
++}
++
+ /*
+  * maybe_fail_all_tickets - we've exhausted our flushing, start failing tickets
+  * @fs_info - fs_info for this fs
+@@ -894,6 +922,10 @@ static bool maybe_fail_all_tickets(struct btrfs_fs_info *fs_info,
+ 		ticket = list_first_entry(&space_info->tickets,
+ 					  struct reserve_ticket, list);
  
-@@ -1909,17 +1914,6 @@ deferred_grow_zone(struct zone *zone, un
- 	pgdat_resize_lock(pgdat, &flags);
++		if (ticket->steal &&
++		    steal_from_global_rsv(fs_info, space_info, ticket))
++			return true;
++
+ 		/*
+ 		 * may_commit_transaction will avoid committing the transaction
+ 		 * if it doesn't feel like the space reclaimed by the commit
+@@ -1110,6 +1142,7 @@ static int handle_reserve_ticket(struct btrfs_fs_info *fs_info,
  
- 	/*
--	 * If deferred pages have been initialized while we were waiting for
--	 * the lock, return true, as the zone was grown.  The caller will retry
--	 * this zone.  We won't return to this function since the caller also
--	 * has this static branch.
--	 */
--	if (!static_branch_unlikely(&deferred_pages)) {
--		pgdat_resize_unlock(pgdat, &flags);
--		return true;
--	}
+ 	switch (flush) {
+ 	case BTRFS_RESERVE_FLUSH_ALL:
++	case BTRFS_RESERVE_FLUSH_ALL_STEAL:
+ 		wait_reserve_ticket(fs_info, space_info, ticket);
+ 		break;
+ 	case BTRFS_RESERVE_FLUSH_LIMIT:
+@@ -1209,7 +1242,9 @@ static int __reserve_metadata_bytes(struct btrfs_fs_info *fs_info,
+ 		ticket.error = 0;
+ 		space_info->reclaim_size += ticket.bytes;
+ 		init_waitqueue_head(&ticket.wait);
+-		if (flush == BTRFS_RESERVE_FLUSH_ALL) {
++		ticket.steal = (flush == BTRFS_RESERVE_FLUSH_ALL_STEAL);
++		if (flush == BTRFS_RESERVE_FLUSH_ALL ||
++		    flush == BTRFS_RESERVE_FLUSH_ALL_STEAL) {
+ 			list_add_tail(&ticket.list, &space_info->tickets);
+ 			if (!space_info->flush) {
+ 				space_info->flush = 1;
+diff --git a/fs/btrfs/space-info.h b/fs/btrfs/space-info.h
+index 0a5001ef1481..c3c64019950a 100644
+--- a/fs/btrfs/space-info.h
++++ b/fs/btrfs/space-info.h
+@@ -78,6 +78,7 @@ struct btrfs_space_info {
+ struct reserve_ticket {
+ 	u64 bytes;
+ 	int error;
++	bool steal;
+ 	struct list_head list;
+ 	wait_queue_head_t wait;
+ };
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index 2d5498136e5e..b5da5d8342dc 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -563,7 +563,8 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
+ 		 * refill that amount for whatever is missing in the reserve.
+ 		 */
+ 		num_bytes = btrfs_calc_insert_metadata_size(fs_info, num_items);
+-		if (delayed_refs_rsv->full == 0) {
++		if (flush == BTRFS_RESERVE_FLUSH_ALL &&
++		    delayed_refs_rsv->full == 0) {
+ 			delayed_refs_bytes = num_bytes;
+ 			num_bytes <<= 1;
+ 		}
+@@ -699,43 +700,10 @@ struct btrfs_trans_handle *btrfs_start_transaction(struct btrfs_root *root,
+ 
+ struct btrfs_trans_handle *btrfs_start_transaction_fallback_global_rsv(
+ 					struct btrfs_root *root,
+-					unsigned int num_items,
+-					int min_factor)
++					unsigned int num_items)
+ {
+-	struct btrfs_fs_info *fs_info = root->fs_info;
+-	struct btrfs_trans_handle *trans;
+-	u64 num_bytes;
+-	int ret;
 -
 -	/*
- 	 * If someone grew this zone while we were waiting for spinlock, return
- 	 * true, as there might be enough pages already.
- 	 */
+-	 * We have two callers: unlink and block group removal.  The
+-	 * former should succeed even if we will temporarily exceed
+-	 * quota and the latter operates on the extent root so
+-	 * qgroup enforcement is ignored anyway.
+-	 */
+-	trans = start_transaction(root, num_items, TRANS_START,
+-				  BTRFS_RESERVE_FLUSH_ALL, false);
+-	if (!IS_ERR(trans) || PTR_ERR(trans) != -ENOSPC)
+-		return trans;
+-
+-	trans = btrfs_start_transaction(root, 0);
+-	if (IS_ERR(trans))
+-		return trans;
+-
+-	num_bytes = btrfs_calc_insert_metadata_size(fs_info, num_items);
+-	ret = btrfs_cond_migrate_bytes(fs_info, &fs_info->trans_block_rsv,
+-				       num_bytes, min_factor);
+-	if (ret) {
+-		btrfs_end_transaction(trans);
+-		return ERR_PTR(ret);
+-	}
+-
+-	trans->block_rsv = &fs_info->trans_block_rsv;
+-	trans->bytes_reserved = num_bytes;
+-	trace_btrfs_space_reservation(fs_info, "transaction",
+-				      trans->transid, num_bytes, 1);
+-
+-	return trans;
++	return start_transaction(root, num_items, TRANS_START,
++				 BTRFS_RESERVE_FLUSH_ALL_STEAL, false);
+ }
+ 
+ struct btrfs_trans_handle *btrfs_join_transaction(struct btrfs_root *root)
+diff --git a/fs/btrfs/transaction.h b/fs/btrfs/transaction.h
+index 31ae8d273065..bf102e64bfb2 100644
+--- a/fs/btrfs/transaction.h
++++ b/fs/btrfs/transaction.h
+@@ -193,8 +193,7 @@ struct btrfs_trans_handle *btrfs_start_transaction(struct btrfs_root *root,
+ 						   unsigned int num_items);
+ struct btrfs_trans_handle *btrfs_start_transaction_fallback_global_rsv(
+ 					struct btrfs_root *root,
+-					unsigned int num_items,
+-					int min_factor);
++					unsigned int num_items);
+ struct btrfs_trans_handle *btrfs_join_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_join_transaction_spacecache(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root);
+-- 
+2.25.1
+
 
 
