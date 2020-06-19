@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B67CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4C220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DDD21974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579309;
-	bh=W2i2BRZmni5PV4/rL1upFoQqytctqsQ9UEQOK5v5ZHM=;
+	s=default; t=1592579327;
+	bh=Tzw3Gzlm+3BA/nlhX9g2BWNAa7mep+kD4+xGWxixxX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EM65/igHKEFsFFRPlw2m/zbxi30xGhAxnhi8VIMRf09ZLFeOQF0IU/BJOGFcnqStd
-	 rz4PKbpYvqaXTVlm2qwSDVAOUQO3/FmlIruoxHum/lfVsx8iw2Ufcl+SkJdtDSLktr
-	 u022RU1ZEF8BmkxxLaRSqTmbvo8XjSpBzJPaSRPE=
+	b=OV9IEnfKf4PgN9K6BdP+fGmdElYEtnAC9pLhkWObGnooMIBXyCZzzZEd1HowhrRUG
+	 /1vmy+TTQcEQxIMUEfnvjaPdF1YXSFW6dpKFdHLxtaCjkF+Vd9EpkCeuDy1d8MSMCT
+	 xfiEYzA6nirRtSiWnQU6FrXrygZik0bzv9ufuanI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391736AbgFSPI2 (ORCPT
+        id S2391795AbgFSPIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391731AbgFSPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:08:25 -0400
+        id S2391738AbgFSPIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:08:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6657821852;
-        Fri, 19 Jun 2020 15:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C25E721852;
+        Fri, 19 Jun 2020 15:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579304;
-        bh=W2i2BRZmni5PV4/rL1upFoQqytctqsQ9UEQOK5v5ZHM=;
+        s=default; t=1592579320;
+        bh=Tzw3Gzlm+3BA/nlhX9g2BWNAa7mep+kD4+xGWxixxX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlZq32jld0ZmZBiP9zkH7fQrcy+hhlEmJYabPR9JccijReOQDksRaa+TifoUlRXzP
-         AnvCn6xofxY2JVuW4gsWu4OWrjvlKrN4oUvBuc4TcjA66dOT2qVit6Y7kbBljJPWeA
-         RbC5L5sAbjp+i1P0M0omEtqb61aZ+82dNsz/wnIU=
+        b=Jo+UPMt3saxLmx94h+O1C6IC2zHcWUQ4AwPzvA+Q8GYeNKHASPEIzZmonAeH7gAIv
+         BbHjImV2Fe81ZP5xnmwLlKt7jmW369T52eO3ks0hST4Wgkkp/OKAFI6Lsow0gEKXTl
+         49ACEI33k8eW+evfwZUKMzKb1k2g3PZPq7M6wGhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/261] iocost_monitor: drop string wrap around numbers when outputting json
-Date:   Fri, 19 Jun 2020 16:31:35 +0200
-Message-Id: <20200619141653.919464743@linuxfoundation.org>
+        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/261] brcmfmac: fix wrong location to get firmware feature
+Date:   Fri, 19 Jun 2020 16:31:12 +0200
+Message-Id: <20200619141652.842535783@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,81 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit 21f3cfeab304fc07b90d93d98d4d2f62110fe6b2 ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-Wrapping numbers in strings is used by some to work around bit-width issues in
-some enviroments. The problem isn't innate to json and the workaround seems to
-cause more integration problems than help. Let's drop the string wrapping.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/cgroup/iocost_monitor.py | 42 +++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
-index 7e344a78a627..b8c082c9fd7d 100644
---- a/tools/cgroup/iocost_monitor.py
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -112,14 +112,14 @@ class IocStat:
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 2c3526aeca6f..545015610cf8 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -283,13 +283,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
  
-     def dict(self, now):
-         return { 'device'               : devname,
--                 'timestamp'            : str(now),
--                 'enabled'              : str(int(self.enabled)),
--                 'running'              : str(int(self.running)),
--                 'period_ms'            : str(self.period_ms),
--                 'period_at'            : str(self.period_at),
--                 'period_vtime_at'      : str(self.vperiod_at),
--                 'busy_level'           : str(self.busy_level),
--                 'vrate_pct'            : str(self.vrate_pct), }
-+                 'timestamp'            : now,
-+                 'enabled'              : self.enabled,
-+                 'running'              : self.running,
-+                 'period_ms'            : self.period_ms,
-+                 'period_at'            : self.period_at,
-+                 'period_vtime_at'      : self.vperiod_at,
-+                 'busy_level'           : self.busy_level,
-+                 'vrate_pct'            : self.vrate_pct, }
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
++
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
  
-     def table_preamble_str(self):
-         state = ('RUN' if self.running else 'IDLE') if self.enabled else 'OFF'
-@@ -179,19 +179,19 @@ class IocgStat:
+ 	brcmf_feat_firmware_overrides(drvr);
  
-     def dict(self, now, path):
-         out = { 'cgroup'                : path,
--                'timestamp'             : str(now),
--                'is_active'             : str(int(self.is_active)),
--                'weight'                : str(self.weight),
--                'weight_active'         : str(self.active),
--                'weight_inuse'          : str(self.inuse),
--                'hweight_active_pct'    : str(self.hwa_pct),
--                'hweight_inuse_pct'     : str(self.hwi_pct),
--                'inflight_pct'          : str(self.inflight_pct),
--                'debt_ms'               : str(self.debt_ms),
--                'use_delay'             : str(self.use_delay),
--                'delay_ms'              : str(self.delay_ms),
--                'usage_pct'             : str(self.usage),
--                'address'               : str(hex(self.address)) }
-+                'timestamp'             : now,
-+                'is_active'             : self.is_active,
-+                'weight'                : self.weight,
-+                'weight_active'         : self.active,
-+                'weight_inuse'          : self.inuse,
-+                'hweight_active_pct'    : self.hwa_pct,
-+                'hweight_inuse_pct'     : self.hwi_pct,
-+                'inflight_pct'          : self.inflight_pct,
-+                'debt_ms'               : self.debt_ms,
-+                'use_delay'             : self.use_delay,
-+                'delay_ms'              : self.delay_ms,
-+                'usage_pct'             : self.usage,
-+                'address'               : self.address }
-         for i in range(len(self.usages)):
-             out[f'usage_pct_{i}'] = str(self.usages[i])
-         return out
 -- 
 2.25.1
 
