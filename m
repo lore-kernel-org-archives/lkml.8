@@ -2,54 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2792C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A332158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46ED2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584443;
-	bh=nvgbRfzR8VCuy4iYcmNPWSPTPLMDk7u16hUJ9OkYZOs=;
+	s=default; t=1592584447;
+	bh=LKve3kRvNjn/XBpYeAq/fEYQEKfR38eu4arP2VpgTDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0aGBwGQifV9Nt3anZFsf6aLOD2hZB9mdooViHVLElaFM0wr9ivEjtUi56Xx9c/HR+
-	 PsyGLwYlpHUKftX3lc5kDmNZ34N4eXWzHgAhJ4xe5G9PqPgRTqmHm2d3oCDySatyBt
-	 6pUrrJJboKDrpf19s1LUigm0DEj97rR5ZK2nx7ik=
+	b=RYTjKrYBrNYU4LxyAxJ1Xr3xy1Er1/8StNEWT0F1ku8ItQB9yocGKtQQmo9YIGRN0
+	 VEcRulVP6tR+gDC4fRGd3zs1kRWE8IfXoJYUcX+VN/ifr07xl35ESaD95AalNDXOFr
+	 os/kBIe19SfZHdAyonCJuLaqVHYfI9Exn0bRAsm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389428AbgFSOvS (ORCPT
+        id S2394963AbgFSQeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389384AbgFSOu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:56 -0400
+        id S2389047AbgFSOvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B2E20776;
-        Fri, 19 Jun 2020 14:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E1C206DB;
+        Fri, 19 Jun 2020 14:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578256;
-        bh=nvgbRfzR8VCuy4iYcmNPWSPTPLMDk7u16hUJ9OkYZOs=;
+        s=default; t=1592578275;
+        bh=LKve3kRvNjn/XBpYeAq/fEYQEKfR38eu4arP2VpgTDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s7PWO/1C/nSTSXeZetXgROpWVMaDZdYrA0GkJLe5KUI/pEmUJ45vKLySQ3uy0I0DJ
-         HaYmCYmY9+5akVc0nEpJviVrpDGxZQ7I7rum8Bd0jSpQikG5OBZ5zSCWtY98XcuYD9
-         zuG6XooKXok5EMSR69PZH5wqF17i0UpBnlhABtm8=
+        b=a+RSOxJeUC/BQbVpc8GwiTuYA51snjK60bZU1k7QzZEtbgXQ2VtdjYv61KBaZzSGM
+         g1EhExakX4WMuk78ILvMwt66omIyueg9e/j9ifADp/JPvckEU5oyZJzxuz4ChqKQrA
+         QiU/nB1XcMjKVHRstKHMQBRe2ltg+nWART/4IRSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
+        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 126/190] x86/mm: Stop printing BRK addresses
-Date:   Fri, 19 Jun 2020 16:32:51 +0200
-Message-Id: <20200619141639.921589009@linuxfoundation.org>
+Subject: [PATCH 4.14 150/190] PCI: Avoid FLR for AMD Starship USB 3.0
+Date:   Fri, 19 Jun 2020 16:33:15 +0200
+Message-Id: <20200619141641.227065937@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -62,35 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Kevin Buettner <kevinb@redhat.com>
 
-[ Upstream commit 67d631b7c05eff955ccff4139327f0f92a5117e5 ]
+[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
 
-This currently leaks kernel physical addresses into userspace.
+The AMD Starship USB 3.0 host controller advertises Function Level Reset
+support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
+on this device.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lkml.kernel.org/r/20200229231120.1147527-1-nivedita@alum.mit.edu
+Without this quirk, when attempting to assign (pass through) an AMD
+Starship USB 3.0 host controller to a guest OS, the system becomes
+increasingly unresponsive over the course of several minutes, eventually
+requiring a hard reset.  Shortly after attempting to start the guest, I see
+these messages:
+
+  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
+
+And then eventually:
+
+  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
+  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
+  ...
+  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
+
+Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
+motherboard with an AMD Ryzen Threadripper 3970X.
+
+Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
+Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 32bb38f6fc18..8039a951db8f 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -112,8 +112,6 @@ __ref void *alloc_low_pages(unsigned int num)
- 	} else {
- 		pfn = pgt_buf_end;
- 		pgt_buf_end += num;
--		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
--			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
- 	}
- 
- 	for (i = 0; i < num; i++) {
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 8d01c6d372fe..1bc7d4bcfea4 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4873,6 +4873,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+  * FLR may cause the following to devices to hang:
+  *
+  * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Starship USB 3.0 Host Controller 0x148c
+  * AMD Matisse USB 3.0 Host Controller 0x149c
+  * Intel 82579LM Gigabit Ethernet Controller 0x1502
+  * Intel 82579V Gigabit Ethernet Controller 0x1503
+@@ -4883,6 +4884,7 @@ static void quirk_no_flr(struct pci_dev *dev)
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+ }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
 -- 
 2.25.1
 
