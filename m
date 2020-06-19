@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBDD20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DCC20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580720;
-	bh=cnbGbbHSMj46Cwtqzz0LD7AuWiPIvqCAFyoE1CsdBqc=;
+	s=default; t=1592580724;
+	bh=5iZkv0fqTgd+XreIbBWlXku76xfHX8tsVakDmB4R/f0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfG8/W2qkX/zIANfdeVKsP2ACxPJU+N4ROa+7mRSxvUQhtDiPNJAG5geHRJyy2eIM
-	 xkSRk5Hy8U2IqZmvSz+QD2PWbIuw6Wnh4AHVTGQXztiaz1HE/5GyaPXJGfhn7oYGJc
-	 9Hrnfv4ltULZbqA/F4Qep/eJ+VDizUJ+Sp9d33vA=
+	b=j/hQ37tlSF29IwPoZgz4u01S1i7gey8ohM7D02/HWsZVMEcFt/U/k0xRWYfVdAz6O
+	 9duRyD+xJakE+SNa78e0T2COMh+P5nODbVA6/g2XZv77jhM3Z53jnVHkdKgQpZU+54
+	 WoCMtShxM/r1WgXv2YEcwE4Pfw4sJF2uRGJlICBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393851AbgFSPb6 (ORCPT
+        id S2393859AbgFSPcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35802 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404874AbgFSPbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:46 -0400
+        id S2391379AbgFSPby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CBD220786;
-        Fri, 19 Jun 2020 15:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62BDA20757;
+        Fri, 19 Jun 2020 15:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580706;
-        bh=cnbGbbHSMj46Cwtqzz0LD7AuWiPIvqCAFyoE1CsdBqc=;
+        s=default; t=1592580713;
+        bh=5iZkv0fqTgd+XreIbBWlXku76xfHX8tsVakDmB4R/f0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5Lzi1vDltnijLErXT1XjaDzlGZgak7xO4TVaR7YT3Sno2a9R2akkZaLZQtC/50TR
-         q13VkRn7IYcmi41rOdrrWy6z+zZJ3t+PvFCvJpiI+9S+ZaxSRd0bNvZh7T2P2Q+keE
-         jsFU8jut4YeIECqI0loNmh3tc+DJmz1MC5KQYa10=
+        b=RMFgbdCf/E182L9gdIXA24YCCgmXWjUUwehZDeZwmzDiZnZTYpFDAtDzMe5bo7pah
+         2TXLsyqeZtjIjLmJpZCUaVo+J1OSch7L/+TQhcsyXmlwmDkmjbehWlYOAKxbfWBQCc
+         o7VMf+ley7B2cNNk9VL6bV1hDVwGEJHCzsjfpau0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.7 352/376] mtd: rawnand: Fix nand_gpio_waitrdy()
-Date:   Fri, 19 Jun 2020 16:34:30 +0200
-Message-Id: <20200619141726.982950815@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 355/376] mtd: rawnand: diskonchip: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:33 +0200
+Message-Id: <20200619141727.124347974@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,44 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit e45a4b652dbd2f8b5a3b8e97e89f602a58cb28aa upstream.
+commit c5be12e45940f1aa1b5dfa04db5d15ad24f7c896 upstream.
 
-Mimic what's done in nand_soft_waitrdy() and add one to the jiffies
-timeout so we don't end up waiting less than actually required.
+Not sure nand_cleanup() is the right function to call here but in any
+case it is not nand_release(). Indeed, even a comment says that
+calling nand_release() is a bit of a hack as there is no MTD device to
+unregister. So switch to nand_cleanup() for now and drop this
+comment.
 
-Reported-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Fixes: b0e137ad24b6c ("mtd: rawnand: Provide helper for polling GPIO R/B pin")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if it did not intruce
+any bug.
+
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200518155237.297549-1-boris.brezillon@collabora.com
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-13-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/nand_base.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/diskonchip.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -736,8 +736,14 @@ EXPORT_SYMBOL_GPL(nand_soft_waitrdy);
- int nand_gpio_waitrdy(struct nand_chip *chip, struct gpio_desc *gpiod,
- 		      unsigned long timeout_ms)
- {
--	/* Wait until R/B pin indicates chip is ready or timeout occurs */
--	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
-+
-+	/*
-+	 * Wait until R/B pin indicates chip is ready or timeout occurs.
-+	 * +1 below is necessary because if we are now in the last fraction
-+	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
-+	 * small jiffy fraction - possibly leading to false timeout.
-+	 */
-+	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
- 	do {
- 		if (gpiod_get_value_cansleep(gpiod))
- 			return 0;
+--- a/drivers/mtd/nand/raw/diskonchip.c
++++ b/drivers/mtd/nand/raw/diskonchip.c
+@@ -1609,13 +1609,10 @@ static int __init doc_probe(unsigned lon
+ 		numchips = doc2001_init(mtd);
+ 
+ 	if ((ret = nand_scan(nand, numchips)) || (ret = doc->late_init(mtd))) {
+-		/* DBB note: i believe nand_release is necessary here, as
++		/* DBB note: i believe nand_cleanup is necessary here, as
+ 		   buffers may have been allocated in nand_base.  Check with
+ 		   Thomas. FIX ME! */
+-		/* nand_release will call mtd_device_unregister, but we
+-		   haven't yet added it.  This is handled without incident by
+-		   mtd_device_unregister, as far as I can tell. */
+-		nand_release(nand);
++		nand_cleanup(nand);
+ 		goto fail;
+ 	}
+ 
 
 
