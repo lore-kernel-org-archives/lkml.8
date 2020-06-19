@@ -2,169 +2,176 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03110C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D417520786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581138;
-	bh=u/SGjul9L8yvIwQLf0aUzCJ7rcHYtEU3h8ZQ5UY7iUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQD5pcMScgbRA5FZl56TnF3pxJwykvZpW8g1+Wra7tqRp3d/JB+XXdN2pqnglbMeG
-	 Q0LE2XbsYd4a6NsJdPnycHZ0RnVvJCaNRq61eybLmHycbI2uEH77kiU6J52cZWUPV6
-	 34gUfmO/X9bv4zsNBQ9/bpB4p1cCRSch2cU6RgAA=
+	by mail.kernel.org (Postfix) with ESMTP id DD85C20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404625AbgFSP31 (ORCPT
+        id S2405033AbgFSPjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:39:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:40230 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404589AbgFSP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B129221D80;
-        Fri, 19 Jun 2020 15:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580529;
-        bh=u/SGjul9L8yvIwQLf0aUzCJ7rcHYtEU3h8ZQ5UY7iUc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0XFYB8BQEEthTtWE5GfWO0E1N6/R5LiiafbOfebwtv+5gpM7m53OWRSEccPnijhY
-         DFtUEDGNrN1WKCypEFrMcf/Hq6vl1BBI8YzQ1a8VdtoS7bJQglHtd4bBA9TOOQlnnG
-         qDTcaMcplfdVkDBOWgkW6RyNMTYxmIm2MPR/ZL2k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.7 277/376] ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
-Date:   Fri, 19 Jun 2020 16:33:15 +0200
-Message-Id: <20200619141723.446976459@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2391845AbgFSPi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:38:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8184B101E;
+        Fri, 19 Jun 2020 08:38:55 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CC63F71F;
+        Fri, 19 Jun 2020 08:38:53 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 16:38:51 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Quentin Perret <qperret@google.com>, ctheegal@codeaurora.org,
+        Guenter Roeck <groeck@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
+ cpu freq
+Message-ID: <20200619153851.vigshoae3ahiy63x@e107158-lin.cambridge.arm.com>
+References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
+ <20200612125250.7bwjfnxhurdf5bwj@e107158-lin.cambridge.arm.com>
+ <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On 06/18/20 14:18, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Jun 12, 2020 at 5:52 AM Qais Yousef <qais.yousef@arm.com> wrote:
+> >
+> > On 06/10/20 15:18, Douglas Anderson wrote:
+> > > The cros_ec_spi driver is realtime priority so that it doesn't get
+> > > preempted by other taks while it's talking to the EC but overall it
+> > > really doesn't need lots of compute power.  Unfortunately, by default,
+> > > the kernel assumes that all realtime tasks should cause the cpufreq to
+> > > jump to max and burn through power to get things done as quickly as
+> > > possible.  That's just not the correct behavior for cros_ec_spi.
+> > >
+> > > Switch to manually overriding the default.
+> > >
+> > > This won't help us if our work moves over to the SPI pump thread but
+> > > that's not the common code path.
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > > NOTE: This would cause a conflict if the patch
+> > > https://lore.kernel.org/r/20200422112831.870192415@infradead.org lands
+> > > first
+> > >
+> > >  drivers/platform/chrome/cros_ec_spi.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+> > > index debea5c4c829..76d59d5e7efd 100644
+> > > --- a/drivers/platform/chrome/cros_ec_spi.c
+> > > +++ b/drivers/platform/chrome/cros_ec_spi.c
+> > > @@ -709,8 +709,11 @@ static void cros_ec_spi_high_pri_release(void *worker)
+> > >  static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
+> > >                                          struct cros_ec_spi *ec_spi)
+> > >  {
+> > > -     struct sched_param sched_priority = {
+> > > -             .sched_priority = MAX_RT_PRIO / 2,
+> > > +     struct sched_attr sched_attr = {
+> > > +             .sched_policy   = SCHED_FIFO,
+> > > +             .sched_priority = MAX_RT_PRIO / 2,
+> > > +             .sched_flags    = SCHED_FLAG_UTIL_CLAMP_MIN,
+> > > +             .sched_util_min = 0,
+> >
+> > Hmm I thought Peter already removed all users that change RT priority directly.
+> >
+> > https://lore.kernel.org/lkml/20200422112719.826676174@infradead.org/
+> 
+> Yeah, I mentioned that patch series "after the cut" in my patch and
+> also made sure to CC Peter on my patch.  I'm not sure what happened to
+> that series since I don't see it in linuxnext...
 
-commit 6cc7c266e5b47d3cd2b5bb7fd3aac4e6bb2dd1d2 upstream.
+Apologies I missed that.
 
-If the template field 'd' is chosen and the digest to be added to the
-measurement entry was not calculated with SHA1 or MD5, it is
-recalculated with SHA1, by using the passed file descriptor. However, this
-cannot be done for boot_aggregate, because there is no file descriptor.
+> 
+> 
+> > >       };
+> > >       int err;
+> > >
+> > > @@ -728,8 +731,7 @@ static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
+> > >       if (err)
+> > >               return err;
+> > >
+> > > -     err = sched_setscheduler_nocheck(ec_spi->high_pri_worker->task,
+> > > -                                      SCHED_FIFO, &sched_priority);
+> > > +     err = sched_setattr_nocheck(ec_spi->high_pri_worker->task, &sched_attr);
+> > >       if (err)
+> > >               dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
+> > >       return err;
+> >
+> > If I read the code correctly, if you fail here cros_ec_spi_probe() will fail
+> > too and the whole thing will not be loaded. If you compile without uclamp then
+> > sched_setattr_nocheck() will always fail with -EOPNOTSUPP.
+> 
+> Oops, definitely need to send out a v2 for that if nothing else.  Is
+> there any good way for me to code this up or do I need a big #ifdef
+> somewhere in my code?
 
-This patch adds a call to ima_calc_boot_aggregate() in
-ima_eventdigest_init(), so that the digest can be recalculated also for the
-boot_aggregate entry.
+A big #ifdef. But this kind of use I don't think was anticipated. And generally
+if we want to allow that, it has to be done via a proper API. Drivers picking
+random uclamp values is as bad as them picking random RT priority.
 
-Cc: stable@vger.kernel.org # 3.13.x
-Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> 
+> > Why can't you manage the priority and boost value of such tasks via your init
+> > scripts instead?
+> 
+> I guess I feel like it's weird in this case.  Userspace isn't creating
+> this task and isn't the one marking it as realtime.  ...and, if we
+> ever manage to upgrade the protocol which we use to talk to the EC we
+> might fully get rid of this task the need to have something boosted up
+> to realtime.
+> 
+> Said another way: the fact that we even have this task at all and the
+> fact that it's realtime is an implementation detail of the kernel.  It
+> seems really weird to add initscripts for it.
 
----
- security/integrity/ima/ima.h              |    3 ++-
- security/integrity/ima/ima_crypto.c       |    6 +++---
- security/integrity/ima/ima_init.c         |    2 +-
- security/integrity/ima/ima_template_lib.c |   18 ++++++++++++++++++
- 4 files changed, 24 insertions(+), 5 deletions(-)
+Yes this is the problem of RT for a general purpose systems. It's hard to
+reason about their priorities/importance since it's not a special purpose
+system with well defined spec of what hardware/software will be running on it
+and their precise requirements is not known before hand.
 
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -52,6 +52,7 @@ extern int ima_policy_flag;
- extern int ima_hash_algo;
- extern int ima_appraise;
- extern struct tpm_chip *ima_tpm_chip;
-+extern const char boot_aggregate_name[];
- 
- /* IMA event related data */
- struct ima_event_data {
-@@ -140,7 +141,7 @@ int ima_calc_buffer_hash(const void *buf
- int ima_calc_field_array_hash(struct ima_field_data *field_data,
- 			      struct ima_template_desc *desc, int num_fields,
- 			      struct ima_digest_data *hash);
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash);
- void ima_add_violation(struct file *file, const unsigned char *filename,
- 		       struct integrity_iint_cache *iint,
- 		       const char *op, const char *cause);
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -665,8 +665,8 @@ static void __init ima_pcrread(u32 idx,
-  * hash algorithm for reading the TPM PCRs as for calculating the boot
-  * aggregate digest as stored in the measurement list.
-  */
--static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
--					      struct crypto_shash *tfm)
-+static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
-+				       struct crypto_shash *tfm)
- {
- 	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
- 	int rc;
-@@ -694,7 +694,7 @@ static int __init ima_calc_boot_aggregat
- 	return rc;
- }
- 
--int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
-+int ima_calc_boot_aggregate(struct ima_digest_data *hash)
- {
- 	struct crypto_shash *tfm;
- 	u16 crypto_id, alg_id;
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -19,7 +19,7 @@
- #include "ima.h"
- 
- /* name for boot aggregate entry */
--static const char boot_aggregate_name[] = "boot_aggregate";
-+const char boot_aggregate_name[] = "boot_aggregate";
- struct tpm_chip *ima_tpm_chip;
- 
- /* Add the boot aggregate to the IMA measurement list and extend
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -286,6 +286,24 @@ int ima_eventdigest_init(struct ima_even
- 		goto out;
- 	}
- 
-+	if ((const char *)event_data->filename == boot_aggregate_name) {
-+		if (ima_tpm_chip) {
-+			hash.hdr.algo = HASH_ALGO_SHA1;
-+			result = ima_calc_boot_aggregate(&hash.hdr);
-+
-+			/* algo can change depending on available PCR banks */
-+			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
-+				result = -EINVAL;
-+
-+			if (result < 0)
-+				memset(&hash, 0, sizeof(hash));
-+		}
-+
-+		cur_digest = hash.hdr.digest;
-+		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
-+		goto out;
-+	}
-+
- 	if (!event_data->file)	/* missing info to re-calculate the digest */
- 		return -EINVAL;
- 
+> 
+> 
+> > I have to admit I need to think about whether it makes sense to have a generic
+> > API that allows drivers to opt-out of the default boosting behavior for their
+> > RT tasks.
+> 
+> Seems like it would be useful.
 
+If you propose something that will help the discussion. I think based on the
+same approach Peter has taken to prevent random RT priorities. In uclamp case
+I think we just want to allow driver to opt RT tasks out of the default
+boosting behavior.
 
+I'm a bit wary that this extra layer of tuning might create a confusion, but
+I can't reason about why is it bad for a driver to say I don't want my RT task
+to be boosted too.
+
+Thanks
+
+--
+Qais Yousef
