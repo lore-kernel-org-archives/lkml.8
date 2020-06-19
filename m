@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5259C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A8E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B7A20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584792;
-	bh=0OKIr2uFeL+aPj9HYYJ5A7Jy8u310+7d7c2yOooviI0=;
+	s=default; t=1592584797;
+	bh=97KhVImh3fMbPEhCdHz6ESrRxmRllU7uaOXxayOKOV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EThgblLxo9GuWcHqd2o7NWu00dccVFI20FNqZ3NHxIRLJLFL9p1bsZcFHqaeJlFFl
-	 67P6N9aMoR+23ffz8VEYvfWyJCKYiftU+rtrsfww1BmG3MzHNs3g46a2GE0fj0CUtZ
-	 Ivin27ZZKjGfKoLOMN08YkwAcd17MBZptmNmVlAo=
+	b=UkQlJEBLV8ZaL1CQ4q0cPqHliabSqA6VwCAumbOG0PMjuF0vGUxJDYPXQis/pX/Mw
+	 C1R16rBXjf9q6bGBLPV4zC09Fy+HQj848Kxa22xY3pcdQd0XfelFmi/rV9sLwknoqk
+	 FDsX12/y3M2wSmG/OnvAIHbXlji73vhGhArFXSq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395290AbgFSQjs (ORCPT
+        id S2388809AbgFSOqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37958 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388820AbgFSOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:15 -0400
+        id S2388787AbgFSOqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A15C20A8B;
-        Fri, 19 Jun 2020 14:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 924F92083B;
+        Fri, 19 Jun 2020 14:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577975;
-        bh=0OKIr2uFeL+aPj9HYYJ5A7Jy8u310+7d7c2yOooviI0=;
+        s=default; t=1592577962;
+        bh=97KhVImh3fMbPEhCdHz6ESrRxmRllU7uaOXxayOKOV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nhFkWvMuRfolml6aARdQWCDXVJIhHio+BAsbv1YVRj9QpLkj4jQW7kQdOrD6VOzvN
-         48hHZXK+zenthOPORC/iTiwBBBQf8DvVLKkVvwUjKc7N2l2ZS2mPR0D3VcQ8gPDK1/
-         Cokx4P2r6J8cupaXe2jHnwwCJ+w6Ew2OC5qCpe0I=
+        b=lzp+XAKHH39Jp+HmviDVl8J2GtQEmQDk1bkQsmrcnkPc7hPTdP+VlZECbEaFF/49C
+         lCPWtvMSiM27Ap+CRziGUJyFxBe9NmrwMFYyejw7tDj11lJtEbtc70yOv3ymMSsobr
+         DXeaA5pw8Ralx3CWdkbnU6KTn48dPFF/TUYqVkOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 027/190] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
-Date:   Fri, 19 Jun 2020 16:31:12 +0200
-Message-Id: <20200619141634.882070177@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH 4.14 006/190] x86: uaccess: Inhibit speculation past access_ok() in user_access_begin()
+Date:   Fri, 19 Jun 2020 16:30:51 +0200
+Message-Id: <20200619141633.788051361@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,34 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 4d8be4bc94f74bb7d096e1c2e44457b530d5a170 upstream.
+commit 6e693b3ffecb0b478c7050b44a4842854154f715 upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Commit 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
+makes the access_ok() check part of the user_access_begin() preceding a
+series of 'unsafe' accesses.  This has the desirable effect of ensuring
+that all 'unsafe' accesses have been range-checked, without having to
+pick through all of the callsites to verify whether the appropriate
+checking has been made.
 
-Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+However, the consolidated range check does not inhibit speculation, so
+it is still up to the caller to ensure that they are not susceptible to
+any speculative side-channel attacks for user addresses that ultimately
+fail the access_ok() check.
+
+This is an oversight, so use __uaccess_begin_nospec() to ensure that
+speculation is inhibited until the access_ok() check has passed.
+
+Reported-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miles Chen <miles.chen@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/cppc_acpi.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/uaccess.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -800,6 +800,7 @@ int acpi_cppc_processor_probe(struct acp
- 			"acpi_cppc");
- 	if (ret) {
- 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
-+		kobject_put(&cpc_ptr->kobj);
- 		goto out_free;
- 	}
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -717,7 +717,7 @@ static __must_check inline bool user_acc
+ {
+ 	if (unlikely(!access_ok(type, ptr, len)))
+ 		return 0;
+-	__uaccess_begin();
++	__uaccess_begin_nospec();
+ 	return 1;
+ }
  
 
 
