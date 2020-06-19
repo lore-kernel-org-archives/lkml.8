@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6239BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B18C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319DD20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C802F20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584809;
-	bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
+	s=default; t=1592584810;
+	bh=uCNmxVWLAvd2UD6qMLaucpPVHNdoLiyvb7ceBA1576o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wy+JWD9PFiVW3KmQisXw2xgBx6tRVL+VVf7BwaOpdmbCWU9L18ntitBrkwmoCmH0e
-	 RjFMQo87fuYx3v3pWBU+zq9KnHFPLA9FMur9AYQxQdz8iyf4Y+un63Hxg6k97/Br/A
-	 YcwaN9MkL0rfUMKOdGy33wzU6MjiHUIXl2wbFX2w=
+	b=ckC55t2kpzkrO43RjxVWwjBSqVdI3Di0lu7MIg8oZJhG9h7r4gJOu3Ab48LYpvoRP
+	 Oe+C/o/efdM+YlLIvamuW6nlQgH84qYkUCejBozgKFcp5X/95tDYELGWG7v2PYcHFO
+	 h2Fm6MmUVANLUcb3UEXepOFZMzR/bbaqmefr+on8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388774AbgFSOpz (ORCPT
+        id S2395428AbgFSQkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388742AbgFSOpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:44 -0400
+        id S2388782AbgFSOp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF34E217D9;
-        Fri, 19 Jun 2020 14:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F293C21556;
+        Fri, 19 Jun 2020 14:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577943;
-        bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
+        s=default; t=1592577959;
+        bh=uCNmxVWLAvd2UD6qMLaucpPVHNdoLiyvb7ceBA1576o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEy9Zj3OGxmsPVwGFo1JZXuH6hJTmlM0/XEYRlu8VEUjfKmtNqBdOEkWBkCB7jrey
-         g4RKnPB+HH2wypXdE2fkfR3oj3RVkSHZs7bRwEfAX5IzrQxPjabrglBZ4IyQ/v+SfE
-         vn4A0saJUUzHtWK9dyzSMradtGnx9BYxq3ktZGhc=
+        b=QZh5ByAimwXqH4aH1NHl5btRS9h7I5xli4OEOjmv7oGVqGg5Jbkr+E0z1AaggCpJy
+         uZUFte7DNS5g7LyFRmqs7OR59cO3/cExCSIse1b1eZfQshz4vXMVKQh/vG5v/mFPIF
+         5tY+qv2ws/osMATkx7uNmC+b5bU14l4jVafp3Shg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.14 022/190] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-Date:   Fri, 19 Jun 2020 16:31:07 +0200
-Message-Id: <20200619141634.589921454@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH 4.14 005/190] arch/openrisc: Fix issues with access_ok()
+Date:   Fri, 19 Jun 2020 16:30:50 +0200
+Message-Id: <20200619141633.736868337@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,36 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Stafford Horne <shorne@gmail.com>
 
-commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
+commit 9cb2feb4d21d97386eb25c7b67e2793efcc1e70a upstream.
 
-The documentation provided by kobject_init_and_add() clearly spells out
-the need to call kobject_put() on the kobject if an error is returned.
-Add this missing call to the error path.
+The commit 594cc251fdd0 ("make 'user_access_begin()' do 'access_ok()'")
+exposed incorrect implementations of access_ok() macro in several
+architectures.  This change fixes 2 issues found in OpenRISC.
 
-Cc: <stable@vger.kernel.org>
-Reported-by: 亿一 <teroincn@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+OpenRISC was not properly using parenthesis for arguments and also using
+arguments twice.  This patch fixes those 2 issues.
+
+I test booted this patch with v5.0-rc1 on qemu and it's working fine.
+
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/efi/efivars.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/openrisc/include/asm/uaccess.h |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -586,8 +586,10 @@ efivar_create_sysfs_entry(struct efivar_
- 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
- 				   NULL, "%s", short_name);
- 	kfree(short_name);
--	if (ret)
-+	if (ret) {
-+		kobject_put(&new_var->kobj);
- 		return ret;
-+	}
+--- a/arch/openrisc/include/asm/uaccess.h
++++ b/arch/openrisc/include/asm/uaccess.h
+@@ -58,8 +58,12 @@
+ /* Ensure that addr is below task's addr_limit */
+ #define __addr_ok(addr) ((unsigned long) addr < get_fs())
  
- 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
- 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+-#define access_ok(type, addr, size) \
+-	__range_ok((unsigned long)addr, (unsigned long)size)
++#define access_ok(type, addr, size)						\
++({ 									\
++	unsigned long __ao_addr = (unsigned long)(addr);		\
++	unsigned long __ao_size = (unsigned long)(size);		\
++	__range_ok(__ao_addr, __ao_size);				\
++})
+ 
+ /*
+  * These are the main single-value transfer routines.  They automatically
 
 
