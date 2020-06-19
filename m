@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5424AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5613C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCF120DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802452158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578003;
-	bh=2geJ1HC8sbOSBhL2sqC+ZhlfgC+NLuBZuPi5yQ1oKYM=;
+	s=default; t=1592578006;
+	bh=99AtoJOv4PI+Kkh6dHzVaD4c6A7Q7IDYN8jBHeaylXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ay6teaKDv9eMgtAy9ANZ4A+n5fVAeoORd4qhWOpXZ6KTRkDnUFLJLu+tW/mlPlSm1
-	 duzBIdYdfZ6ejO+0Z4VDTrB1wv55TFWF5LD3wm4nRXmylq9ySqz7p8AP8xHMz+Qfot
-	 Vu2z3lyffFk3wDt5bpqrvFj/+vxFDx/zIiEnTcg0=
+	b=NxG+2N0BE6leHMOrRrXpMCbg+/Ahi0A9z4KuY3Pe7eP6sI/dfzeOrOITiL1Z7gi4r
+	 9rdvVJMzN8SY4Fev4utGH+AENlkcUj2GxIWWPL3PjwFZyQuAQMzqS3QkPMDjnW4vdU
+	 kaSdKPiO4FidP2bevdPaqMbA/bbotYV+oqrbXZMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388865AbgFSOqk (ORCPT
+        id S2388871AbgFSOqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388838AbgFSOqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:30 -0400
+        id S2388863AbgFSOql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 314E220A8B;
-        Fri, 19 Jun 2020 14:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D91621582;
+        Fri, 19 Jun 2020 14:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577989;
-        bh=2geJ1HC8sbOSBhL2sqC+ZhlfgC+NLuBZuPi5yQ1oKYM=;
+        s=default; t=1592578000;
+        bh=99AtoJOv4PI+Kkh6dHzVaD4c6A7Q7IDYN8jBHeaylXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1V95gEedGa5uz4yi72L0RFG/uu/3PgUZfvY8f6OHvacPixcb82r3ACupsbattjo9
-         Nbz0SIZJ3YM0bF9fXXXNNkxre1Yj5MkmncXRDwCXIEwyvptzLbLGG+YlB7XR4K5L44
-         rZtUqahARiwh+EdGNQOaboIUntwC/y20s6p0jbLI=
+        b=cCmdG+SnwW3QWZ05+EWW9QwrzOQzVTxYu4/Go75Nvz/+cT9S2hubRxQB0qOGU9oHw
+         ZkRkD5n3j0xHYBx+s9PZenSovT827sscy4VI+Hw8kvbjOmcjX95dLA5/A5WBnlQV83
+         BX3kznXc3X1eQiygpCRjfJKppzbGYYELUgqUcvI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>, Borislav Petkov <bp@alien8.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 040/190] x86/speculation: Add support for STIBP always-on preferred mode
-Date:   Fri, 19 Jun 2020 16:31:25 +0200
-Message-Id: <20200619141635.583521394@linuxfoundation.org>
+Subject: [PATCH 4.14 044/190] spi: dw: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:31:29 +0200
+Message-Id: <20200619141635.795939060@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -65,143 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Lendacky <Thomas.Lendacky@amd.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 20c3a2c33e9fdc82e9e8e8d2a6445b3256d20191 ]
+[ Upstream commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 ]
 
-Different AMD processors may have different implementations of STIBP.
-When STIBP is conditionally enabled, some implementations would benefit
-from having STIBP always on instead of toggling the STIBP bit through MSR
-writes. This preference is advertised through a CPUID feature bit.
+The Designware SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+dw_spi_remove_host() before unregistering the SPI controller via
+devres_release_all().
 
-When conditional STIBP support is requested at boot and the CPU advertises
-STIBP always-on mode as preferred, switch to STIBP "on" support. To show
-that this transition has occurred, create a new spectre_v2_user_mitigation
-value and a new spectre_v2_user_strings message. The new mitigation value
-is used in spectre_v2_user_select_mitigation() to print the new mitigation
-message as well as to return a new string from stibp_state().
+This order is incorrect:  dw_spi_remove_host() shuts down the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Link: https://lkml.kernel.org/r/20181213230352.6937.74943.stgit@tlendack-t1.amdoffice.net
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
+
+Fix by reverting to the non-devm variant of spi_register_controller().
+
+An alternative approach would be to use device-managed functions for all
+steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
+
+Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v3.14+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/cpufeatures.h   |  1 +
- arch/x86/include/asm/nospec-branch.h |  1 +
- arch/x86/kernel/cpu/bugs.c           | 28 ++++++++++++++++++++++------
- 3 files changed, 24 insertions(+), 6 deletions(-)
+ drivers/spi/spi-dw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 764cbf1774d9..e08866cd2287 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -291,6 +291,7 @@
- #define X86_FEATURE_AMD_IBPB		(13*32+12) /* "" Indirect Branch Prediction Barrier */
- #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
- #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
- #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
- #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
- #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index b73a16a56e4f..041d2a04be1d 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -232,6 +232,7 @@ enum spectre_v2_mitigation {
- enum spectre_v2_user_mitigation {
- 	SPECTRE_V2_USER_NONE,
- 	SPECTRE_V2_USER_STRICT,
-+	SPECTRE_V2_USER_STRICT_PREFERRED,
- 	SPECTRE_V2_USER_PRCTL,
- 	SPECTRE_V2_USER_SECCOMP,
- };
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 3c3406a36812..ecd7ff665efe 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -633,10 +633,11 @@ enum spectre_v2_user_cmd {
- };
- 
- static const char * const spectre_v2_user_strings[] = {
--	[SPECTRE_V2_USER_NONE]		= "User space: Vulnerable",
--	[SPECTRE_V2_USER_STRICT]	= "User space: Mitigation: STIBP protection",
--	[SPECTRE_V2_USER_PRCTL]		= "User space: Mitigation: STIBP via prctl",
--	[SPECTRE_V2_USER_SECCOMP]	= "User space: Mitigation: STIBP via seccomp and prctl",
-+	[SPECTRE_V2_USER_NONE]			= "User space: Vulnerable",
-+	[SPECTRE_V2_USER_STRICT]		= "User space: Mitigation: STIBP protection",
-+	[SPECTRE_V2_USER_STRICT_PREFERRED]	= "User space: Mitigation: STIBP always-on protection",
-+	[SPECTRE_V2_USER_PRCTL]			= "User space: Mitigation: STIBP via prctl",
-+	[SPECTRE_V2_USER_SECCOMP]		= "User space: Mitigation: STIBP via seccomp and prctl",
- };
- 
- static const struct {
-@@ -726,6 +727,15 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 		break;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 5c16f7b17029..b11d0cd3fd20 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -534,7 +534,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 		}
  	}
  
-+	/*
-+	 * At this point, an STIBP mode other than "off" has been set.
-+	 * If STIBP support is not being forced, check if STIBP always-on
-+	 * is preferred.
-+	 */
-+	if (mode != SPECTRE_V2_USER_STRICT &&
-+	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
-+		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+-	ret = devm_spi_register_master(dev, master);
++	ret = spi_register_master(master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
+ 		goto err_dma_exit;
+@@ -558,6 +558,8 @@ void dw_spi_remove_host(struct dw_spi *dws)
+ {
+ 	dw_spi_debugfs_remove(dws);
+ 
++	spi_unregister_master(dws->master);
 +
- 	/* Initialize Indirect Branch Prediction Barrier */
- 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
- 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
-@@ -999,6 +1009,7 @@ void arch_smt_update(void)
- 	case SPECTRE_V2_USER_NONE:
- 		break;
- 	case SPECTRE_V2_USER_STRICT:
-+	case SPECTRE_V2_USER_STRICT_PREFERRED:
- 		update_stibp_strict();
- 		break;
- 	case SPECTRE_V2_USER_PRCTL:
-@@ -1233,7 +1244,8 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- 		 * Indirect branch speculation is always disabled in strict
- 		 * mode.
- 		 */
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
-+		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return -EPERM;
- 		task_clear_spec_ib_disable(task);
- 		task_update_spec_tif(task);
-@@ -1246,7 +1258,8 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- 		 */
- 		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
- 			return -EPERM;
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
-+		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return 0;
- 		task_set_spec_ib_disable(task);
- 		if (ctrl == PR_SPEC_FORCE_DISABLE)
-@@ -1317,6 +1330,7 @@ static int ib_prctl_get(struct task_struct *task)
- 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
- 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
- 	case SPECTRE_V2_USER_STRICT:
-+	case SPECTRE_V2_USER_STRICT_PREFERRED:
- 		return PR_SPEC_DISABLE;
- 	default:
- 		return PR_SPEC_NOT_AFFECTED;
-@@ -1564,6 +1578,8 @@ static char *stibp_state(void)
- 		return ", STIBP: disabled";
- 	case SPECTRE_V2_USER_STRICT:
- 		return ", STIBP: forced";
-+	case SPECTRE_V2_USER_STRICT_PREFERRED:
-+		return ", STIBP: always-on";
- 	case SPECTRE_V2_USER_PRCTL:
- 	case SPECTRE_V2_USER_SECCOMP:
- 		if (static_key_enabled(&switch_to_cond_stibp))
+ 	if (dws->dma_ops && dws->dma_ops->dma_exit)
+ 		dws->dma_ops->dma_exit(dws);
+ 
 -- 
 2.25.1
 
