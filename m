@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15896C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0889C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCC3621531
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0ED42166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582443;
-	bh=r6EliizRfhM4+8HlSDWbsKnzlj+GEis6zN/fAjxUXHM=;
+	s=default; t=1592582451;
+	bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LPkTZOw7RqJYH3DalPKKc9tLW37IxLAXFcetq2EBdzE4xVUiSdgxMQLg6LGfD6p1
-	 Oz8R40cl0KPgDMn1mtPI0rLAz3NUZypjD+JTgThv5/rjSI2nvrEHNlpaKyopEUbkYY
-	 LmOmpfkplTas43yD3LIBahZDCrYregPdcGMIDcVo=
+	b=A44egbG5AyROaYFHH0X4pw28xds0Sc7wQz8NCjeJlis1lIFmJGe85tX75lFURew03
+	 9mGTL4DXNJx5n65OMKp/YueV6frnN+VQJtc28s+tFjggx1hDyubh32Iiy/KJMOWLqz
+	 ViEttCiyWEqOfFSr98SIgOUpY5oP6nIGMw2CQaYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403929AbgFSQAl (ORCPT
+        id S2404160AbgFSQAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403975AbgFSPOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:23 -0400
+        id S2391847AbgFSPON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66FDB21582;
-        Fri, 19 Jun 2020 15:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EA420776;
+        Fri, 19 Jun 2020 15:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579663;
-        bh=r6EliizRfhM4+8HlSDWbsKnzlj+GEis6zN/fAjxUXHM=;
+        s=default; t=1592579652;
+        bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noGss0IcfIKeqn0ncwBHL1Z7p2AO+3HDBjRocwqEMx14Tfn4QwSw3c/UTZESoZLXV
-         nig7xfhcq/c6Gk+Aamh0+e2M1wFYbvMTNEu0vZNVO4Z89ZuMhs7PNAS+TFC2qn9THg
-         0zwZA3OrqSm7EpKmy2Qq4a1f8/sVaPbYPmM6at50=
+        b=qml4MP7sshma01Z6qeCswqba8MowA7Gmq51/jmmo7msOLgSIH82b73XMYs6jOoa8g
+         6yo/paQdimwYcEgCB5vnPIx34uYNm4sP/yBi1QLv6oDCaZ9sOI4sJhW2pfsbE0ud/D
+         dcYjE338wq6t2SGgP4HV7Z62B2vBzXHGo65KS6EI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.4 218/261] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
-Date:   Fri, 19 Jun 2020 16:33:49 +0200
-Message-Id: <20200619141700.328510834@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.4 215/261] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
+Date:   Fri, 19 Jun 2020 16:33:46 +0200
+Message-Id: <20200619141700.183401782@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,61 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 upstream.
+commit f354157a7d184db430c1a564c506434e33b1bec5 upstream.
 
-We do need access_process_vm() to access the target's reg_window.
-However, access to caller's memory (storing the result in
-genregs32_get(), fetching the new values in case of genregs32_set())
-should be done by normal uaccess primitives.
+Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
+are saved and restored over a suspend/resume cycle.  However, the
+EINT_MASK registers are not.
 
-Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
-Cc: stable@kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+On S5PV210 at the very least, these registers are not retained over
+suspend, leading to the interrupts remaining masked upon resume and
+therefore no interrupts being triggered for the device.  There should
+be no effect on any SoCs that do retain these registers as theoretically
+we would just be re-writing what was already there.
+
+Fixes: 7ccbc60cd9c2 ("pinctrl: exynos: Handle suspend/resume of GPIO EINT registers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sparc/kernel/ptrace_64.c |   17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-exynos.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/arch/sparc/kernel/ptrace_64.c
-+++ b/arch/sparc/kernel/ptrace_64.c
-@@ -572,19 +572,13 @@ static int genregs32_get(struct task_str
- 			for (; count > 0 && pos < 32; count--) {
- 				if (access_process_vm(target,
- 						      (unsigned long)
--						      &reg_window[pos],
-+						      &reg_window[pos++],
- 						      &reg, sizeof(reg),
- 						      FOLL_FORCE)
- 				    != sizeof(reg))
- 					return -EFAULT;
--				if (access_process_vm(target,
--						      (unsigned long) u,
--						      &reg, sizeof(reg),
--						      FOLL_FORCE | FOLL_WRITE)
--				    != sizeof(reg))
-+				if (put_user(reg, u++))
- 					return -EFAULT;
--				pos++;
--				u++;
- 			}
- 		}
- 	}
-@@ -684,12 +678,7 @@ static int genregs32_set(struct task_str
- 			}
- 		} else {
- 			for (; count > 0 && pos < 32; count--) {
--				if (access_process_vm(target,
--						      (unsigned long)
--						      u,
--						      &reg, sizeof(reg),
--						      FOLL_FORCE)
--				    != sizeof(reg))
-+				if (get_user(reg, u++))
- 					return -EFAULT;
- 				if (access_process_vm(target,
- 						      (unsigned long)
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -267,6 +267,7 @@ struct exynos_eint_gpio_save {
+ 	u32 eint_con;
+ 	u32 eint_fltcon0;
+ 	u32 eint_fltcon1;
++	u32 eint_mask;
+ };
+ 
+ /*
+@@ -633,10 +634,13 @@ static void exynos_pinctrl_suspend_bank(
+ 						+ 2 * bank->eint_offset);
+ 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ 
+ 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
+ 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
+ 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
++	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
+ }
+ 
+ void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+@@ -678,6 +682,9 @@ static void exynos_pinctrl_resume_bank(
+ 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
+ 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
++	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
++			readl(regs + bank->irq_chip->eint_mask
++			+ bank->eint_offset), save->eint_mask);
+ 
+ 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
+ 						+ bank->eint_offset);
+@@ -685,6 +692,8 @@ static void exynos_pinctrl_resume_bank(
+ 						+ 2 * bank->eint_offset);
+ 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ }
+ 
+ void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
 
 
