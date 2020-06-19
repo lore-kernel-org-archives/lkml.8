@@ -2,54 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED44221556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B582206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581147;
-	bh=ZOBjPwNTxWrUqyukv0mLvrQ62a6ylels/hEl/abfOe8=;
+	s=default; t=1592581150;
+	bh=4foPV+8cPuT6YTbH/rVC26dtPTN6m24T14Feff016z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CkGNJ3emTnEI/7/0AW/y3gFiIfDdkO3zfatXkrWBMoD8mG0T0Ce8F700gC1g6zbQc
-	 IsUf91qiXuR3XUQ4fFZrbykmdXO5hIY5Fb/GcnYFLkIY5pHkBxJI2F1US7zkxaq5LR
-	 5CKtURFQrqgv3DCY2ZWcHe1H1p3v7exmvti28tiU=
+	b=N2YGk4z/JYryQVZyhzEZPLmR0ic5yat0A6c69WxWE2Fk3+ebg4nkUrXvaOdjb0IU9
+	 1iiI8MtA98Zs/1n/yb2BrOYuIyYjlSWXnWoWkfu/6/e/RIODImLJv13Vg8ljdlQT6P
+	 +V8n097YFIwjYA+gEdJBs7NYJUZEM033WUldx1QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404616AbgFSP3Z (ORCPT
+        id S2405171AbgFSPjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404585AbgFSP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:47 -0400
+        id S2404610AbgFSP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42BE521919;
-        Fri, 19 Jun 2020 15:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D4521919;
+        Fri, 19 Jun 2020 15:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580526;
-        bh=ZOBjPwNTxWrUqyukv0mLvrQ62a6ylels/hEl/abfOe8=;
+        s=default; t=1592580563;
+        bh=4foPV+8cPuT6YTbH/rVC26dtPTN6m24T14Feff016z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhS7Ex0SRQKtgw97IzQ6Np/X6MVcnf/PQs2POz7MeV8lGz1u3KeNK8Tf+yDkZi2b3
-         NBDMhQOmQ8Bh++IHPr8yiTRem7Z79CFLh666Xri1xBvXb59btsmcSiD09MrCAmTtjx
-         wZJJ2XU7eUTwd669RzERbTsB8HcJFDn13LjWY3j0=
+        b=tu2FVrmU6RHBUGrmY2up2hfngLUPbe9kZBkOaIoeUXJIwsuPrW0F8H8lKlVGdbykD
+         37x0K1cAXEJFxFTF60lc3k8RC/VHkAblNuXZaIQ85TQNaPCZq0SaaW/rTeTzb9p8nx
+         nu5RGZybvQAnq8kutkN9ALGp4EpFXi6eUFBHNXRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 243/376] ice: Fix inability to set channels when down
-Date:   Fri, 19 Jun 2020 16:32:41 +0200
-Message-Id: <20200619141721.832581252@linuxfoundation.org>
+        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.7 297/376] carl9170: remove P2P_GO support
+Date:   Fri, 19 Jun 2020 16:33:35 +0200
+Message-Id: <20200619141724.399406750@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,48 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesse Brandeburg <jesse.brandeburg@intel.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit 765dd7a1827c687b782e6ab3dd6daf4d13a4780f ]
+commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
 
-Currently the driver prevents a user from doing
-modprobe ice
-ethtool -L eth0 combined 5
-ip link set eth0 up
+This patch follows up on a bug-report by Frank Schäfer that
+discovered P2P GO wasn't working with wpa_supplicant.
+This patch removes part of the broken P2P GO support but
+keeps the vif switchover code in place.
 
-The ethtool command fails, because the driver is checking to see if the
-interface is down before allowing the get_channels to proceed (even for
-a set_channels).
+Cc: <stable@vger.kernel.org>
+Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
+Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Remove this check and allow the user to configure the interface
-before bringing it up, which is a much better usability case.
-
-Fixes: 87324e747fde ("ice: Implement ethtool ops for channels")
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_ethtool.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
+ drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
+ 2 files changed, 5 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index 593fb37bd59e..153e3565e313 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -3171,10 +3171,6 @@ ice_get_channels(struct net_device *dev, struct ethtool_channels *ch)
- 	struct ice_vsi *vsi = np->vsi;
- 	struct ice_pf *pf = vsi->back;
+--- a/drivers/net/wireless/ath/carl9170/fw.c
++++ b/drivers/net/wireless/ath/carl9170/fw.c
+@@ -338,9 +338,7 @@ static int carl9170_fw(struct ar9170 *ar
+ 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
  
--	/* check to see if VSI is active */
--	if (test_bit(__ICE_DOWN, vsi->state))
--		return;
+ 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
+-			if_comb_types |=
+-				BIT(NL80211_IFTYPE_AP) |
+-				BIT(NL80211_IFTYPE_P2P_GO);
++			if_comb_types |= BIT(NL80211_IFTYPE_AP);
+ 
+ #ifdef CONFIG_MAC80211_MESH
+ 			if_comb_types |=
+--- a/drivers/net/wireless/ath/carl9170/main.c
++++ b/drivers/net/wireless/ath/carl9170/main.c
+@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
+ 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
+ 	    (vif->type != NL80211_IFTYPE_AP));
+ 
+-	/* While the driver supports HW offload in a single
+-	 * P2P client configuration, it doesn't support HW
+-	 * offload in the favourit, concurrent P2P GO+CLIENT
+-	 * configuration. Hence, HW offload will always be
+-	 * disabled for P2P.
++	/* The driver used to have P2P GO+CLIENT support,
++	 * but since this was dropped and we don't know if
++	 * there are any gremlins lurking in the shadows,
++	 * so best we keep HW offload disabled for P2P.
+ 	 */
+ 	ar->disable_offload |= vif->p2p;
+ 
+@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
+ 			if (vif->type == NL80211_IFTYPE_STATION)
+ 				break;
+ 
+-			/* P2P GO [master] use-case
+-			 * Because the P2P GO station is selected dynamically
+-			 * by all participating peers of a WIFI Direct network,
+-			 * the driver has be able to change the main interface
+-			 * operating mode on the fly.
+-			 */
+-			if (main_vif->p2p && vif->p2p &&
+-			    vif->type == NL80211_IFTYPE_AP) {
+-				old_main = main_vif;
+-				break;
+-			}
 -
- 	/* report maximum channels */
- 	ch->max_rx = ice_get_max_rxq(pf);
- 	ch->max_tx = ice_get_max_txq(pf);
--- 
-2.25.1
-
+ 			err = -EBUSY;
+ 			rcu_read_unlock();
+ 
 
 
