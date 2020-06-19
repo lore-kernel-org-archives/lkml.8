@@ -2,155 +2,126 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6673220809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581625;
-	bh=MjLl3ug6sbtCBvmLTLKqCIvNlrMQAeBsiE98mZv6j0Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYgPCwuapEJNcGeRZ0ls8u4Dl4R/NWJoWGlgv/4C/CkJigxcX+zchLY1W9EgUKjpO
-	 24N/i+o2dA4hmznRIXnofeZjH5VqBOa9o0VcI8yODCRXWGqvcR/xjfp4ShOdYn9VM/
-	 ncY8cm1RGtdeNuqBR++R8Ja+KMOe/HT0eMQFA1Mw=
+	by mail.kernel.org (Postfix) with ESMTP id EB5D621532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jo6wL5xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404215AbgFSP0Q (ORCPT
+        id S2393677AbgFSPrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392316AbgFSPXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFA61218AC;
-        Fri, 19 Jun 2020 15:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580223;
-        bh=MjLl3ug6sbtCBvmLTLKqCIvNlrMQAeBsiE98mZv6j0Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3Ul5h1OZUq5zjNzYrQrUCy7Snv+yUP+lv09fw5mGIVVQhwyLvZ399afpWC0+yrNP
-         /6BxJ9u8euhXvxBbUEJTbosSBR94BgSM0TYXL30h6Mc8oFf8CzfVWBAKlsdfFqSuCB
-         omfY5lqYNb6c1hm5+sJobAUmES17mdE38nb8Q1Ng=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 168/376] iwlwifi: avoid debug max amsdu config overwriting itself
-Date:   Fri, 19 Jun 2020 16:31:26 +0200
-Message-Id: <20200619141718.275884757@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403875AbgFSPq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:46:57 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361E9C06174E;
+        Fri, 19 Jun 2020 08:46:57 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so12034751ljc.8;
+        Fri, 19 Jun 2020 08:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2aeO2u4RtaCPo8nCEgw4qCFKUHWK0LPFLeoI2aW5HPQ=;
+        b=jo6wL5xA6o2oH5Qfa/Iq4GtVdDCLwHsr8D1YOa8ko3zROJAiMn/5bGOz6il/WVub71
+         sgkOp5yYot9p6XVr6ItkoFtBdxyEetxbA3qJ1aBlqE2UyowCwErx9g0KfuWMbY02+zCX
+         aM+An3sSPzlrRJKkObwEk0GKPbwYYeV7uPOaOrHOU1v72UV0PV1J2xb1Xtsf0Foiurn9
+         s2mqi/EQ+kM1jYqerwtJhJjsCnpn8C5AZSkHmrKrILzE4485907xY8fZdWSZSHer0v2e
+         SdSy4vj6XHFIPnVV0DS9bk7+A//zYOx/0mWh5yCkAjb3CrfOopT/l/KkiUuTU+ywyy4q
+         PODQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2aeO2u4RtaCPo8nCEgw4qCFKUHWK0LPFLeoI2aW5HPQ=;
+        b=QPHpONugUZc1W7DQy9TX/pi/KmaSmhlbHBrGcFYrfQj8pdmMgw0OspnnORGq0u91qa
+         NJCnRMDCcuB6jXvgrjkWzdkH6dG7xppvH+KuPZuffVALD8iMIIYeRh7QXYNDEdcXpVDz
+         4EghiQSD5UXbZJ1+I/NTttGPv8QB03fKXIXb6KQyKmEBNCogrW25wXzEuiU6b1vF+ERE
+         NjbkgXlIGfFU8WX6rtj3PF4p3CNxfRGqQ9UikZsmJlJrgC2Cc8Fb4ZNCMgK4xl0f+Dv+
+         ixSMqC1kahW+x6+YpYofnBOZkEdwxCk83GnDGbMKdlyNvMCtJqxAKBas7MVUhrKgZFwy
+         TDcQ==
+X-Gm-Message-State: AOAM530NABG6kjVibXNlGSC9gP6cPxwhMQ5F657oUBMVztUaF0haF20f
+        rstWC6uPBW6Ldr+w/zOPby8=
+X-Google-Smtp-Source: ABdhPJwUhOSSv9Ni5UNYPTcQgeNwmvJEp3WKGXZARh2sfgnjRmYeeL7JRfK5VaDXWSsF2HWXIUVk1w==
+X-Received: by 2002:a2e:9a55:: with SMTP id k21mr2282446ljj.340.1592581615594;
+        Fri, 19 Jun 2020 08:46:55 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id f24sm1222442ljk.125.2020.06.19.08.46.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 08:46:54 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 19 Jun 2020 17:46:52 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200619154652.GA19990@pc636>
+References: <20200618005214.GN8681@bombadil.infradead.org>
+ <20200618031823.GQ2723@paulmck-ThinkPad-P72>
+ <20200618173520.GC14613@pc636>
+ <20200618175719.GT2723@paulmck-ThinkPad-P72>
+ <20200618183448.GA15136@pc636>
+ <20200618190359.GU2723@paulmck-ThinkPad-P72>
+ <20200618203557.GB16976@pc636>
+ <20200618203821.GU8681@bombadil.infradead.org>
+ <20200618211709.GA17263@pc636>
+ <20200618213427.GV2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618213427.GV2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+On Thu, Jun 18, 2020 at 02:34:27PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 18, 2020 at 11:17:09PM +0200, Uladzislau Rezki wrote:
+> > > > <snip>
+> > > >     trace_rcu_invoke_kfree_bulk_callback(
+> > > >         rcu_state.name, bkvhead[i]->nr_records,
+> > > >             bkvhead[i]->records);
+> > > >     if (i == 0)
+> > > >         kfree_bulk(bkvhead[i]->nr_records,
+> > > >             bkvhead[i]->records);
+> > > >     else
+> > > >         vfree_bulk(bkvhead[i]->nr_records,
+> > > >             bkvhead[i]->records);
+> > > > <snip>
+> > > > 
+> > > > Matthew, what is your thought?
+> > > 
+> > > That was my thinking too.  If we had a kvfree_bulk(), I would expect it to
+> > > handle a mixture of vfree and kfree, but you've segregated them already.
+> > > So I think this is better.
+> > >
+> > Yes, the segregation is done. Having vfree_bulk() is enough then.
+> > We are on the same page :)
+> 
+> Very good.  When does kfree_rcu() and friends move out of kernel/rcu?
+> 
+Do you mean to move the whole logic of kfree_rcu() from top to down to mm/?
 
-[ Upstream commit a65a5824298b06049dbaceb8a9bd19709dc9507c ]
+Thanks!
 
-If we set amsdu_len one after another the second one overwrites
-the orig_amsdu_len so allow only moving from debug to non debug state.
-
-Also the TLC update check was wrong: it was checking that also the orig
-is smaller then the new updated size, which is not the case in debug
-amsdu mode.
-
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: af2984e9e625 ("iwlwifi: mvm: add a debugfs entry to set a fixed size AMSDU for all TX packets")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200424182644.e565446a4fce.I9729d8c520d8b8bb4de9a5cdc62e01eb85168aac@changeid
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c | 11 +++++++----
- drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c   | 15 ++++++++-------
- 2 files changed, 15 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
-index 3beef8d077b8..8fae7e707374 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
-@@ -5,10 +5,9 @@
-  *
-  * GPL LICENSE SUMMARY
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -28,10 +27,9 @@
-  *
-  * BSD LICENSE
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -481,6 +479,11 @@ static ssize_t iwl_dbgfs_amsdu_len_write(struct ieee80211_sta *sta,
- 	if (kstrtou16(buf, 0, &amsdu_len))
- 		return -EINVAL;
- 
-+	/* only change from debug set <-> debug unset */
-+	if ((amsdu_len && mvmsta->orig_amsdu_len) ||
-+	    (!!amsdu_len && mvmsta->orig_amsdu_len))
-+		return -EBUSY;
-+
- 	if (amsdu_len) {
- 		mvmsta->orig_amsdu_len = sta->max_amsdu_len;
- 		sta->max_amsdu_len = amsdu_len;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-index 15d11fb72aca..6f4d241d47e9 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-@@ -369,14 +369,15 @@ void iwl_mvm_tlc_update_notif(struct iwl_mvm *mvm,
- 		u16 size = le32_to_cpu(notif->amsdu_size);
- 		int i;
- 
--		/*
--		 * In debug sta->max_amsdu_len < size
--		 * so also check with orig_amsdu_len which holds the original
--		 * data before debugfs changed the value
--		 */
--		if (WARN_ON(sta->max_amsdu_len < size &&
--			    mvmsta->orig_amsdu_len < size))
-+		if (sta->max_amsdu_len < size) {
-+			/*
-+			 * In debug sta->max_amsdu_len < size
-+			 * so also check with orig_amsdu_len which holds the
-+			 * original data before debugfs changed the value
-+			 */
-+			WARN_ON(mvmsta->orig_amsdu_len < size);
- 			goto out;
-+		}
- 
- 		mvmsta->amsdu_enabled = le32_to_cpu(notif->amsdu_enabled);
- 		mvmsta->max_amsdu_len = size;
--- 
-2.25.1
-
-
-
+--
+Vlad Rezki
