@@ -2,149 +2,137 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD35C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3803C2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE892166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584323;
+	bh=NwfQU7fSe4QB0jQSwOpSIhax6afxMeJGfgwLHF+zpZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EyykY9IdFR74Lc5JRtcJpnqqgbEmwg7OBN9wkVvlX9UyKbFxECA8yDHY9vS1UMyOc
+	 kcAtscLr46aRZvsI4Q89t1QJJFNhAoVWpPyjWNAN+gYwb5gYngKNOceXHHooC/cg62
+	 CaQvzjNcrDzWkFY2RbEUJvNLhWw1v0ImEUIX77lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395069AbgFSQby (ORCPT
+        id S2395077AbgFSQcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:54 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2346 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2395042AbgFSQbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:31:51 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 8C2554A4460EE215B62C;
-        Fri, 19 Jun 2020 17:31:50 +0100 (IST)
-Received: from localhost (10.52.127.178) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 19 Jun
- 2020 17:31:50 +0100
-Date:   Fri, 19 Jun 2020 17:31:01 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.4 03/60] iio: light: isl29125: fix
- iio_triggered_buffer_{predisable,postenable} positions
-Message-ID: <20200619173101.000045a2@Huawei.com>
-In-Reply-To: <20200618013004.610532-3-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
-        <20200618013004.610532-3-sashal@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 19 Jun 2020 12:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389604AbgFSOwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BF4217D8;
+        Fri, 19 Jun 2020 14:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578356;
+        bh=NwfQU7fSe4QB0jQSwOpSIhax6afxMeJGfgwLHF+zpZ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zIWfXjX8pRv4hXBpGDj38i7kXK2/T4DIiC96L44G1c0268Vl8DeeQ603jmqkpie1w
+         G82lMt6pK84TTfOpqVwphB1TmnmKCZ1TNBs4wDc6ZRGLEfLzjJWSyV1jUbt3HGqbC5
+         r33dMyddYg7ICGC/B6HXnZTgol/Md/a6nx7k2OQc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 181/190] powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
+Date:   Fri, 19 Jun 2020 16:33:46 +0200
+Message-Id: <20200619141642.890318318@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.178]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 21:29:07 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> 
-> [ Upstream commit 9b7a12c3e090cf3fba6f66f1f23abbc6e0e86021 ]
-> 
-> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-> the poll functions.
-> 
-> For the predisable hook, the disable code should occur before detaching
-> the poll func, and for the postenable hook, the poll func should be
-> attached before the enable code.
-> 
-> This change reworks the predisable/postenable hooks so that the pollfunc is
-> attached/detached in the correct position.
-> It also balances the calls a bit, by grouping the preenable and the
-> iio_triggered_buffer_postenable() into a single
-> isl29125_buffer_postenable() function.
-> 
+commit 912c0a7f2b5daa3cbb2bc10f303981e493de73bd upstream.
 
-This is really part of some rework.  It doesn't 'fix' a bug
-as such (I think), but rather a bit of logical inconsistency.
+At boot the FSCR is initialised via one of two paths. On most systems
+it's set to a hard coded value in __init_FSCR().
 
-Shouldn't do any harm though beyond adding noise to stable.
-I added notes to some of these to mark them as not stable material,
-but clearly missed this one. Sorry about that.
+On newer skiboot systems we use the device tree CPU features binding,
+where firmware can tell Linux what bits to set in FSCR (and HFSCR).
 
-Jonathan
+In both cases the value that's configured at boot is not propagated
+into the init_task.thread.fscr value prior to the initial fork of init
+(pid 1), which means the value is not used by any processes other than
+swapper (the idle task).
 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/iio/light/isl29125.c | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/light/isl29125.c b/drivers/iio/light/isl29125.c
-> index e2945a20e5f6..60388a41ec8c 100644
-> --- a/drivers/iio/light/isl29125.c
-> +++ b/drivers/iio/light/isl29125.c
-> @@ -215,13 +215,24 @@ static const struct iio_info isl29125_info = {
->  	.driver_module = THIS_MODULE,
->  };
->  
-> -static int isl29125_buffer_preenable(struct iio_dev *indio_dev)
-> +static int isl29125_buffer_postenable(struct iio_dev *indio_dev)
->  {
->  	struct isl29125_data *data = iio_priv(indio_dev);
-> +	int err;
-> +
-> +	err = iio_triggered_buffer_postenable(indio_dev);
-> +	if (err)
-> +		return err;
->  
->  	data->conf1 |= ISL29125_MODE_RGB;
-> -	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
-> +	err = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
->  		data->conf1);
-> +	if (err) {
-> +		iio_triggered_buffer_predisable(indio_dev);
-> +		return err;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
-> @@ -229,19 +240,18 @@ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
->  	struct isl29125_data *data = iio_priv(indio_dev);
->  	int ret;
->  
-> -	ret = iio_triggered_buffer_predisable(indio_dev);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	data->conf1 &= ~ISL29125_MODE_MASK;
->  	data->conf1 |= ISL29125_MODE_PD;
-> -	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
-> +	ret = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
->  		data->conf1);
-> +
-> +	iio_triggered_buffer_predisable(indio_dev);
-> +
-> +	return ret;
->  }
->  
->  static const struct iio_buffer_setup_ops isl29125_buffer_setup_ops = {
-> -	.preenable = isl29125_buffer_preenable,
-> -	.postenable = &iio_triggered_buffer_postenable,
-> +	.postenable = isl29125_buffer_postenable,
->  	.predisable = isl29125_buffer_predisable,
->  };
->  
+For the __init_FSCR() case this is OK, because the value in
+init_task.thread.fscr is initialised to something sensible. However it
+does mean that the value set in __init_FSCR() is not used other than
+for swapper, which is odd and confusing.
+
+The bigger problem is for the device tree CPU features case it
+prevents firmware from setting (or clearing) FSCR bits for use by user
+space. This means all existing kernels can not have features
+enabled/disabled by firmware if those features require
+setting/clearing FSCR bits.
+
+We can handle both cases by saving the FSCR value into
+init_task.thread.fscr after we have initialised it at boot. This fixes
+the bug for device tree CPU features, and will allow us to simplify
+the initialisation for the __init_FSCR() case in a future patch.
+
+Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200527145843.2761782-3-mpe@ellerman.id.au
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/kernel/prom.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -658,6 +658,23 @@ static void __init early_reserve_mem(voi
+ #endif
+ }
+ 
++#ifdef CONFIG_PPC64
++static void __init save_fscr_to_task(void)
++{
++	/*
++	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
++	 * have configured via the device tree features or via __init_FSCR().
++	 * That value will then be propagated to pid 1 (init) and all future
++	 * processes.
++	 */
++	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
++		init_task.thread.fscr = mfspr(SPRN_FSCR);
++}
++#else
++static inline void save_fscr_to_task(void) {};
++#endif
++
++
+ void __init early_init_devtree(void *params)
+ {
+ 	phys_addr_t limit;
+@@ -743,6 +760,8 @@ void __init early_init_devtree(void *par
+ 		BUG();
+ 	}
+ 
++	save_fscr_to_task();
++
+ #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
+ 	/* We'll later wait for secondaries to check in; there are
+ 	 * NCPUS-1 non-boot CPUs  :-)
 
 
