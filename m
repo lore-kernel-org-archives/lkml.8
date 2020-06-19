@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E16C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3223EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464B620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038352158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579656;
-	bh=atWOVYEMnKN4w9Qj8wIZ1sIxzM5jrFGsmCak9jUALm0=;
+	s=default; t=1592579662;
+	bh=QasecetVS2wywm5+DfOgUE0zZX8LEXJJBx2rbD4hdMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTU0G8tRXbPNwvqzPRXNZfPcDTgboKw4oTVTk9rPU1Fl2mZ9ey4bWydL0sl8s8+dG
-	 wOE7/ym7KKJaifzlL5GJaurc+bnu6u4njXgMX1NK2ojR/SSUzkXeH8eXaWqgMUizj9
-	 Me6fqy+6HkjsJgRGGQ8eWQLNSGz9w1za/j4+BuSc=
+	b=q+l9I6n9WhCaqiGyqDgw3/dXthO+hDyRrNfDCfyBVPv0mgHirGaiuI3hI8BeNlsD9
+	 yxovzNWYWD8lF11miw4fdCj1ndZKhWdHwsIHDCOf1AauPmzgapqbTLN+ZxfiWs+zW8
+	 sBSNNaGsm91ZfisuEntHa7wbzNSPN2eFRtxNC7MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403963AbgFSPOO (ORCPT
+        id S2403964AbgFSPOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44548 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392007AbgFSPN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:59 -0400
+        id S2392062AbgFSPOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B6021582;
-        Fri, 19 Jun 2020 15:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0527521582;
+        Fri, 19 Jun 2020 15:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579639;
-        bh=atWOVYEMnKN4w9Qj8wIZ1sIxzM5jrFGsmCak9jUALm0=;
+        s=default; t=1592579641;
+        bh=QasecetVS2wywm5+DfOgUE0zZX8LEXJJBx2rbD4hdMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cgtFK9/2MPV5j1KRJkXNdNR0qePn1msAcO1Hk+Hlxnd7h6KVP2zUZeTyNZ1aeN+M1
-         jcuh+rw9pOAcDlxA9yfM8wm+bzm4veiaJW65UiFqZbjfdvk4/jYY+Vkw3FuEIVr//b
-         Vol4btyxMLYkW3WzZRZB/41b6s78PTjOqdq/P0ZI=
+        b=mNVTQSUKUzaWQnhlFAk3gdmLX/vS2vOsXFT1irPNS28OH089QLz5Q8PH4VMlS1gbs
+         RMoRhl4mBU0lTFyPEGN/zUg7t70qWarlzWdD1nwIwtr9+NH4TX3vNxM03uXb4eluWL
+         mIXl0seINtZab7f5VrXPCKzy2FaHR5xrAGjui0jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
-        Borislav Petkov <bp@suse.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH 5.4 210/261] EDAC/amd64: Add AMD family 17h model 60h PCI IDs
-Date:   Fri, 19 Jun 2020 16:33:41 +0200
-Message-Id: <20200619141659.962491441@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 211/261] power: vexpress: add suppress_bind_attrs to true
+Date:   Fri, 19 Jun 2020 16:33:42 +0200
+Message-Id: <20200619141700.003858944@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,70 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-commit b6bea24d41519e8c31e4798f1c1a3f67e540c5d0 upstream.
+commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
 
-Add support for AMD Renoir (4000-series Ryzen CPUs).
+Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
+attributes available via the sysfs, so lets be explicit here and use
+".suppress_bind_attrs = true" to prevent userspace from doing something
+silly.
 
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20200510204842.2603-4-amonakov@ispras.ru
+Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/amd64_edac.c |   13 +++++++++++++
- drivers/edac/amd64_edac.h |    3 +++
- 2 files changed, 16 insertions(+)
+ drivers/power/reset/vexpress-poweroff.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2317,6 +2317,15 @@ static struct amd64_family_type family_t
- 			.dbam_to_cs		= f17_addr_mask_to_cs_size,
- 		}
+--- a/drivers/power/reset/vexpress-poweroff.c
++++ b/drivers/power/reset/vexpress-poweroff.c
+@@ -143,6 +143,7 @@ static struct platform_driver vexpress_r
+ 	.driver = {
+ 		.name = "vexpress-reset",
+ 		.of_match_table = vexpress_reset_of_match,
++		.suppress_bind_attrs = true,
  	},
-+	[F17_M60H_CPUS] = {
-+		.ctl_name = "F17h_M60h",
-+		.f0_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F0,
-+		.f6_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F6,
-+		.ops = {
-+			.early_channel_count	= f17_early_channel_count,
-+			.dbam_to_cs		= f17_addr_mask_to_cs_size,
-+		}
-+	},
- 	[F17_M70H_CPUS] = {
- 		.ctl_name = "F17h_M70h",
- 		.f0_id = PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
-@@ -3366,6 +3375,10 @@ static struct amd64_family_type *per_fam
- 			fam_type = &family_types[F17_M30H_CPUS];
- 			pvt->ops = &family_types[F17_M30H_CPUS].ops;
- 			break;
-+		} else if (pvt->model >= 0x60 && pvt->model <= 0x6f) {
-+			fam_type = &family_types[F17_M60H_CPUS];
-+			pvt->ops = &family_types[F17_M60H_CPUS].ops;
-+			break;
- 		} else if (pvt->model >= 0x70 && pvt->model <= 0x7f) {
- 			fam_type = &family_types[F17_M70H_CPUS];
- 			pvt->ops = &family_types[F17_M70H_CPUS].ops;
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -120,6 +120,8 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F0 0x1448
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F6 0x144e
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
- 
-@@ -291,6 +293,7 @@ enum amd_families {
- 	F17_CPUS,
- 	F17_M10H_CPUS,
- 	F17_M30H_CPUS,
-+	F17_M60H_CPUS,
- 	F17_M70H_CPUS,
- 	NUM_FAMILIES,
  };
+ 
 
 
