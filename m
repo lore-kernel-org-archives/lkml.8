@@ -2,117 +2,112 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16929C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36395C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4A2B2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1105E2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592568431;
+	bh=JG6wlESc37vW6YVMVRhjMEDRMoyDJ8cmczp3+E0WE5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SuwtDGVSwPgtLwdVAWEOJ7HZrPdU3u3DC5uqFu3ZvedBJBXdIcf0l1JywNheALddC
+	 sddSqT8fgXTlAtXZUfSGlQ6gJph0dNaAH/Y+7u4cReJ2MiPZwyAAogyZNtMX+we3Q2
+	 sToVmVYdsDSIHPxitLPASGheIRS3gDomhSD/ocIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732852AbgFSMCe (ORCPT
+        id S1732808AbgFSMHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:02:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732671AbgFSMCa (ORCPT
+        Fri, 19 Jun 2020 08:07:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:32821 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731776AbgFSMHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:02:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JC21SR077689;
-        Fri, 19 Jun 2020 08:02:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ra90g157-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 08:02:21 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JC2L5J079749;
-        Fri, 19 Jun 2020 08:02:21 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ra90g12y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 08:02:21 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JBuKux008619;
-        Fri, 19 Jun 2020 12:02:19 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31qur62ye2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 12:02:19 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JC2Frp10682674
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 12:02:16 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D002BA405D;
-        Fri, 19 Jun 2020 12:02:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E468A404D;
-        Fri, 19 Jun 2020 12:02:15 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.147.95])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Jun 2020 12:02:15 +0000 (GMT)
-Date:   Fri, 19 Jun 2020 14:02:13 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200619140213.69f4992d.pasic@linux.ibm.com>
-In-Reply-To: <20200619112051.74babdb1.cohuck@redhat.com>
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
-        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
-        <20200618002956.5f179de4.pasic@linux.ibm.com>
-        <20200619112051.74babdb1.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 19 Jun 2020 08:07:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id o26so7438875edq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:07:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FCgGElYZkmUmaA6JH2fsnooqQnU7ecDqoues9JmTDO4=;
+        b=liet1sk2OZC/E0wskDpeTTREqZ2K6z0V+Ar5IK4CUmCMwoLfWqsOsJUO+GNmWghycG
+         RjA0ue7krIvNwLSw8FlF16PRmzy41KoGUQZLwjM9MhIGYX/7exGL9ygDvYtzs160DFC5
+         scEf4vccuHK556BPmVN/Pqj6NetFyxj958AkxOP2T6ogW+xtD8z2RiEO+2rPAzoVBmiZ
+         mPh3novCLXB0zLzgbtxCZm0X0ubG2nXAAXjXva9ZYhKM4/oGSYrSfwsqmjUKQHJeZJGE
+         kkriH9xJf7vhY4GSKXf11dn4hFPBI92DjdUBp37uhPt94PPfTGjk+DBt6s3KZj2DTgJc
+         ku7A==
+X-Gm-Message-State: AOAM530QOrjMaPpFon9X7jahVcIh9G3D3swOh1y1dX0BfvHk2s9fDe44
+        NC2aJZmJRJuvqISw8Sowld8=
+X-Google-Smtp-Source: ABdhPJwanPG2AiqwbdvTfmxmMlKJkv9Ym8BRRBtspbNfvUfvQbUcEvc9LjS5GY4fUw4XoO9ZCSziWg==
+X-Received: by 2002:aa7:ccc2:: with SMTP id y2mr2879408edt.97.1592568426584;
+        Fri, 19 Jun 2020 05:07:06 -0700 (PDT)
+Received: from localhost (ip-37-188-189-34.eurotel.cz. [37.188.189.34])
+        by smtp.gmail.com with ESMTPSA id t9sm4650506ejy.43.2020.06.19.05.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 05:07:05 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 14:07:04 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+Message-ID: <20200619120704.GD12177@dhcp22.suse.cz>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_08:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=859
- malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 clxscore=1015
- impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006190085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 11:20:51 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+On Tue 09-06-20 18:54:51, Daniel Jordan wrote:
+[...]
+> @@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
+>  		goto done;
+>  	}
+>  
+> +	/*
+> +	 * Use max block size to minimize overhead on bare metal, where
+> +	 * alignment for memory hotplug isn't a concern.
 
-> > > +	if (arch_needs_virtio_iommu_platform(dev) &&
-> > > +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> > > +		dev_warn(&dev->dev,
-> > > +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");    
-> > 
-> > I'm not sure, divulging the current Linux name of this feature bit is a
-> > good idea, but if everybody else is fine with this, I don't care that  
-> 
-> Not sure if that feature name will ever change, as it is exported in
-> headers. At most, we might want to add the new ACCESS_PLATFORM define
-> and keep the old one, but that would still mean some churn.
-> 
-> > much. An alternative would be:
-> > "virtio: device falsely claims to have full access to the memory,
-> > aborting the device"  
-> 
-> "virtio: device does not work with limited memory access" ?
-> 
-> But no issue with keeping the current message.
+This really begs a clarification why this is not a concern. Bare metal
+can see physical memory hotadd as well. I just suspect that you do not
+consider that to be very common so it is not a big deal? And I would
+tend to agree but still we are just going to wait until first user
+stumbles over this.
 
-I think I prefer Conny's version, but no strong feelings here.
+Btw. memblock interface just doesn't scale and it is a terrible
+interface for large machines and for the memory hotplug in general (just
+look at ppc and their insanely small memblocks).
 
-Halil
+Most usecases I have seen simply want to either offline some portion of
+memory without a strong requirement of the physical memory range as long
+as it is from a particular node or simply offline and remove the full
+node.
+
+I believe that we should think about a future interface rather than
+trying to ducktape the blocksize anytime it causes problems. I would be
+even tempted to simply add a kernel command line option 
+memory_hotplug=disable,legacy,new_shiny
+
+for disable it would simply drop all the sysfs crud and speed up boot
+for most users who simply do not care about memory hotplug. new_shiny
+would ideally provide an interface that would either export logically
+hotplugable memory ranges (e.g. DIMMs) or a query/action interface which
+accepts physical ranges as input. Having gazillions of sysfs files is
+simply unsustainable.
+-- 
+Michal Hocko
+SUSE Labs
