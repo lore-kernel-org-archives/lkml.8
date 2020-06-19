@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE22C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17978C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A792168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC75F2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583771;
-	bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+	s=default; t=1592583779;
+	bh=ECcn17W33XXpxx4IFxtIAWTOwXr2/kUWxEFrI6i1i6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTJEaM7ffLicJkJH3vZ3kYABq/ytPK+SKPRY2EZCbBAGIkm/r4Yci0692JJABdalV
-	 Ugd99Ocsd6LlDnCgxIZCT/toKkboTWO2Z8QRXEz9bilot5JSXQsMjOF4FrOcglWOPC
-	 3xpVOGIwI66lb87IPw5bXCs6OiETTvOp5lFYAOX8=
+	b=o3Qg42eSNx3N4lBx+OJf0UrxViQM7vMtGCvelMUN3QIEw13x7tC53dPqhiaiRwUFP
+	 4H8YJzlg/vp2V7zk1xWbKy8n2atDvGo1a+iDnvR/k1FG8LPxXz9kdom/VQCyFuqr++
+	 +AsydK6sFMRapV03hk0pfIRPAk2GqeX9jUqAMUyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390597AbgFSO76 (ORCPT
+        id S2394752AbgFSQW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:59:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390568AbgFSO7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:50 -0400
+        id S2389239AbgFSO7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD5321973;
-        Fri, 19 Jun 2020 14:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0105F218AC;
+        Fri, 19 Jun 2020 14:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578790;
-        bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+        s=default; t=1592578787;
+        bh=ECcn17W33XXpxx4IFxtIAWTOwXr2/kUWxEFrI6i1i6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rblfrh5fxY6dMjjQ335dTTeutn74mUMH86p0c0/369EF/2eUyGY4OLqVWNdOj+eL6
-         VVIXfc51GdakcOFyF1/b6xaWottdgJsIDsQMcHLsnOcDyITpcvPEz+jUqGubpDslR0
-         L16JJfwo2gUw5pIPgX6T4kPK/Tdx1u8vfCbRXs+w=
+        b=pF92/oknCFrBHZQDraSXpfcqIkUKcTaT8pe0YRAHJMWpUDgPkGA14G+xT5C47MvMV
+         1vK1BtarN8wFD5PvNxNeQX2swTz662mbY2ObGgl1+659lu8k88+0DcciHnIKqAwoGU
+         r60hGWHK5PVlHitZEQpykCCC2WVP2M3Ex36pRcZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/267] media: platform: fcp: Set appropriate DMA parameters
-Date:   Fri, 19 Jun 2020 16:31:52 +0200
-Message-Id: <20200619141654.922135292@linuxfoundation.org>
+Subject: [PATCH 4.19 126/267] media: dvb: return -EREMOTEIO on i2c transfer failure.
+Date:   Fri, 19 Jun 2020 16:31:51 +0200
+Message-Id: <20200619141654.875850969@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -63,69 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+[ Upstream commit 96f3a9392799dd0f6472648a7366622ffd0989f3 ]
 
-Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
-enable extra validation on DMA operations ensuring that the size
-restraints are met.
+Currently when i2c transfers fail the error return -EREMOTEIO
+is assigned to err but then later overwritten when the tuner
+attach call is made.  Fix this by returning early with the
+error return code -EREMOTEIO on i2c transfer failure errors.
 
-When using the FCP in conjunction with the VSP1/DU, and display frames,
-the size of the DMA operations is larger than the default maximum
-segment size reported by the DMA core (64K). With the DMA debug enabled,
-this produces a warning such as the following:
+If the transfer fails, an uninitialized value will be read from b2.
 
-"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
-claims to support [len=3145728] [max=65536]"
+Addresses-Coverity: ("Unused value")
 
-We have no specific limitation on the segment size which isn't already
-handled by the VSP1/DU which actually handles the DMA allcoations and
-buffer management, so define a maximum segment size of up to 4GB (a 32
-bit mask).
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-fcp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-index 43c78620c9d8..5c6b00737fe7 100644
---- a/drivers/media/platform/rcar-fcp.c
-+++ b/drivers/media/platform/rcar-fcp.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
+index 408920577716..94f59c7765dc 100644
+--- a/drivers/media/usb/dvb-usb/dibusb-mb.c
++++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
+@@ -84,7 +84,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
  
- #include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-@@ -21,6 +22,7 @@
- struct rcar_fcp_device {
- 	struct list_head list;
- 	struct device *dev;
-+	struct device_dma_parameters dma_parms;
- };
+ 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
+ 		err("tuner i2c write failed.");
+-		ret = -EREMOTEIO;
++		return -EREMOTEIO;
+ 	}
  
- static LIST_HEAD(fcp_devices);
-@@ -136,6 +138,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
- 
- 	fcp->dev = &pdev->dev;
- 
-+	fcp->dev->dma_parms = &fcp->dma_parms;
-+	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
-+
- 	pm_runtime_enable(&pdev->dev);
- 
- 	mutex_lock(&fcp_lock);
+ 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
 -- 
 2.25.1
 
