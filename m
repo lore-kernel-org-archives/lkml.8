@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD902C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5E32083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF30320DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578096;
-	bh=tiCrtYAbKQC9fIQoevdXLhBjypRGfWewBktZLqo92so=;
+	s=default; t=1592578100;
+	bh=kZ2JT7pJzNcsSRPkYpNNMCMcIXuq+V0mJeRqmsklpBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRYu9Gcl3bH5xIAKCbt4dLze0YM4ZOlRltZGuNtsLl2xhhNuGmykXW4f3lQnNnJHg
-	 1kqqOre46WIs6yScvcXgfO56f6N+ciTVep3GMo5SpdVJA6AsdGqP21YAOQRY6VkG9L
-	 M6wabI1rGlbuXXEjoY3tfTeBKZUEk43lTWWFlzpI=
+	b=xLFxCCZB2S5Kt5NAmYK1rSwzK/CnkY3+ZTdGqOWXKeiozWVGI0lJtSQQrKb0TiYNN
+	 tJyhVG4pkehmJ9JxZy+IRcmkoAj66Wi6DMkxhigZ7Qib+54v0RtNnHUjBjjYZqF+Dm
+	 vr55Eypkjh/u4Ge/yptGgUdqFw1wk3br+1yaUVT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbgFSOsO (ORCPT
+        id S2389016AbgFSOsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389024AbgFSOr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:58 -0400
+        id S2388368AbgFSOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B765217BA;
-        Fri, 19 Jun 2020 14:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C182083B;
+        Fri, 19 Jun 2020 14:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578078;
-        bh=tiCrtYAbKQC9fIQoevdXLhBjypRGfWewBktZLqo92so=;
+        s=default; t=1592578080;
+        bh=kZ2JT7pJzNcsSRPkYpNNMCMcIXuq+V0mJeRqmsklpBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiNaSXyaTfybZftkjSTZehVKwj9M2r6iHDeuaoRX1nvOVxROnb9IlM10WjBzG5Tbx
-         THIi7ubgpRDM7JrUcOjctdD80DbX4ZmLnadIqsLUL3UzSXBdP0TrQzBkITvS7MTIL4
-         YUYW9cwyHEB1V+iTdYZTAjfQbog9Fe/9C6yb6aSU=
+        b=tZEYRCWHQc69LiXYIiSAR2RjfyufNOjVsaEnjFbjbFhBQxykfHklTwvF7T5I62UJR
+         tW86+AMAS0vN30eE2ZbganbDtACnUuM8hgu14H9y3uZl38+vsOSAlUncf90KhXjPze
+         V3jg5aQ9t8EPalBtDh94regGCXRkCMtQfLJrBDdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 4.14 074/190] xen/pvcalls-back: test for errors when calling backend_connect()
-Date:   Fri, 19 Jun 2020 16:31:59 +0200
-Message-Id: <20200619141637.288886018@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 075/190] ACPI: GED: use correct trigger type field in _Exx / _Lxx handling
+Date:   Fri, 19 Jun 2020 16:32:00 +0200
+Message-Id: <20200619141637.329915429@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,36 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit c8d70a29d6bbc956013f3401f92a4431a9385a3c upstream.
+commit e5c399b0bd6490c12c0af2a9eaa9d7cd805d52c9 upstream.
 
-backend_connect() can fail, so switch the device to connected only if
-no error occurred.
+Commit ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler
+methods") added a reference to the 'triggering' field of either the
+normal or the extended ACPI IRQ resource struct, but inadvertently used
+the wrong pointer in the latter case. Note that both pointers refer to the
+same union, and the 'triggering' field appears at the same offset in both
+struct types, so it currently happens to work by accident. But let's fix
+it nonetheless
 
-Fixes: 0a9c75c2c7258f2 ("xen/pvcalls: xenbus state handling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20200511074231.19794-1-jgross@suse.com
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: ea6f3af4c5e63f69 ("ACPI: GED: add support for _Exx / _Lxx handler methods")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/pvcalls-back.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/evged.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/pvcalls-back.c
-+++ b/drivers/xen/pvcalls-back.c
-@@ -1104,7 +1104,8 @@ static void set_backend_state(struct xen
- 		case XenbusStateInitialised:
- 			switch (state) {
- 			case XenbusStateConnected:
--				backend_connect(dev);
-+				if (backend_connect(dev))
-+					return;
- 				xenbus_switch_state(dev, XenbusStateConnected);
- 				break;
- 			case XenbusStateClosing:
+--- a/drivers/acpi/evged.c
++++ b/drivers/acpi/evged.c
+@@ -97,7 +97,7 @@ static acpi_status acpi_ged_request_inte
+ 		trigger = p->triggering;
+ 	} else {
+ 		gsi = pext->interrupts[0];
+-		trigger = p->triggering;
++		trigger = pext->triggering;
+ 	}
+ 
+ 	irq = r.start;
 
 
