@@ -2,127 +2,291 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A91C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC2A20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583603;
-	bh=qrid19kxZaqA3ldtv5abpdqcKtq/ehLJHOG8ghrjLDY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n0wmA24ZYPpwzYxcmbtXco7kCA3ysXQkQ0HBjaM9GGRnltV+w4WsWDKGz52J/gsK4
-	 Keh/wciUncpREV/CqdTD9W4yAeKK7PVd0bF+3OZJo+tUrTHu8uAqFP5d0JxHzed6bL
-	 RQL+ZDti9vVS6BNZR5iRdSaqqUr5x/MPeG9guGVU=
+	by mail.kernel.org (Postfix) with ESMTP id 3F0E421527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KTV4omVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394632AbgFSQUB (ORCPT
+        id S2390760AbgFSQUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:20:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390737AbgFSPBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB58F21841;
-        Fri, 19 Jun 2020 15:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578903;
-        bh=qrid19kxZaqA3ldtv5abpdqcKtq/ehLJHOG8ghrjLDY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uC8TlDVJS6Kel7Oo98SA+h2P5TYftE/IzKiQFZIwsIIHeaL5dzodlM0dMz4hh4vxc
-         taYaDZvjA7J1HZ30r86zHdsrG1yvhlZUd6zd1mX93vvA5exaIm/clDnkW6f/slfgwR
-         92ltFgRbEkY7xoRfJ7jBAsBbtS6lmEIaRX5bYl70=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 201/267] PCI: Avoid FLR for AMD Starship USB 3.0
-Date:   Fri, 19 Jun 2020 16:33:06 +0200
-Message-Id: <20200619141658.388542382@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390424AbgFSQTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:19:55 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD79C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:19:55 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id z145so1987773ooa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wj1FO43iGyk7PYrrEEhEjkp2h2XH2iryroz21N45gqk=;
+        b=KTV4omVyKlC8idt6WMrK4rC6pvlVu4xrql1JVUD6KZBV7gKdYxJqpq4ZpeJGmx7n73
+         SSvhTZIxARGe61f5ZXZTmUvAdjCzvsY39rR/ObaJechM5w4wxPVEwfsRpKxgNAiucgSa
+         n+dE3o8mBQzdJSPyc96774z0RS4si3IIY3MGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wj1FO43iGyk7PYrrEEhEjkp2h2XH2iryroz21N45gqk=;
+        b=DVUyyHGK3WYyEGFO03fdhOd1YXv1z0f5sg4q/DFvx7djTUs9Qh3epqflL/KQFUSPG9
+         exOiqI3bP0xY5arFObRds7YDboWp80GpasZks7tYTtDrW0lniiqxIzXN/hqDdScGBday
+         N37Ql+J8UQ+dvynJvWUWe9irTdmL7C+D2BWJ3UBQL1pvfye9dBdobxjsO+4WZKNbP7XM
+         Pbu1oGFtoiOlk+D58MxysssJEnSbrQXphbQ4IdbnBBvLzqDJGR6pYSwXYZKIc2se+FIG
+         KmbhpiQ3PWH6jtVlhSGsa8YLug1hCy7X8CTLhyaaqaGiLU6gQPQOUWgppuW7uw9QPRNu
+         NsBw==
+X-Gm-Message-State: AOAM531tLf8yWud8Zd8AvK1IH1WTC/BYlJ0xKFTb7uiY3v60YdJ6qwVy
+        Xj6gTzLxQDH8SyvMNFNgTpVTG44ZG/PO4Wo3xr2FOA==
+X-Google-Smtp-Source: ABdhPJyoy6aHWkVkbh8xMF9/TzGOKKb8kpLI0Idlia3eF0cObcMto8g+bs85raCaxdKtZhy5XKzmlJ6GtvyqnZQdJOE=
+X-Received: by 2002:a4a:9528:: with SMTP id m37mr3925602ooi.85.1592583593309;
+ Fri, 19 Jun 2020 09:19:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200611083430.GD20149@phenom.ffwll.local> <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local> <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca> <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca> <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca> <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+In-Reply-To: <20200619151551.GP6578@ziepe.ca>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 19 Jun 2020 18:19:41 +0200
+Message-ID: <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+On Fri, Jun 19, 2020 at 5:15 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Fri, Jun 19, 2020 at 05:06:04PM +0200, Daniel Vetter wrote:
+> > On Fri, Jun 19, 2020 at 1:39 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > >
+> > > On Fri, Jun 19, 2020 at 09:22:09AM +0200, Daniel Vetter wrote:
+> > > > > As I've understood GPU that means you need to show that the commands
+> > > > > associated with the buffer have completed. This is all local stuff
+> > > > > within the driver, right? Why use fence (other than it already exists)
+> > > >
+> > > > Because that's the end-of-dma thing. And it's cross-driver for the
+> > > > above reasons, e.g.
+> > > > - device A renders some stuff. Userspace gets dma_fence A out of that
+> > > > (well sync_file or one of the other uapi interfaces, but you get the
+> > > > idea)
+> > > > - userspace (across process or just different driver) issues more
+> > > > rendering for device B, which depends upon the rendering done on
+> > > > device A. So dma_fence A is an dependency and will block this dma
+> > > > operation. Userspace (and the kernel) gets dma_fence B out of this
+> > > > - because unfortunate reasons, the same rendering on device B also
+> > > > needs a userptr buffer, which means that dma_fence B is also the one
+> > > > that the mmu_range_notifier needs to wait on before it can tell core
+> > > > mm that it can go ahead and release those pages
+> > >
+> > > I was afraid you'd say this - this is complete madness for other DMA
+> > > devices to borrow the notifier hook of the first device!
+> >
+> > The first device might not even have a notifier. This is the 2nd
+> > device, waiting on a dma_fence of its own, but which happens to be
+> > queued up as a dma operation behind something else.
+> >
+> > > What if the first device is a page faulting device and doesn't call
+> > > dma_fence??
+> >
+> > Not sure what you mean with this ... even if it does page-faulting for
+> > some other reasons, it'll emit a dma_fence which the 2nd device can
+> > consume as a dependency.
+>
+> At some point the pages under the buffer have to be either pinned
+> or protected by mmu notifier. So each and every single device doing
+> DMA to these pages must either pin, or use mmu notifier.
+>
+> Driver A should never 'borrow' a notifier from B
 
-[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
+It doesn't. I guess this would be great topic for lpc with a seriously
+big white-board, but I guess we don't have that this year again, so
+let me try again. Simplified example ofc, but should be the gist.
 
-The AMD Starship USB 3.0 host controller advertises Function Level Reset
-support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
-on this device.
+Ingredients:
+Device A and Device B
+A dma-buf, shared between device A and device B, let's call that shared_buf
+A userptr buffer, which userspace created on device B to hopefully
+somewhat track a virtual memory range, let's call that userptr_buf.
+A pile of other buffers, but we pretend they don't exist (because they
+kinda don't matter.
 
-Without this quirk, when attempting to assign (pass through) an AMD
-Starship USB 3.0 host controller to a guest OS, the system becomes
-increasingly unresponsive over the course of several minutes, eventually
-requiring a hard reset.  Shortly after attempting to start the guest, I see
-these messages:
+Sequence of events as userspace issues them to the kernel.
+1. dma operation on device A, which fills some interesting stuff into
+shared_buf. Userspace gets back a handle to dma_fence fence_A. No mmu
+notifier anywhere to be seen in the driver for device A.
 
-  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
+2. userspace passes fence_A around to some other place
 
-And then eventually:
+3. other places takes the handle for shared_buf and fence_A and
+userptr_buf and starts a dma operation on device B. It's one dma
+operation, maybe device B is taking the data from shared_buf and
+compresses it into userptr_buf, so that userspace can then send it
+over the network or to disk or whatever. device B has a mmu_notifier.
+Userspace gets back fence_B, which represents this dma operation. The
+kernel also stuffs this fence_B into the mmu_range_notifier for
+userptr_buf.
 
-  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
-  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
-  ...
-  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
+-> at this point device A might still be crunching the numbers
 
-Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
-motherboard with an AMD Ryzen Threadripper 3970X.
+4. device A is finally done doing whatever it was supposed to do, and
+fence_A completes
 
-Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+5. device B wakes up (this might or might not involve the kernel,
+usually it does) since fence_A has completed, and now starts doing its
+own crunching.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 7a835c49409e..92892b1c35fa 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4960,6 +4960,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * FLR may cause the following to devices to hang:
-  *
-  * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Starship USB 3.0 Host Controller 0x148c
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-@@ -4970,6 +4971,7 @@ static void quirk_no_flr(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+6. once device B is also done, it signals fence_B
+
+In all this device A has never borrowed the mmu notifier or even
+accessd the memory in userptr_buf or had access to that buffer handle.
+
+The madness is only that device B's mmu notifier might need to wait
+for fence_B so that the dma operation finishes. Which in turn has to
+wait for device A to finish first.
+
+> If each driver controls its own lifetime of the buffers, why can't the
+> driver locally wait for its device to finish?
+>
+> Can't the GPUs cancel work that is waiting on a DMA fence? Ie if
+> Driver A detects that work completed and wants to trigger a DMA fence,
+> but it now knows the buffer is invalidated, can't it tell driver B to
+> give up?
+
+We can (usually, the shitty hw where we can't has generally
+disappeared) with gpu reset. Users make really sad faces when that
+happens though, and generally they're only ok with that if it's indeed
+a nasty gpu program that resulted in the crash (there's some webgl
+shaders that run too long for quick&easy testing of how good the gpu
+reset is, don't do that if you care about the data in your desktop
+session ...).
+
+The trouble is that userspace assembles the work that's queued up on
+the gpu. After submission everyone has forgotten enough that just
+canceling stuff and re-issuing everything isn't on the table.
+
+Some hw is better, with real hw page faults and stuff, but those also
+don't need dma_fence to track their memory. But generally just not
+possible.
+
+> > The problem is that there's piles of other dependencies for a dma job.
+> > GPU doesn't just consume a single buffer each time, it consumes entire
+> > lists of buffers and mixes them all up in funny ways. Some of these
+> > buffers are userptr, entirely local to the device. Other buffers are
+> > just normal device driver allocations (and managed with some shrinker
+> > to keep them in check). And then there's the actually shared dma-buf
+> > with other devices. The trouble is that they're all bundled up
+> > together.
+>
+> But why does this matter? Does the GPU itself consume some work and
+> then stall internally waiting for an external DMA fence?
+
+Yup, see above, that's what's going on. Userspace queues up
+distributed work across engines & drivers, and then just waits for the
+entire thing to cascade and finish.
+
+> Otherwise I would expect this dependency chain should be breakable by
+> aborting work waiting on fences upon invalidation (without stalling)
+
+Yup, it would. Now on some hw you have a gpu work scheduler that sits
+in some kthread, and you could probably unschedule the work if there's
+some external dependency and you get an mmu notifier callback. Then
+put it on some queue, re-acquire the user pages and then reschedule
+it.
+
+It's still as horrible, since you still have the wait for the
+completion in there, the only benefit is that other device drivers
+without userptr support don't have to live with that specific
+constraint. dma_fence rules are still very strict and easy to
+deadlock, so we'd still want some lockdep checks, but now you'd have
+to somehow annotate whether you're a driver with userptr or a driver
+without userptr and make sure everyone gets it right.
+
+Also a scheduler which can unschedule and reschedule is mighty more
+complex than one which cannot, plus it needs to do that from mmu
+notifier callback (not the nicest calling context we have in the
+kernel by far). And if you have a single driver which doesn't
+unschedule, you're still screwed from an overall subsystem pov.
+
+So lots of code, lots of work, and not that much motivation to roll it
+out consistently across the board since there's no incremental payoff.
+Plus the thing is, the drivers without userptr are generally the
+really simple ones. Much easier to just fix those than to change the
+big complex render beasts which want userptr :-)
+
+E.g. the atomic modeset framework we've rolled out in the past few
+years and that almost all display drivers now use pulls any (sleeping)
+locks and memory allocations out of the critical async work section by
+design. Some drivers still managed to butcher it (the annotations
+caught some locking bugs already, not just memory allocations in the
+wrong spot), but generally easy to fix those.
+
+> > > Do not need to wait on dma_fence in notifiers.
+> >
+> > Maybe :-) The goal of this series is more to document current rules
+> > and make them more consistent. Fixing them if we don't like them might
+> > be a follow-up task, but that would likely be a pile more work. First
+> > we need to know what the exact shape of the problem even is.
+>
+> Fair enough
+
+Full disclosure: We are aware that we've designed ourselves into an
+impressive corner here, and there's lots of talks going on about
+untangling the dma synchronization from the memory management
+completely. But
+
+- that needs minimally reliable preempt support for gpu work, and hw
+engineers seem to have a hard time with that (or just don't want to do
+it). hw page faults would be even better, and even more wishlist than
+reality if you expect it to work everywhere.
+
+- it'd be a complete break of the established userspace abi, including
+all the cross driver stuff. Which means it's not just some in-kernel
+refactoring, we need to rev the entire ecosystem. And that takes a
+very long time, and needs serious pressure to get people moving.
+
+E.g. the atomic modeset rework is still not yet rolled out to major
+linux desktop environments, and it's over 5 years old, and it's
+starting to seriously hurt because lots of performance features
+require atomic modeset in userspace to be able to use them. I think
+rev'ing the entire memory management support will take as long. Plus I
+don't think we can ditch the old ways - even if all the hw currently
+using this would be dead (and we can delete the drivers) there's still
+the much smaller gpus in SoC that also need to go through the entire
+evolution.
+-Daniel
 -- 
-2.25.1
-
-
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
