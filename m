@@ -2,27 +2,27 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A532CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD583C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AC321D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A162321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgFSW4t (ORCPT
+        id S1730090AbgFSW5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:56:49 -0400
-Received: from smtp.uniroma2.it ([160.80.6.16]:33336 "EHLO smtp.uniroma2.it"
+        Fri, 19 Jun 2020 18:57:25 -0400
+Received: from smtp.uniroma2.it ([160.80.6.16]:33334 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbgFSW4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:56:46 -0400
+        id S1729891AbgFSW4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 18:56:48 -0400
 Received: from localhost.localdomain ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05JMuRJC014086
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05JMuRJF014086
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 20 Jun 2020 00:56:28 +0200
+        Sat, 20 Jun 2020 00:56:29 +0200
 From:   Andrea Mayer <andrea.mayer@uniroma2.it>
 To:     David Ahern <dsahern@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
@@ -38,9 +38,9 @@ Cc:     Donald Sharp <sharpd@cumulusnetworks.com>,
         Paolo Lungaroni <paolo.lungaroni@cnit.it>,
         Ahmed Abdelsalam <ahabdels@gmail.com>,
         Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: [net-next,v1,2/5] vrf: track associations between VRF devices and tables
-Date:   Sat, 20 Jun 2020 00:54:44 +0200
-Message-Id: <20200619225447.1445-3-andrea.mayer@uniroma2.it>
+Subject: [net-next,v1,5/5] selftests: add selftest for the VRF strict mode
+Date:   Sat, 20 Jun 2020 00:54:47 +0200
+Message-Id: <20200619225447.1445-6-andrea.mayer@uniroma2.it>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
 References: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
@@ -53,370 +53,411 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the data structures and the processing logic to keep track of the
-associations between VRF devices and routing tables.
-When a VRF is instantiated, it needs to refer to a given routing table.
-For each table, we explicitly keep track of the existing VRFs that refer to
-the table.
+The new strict mode functionality is tested in different configurations and
+on different network namespaces.
 
 Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 ---
- drivers/net/vrf.c | 273 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 268 insertions(+), 5 deletions(-)
+ .../selftests/net/vrf_strict_mode_test.sh     | 390 ++++++++++++++++++
+ 1 file changed, 390 insertions(+)
+ create mode 100755 tools/testing/selftests/net/vrf_strict_mode_test.sh
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 43928a1c2f2a..098fdabaa4c5 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -21,6 +21,7 @@
- #include <net/rtnetlink.h>
- #include <linux/u64_stats_sync.h>
- #include <linux/hashtable.h>
-+#include <linux/spinlock_types.h>
- 
- #include <linux/inetdevice.h>
- #include <net/arp.h>
-@@ -35,12 +36,75 @@
- #include <net/netns/generic.h>
- 
- #define DRV_NAME	"vrf"
--#define DRV_VERSION	"1.0"
-+#define DRV_VERSION	"1.1"
- 
- #define FIB_RULE_PREF  1000       /* default preference for FIB rules */
- 
-+#define HT_MAP_BITS	4
-+#define HASH_INITVAL	((u32)0xcafef00d)
+diff --git a/tools/testing/selftests/net/vrf_strict_mode_test.sh b/tools/testing/selftests/net/vrf_strict_mode_test.sh
+new file mode 100755
+index 000000000000..5274f4a1fba1
+--- /dev/null
++++ b/tools/testing/selftests/net/vrf_strict_mode_test.sh
+@@ -0,0 +1,390 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+struct  vrf_map {
-+	DECLARE_HASHTABLE(ht, HT_MAP_BITS);
-+	spinlock_t vmap_lock;
++# This test is designed for testing the new VRF strict_mode functionality.
 +
-+	/* shared_tables:
-+	 * count how many distinct tables do not comply with the strict mode
-+	 * requirement.
-+	 * shared_tables value must be 0 in order to enable the strict mode.
-+	 *
-+	 * example of the evolution of shared_tables:
-+	 *                                                        | time
-+	 * add  vrf0 --> table 100        shared_tables = 0       | t0
-+	 * add  vrf1 --> table 101        shared_tables = 0       | t1
-+	 * add  vrf2 --> table 100        shared_tables = 1       | t2
-+	 * add  vrf3 --> table 100        shared_tables = 1       | t3
-+	 * add  vrf4 --> table 101        shared_tables = 2       v t4
-+	 *
-+	 * shared_tables is a "step function" (or "staircase function")
-+	 * and it is increased by one when the second vrf is associated to a
-+	 * table.
-+	 *
-+	 * at t2, vrf0 and vrf2 are bound to table 100: shared_tables = 1.
-+	 *
-+	 * at t3, another dev (vrf3) is bound to the same table 100 but the
-+	 * value of shared_tables is still 1.
-+	 * This means that no matter how many new vrfs will register on the
-+	 * table 100, the shared_tables will not increase (considering only
-+	 * table 100).
-+	 *
-+	 * at t4, vrf4 is bound to table 101, and shared_tables = 2.
-+	 *
-+	 * Looking at the value of shared_tables we can immediately know if
-+	 * the strict_mode can or cannot be enforced. Indeed, strict_mode
-+	 * can be enforced iff shared_tables = 0.
-+	 *
-+	 * Conversely, shared_tables is decreased when a vrf is de-associated
-+	 * from a table with exactly two associated vrfs.
-+	 */
-+	u32 shared_tables;
++ret=0
 +
-+	bool strict_mode;
-+};
++# identifies the "init" network namespace which is often called root network
++# namespace.
++INIT_NETNS_NAME="init"
 +
-+struct vrf_map_elem {
-+	struct hlist_node hnode;
-+	struct list_head vrf_list;  /* VRFs registered to this table */
++PAUSE_ON_FAIL=${PAUSE_ON_FAIL:=no}
 +
-+	u32 table_id;
-+	int users;
-+	int ifindex;
-+};
-+
- static unsigned int vrf_net_id;
- 
-+/* per netns vrf data */
-+struct netns_vrf {
-+	/* protected by rtnl lock */
-+	bool add_fib_rules;
-+
-+	struct vrf_map vmap;
-+};
-+
- struct net_vrf {
- 	struct rtable __rcu	*rth;
- 	struct rt6_info	__rcu	*rt6;
-@@ -48,6 +112,9 @@ struct net_vrf {
- 	struct fib6_table	*fib6_table;
- #endif
- 	u32                     tb_id;
-+
-+	struct list_head	me_list;   /* entry in vrf_map_elem */
-+	int			ifindex;
- };
- 
- struct pcpu_dstats {
-@@ -103,6 +170,173 @@ static void vrf_get_stats64(struct net_device *dev,
- 	}
- }
- 
-+static struct vrf_map *netns_vrf_map(struct net *net)
++log_test()
 +{
-+	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
++	local rc=$1
++	local expected=$2
++	local msg="$3"
 +
-+	return &nn_vrf->vmap;
++	if [ ${rc} -eq ${expected} ]; then
++		nsuccess=$((nsuccess+1))
++		printf "\n    TEST: %-60s  [ OK ]\n" "${msg}"
++	else
++		ret=1
++		nfail=$((nfail+1))
++		printf "\n    TEST: %-60s  [FAIL]\n" "${msg}"
++		if [ "${PAUSE_ON_FAIL}" = "yes" ]; then
++			echo
++			echo "hit enter to continue, 'q' to quit"
++			read a
++			[ "$a" = "q" ] && exit 1
++		fi
++	fi
 +}
 +
-+static struct vrf_map *netns_vrf_map_by_dev(struct net_device *dev)
++print_log_test_results()
 +{
-+	return netns_vrf_map(dev_net(dev));
++	if [ "$TESTS" != "none" ]; then
++		printf "\nTests passed: %3d\n" ${nsuccess}
++		printf "Tests failed: %3d\n"   ${nfail}
++	fi
 +}
 +
-+static struct vrf_map_elem *vrf_map_elem_alloc(gfp_t flags)
++log_section()
 +{
-+	struct vrf_map_elem *me;
-+
-+	me = kmalloc(sizeof(*me), flags);
-+	if (!me)
-+		return NULL;
-+
-+	return me;
++	echo
++	echo "################################################################################"
++	echo "TEST SECTION: $*"
++	echo "################################################################################"
 +}
 +
-+static void vrf_map_elem_free(struct vrf_map_elem *me)
++ip_expand_args()
 +{
-+	kfree(me);
++	local nsname=$1
++	local nsarg=""
++
++	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
++		nsarg="-netns ${nsname}"
++	fi
++
++	echo "${nsarg}"
 +}
 +
-+static void vrf_map_elem_init(struct vrf_map_elem *me, int table_id,
-+			      int ifindex, int users)
++vrf_count()
 +{
-+	me->table_id = table_id;
-+	me->ifindex = ifindex;
-+	me->users = users;
-+	INIT_LIST_HEAD(&me->vrf_list);
++	local nsname=$1
++	local nsarg="$(ip_expand_args ${nsname})"
++
++	ip ${nsarg} -o link show type vrf | wc -l
 +}
 +
-+static struct vrf_map_elem *vrf_map_lookup_elem(struct vrf_map *vmap,
-+						u32 table_id)
++count_vrf_by_table_id()
 +{
-+	struct vrf_map_elem *me;
-+	u32 key;
++	local nsname=$1
++	local tableid=$2
++	local nsarg="$(ip_expand_args ${nsname})"
 +
-+	key = jhash_1word(table_id, HASH_INITVAL);
-+	hash_for_each_possible(vmap->ht, me, hnode, key) {
-+		if (me->table_id == table_id)
-+			return me;
-+	}
-+
-+	return NULL;
++	ip ${nsarg} -d -o link show type vrf | grep "table ${tableid}" | wc -l
 +}
 +
-+static void vrf_map_add_elem(struct vrf_map *vmap, struct vrf_map_elem *me)
++add_vrf()
 +{
-+	u32 table_id = me->table_id;
-+	u32 key;
++	local nsname=$1
++	local vrfname=$2
++	local vrftable=$3
++	local nsarg="$(ip_expand_args ${nsname})"
 +
-+	key = jhash_1word(table_id, HASH_INITVAL);
-+	hash_add(vmap->ht, &me->hnode, key);
++	ip ${nsarg} link add ${vrfname} type vrf table ${vrftable} &>/dev/null
 +}
 +
-+static void vrf_map_del_elem(struct vrf_map_elem *me)
++add_vrf_and_check()
 +{
-+	hash_del(&me->hnode);
++	local nsname=$1
++	local vrfname=$2
++	local vrftable=$3
++	local cnt
++	local rc
++
++	add_vrf ${nsname} ${vrfname} ${vrftable}; rc=$?
++
++	cnt=$(count_vrf_by_table_id ${nsname} ${vrftable})
++
++	log_test ${rc} 0 "${nsname}: add vrf ${vrfname}, ${cnt} vrfs for table ${vrftable}"
 +}
 +
-+static void vrf_map_lock(struct vrf_map *vmap) __acquires(&vmap->vmap_lock)
++add_vrf_and_check_fail()
 +{
-+	spin_lock(&vmap->vmap_lock);
++	local nsname=$1
++	local vrfname=$2
++	local vrftable=$3
++	local cnt
++	local rc
++
++	add_vrf ${nsname} ${vrfname} ${vrftable}; rc=$?
++
++	cnt=$(count_vrf_by_table_id ${nsname} ${vrftable})
++
++	log_test ${rc} 2 "${nsname}: CANNOT add vrf ${vrfname}, ${cnt} vrfs for table ${vrftable}"
 +}
 +
-+static void vrf_map_unlock(struct vrf_map *vmap) __releases(&vmap->vmap_lock)
++del_vrf_and_check()
 +{
-+	spin_unlock(&vmap->vmap_lock);
++	local nsname=$1
++	local vrfname=$2
++	local nsarg="$(ip_expand_args ${nsname})"
++
++	ip ${nsarg} link del ${vrfname}
++	log_test $? 0 "${nsname}: remove vrf ${vrfname}"
 +}
 +
-+/* called with rtnl lock held */
-+static int
-+vrf_map_register_dev(struct net_device *dev, struct netlink_ext_ack *extack)
++config_vrf_and_check()
 +{
-+	struct vrf_map *vmap = netns_vrf_map_by_dev(dev);
-+	struct net_vrf *vrf = netdev_priv(dev);
-+	struct vrf_map_elem *new_me, *me;
-+	u32 table_id = vrf->tb_id;
-+	bool free_new_me = false;
-+	int users;
-+	int res;
++	local nsname=$1
++	local addr=$2
++	local vrfname=$3
++	local nsarg="$(ip_expand_args ${nsname})"
 +
-+	/* we pre-allocate elements used in the spin-locked section (so that we
-+	 * keep the spinlock as short as possibile).
-+	 */
-+	new_me = vrf_map_elem_alloc(GFP_KERNEL);
-+	if (!new_me)
-+		return -ENOMEM;
-+
-+	vrf_map_elem_init(new_me, table_id, dev->ifindex, 0);
-+
-+	vrf_map_lock(vmap);
-+
-+	me = vrf_map_lookup_elem(vmap, table_id);
-+	if (!me) {
-+		me = new_me;
-+		vrf_map_add_elem(vmap, me);
-+		goto link_vrf;
-+	}
-+
-+	/* we already have an entry in the vrf_map, so it means there is (at
-+	 * least) a vrf registered on the specific table.
-+	 */
-+	free_new_me = true;
-+	if (vmap->strict_mode) {
-+		/* vrfs cannot share the same table */
-+		NL_SET_ERR_MSG(extack, "Table is used by another VRF");
-+		res = -EBUSY;
-+		goto unlock;
-+	}
-+
-+link_vrf:
-+	users = ++me->users;
-+	if (users == 2)
-+		++vmap->shared_tables;
-+
-+	list_add(&vrf->me_list, &me->vrf_list);
-+
-+	res = 0;
-+
-+unlock:
-+	vrf_map_unlock(vmap);
-+
-+	/* clean-up, if needed */
-+	if (free_new_me)
-+		vrf_map_elem_free(new_me);
-+
-+	return res;
++	ip ${nsarg} link set dev ${vrfname} up && \
++		ip ${nsarg} addr add ${addr} dev ${vrfname}
++	log_test $? 0 "${nsname}: vrf ${vrfname} up, addr ${addr}"
 +}
 +
-+/* called with rtnl lock held */
-+static void vrf_map_unregister_dev(struct net_device *dev)
++read_strict_mode()
 +{
-+	struct vrf_map *vmap = netns_vrf_map_by_dev(dev);
-+	struct net_vrf *vrf = netdev_priv(dev);
-+	u32 table_id = vrf->tb_id;
-+	struct vrf_map_elem *me;
-+	int users;
++	local nsname=$1
++	local rval
++	local rc=0
++	local nsexec=""
 +
-+	vrf_map_lock(vmap);
++	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
++		# a custom network namespace is provided
++		nsexec="ip netns exec ${nsname}"
++	fi
 +
-+	me = vrf_map_lookup_elem(vmap, table_id);
-+	if (!me)
-+		goto unlock;
++	rval="$(${nsexec} bash -c "cat /proc/sys/net/vrf/strict_mode" | \
++		grep -E "^[0-1]$")" &> /dev/null
++	if [ $? -ne 0 ]; then
++		# set errors
++		rval=255
++		rc=1
++	fi
 +
-+	list_del(&vrf->me_list);
-+
-+	users = --me->users;
-+	if (users == 1) {
-+		--vmap->shared_tables;
-+	} else if (users == 0) {
-+		vrf_map_del_elem(me);
-+
-+		/* no one will refer to this element anymore */
-+		vrf_map_elem_free(me);
-+	}
-+
-+unlock:
-+	vrf_map_unlock(vmap);
++	# on success, rval can be only 0 or 1; on error, rval is equal to 255
++	echo ${rval}
++	return ${rc}
 +}
 +
- /* by default VRF devices do not have a qdisc and are expected
-  * to be created with only a single queue.
-  */
-@@ -1319,6 +1553,8 @@ static void vrf_dellink(struct net_device *dev, struct list_head *head)
- 	netdev_for_each_lower_dev(dev, port_dev, iter)
- 		vrf_del_slave(dev, port_dev);
- 
-+	vrf_map_unregister_dev(dev);
-+
- 	unregister_netdevice_queue(dev, head);
- }
- 
-@@ -1327,6 +1563,7 @@ static int vrf_newlink(struct net *src_net, struct net_device *dev,
- 		       struct netlink_ext_ack *extack)
- {
- 	struct net_vrf *vrf = netdev_priv(dev);
-+	struct netns_vrf *nn_vrf;
- 	bool *add_fib_rules;
- 	struct net *net;
- 	int err;
-@@ -1349,11 +1586,26 @@ static int vrf_newlink(struct net *src_net, struct net_device *dev,
- 	if (err)
- 		goto out;
- 
-+	/* mapping between table_id and vrf;
-+	 * note: such binding could not be done in the dev init function
-+	 * because dev->ifindex id is not available yet.
-+	 */
-+	vrf->ifindex = dev->ifindex;
-+
-+	err = vrf_map_register_dev(dev, extack);
-+	if (err) {
-+		unregister_netdevice(dev);
-+		goto out;
-+	}
-+
- 	net = dev_net(dev);
--	add_fib_rules = net_generic(net, vrf_net_id);
-+	nn_vrf = net_generic(net, vrf_net_id);
-+
-+	add_fib_rules = &nn_vrf->add_fib_rules;
- 	if (*add_fib_rules) {
- 		err = vrf_add_fib_rules(dev);
- 		if (err) {
-+			vrf_map_unregister_dev(dev);
- 			unregister_netdevice(dev);
- 			goto out;
- 		}
-@@ -1440,12 +1692,23 @@ static struct notifier_block vrf_notifier_block __read_mostly = {
- 	.notifier_call = vrf_device_event,
- };
- 
-+static int vrf_map_init(struct vrf_map *vmap)
++read_strict_mode_compare_and_check()
 +{
-+	spin_lock_init(&vmap->vmap_lock);
-+	hash_init(vmap->ht);
++	local nsname=$1
++	local expected=$2
++	local res
 +
-+	vmap->strict_mode = false;
-+
-+	return 0;
++	res="$(read_strict_mode ${nsname})"
++	log_test ${res} ${expected} "${nsname}: check strict_mode=${res}"
 +}
 +
- /* Initialize per network namespace state */
- static int __net_init vrf_netns_init(struct net *net)
- {
--	bool *add_fib_rules = net_generic(net, vrf_net_id);
-+	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
- 
--	*add_fib_rules = true;
-+	nn_vrf->add_fib_rules = true;
-+	vrf_map_init(&nn_vrf->vmap);
- 
- 	return 0;
- }
-@@ -1453,7 +1716,7 @@ static int __net_init vrf_netns_init(struct net *net)
- static struct pernet_operations vrf_net_ops __net_initdata = {
- 	.init = vrf_netns_init,
- 	.id   = &vrf_net_id,
--	.size = sizeof(bool),
-+	.size = sizeof(struct netns_vrf),
- };
- 
- static int __init vrf_init_module(void)
++set_strict_mode()
++{
++	local nsname=$1
++	local val=$2
++	local nsexec=""
++
++	if [ "${nsname}" != "${INIT_NETNS_NAME}" ]; then
++		# a custom network namespace is provided
++		nsexec="ip netns exec ${nsname}"
++	fi
++
++	${nsexec} bash -c "echo ${val} >/proc/sys/net/vrf/strict_mode" &>/dev/null
++}
++
++enable_strict_mode()
++{
++	local nsname=$1
++
++	set_strict_mode ${nsname} 1
++}
++
++disable_strict_mode()
++{
++	local nsname=$1
++
++	set_strict_mode ${nsname} 0
++}
++
++disable_strict_mode_and_check()
++{
++	local nsname=$1
++
++	disable_strict_mode ${nsname}
++	log_test $? 0 "${nsname}: disable strict_mode (=0)"
++}
++
++enable_strict_mode_and_check()
++{
++	local nsname=$1
++
++	enable_strict_mode ${nsname}
++	log_test $? 0 "${nsname}: enable strict_mode (=1)"
++}
++
++enable_strict_mode_and_check_fail()
++{
++	local nsname=$1
++
++	enable_strict_mode ${nsname}
++	log_test $? 1 "${nsname}: CANNOT enable strict_mode"
++}
++
++strict_mode_check_default()
++{
++	local nsname=$1
++	local strictmode
++	local vrfcnt
++
++	vrfcnt=$(vrf_count ${nsname})
++	strictmode=$(read_strict_mode ${nsname})
++	log_test ${strictmode} 0 "${nsname}: strict_mode=0 by default, ${vrfcnt} vrfs"
++}
++
++setup()
++{
++	modprobe vrf
++
++	ip netns add testns
++	ip netns exec testns ip link set lo up
++}
++
++cleanup()
++{
++	ip netns del testns 2>/dev/null
++
++	ip link del vrf100 2>/dev/null
++	ip link del vrf101 2>/dev/null
++	ip link del vrf102 2>/dev/null
++
++	echo 0 >/proc/sys/net/vrf/strict_mode 2>/dev/null
++}
++
++vrf_strict_mode_tests_init()
++{
++	vrf_strict_mode_check_support init
++
++	strict_mode_check_default init
++
++	add_vrf_and_check init vrf100 100
++	config_vrf_and_check init 172.16.100.1/24 vrf100
++
++	enable_strict_mode_and_check init
++
++	add_vrf_and_check_fail init vrf101 100
++
++	disable_strict_mode_and_check init
++
++	add_vrf_and_check init vrf101 100
++	config_vrf_and_check init 172.16.101.1/24 vrf101
++
++	enable_strict_mode_and_check_fail init
++
++	del_vrf_and_check init vrf101
++
++	enable_strict_mode_and_check init
++
++	add_vrf_and_check init vrf102 102
++	config_vrf_and_check init 172.16.102.1/24 vrf102
++
++	# the strict_modle is enabled in the init
++}
++
++vrf_strict_mode_tests_testns()
++{
++	vrf_strict_mode_check_support testns
++
++	strict_mode_check_default testns
++
++	enable_strict_mode_and_check testns
++
++	add_vrf_and_check testns vrf100 100
++	config_vrf_and_check testns 10.0.100.1/24 vrf100
++
++	add_vrf_and_check_fail testns vrf101 100
++
++	add_vrf_and_check_fail testns vrf102 100
++
++	add_vrf_and_check testns vrf200 200
++
++	disable_strict_mode_and_check testns
++
++	add_vrf_and_check testns vrf101 100
++
++	add_vrf_and_check testns vrf102 100
++
++	#the strict_mode is disabled in the testns
++}
++
++vrf_strict_mode_tests_mix()
++{
++	read_strict_mode_compare_and_check init 1
++
++	read_strict_mode_compare_and_check testns 0
++
++	del_vrf_and_check testns vrf101
++
++	del_vrf_and_check testns vrf102
++
++	disable_strict_mode_and_check init
++
++	enable_strict_mode_and_check testns
++
++	enable_strict_mode_and_check init
++	enable_strict_mode_and_check init
++
++	disable_strict_mode_and_check testns
++	disable_strict_mode_and_check testns
++
++	read_strict_mode_compare_and_check init 1
++
++	read_strict_mode_compare_and_check testns 0
++}
++
++vrf_strict_mode_tests()
++{
++	log_section "VRF strict_mode test on init network namespace"
++	vrf_strict_mode_tests_init
++
++	log_section "VRF strict_mode test on testns network namespace"
++	vrf_strict_mode_tests_testns
++
++	log_section "VRF strict_mode test mixing init and testns network namespaces"
++	vrf_strict_mode_tests_mix
++}
++
++vrf_strict_mode_check_support()
++{
++	local nsname=$1
++	local output
++	local rc
++
++	output="$(lsmod | grep '^vrf' | awk '{print $1}')"
++	if [ -z "${output}" ]; then
++		modinfo vrf || return $?
++	fi
++
++	# we do not care about the value of the strict_mode; we only check if
++	# the strict_mode parameter is available or not.
++	read_strict_mode ${nsname} &>/dev/null; rc=$?
++	log_test ${rc} 0 "${nsname}: net.vrf.strict_mode is available"
++
++	return ${rc}
++}
++
++if [ "$(id -u)" -ne 0 ];then
++	echo "SKIP: Need root privileges"
++	exit 0
++fi
++
++if [ ! -x "$(command -v ip)" ]; then
++	echo "SKIP: Could not run test without ip tool"
++	exit 0
++fi
++
++cleanup &> /dev/null
++
++setup
++vrf_strict_mode_tests
++cleanup
++
++print_log_test_results
++
++exit $ret
 -- 
 2.20.1
 
