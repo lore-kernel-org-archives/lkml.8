@@ -2,78 +2,149 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3794C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02C2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:41:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eS+B+DYe"
+	by mail.kernel.org (Postfix) with ESMTP id D7C262073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgFSHlP (ORCPT
+        id S1730870AbgFSHmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:41:15 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58866 "EHLO mail.skyhub.de"
+        Fri, 19 Jun 2020 03:42:37 -0400
+Received: from verein.lst.de ([213.95.11.211]:52332 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgFSHlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:41:08 -0400
-Received: from zn.tnic (p200300ec2f0bac00fd80253c6a150deb.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ac00:fd80:253c:6a15:deb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AFD521EC02AC;
-        Fri, 19 Jun 2020 09:41:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592552467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=h4FwYiyWhYR7saNRzcCJ27rw0psvb//Ts/LIFLxn7iU=;
-        b=eS+B+DYemdA2HXQwi7Qe4nvX3U3QY63WkSacRFe5wuS37S9Au1EGoiqo+pj4I+vFxC3vUn
-        REv9B/uBMcNymPkRZVUH/LrFQ8f4rybPmOs2QCUGUcwfErGLGIilOkq5QAdlk5FTtBoQNu
-        PzvDqNsp0lTul1GY3aBN7erN9/cgfM4=
-Date:   Fri, 19 Jun 2020 09:41:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-Message-ID: <20200619074105.GB32683@zn.tnic>
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
- <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
+        id S1729548AbgFSHmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:42:36 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0A2F568AFE; Fri, 19 Jun 2020 09:42:34 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 09:42:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Commit 25f12ae45fc1 ("maccess: rename probe_kernel_address to
+ get_kernel_nofault") causing several OOPSes
+Message-ID: <20200619074233.GA3723@lst.de>
+References: <alpine.DEB.2.22.394.2006181751270.9276@xps-7390> <20200619065007.GA3041@lst.de> <alpine.DEB.2.22.394.2006182351090.9276@xps-7390>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
+In-Reply-To: <alpine.DEB.2.22.394.2006182351090.9276@xps-7390>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:52:18PM -0700, Dave Hansen wrote:
-> Do we need another driver when running in a SEV guest to tell us about
-> SEV's status?
+On Thu, Jun 18, 2020 at 11:57:27PM -0700, Kenneth R. Crudup wrote:
+> 
+> On Fri, 19 Jun 2020, Christoph Hellwig wrote:
+> 
+> > That is indeed really strange, as that commit is just a rename.
+> > Well, Linus also added swapping of the argument order, but again it
+> > shouldn't change much.
+> 
+> Thing is, there's other examples of the previous version in the kernel tree- any
+> chance there's a usage conflict (Thunderbolt has a ROM in it, maybe something in
+> "probe_roms.c"? (Just guessing, no idea):
 
-We use /proc/cpuinfo for that.
+Maybe.  But nothing looks strange there.  Just to re-reconfirm, you had to
+revert "maccess: rename probe_kernel_address to get_kernel_nofault",
+"maccess: make get_kernel_nofault() check for minimal type compatibility"
+wasn't enough?
 
--- 
-Regards/Gruss,
-    Boris.
+Below is a patch to do a "partial revert" for probe_roms.c.  I'd be
+totally surprised if it changes anything from staring at it for while,
+but anyway..
 
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
+index 9e1def3744f220..70ff3267b4f373 100644
+--- a/arch/x86/kernel/probe_roms.c
++++ b/arch/x86/kernel/probe_roms.c
+@@ -22,6 +22,9 @@
+ #include <asm/io.h>
+ #include <asm/setup_arch.h>
+ 
++#define probe_kernel_address(addr, retval)             \
++	copy_from_kernel_nofault(&retval, addr, sizeof(retval))
++
+ static struct resource system_rom_resource = {
+ 	.name	= "System ROM",
+ 	.start	= 0xf0000,
+@@ -99,7 +102,7 @@ static bool probe_list(struct pci_dev *pdev, unsigned short vendor,
+ 	unsigned short device;
+ 
+ 	do {
+-		if (get_kernel_nofault(device, rom_list) != 0)
++		if (probe_kernel_address(rom_list, device) != 0)
+ 			device = 0;
+ 
+ 		if (device && match_id(pdev, vendor, device))
+@@ -125,13 +128,13 @@ static struct resource *find_oprom(struct pci_dev *pdev)
+ 			break;
+ 
+ 		rom = isa_bus_to_virt(res->start);
+-		if (get_kernel_nofault(offset, rom + 0x18) != 0)
++		if (probe_kernel_address(rom + 0x18, offset) != 0)
+ 			continue;
+ 
+-		if (get_kernel_nofault(vendor, rom + offset + 0x4) != 0)
++		if (probe_kernel_address(rom + offset + 0x4, vendor) != 0)
+ 			continue;
+ 
+-		if (get_kernel_nofault(device, rom + offset + 0x6) != 0)
++		if (probe_kernel_address(rom + offset + 0x6, device) != 0)
+ 			continue;
+ 
+ 		if (match_id(pdev, vendor, device)) {
+@@ -139,8 +142,8 @@ static struct resource *find_oprom(struct pci_dev *pdev)
+ 			break;
+ 		}
+ 
+-		if (get_kernel_nofault(list, rom + offset + 0x8) == 0 &&
+-		    get_kernel_nofault(rev, rom + offset + 0xc) == 0 &&
++		if (probe_kernel_address(rom + offset + 0x8, list) == 0 &&
++		    probe_kernel_address(rom + offset + 0xc, rev) == 0 &&
+ 		    rev >= 3 && list &&
+ 		    probe_list(pdev, vendor, rom + offset + list)) {
+ 			oprom = res;
+@@ -183,14 +186,14 @@ static int __init romsignature(const unsigned char *rom)
+ 	const unsigned short * const ptr = (const unsigned short *)rom;
+ 	unsigned short sig;
+ 
+-	return get_kernel_nofault(sig, ptr) == 0 && sig == ROMSIGNATURE;
++	return probe_kernel_address(ptr, sig) == 0 && sig == ROMSIGNATURE;
+ }
+ 
+ static int __init romchecksum(const unsigned char *rom, unsigned long length)
+ {
+ 	unsigned char sum, c;
+ 
+-	for (sum = 0; length && get_kernel_nofault(c, rom++) == 0; length--)
++	for (sum = 0; length && probe_kernel_address(rom++, c) == 0; length--)
+ 		sum += c;
+ 	return !length && !sum;
+ }
+@@ -211,7 +214,7 @@ void __init probe_roms(void)
+ 
+ 		video_rom_resource.start = start;
+ 
+-		if (get_kernel_nofault(c, rom + 2) != 0)
++		if (probe_kernel_address(rom + 2, c) != 0)
+ 			continue;
+ 
+ 		/* 0 < length <= 0x7f * 512, historically */
+@@ -249,7 +252,7 @@ void __init probe_roms(void)
+ 		if (!romsignature(rom))
+ 			continue;
+ 
+-		if (get_kernel_nofault(c, rom + 2) != 0)
++		if (probe_kernel_address(rom + 2, c) != 0)
+ 			continue;
+ 
+ 		/* 0 < length <= 0x7f * 512, historically */
