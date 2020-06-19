@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC90C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248BE206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BED20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580621;
-	bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
+	s=default; t=1592580625;
+	bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mN/hXn0DfFV21Wkrwm4QTFE4PTqJQjFBwlHy0VZeJ9f0qUGtLneZxJNuNrvWpRkOB
-	 Bkofc7Owy1DwX3S16AvAdlSdXQ0llgaU9hoiGVhcrdZXhCY0U6nuZyw4i7WA459gGN
-	 uIb0Cj6BSEt/G8c4+PeJTGGKIm0QiZ9cbQYbq5Aw=
+	b=q1OaiDuxlAUEDbSEU/g0OW3wZ9UUU9EBki7OSSrXA2VRgGbpNhfQu/dtF9Y8aByJ9
+	 yX+z6YHQUWiSBqRS4ViZjaIdQweHb96XU37EobANcHPMA5oPJnVzx+vUkzJSwPc4uj
+	 CEj9jwd1c1c/XpmEtBut651vhknthV3CUn4HkvxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404782AbgFSPaU (ORCPT
+        id S2404793AbgFSPaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393716AbgFSPaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:17 -0400
+        id S2404784AbgFSPaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E711206B7;
-        Fri, 19 Jun 2020 15:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F4D3206B7;
+        Fri, 19 Jun 2020 15:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580616;
-        bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
+        s=default; t=1592580619;
+        bh=IHsGAHyKbgpWjBQj4bs3429bWKJ1vbwB1BZGZENbMJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9mRtqBEbixN96QC5I3VvUf6G/GaCo/FXcIdux3zLDaXClZpYbm2LRtoaR7zb2pMN
-         CXq7lqM92K23LpxaqhHH+wR6jWgGJE+G3b0R/IqcXJfeJbpMqn4W+5GdWOSmD6owtg
-         /EZ/a3vxj+avMaUYeJJqKmKO9XzI61cPJNW+tz+E=
+        b=yxMFuHbOSFQKcjgE/BJLfnQvU/ObhXDBgduAnekN+j0Lzz1PaqvSmi52zvf3lRnf4
+         2ieczM7v+GyS5KAj/xvRCcnP20tTsKVPv2Vsx0xwMcwNTrCBO39dUSWTycrkOgi41x
+         c6T11VEMqHT1MPmrzvwYiZYqHGuLJy49Z2duWThs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.7 310/376] igb: Report speed and duplex as unknown when device is runtime suspended
-Date:   Fri, 19 Jun 2020 16:33:48 +0200
-Message-Id: <20200619141725.010032306@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.7 319/376] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
+Date:   Fri, 19 Jun 2020 16:33:57 +0200
+Message-Id: <20200619141725.430820217@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,52 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
+commit f354157a7d184db430c1a564c506434e33b1bec5 upstream.
 
-igb device gets runtime suspended when there's no link partner. We can't
-get correct speed under that state:
-$ cat /sys/class/net/enp3s0/speed
-1000
+Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
+are saved and restored over a suspend/resume cycle.  However, the
+EINT_MASK registers are not.
 
-In addition to that, an error can also be spotted in dmesg:
-[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+On S5PV210 at the very least, these registers are not retained over
+suspend, leading to the interrupts remaining masked upon resume and
+therefore no interrupts being triggered for the device.  There should
+be no effect on any SoCs that do retain these registers as theoretically
+we would just be re-writing what was already there.
 
-Since device can only be runtime suspended when there's no link partner,
-we can skip reading register and let the following logic set speed and
-duplex with correct status.
-
-The more generic approach will be wrap get_link_ksettings() with begin()
-and complete() callbacks. However, for this particular issue, begin()
-calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
-is already hold by upper ethtool layer.
-
-So let's take this approach until the igb_runtime_resume() no longer
-needs to hold rtnl_lock.
-
-CC: stable <stable@vger.kernel.org>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 7ccbc60cd9c2 ("pinctrl: exynos: Handle suspend/resume of GPIO EINT registers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/samsung/pinctrl-exynos.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -143,7 +143,8 @@ static int igb_get_link_ksettings(struct
- 	u32 speed;
- 	u32 supported, advertising;
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -267,6 +267,7 @@ struct exynos_eint_gpio_save {
+ 	u32 eint_con;
+ 	u32 eint_fltcon0;
+ 	u32 eint_fltcon1;
++	u32 eint_mask;
+ };
  
--	status = rd32(E1000_STATUS);
-+	status = pm_runtime_suspended(&adapter->pdev->dev) ?
-+		 0 : rd32(E1000_STATUS);
- 	if (hw->phy.media_type == e1000_media_type_copper) {
+ /*
+@@ -633,10 +634,13 @@ static void exynos_pinctrl_suspend_bank(
+ 						+ 2 * bank->eint_offset);
+ 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
  
- 		supported = (SUPPORTED_10baseT_Half |
+ 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
+ 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
+ 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
++	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
+ }
+ 
+ void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+@@ -678,6 +682,9 @@ static void exynos_pinctrl_resume_bank(
+ 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
+ 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
++	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
++			readl(regs + bank->irq_chip->eint_mask
++			+ bank->eint_offset), save->eint_mask);
+ 
+ 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
+ 						+ bank->eint_offset);
+@@ -685,6 +692,8 @@ static void exynos_pinctrl_resume_bank(
+ 						+ 2 * bank->eint_offset);
+ 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ }
+ 
+ void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
 
 
