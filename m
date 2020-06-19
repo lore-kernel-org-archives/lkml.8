@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F45C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D92204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD86204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585347;
-	bh=Q5RfkEOwMa2sKTnOL1vN4j9QXp/MzQ8CeuVxeHJ2GsE=;
+	s=default; t=1592585351;
+	bh=ygtLnoiUpOgaLKcoOxtcS9NrtUZR0kTHoYbA9bgfytU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z2B/jPTn0A7cWPmP16q3N9ac9kWyVvKurBa3fv5DqPi+SuShc+cGHuANSh+AZC0+V
-	 MT2CPHJ4sEyF7Bq10HGORF3D1CmyVst963s9aQgYlJGpn70XX3tR6LgYCW7UdqpROQ
-	 /83DGaIsZQj+LlS32PcENsXBXxEWsb34Uyan2bns=
+	b=l1y89tfBBcix/6WybgmUpTgdy3Y2VPuhEcgVybbRBEeEFKKx60aHRK1qKfAlwFOyW
+	 Qe3a+2eqEHZG15bizx80YmJ5colXEfISJLU2BfBrTPS1RwLWEnexl1yM54q5zxunTh
+	 S32t6GYN/hd6twK349Nm9sBFOCgXM61gCQgtvN2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405790AbgFSQtG (ORCPT
+        id S2393469AbgFSQtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:49:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733089AbgFSOju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:50 -0400
+        id S2388080AbgFSOjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCE99208B8;
-        Fri, 19 Jun 2020 14:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D5B4208B8;
+        Fri, 19 Jun 2020 14:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577590;
-        bh=Q5RfkEOwMa2sKTnOL1vN4j9QXp/MzQ8CeuVxeHJ2GsE=;
+        s=default; t=1592577587;
+        bh=ygtLnoiUpOgaLKcoOxtcS9NrtUZR0kTHoYbA9bgfytU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uEdpMf17Bxg9dIjPYnCBY9b77fdstKgpaDtABX590dgjU/GKtZc/FfhsVOBg2AdAR
-         7SUIo3irjwhDLmL+skXyd1RuXAeD+GAHY0lkalc+s7DqBHgTNGUFUFcxXARNJ6v2Vm
-         JAMewakClS12YpwGR2ge8FuYpqeysX6V6o4Xudb0=
+        b=ZLXm9GevYiUE83l16MclWqjL9fVYx8o2DkwLmDI1qq5d+7yRL0DiMnTJB/Ra/llWy
+         ooYYqvCU05ae9K5VMT66KpRkJLuh4mGISZf8QBSiiyupjewMIK2Xthuh7QGsotOckz
+         gAvADAK96FqEoLS4EJbRhCmoeYhwcRtUWqSDa7Ik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 010/128] x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
-Date:   Fri, 19 Jun 2020 16:31:44 +0200
-Message-Id: <20200619141620.689591324@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 001/128] ipv6: fix IPV6_ADDRFORM operation logic
+Date:   Fri, 19 Jun 2020 16:31:35 +0200
+Message-Id: <20200619141620.218012110@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,45 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 1574051e52cb4b5b7f7509cfd729b76ca1117808 upstream.
+[ Upstream commit 79a1f0ccdbb4ad700590f61b00525b390cb53905 ]
 
-The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
-registers (undocumented in the public spec) where BAR 0 is supposed to be,
-which results in messages like this:
+Socket option IPV6_ADDRFORM supports UDP/UDPLITE and TCP at present.
+Previously the checking logic looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol != IPPROTO_TCP)
+	break;
 
-  pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
+After commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation"), TCP
+was blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+	break;
+else
+	break;
 
-Mark these MROM functions as having non-compliant BARs so we don't try to
-probe any of them.  There are no other BARs on these devices.
+Then after commit 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+UDP/UDPLITE were blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
 
-See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
-May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
+if (sk->sk_protocol != IPPROTO_TCP)
+	break;
 
-[bhelgaas: commit log, add 0xa26d]
-Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Fix it by using Eric's code and simply remove the break in TCP check, which
+looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+else
+	break;
+
+Fixes: 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/pci/fixup.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv6/ipv6_sockglue.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -571,6 +571,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
- 
- /*
-  * Device [1022:7914]
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -184,14 +184,15 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			}
+-			if (sk->sk_protocol == IPPROTO_TCP &&
+-			    sk->sk_prot != &tcpv6_prot) {
+-				retv = -EBUSY;
++			} else if (sk->sk_protocol == IPPROTO_TCP) {
++				if (sk->sk_prot != &tcpv6_prot) {
++					retv = -EBUSY;
++					break;
++				}
++			} else {
+ 				break;
+ 			}
+-			if (sk->sk_protocol != IPPROTO_TCP)
+-				break;
++
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
