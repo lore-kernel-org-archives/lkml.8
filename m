@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6853221D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7943421841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578969;
-	bh=INhRY3Oos2mJKymCZriRZ4iTs0rSo4VdvCTFl3hg/LQ=;
+	s=default; t=1592578972;
+	bh=y/+T3sAqOIXoIccp6M2Le5955EgIiy+8DcPf4Vzw8xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x3pyW8H8NokWhJw0eJRkvzuZQfkELl+qdlFr6MdfO+y17oxDemlPIZkrS2pAh0iI+
-	 HaxlGsqaNE/9difPn6sEe+uR/NB7YIgaL8xSURsVxPCwWU9/0BXI+nWiD4mgtYjmiY
-	 mYnZMz6Dve6dDq5+g9u2St0KDnKnI7x9tRlkI8Bw=
+	b=jbHiWWPmyRbC8eItzIJpU5blSS/tdeSzaC+GJv4FimH4VwiHvQqa+tOz2cuhav1Mc
+	 5kQo4vM+t7PeYPTHFYgyfTFLoNEeehlS6bc0TMg5JFAqo4hE3JXkKcv9aKIwLDXl7W
+	 dCgB+LpFil1rYw/MI2IzAXflwPNbLyETKcQH+ZIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390890AbgFSPCr (ORCPT
+        id S2390898AbgFSPCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58652 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390793AbgFSPCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:09 -0400
+        id S2390819AbgFSPCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9D52193E;
-        Fri, 19 Jun 2020 15:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A241620734;
+        Fri, 19 Jun 2020 15:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578928;
-        bh=INhRY3Oos2mJKymCZriRZ4iTs0rSo4VdvCTFl3hg/LQ=;
+        s=default; t=1592578939;
+        bh=y/+T3sAqOIXoIccp6M2Le5955EgIiy+8DcPf4Vzw8xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbCvxiFDtxmlgmRR+AjYzzgcv3mDpgad4MwhA2oNtrX2AmsPbtSZKkbsuIz66C9y7
-         WAch6shWABxGC5CmK6nnaiEST42fiDBRyxoMhgPWwWT75XoCLc9jtbYcLJ/RGgvmOR
-         n/wfy1jqmhg7JFpD48Gt9blZzIJdyTDuX6pUkQzU=
+        b=tpYEaStg8SE0AqmFnYLAxB4RvTaEc6p+nVxa7C0r7el+cBrTGacuyQCpFas54ysQD
+         eLgKz7l7qUS6CWoDp9aD7og/E1O3JXNDx3htYqpQlAerHiYjvVl/mbMIJ79XOoeNho
+         NRH22w5lLTJTwjOv3TDGgcSrkl0bxZj84AsJFpcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 210/267] PCI: Move Rohm Vendor ID to generic list
-Date:   Fri, 19 Jun 2020 16:33:15 +0200
-Message-Id: <20200619141658.808434176@linuxfoundation.org>
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 213/267] PCI: Add Synopsys endpoint EDDA Device ID
+Date:   Fri, 19 Jun 2020 16:33:18 +0200
+Message-Id: <20200619141658.949200653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -63,168 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 
-[ Upstream commit 0ce26a1c31ca928df4dfc7504c8898b71ff9f5d5 ]
+[ Upstream commit 1f418f46503d72594bbe6407d97fd2ae1ce15ee6 ]
 
-Move the Rohm Vendor ID to pci_ids.h instead of defining it in several
-drivers.
+Create and add Synopsys Endpoint EDDA Device ID to PCI ID list, since
+this ID is now being use on two different drivers (pci_endpoint_test.ko
+and dw-edma-pcie.ko).
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c                                | 1 -
- drivers/gpio/gpio-ml-ioh.c                           | 2 --
- drivers/gpio/gpio-pch.c                              | 1 -
- drivers/i2c/busses/i2c-eg20t.c                       | 1 -
- drivers/misc/pch_phub.c                              | 1 -
- drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c | 7 ++-----
- drivers/spi/spi-topcliff-pch.c                       | 1 -
- drivers/tty/serial/pch_uart.c                        | 2 --
- drivers/usb/gadget/udc/pch_udc.c                     | 1 -
- include/linux/pci_ids.h                              | 2 ++
- 10 files changed, 4 insertions(+), 15 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 2 +-
+ include/linux/pci_ids.h          | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index 6e91584c3677..47c6e3ceac4d 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -972,7 +972,6 @@ static void pch_dma_remove(struct pci_dev *pdev)
- }
- 
- /* PCI Device ID of DMA device */
--#define PCI_VENDOR_ID_ROHM             0x10DB
- #define PCI_DEVICE_ID_EG20T_PCH_DMA_8CH        0x8810
- #define PCI_DEVICE_ID_EG20T_PCH_DMA_4CH        0x8815
- #define PCI_DEVICE_ID_ML7213_DMA1_8CH	0x8026
-diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-index 51c7d1b84c2e..0c076dce9e17 100644
---- a/drivers/gpio/gpio-ml-ioh.c
-+++ b/drivers/gpio/gpio-ml-ioh.c
-@@ -31,8 +31,6 @@
- 
- #define IOH_IRQ_BASE		0
- 
--#define PCI_VENDOR_ID_ROHM             0x10DB
--
- struct ioh_reg_comn {
- 	u32	ien;
- 	u32	istatus;
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index ffce0ab912ed..8c7f3d20e30e 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -524,7 +524,6 @@ static int pch_gpio_resume(struct pci_dev *pdev)
- #define pch_gpio_resume NULL
- #endif
- 
--#define PCI_VENDOR_ID_ROHM             0x10DB
- static const struct pci_device_id pch_gpio_pcidev_id[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x8803) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ROHM, 0x8014) },
-diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-index 835d54ac2971..231675b10376 100644
---- a/drivers/i2c/busses/i2c-eg20t.c
-+++ b/drivers/i2c/busses/i2c-eg20t.c
-@@ -177,7 +177,6 @@ static wait_queue_head_t pch_event;
- static DEFINE_MUTEX(pch_mutex);
- 
- /* Definition for ML7213 by LAPIS Semiconductor */
--#define PCI_VENDOR_ID_ROHM		0x10DB
- #define PCI_DEVICE_ID_ML7213_I2C	0x802D
- #define PCI_DEVICE_ID_ML7223_I2C	0x8010
- #define PCI_DEVICE_ID_ML7831_I2C	0x8817
-diff --git a/drivers/misc/pch_phub.c b/drivers/misc/pch_phub.c
-index 540845651b8c..309703e9c42e 100644
---- a/drivers/misc/pch_phub.c
-+++ b/drivers/misc/pch_phub.c
-@@ -64,7 +64,6 @@
- #define CLKCFG_UARTCLKSEL			(1 << 18)
- 
- /* Macros for ML7213 */
--#define PCI_VENDOR_ID_ROHM			0x10db
- #define PCI_DEVICE_ID_ROHM_ML7213_PHUB		0x801A
- 
- /* Macros for ML7223 */
-diff --git a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
-index 43c0c10dfeb7..3a4225837049 100644
---- a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
-+++ b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
-@@ -27,7 +27,6 @@
- #define DRV_VERSION     "1.01"
- const char pch_driver_version[] = DRV_VERSION;
- 
--#define PCI_DEVICE_ID_INTEL_IOH1_GBE	0x8802		/* Pci device ID */
- #define PCH_GBE_MAR_ENTRIES		16
- #define PCH_GBE_SHORT_PKT		64
- #define DSC_INIT16			0xC000
-@@ -37,11 +36,9 @@ const char pch_driver_version[] = DRV_VERSION;
- #define PCH_GBE_PCI_BAR			1
- #define PCH_GBE_RESERVE_MEMORY		0x200000	/* 2MB */
- 
--/* Macros for ML7223 */
--#define PCI_VENDOR_ID_ROHM			0x10db
--#define PCI_DEVICE_ID_ROHM_ML7223_GBE		0x8013
-+#define PCI_DEVICE_ID_INTEL_IOH1_GBE		0x8802
- 
--/* Macros for ML7831 */
-+#define PCI_DEVICE_ID_ROHM_ML7223_GBE		0x8013
- #define PCI_DEVICE_ID_ROHM_ML7831_GBE		0x8802
- 
- #define PCH_GBE_TX_WEIGHT         64
-diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
-index fa730a871d25..8a5966963834 100644
---- a/drivers/spi/spi-topcliff-pch.c
-+++ b/drivers/spi/spi-topcliff-pch.c
-@@ -92,7 +92,6 @@
- #define PCH_MAX_SPBR		1023
- 
- /* Definition for ML7213/ML7223/ML7831 by LAPIS Semiconductor */
--#define PCI_VENDOR_ID_ROHM		0x10DB
- #define PCI_DEVICE_ID_ML7213_SPI	0x802c
- #define PCI_DEVICE_ID_ML7223_SPI	0x800F
- #define PCI_DEVICE_ID_ML7831_SPI	0x8816
-diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
-index 3245cdbf9116..e5ff30544bd0 100644
---- a/drivers/tty/serial/pch_uart.c
-+++ b/drivers/tty/serial/pch_uart.c
-@@ -192,8 +192,6 @@ enum {
- #define PCH_UART_HAL_LOOP		(PCH_UART_MCR_LOOP)
- #define PCH_UART_HAL_AFE		(PCH_UART_MCR_AFE)
- 
--#define PCI_VENDOR_ID_ROHM		0x10DB
--
- #define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
- 
- #define DEFAULT_UARTCLK   1843200 /*   1.8432 MHz */
-diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
-index 991184b8bb41..667011c99372 100644
---- a/drivers/usb/gadget/udc/pch_udc.c
-+++ b/drivers/usb/gadget/udc/pch_udc.c
-@@ -368,7 +368,6 @@ struct pch_udc_dev {
- #define PCI_DEVICE_ID_INTEL_QUARK_X1000_UDC	0x0939
- #define PCI_DEVICE_ID_INTEL_EG20T_UDC		0x8808
- 
--#define PCI_VENDOR_ID_ROHM		0x10DB
- #define PCI_DEVICE_ID_ML7213_IOH_UDC	0x801D
- #define PCI_DEVICE_ID_ML7831_IOH_UDC	0x8808
- 
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 2c472f9cc135..7d166f57f624 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -810,7 +810,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
++	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
+ 	},
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 05705d0b5689..5c395f52d681 100644
+index 5c395f52d681..47833d8f8928 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -1140,6 +1140,8 @@
- #define PCI_VENDOR_ID_TCONRAD		0x10da
- #define PCI_DEVICE_ID_TCONRAD_TOKENRING	0x0508
+@@ -2366,6 +2366,7 @@
+ #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3		0xabcd
+ #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3_AXI	0xabce
+ #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB31	0xabcf
++#define PCI_DEVICE_ID_SYNOPSYS_EDDA	0xedda
  
-+#define PCI_VENDOR_ID_ROHM		0x10db
-+
- #define PCI_VENDOR_ID_NVIDIA			0x10de
- #define PCI_DEVICE_ID_NVIDIA_TNT		0x0020
- #define PCI_DEVICE_ID_NVIDIA_TNT2		0x0028
+ #define PCI_VENDOR_ID_USR		0x16ec
+ 
 -- 
 2.25.1
 
