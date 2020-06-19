@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F205C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601E32168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8362521527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583064;
-	bh=BswtJRKHutJLb0chTOqQLF44TaQNCFggqTRlWcKon54=;
+	s=default; t=1592583075;
+	bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ou2NDTi7aazxJsg3xTjOZHNg7UYBBnrAqlYAzTpI6dHk3eXyDMqfcJ5o0S8QOIzha
-	 vGHWNr5tW2Tfp198DnTVILz7laLhcGwpntifTxLhNYTAUtsrH/gG7swryYAuKZ8sY8
-	 qxuGS5o9vbwdxlDqRVZM06I+XJUycBhUQHvKJb4U=
+	b=nSY6Z9KYjNwE9TxIdlFVmiL/FHFhYaXxQivOqDxkOwvrLqdnyhwCzPFxxoFa93Eqb
+	 GCeml/DkhstmSsyMhWOLtoRKwx/LGJhWLPxpL9Pd8s2UMpPx3R9HpIsbTJztlGOnfu
+	 x2/BSKObTeo7eiIdQe/7bDGUe2WxylvT1QB+HXuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394341AbgFSQLC (ORCPT
+        id S2394343AbgFSQLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:11:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391409AbgFSPGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:15 -0400
+        id S2389003AbgFSPGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A5521974;
-        Fri, 19 Jun 2020 15:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 608FD21852;
+        Fri, 19 Jun 2020 15:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579175;
-        bh=BswtJRKHutJLb0chTOqQLF44TaQNCFggqTRlWcKon54=;
+        s=default; t=1592579167;
+        bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vX2I66Xp7hqcfGnCGSEO1/Otbnn5QnYNJlB02TBxvLpRKXFzpLrSD/m8dXt217g2g
-         buJPzRfR6/xpgGIAre7d6xsxFUU9GvxElAkKoyu0Zq6qrXgvDHA45QcSgDHk0ukp9g
-         S1KaihWrzs9xPM4juBEbUMjRElBfwAjQ4Qz38Z2M=
+        b=ZMfujynhnOtjC6DaT+FGJb09taWrw1sLY4oabdVqgPBVsepgE7U0xNC8ujfyF/O5M
+         hVQp6BJCThz62Wq48Gsoy/5qomiqVs3fWWg5TOrdCBPItzLAhTqX6Keipc6UForjRa
+         91SO7xhTFXpEQGZBI3synVKu2cjYv0B96iJbLdrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org, Koba Ko <koba.ko@canonical.com>,
+        Mario Limonciello <Mario.limonciello@dell.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/261] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
-Date:   Fri, 19 Jun 2020 16:30:47 +0200
-Message-Id: <20200619141651.643978819@linuxfoundation.org>
+Subject: [PATCH 5.4 033/261] platform/x86: dell-laptop: dont register micmute LED if there is no token
+Date:   Fri, 19 Jun 2020 16:30:44 +0200
+Message-Id: <20200619141651.497700068@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,72 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Koba Ko <koba.ko@canonical.com>
 
-[ Upstream commit 202164fbfa2b2ffa3e66b504e0f126ba9a745006 ]
+[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
 
-In commit 81eaadcae81b ("kgdboc: disable the console lock when in
-kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
-kgdboc.  That still works fine, but it turns out that we get a similar
-yell when using other I/O drivers.  One example is the "I/O driver"
-for the kgdb test suite (kgdbts).  When I enabled that I again got the
-same yells.
+On Dell G3-3590, error message is issued during boot up,
+"platform::micmute: Setting an LED's brightness failed (-19)",
+but there's no micmute led on the machine.
 
-Even though "kgdbts" doesn't actually interact with the user over the
-console, using it still causes kgdb to print to the consoles.  That
-trips the same warning:
-  con_is_visible+0x60/0x68
-  con_scroll+0x110/0x1b8
-  lf+0x4c/0xc8
-  vt_console_print+0x1b8/0x348
-  vkdb_printf+0x320/0x89c
-  kdb_printf+0x68/0x90
-  kdb_main_loop+0x190/0x860
-  kdb_stub+0x2cc/0x3ec
-  kgdb_cpu_enter+0x268/0x744
-  kgdb_handle_exception+0x1a4/0x200
-  kgdb_compiled_brk_fn+0x34/0x44
-  brk_handler+0x7c/0xb8
-  do_debug_exception+0x1b4/0x228
+Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+If one of two tokens doesn't exist,
+don't call led_classdev_register() for platform::micmute.
+After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+and the error message wouldn't see in dmesg.
 
-Let's increment/decrement the "ignore_console_lock_warning" variable
-all the time when we enter the debugger.
-
-This will allow us to later revert commit 81eaadcae81b ("kgdboc:
-disable the console lock when in kgdb").
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200507130644.v4.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/dell-laptop.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index f76d6f77dd5e..d0d557c0ceff 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -634,6 +634,8 @@ return_normal:
- 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
- 		goto kgdb_restore;
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 74e988f839e8..4c1dd1d4e60b 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
  
-+	atomic_inc(&ignore_console_lock_warning);
-+
- 	/* Call the I/O driver's pre_exception routine */
- 	if (dbg_io_ops->pre_exception)
- 		dbg_io_ops->pre_exception();
-@@ -706,6 +708,8 @@ cpu_master_loop:
- 	if (dbg_io_ops->post_exception)
- 		dbg_io_ops->post_exception();
+ 	dell_laptop_register_notifier(&dell_laptop_notifier);
  
-+	atomic_dec(&ignore_console_lock_warning);
-+
- 	if (!kgdb_single_step) {
- 		raw_spin_unlock(&dbg_slave_lock);
- 		/* Wait till all the CPUs have quit from the debugger. */
+-	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+-	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+-	if (ret < 0)
+-		goto fail_led;
++	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
++	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
++		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
++		if (ret < 0)
++			goto fail_led;
++	}
+ 
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
 -- 
 2.25.1
 
