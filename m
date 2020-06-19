@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D93BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFAD721548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E071B21548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580261;
-	bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+	s=default; t=1592580266;
+	bh=7IiQDXdq9Z5dE9WWdDCDCvrJ4FHOUElT9vMdc58iVhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ji7qzL+YKqzvYciJWxp2y46BrhhevkQxUDBpqgZLDANyCpBG/HZlNlVB5tWiPlPpZ
-	 k/TD/9s5BFxShY8jOzwz8qkzC9BpE/BmCdMEtuIDoHO4UylNS1f1kDQqLUMUSdr7eb
-	 BXZPbI0m8NK2PJGWzNtDNmIoPi6SiTCGcRZ1ZxwU=
+	b=WM1SoByJse34rstOmq+L1jFkvmOmtJ96VKpcocEDHuRZ7FFa5e+3WgVzbEh0YBq+5
+	 Ql/EMfQpuysywOCIj9UkV6wluZhAamc3wMsGWcH0dm18cwdi5PR6vS6DT9QHpVAd5N
+	 8D++ydXDtBkHZXojOQY0AqseayF/uyMGdzV53Sb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392705AbgFSPYU (ORCPT
+        id S2393256AbgFSPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392754AbgFSPUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:51 -0400
+        id S2392812AbgFSPVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B75120706;
-        Fri, 19 Jun 2020 15:20:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D839320706;
+        Fri, 19 Jun 2020 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580050;
-        bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+        s=default; t=1592580066;
+        bh=7IiQDXdq9Z5dE9WWdDCDCvrJ4FHOUElT9vMdc58iVhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQg8oztfttqT6KFLEYPg5syx0nsNs1KNVpXktD6tYVvsCDR7EkWZxPMbJQzV5S2nB
-         910FXI57qKt9mf0D0fVezUKfDBMk40G3RDa+WN6bvAJJQ5K9FncrMnQCV/eL09pQL6
-         mQbWaedEdxnNTq6DkUCFPUjmts8Xi8rwkOR0sjlE=
+        b=Nqlq7OCvT3RA2ndRYvkBrNrCCIjKgvp0+uu1FozrZU/Zd4JQFwR+GcVQlpHexldSA
+         OzVIBD0t5U4lW6i/N34vJfvqhG2SbR7Mww/wxILB9K4KiNGlrsA22KvExLF2XCSkuc
+         erRiNpwp7tv7NbfiBEcziUxEgq4IRkgySkdjjc28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Dale Zhao <dale.zhao@amd.com>,
+        Sung Lee <sung.lee@amd.com>,
+        Yongqiang Sun <yongqiang.sun@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 103/376] media: platform: fcp: Set appropriate DMA parameters
-Date:   Fri, 19 Jun 2020 16:30:21 +0200
-Message-Id: <20200619141715.222785776@linuxfoundation.org>
+Subject: [PATCH 5.7 108/376] drm/amd/display: Correct updating logic of dcn21s pipe VM flags
+Date:   Fri, 19 Jun 2020 16:30:26 +0200
+Message-Id: <20200619141715.458435986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,69 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Dale Zhao <dale.zhao@amd.com>
 
-[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+[ Upstream commit 2a28fe92220a116735ef45939b7edcfee83cc6b0 ]
 
-Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
-enable extra validation on DMA operations ensuring that the size
-restraints are met.
+[Why]:
+Renoir's pipe VM flags are not correctly updated if pipe strategy has
+changed during some scenarios. It will result in watermarks mistakenly
+calculation, thus underflow and garbage appear.
 
-When using the FCP in conjunction with the VSP1/DU, and display frames,
-the size of the DMA operations is larger than the default maximum
-segment size reported by the DMA core (64K). With the DMA debug enabled,
-this produces a warning such as the following:
+[How]:
+Correctly update pipe VM flags to pipes which have been populated.
 
-"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
-claims to support [len=3145728] [max=65536]"
-
-We have no specific limitation on the segment size which isn't already
-handled by the VSP1/DU which actually handles the DMA allcoations and
-buffer management, so define a maximum segment size of up to 4GB (a 32
-bit mask).
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Dale Zhao <dale.zhao@amd.com>
+Signed-off-by: Sung Lee <sung.lee@amd.com>
+Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-fcp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-index 43c78620c9d8..5c6b00737fe7 100644
---- a/drivers/media/platform/rcar-fcp.c
-+++ b/drivers/media/platform/rcar-fcp.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index a721bb401ef0..6d1736cf5c12 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -1694,12 +1694,8 @@ static int dcn21_populate_dml_pipes_from_context(
+ {
+ 	uint32_t pipe_cnt = dcn20_populate_dml_pipes_from_context(dc, context, pipes);
+ 	int i;
+-	struct resource_context *res_ctx = &context->res_ctx;
  
- #include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-@@ -21,6 +22,7 @@
- struct rcar_fcp_device {
- 	struct list_head list;
- 	struct device *dev;
-+	struct device_dma_parameters dma_parms;
- };
+-	for (i = 0; i < dc->res_pool->pipe_count; i++) {
+-
+-		if (!res_ctx->pipe_ctx[i].stream)
+-			continue;
++	for (i = 0; i < pipe_cnt; i++) {
  
- static LIST_HEAD(fcp_devices);
-@@ -136,6 +138,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
- 
- 	fcp->dev = &pdev->dev;
- 
-+	fcp->dev->dma_parms = &fcp->dma_parms;
-+	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
-+
- 	pm_runtime_enable(&pdev->dev);
- 
- 	mutex_lock(&fcp_lock);
+ 		pipes[i].pipe.src.hostvm = 1;
+ 		pipes[i].pipe.src.gpuvm = 1;
 -- 
 2.25.1
 
