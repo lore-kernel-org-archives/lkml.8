@@ -6,62 +6,55 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC69C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311BD20888
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D6020888
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgFSDh7 (ORCPT
+        id S1729195AbgFSDkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
+        Thu, 18 Jun 2020 23:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbgFSDh6 (ORCPT
+        with ESMTP id S1726382AbgFSDkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:37:58 -0400
+        Thu, 18 Jun 2020 23:40:46 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABC6C06174E;
-        Thu, 18 Jun 2020 20:37:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C303C06174E;
+        Thu, 18 Jun 2020 20:40:46 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6863C120ED49C;
-        Thu, 18 Jun 2020 20:37:57 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 20:37:56 -0700 (PDT)
-Message-Id: <20200618.203756.1164703626188584540.davem@davemloft.net>
-To:     alobakin@pm.me
-Cc:     kuba@kernel.org, mkubecek@suse.cz, andrew@lunn.ch,
-        f.fainelli@gmail.com, richardcochran@gmail.com,
-        antoine.tenart@bootlin.com, ayal@mellanox.com,
-        steffen.klassert@secunet.com, willemb@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend net] net: ethtool: add missing
- NETIF_F_GSO_FRAGLIST feature string
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F0FA1120ED4AD;
+        Thu, 18 Jun 2020 20:40:45 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:40:45 -0700 (PDT)
+Message-Id: <20200618.204045.980620033626622900.davem@davemloft.net>
+To:     tharvey@gateworks.com
+Cc:     bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lan743x: allow mac address to come from dt
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me>
-References: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me>
+In-Reply-To: <1592434750-8940-1-git-send-email-tharvey@gateworks.com>
+References: <1592434750-8940-1-git-send-email-tharvey@gateworks.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:37:57 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:40:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@pm.me>
-Date: Wed, 17 Jun 2020 20:42:47 +0000
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Wed, 17 Jun 2020 15:59:10 -0700
 
-> Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
-> an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
-> a result, fraglist GSO feature is not shown in 'ethtool -k' output and
-> can't be toggled on/off.
-> The fix is trivial.
+> If a valid mac address is present in dt, use that before using
+> CSR's or a random mac address.
 > 
-> Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-Applied and queued up for v5.6 -stable, thank you.
+Applied to net-next, thanks.
