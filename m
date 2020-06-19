@@ -2,146 +2,117 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D2820C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2AD20C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KG3HLTZq"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MMmRJ8t4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390691AbgFSTuz (ORCPT
+        id S2390816AbgFSTvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44330 "EHLO
+        Fri, 19 Jun 2020 15:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390635AbgFSTuy (ORCPT
+        with ESMTP id S2390725AbgFSTvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:50:54 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C88C0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:50:54 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j12so2639098pfn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:50:54 -0700 (PDT)
+        Fri, 19 Jun 2020 15:51:46 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70531C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:51:45 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q198so2288469qka.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:51:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aNT64JH4pEFGIW/zOKuYzIi+PxEqhWFih4V3DtMG5uw=;
-        b=KG3HLTZqAizhXno+SvHB3QU8UgG5DSs2DDiK4JSvYwT0dXUgdjLm+SzEy0nDs63BIa
-         6nJQ42blal7wAjbcLi+3pwKuL2BNdtMif3R9vV0ibh49nqpYHmUuEaFY453sFeTi8TMB
-         qv69DHklzRs7nQLdJNwaPCpK60msvzUoo/gUUk9uKpfDs5IlJjVPciyOzPbqezC/pT83
-         n/GIY/O0eEoMNHtLityMrxCgGATz4U4a7V854f79pKWRIwbEQwZ5h054cJKi4gFHrnVf
-         BeGgliaDqVJlPkhqH6xDv3w7Q99uO8xiJToRdQmKvd1hjx0e/Cc37+pezgu9mrB+xhSp
-         HlRA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zP3mPfj8fYVGpA7X3i9lQw/wDhwl6Nv+h6HgzhW86WQ=;
+        b=MMmRJ8t4j4VSr9X/gdvrRhfckKKnEPttgsjRqD7r42N3dR4TTyyqhwnzRR2Zmqw9vU
+         /eO8RZr/A4nHSOyE8HOfUMCXLr5V4yKzT96SAI89H9oM6ivtb11eu4o1b5IwFl/nQYDG
+         BnpCLEibfwPpM+qQe2fTwD8TqkotDnif2MXx2+W5OqJhUu02J9GSkKwpu8Dh9btmlQsW
+         HfPeSb4neRXQnhdWbAQBoeJfQU5yXw4BH7QCQBZFfTz7zBx/ENEemRvnCmMQHQcSOvEj
+         0arcTcBmJyDOK1t36aFed0to462HbPkMSNhWvaHJO5I28iu9xV3xW3atg8lfxqqFsEQb
+         IKQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aNT64JH4pEFGIW/zOKuYzIi+PxEqhWFih4V3DtMG5uw=;
-        b=CazQ7lAvEs6KbN0hkO3hpcT508JJ6MCTVxU3i8y2Q9GVTcC4UCgXJryX9G5+zTIcmx
-         gzArakPr9YdCEhxTy3uHmOP/BXbrPFSVB1NYXQnQaCJYB+hE1qXBBmYN6DIPrAwO7L6x
-         3+JPi7KeSeQB2U3ZTwz5Mz3D9kPcfMUZ6y9sl82s/9KoP00imR9pQb3zF9D2XQ4vgWU9
-         BUkGkkzgTDFsr//xVOpfRvE4cmhVOIk4tTg1PzUQCFYDEvz0KdBi2/IYsDddfdL56F4y
-         ALfA6QxN6wlJOT5WJK+8PeHOf/QSkJv9DbubpKirNgT4Xr28iDN9kEIdoFpMZOPpIW+7
-         z+mA==
-X-Gm-Message-State: AOAM531jKTeEbJIqNBh5Yw5PnlgRNlVK7AZPQ37x3AFXtweBbiwtT4jN
-        5NI+NoHhxlF8rFtNjuvomUc+0HN7v7rByNsiW6McNw==
-X-Google-Smtp-Source: ABdhPJzCbeGw8aqUSCSne4JgLyCwGUWXAGu/3y8GGUrbwN50PA0lsKp01F63TLMxspcEfPHDiA2gG1W3jqhNDrBn270=
-X-Received: by 2002:a63:4c08:: with SMTP id z8mr4188941pga.201.1592596253398;
- Fri, 19 Jun 2020 12:50:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zP3mPfj8fYVGpA7X3i9lQw/wDhwl6Nv+h6HgzhW86WQ=;
+        b=UOWpabkPCbAQbK7v3jPoH4V6jy80oUeaGbw3yHgJEO008hTD5ZPMxs0e2XnepUHR4B
+         EARx/IN5Tl2FPX8Nq7Bm3hluSF+PUvKzN9+++miQN4xPVTL8EhskvvMbEFbCbHOTuXPA
+         K+aDzWFmGjan4YQ1xYblzJ9/2WQRxDS4OSBNI0t5d425ZbpxUuS6he7IXQYwEiqjaZwJ
+         +/kJzF0B2cA2zFi3Hhcuemd5F0M7GrN4GFuB0eDLz+Eqf+VL7WRcK9Vpf9exqgkImVST
+         gfhVAfprjrifYVgy/Ky5ur2rYbbCY1rw9yDRZ+osA6ZsmDhkh40jTGKtQaLFCJC7ZmEA
+         5Meg==
+X-Gm-Message-State: AOAM53189NrgNJPG4KLNGYqCXGuMAPmzFVuU6gBoF2tmHnpyi6QiYFxA
+        0V5eiYoutm3fxk9u46o73sIMgw==
+X-Google-Smtp-Source: ABdhPJyeNbiGf5pDE6/nVlB6izIza9irK+wIFfmkUW9Wq6/rfhl4M8xllFEi5LwJ5619wnq0QRE14Q==
+X-Received: by 2002:a37:b401:: with SMTP id d1mr5401845qkf.206.1592596304691;
+        Fri, 19 Jun 2020 12:51:44 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id a81sm7609057qkb.24.2020.06.19.12.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 12:51:44 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmN39-00B0gQ-Jd; Fri, 19 Jun 2020 16:51:43 -0300
+Date:   Fri, 19 Jun 2020 16:51:43 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619195143.GS6578@ziepe.ca>
+References: <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <CADnq5_Pw_85Kzh1of=MbDi4g9POeF3jO4AJ7p2FjY5XZW0=vsQ@mail.gmail.com>
+ <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
 MIME-Version: 1.0
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006141120.96FF8C5@keescook> <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006161642.A5F50ED07@keescook>
-In-Reply-To: <202006161642.A5F50ED07@keescook>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 19 Jun 2020 12:50:42 -0700
-Message-ID: <CAFd5g46VkEbYemSv2PC28GyGTSipoFG+e6yqO--H9e2Sa+UdbQ@mail.gmail.com>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86f7f5e5-81a0-5429-5a6e-0d3b0860cfae@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 4:52 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 15, 2020 at 07:07:34PM +0000, Bird, Tim wrote:
-> > From: Kees Cook <keescook@chromium.org>
-> > > Note: making the plan line required differs from TAP13 and TAP14. I
-> > > think it's the right choice, but we should be clear.
-> >
-> > [...]
-> > With regards to making it optional or not, I don't have a strong
-> > preference.  The extra info seems helpful in some circumstances.
-> > I don't know if it's too onerous to make it a requirement or not.
-> > I'd prefer if it was always there (either at the beginning or the end),
-> > but if there is some situation where it's quite difficult to calculate,
-> > then it would be best not to mandate it. I can't think of any impossible
-> > situations at the moment.
->
-> I think we should require one of:
->
-> - starting plan line
-> - ending plan line
-> - ending with something that indicates "I'm done, but I have no idea how
->   many tests actually ran" (Maybe "1..?")
->
-> To me, the point of the plan line is to be able to say "this test did,
-> in fact, finish". So even if some test can't even count how many tests
-> it _ran_, it can at least say "I am now finished".
+On Fri, Jun 19, 2020 at 03:30:32PM -0400, Felix Kuehling wrote:
+> We have a potential problem with CPU updating page tables while the GPU
+> is retrying on page table entries because 64 bit CPU transactions don't
+> arrive in device memory atomically.
 
-So the counting is actually not the hard part for us, it's figuring
-out when we have finished. Again, the change that I am working on (I
-REALLY need to get that out) should fix that, but until we get that
-upstream, KUnit doesn't actually know when it is done running tests.
+Except for 32 bit platforms atomicity is guarenteed if you use uncached
+writeq() to aligned addresses..
 
-> > > TAP13/14 makes description optional, are we making it required (I think
-> > > we should). There seems to be a TAP13/14 "convention" of starting
-> > > <description> with "- ", which I'm on the fence about it. It does make
-> > > parsing maybe a little easier.
-> >
-> > I would like the description to be required.
-> > I don't have a strong opinion on the dash.  I'm OK with either one (dash
-> > or no dash), but we should make kselftest and KUnit consistent.
->
-> I find the dash to be distracting -- it doesn't help me scan it, and it
-> doesn't help a parser (which only needs to find "#").
+The linux driver model breaks of the writeX() stuff is not atomic.
 
-Yeah, I also prefer spaces and/or "#". I am okay if spaces are
-optional only to aid human readability. And honestly I don't care
-about this point too much. Just offering my 2 cents.
-
-> > > > Differences between kernel test result format and TAP13:
-> > > >  - in KTAP the "# SKIP" directive is placed after the description on
-> > > >    the test result line
->
-> I sent a bunch of clean-ups for kselftest.h recently[1], but it looks
-> like we'll need more for adding "description" to skip (right now it only
-> prints the SKIP reason).
->
-> [1] https://lore.kernel.org/lkml/20200611224028.3275174-1-keescook@chromium.org/
->
-> > > Yes Documentation/*.rst Not sure on name yet, but where do kselftest
-> > > docs live? :)
-> > Documentation/dev-tools/kselftest.rst
-> >
-> > I'll put this at: Documentation/dev-tools/test-results-format.rst
->
-> Sounds good!
->
-> --
-> Kees Cook
+Jason
