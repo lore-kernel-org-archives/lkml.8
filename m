@@ -2,88 +2,153 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51398C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D556D20EDD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318D9214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUhSM1Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388667AbgFSSwl (ORCPT
+        id S2388706AbgFSSw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:52:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:56276 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgFSSwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:52:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E13D52B;
-        Fri, 19 Jun 2020 11:52:39 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4013A3F73C;
-        Fri, 19 Jun 2020 11:52:38 -0700 (PDT)
-References: <20200618195525.7889-1-qais.yousef@arm.com> <20200618195525.7889-3-qais.yousef@arm.com> <jhjwo43cpfl.mognet@arm.com> <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com> <jhjsgerchmn.mognet@arm.com> <20200619141348.5o5iqomwe6lofgiu@e107158-lin.cambridge.arm.com> <jhjr1ubccg2.mognet@arm.com> <20200619172524.y66a4hz6g6hr3thr@e107158-lin.cambridge.arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chrid.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with static key
-Message-ID: <jhjpn9udh2d.mognet@arm.com>
-In-reply-to: <20200619172524.y66a4hz6g6hr3thr@e107158-lin.cambridge.arm.com>
-Date:   Fri, 19 Jun 2020 19:52:32 +0100
+        Fri, 19 Jun 2020 14:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387610AbgFSSw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 14:52:57 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74B1C06174E;
+        Fri, 19 Jun 2020 11:52:57 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id di13so4939631qvb.12;
+        Fri, 19 Jun 2020 11:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hJpxaO8wecs1gNV5FgZjVozSJfwwAkVOxq5pqOxymAM=;
+        b=cUhSM1PztUEgyiNZaYEdtH4fvMAu1DLukX02awRYoK34br2QzEKEmrdkGZZtbdJ3AL
+         9ccFpK0x831zJf5osXFDvzZGWKtc7Tqy+jlLDEGsU+8RjJHDByGs/NZq0NEfUhdpGzZB
+         tX6QQCOManOu7LK1HF+CwpTePa1G9BjG4f+4vciiqQNviH7u9tljlXvEHVfURHG9kg6t
+         LWy7lnL6k3waDz3anm1oGF6IVEny/5jtRDEpNtWGTWI5Tel4YGLSe0WEt+U/m4+L2obh
+         0X8wt6/qnNSFzftwzBeyioSFBEvUBBnmTOXa+kqJGhOkPqAW1SGw6tNKuVdtK6IBVMFW
+         a7rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hJpxaO8wecs1gNV5FgZjVozSJfwwAkVOxq5pqOxymAM=;
+        b=dwmdop4qAGeSxEcmUeCZeM+TgGgPwImV9Tcc3CZWOAqGDGi0fxKIggDQCf9y/LDGgx
+         5nEVBtolwR/z7vScWP1YSpD3UAUGdPbZocAW08FDz8INGIxlCRwM14Nm8QVCCvmgrLti
+         paFh7aKho1yb5xPi8eY3COtOgnky2b8keR5FYmRDT3o1muItgY7jL14Rf1KUDUS1YTAo
+         QDsvaMX33LbeZvT3mlPZxOBhthWYNkWJCnwiTmQDjDj0tBUfaikBknlSEbCyR3YY/GHL
+         GGh1RSVsC3wOy22QPhoAseMnTHq6PqhoWA6t0iTmSzV3YZHN7dG5cvhFb1TujI6yCm6h
+         wvBw==
+X-Gm-Message-State: AOAM530WlBc75yEKAAXKVV5q9MqFaA+lZJk1OtVTVBTaFGO21VqAY7jb
+        909pRrG8sJdNypH0QiXS1u0=
+X-Google-Smtp-Source: ABdhPJxKMajxQem/Kij7mKkifvxhM6NLm7pnMBGYr2xu+ZwSgceGTfmvc8rsKifEZ3/7vXhSwKyoBg==
+X-Received: by 2002:ad4:4962:: with SMTP id p2mr10184688qvy.55.1592592776609;
+        Fri, 19 Jun 2020 11:52:56 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id g132sm6589963qkb.78.2020.06.19.11.52.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 11:52:56 -0700 (PDT)
+Subject: Re: RFC - kernel selftest result documentation (KTAP)
+To:     Kees Cook <keescook@chromium.org>, "Bird, Tim" <Tim.Bird@sony.com>
+Cc:     "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>
+References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006141120.96FF8C5@keescook>
+ <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006161642.A5F50ED07@keescook>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <19617b29-0298-5caf-39f2-ab08a7fddb82@gmail.com>
+Date:   Fri, 19 Jun 2020 13:52:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <202006161642.A5F50ED07@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 19/06/20 18:25, Qais Yousef wrote:
-> On 06/19/20 16:17, Valentin Schneider wrote:
->
-> [...]
->
->> > But here this is
->> > just extra churn.
->> >
->> > If an imbalance has happend this means either:
->> >
->> >       1. enqueue/dequeue_task() is imablanced itself
->> >       2. uclamp_update_active() calls dec without inc.
->> >
->> > If 1 happened we have more reasons to be worried about. For 2 the function
->> > takes task_rq_lock() and does dec/inc in obvious way.
->> >
+On 2020-06-16 18:52, Kees Cook wrote:
+> On Mon, Jun 15, 2020 at 07:07:34PM +0000, Bird, Tim wrote:
+>> From: Kees Cook <keescook@chromium.org>
+>>> Note: making the plan line required differs from TAP13 and TAP14. I
+>>> think it's the right choice, but we should be clear.
 >>
->> True. I won't argue over the feasibility of the scenarios we are currently
->> aware of, my point was that if they do happen, it's nice to have debug
->> helps in the right places as the final breakage can happen much further
->> downstream.
->>
->> FWIW I don't like the diff I suggested at all, but if we can come up with a
->> cleverer scheme I think we should do it, as per the above.
->
-> There's the fact as well that this whole thing is to deal with potentially
-> avoid doing anything that is stricly not necessary in the fast path.
->
-> keep in mind that my patch of introducing the sysctl is not accepted yet
-> because it introduces such thing, but in that case it's not a debug only
-> feature. CONFIG_SCHED_DEBUG do get enabled by distros because it exports a lot
-> of useful info.
+>> [...]
+>> With regards to making it optional or not, I don't have a strong
+>> preference.  The extra info seems helpful in some circumstances.
+>> I don't know if it's too onerous to make it a requirement or not.
+>> I'd prefer if it was always there (either at the beginning or the end),
+>> but if there is some situation where it's quite difficult to calculate,
+>> then it would be best not to mandate it. I can't think of any impossible
+>> situations at the moment.
+> 
+> I think we should require one of:
+> 
+> - starting plan line
+> - ending plan line
 
-Sigh, true, but they really shouldn't. The whole point of having
-SCHED_WARN_ON() is that it's a no-op on !SCHED_DEBUG kernels, which should
-be any "production" kernel :(
+> - ending with something that indicates "I'm done, but I have no idea how
+>   many tests actually ran" (Maybe "1..?")
+
+I understand the desire to be able to say "I don't know how many tests
+actually ran", but the use of it should be discouraged, even if available.
+
+-Frank
+
+> 
+> To me, the point of the plan line is to be able to say "this test did,
+> in fact, finish". So even if some test can't even count how many tests
+> it _ran_, it can at least say "I am now finished".
+> 
+>>> TAP13/14 makes description optional, are we making it required (I think
+>>> we should). There seems to be a TAP13/14 "convention" of starting
+>>> <description> with "- ", which I'm on the fence about it. It does make
+>>> parsing maybe a little easier.
+>>
+>> I would like the description to be required.
+>> I don't have a strong opinion on the dash.  I'm OK with either one (dash
+>> or no dash), but we should make kselftest and KUnit consistent.
+> 
+> I find the dash to be distracting -- it doesn't help me scan it, and it
+> doesn't help a parser (which only needs to find "#").
+> 
+>>>> Differences between kernel test result format and TAP13:
+>>>>  - in KTAP the "# SKIP" directive is placed after the description on
+>>>>    the test result line
+> 
+> I sent a bunch of clean-ups for kselftest.h recently[1], but it looks
+> like we'll need more for adding "description" to skip (right now it only
+> prints the SKIP reason).
+> 
+> [1] https://lore.kernel.org/lkml/20200611224028.3275174-1-keescook@chromium.org/
+> 
+>>> Yes Documentation/*.rst Not sure on name yet, but where do kselftest
+>>> docs live? :)
+>> Documentation/dev-tools/kselftest.rst
+>>
+>> I'll put this at: Documentation/dev-tools/test-results-format.rst
+> 
+> Sounds good!
+> 
+
