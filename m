@@ -2,131 +2,110 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F194AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF0620885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jW5Z9Bx2"
+	by mail.kernel.org (Postfix) with ESMTP id D09962080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbgFSIGc (ORCPT
+        id S1731161AbgFSIH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:06:32 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:20115 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731184AbgFSIGM (ORCPT
+        Fri, 19 Jun 2020 04:07:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37232 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731048AbgFSIHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:06:12 -0400
-X-UUID: 62735648027b42f5a0a5a67ccf2d4aa7-20200619
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UtXQMNPiKcI1teux/iFeLY1Gk2pKVYDIwGiIqNOtybw=;
-        b=jW5Z9Bx2K6HqBA/v9tHRhB2z80MJaXfvJG2L3I2TYpcXKA1I2gEIxYSVkYeBA6VDkIly2sPh5qsdDYmBpsJ9KtiMwPONUlL7CfrVHSDOF8J6WuQd9l/Oe8p2NL07e6PdzgFeLq4TJ6+9k5FRyvjyRS6i2c4dM4k0dZPRq5KVx8M=;
-X-UUID: 62735648027b42f5a0a5a67ccf2d4aa7-20200619
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 972338632; Fri, 19 Jun 2020 16:06:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 19 Jun 2020 16:05:06 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 19 Jun 2020 16:05:06 +0800
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, EastL <EastL.Lee@mediatek.com>
-Subject: [PATCH v5 1/4] dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller bindings
-Date:   Fri, 19 Jun 2020 16:04:59 +0800
-Message-ID: <1592553902-30592-2-git-send-email-EastL.Lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
-References: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
+        Fri, 19 Jun 2020 04:07:46 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a3so7741090oid.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:07:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9QLwr/gThP6fd0GJQ39gaT5PlOnHllX1baIFXtwLyU=;
+        b=ARwyL1u8b2INHIDkSNiyNO7IL7f668sXq1o1B8yL/9hVYPTljgkE9/Mc3btaOqD2VY
+         zLSCrfXcxNWuUEnaUMWFkRmqmAplsGr1Twq1pMlvTeGh5o9NyzrbKYU048Jx/IiBeBv4
+         hi76s81dJkTT/2GsyP7zK5Pu3vvZ/NWm+eypdwUu344C66eyEtcY8/KVZo/2m/MmkhZ6
+         ruwBm2/fF7QY8taUHSuxmWwfxdOgaAoEUjGQLbFAXuYRSrYlfaI9kDA74QIS5Y36dT7P
+         iHGz9zAtEvGQkKzAbOZLaQ1IUa+W7+gGJaJcoVRzw/5cvvP93DNH2K582ElR3EBo3fT1
+         oHJQ==
+X-Gm-Message-State: AOAM532EUbUnYhY8inZCNFwE5pWWOF8ig4wdSqcP0iuSIvLu88SDm5r1
+        T4G6HiAZAbIeUfbZJfqSgJsQAHqHuB5xe6oWDE0=
+X-Google-Smtp-Source: ABdhPJzaFc9C3fifQNKploQvy0a6vVQ8Cye3kfwreRTY9aJnXhpvwaZOcSzS1B5qS9ZnLZSGGASKTTFMUnJieriQexQ=
+X-Received: by 2002:a54:4006:: with SMTP id x6mr2087593oie.148.1592554065970;
+ Fri, 19 Jun 2020 01:07:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 03BA4C7E34FC566C1EE83D711BB1655A4B129E4C11B45DF4651B520F2DD073182000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200617220226.88948-1-luc.vanoostenryck@gmail.com>
+ <CANiq72nNQ+11ch7sRjLLc33s_OkftuOqgGkCDggq88tbJtdPNQ@mail.gmail.com> <20200618050249.lqwznznltm3lcykr@ltop.local>
+In-Reply-To: <20200618050249.lqwznznltm3lcykr@ltop.local>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 19 Jun 2020 10:07:34 +0200
+Message-ID: <CAMuHMdWQsirja-h3wBcZezk+H2Q_HShhAks8Hc8ps5fTAp=ObQ@mail.gmail.com>
+Subject: Re: [PATCH] sparse: use identifiers to define address spaces
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQtUXVl
-dWUgRE1BIGNvbnRyb2xsZXINCndoaWNoIGNvdWxkIGJlIGZvdW5kIG9uIE1UNjc3OSBTb0Mgb3Ig
-b3RoZXIgc2ltaWxhciBNZWRpYXRlayBTb0NzLg0KDQpTaWduZWQtb2ZmLWJ5OiBFYXN0TCA8RWFz
-dEwuTGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9t
-dGstY3FkbWEueWFtbCAgICAgICAgIHwgMTE0ICsrKysrKysrKysrKysrKysrKysrKw0KIDEgZmls
-ZSBjaGFuZ2VkLCAxMTQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQoNCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1s
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9tdGstY3FkbWEueWFtbA0K
-bmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLmU2ZmRmMDUNCi0tLSAvZGV2L251
-bGwNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1h
-LnlhbWwNCkBAIC0wLDAgKzEsMTE0IEBADQorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BM
-LTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZQ0KKyVZQU1MIDEuMg0KKy0tLQ0KKyRpZDogaHR0cDov
-L2RldmljZXRyZWUub3JnL3NjaGVtYXMvZG1hL210ay1jcWRtYS55YW1sIw0KKyRzY2hlbWE6IGh0
-dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KKw0KK3RpdGxlOiBN
-ZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyIERldmljZSBUcmVlIEJpbmRpbmcN
-CisNCittYWludGFpbmVyczoNCisgIC0gRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29t
-Pg0KKw0KK2Rlc2NyaXB0aW9uOg0KKyAgTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJv
-bGxlciAoQ1FETUEpIG9uIE1lZGlhdGVrIFNvQw0KKyAgaXMgZGVkaWNhdGVkIHRvIG1lbW9yeS10
-by1tZW1vcnkgdHJhbnNmZXIgdGhyb3VnaCBxdWV1ZSBiYXNlZA0KKyAgZGVzY3JpcHRvciBtYW5h
-Z2VtZW50Lg0KKw0KK2FsbE9mOg0KKyAgLSAkcmVmOiAiZG1hLWNvbnRyb2xsZXIueWFtbCMiDQor
-DQorcHJvcGVydGllczoNCisgICIjZG1hLWNlbGxzIjoNCisgICAgbWluaW11bTogMQ0KKyAgICBt
-YXhpbXVtOiAyNTUNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgVXNlZCB0byBwcm92aWRlIERN
-QSBjb250cm9sbGVyIHNwZWNpZmljIGluZm9ybWF0aW9uLg0KKw0KKyAgY29tcGF0aWJsZToNCisg
-ICAgb25lT2Y6DQorICAgICAgLSBjb25zdDogbWVkaWF0ZWssY29tbW9uLWNxZG1hDQorICAgICAg
-LSBjb25zdDogbWVkaWF0ZWssbXQ2NzY1LWNxZG1hDQorICAgICAgLSBjb25zdDogbWVkaWF0ZWss
-bXQ2Nzc5LWNxZG1hDQorDQorICByZWc6DQorICAgIG1pbkl0ZW1zOiAxDQorICAgIG1heEl0ZW1z
-OiA1DQorICAgIGRlc2NyaXB0aW9uOg0KKyAgICAgICAgQSBiYXNlIGFkZHJlc3Mgb2YgTWVkaWFU
-ZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciwNCisgICAgICAgIGEgY2hhbm5lbCB3aWxs
-IGhhdmUgYSBzZXQgb2YgYmFzZSBhZGRyZXNzLg0KKw0KKyAgaW50ZXJydXB0czoNCisgICAgbWlu
-SXRlbXM6IDENCisgICAgbWF4SXRlbXM6IDUNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgICBB
-IGludGVycnVwdCBudW1iZXIgb2YgTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxl
-ciwNCisgICAgICAgIG9uZSBpbnRlcnJ1cHQgbnVtYmVyIHBlciBkbWEtY2hhbm5lbHMuDQorDQor
-ICBjbG9ja3M6DQorICAgIG1heEl0ZW1zOiAxDQorDQorICBjbG9jay1uYW1lczoNCisgICAgY29u
-c3Q6IGNxZG1hDQorDQorICBkbWEtY2hhbm5lbC1tYXNrOg0KKyAgICAkcmVmOiAvc2NoZW1hcy90
-eXBlcy55YW1sI2RlZmluaXRpb25zL3VpbnQzMg0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICAg
-Rm9yIERNQSBjYXBhYmlsaXR5LCBXZSB3aWxsIGtub3cgdGhlIGFkZHJlc3NpbmcgY2FwYWJpbGl0
-eSBvZg0KKyAgICAgICBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyIHRocm91
-Z2ggZG1hLWNoYW5uZWwtbWFzay4NCisgICAgaXRlbXM6DQorICAgICAgbWluSXRlbXM6IDENCisg
-ICAgICBtYXhJdGVtczogNjMNCisNCisgIGRtYS1jaGFubmVsczoNCisgICAgJHJlZjogL3NjaGVt
-YXMvdHlwZXMueWFtbCNkZWZpbml0aW9ucy91aW50MzINCisgICAgZGVzY3JpcHRpb246DQorICAg
-ICAgTnVtYmVyIG9mIERNQSBjaGFubmVscyBzdXBwb3J0ZWQgYnkgTWVkaWFUZWsgQ29tbWFuZC1R
-dWV1ZSBETUENCisgICAgICBjb250cm9sbGVyLCBzdXBwb3J0IHVwIHRvIGZpdmUuDQorICAgIGl0
-ZW1zOg0KKyAgICAgIG1pbkl0ZW1zOiAxDQorICAgICAgbWF4SXRlbXM6IDUNCisNCisgIGRtYS1y
-ZXF1ZXN0czoNCisgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9ucy91aW50
-MzINCisgICAgZGVzY3JpcHRpb246DQorICAgICAgTnVtYmVyIG9mIERNQSByZXF1ZXN0ICh2aXJ0
-dWFsIGNoYW5uZWwpIHN1cHBvcnRlZCBieSBNZWRpYVRlaw0KKyAgICAgIENvbW1hbmQtUXVldWUg
-RE1BIGNvbnRyb2xsZXIsIHN1cHBvcnQgdXAgdG8gMzIuDQorICAgIGl0ZW1zOg0KKyAgICAgIG1p
-bkl0ZW1zOiAxDQorICAgICAgbWF4SXRlbXM6IDMyDQorDQorcmVxdWlyZWQ6DQorICAtICIjZG1h
-LWNlbGxzIg0KKyAgLSBjb21wYXRpYmxlDQorICAtIHJlZw0KKyAgLSBpbnRlcnJ1cHRzDQorICAt
-IGNsb2Nrcw0KKyAgLSBjbG9jay1uYW1lcw0KKyAgLSBkbWEtY2hhbm5lbC1tYXNrDQorICAtIGRt
-YS1jaGFubmVscw0KKyAgLSBkbWEtcmVxdWVzdHMNCisNCithZGRpdGlvbmFsUHJvcGVydGllczog
-ZmFsc2UNCisNCitleGFtcGxlczoNCisgIC0gfA0KKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3Mv
-aW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQorICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQorICAgICNpbmNsdWRlIDxkdC1iaW5kaW5n
-cy9jbG9jay9tdDY3NzktY2xrLmg+DQorICAgIGNxZG1hOiBkbWEtY29udHJvbGxlckAxMDIxMjAw
-MCB7DQorICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1jcWRtYSI7DQorICAg
-ICAgICByZWcgPSA8MHgxMDIxMjAwMCAweDgwPiwNCisgICAgICAgICAgICA8MHgxMDIxMjA4MCAw
-eDgwPiwNCisgICAgICAgICAgICA8MHgxMDIxMjEwMCAweDgwPjsNCisgICAgICAgIGludGVycnVw
-dHMgPSA8R0lDX1NQSSAxMzkgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCisgICAgICAgICAgICA8R0lD
-X1NQSSAxNDAgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCisgICAgICAgICAgICA8R0lDX1NQSSAxNDEg
-SVJRX1RZUEVfTEVWRUxfTE9XPjsNCisgICAgICAgIGNsb2NrcyA9IDwmaW5mcmFjZmdfYW8gQ0xL
-X0lORlJBX0NRX0RNQT47DQorICAgICAgICBjbG9jay1uYW1lcyA9ICJjcWRtYSI7DQorICAgICAg
-ICBkbWEtY2hhbm5lbC1tYXNrID0gPDYzPjsNCisgICAgICAgIGRtYS1jaGFubmVscyA9IDwzPjsN
-CisgICAgICAgIGRtYS1yZXF1ZXN0cyA9IDwzMj47DQorICAgICAgICAjZG1hLWNlbGxzID0gPDE+
-Ow0KKyAgICB9Ow0KKw0KKy4uLg0KLS0gDQoxLjkuMQ0K
+Hi Luc,
 
+On Thu, Jun 18, 2020 at 7:05 AM Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+> On Thu, Jun 18, 2020 at 03:22:15AM +0200, Miguel Ojeda wrote:
+> > On Thu, Jun 18, 2020 at 12:02 AM Luc Van Oostenryck
+> > <luc.vanoostenryck@gmail.com> wrote:
+> > >
+> > > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> > > index 21aed0981edf..e368384445b6 100644
+> > > --- a/include/linux/compiler_types.h
+> > > +++ b/include/linux/compiler_types.h
+> > > @@ -5,20 +5,20 @@
+> > >  #ifndef __ASSEMBLY__
+> > >
+> > >  #ifdef __CHECKER__
+> > > -# define __user                __attribute__((noderef, address_space(1)))
+> > >  # define __kernel      __attribute__((address_space(0)))
+> > > +# define __user                __attribute__((noderef, address_space(__user)))
+> >
+> > I guess `__kernel` moves to the first place since it uses the first
+> > address space?
+>
+> No, there is no really an order between address spaces. Even before
+> this patch, the number were only used as an ID to distinguish them
+> from each other.
+>
+> I just moved __kernel above because it is quite different from
+> the others because it's the default one, and so:
+> * it's never displayed
+> * it's normally not needed, nor in type annotations, nor in cast
+>   between address spaces. The only time it's needed is when it's
+>   combined with a typeof to express "the same type as this one but
+>   without the address space"
+> * it can't be defined with a name, '0' must be used.
+>
+> So, it seemed strange to me to have it in the middle of the other ones.
+
+Indeed. It looks like this whole list is completely unsorted, and was created
+by appending new definitions at the bottom.
+So perhaps all the address_space ones should be grouped together?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
