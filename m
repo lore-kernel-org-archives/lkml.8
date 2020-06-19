@@ -2,53 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2932C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6EAB217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0B021841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578182;
-	bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
+	s=default; t=1592578187;
+	bh=7XcN7bjQK5eSkSwS7XuWiPl/kmwVvmcBHaISVa22uGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLZYbZ50iNbcQRyKRV1NXjrQrA8le59Af3cve6f+Wi3TLQ0EHZhd19niqyt6OZjMp
-	 TLJx33eTRhsmhjwnblxuzGtSJwV4A/+1R6GrtoRrCBYI/fxTmQHe6SNUtLWFgr2qTf
-	 BDANQMmvTMnejwmtpkGEvy/zebA4hSOkZeHIheN8=
+	b=pZOk3CCRLTJ7T9K7dfyyMDiBO8N7be8ABi+gB78g3OmaO8Og5F1x3pu3JPhZJvV1S
+	 wrlnubgbfpQx7WJCegbLC1mc0BxsNZznIHDtcpydacIfu5HPo3MNpC62TmGwAnGHdi
+	 982Y39JMJYCLm29d+JfcXovYtOrQahiZdp8F3rrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389238AbgFSOtk (ORCPT
+        id S2389240AbgFSOtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389206AbgFSOt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:27 -0400
+        id S2389232AbgFSOti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909E52158C;
-        Fri, 19 Jun 2020 14:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4C42158C;
+        Fri, 19 Jun 2020 14:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578167;
-        bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
+        s=default; t=1592578176;
+        bh=7XcN7bjQK5eSkSwS7XuWiPl/kmwVvmcBHaISVa22uGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6l8jTaDSbH20fIKEH0mxpWr4kqJapdT5Jp845f4GXPnfysgff3tQanJsfP10yEo8
-         BDL/9EOV6jSdRm3hHCBUt42l25eW89neAQ+cYzcOzFSRnYltGEJz3QdfLwUqJdvqnn
-         ekfGR1K9DnrwZqAIx2t45qGO6LWoVIAEun6FNedk=
+        b=Qxjn0tJrUJEIV9g2s4S2ikINgidrPIMNg7dK/iws+O5x3YnQtoeuQNjk3QI+u18bn
+         s1PSxgEj7tjJzDZa0HMASkj9empis+L3DJBF5e0Q4yEMjb99rVmJ9EH1PvMkBEfh3L
+         Z1xVmXymX/IpWAnrdf14gZ+jmXkOkjXxIHltVAgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/190] net: lpc-enet: fix error return code in lpc_mii_init()
-Date:   Fri, 19 Jun 2020 16:32:34 +0200
-Message-Id: <20200619141639.047272584@linuxfoundation.org>
+Subject: [PATCH 4.14 112/190] powerpc/spufs: fix copy_to_user while atomic
+Date:   Fri, 19 Jun 2020 16:32:37 +0200
+Message-Id: <20200619141639.226634298@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,36 +61,282 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
+[ Upstream commit 88413a6bfbbe2f648df399b62f85c934460b7a4d ]
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+Currently, we may perform a copy_to_user (through
+simple_read_from_buffer()) while holding a context's register_lock,
+while accessing the context save area.
 
-Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This change uses a temporary buffer for the context save area data,
+which we then pass to simple_read_from_buffer.
+
+Includes changes from Christoph Hellwig <hch@lst.de>.
+
+Fixes: bf1ab978be23 ("[POWERPC] coredump: Add SPU elf notes to coredump.")
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+[hch: renamed to function to avoid ___-prefixes]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/cell/spufs/file.c | 113 +++++++++++++++--------
+ 1 file changed, 75 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 41d30f55c946..6bd6c261f2ba 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -845,7 +845,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
- 	if (mdiobus_register(pldat->mii_bus))
- 		goto err_out_unregister_bus;
+diff --git a/arch/powerpc/platforms/cell/spufs/file.c b/arch/powerpc/platforms/cell/spufs/file.c
+index 5ffcdeb1eb17..9d9fffaedeef 100644
+--- a/arch/powerpc/platforms/cell/spufs/file.c
++++ b/arch/powerpc/platforms/cell/spufs/file.c
+@@ -1988,8 +1988,9 @@ static ssize_t __spufs_mbox_info_read(struct spu_context *ctx,
+ static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+-	int ret;
+ 	struct spu_context *ctx = file->private_data;
++	u32 stat, data;
++	int ret;
  
--	if (lpc_mii_probe(pldat->ndev) != 0)
-+	err = lpc_mii_probe(pldat->ndev);
-+	if (err)
- 		goto err_out_unregister_bus;
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+@@ -1998,11 +1999,16 @@ static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_mbox_info_read(ctx, buf, len, pos);
++	stat = ctx->csa.prob.mb_stat_R;
++	data = ctx->csa.prob.pu_mb_R;
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
  
- 	return 0;
+-	return ret;
++	/* EOF if there's no entry in the mbox */
++	if (!(stat & 0x0000ff))
++		return 0;
++
++	return simple_read_from_buffer(buf, len, pos, &data, sizeof(data));
+ }
+ 
+ static const struct file_operations spufs_mbox_info_fops = {
+@@ -2029,6 +2035,7 @@ static ssize_t spufs_ibox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	u32 stat, data;
+ 	int ret;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+@@ -2038,11 +2045,16 @@ static ssize_t spufs_ibox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_ibox_info_read(ctx, buf, len, pos);
++	stat = ctx->csa.prob.mb_stat_R;
++	data = ctx->csa.priv2.puint_mb_R;
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	/* EOF if there's no entry in the ibox */
++	if (!(stat & 0xff0000))
++		return 0;
++
++	return simple_read_from_buffer(buf, len, pos, &data, sizeof(data));
+ }
+ 
+ static const struct file_operations spufs_ibox_info_fops = {
+@@ -2051,6 +2063,11 @@ static const struct file_operations spufs_ibox_info_fops = {
+ 	.llseek  = generic_file_llseek,
+ };
+ 
++static size_t spufs_wbox_info_cnt(struct spu_context *ctx)
++{
++	return (4 - ((ctx->csa.prob.mb_stat_R & 0x00ff00) >> 8)) * sizeof(u32);
++}
++
+ static ssize_t __spufs_wbox_info_read(struct spu_context *ctx,
+ 			char __user *buf, size_t len, loff_t *pos)
+ {
+@@ -2059,7 +2076,7 @@ static ssize_t __spufs_wbox_info_read(struct spu_context *ctx,
+ 	u32 wbox_stat;
+ 
+ 	wbox_stat = ctx->csa.prob.mb_stat_R;
+-	cnt = 4 - ((wbox_stat & 0x00ff00) >> 8);
++	cnt = spufs_wbox_info_cnt(ctx);
+ 	for (i = 0; i < cnt; i++) {
+ 		data[i] = ctx->csa.spu_mailbox_data[i];
+ 	}
+@@ -2072,7 +2089,8 @@ static ssize_t spufs_wbox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
+-	int ret;
++	u32 data[ARRAY_SIZE(ctx->csa.spu_mailbox_data)];
++	int ret, count;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+@@ -2081,11 +2099,13 @@ static ssize_t spufs_wbox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_wbox_info_read(ctx, buf, len, pos);
++	count = spufs_wbox_info_cnt(ctx);
++	memcpy(&data, &ctx->csa.spu_mailbox_data, sizeof(data));
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &data,
++				count * sizeof(u32));
+ }
+ 
+ static const struct file_operations spufs_wbox_info_fops = {
+@@ -2094,27 +2114,33 @@ static const struct file_operations spufs_wbox_info_fops = {
+ 	.llseek  = generic_file_llseek,
+ };
+ 
+-static ssize_t __spufs_dma_info_read(struct spu_context *ctx,
+-			char __user *buf, size_t len, loff_t *pos)
++static void spufs_get_dma_info(struct spu_context *ctx,
++		struct spu_dma_info *info)
+ {
+-	struct spu_dma_info info;
+-	struct mfc_cq_sr *qp, *spuqp;
+ 	int i;
+ 
+-	info.dma_info_type = ctx->csa.priv2.spu_tag_status_query_RW;
+-	info.dma_info_mask = ctx->csa.lscsa->tag_mask.slot[0];
+-	info.dma_info_status = ctx->csa.spu_chnldata_RW[24];
+-	info.dma_info_stall_and_notify = ctx->csa.spu_chnldata_RW[25];
+-	info.dma_info_atomic_command_status = ctx->csa.spu_chnldata_RW[27];
++	info->dma_info_type = ctx->csa.priv2.spu_tag_status_query_RW;
++	info->dma_info_mask = ctx->csa.lscsa->tag_mask.slot[0];
++	info->dma_info_status = ctx->csa.spu_chnldata_RW[24];
++	info->dma_info_stall_and_notify = ctx->csa.spu_chnldata_RW[25];
++	info->dma_info_atomic_command_status = ctx->csa.spu_chnldata_RW[27];
+ 	for (i = 0; i < 16; i++) {
+-		qp = &info.dma_info_command_data[i];
+-		spuqp = &ctx->csa.priv2.spuq[i];
++		struct mfc_cq_sr *qp = &info->dma_info_command_data[i];
++		struct mfc_cq_sr *spuqp = &ctx->csa.priv2.spuq[i];
+ 
+ 		qp->mfc_cq_data0_RW = spuqp->mfc_cq_data0_RW;
+ 		qp->mfc_cq_data1_RW = spuqp->mfc_cq_data1_RW;
+ 		qp->mfc_cq_data2_RW = spuqp->mfc_cq_data2_RW;
+ 		qp->mfc_cq_data3_RW = spuqp->mfc_cq_data3_RW;
+ 	}
++}
++
++static ssize_t __spufs_dma_info_read(struct spu_context *ctx,
++			char __user *buf, size_t len, loff_t *pos)
++{
++	struct spu_dma_info info;
++
++	spufs_get_dma_info(ctx, &info);
+ 
+ 	return simple_read_from_buffer(buf, len, pos, &info,
+ 				sizeof info);
+@@ -2124,6 +2150,7 @@ static ssize_t spufs_dma_info_read(struct file *file, char __user *buf,
+ 			      size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	struct spu_dma_info info;
+ 	int ret;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+@@ -2133,11 +2160,12 @@ static ssize_t spufs_dma_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_dma_info_read(ctx, buf, len, pos);
++	spufs_get_dma_info(ctx, &info);
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &info,
++				sizeof(info));
+ }
+ 
+ static const struct file_operations spufs_dma_info_fops = {
+@@ -2146,13 +2174,31 @@ static const struct file_operations spufs_dma_info_fops = {
+ 	.llseek = no_llseek,
+ };
+ 
++static void spufs_get_proxydma_info(struct spu_context *ctx,
++		struct spu_proxydma_info *info)
++{
++	int i;
++
++	info->proxydma_info_type = ctx->csa.prob.dma_querytype_RW;
++	info->proxydma_info_mask = ctx->csa.prob.dma_querymask_RW;
++	info->proxydma_info_status = ctx->csa.prob.dma_tagstatus_R;
++
++	for (i = 0; i < 8; i++) {
++		struct mfc_cq_sr *qp = &info->proxydma_info_command_data[i];
++		struct mfc_cq_sr *puqp = &ctx->csa.priv2.puq[i];
++
++		qp->mfc_cq_data0_RW = puqp->mfc_cq_data0_RW;
++		qp->mfc_cq_data1_RW = puqp->mfc_cq_data1_RW;
++		qp->mfc_cq_data2_RW = puqp->mfc_cq_data2_RW;
++		qp->mfc_cq_data3_RW = puqp->mfc_cq_data3_RW;
++	}
++}
++
+ static ssize_t __spufs_proxydma_info_read(struct spu_context *ctx,
+ 			char __user *buf, size_t len, loff_t *pos)
+ {
+ 	struct spu_proxydma_info info;
+-	struct mfc_cq_sr *qp, *puqp;
+ 	int ret = sizeof info;
+-	int i;
+ 
+ 	if (len < ret)
+ 		return -EINVAL;
+@@ -2160,18 +2206,7 @@ static ssize_t __spufs_proxydma_info_read(struct spu_context *ctx,
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+ 
+-	info.proxydma_info_type = ctx->csa.prob.dma_querytype_RW;
+-	info.proxydma_info_mask = ctx->csa.prob.dma_querymask_RW;
+-	info.proxydma_info_status = ctx->csa.prob.dma_tagstatus_R;
+-	for (i = 0; i < 8; i++) {
+-		qp = &info.proxydma_info_command_data[i];
+-		puqp = &ctx->csa.priv2.puq[i];
+-
+-		qp->mfc_cq_data0_RW = puqp->mfc_cq_data0_RW;
+-		qp->mfc_cq_data1_RW = puqp->mfc_cq_data1_RW;
+-		qp->mfc_cq_data2_RW = puqp->mfc_cq_data2_RW;
+-		qp->mfc_cq_data3_RW = puqp->mfc_cq_data3_RW;
+-	}
++	spufs_get_proxydma_info(ctx, &info);
+ 
+ 	return simple_read_from_buffer(buf, len, pos, &info,
+ 				sizeof info);
+@@ -2181,17 +2216,19 @@ static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	struct spu_proxydma_info info;
+ 	int ret;
+ 
+ 	ret = spu_acquire_saved(ctx);
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_proxydma_info_read(ctx, buf, len, pos);
++	spufs_get_proxydma_info(ctx, &info);
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &info,
++				sizeof(info));
+ }
+ 
+ static const struct file_operations spufs_proxydma_info_fops = {
 -- 
 2.25.1
 
