@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4955FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF3220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0EE217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577676;
-	bh=VsihRR3Y1zmxLKTxg56v6Z1yJ6j+QS1iZJgaK1mjsJs=;
+	s=default; t=1592577681;
+	bh=uL5DzlwHh/1AWGFJZh0Ag4fA0tSL7mQIfxjWVnjAN9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRRUDAW4/OHGgeK6k4iqCasVK/az+nLYbFOMS+L37ao/KiprXg1tXDLlw+ME0mrjI
-	 s0+Al97E+UFLL50hhMSooos10pmHEj+kW2OoztoPu6PUiBUfFeiTAFtSZPIAk6s4XO
-	 L4L7Kl9eFRDbfuaDZfqQBuOqo3YWZRzF0RdUzKgI=
+	b=zUY2TsqXPyq0I30wi0FnKOrn6Hu+0L1LnzXgKNgZvzZupu4NIrGbcLzHP67pYA5IN
+	 cCaKoQDpC/7DUdBcP8v3m3ijYyZ9L16sB7F+PjIbHSaWDeaCBjE3YZ2rVx1wvcakHU
+	 w4/c2w/HtDFktCOW97rgJGo0Sh+M478e2Ti5y4AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733225AbgFSOlO (ORCPT
+        id S2388219AbgFSOlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:41:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387524AbgFSOlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:03 -0400
+        id S1728068AbgFSOlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7542070A;
-        Fri, 19 Jun 2020 14:41:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2330720CC7;
+        Fri, 19 Jun 2020 14:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577663;
-        bh=VsihRR3Y1zmxLKTxg56v6Z1yJ6j+QS1iZJgaK1mjsJs=;
+        s=default; t=1592577671;
+        bh=uL5DzlwHh/1AWGFJZh0Ag4fA0tSL7mQIfxjWVnjAN9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fs/Hqc4k5yZAPiGkgq+yNHL0fnyuf70YbmwEKgWnZZMA/PrqwCfjllHKbzZ0IwkYe
-         B8YB/1OGcdcIMFsvGn2nCgsC08ohMyjSqvR80Uj0S4FlCb4mcKnbBiQrK/PeurwGar
-         IKHhH+4LP9Xm3wL+OU5I6/KGx/qBexGOhGXZ6e7I=
+        b=b4EcgS7uXYLxgugAe0bPgw/ns/8S3+rcQGl8czD8ORf/MZI9G6r38uSUaiaAr94MS
+         guhKm2qy3xNHMiFazf0xre68l1Hr4ip5lOnHfWK9UOKjcM6hiDXrmULxaoXlFzfdY+
+         kmmWIsG2BZ4/F4TGb0oLVyrSMJMC04NpoJ+ZXv7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 039/128] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-Date:   Fri, 19 Jun 2020 16:32:13 +0200
-Message-Id: <20200619141622.282898678@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 024/128] ALSA: pcm: disallow linking stream to itself
+Date:   Fri, 19 Jun 2020 16:31:58 +0200
+Message-Id: <20200619141621.457414340@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,51 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 2ebac8bb3c2d35f5135466490fc8eeaf3f3e2d37 upstream.
+commit 951e2736f4b11b58dc44d41964fa17c3527d882a upstream.
 
-Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-when determining whether a nested VM-Exit should be reflected into L1 or
-handled by KVM in L0.
+Prevent SNDRV_PCM_IOCTL_LINK linking stream to itself - the code
+can't handle it. Fixed commit is not where bug was introduced, but
+changes the context significantly.
 
-For better or worse, the switch statement in nested_vmx_exit_reflected()
-currently defaults to "true", i.e. reflects any nested VM-Exit without
-dedicated logic.  Because the case statements only contain the basic
-exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-even if KVM intended to handle it in L0.
-
-Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-L1, as "failed VM-Entry" is the only modifier that KVM can currently
-encounter.  The SMM modifiers will never be generated as KVM doesn't
-support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-enter an enclave in a KVM guest (L1 or L2).
-
-Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 0888c321de70 ("pcm_native: switch to fdget()/fdput()")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/89c4a2487609a0ed6af3ecf01cc972bdc59a7a2d.1591634956.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -8207,7 +8207,7 @@ static bool nested_vmx_exit_handled(stru
- 		return true;
+---
+ sound/core/pcm_native.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1836,6 +1836,11 @@ static int snd_pcm_link(struct snd_pcm_s
  	}
- 
--	switch (exit_reason) {
-+	switch ((u16)exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		if (is_nmi(intr_info))
- 			return false;
+ 	pcm_file = f.file->private_data;
+ 	substream1 = pcm_file->substream;
++	if (substream == substream1) {
++		res = -EINVAL;
++		goto _badf;
++	}
++
+ 	group = kmalloc(sizeof(*group), GFP_KERNEL);
+ 	if (!group) {
+ 		res = -ENOMEM;
 
 
