@@ -2,148 +2,142 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50639C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6BE206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C96E21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpUM4Zhm"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Yecaf6gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbgFSMPF (ORCPT
+        id S1732879AbgFSMP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:15:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56735 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731946AbgFSMOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:14:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592568884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R8cRJ9mKHnqlRMCmgZ9Saj2HVMswrOptw4ckNPEI2IU=;
-        b=QpUM4ZhmlexdzLggh99pMgLG56jzHtlMbLLYXwLj/UwqfbnrswYKf9kkwUvflSpU/jqayL
-        APTjWHptm4ZC2pan5RK4vZlo5CdmEJIB7U7qT/hJepY6m25r3BvepII9M8Y4oEU+H7CP5R
-        ZOzV9CxZ2TlXfQeAgAHVLKOpjev3HYE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-cfpd_Iq4OGyrKS2WTkCDVw-1; Fri, 19 Jun 2020 08:14:42 -0400
-X-MC-Unique: cfpd_Iq4OGyrKS2WTkCDVw-1
-Received: by mail-wr1-f71.google.com with SMTP id m14so4194673wrj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:14:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R8cRJ9mKHnqlRMCmgZ9Saj2HVMswrOptw4ckNPEI2IU=;
-        b=lyB27ydupdZCManRT5/e4JMIT6GDNnuiVr3evOcmYhPVxgl1C31//NV+Im228UDcyf
-         Txmt+WPKQBtPc5bDTpCehiXTRQVeSc+oPIfnyW2mKWC0X+H8Sw8xAJIdmYzXbqd2Tfdr
-         gTf7o8w+/bs/s4tBhiy3RuPnD0XIxSc2aM230csE+I/GWMv6dcbtBf0EaKdkSHtKA7to
-         zxKAAPLib7hcEL+O1esqinowD5F5C8UGrSR+TsuPAK5RrH1AlXlukNlQ2DA9kPy5SJ5V
-         DOSEwiTIpxXt8vBvNY5KvlQvnWvfq9GZTW43tWHNINorVUVv8Ci4T1tm7bAMvo7AG4ka
-         YIYg==
-X-Gm-Message-State: AOAM533z4wy+E1ewLxGLPcFHOGl47fmqqPvrGeP8w+5PPpsnKY6VTAaP
-        yuH6D/xlqkkogTZ0EfhrVtZXAx7VGm5zzhL6R41lRf1dr/Avg9lD3BMkZjP1CLpRxzFNO1YKfOQ
-        s2+nosMIKtLaHsVA9jkGGoYET
-X-Received: by 2002:adf:db09:: with SMTP id s9mr3724454wri.256.1592568881585;
-        Fri, 19 Jun 2020 05:14:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzI0DHsQbRkAzRAW/4WimBoJGHA0E5juzZDQy4xA4UsJjmsZK6Wry3yY0B5r4VoAJNzMN1cjA==
-X-Received: by 2002:adf:db09:: with SMTP id s9mr3724431wri.256.1592568881336;
-        Fri, 19 Jun 2020 05:14:41 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e1d2:138e:4eff:42cb? ([2001:b07:6468:f312:e1d2:138e:4eff:42cb])
-        by smtp.gmail.com with ESMTPSA id b201sm6852671wmb.36.2020.06.19.05.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 05:14:40 -0700 (PDT)
-Subject: Re: [PATCH RFC] Revert "KVM: VMX: Micro-optimize vmexit time when not
- exposing PMU"
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200619094046.654019-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d72de2a8-7c65-6ad1-8f53-5a2a94533018@redhat.com>
-Date:   Fri, 19 Jun 2020 14:13:52 +0200
+        Fri, 19 Jun 2020 08:15:59 -0400
+Received: from mout.web.de ([212.227.15.4]:37479 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731561AbgFSMPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 08:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592568935;
+        bh=45UgeJv4t65eu4zPCmJvNpVnUo7ZfpKmm0k9LndJsks=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=Yecaf6gj4cR2Pksp9Js8UeVO+MNjZbWGmDnsnuhS3sHsSWrInRQI3/qsmEJ18sBHj
+         rhpx+N4EJ8qCvTB9d/JIl7U1uFetrGORYRz1R+hvcNFP5qF9vpgTlKP+5Zzc6mrEl9
+         T3U/K54jm3PqYM0gZ5Ya6X0wZrgDKFmw4K+IIes4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.139.231]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LecN4-1j5kAj0xig-00qRCG; Fri, 19
+ Jun 2020 14:15:35 +0200
+Cc:     opensource.kernel@vivo.com, Aditya Pakki <pakki001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: [PATCH] drm/amdkfd: Fix memory leaks according to error branches
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c966b91e-765f-c36c-2563-4e348fd1daf6@web.de>
+Date:   Fri, 19 Jun 2020 14:15:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200619094046.654019-1-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bW/jlvnVLAJqZr8DAAisjb74aEUzKSMI3tkulAuAkBcRr7D/Ac8
+ Js053pNH47f7md+XQThFTIy3GMK4avN5YSs0NxDfhGprk5wAJ2isK/4Aar5h1wCJ3wv5e5D
+ 9Kz1RLx7jf8jLjWWtD3SdqykCQfwkJjPd1yrbVdbQJ/PcrVGh6cTWGQzBRWaRI4UMHx9TzY
+ Vq8D3r3AEo4v+R0v3GJsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NNc4CFBbVQw=:aBMbY0JcBtV/ZHsxAV/gBT
+ 8lGmEqt61nXy2U2c/Kk3x37uN/RhQHlIskwB1kwAsjKipFcTTv1uUOc4QoquWWKcn3SeH5/Zn
+ JOSX4uoZKjhp0b52BmlLC6k9iXMzof65X7S1hmtBKLsHiuL7tghnbNxqBT5erMGjBwZ4mDG8d
+ Jwd1vRfrbvPo3IFFeYhxgtOY1JJldNCgiz0RG5QVKNW/UzYzi4wsmTZVW06fHLHBz7Ib5j4di
+ de4jCwh0qBPSpaAyUPop7ujZ+spuiFKgElUeo98PCY5ys6fA6WghMot0hePPb2EjpVo+ZCjgH
+ AilZInQO7QtQo7AxZbYLVICdzehvI6j0FKQrLVveFSonIGpn/Z4vz1AuaazrW9dzLkjk7Y24k
+ KrHscqcR7iS2wtpLRgUKg5zRyM7AQFiijR8Y8KCuUHWoUKn+YvbDmefZ/5EEj9+wyVbDByorg
+ 6tC5sXC3EhKpKhgy/dIVE5ouoK4hWVXddtU51B6+Q2elxXIILJMrWxWcyZWZOSSDD69UZmwfv
+ Jvr+sayG7hhYuL7pTEwmMs6IWOI3Wo4mJvLxffVp52UXVl2BSzGQIDaP30Qq0NMOORSOZNxGT
+ lCObH0pH6iv5dzDZHh9F7cZclfJ4SQ8rdPSCm0pyBVzogCCuHCsTuGQXZaUlSKSFE8j8Jai0J
+ 3/qTPwMQ+zxfoW5LC1uWDpg4K1+gSEa3eyFF7Oj5wd5ArIOg6zwu/TvhISlxhWi7BWFN02uZk
+ 5Jqm8JYu4jbVwHrI8xn2X4OimKf2mI4wt3H8S+C/Xn75rLncuBplavNHGnHilvIKFOEBeFBTZ
+ ubLA+KatpfW3qjmstpvp1yIqHAuRcrDOFUMB9U+r9XRdg0zjmfbGzcfizberKPZQlKgv4YjP5
+ gVMaKk2Yb2x6FmnLbr0A8bhlcDWuS5SRhpMiWS0Tc0JeAt+C815s3Zxp1/zXnkTtq0NR90RKw
+ rBsQ1gYI95VhsU6vur8XdP9+yV+cuR2pLZaJSZ5f5uy1aTDFbx+5WibMpPY2gFNj6iAAI6Gdg
+ TZrTfoSD90/bDxcip5aOBYJuAdn21gu4WffcT7ZuqKMZxjdzsm3KfM5rrVG+jSoyAC1iC21Y0
+ UKoWc1ZCcRrYElPYt6yQ47BX2J4Vd+hHkeZJOAAKnQcdnYWnvOaKLJLB+fGdtMiz5wft9cKmE
+ hzOSV6GCh29oQr0g8xgyfs2K1H9GPCFD1BcenayOKAyndHsjcOwdnxIOziUe3lDaQhWsNioDJ
+ Mp5EPu0irg/USbzU2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/20 11:40, Vitaly Kuznetsov wrote:
-> Guest crashes are observed on a Cascade Lake system when 'perf top' is
-> launched on the host, e.g.
-> 
->  BUG: unable to handle kernel paging request at fffffe0000073038
->  PGD 7ffa7067 P4D 7ffa7067 PUD 7ffa6067 PMD 7ffa5067 PTE ffffffffff120
->  Oops: 0000 [#1] SMP PTI
->  CPU: 1 PID: 1 Comm: systemd Not tainted 4.18.0+ #380
-> ...
->  Call Trace:
->   serial8250_console_write+0xfe/0x1f0
->   call_console_drivers.constprop.0+0x9d/0x120
->   console_unlock+0x1ea/0x460
-> 
-> Call traces are different but the crash is imminent. The problem was
-> blindly bisected to the commit 041bc42ce2d0 ("KVM: VMX: Micro-optimize
-> vmexit time when not exposing PMU"). It was also confirmed that the
-> issue goes away if PMU is exposed to the guest.
-> 
-> With some instrumentation of the guest we can see what is being switched
-> (when we do atomic_switch_perf_msrs()):
-> 
->  vmx_vcpu_run: switching 2 msrs
->  vmx_vcpu_run: switching MSR38f guest: 70000000d host: 70000000f
->  vmx_vcpu_run: switching MSR3f1 guest: 0 host: 2
-> 
-> The current guess is that PEBS (MSR_IA32_PEBS_ENABLE, 0x3f1) is to blame.
-> Regardless of whether PMU is exposed to the guest or not, PEBS needs to
-> be disabled upon switch.
-> 
-> This reverts commit 041bc42ce2d0efac3b85bbb81dea8c74b81f4ef9.
-> 
-> Reported-by: Maxime Coquelin <maxime.coquelin@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
-> - Perf/KVM interractions are a mystery to me, thus RFC.
-> ---
->  arch/x86/kvm/vmx/vmx.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 36c771728c8c..b1a23ad986ff 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6728,8 +6728,7 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  
->  	pt_guest_enter(vmx);
->  
-> -	if (vcpu_to_pmu(vcpu)->version)
-> -		atomic_switch_perf_msrs(vmx);
-> +	atomic_switch_perf_msrs(vmx);
->  	atomic_switch_umwait_control_msr(vmx);
->  
->  	if (enable_preemption_timer)
-> 
+> The function kobject_init_and_add alloc memory like:
+> kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+> ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+> ->kmalloc_slab, in err branch this memory not free. If use
+> kmemleak, this path maybe catched.
+> These changes are to add kobject_put in kobject_init_and_add
+> failed branch, fix potential memleak.
 
-Queued, thanks.
+I suggest to improve this change description.
 
-Paolo
+* Can an other wording variant be nicer?
 
+* Will the tag =E2=80=9CFixes=E2=80=9D become helpful?
+
+Regards,
+Markus
