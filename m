@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E72C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEAC20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B6C20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580969;
-	bh=bHkNN74cdzXa9vVkD8gRknfG06ao0SH0hSvjcOVtP5g=;
+	s=default; t=1592580973;
+	bh=F56PYJf7LzlvOVbm708My6zGxN14mmdq2iquiOLJAwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jbBpPWNNB3HEjSMyGnJFOFn1JqZssjw9QxqPiGmcqIOTK04TQzkZ4AB4lXHijQ2vZ
-	 /sSLLqjx5c4JJbTQElu9faFSyJYT8/dNfHOEN0eFWM6pXTAxeZmOw10vxmDsZKS7+3
-	 5cpqDDTxNBBBlkHLUa3FxZkes418B2hHV8C4hPrU=
+	b=Kgr1lTenAjLcn1NUlRDPqmZEpiEochsFFdDqEj7om2GWKmij/x1dTSpqieAXKsD+N
+	 Exbue297n4A/lHpwRdWYbHohQD3bOIp5H2HLqVuMe5n16nrkPuq5ze+mbVp3tQ/h8o
+	 bTurqFkMzDSNogqhKuCueb6K2WT9qvpYS1vdTMcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393784AbgFSPbJ (ORCPT
+        id S2405055AbgFSPgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391325AbgFSPbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:00 -0400
+        id S2393776AbgFSPbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641CC206B7;
-        Fri, 19 Jun 2020 15:30:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1663E20757;
+        Fri, 19 Jun 2020 15:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580658;
-        bh=bHkNN74cdzXa9vVkD8gRknfG06ao0SH0hSvjcOVtP5g=;
+        s=default; t=1592580666;
+        bh=F56PYJf7LzlvOVbm708My6zGxN14mmdq2iquiOLJAwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eOgBuiXvtJMznWM9ab+A2Ebbsx302bgOuHggIE/+QV8TpBUhqPT3ZRy2R1PmzRLre
-         rAgVYlJSgjeSD7Vq4C/t7zuOZtfds30ksenWJUybXSqQvTdljpsqaiQWcZQleX8F0r
-         1q5iypnttrfbuLmdJZ9W/LhQEzGbXFAYjkwR4J6Q=
+        b=bM3Q7qXsOjD7gG0lK5SSLZE7c+TfHNZKdUy1pD4RSQ7Cz5trrynH+ydSLqH5Uy6g+
+         Q29xqTChVp1XNicRB8Ym02pZ9FHK2+XyVgGinTAJSAgYSJG2LCU7A8Q8z0Dhik8d8o
+         OSAzWcq7SmyO1SWrf2MMxX9wqErRj4Ao1rcVlh9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.7 333/376] jbd2: avoid leaking transaction credits when unreserving handle
-Date:   Fri, 19 Jun 2020 16:34:11 +0200
-Message-Id: <20200619141726.093088973@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.7 336/376] ARM: dts: s5pv210: Set keep-power-in-suspend for SDHCI1 on Aries
+Date:   Fri, 19 Jun 2020 16:34:14 +0200
+Message-Id: <20200619141726.237940532@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,73 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-commit 14ff6286309e2853aed50083c9a83328423fdd8c upstream.
+commit 869d42e6eba821905e1a0950623aadafe1a6e6d3 upstream.
 
-When reserved transaction handle is unused, we subtract its reserved
-credits in __jbd2_journal_unreserve_handle() called from
-jbd2_journal_stop(). However this function forgets to remove reserved
-credits from transaction->t_outstanding_credits and thus the transaction
-space that was reserved remains effectively leaked. The leaked
-transaction space can be quite significant in some cases and leads to
-unnecessarily small transactions and thus reducing throughput of the
-journalling machinery. E.g. fsmark workload creating lots of 4k files
-was observed to have about 20% lower throughput due to this when ext4 is
-mounted with dioread_nolock mount option.
+SDHCI1 is connected to a BCM4329 WiFi/BT chip which requires
+power to be kept over suspend.  As the surrounding hardware supports
+this, mark it as such.  This fixes WiFi after a suspend/resume cycle.
 
-Subtract reserved credits from t_outstanding_credits as well.
-
-CC: stable@vger.kernel.org
-Fixes: 8f7d89f36829 ("jbd2: transaction reservation support")
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200520133119.1383-3-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 170642468a51 ("ARM: dts: s5pv210: Add initial DTS for Samsung Aries based phones")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/s5pv210-aries.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -541,17 +541,24 @@ handle_t *jbd2_journal_start(journal_t *
- }
- EXPORT_SYMBOL(jbd2_journal_start);
+--- a/arch/arm/boot/dts/s5pv210-aries.dtsi
++++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
+@@ -454,6 +454,7 @@
+ 	pinctrl-names = "default";
+ 	cap-sd-highspeed;
+ 	cap-mmc-highspeed;
++	keep-power-in-suspend;
  
--static void __jbd2_journal_unreserve_handle(handle_t *handle)
-+static void __jbd2_journal_unreserve_handle(handle_t *handle, transaction_t *t)
- {
- 	journal_t *journal = handle->h_journal;
- 
- 	WARN_ON(!handle->h_reserved);
- 	sub_reserved_credits(journal, handle->h_total_credits);
-+	if (t)
-+		atomic_sub(handle->h_total_credits, &t->t_outstanding_credits);
- }
- 
- void jbd2_journal_free_reserved(handle_t *handle)
- {
--	__jbd2_journal_unreserve_handle(handle);
-+	journal_t *journal = handle->h_journal;
-+
-+	/* Get j_state_lock to pin running transaction if it exists */
-+	read_lock(&journal->j_state_lock);
-+	__jbd2_journal_unreserve_handle(handle, journal->j_running_transaction);
-+	read_unlock(&journal->j_state_lock);
- 	jbd2_free_handle(handle);
- }
- EXPORT_SYMBOL(jbd2_journal_free_reserved);
-@@ -722,7 +729,8 @@ static void stop_this_handle(handle_t *h
- 	atomic_sub(handle->h_total_credits,
- 		   &transaction->t_outstanding_credits);
- 	if (handle->h_rsv_handle)
--		__jbd2_journal_unreserve_handle(handle->h_rsv_handle);
-+		__jbd2_journal_unreserve_handle(handle->h_rsv_handle,
-+						transaction);
- 	if (atomic_dec_and_test(&transaction->t_updates))
- 		wake_up(&journal->j_wait_updates);
- 
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	non-removable;
 
 
