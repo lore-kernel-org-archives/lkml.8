@@ -2,99 +2,97 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C36C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5864F2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0248E207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOm7jvz0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lblZEhu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbgFSHyb (ORCPT
+        id S1730980AbgFSH41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:54:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39130 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729548AbgFSHyb (ORCPT
+        Fri, 19 Jun 2020 03:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730875AbgFSH41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592553270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bryp9+XYVmgJRh4PMhNskE1wuXqIjMfjYcFoobgkJo4=;
-        b=dOm7jvz0s4gxSWMPdcn6uyRgZEnBIkLKe6uzT6tiHE3QrkrQRRS5xlDRfQ/1FtGHgz4XL/
-        85I9C5WbEGjtw0EsOSxtmsnAqIoNA56xwIyLFOwxBRkQmYxUf6A3Mim1ZpGlb6RldI5kLK
-        /89sKd0DA/DwrmhRiZEOFMklSf+5QF8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-jVicbQ_XMoyMczAOJrkecQ-1; Fri, 19 Jun 2020 03:54:27 -0400
-X-MC-Unique: jVicbQ_XMoyMczAOJrkecQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B191B873074;
-        Fri, 19 Jun 2020 07:54:26 +0000 (UTC)
-Received: from [10.72.13.200] (ovpn-13-200.pek2.redhat.com [10.72.13.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6BD45C1BB;
-        Fri, 19 Jun 2020 07:54:20 +0000 (UTC)
-Subject: Re: [PATCH] virtio-mem: Fix build error due to improper use 'select'
-To:     Weilong Chen <chenweilong@huawei.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org, lizefan@huawei.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20200619080333.194753-1-chenweilong@huawei.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <953448d3-9e7c-3a96-b28b-edaf8b775e4d@redhat.com>
-Date:   Fri, 19 Jun 2020 15:54:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 03:56:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B48C06174E;
+        Fri, 19 Jun 2020 00:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+6lPoVcKNlDZ05zKLgAxZCl2a/rH2CM1rj4HgNIEc9s=; b=lblZEhu1fj4HGfeB9rhLnm35e9
+        3s57GAEQfeYx9h5CBtLLPeAfKEWKCz18DZbbPCosACUyBaHUXmzsIVHYCRGJVPG9fd8muPAzgwPu1
+        V/71pp368G0BLs+SJP1MgF8kDjX9G90M/thlJtpGLGS6/TUykwIDqd0wDpgWHY4LmSnrbOJwFkW1u
+        bmIqEbVSMPVmLVAbNEJ5TT97yQsdSJgNJgeiBPRVLvomB3zVX+sRq5JZ18lk3/mWl7wLGKMGBZxPo
+        lC7rsgOSIPzShQNsWEImEJA6EBemQePknjzZd+JcfY94JHq401SFPp4B4rNlvgjY1ed3aLR1jCiWB
+        Xru8sLrw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmBsq-000095-Sv; Fri, 19 Jun 2020 07:56:20 +0000
+Date:   Fri, 19 Jun 2020 00:56:20 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, javier.gonz@samsung.com
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Message-ID: <20200619075620.GA20581@infradead.org>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <20200618065634.GB24943@infradead.org>
+ <20200618175258.GA4141152@test-zns>
 MIME-Version: 1.0
-In-Reply-To: <20200619080333.194753-1-chenweilong@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618175258.GA4141152@test-zns>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 11:22:58PM +0530, Kanchan Joshi wrote:
+> I was thinking of raw block-access to zone device rather than pristine file
+> abstraction.
 
-On 2020/6/19 下午4:03, Weilong Chen wrote:
-> As noted in:
-> https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
-> "select should be used with care. select will force a symbol to a
-> value without visiting the dependencies."
-> Config VIRTIO_MEM should not select CONTIG_ALLOC directly.
-> Otherwise it will cause an error:
-> https://bugzilla.kernel.org/show_bug.cgi?id=208245
->
-> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
-> ---
->   drivers/virtio/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index 5809e5f5b157..5c92e4a50882 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -85,7 +85,7 @@ config VIRTIO_MEM
->   	depends on VIRTIO
->   	depends on MEMORY_HOTPLUG_SPARSE
->   	depends on MEMORY_HOTREMOVE
-> -	select CONTIG_ALLOC
-> +	depends on CONTIG_ALLOC
->   	help
->   	 This driver provides access to virtio-mem paravirtualized memory
->   	 devices, allowing to hotplug and hotunplug memory.
+Why?
 
+> And in that context, semantics, at this point, are unchanged
+> (i.e. same as direct writes) while flexibility of async-interface gets
+> added.
+> Synchronous-writes on single-zone sound fine, but synchronous-appends on
+> single-zone do not sound that fine.
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+Where does synchronous access come into play?
 
+> > What could be a useful addition is a way for O_APPEND/RWF_APPEND writes
+> > to report where they actually wrote, as that comes close to Zone Append
+> > while still making sense at our usual abstraction level for file I/O.
+> 
+> Thanks for suggesting this. O and RWF_APPEND may not go well with block
+> access as end-of-file will be picked from dev inode.
+
+No, but they go really well with zonefs.
+
+> But perhaps a new
+> flag like RWF_ZONE_APPEND can help to transform writes (aio or uring)
+> into append without introducing new opcodes.
+
+I don't think this is a good idea.  Zones are a concept for a a very
+specific class of zoned devices.  Trying to shoe-horn this into the
+byte address files / whole device abstraction not only is ugly
+conceptually but also adds the overhead for it to the VFS.
+
+And O_APPEND that returns the written position OTOH makes total sense
+at the file level as well and not just for raw zoned devices.
