@@ -2,98 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B52C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D3F21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fftsKWXL"
+	by mail.kernel.org (Postfix) with ESMTP id 022B920809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592582497;
+	bh=xRG44M/nxXxzNVpGV9y7/mUYH/wmbZs1DNIosD6B1Q8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gF0ZPlnjWP+3rpaOk0y4sjVQ5r3+r5yy+PJtXh60kiN85iLdyRrDEzwSahrWzUJuA
+	 YmWJd5Zg4SrgzwaqI8DZZrqH4coshP7GB3bhW8N1WfdvWW3LOFzFcmSVVzih/2D7Em
+	 VIp/EHCKERxPX3Y/TMZEtmD+J6FT+9ep/AChp04Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392245AbgFSQB2 (ORCPT
+        id S2392206AbgFSPNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392782AbgFSQBU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:01:20 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E85EC06174E;
-        Fri, 19 Jun 2020 09:01:20 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so4091787pls.2;
-        Fri, 19 Jun 2020 09:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Al8lo1vohaR538nK8K73F1PSw58YXyOEBF1pYFlniR4=;
-        b=fftsKWXLIqPq+IZfmJ93m4f0LUAQDvvJhlKujnhkDr71z51FLg5MA4vyH6aR2nkajs
-         OCpQxv8QDtvbFFJ69EDvy/UCT02TiSPrV7QYfCyPkWP8wdtJ/QznPUiBNdJDB5CHk3GO
-         JwlMFYzjYYCN09eYFHJ6DNnnNv8sDQ/Dzwlmwwdd6VG+TTJjq8+655E8udUvXwu7vyF2
-         JV9V+0qhvIVw6w1qr1Msb9pzGBScyBEohHpGQw8lL2iWvReCKlodZJfHi57P33Y5uOou
-         FYYgHJAOjd2waOkh+owR396bXsWGI+I5Nw2MLXreSNgXG5ZdvB2pGmIiUSw3LenMkXP3
-         DC8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Al8lo1vohaR538nK8K73F1PSw58YXyOEBF1pYFlniR4=;
-        b=q7TR9sEnRI/hPSO2BYy2zacyN3pQJFxR0/YQ5v8cP/fTj2TsIUlbEj7QCSnSpoX6rB
-         7zxol7JwLxKj09J/y5efFky6kpAjS12WcBuveIb55VHOLAiTTN/eQLJUaPVfHLCEJht7
-         mq/t+KeZr90MQpkBPS5Y5aXwQcKh/J6fs5uAuo1ymOL9yd0t/vsa0+EReCqJ9F6CgJdm
-         JyBYSuAIsFnzJLWNyn7g3qqnUhofPC6yJpBOt3oY9yzgxkCSNvMqBwkJnKlcYmxpTje0
-         GfYkpe5OCDXpMGfvU0RBkfJ1/jv/NNIcbcRreaBdkeAY5i2elSydj6j1VoBCTXn0Utlu
-         2UMw==
-X-Gm-Message-State: AOAM531Zs1KsVPWL7q0deJYQt4unX4rMmhc6hXEl+n2JPOJAC+lgEsEo
-        IkJN4wPfvqYB7POPTUjCKQQ=
-X-Google-Smtp-Source: ABdhPJz9UVcZvtW383mrRKD0cV4j8Kv0RZmN5hMHiAJxZiNhHfbQ1q+ptp4COAn+YGx5pjx3ina7IQ==
-X-Received: by 2002:a17:90a:1ae6:: with SMTP id p93mr4065056pjp.182.1592582479643;
-        Fri, 19 Jun 2020 09:01:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g21sm6204847pfh.134.2020.06.19.09.01.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Jun 2020 09:01:19 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 09:01:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/261] 5.4.48-rc1 review
-Message-ID: <20200619160118.GA105163@roeck-us.net>
-References: <20200619141649.878808811@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 19 Jun 2020 11:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391971AbgFSPNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C44E0218AC;
+        Fri, 19 Jun 2020 15:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579587;
+        bh=xRG44M/nxXxzNVpGV9y7/mUYH/wmbZs1DNIosD6B1Q8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mI9zigY7BdjOMPPNcBCovac3/JFQbbtkrE6/pu/rotIw1MGVmSeXI9nH9UKbNaAfi
+         Ok305d6oZbhlooZa1v+DRl6OV/uzkBChuBxLn1a8ZiNaUstNFVSokeu4nD84QMs/Sy
+         I9RO7du/f1z1oAmcHIWjiLsr6ROoA2XBzYrocH0k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 161/261] btrfs: include non-missing as a qualifier for the latest_bdev
+Date:   Fri, 19 Jun 2020 16:32:52 +0200
+Message-Id: <20200619141657.605608876@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:30:11PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.48 release.
-> There are 261 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
-> Anything received after that time might be too late.
-> 
+From: Anand Jain <anand.jain@oracle.com>
 
-Building mips:defconfig ... failed
---------------
-Error log:
-arch/mips/mm/dma-noncoherent.c: In function 'cpu_needs_post_dma_flush':
-arch/mips/mm/dma-noncoherent.c:36:7: error: 'CPU_LOONGSON2EF' undeclared
+commit 998a0671961f66e9fad4990ed75f80ba3088c2f1 upstream.
 
-Also affects v4.19.y.queue, and causes almost all mips builds to fail.
+btrfs_free_extra_devids() updates fs_devices::latest_bdev to point to
+the bdev with greatest device::generation number.  For a typical-missing
+device the generation number is zero so fs_devices::latest_bdev will
+never point to it.
 
-Guenter
+But if the missing device is due to alienation [1], then
+device::generation is not zero and if it is greater or equal to the rest
+of device  generations in the list, then fs_devices::latest_bdev ends up
+pointing to the missing device and reports the error like [2].
+
+[1] We maintain devices of a fsid (as in fs_device::fsid) in the
+fs_devices::devices list, a device is considered as an alien device
+if its fsid does not match with the fs_device::fsid
+
+Consider a working filesystem with raid1:
+
+  $ mkfs.btrfs -f -d raid1 -m raid1 /dev/sda /dev/sdb
+  $ mount /dev/sda /mnt-raid1
+  $ umount /mnt-raid1
+
+While mnt-raid1 was unmounted the user force-adds one of its devices to
+another btrfs filesystem:
+
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt-single
+  $ btrfs dev add -f /dev/sda /mnt-single
+
+Now the original mnt-raid1 fails to mount in degraded mode, because
+fs_devices::latest_bdev is pointing to the alien device.
+
+  $ mount -o degraded /dev/sdb /mnt-raid1
+
+[2]
+mount: wrong fs type, bad option, bad superblock on /dev/sdb,
+       missing codepage or helper program, or other error
+
+       In some cases useful info is found in syslog - try
+       dmesg | tail or so.
+
+  kernel: BTRFS warning (device sdb): devid 1 uuid 072a0192-675b-4d5a-8640-a5cf2b2c704d is missing
+  kernel: BTRFS error (device sdb): failed to read devices
+  kernel: BTRFS error (device sdb): open_ctree failed
+
+Fix the root cause by checking if the device is not missing before it
+can be considered for the fs_devices::latest_bdev.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/volumes.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -1223,6 +1223,8 @@ again:
+ 							&device->dev_state)) {
+ 			if (!test_bit(BTRFS_DEV_STATE_REPLACE_TGT,
+ 			     &device->dev_state) &&
++			    !test_bit(BTRFS_DEV_STATE_MISSING,
++				      &device->dev_state) &&
+ 			     (!latest_dev ||
+ 			      device->generation > latest_dev->generation)) {
+ 				latest_dev = device;
+
+
