@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B68C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4256206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A483206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585075;
-	bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
+	s=default; t=1592585078;
+	bh=WY31jg+QTjwpvgTyqbJoQiR6KxR7XceZbkjxg2z4T+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRedqWeVk+pi2lluUVCewdWhocDmf6U+fKdiCpDE+1iBzXLCavDWPD1JwR4gzZ/mI
-	 eZ26G0Py3klAgtVpCd8hJUY4OvTszVZlvUi0ybajuoeRF8zhaHvz6SX/ik4bOs3kvJ
-	 P6zF2Ff3VkFOmVlDCER7q2YjgDlN/1b6zLz511lA=
+	b=Ht2LWfgwQs2iwuuPoX8ZbNwPTYR8z3I5UqlQICOr1LPWrzWrSrrRUPRn9J+osQsXj
+	 8AGcL/EvxxonfzlHPIeMQoXBT5ijgq5xdQ4Cr45ZcCTi7E+d1rSE46Ru4d/47ByvDk
+	 C7c0yctL6ACM7R1KG0vEKYeJqD0lhpt6VIjfTBUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbgFSQoe (ORCPT
+        id S2404476AbgFSQog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388095AbgFSOnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:07 -0400
+        id S2388437AbgFSOnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E1202168B;
-        Fri, 19 Jun 2020 14:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331B321582;
+        Fri, 19 Jun 2020 14:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577788;
-        bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
+        s=default; t=1592577785;
+        bh=WY31jg+QTjwpvgTyqbJoQiR6KxR7XceZbkjxg2z4T+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfoUg6eKXR0/ybKawEd16AymW+zu3hP6yiXXBgnyuvQT2Ac7d02BbPCkrflPhCPYp
-         AracQco/y1utrmAf8fX3IqcWfMp5EUL9kGKrE5An7MOdLMvZcXSPi6pPQ6WTHJ1OkY
-         lxVAiRpORL61Aef3/PiiF/kU+P55Qii5OmB6mozo=
+        b=dT4eticNx+oWIRpW7KzqA+KPvdQJdnJZu5upPFHols80qpQ3J+lj8gGIWWby+lDhy
+         BNCVkKcPcWh+/GozV1cAsIAz54B6wZuyeP+xj8gFgEls6bcD7+4Kkr8M3Z6BNPmK9H
+         WGAxNqfLcGrmCb0EnpGTQ3ixqp8gUrYyoHypUmH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 060/128] kgdb: Prevent infinite recursive entries to the debugger
-Date:   Fri, 19 Jun 2020 16:32:34 +0200
-Message-Id: <20200619141623.389129571@linuxfoundation.org>
+Subject: [PATCH 4.9 059/128] Bluetooth: Add SCO fallback for invalid LMP parameters error
+Date:   Fri, 19 Jun 2020 16:32:33 +0200
+Message-Id: <20200619141623.338855634@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,36 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Hsin-Yu Chao <hychao@chromium.org>
 
-[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
+[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
 
-If we detect that we recursively entered the debugger we should hack
-our I/O ops to NULL so that the panic() in the next line won't
-actually cause another recursion into the debugger.  The first line of
-kgdb_panic() will check this and return.
+Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
+with invalid parameter at the first SCO request expecting AG to
+attempt another SCO request with the use of "safe settings" for
+given codec, base on section 5.7.1.2 of HFP 1.7 specification.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
+to the SCO fallback case. Verified with below log:
+
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 13
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x0380
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Number of Completed Packets (0x13) plen 5
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
+        Handle: 0
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x00
+        Retransmission window: 0x02
+        RX packet length: 0
+        TX packet length: 0
+        Air mode: Transparent (0x03)
+< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
+        Handle: 256
+        Transmit bandwidth: 8000
+        Receive bandwidth: 8000
+        Max latency: 8
+        Setting: 0x0003
+          Input Coding: Linear
+          Input Data Format: 1's complement
+          Input Sample Size: 8-bit
+          # of bits padding at MSB: 0
+          Air Coding Format: Transparent Data
+        Retransmission effort: Optimize for link quality (0x02)
+        Packet type: 0x03c8
+          EV3 may be used
+          2-EV3 may not be used
+          3-EV3 may not be used
+          2-EV5 may not be used
+          3-EV5 may not be used
+> HCI Event: Command Status (0x0f) plen 4
+      Setup Synchronous Connection (0x01|0x0028) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 5
+> HCI Event: Max Slots Change (0x1b) plen 3
+        Handle: 256
+        Max slots: 1
+> HCI Event: Synchronous Connect Complete (0x2c) plen 17
+        Status: Success (0x00)
+        Handle: 257
+        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
+        Link type: eSCO (0x02)
+        Transmission interval: 0x06
+        Retransmission window: 0x04
+        RX packet length: 30
+        TX packet length: 30
+        Air mode: Transparent (0x03)
+
+Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 1 +
+ net/bluetooth/hci_event.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 79517e5549f1..9c939c6bf21c 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -443,6 +443,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
- 
- 	if (exception_level > 1) {
- 		dump_stack();
-+		kgdb_io_module_registered = false;
- 		panic("Recursive entry to debugger");
- 	}
- 
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 6f78489fdb13..a8aa3f29f2d6 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3775,6 +3775,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
+ 	case 0x11:	/* Unsupported Feature or Parameter Value */
+ 	case 0x1c:	/* SCO interval rejected */
+ 	case 0x1a:	/* Unsupported Remote Feature */
++	case 0x1e:	/* Invalid LMP Parameters */
+ 	case 0x1f:	/* Unspecified error */
+ 	case 0x20:	/* Unsupported LMP Parameter value */
+ 		if (conn->out) {
 -- 
 2.25.1
 
