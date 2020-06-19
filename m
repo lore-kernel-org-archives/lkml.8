@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22775C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BEE21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC7D2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578356;
-	bh=IZYrfs19SgeWWLKJuBShuVZ/GQEjl9mIxuLz473p+Ek=;
+	s=default; t=1592578371;
+	bh=+OZj2jAXCncu9wYrjju7ertIwwrHjJKhK6GfzfHwLvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2viq2HXMtn/s0UQlRUQD1yPobpb+MzRhtab171CRMdcZBMyOWs9vcFOjjZLR3JjTt
-	 TQ+OKBQaCFPnCOq9N/fzzlFxXCbFc5IWDu93WYz4Tg+N+5dA+lIDKeznaaUHfZTN0Q
-	 8TwFXpWz9dgP4UvdmRSisZsX/OWxriH2POfEAujc=
+	b=c8khZoOtJwEwgr8o2DjFlLrf6k1QCMefgzKRI3uUTQDrcl+DrR+TtgWa9LtO3bd1r
+	 KYLDqeJoDByy9agLJ/YcYKY/QqS9zqAnMKjdZo2gFJ1L+fpH9i3ScUB2p/NLN2rVVh
+	 NgtrjQ6oITbH55fNSBadA/F5RsKCP5/GtDk7TK8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389601AbgFSOwf (ORCPT
+        id S2389625AbgFSOwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389576AbgFSOw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:26 -0400
+        id S2389558AbgFSOwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0000217D8;
-        Fri, 19 Jun 2020 14:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA51217D8;
+        Fri, 19 Jun 2020 14:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578346;
-        bh=IZYrfs19SgeWWLKJuBShuVZ/GQEjl9mIxuLz473p+Ek=;
+        s=default; t=1592578338;
+        bh=+OZj2jAXCncu9wYrjju7ertIwwrHjJKhK6GfzfHwLvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GpL5EXoqMsZfB+Y5swzttKKN+7P2hCO6gdp4iIz9X9NNE/C8oTB9pfqewyeRBjX6g
-         pypRnIHBqG66HHDgXE/q/5I0XxhugCLmD/I86lthOxzyis+aSwMlkdYFq6j9l4z/BQ
-         ERB0DSGRBOe7xLIIxMm6jmQaXoXR8ZGlFy/JBcvU=
+        b=sYo2yjpIq7oSjJn1jVX+QBQSbNRfgydMa7Jn/9ena56ImmiwYEcSbZ/iJHhBoMDkh
+         wLDiGhNwvZUgK6Rz6rLFSJCG/cVaCPWJByXy7QlGYNStoJBUSZgEOU80vZpkxAhTvL
+         PPhTdXs4VhrnkaFdZc26HBE98ICJqymbJg0q3Jys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.14 177/190] kernel/cpu_pm: Fix uninitted local in cpu_pm
-Date:   Fri, 19 Jun 2020 16:33:42 +0200
-Message-Id: <20200619141642.631243538@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.14 175/190] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
+Date:   Fri, 19 Jun 2020 16:33:40 +0200
+Message-Id: <20200619141642.524269755@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -62,54 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit b5945214b76a1f22929481724ffd448000ede914 upstream.
+commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 upstream.
 
-cpu_pm_notify() is basically a wrapper of notifier_call_chain().
-notifier_call_chain() doesn't initialize *nr_calls to 0 before it
-starts incrementing it--presumably it's up to the callers to do this.
+We do need access_process_vm() to access the target's reg_window.
+However, access to caller's memory (storing the result in
+genregs32_get(), fetching the new values in case of genregs32_set())
+should be done by normal uaccess primitives.
 
-Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
-This potentially means you could get too many or two few calls to
-CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
-luck of the stack.
-
-Let's fix this.
-
-Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
-Cc: stable@vger.kernel.org
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sparc/kernel/ptrace_64.c |   17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
---- a/kernel/cpu_pm.c
-+++ b/kernel/cpu_pm.c
-@@ -89,7 +89,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_unregister_noti
-  */
- int cpu_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
- 
- 	ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
-@@ -140,7 +140,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_exit);
-  */
- int cpu_cluster_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
- 
- 	ret = cpu_pm_notify(CPU_CLUSTER_PM_ENTER, -1, &nr_calls);
+--- a/arch/sparc/kernel/ptrace_64.c
++++ b/arch/sparc/kernel/ptrace_64.c
+@@ -571,19 +571,13 @@ static int genregs32_get(struct task_str
+ 			for (; count > 0 && pos < 32; count--) {
+ 				if (access_process_vm(target,
+ 						      (unsigned long)
+-						      &reg_window[pos],
++						      &reg_window[pos++],
+ 						      &reg, sizeof(reg),
+ 						      FOLL_FORCE)
+ 				    != sizeof(reg))
+ 					return -EFAULT;
+-				if (access_process_vm(target,
+-						      (unsigned long) u,
+-						      &reg, sizeof(reg),
+-						      FOLL_FORCE | FOLL_WRITE)
+-				    != sizeof(reg))
++				if (put_user(reg, u++))
+ 					return -EFAULT;
+-				pos++;
+-				u++;
+ 			}
+ 		}
+ 	}
+@@ -683,12 +677,7 @@ static int genregs32_set(struct task_str
+ 			}
+ 		} else {
+ 			for (; count > 0 && pos < 32; count--) {
+-				if (access_process_vm(target,
+-						      (unsigned long)
+-						      u,
+-						      &reg, sizeof(reg),
+-						      FOLL_FORCE)
+-				    != sizeof(reg))
++				if (get_user(reg, u++))
+ 					return -EFAULT;
+ 				if (access_process_vm(target,
+ 						      (unsigned long)
 
 
