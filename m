@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D55C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE69A20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E324220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581904;
-	bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
+	s=default; t=1592581911;
+	bh=qViuOa0tFAuzGHOi+ZLjbhAYpuI3NFwXYEk9AAsSz0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztvK3zoWCT71tds6yq9hdNmB7wxhret1p1PIF8VD3to0+iQJjcUjAEEkTCcCNg1aU
-	 /K53kg7EMgc79v08XjOyF3EKrRsMuBHYHm92iTqg59SSXkF93TNE4s4pjOpYwqlMog
-	 7cMYg4NmZMm6qkNXDPVDfp7nUfVYAakr8wyyuFww=
+	b=P1MhrshXuJSMAp6kg0u/b7Ole2NRfNDixxNu7peQbLdh20kqM7SYN6OIzZxrDxykS
+	 Gb51my2IzFYU4s7Eo6WJgijCZ3fDqwy+kSs/7RsTVaA14ZuZpEVTdN1zECqGCMD1iY
+	 kUMd5xU75Z1T/4F0KfApaZOrbAq05EByXu8sUXMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405201AbgFSPvm (ORCPT
+        id S2405275AbgFSPvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55570 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392683AbgFSPX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:58 -0400
+        id S2390114AbgFSPXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80616217A0;
-        Fri, 19 Jun 2020 15:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C12321841;
+        Fri, 19 Jun 2020 15:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580237;
-        bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
+        s=default; t=1592580221;
+        bh=qViuOa0tFAuzGHOi+ZLjbhAYpuI3NFwXYEk9AAsSz0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiBuOxjwWI78AmHtQDiOy/8ukzkEOVN5BvI9bjCUdYiLkXppQI1A/2DEQaXDBa2GL
-         5KuCSMCFVbxNyjK3nCJap7Ufq58+l/ktusGUotFaZcFG7hC/Upi6W5MBcLE7jHdUB/
-         66Ms6TdnShvfX8oO4uNbyyncxEDAf83oknTOl1uA=
+        b=i5RI3Ca10qwjb5emS0co++8qMSpun46VLSDEfU8c3pZUzbedfU35oszQh/3ZSW25X
+         uRWnkRIIyMV9RPWhdDIXjn2BEu7XYo8lfJuISgRZhpBaapM5/IFh64VlGr2uQ3yQGr
+         h5KDWCQSRJ0+qypzo7xpfpR/x/r/f4v5ABJDsJK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <Mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 173/376] ath10k: Skip handling del_server during driver exit
-Date:   Fri, 19 Jun 2020 16:31:31 +0200
-Message-Id: <20200619141718.519617653@linuxfoundation.org>
+Subject: [PATCH 5.7 167/376] platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types
+Date:   Fri, 19 Jun 2020 16:31:25 +0200
+Message-Id: <20200619141718.227464841@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,94 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 7c6d67b136ceb0aebc7a3153b300e925ed915daf ]
+[ Upstream commit 1fac39fd0316b19c3e57a182524332332d1643ce ]
 
-The qmi infrastructure sends the client a del_server
-event when the client releases its qmi handle. This
-is not the msg indicating the actual qmi server exiting.
-In such cases the del_server msg should not be processed,
-since the wifi firmware does not reset its qmi state.
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+reporting SW_TABLET_MODE = 1 to userspace on laptops.
 
-Hence skip the processing of del_server event when the
-driver is unloading.
+Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report if they are in tablet mode (keyboard detached) or not,
+report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+The Dell Venue 11 Pro 7130 is an example of this.
 
-Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1588663061-12138-1-git-send-email-pillair@codeaurora.org
+Extend the DMI chassis-type check to also accept Portables and Detachables
+so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+
+Note the chassis-type check was originally added to avoid a false-positive
+tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+we still ignore the tablet-switch for that chassis-type.
+
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/qmi.c | 13 ++++++++++++-
- drivers/net/wireless/ath/ath10k/qmi.h |  6 ++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 85dce43c5439..7abdef8d6b9b 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -961,7 +961,16 @@ static void ath10k_qmi_del_server(struct qmi_handle *qmi_hdl,
- 		container_of(qmi_hdl, struct ath10k_qmi, qmi_hdl);
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 500fae82e12c..4921fc15dc6c 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -158,12 +158,22 @@ static void detect_tablet_mode(struct platform_device *device)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
+ {
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
- 	qmi->fw_ready = false;
--	ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT, NULL);
+-	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
++	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+ 		return false;
+ 
++	switch (chassis_type_int) {
++	case  8: /* Portable */
++	case 31: /* Convertible */
++	case 32: /* Detachable */
++		break;
++	default:
++		return false;
++	}
 +
-+	/*
-+	 * The del_server event is to be processed only if coming from
-+	 * the qmi server. The qmi infrastructure sends del_server, when
-+	 * any client releases the qmi handle. In this case do not process
-+	 * this del_server event.
-+	 */
-+	if (qmi->state == ATH10K_QMI_STATE_INIT_DONE)
-+		ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT,
-+					     NULL);
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
  }
- 
- static struct qmi_ops ath10k_qmi_ops = {
-@@ -1091,6 +1100,7 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size)
- 	if (ret)
- 		goto err_qmi_lookup;
- 
-+	qmi->state = ATH10K_QMI_STATE_INIT_DONE;
- 	return 0;
- 
- err_qmi_lookup:
-@@ -1109,6 +1119,7 @@ int ath10k_qmi_deinit(struct ath10k *ar)
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 	struct ath10k_qmi *qmi = ar_snoc->qmi;
- 
-+	qmi->state = ATH10K_QMI_STATE_DEINIT;
- 	qmi_handle_release(&qmi->qmi_hdl);
- 	cancel_work_sync(&qmi->event_work);
- 	destroy_workqueue(qmi->event_wq);
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
-index dc257375f161..b59720524224 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi.h
-@@ -83,6 +83,11 @@ struct ath10k_qmi_driver_event {
- 	void *data;
- };
- 
-+enum ath10k_qmi_state {
-+	ATH10K_QMI_STATE_INIT_DONE,
-+	ATH10K_QMI_STATE_DEINIT,
-+};
-+
- struct ath10k_qmi {
- 	struct ath10k *ar;
- 	struct qmi_handle qmi_hdl;
-@@ -105,6 +110,7 @@ struct ath10k_qmi {
- 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
- 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
- 	bool msa_fixed_perm;
-+	enum ath10k_qmi_state state;
- };
- 
- int ath10k_qmi_wlan_enable(struct ath10k *ar,
 -- 
 2.25.1
 
