@@ -2,76 +2,124 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E407AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 080762080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D60207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732372AbgFSKba (ORCPT
+        id S1732377AbgFSKg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732320AbgFSK2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:28:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EDCC0613EF;
-        Fri, 19 Jun 2020 03:28:06 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 425E12A51F9
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 1/7] dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
-Date:   Fri, 19 Jun 2020 12:27:51 +0200
-Message-Id: <20200619102757.1358675-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619102757.1358675-1-enric.balletbo@collabora.com>
-References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
+        Fri, 19 Jun 2020 06:36:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:51180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729195AbgFSKgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:36:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50909D6E;
+        Fri, 19 Jun 2020 03:36:24 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0EB03F71F;
+        Fri, 19 Jun 2020 03:36:22 -0700 (PDT)
+References: <20200618195525.7889-1-qais.yousef@arm.com> <20200618195525.7889-2-qais.yousef@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Fix initialization of strut uclamp_rq
+In-reply-to: <20200618195525.7889-2-qais.yousef@arm.com>
+Date:   Fri, 19 Jun 2020 11:36:17 +0100
+Message-ID: <jhjy2ojcpge.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The krane-sku176 is the Lenovo IdeaPad Duet Chromebook. A 2-in-1
-detachable device using the MediaTek MT8183 SoC.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+On 18/06/20 20:55, Qais Yousef wrote:
+> struct uclamp_rq was zeroed out entirely in assumption that in the first
+> call to uclamp_rq_inc() they'd be initialized correctly in accordance to
+> default settings.
+>
+> But when next patch introduces a static key to skip
+> uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
+> will fail to perform any frequency changes because the
+> rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
+> means all rqs are capped to 0 by default.
+>
+> Fix it by making sure we do proper initialization at init without
+> relying on uclamp_rq_inc() doing it later.
+>
+> Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+> Cc: Chris Redpath <chrid.redpath@arm.com>
+> Cc: Lukasz Luba <lukasz.luba@arm.com>
+> Cc: linux-kernel@vger.kernel.org
 
- Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Small nit below, otherwise:
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index abc544dde6920..30908963ae261 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -114,4 +114,9 @@ properties:
-           - enum:
-               - mediatek,mt8183-evb
-           - const: mediatek,mt8183
-+      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
-+        items:
-+          - const: google,krane-sku176
-+          - const: google,krane
-+          - const: mediatek,mt8183
- ...
--- 
-2.27.0
+> ---
+>  kernel/sched/core.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index a43c84c27c6f..e19d2b915406 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1248,6 +1248,20 @@ static void uclamp_fork(struct task_struct *p)
+>       }
+>  }
+>
+> +static void __init init_uclamp_rq(struct rq *rq)
+> +{
+> +	enum uclamp_id clamp_id;
+> +	struct uclamp_rq *uc_rq = rq->uclamp;
+> +
+> +	for_each_clamp_id(clamp_id) {
+> +		memset(uc_rq[clamp_id].bucket,
+> +		       0,
+> +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
+> +
+> +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
+> +	}
+> +}
+> +
+>  static void __init init_uclamp(void)
+>  {
+>       struct uclamp_se uc_max = {};
+> @@ -1257,8 +1271,7 @@ static void __init init_uclamp(void)
+>       mutex_init(&uclamp_mutex);
+>
+>       for_each_possible_cpu(cpu) {
+> -		memset(&cpu_rq(cpu)->uclamp, 0,
+> -				sizeof(struct uclamp_rq)*UCLAMP_CNT);
+> +		init_uclamp_rq(cpu_rq(cpu));
+>               cpu_rq(cpu)->uclamp_flags = 0;
 
+That flags assignment ought to be squashed in the init function as well -
+and actually you do that in patch 2, so I suppose that's a rebase accident.
+
+>       }
