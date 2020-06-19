@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692AC206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D42206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585139;
-	bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
+	s=default; t=1592585144;
+	bh=0ambyJKz5RjjLK0EaA4PkU3GfZROwDupON57dM5hrAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzeyQQSCPCg3T/ZmuumKjjVkOU5bV01XfTCvaOTlfvA4xOog9rqzySWiqMyyo2Bh8
-	 H89D9ckpWa0bDo9T7KjPJsIrk7IFo2ugvP90sAYtdre1YSp982PyzCd0vsMks1cTZZ
-	 +j3E0MS+D0jcupWWutt9QViX7Q3RRs+zVYLWcouo=
+	b=qe3/pIOs1jGxYC5zU20l4RY+57UPdx3/34EiSDsA9TN760PoeGl5DkklUPFn1N1E+
+	 le5oC35aimebfjvVBtaachHtJhUE2ghT08N4cUOvXQiL0f4Zi9zODeiE+G8nY4bYSv
+	 I19vHQWXB9rOh8i6IeY0oQdvU17+uuY1S/kftINA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404988AbgFSQpi (ORCPT
+        id S2388310AbgFSOl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:41:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388324AbgFSOmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:03 -0400
+        id S2388300AbgFSOlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4489121527;
-        Fri, 19 Jun 2020 14:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77EB321527;
+        Fri, 19 Jun 2020 14:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577723;
-        bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
+        s=default; t=1592577711;
+        bh=0ambyJKz5RjjLK0EaA4PkU3GfZROwDupON57dM5hrAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHnLZiZ4MS23H2UZmZ0mOBSI7NxogEazxpceEBPOri1A/1+UDfbdzwLPBvMpciM7i
-         xNEBwxd7NYHecEZ3WNQ6lE6BIczrlYV42fvk7qmsXQM3OZJk0ySDdfzvYLhRhPjnFL
-         uE1/Ovn8Tui6YmvRnhJ2Ntez6Gm1uUC1yjbwo4Bo=
+        b=1Xjz2tPXKNBsLtbQhRzgHKfxlDVw3L5cGLBrXwyEuPRJnnmrxVJP/uWq8+IS1lASB
+         SMvhWyzY4rCo3n3egf9ZcWLSsHtAHTBxcAfAWyzJA0Fke+BtmdZljalUucvcIhwAzr
+         e+VwjtvuU4kuCz0bLtwzzoRo5l+sXofQxwaZZiTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <jthierry@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 056/128] objtool: Ignore empty alternatives
-Date:   Fri, 19 Jun 2020 16:32:30 +0200
-Message-Id: <20200619141623.160513124@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 028/128] x86/speculation: PR_SPEC_FORCE_DISABLE enforcement for indirect branches.
+Date:   Fri, 19 Jun 2020 16:32:02 +0200
+Message-Id: <20200619141621.659073783@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,43 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <jthierry@redhat.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
+[ Upstream commit 4d8df8cbb9156b0a0ab3f802b80cb5db57acc0bf ]
 
-The .alternatives section can contain entries with no original
-instructions. Objtool will currently crash when handling such an entry.
+Currently, it is possible to enable indirect branch speculation even after
+it was force-disabled using the PR_SPEC_FORCE_DISABLE option. Moreover, the
+PR_GET_SPECULATION_CTRL command gives afterwards an incorrect result
+(force-disabled when it is in fact enabled). This also is inconsistent
+vs. STIBP and the documention which cleary states that
+PR_SPEC_FORCE_DISABLE cannot be undone.
 
-Just skip that entry, but still give a warning to discourage useless
-entries.
+Fix this by actually enforcing force-disabled indirect branch
+speculation. PR_SPEC_ENABLE called after PR_SPEC_FORCE_DISABLE now fails
+with -EPERM as described in the documentation.
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 9137bb27e60e ("x86/speculation: Add prctl() control for indirect branch speculation")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/kernel/cpu/bugs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b0b8ba9b800c..c7399d7f4bc7 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -778,6 +778,12 @@ static int add_special_section_alts(struct objtool_file *file)
- 		}
- 
- 		if (special_alt->group) {
-+			if (!special_alt->orig_len) {
-+				WARN_FUNC("empty alternative entry",
-+					  orig_insn->sec, orig_insn->offset);
-+				continue;
-+			}
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 2ab65f0ec56d..85c1cc0305f3 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1257,11 +1257,14 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
+ 			return 0;
+ 		/*
+ 		 * Indirect branch speculation is always disabled in strict
+-		 * mode.
++		 * mode. It can neither be enabled if it was force-disabled
++		 * by a  previous prctl call.
 +
- 			ret = handle_group_alt(file, special_alt, orig_insn,
- 					       &new_insn);
- 			if (ret)
+ 		 */
+ 		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
+ 		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED ||
++		    task_spec_ib_force_disable(task))
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
 -- 
 2.25.1
 
