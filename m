@@ -2,55 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F96C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6670A20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACEF20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581988;
-	bh=PI6MDFFIcWCnzETZAKrPKSBq6YXasMhrToqFuqcZkQ8=;
+	s=default; t=1592581992;
+	bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSEHsyfT334T7m1SH3op7jFqh33D5zYGyd9rmUEFdzZ60XX+KoCC1+gcnXlUEctW6
-	 rfdvUMcRAZE0TjEBiNtmrdOnaVChTl1vPkbei0fhFvPLcHBmdtIV8H2NAZ09SdrdzG
-	 RqZwW9O6tLgyiDOu1WkYtZpA0F0uj22dlFCGcCpo=
+	b=PNoOjO00Woh11Q/Ilm7UpmElwwj5MBa3LIwudJE1liO8PMtXShylz/GRzWMvyn8Xd
+	 OsXJyFGmBwzL5krRgsHFx2d/lg89JTCa38WuYtQbhrlTB7grCA1VGxIB7R+19T1C/3
+	 PXyDapO+ooVcvZgfxW7PwmB8qS/Tz6/lovX5aY2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393056AbgFSPWp (ORCPT
+        id S2405391AbgFSPxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45942 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392412AbgFSPPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:25 -0400
+        id S2393060AbgFSPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB4A4206DB;
-        Fri, 19 Jun 2020 15:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5099521582;
+        Fri, 19 Jun 2020 15:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579724;
-        bh=PI6MDFFIcWCnzETZAKrPKSBq6YXasMhrToqFuqcZkQ8=;
+        s=default; t=1592580166;
+        bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4tCTNzQro3vdgJm9C3QowtzsfXGHYWT8ebfrwoj9cl42Kt2rv1O3RTl9frPYGWbQ
-         6Fqje3L4Dy0hFRvwS5YQ/IqH/4/CyYj8sYSPzVEWJ2XAUQvO41NP0lbhidIm2EDoxb
-         8DTDEz3Kav0g0VZGawB8MtYMWbUpLyXA13PYUQok=
+        b=QTc5I4Om2noozQ3boEG8qJ0UWsmYL5G9sli9tLKSoY4po8tlHXlN4on86+7OWrNJ9
+         19MjHr5/NqcCPEmPxgEpGydNTKocUQv1vlRZTlXQhbtnAd4yAjdxnNLk/23QJkbRTS
+         8RyJXZw4Vbikih1vVtwB5fm/boSgdS4JyriKbb84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 242/261] mtd: rawnand: brcmnand: fix hamming oob layout
-Date:   Fri, 19 Jun 2020 16:34:13 +0200
-Message-Id: <20200619141701.480701977@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 117/376] ath11k: use GFP_ATOMIC under spin lock
+Date:   Fri, 19 Jun 2020 16:30:35 +0200
+Message-Id: <20200619141715.884913816@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Álvaro Fernández Rojas <noltari@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 130bbde4809b011faf64f99dddc14b4b01f440c3 upstream.
+[ Upstream commit 69c93f9674c97dc439cdc0527811f8ad104c2e35 ]
 
-First 2 bytes are used in large-page nand.
+A spin lock is taken here so we should use GFP_ATOMIC.
 
-Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200512075733.745374-2-noltari@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200427092417.56236-1-weiyongjun1@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -1019,11 +1019,14 @@ static int brcmnand_hamming_ooblayout_fr
- 		if (!section) {
- 			/*
- 			 * Small-page NAND use byte 6 for BBI while large-page
--			 * NAND use byte 0.
-+			 * NAND use bytes 0 and 1.
- 			 */
--			if (cfg->page_size > 512)
--				oobregion->offset++;
--			oobregion->length--;
-+			if (cfg->page_size > 512) {
-+				oobregion->offset += 2;
-+				oobregion->length -= 2;
-+			} else {
-+				oobregion->length--;
-+			}
- 		}
- 	}
+diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
+index f74a0e74bf3e..34b1e8e6a7fb 100644
+--- a/drivers/net/wireless/ath/ath11k/dp_rx.c
++++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
+@@ -892,7 +892,7 @@ int ath11k_peer_rx_tid_setup(struct ath11k *ar, const u8 *peer_mac, int vdev_id,
+ 	else
+ 		hw_desc_sz = ath11k_hal_reo_qdesc_size(DP_BA_WIN_SZ_MAX, tid);
  
+-	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_KERNEL);
++	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_ATOMIC);
+ 	if (!vaddr) {
+ 		spin_unlock_bh(&ab->base_lock);
+ 		return -ENOMEM;
+-- 
+2.25.1
+
 
 
