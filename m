@@ -2,142 +2,145 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E55C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680E5206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD3E206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="wvaHmbVc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvwgYKtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbgFSTpP (ORCPT
+        id S2390253AbgFSTqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
+        Fri, 19 Jun 2020 15:46:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389877AbgFSTpM (ORCPT
+        with ESMTP id S2389005AbgFSTqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:45:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C04C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:45:10 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q2so8369232wrv.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 12:45:10 -0700 (PDT)
+        Fri, 19 Jun 2020 15:46:16 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86ED8C06174E;
+        Fri, 19 Jun 2020 12:46:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j1so4864107pfe.4;
+        Fri, 19 Jun 2020 12:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qa/SGQ5p7b66E33hW6+x88Sl1GCC1UqRDbxtplLHMyo=;
-        b=wvaHmbVc03z8sxgT5+NeeKq3DtEy5tOUopJ7aMUNhvLSMwsgffuoLV2dQPsd8V4kqj
-         8ts2lc6IPfPipbb7WWOFp4dHelewrAYPn4gKiratsUGrHGmu4dDfqDZHH1aWt7m3MY5/
-         eTAiR8q6MNyw901TqZbnZnp0NFFOCfE2e/+S0=
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uycxWZsh8kXOgvUY6V8WFigSegpe6Uug5YxuPV8BuXw=;
+        b=dvwgYKtbAHl6Wc3/JNJoE3RFqqWkwatSlAw/rZFBzbnISjQeYP3Co/8xtuY+5ahqmS
+         2H1IADoCCxh9rg7MYrFMQyz1A9Q5NmUFgQDY8a6ihSfXJ3sT3z3/h5XRuCMIEnQG6l+f
+         fHlkHNq4/pauNltTFnfQdA/GPKQ9jxAVzDsXfmH45M/XdiGP8DpmSZzoZJkOyhI5APSp
+         MIqeyuMsuCps7d/uIJffsQE3Yzp/VYuF4R6Kr2DGeVj25qMamp94LcorliCDXNeuJXkA
+         ENjDud1Iw8HDBj7pvRtfGSjwFJcuQRTX4TeBO+vA9Y74zteAaw+prREFYP9sLTPKh5Qy
+         G/4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qa/SGQ5p7b66E33hW6+x88Sl1GCC1UqRDbxtplLHMyo=;
-        b=WFpu9yW+ETyv1xB17XKrKekWduBiWTavHozU6N2yirb/9Z4iRYh5M4rcUraYwBFs66
-         lHU3DkxL1q+dp2duqsZzBKNYFE6qItyBzCOZxCsMKyslYq/VL53fpb+pyUUjlCdmm33T
-         rwyluFys4DDfDHslngNKSfTqCQzPNNiqkJB/D6BrgsbIi5zrHUXfMwf9GPYDbOiRTZGt
-         YIo3F9RqhQpU8hY+xeRqQmWWr1t3p/OPdA9gu0NmEeS2bNqZEbUF0eFpi04fVIsvIuZ/
-         wTRnrDQlZrnzVtLMkqQSAj3YVGgM2Cdy5Yp3q/ieFCoePFcYtvy4lUFnaKY+vCteynBB
-         WNgA==
-X-Gm-Message-State: AOAM532gvCGDYzWKBPIkRMvnNGzWZMOwgoZVkNyswsPWLlqOSgik/Lkm
-        EzU1WnC83J9I0AfurBZGPingiw0hFtluY9c8dXB4xA==
-X-Google-Smtp-Source: ABdhPJxbC6lp4MxQf0dfsCqDKCB2VGeC8/eWBp3p6IZm0evbtMuNDv3X63KOzuz2U5svP/1Vk0NdYx1m+kIGwkUHFrc=
-X-Received: by 2002:adf:958a:: with SMTP id p10mr5367723wrp.323.1592595908766;
- Fri, 19 Jun 2020 12:45:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619164132.1648-1-ignat@cloudflare.com> <20200619165548.GA24779@redhat.com>
- <alpine.LRH.2.02.2006191429060.23991@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.02.2006191429060.23991@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Ignat Korchagin <ignat@cloudflare.com>
-Date:   Fri, 19 Jun 2020 20:44:58 +0100
-Message-ID: <CALrw=nEBjfV5e35z89Nxy0Gix1SeLyGOP5pvxF8xS0Wy7XfDYw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] dm-crypt excessive overhead
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mike Snitzer <snitzer@redhat.com>, agk@redhat.com,
-        dm-devel@redhat.com, dm-crypt@saout.de,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uycxWZsh8kXOgvUY6V8WFigSegpe6Uug5YxuPV8BuXw=;
+        b=EE5DP9r7a2nyPdH9S8QA9sEZ7evFRkfrdhWHTHEtjxtEdSUvWFaFENItha9mqjyPY7
+         5FT3P+nXGkG+tkK2+gFOm5oLU+mhzee4KAXfmw4IDmArQXcLffxWuItG92IFeayHGa8T
+         bUPZ9h2iOA0cL5E1CZxoE3d4bBtvePxeyJgaYrh2RbaXQv/uyb6KvAxHjie2794Uq7hd
+         UVJGvzbCekemrroTM127DEh4eAQDP3OPchiEvepUeNzgzRsQBAeBAS5rlyDlBpRzaamw
+         etDfmJtuUP3q6/z2H5kI/vfJGH6a91ADYvvLRRHCTylS1lh1+ar1CYiJ4bi7Cnb+1zVG
+         QdDg==
+X-Gm-Message-State: AOAM532sjmM50OaZFOGx6KlYRVhjxvMGTYjcH0KIHelwRkDl7VNb/YBZ
+        jopN75spZWum/CK3I6pZEis=
+X-Google-Smtp-Source: ABdhPJzGkWDxM2It2kwRNz1bHPQlJQm0CGjM9y0/T9u/T3f48GJqwbp8RSzphbVHaQrw5MFbYyh3MQ==
+X-Received: by 2002:a62:ed02:: with SMTP id u2mr9259644pfh.283.1592595974783;
+        Fri, 19 Jun 2020 12:46:14 -0700 (PDT)
+Received: from ?IPv6:2601:647:4700:9b2:f471:e6bc:7ad4:bb29? ([2601:647:4700:9b2:f471:e6bc:7ad4:bb29])
+        by smtp.gmail.com with ESMTPSA id y10sm6933627pfq.34.2020.06.19.12.46.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jun 2020 12:46:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [kvm-unit-tests PATCH] x86: pmu: Test full-width counter writes
+ support
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <1272fbd7-3ff1-5eac-e9e2-78b824fbc4e0@redhat.com>
+Date:   Fri, 19 Jun 2020 12:46:12 -0700
+Cc:     Thomas Huth <thuth@redhat.com>, Like Xu <like.xu@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <A2E707BF-BF31-4B96-9181-881B5E496938@gmail.com>
+References: <20200529074347.124619-1-like.xu@linux.intel.com>
+ <20200529074347.124619-4-like.xu@linux.intel.com>
+ <b1a5472b-f7d0-82b0-e753-dabf81254488@redhat.com>
+ <1272fbd7-3ff1-5eac-e9e2-78b824fbc4e0@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 7:39 PM Mikulas Patocka <mpatocka@redhat.com> wrote:
->
->
->
-> On Fri, 19 Jun 2020, Mike Snitzer wrote:
->
-> > On Fri, Jun 19 2020 at 12:41pm -0400,
-> > Ignat Korchagin <ignat@cloudflare.com> wrote:
-> >
-> > > This is a follow up from the long-forgotten [1], but with some more convincing
-> > > evidence. Consider the following script:
-> > >
-> > > [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
-> > > [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
-> > >
-> > > Ignat Korchagin (1):
-> > >   Add DM_CRYPT_FORCE_INLINE flag to dm-crypt target
-> > >
-> > >  drivers/md/dm-crypt.c | 55 +++++++++++++++++++++++++++++++++----------
-> > >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > >
-> > > --
-> > > 2.20.1
-> > >
-> >
-> > Hi,
-> >
-> > I saw [2] and have been expecting something from cloudflare ever since.
-> > Nice to see this submission.
-> >
-> > There is useful context in your 0th patch header.  I'll likely merge
-> > parts of this patch header with the more terse 1/1 header (reality is
-> > there only needed to be a single patch submission).
-> >
-> > Will review and stage accordingly if all looks fine to me.  Mikulas,
-> > please have a look too.
-> >
-> > Thanks,
-> > Mike
->
-> +       if (test_bit(DM_CRYPT_FORCE_INLINE, &cc->flags)) {
-> +               if (in_irq()) {
-> +                       /* Crypto API will fail hard in hard IRQ context */
-> +                       tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
-> +                       tasklet_schedule(&io->tasklet);
-> +               } else
-> +                       kcryptd_crypt(&io->work);
-> +       } else {
-> +               INIT_WORK(&io->work, kcryptd_crypt);
-> +               queue_work(cc->crypt_queue, &io->work);
-> +       }
->
-> I'm looking at this and I'd like to know why does the crypto API fail in
-> hard-irq context and why does it work in tasklet context. What's the exact
-> reason behind this?
+> On Jun 16, 2020, at 5:28 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> 
+> On 16/06/20 12:49, Thomas Huth wrote:
+>> On 29/05/2020 09.43, Like Xu wrote:
+>>> When the full-width writes capability is set, use the alternative MSR
+>>> range to write larger sign counter values (up to GP counter width).
+>>> 
+>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>>> ---
+>>> lib/x86/msr.h |   1 +
+>>> x86/pmu.c     | 125 ++++++++++++++++++++++++++++++++++++++++----------
+>>> 2 files changed, 102 insertions(+), 24 deletions(-)
+>> [...]
+>>> @@ -452,6 +468,66 @@ static void check_running_counter_wrmsr(void)
+>>> 	report_prefix_pop();
+>>> }
+>>> 
+>>> +static void check_counters(void)
+>>> +{
+>>> +	check_gp_counters();
+>>> +	check_fixed_counters();
+>>> +	check_rdpmc();
+>>> +	check_counters_many();
+>>> +	check_counter_overflow();
+>>> +	check_gp_counter_cmask();
+>>> +	check_running_counter_wrmsr();
+>>> +}
+>>> +
+>>> +static void do_unsupported_width_counter_write(void *index)
+>>> +{
+>>> +	wrmsr(MSR_IA32_PMC0 + *((int *) index), 0xffffff0123456789ull);
+>>> +}
+>>> +
+>>> +static void  check_gp_counters_write_width(void)
+>>> +{
+>>> +	u64 val_64 = 0xffffff0123456789ull;
+>>> +	u64 val_32 = val_64 & ((1ul << 32) - 1);
+>> Hi,
+>> 
+>> this broke compilation on 32-bit hosts:
+>> 
+>> https://travis-ci.com/github/huth/kvm-unit-tests/jobs/349654654#L710
+>> 
+>> Fix should be easy, I guess - either use 1ull or specify the mask
+>> 0xffffffff directly.
+> 
+> Or
+> 
+> u64 val_32 = (u64)(u32) val_64;
+> 
+> I'll send a patch.
 
-This comes from
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/crypto/skcipher.c?id=5e857ce6eae7ca21b2055cca4885545e29228fe2#n433
-And, I believe, it is there for the same reason kcryptd was introduced
-in 2005 in dm-crypt:
-"...because it would be very unwise to do decryption in an interrupt
-context..." (that is, when other interrupts are disabled). In tasklet
-however we can still service other interrupts even if we process a
-large block.
+I missed this correspondence, but while running the tests on 32-bit I
+encountered two additional cases of wrong masks that caused failures.
 
->
->
-> Mikulas
+I have sent a separate patch for your consideration.
+
