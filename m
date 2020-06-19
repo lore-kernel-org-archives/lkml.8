@@ -2,72 +2,86 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA27AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E143C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B98206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91EA20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+p8djyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgFSFBg (ORCPT
+        id S1728430AbgFSFCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:01:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14185 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFSFBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:01:36 -0400
-IronPort-SDR: MocMuL/9lNNc1ijMTHYSJ39gQs9Wxz5xuPIwlxtrhTe1J6DXtrsdhbbZnr4FejoMXHt7LPLmvn
- rN8+mO8cW8Zw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204331536"
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="204331536"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 22:01:34 -0700
-IronPort-SDR: WazQLo6m3SlU/AjORBRiflOgPm2Lt9diJX/sDwzGKeT1jjBOF85UWA+Wo4polTMx9xpzmmKI8s
- tNUInU+6Om3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="262213168"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.249.171.195]) ([10.249.171.195])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Jun 2020 22:01:30 -0700
-Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5%
- regression
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200319023819.GO11705@shao2-debian>
- <20200612110616.20264-1-hdanton@sina.com>
- <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com>
- <20200615081041.GA16990@vingu-book>
- <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com>
- <20200616065432.GA18401@vingu-book>
- <3de4937b-1dcd-6d2e-836f-fed1c295dd7c@linux.intel.com>
- <20200617145725.GA12524@vingu-book> <20200617162558.GA3253@vingu-book>
- <451eabaf-c425-8e05-f5d4-3074c867cea6@linux.intel.com>
- <CAKfTPtCSGcx0_0b7PTWPNi9LnGqCCTpt4zswOBumVgr7CWAJbQ@mail.gmail.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <26e38288-8f7c-4c22-d0ca-7e9236e94c94@linux.intel.com>
-Date:   Fri, 19 Jun 2020 13:01:29 +0800
+        Fri, 19 Jun 2020 01:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgFSFCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 01:02:03 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86720C06174E;
+        Thu, 18 Jun 2020 22:02:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k2so3585329pjs.2;
+        Thu, 18 Jun 2020 22:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SiDB1J01wn7pLbZQ7NN544CR9V1CL0STkwNstWzaeL0=;
+        b=Q+p8djyOFrojiC/CZXUfS2ozp4zwZo8x4pCbOFnDoDovi3kHP3dyPWsIZ8H7cf1cBM
+         X8NZycMVklwlkXQ1DPTKMhKcaAo7+GIb2XPh36gbjYSLX8GE5wxKV6GxuTAKLUsqLqia
+         6A2sz7QFWkjFescqu915j41GpLDPr0JfGAa0OArqggX4OcHp0q9HT9Gm7lMlSaCKfvCe
+         3CpJFenzu8paxoAomHeGIZgJByHJVKtfNCBIrTjZyketYTEa7RguWc3mXhyBdwJDAXGW
+         Wv0wVANE4WTiJN+HWgvQMp3rPKCNhO1gT1LqGMxhe1O5G+y1Uhkp26jhYdz75Y3ipGtp
+         D9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SiDB1J01wn7pLbZQ7NN544CR9V1CL0STkwNstWzaeL0=;
+        b=TdAUg/Mse5srkZX8FAfnS+RS8osM9pKIAYMYvtWe6P+ymqZRuhE62weGyF1dDky6Gb
+         cKI2uvQVfvRfZr6Hr37qgrjf3C9S/+mVeH+WOXfqLrN8yUugmYuF5mxno7lTAeboZY7f
+         4wttvrqUFnq9rN7UXAbGso4J3n+KcuWpLLVMJYbBpIBRlO6KtBZ3S6KsHVqO7zFkqPnv
+         T6SJUKVMdDZqHLOfJxp9azi0G9PxbVbzDnbOsna5Y4yQAKPliYxW6q0i1lC1GDakr3en
+         47ys1x848oBsiR5kg8UB7Oi+Z82LKe6xNBMlEuavNCg6kUIL04CGdwAWa7JktiGA1kjF
+         IFfQ==
+X-Gm-Message-State: AOAM530nFw7vRYW2JMRoDHrWEY/PDnFJVB+9H2YDttU215vK9ZCRDHzk
+        FZrYR1YMMB/NuPBUP4RCYGU=
+X-Google-Smtp-Source: ABdhPJzzw16q71O4BfPkHNLVa5OmqTfgAuceKUIEfpvaV41w5KPGLKxCaBtIOZhpdXHXEx6EQJD3wQ==
+X-Received: by 2002:a17:902:e901:: with SMTP id k1mr6599989pld.92.1592542921858;
+        Thu, 18 Jun 2020 22:02:01 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i63sm3992094pje.34.2020.06.18.22.01.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 22:02:00 -0700 (PDT)
+Subject: Re: [PATCH v5 2/3] dt-bindings: net: mscc-vsc8531: add optional clock
+ properties
+To:     Heiko Stuebner <heiko@sntech.de>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+References: <20200618121139.1703762-1-heiko@sntech.de>
+ <20200618121139.1703762-3-heiko@sntech.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a877e41d-4c3c-c4c2-1875-71e1e08cf977@gmail.com>
+Date:   Thu, 18 Jun 2020 22:01:58 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCSGcx0_0b7PTWPNi9LnGqCCTpt4zswOBumVgr7CWAJbQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200618121139.1703762-3-heiko@sntech.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,144 +89,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/18/2020 8:35 PM, Vincent Guittot wrote:
-> On Thu, 18 Jun 2020 at 04:45, Xing Zhengjun
-> <zhengjun.xing@linux.intel.com> wrote:
->>
->>
->>
+On 6/18/2020 5:11 AM, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
->>>>
->>>> This bench forks a new thread for each and every new step. But a newly forked
->>>> threads start with a load_avg and a runnable_avg set to max whereas the threads
->>>> are running shortly before exiting. This makes the CPU to be set overloaded in
->>>> some case whereas it isn't.
->>>>
->>>> Could you try the patch below ?
->>>> It fixes the problem on my setup (I have finally been able to reproduce the problem)
->>>>
->>>> ---
->>>>    kernel/sched/fair.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index 0aeffff62807..b33a4a9e1491 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -807,7 +807,7 @@ void post_init_entity_util_avg(struct task_struct *p)
->>>>               }
->>>>       }
->>>>
->>>> -    sa->runnable_avg = cpu_scale;
->>>> +    sa->runnable_avg = sa->util_avg;
->>>>
->>>>       if (p->sched_class != &fair_sched_class) {
->>>>               /*
->>>> --
->>>> 2.17.1
->>>>
->>>
->>> The patch above tries to move back to the group in the same classification as
->>> before but this could harm other benchmarks.
->>>
->>> There is another way to fix this by easing the migration of task in the case
->>> of migrate_util imbalance.
->>>
->>> Could you also try the patch below instead of the one above ?
->>>
->>> ---
->>>    kernel/sched/fair.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index 0aeffff62807..fcaf66c4d086 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -7753,7 +7753,8 @@ static int detach_tasks(struct lb_env *env)
->>>                case migrate_util:
->>>                        util = task_util_est(p);
->>>
->>> -                     if (util > env->imbalance)
->>> +                     if (util/2 > env->imbalance &&
->>> +                         env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
->>>                                goto next;
->>>
->>>                        env->imbalance -= util;
->>> --
->>> 2.17.1
->>>
->>>
->>
->> I apply the patch based on v5.7, the test result is as the following:
->>
->> =========================================================================================
->> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
->>
->> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
->>
->> commit:
->>     9f68395333ad7f5bfe2f83473fed363d4229f11c
->>     070f5e860ee2bf588c99ef7b4c202451faa48236
->>     v5.7
->>     69c81543653bf5f2c7105086502889fa019c15cb  (the test patch)
->>
->> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
->> 69c81543653bf5f2c7105086502
->> ---------------- --------------------------- ---------------------------
->> ---------------------------
->>            %stddev     %change         %stddev     %change
->> %stddev     %change         %stddev
->>                \          |                \          |                \
->>           |                \
->>         0.69           -10.3%       0.62            -9.1%       0.62
->>         -7.6%       0.63        reaim.child_systime
->>         0.62            -1.0%       0.61            +0.5%       0.62
->>         +1.9%       0.63        reaim.child_utime
->>        66870           -10.0%      60187            -7.6%      61787
->>         -5.9%      62947        reaim.jobs_per_min
+> Some mscc ethernet phys have a configurable clock output, so describe the
+> generic properties to access them in devicetrees.
 > 
-> There is an improvement but not at the same level as on my setup.
-> I'm not sure with patch you tested here. Is it the last one that
-> modify detach_tasks() or the previous one that modify
-> post_init_entity_util_avg() ?
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-It is the last one that modify detach_tasks().
-
-> Could you also try the other one ? Both patches were improving results
-> on y setup but the behavior doesn't seem to be the same on your setup.
+> diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> index 5ff37c68c941..67625ba27f53 100644
+> --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> @@ -1,6 +1,8 @@
+>  * Microsemi - vsc8531 Giga bit ethernet phy
+>  
+>  Optional properties:
+> +- clock-output-names	: Name for the exposed clock output
+> +- #clock-cells		: should be 0
+>  - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
+>  			  in the first row of Table 1 (below).
+>  			  This property is only used in combination
 > 
 
-The test result for the other one has been sent in another mail.
-
-> 
->>        16717           -10.0%      15046            -7.6%      15446
->>         -5.9%      15736        reaim.jobs_per_min_child
->>        97.84            -1.1%      96.75            -0.4%      97.43
->>         -0.4%      97.47        reaim.jti
->>        72000           -10.8%      64216            -8.3%      66000
->>         -5.7%      67885        reaim.max_jobs_per_min
->>         0.36           +10.6%       0.40            +7.8%       0.39
->>         +6.0%       0.38        reaim.parent_time
->>         1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ±
->> 2%     +23.6%       1.95 ±  3%  reaim.std_dev_percent
->>         0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ±
->> 7%     +43.2%       0.01 ±  5%  reaim.std_dev_time
->>        50800            -2.4%      49600            -1.6%      50000
->>         -0.8%      50400        reaim.workload
->>
->>
->>>>
->>>>
-> ...
->>>>>>>
->>>>>>> --
->>>>>>> Zhengjun Xing
->>>>>
->>>>> --
->>>>> Zhengjun Xing
->>
->> --
->> Zhengjun Xing
-
+With that approach, you also need to be careful as a driver writer to
+ensure that you have at least probed the MDIO bus to ensure that the PHY
+device has been created (and therefore it is available as a clock
+provider) if that same Ethernet MAC is a consumer of that clock (which
+it appears to be). Otherwise you may just never probe and be trapped in
+a circular dependency.
 -- 
-Zhengjun Xing
+Florian
