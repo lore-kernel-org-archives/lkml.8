@@ -2,114 +2,113 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4944EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4529217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ArowfuHI"
+	by mail.kernel.org (Postfix) with ESMTP id 1F92B217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584034;
+	bh=8KQ6F9AGxL2T42f0+XH1LoTkGMUB/lUMpUpOwjWB4Ck=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OIqFdQKQ2NAWj0pADYUEbBsIZiJjagFI+5wzHeA/QqgAPNhMlM3zX/MHAVTYVom0E
+	 zxnxuoCzROrJd50fqvmS2KZSWtErNjdNVN9SRwZUGSJkDvVAJ5iPcrlrHtXGS0A9sM
+	 jWXS85xYh/MvHv+YWTAQPQqXPrNmcYCdgaZB45L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394868AbgFSQ1F (ORCPT
+        id S2394874AbgFSQ1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:27:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50666 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390094AbgFSQ1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:27:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGQwFp077473;
-        Fri, 19 Jun 2020 11:26:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592584018;
-        bh=chC6pirnioIvgefBUFNtXHQtUPYlAklhZc784jj70us=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ArowfuHI6C+C60biqKWTfyl8YL+yIj+CQXlacknyNJoGoC5aBrxqwc430yoERWj5o
-         LRkyN0+EiGJGLJCpts/A1g1DYAKteUAAtwIs2IYdpqQ3cfDxn+WfJUtn1GnVO63OPa
-         Gzv3rMy0NkgRSacNTQKWXKbnaQsq2kw01jBdNDhY=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGQwrQ058946;
-        Fri, 19 Jun 2020 11:26:58 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
- Jun 2020 11:26:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 19 Jun 2020 11:26:57 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGQtMA051337;
-        Fri, 19 Jun 2020 11:26:56 -0500
-Subject: Re: [PATCH 0/2] arm64: dts: ti: k3: add platforms chipid module nodes
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Dave Gerlach <d-gerlach@ti.com>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200613164346.28852-1-grygorii.strashko@ti.com>
- <8b8f7f92-571d-4a44-4858-7d79676a6375@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <1dcd2e6c-924d-8151-8100-0b42f154a59c@ti.com>
-Date:   Fri, 19 Jun 2020 19:26:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 12:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390064AbgFSO4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD962184D;
+        Fri, 19 Jun 2020 14:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578583;
+        bh=8KQ6F9AGxL2T42f0+XH1LoTkGMUB/lUMpUpOwjWB4Ck=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jEh/Teq90J+1+QaGXJ3W4BjuB6MLzTavHoeJG/bcpjSJ+tz8kOEPzJ6hltIlq9pZ3
+         S2Z7qGmVnk6/TRkxcF6Y1Wy7t3k5HHVWfYoovk52iiL0mrdekGPrGqnoHjJBEf2BhR
+         ICGJSRh0Ao+MuAZ/fbEKrtrkGj1DUB99P+GSbU+s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 077/267] scsi: megaraid_sas: TM command refire leads to controller firmware crash
+Date:   Fri, 19 Jun 2020 16:31:02 +0200
+Message-Id: <20200619141652.584476677@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <8b8f7f92-571d-4a44-4858-7d79676a6375@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Sumit Saxena <sumit.saxena@broadcom.com>
+
+commit 6fd8525a70221c26823b1c7e912fb21f218fb0c5 upstream.
+
+When TM command times out, driver invokes the controller reset. Post reset,
+driver re-fires pended TM commands which leads to firmware crash.
+
+Post controller reset, return pended TM commands back to OS.
+
+Link: https://lore.kernel.org/r/20200508085242.23406-1-chandrakanth.patil@broadcom.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -3940,6 +3940,7 @@ void megasas_refire_mgmt_cmd(struct mega
+ 	struct fusion_context *fusion;
+ 	struct megasas_cmd *cmd_mfi;
+ 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc;
++	struct MPI2_RAID_SCSI_IO_REQUEST *scsi_io_req;
+ 	u16 smid;
+ 	bool refire_cmd = 0;
+ 	u8 result;
+@@ -3990,6 +3991,11 @@ void megasas_refire_mgmt_cmd(struct mega
+ 			break;
+ 		}
+ 
++		scsi_io_req = (struct MPI2_RAID_SCSI_IO_REQUEST *)
++				cmd_fusion->io_request;
++		if (scsi_io_req->Function == MPI2_FUNCTION_SCSI_TASK_MGMT)
++			result = RETURN_CMD;
++
+ 		switch (result) {
+ 		case REFIRE_CMD:
+ 			megasas_fire_cmd_fusion(instance, req_desc);
+@@ -4187,7 +4193,6 @@ megasas_issue_tm(struct megasas_instance
+ 	if (!timeleft) {
+ 		dev_err(&instance->pdev->dev,
+ 			"task mgmt type 0x%x timed out\n", type);
+-		cmd_mfi->flags |= DRV_DCMD_SKIP_REFIRE;
+ 		mutex_unlock(&instance->reset_mutex);
+ 		rc = megasas_reset_fusion(instance->host, MFI_IO_TIMEOUT_OCR);
+ 		mutex_lock(&instance->reset_mutex);
 
 
-On 15/06/2020 10:47, Peter Ujfalusi wrote:
-> Hi Grygorii,
-> 
-> On 13/06/2020 19.43, Grygorii Strashko wrote:
->> Hi Tero,
->>
->> Hence k3 platforms chipid module driver was merged, there is follow up series
->> to add corresponding DT chipid nodes.
->>
->> [1] https://lkml.org/lkml/2020/5/29/979
->>
->> Grygorii Strashko (2):
->>    arm64: dts: ti: k3-am65-wakeup: add k3 platforms chipid module node
->>    arm64: dts: ti: k3-j721e-mcu-wakeup: add k3 platforms chipid module node
-> 
-> Can you also send a patch to enable the socinfo build?
-
-Posted.
-
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 8dd05b2a925c..1d3710e3626a 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -98,6 +98,7 @@ config ARCH_K3
->   	select TI_SCI_PROTOCOL
->   	select TI_SCI_INTR_IRQCHIP
->   	select TI_SCI_INTA_IRQCHIP
-> +	select TI_K3_SOCINFO
->   	help
->   	  This enables support for Texas Instruments' K3 multicore SoC
->   	  architecture.
-> 
-> With this added:
-> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tero: FYI. There is no dependecies for this series.
-
-Best regards,
-grygorii
