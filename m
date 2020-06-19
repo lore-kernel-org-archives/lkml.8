@@ -2,53 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15896C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3E921531
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC3621531
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582437;
-	bh=YS/1+C5Gc/aYgEcSiM1bzy5ILHrf1WyuBfOZNkmRka0=;
+	s=default; t=1592582443;
+	bh=r6EliizRfhM4+8HlSDWbsKnzlj+GEis6zN/fAjxUXHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVncWZf5XOyIm88h7CDklXI3EqPqVz17AAjKarhb5l/utioa8f+6ShNwpbuE/u20w
-	 IjE/TNFhiagz5LHv2SYnIPSWQJhtKd4FGSMSL+Y2sXfT+fab7EzdYuhAhjOj8pnyge
-	 VaTgQWW0Wva35woVZxThVDfcT017sIxgkbr/J97w=
+	b=1LPkTZOw7RqJYH3DalPKKc9tLW37IxLAXFcetq2EBdzE4xVUiSdgxMQLg6LGfD6p1
+	 Oz8R40cl0KPgDMn1mtPI0rLAz3NUZypjD+JTgThv5/rjSI2nvrEHNlpaKyopEUbkYY
+	 LmOmpfkplTas43yD3LIBahZDCrYregPdcGMIDcVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391602AbgFSQAe (ORCPT
+        id S2403929AbgFSQAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403987AbgFSPO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:29 -0400
+        id S2403975AbgFSPOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA6B62186A;
-        Fri, 19 Jun 2020 15:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66FDB21582;
+        Fri, 19 Jun 2020 15:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579668;
-        bh=YS/1+C5Gc/aYgEcSiM1bzy5ILHrf1WyuBfOZNkmRka0=;
+        s=default; t=1592579663;
+        bh=r6EliizRfhM4+8HlSDWbsKnzlj+GEis6zN/fAjxUXHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UiDO+F1vImqFvDHSQSW5BlF8JtyE0Xdpbzi9VelaDdfGi04rCsxT7Vw0B544nMtz1
-         b1unFmumjXbSVjbj1+LzwI1IwXaJLKoxmTyh7wbXA1KdeQEpD3NaqpeXlX5ly57eZV
-         SImQPSwqeurtSBju+1Newh7agib9BgtG2grOetvs=
+        b=noGss0IcfIKeqn0ncwBHL1Z7p2AO+3HDBjRocwqEMx14Tfn4QwSw3c/UTZESoZLXV
+         nig7xfhcq/c6Gk+Aamh0+e2M1wFYbvMTNEu0vZNVO4Z89ZuMhs7PNAS+TFC2qn9THg
+         0zwZA3OrqSm7EpKmy2Qq4a1f8/sVaPbYPmM6at50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 191/261] serial: 8250_pci: Move Pericom IDs to pci_ids.h
-Date:   Fri, 19 Jun 2020 16:33:22 +0200
-Message-Id: <20200619141659.055686659@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.4 218/261] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
+Date:   Fri, 19 Jun 2020 16:33:49 +0200
+Message-Id: <20200619141700.328510834@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,59 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 62a7f3009a460001eb46984395280dd900bc4ef4 ]
+commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 upstream.
 
-Move the IDs to pci_ids.h so it can be used by next patch.
+We do need access_process_vm() to access the target's reg_window.
+However, access to caller's memory (storing the result in
+genregs32_get(), fetching the new values in case of genregs32_set())
+should be done by normal uaccess primitives.
 
-Link: https://lore.kernel.org/r/20200508065343.32751-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/tty/serial/8250/8250_pci.c | 6 ------
- include/linux/pci_ids.h            | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/sparc/kernel/ptrace_64.c |   17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index 8a01d034f9d1..7cad66eb39ff 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -1871,12 +1871,6 @@ pci_moxa_setup(struct serial_private *priv,
- #define PCIE_DEVICE_ID_WCH_CH384_4S	0x3470
- #define PCIE_DEVICE_ID_WCH_CH382_2S	0x3253
- 
--#define PCI_VENDOR_ID_PERICOM			0x12D8
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
--
- #define PCI_VENDOR_ID_ACCESIO			0x494f
- #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
- #define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1dfc4e1dcb94..9a57e6717e5c 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1832,6 +1832,12 @@
- #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
- #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
- 
-+#define PCI_VENDOR_ID_PERICOM			0x12D8
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
-+
- #define PCI_SUBVENDOR_ID_CHASE_PCIFAST		0x12E0
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST4		0x0031
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST8		0x0021
--- 
-2.25.1
-
+--- a/arch/sparc/kernel/ptrace_64.c
++++ b/arch/sparc/kernel/ptrace_64.c
+@@ -572,19 +572,13 @@ static int genregs32_get(struct task_str
+ 			for (; count > 0 && pos < 32; count--) {
+ 				if (access_process_vm(target,
+ 						      (unsigned long)
+-						      &reg_window[pos],
++						      &reg_window[pos++],
+ 						      &reg, sizeof(reg),
+ 						      FOLL_FORCE)
+ 				    != sizeof(reg))
+ 					return -EFAULT;
+-				if (access_process_vm(target,
+-						      (unsigned long) u,
+-						      &reg, sizeof(reg),
+-						      FOLL_FORCE | FOLL_WRITE)
+-				    != sizeof(reg))
++				if (put_user(reg, u++))
+ 					return -EFAULT;
+-				pos++;
+-				u++;
+ 			}
+ 		}
+ 	}
+@@ -684,12 +678,7 @@ static int genregs32_set(struct task_str
+ 			}
+ 		} else {
+ 			for (; count > 0 && pos < 32; count--) {
+-				if (access_process_vm(target,
+-						      (unsigned long)
+-						      u,
+-						      &reg, sizeof(reg),
+-						      FOLL_FORCE)
+-				    != sizeof(reg))
++				if (get_user(reg, u++))
+ 					return -EFAULT;
+ 				if (access_process_vm(target,
+ 						      (unsigned long)
 
 
