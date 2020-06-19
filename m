@@ -2,148 +2,87 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70706C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8076C206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585177;
-	bh=nf6WbXus/fRJsbsMaoNzI2UGOISYEAtpLYyvozpfqfY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syYCe7xLQuOt520+XrqA7Otr3y9+Bbk0aLC9pIapQj0ZnTxY5nkuYA+O+C7PRJUfe
-	 gn7H+j9B3VSwQ+GY5sT+fMfuqzHZoucR9Ms/VrHzu7o2pRQFvbndoMULl08sn1/M3z
-	 9hTd5LrnuJx47p58IiQk7XeOHqj2+aaDg+HLIjxM=
+	by mail.kernel.org (Postfix) with ESMTP id 53FAB204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405126AbgFSQqQ (ORCPT
+        id S2405150AbgFSQqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388278AbgFSOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539D320A8B;
-        Fri, 19 Jun 2020 14:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577697;
-        bh=nf6WbXus/fRJsbsMaoNzI2UGOISYEAtpLYyvozpfqfY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9+ciDKziNgZa/IkZug6IKeIxQoUTkeQholgIknAek2KS0ggzqi+TGkNmsaLlOTy6
-         CZFgttQFK/TH+kYVIQYxSyqwAoLIIlfAUb2a7YFg0SzBDUG6g63HTiyduXzmoeSUaI
-         R7xyA4kQ0FlVCadI5BiYAKJxRJLwlUcnFhARGpKU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 025/128] x86/speculation: Change misspelled STIPB to STIBP
-Date:   Fri, 19 Jun 2020 16:31:59 +0200
-Message-Id: <20200619141621.505130315@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
-References: <20200619141620.148019466@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405038AbgFSQqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:46:03 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A593C0613F0;
+        Fri, 19 Jun 2020 09:46:02 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jmK9Q-00044M-DH; Fri, 19 Jun 2020 18:46:00 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0D6B81C032F;
+        Fri, 19 Jun 2020 18:46:00 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 16:45:59 -0000
+From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: efi/urgent] efi/libstub: Fix missing-prototype warning for
+ skip_spaces()
+Cc:     Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <159258515978.16989.8538680304687702182.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+The following commit has been merged into the efi/urgent branch of tip:
 
-[ Upstream commit aa77bfb354c495fc4361199e63fc5765b9e1e783 ]
+Commit-ID:     24552d10339f13d2174e013002da3ed90e26adda
+Gitweb:        https://git.kernel.org/tip/24552d10339f13d2174e013002da3ed90e26adda
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Mon, 15 Jun 2020 12:31:14 +02:00
+Committer:     Ard Biesheuvel <ardb@kernel.org>
+CommitterDate: Mon, 15 Jun 2020 19:43:58 +02:00
 
-STIBP stands for Single Thread Indirect Branch Predictors. The acronym,
-however, can be easily mis-spelled as STIPB. It is perhaps due to the
-presence of another related term - IBPB (Indirect Branch Predictor
-Barrier).
+efi/libstub: Fix missing-prototype warning for skip_spaces()
 
-Fix the mis-spelling in the code.
+Include <linux/string.h> into skip_spaces.c to silence a compiler
+warning about a missing prototype.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1544039368-9009-1-git-send-email-longman@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/cpu/bugs.c | 6 +++---
- arch/x86/kernel/process.h  | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/firmware/efi/libstub/skip_spaces.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 5ef0a2b34261..704ffc01a226 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -60,7 +60,7 @@ static u64 __ro_after_init x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
- u64 __ro_after_init x86_amd_ls_cfg_base;
- u64 __ro_after_init x86_amd_ls_cfg_ssbd_mask;
+diff --git a/drivers/firmware/efi/libstub/skip_spaces.c b/drivers/firmware/efi/libstub/skip_spaces.c
+index a700b3c..159fb4e 100644
+--- a/drivers/firmware/efi/libstub/skip_spaces.c
++++ b/drivers/firmware/efi/libstub/skip_spaces.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
--/* Control conditional STIPB in switch_to() */
-+/* Control conditional STIBP in switch_to() */
- DEFINE_STATIC_KEY_FALSE(switch_to_cond_stibp);
- /* Control conditional IBPB in switch_mm() */
- DEFINE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
-@@ -749,12 +749,12 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 			"always-on" : "conditional");
- 	}
+ #include <linux/ctype.h>
++#include <linux/string.h>
+ #include <linux/types.h>
  
--	/* If enhanced IBRS is enabled no STIPB required */
-+	/* If enhanced IBRS is enabled no STIBP required */
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	/*
--	 * If SMT is not possible or STIBP is not available clear the STIPB
-+	 * If SMT is not possible or STIBP is not available clear the STIBP
- 	 * mode.
- 	 */
- 	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
-index 898e97cf6629..320ab978fb1f 100644
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -19,7 +19,7 @@ static inline void switch_to_extra(struct task_struct *prev,
- 	if (IS_ENABLED(CONFIG_SMP)) {
- 		/*
- 		 * Avoid __switch_to_xtra() invocation when conditional
--		 * STIPB is disabled and the only different bit is
-+		 * STIBP is disabled and the only different bit is
- 		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
- 		 * in the TIF_WORK_CTXSW masks.
- 		 */
--- 
-2.25.1
-
-
-
+ char *skip_spaces(const char *str)
