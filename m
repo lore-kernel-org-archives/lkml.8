@@ -2,390 +2,156 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B95208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9ED208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SConi2qe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbgFSNNk (ORCPT
+        id S1732622AbgFSNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:13:40 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:34417 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgFSNNg (ORCPT
+        Fri, 19 Jun 2020 09:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730977AbgFSNNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:13:36 -0400
-Received: by mail-lj1-f174.google.com with SMTP id x18so11432592lji.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:13:33 -0700 (PDT)
+        Fri, 19 Jun 2020 09:13:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2C2C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:13:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so7697116wrm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6UFNoVkVHTZErq2JtCJe5vBxdIIAUeTxaBKUEdnLeKM=;
+        b=SConi2qeGRAGuNLdtIm23QSPOAFACg3QXM3YdAQis7gAzJxIdD8+ZzQGF0ZlPVYDTC
+         POzOonq9u7WSfC+X1tyMD1XD5xRMIHWzDEHPotqLvh5xhx8RtkbVW4xz3GgcfrL+2lhV
+         SUOUIGLgG7MabFFIr8SMJA2QRHhUHwYY4qTd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iV0NmQFNmutz16eLhCxLK2NGxLJ1R4f6BmCpmiGCcRI=;
-        b=PoyH9IYJaZdO34/7YYADnnLsBmuL/VSArK4gj5Tq+J5+yEStV1MUfhq45yJpKsZqBL
-         S9zCi1slEYf7gEcZlI/JxfFTvllYDiWgvu9aNq0PIFMBwwR7XB34HARmvV6SVcKjL30F
-         yT8ki7Eqah3l397lLTyl1zoz4NyucnuiW2vqUcYbDAqYq2s3RgWtHsgh98XfQOjxb0v2
-         bpS1j3EgUHZyAYVhKLxZ+I+RuSB9DjaqOU1uDVtY2da0QnQ0gMC0d7qqvhOJYsF0olZu
-         wVd/CnDj7uw97kYoetiFKwlBlDsE/kbpjCucjaPS1I9COsAuOUWk1siBaSNfLZEpugG0
-         fVqQ==
-X-Gm-Message-State: AOAM531JHerhF5/u+egaG305U9iekczfyvOl3yu3O6ssAPhOuD+UiwDN
-        I9ZQTGYz0e7DJuhtpDP6Q/0=
-X-Google-Smtp-Source: ABdhPJzlROh8KIXLkHt/491HrtKLzb6gOrUq5Fv4YONck9smbYsRMHNTZwfntEHqFmog64dvMEBVnQ==
-X-Received: by 2002:a2e:6f19:: with SMTP id k25mr1705672ljc.247.1592572412343;
-        Fri, 19 Jun 2020 06:13:32 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.137.195])
-        by smtp.googlemail.com with ESMTPSA id p19sm1170166lji.113.2020.06.19.06.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 06:13:31 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <garsilva@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3] coccinelle: misc: add array_size_dup script to detect missed overflow checks
-Date:   Fri, 19 Jun 2020 16:13:13 +0300
-Message-Id: <20200619131313.15468-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
-References: <20200615102045.4558-1-efremov@linux.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6UFNoVkVHTZErq2JtCJe5vBxdIIAUeTxaBKUEdnLeKM=;
+        b=N7PIrXxdAAzauXf5ujVDlnnCsdfjsTdBJgueH8/98mz31n15X7UqGIuRjUpuQT7E9l
+         sgrFTcOeEN1G8onEuSgt5PBqieG2mmWHvA/EkTkhMaryBSebmtG/m4rQDzdoV/Pa8jQ/
+         ktTVCcZh0LWY0Vg14DmjbrkcSnYLxWo53N12RRO47MQ85ho+poMQ8Iqk0HWNVyfAtLUz
+         LSkkGOi5f4GaytObUXT1QGbJjPC4Eo9phggH7Nz6tSa/oDte3JLodNVaOYtd+cgPRacy
+         qgBoFAK7tDwxSeJFBcXL0VOzjfcyK+o4ParoArR5N6kfw5iDTT6AnDX+wwgT5wK5Umpu
+         6t1g==
+X-Gm-Message-State: AOAM533KG9AvsbA+pAwGoGNMpHzOQ5iPxLqEuirvZTG8C8IDGYuUJrpd
+        Xu9h3c9sCzyfiY+OnFmq8mcCuwdyeKY6Q0T7ZWge6w==
+X-Google-Smtp-Source: ABdhPJwXqMeHG4k19RmjN1x/uYLq/BiSiI4EM1nMy3AVv6eLoy7FJH0ywzEFP6e55HlgtVBSrMacOTA3AQPzP/hcIzw=
+X-Received: by 2002:adf:afc7:: with SMTP id y7mr4002099wrd.173.1592572424114;
+ Fri, 19 Jun 2020 06:13:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200520125616.193765-1-kpsingh@chromium.org> <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
+In-Reply-To: <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Fri, 19 Jun 2020 15:13:32 +0200
+Message-ID: <CACYkzJ5e_JOLS-gmNug6e4RJkSsv7sjMUfMWyfMCsQLSoxS8RQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Peter Zijlstra <peterz@infradead.org>, jpoimboe@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detect an opencoded expression that is used before or after
-array_size()/array3_size()/struct_size() to compute the same size.
+Hi,
 
-Cc: Gustavo A. R. Silva <garsilva@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Changes in v2:
- - python rules moved next to SmPL patterns
- - assignment operator used
- - struct_size patterns fixed to check only E3, since
-   E1, E2 are sizeofs of a structure and a member
-   of a structure
-Changes in v3:
- - s/overlow/overflow/ typo fixed (thanks, Markus)
- - \(&E1\|&E2\) changed to &\(E1\|E2\)
- - print strings breaks removed
+On Fri, Jun 19, 2020 at 2:49 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> On Wed, May 20, 2020 at 2:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > secid_to_secctx is not stackable, and since the BPF LSM registers this
+> > hook by default, the call_int_hook logic is not suitable which
+> > "bails-on-fail" and casues issues when other LSMs register this hook and
+> > eventually breaks Audit.
+> >
+> > In order to fix this, directly iterate over the security hooks instead
+> > of using call_int_hook as suggested in:
+> >
+> > https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
+> >
+> > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> > Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
+> > Reported-by: Alexei Starovoitov <ast@kernel.org>
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> [...]
+>
+> Sorry for being late to the party, but doesn't this (and the
+> associated default return value patch) just paper over a bigger
+> problem? What if I have only the BPF LSM enabled and I attach a BPF
+> program to this hook that just returns 0? Doesn't that allow anything
+> privileged enough to do this to force the kernel to try and send
+> memory from uninitialized pointers to userspace and/or copy such
+> memory around and/or free uninitialized pointers?
+>
+> Why on earth does the BPF LSM directly expose *all* of the hooks, even
+> those that are not being used for any security decisions (and are
+> "useful" in this context only for borking the kernel...)? Feel free to
+> prove me wrong, but this lazy approach of "let's just take all the
+> hooks as they are and stick BPF programs to them" doesn't seem like a
 
- scripts/coccinelle/misc/array_size_dup.cocci | 297 +++++++++++++++++++
- 1 file changed, 297 insertions(+)
- create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
+The plan was definitely to not hook everywhere but only call the hooks
+that do have a BPF program registered. This was one of the versions
+we proposed in the initial patches where the call to the BPF LSM was
+guarded by a static key with it being enabled only when there's a
+BPF program attached to the hook.
 
-diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
-new file mode 100644
-index 000000000000..d03740257e97
---- /dev/null
-+++ b/scripts/coccinelle/misc/array_size_dup.cocci
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Check for array_size(), array3_size(), struct_size() duplicates.
-+/// Three types of patterns for these functions:
-+///  1. An opencoded expression is used before array_size() to compute the same size
-+///  2. An opencoded expression is used after array_size() to compute the same size
-+///  3. Consecutive calls of array_size() with the same values
-+/// From security point of view only first case is relevant. These functions
-+/// perform arithmetic overflow check. Thus, if we use an opencoded expression
-+/// before a call to the *_size() function we can miss an overflow.
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers --no-loops
-+
-+virtual context
-+virtual report
-+virtual org
-+
-+@as@
-+expression E1, E2;
-+@@
-+
-+array_size(E1, E2)
-+
-+@as_next@
-+expression subE1 <= as.E1;
-+expression subE2 <= as.E2;
-+expression as.E1, as.E2, E3;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2@p1
-+  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
-+      when != &\(E1\|E2\|subE1\|subE2\)
-+* array_size(E1, E2)@p2
-+
-+@script:python depends on report@
-+p1 << as_next.p1;
-+p2 << as_next.p2;
-+@@
-+
-+coccilib.report.print_report(p1[0],
-+f"WARNING: array_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << as_next.p1;
-+p2 << as_next.p2;
-+@@
-+
-+coccilib.org.print_todo(p1[0],
-+f"WARNING: array_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@as_prev@
-+expression subE1 <= as.E1;
-+expression subE2 <= as.E2;
-+expression as.E1, as.E2, E3;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array_size(E1, E2)@p1
-+  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
-+      when != &\(E1\|E2\|subE1\|subE2\)
-+* E1 * E2@p2
-+
-+@script:python depends on report@
-+p1 << as_prev.p1;
-+p2 << as_prev.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: array_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << as_prev.p1;
-+p2 << as_prev.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: array_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@as_dup@
-+expression subE1 <= as.E1;
-+expression subE2 <= as.E2;
-+expression as.E1, as.E2, E3;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array_size(E1, E2)@p1
-+  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
-+      when != &\(E1\|E2\|subE1\|subE2\)
-+* array_size(E1, E2)@p2
-+
-+@script:python depends on report@
-+p1 << as_dup.p1;
-+p2 << as_dup.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: same array_size (line {p1[0].line})")
-+
-+@script:python depends on org@
-+p1 << as_dup.p1;
-+p2 << as_dup.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: same array_size (line {p1[0].line})")
-+
-+@as3@
-+expression E1, E2, E3;
-+@@
-+
-+array3_size(E1, E2, E3)
-+
-+@as3_next@
-+expression subE1 <= as3.E1;
-+expression subE2 <= as3.E2;
-+expression subE3 <= as3.E3;
-+expression as3.E1, as3.E2, as3.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2 * E3@p1
-+  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
-+      when != &\(E1\|E2\|E3\|subE1\|subE2\|subE3\)
-+* array3_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << as3_next.p1;
-+p2 << as3_next.p2;
-+@@
-+
-+coccilib.report.print_report(p1[0],
-+f"WARNING: array3_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << as3_next.p1;
-+p2 << as3_next.p2;
-+@@
-+
-+coccilib.org.print_todo(p1[0],
-+f"WARNING: array3_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@as3_prev@
-+expression subE1 <= as3.E1;
-+expression subE2 <= as3.E2;
-+expression subE3 <= as3.E3;
-+expression as3.E1, as3.E2, as3.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array3_size(E1, E2, E3)@p1
-+  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
-+      when != &\(E1\|E2\|E3\|subE1\|subE2\|subE3\)
-+* E1 * E2 * E3@p2
-+
-+@script:python depends on report@
-+p1 << as3_prev.p1;
-+p2 << as3_prev.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: array3_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << as3_prev.p1;
-+p2 << as3_prev.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: array3_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@as3_dup@
-+expression subE1 <= as3.E1;
-+expression subE2 <= as3.E2;
-+expression subE3 <= as3.E3;
-+expression as3.E1, as3.E2, as3.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array3_size(E1, E2, E3)@p1
-+  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
-+      when != &\(E1\|E2\|E3\|subE1\|subE2\|subE3\)
-+* array3_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << as3_dup.p1;
-+p2 << as3_dup.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: same array3_size (line {p1[0].line})")
-+
-+@script:python depends on org@
-+p1 << as3_dup.p1;
-+p2 << as3_dup.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: same array3_size (line {p1[0].line})")
-+
-+@ss@
-+expression E1, E2, E3;
-+@@
-+
-+struct_size(E1, E2, E3)
-+
-+@ss_next@
-+expression subE3 <= ss.E3;
-+expression ss.E1, ss.E2, ss.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2 + E3@p1
-+  ... when != \(E3\|subE3\) aop E4
-+      when != &\(E3\|subE3\)
-+* struct_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << ss_next.p1;
-+p2 << ss_next.p2;
-+@@
-+
-+coccilib.report.print_report(p1[0],
-+f"WARNING: struct_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << ss_next.p1;
-+p2 << ss_next.p2;
-+@@
-+
-+coccilib.org.print_todo(p1[0],
-+f"WARNING: struct_size is used down the code (line {p2[0].line}) to compute the same size")
-+
-+@ss_prev@
-+expression subE3 <= ss.E3;
-+expression ss.E1, ss.E2, ss.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* struct_size(E1, E2, E3)@p1
-+  ... when != \(E3\|subE3\) aop E4
-+      when != &\(E3\|subE3\)
-+* E1 * E2 + E3@p2
-+
-+@script:python depends on report@
-+p1 << ss_prev.p1;
-+p2 << ss_prev.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: struct_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@script:python depends on org@
-+p1 << ss_prev.p1;
-+p2 << ss_prev.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: struct_size is already used (line {p1[0].line}) to compute the same size")
-+
-+@ss_dup@
-+expression subE3 <= ss.E3;
-+expression ss.E1, ss.E2, ss.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* struct_size(E1, E2, E3)@p1
-+  ... when != \(E3\|subE3\) aop E4
-+      when != &\(E3\|subE3\)
-+* struct_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << ss_dup.p1;
-+p2 << ss_dup.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+f"WARNING: same struct_size (line {p1[0].line})")
-+
-+@script:python depends on org@
-+p1 << ss_dup.p1;
-+p2 << ss_dup.p2;
-+@@
-+
-+coccilib.org.print_todo(p2[0],
-+f"WARNING: same struct_size (line {p1[0].line})")
--- 
-2.26.2
+https://lore.kernel.org/bpf/20200220175250.10795-5-kpsingh@chromium.org/
 
+However, this special-cased BPF in the LSM framework, and, was met
+with opposition. Our plan is to still achieve this, but we want to do this
+with DEFINE_STATIC_CALL patches:
+
+https://lore.kernel.org/lkml/cover.1547073843.git.jpoimboe@redhat.com
+
+Using these, only can we enable the call into the hook based on whether
+a program is attached, we can also eliminate the indirect call overhead which
+currently affects the "slow" way which was decided in the discussion:
+
+https://lore.kernel.org/bpf/202002241136.C4F9F7DFF@keescook/
+
+> good choice... IMHO you should either limit the set of hooks that can
+> be attached to only those that aren't used to return back values via
+
+I am not sure if limiting the hooks is required here once we have
+the ability to call into BPF only when a program is attached. If the
+the user provides a BPF program, deliberately returns 0 (or any
+other value) then it is working as intended. Even if we limit this in the
+bpf LSM, deliberate privileged users can still achieve this with
+other means.
+
+- KP
+
+> pointers, or (if you really really need to do some state
+> updates/logging in those hooks) use wrapper functions that will call
+> the BPF progs via a simplified interface so that they cannot cause
+> unsafe behavior.
+>
+> --
+> Ondrej Mosnacek
+> Software Engineer, Platform Security - SELinux kernel
+> Red Hat, Inc.
+>
