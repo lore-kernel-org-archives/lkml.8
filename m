@@ -2,269 +2,296 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C807DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE0D21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C964208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592587250;
+	bh=O6Ls3nz5ZZ8Ld/NXIMTYeDa8YaVfv0pLiQ7EYte+DkU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=HIbx/e4iXwSSWOUuDbmjTos5jFz27f74bMrBg1Nis+/CkanFC/uubVZq/YV+20T2Q
+	 h8LlEYxLsXwdKZorvFMGKCI35tOL1nwajDDaDwmzX6TOs8wHNKhtJXHrAq/AA/ZnKv
+	 OjK6PyXa3y1nexJF+bUMybwZHYdJmr1eWxf/DD+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391441AbgFSRUq (ORCPT
+        id S2391996AbgFSRUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:20:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:49154 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 13:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgFSRUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:20:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA4B111B3;
-        Fri, 19 Jun 2020 10:20:43 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36BAE3F71F;
-        Fri, 19 Jun 2020 10:20:42 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] sched/uclamp: Protect uclamp fast path code with static key
-Date:   Fri, 19 Jun 2020 18:20:11 +0100
-Message-Id: <20200619172011.5810-3-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619172011.5810-1-qais.yousef@arm.com>
-References: <20200619172011.5810-1-qais.yousef@arm.com>
+        id S1725788AbgFSRUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:20:48 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F42720809;
+        Fri, 19 Jun 2020 17:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592587247;
+        bh=O6Ls3nz5ZZ8Ld/NXIMTYeDa8YaVfv0pLiQ7EYte+DkU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ti+VeUrcjZf/wjCSg1mAQKFqN02V/oOLDP7SjIW0KxgP1zjaJhO/fJfWDv897L9xJ
+         6o4/n/L4Y7RTLST/YsyhW9uv8HJnZ+J2pM3rNiTOgm4KDQqxE+AXzet+P/s3We2a8r
+         P9i4KePTpkLR0KXPW95BPSgMf9L9ebs5B1AgLOU8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1815935229B4; Fri, 19 Jun 2020 10:20:47 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 10:20:47 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, frederic@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        npiggin@gmail.com
+Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
+Message-ID: <20200619172047.GK2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200615125654.678940605@infradead.org>
+ <20200615162330.GF2723@paulmck-ThinkPad-P72>
+ <20200615164048.GC2531@hirez.programming.kicks-ass.net>
+ <20200615172149.GJ2723@paulmck-ThinkPad-P72>
+ <20200615191158.GK2531@hirez.programming.kicks-ass.net>
+ <20200616170410.GL2554@hirez.programming.kicks-ass.net>
+ <20200616171721.GM2554@hirez.programming.kicks-ass.net>
+ <20200619134423.GB577403@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619134423.GB577403@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a report that when uclamp is enabled, a netperf UDP test
-regresses compared to a kernel compiled without uclamp.
+On Fri, Jun 19, 2020 at 03:44:23PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 16, 2020 at 07:17:21PM +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 16, 2020 at 07:04:10PM +0200, Peter Zijlstra wrote:
+> > > [19324.795303] ------------[ cut here ]------------
+> > > [19324.795304] WARNING: CPU: 10 PID: 76 at kernel/smp.c:138 __smp_call_single_queue+0x40/0x50
+> > > [19324.795305] Modules linked in:
+> > > [19324.795306] CPU: 10 PID: 76 Comm: ksoftirqd/10 Not tainted 5.8.0-rc1+ #8
+> > > [19324.795307] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+> > > [19324.795307] RIP: 0010:__smp_call_single_queue+0x40/0x50
+> > > [19324.795308] Code: c2 40 91 02 00 4c 89 e6 4c 89 e7 48 03 14 c5 e0 56 2d b4 e8 b2 3a 2f 00 84 c0 75 04 5d 41 5c c3 89 ef 5d 41 5c e9 40 af f9 ff <0f> 0b eb cd 66 66 2e 0f 1f 84 00 00 00 00 00 90 41 54 49 89 f4 55
+> > > [19324.795309] RSP: 0000:ffffb3cb4030bd18 EFLAGS: 00010046
+> > > [19324.795310] RAX: 000000000000000a RBX: 0000000000000000 RCX: 00000000ffffffff
+> > > [19324.795310] RDX: 00000000000090aa RSI: ffffffffb420bc3f RDI: ffffffffb4232e3e
+> > > [19324.795311] RBP: 000000000000000a R08: 00001193646cd91c R09: ffff93c1df49c008
+> > > [19324.795312] R10: ffffb3cb4030bdf8 R11: 000000000000032e R12: ffff93c1dbed5b30
+> > > [19324.795312] R13: ffff93c1df4a8340 R14: 000000000000000a R15: ffff93c1df2e8340
+> > > [19324.795313] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
+> > > [19324.795313] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [19324.795314] CR2: 00000000ffffffff CR3: 000000001e40a000 CR4: 00000000000006e0
+> > > [19324.795315] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [19324.795315] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > [19324.795316] Call Trace:
+> > > [19324.795316]  ttwu_queue_wakelist+0xa4/0xc0
+> > > [19324.795316]  try_to_wake_up+0x432/0x530
+> > 
+> > This is indeed WF_ON_CPU... it had to be, but how ?!
+> 
+> So my latest theory is that we have a memory ordering problem. It would
+> fully explain the thing, but it would also render my patch #1
+> insufficient.
+> 
+> If we suppose the: task_cpu(p) load at the beginning of try_to_wake_up()
+> returns an old value, and this old value happens to be this_cpu. Further
+> assume that the p->on_cpu load accurately returns 1, it really is still
+> running, just not here.
+> 
+> Then, when we issue a local wakeup, we can crash in exactly the observed
+> manner because p->se.cfs_rq != rq->cfs_rq, because p's cfs_rq is from
+> the wrong CPU, therefore we'll iterate into the non-existant parents and
+> NULL deref.
+> 
+> The scenario is somewhat elaborate:
+> 
+> 
+> 					X->cpu = 1
+> 					rq(1)->curr = X
+> 
+> 
+> 	CPU0				CPU1				CPU2
+> 
+> 					// switch away from X
+> 					LOCK rq(1)->lock
+> 					smp_mb__after_spinlock
+> 					dequeue_task(X)
+> 					  X->on_rq = 9
+> 					switch_to(Z)
+> 					  X->on_cpu = 0
+> 					UNLOCK rq(1)->lock
+> 
+> 
+> 									// migrate X to cpu 0
+> 									LOCK rq(1)->lock
+> 									dequeue_task(X)
+> 									set_task_cpu(X, 0)
+> 									  X->cpu = 0
+> 									UNLOCK rq(1)->lock
+> 
+> 									LOCK rq(0)->lock
+> 									enqueue_task(X)
+> 									  X->on_rq = 1
+> 									UNLOCK rq(0)->lock
+> 
+> 	// switch to X
+> 	LOCK rq(0)->lock
+> 	smp_mb__after_spinlock
+> 	switch_to(X)
+> 	  X->on_cpu = 1
+> 	UNLOCK rq(0)->lock
+> 
+> 	// X goes sleep
+> 	X->state = TASK_UNINTERRUPTIBLE
+> 	smp_mb();			// wake X
+> 					ttwu()
+> 					  LOCK X->pi_lock
+> 					  smp_mb__after_spinlock
+> 
+> 					  if (p->state)
+> 
+> 					  cpu = X->cpu; // =? 1
+> 
+> 					  smp_rmb()
+> 
+> 	// X calls schedule()
+> 	LOCK rq(0)->lock
+> 	smp_mb__after_spinlock
+> 	dequeue_task(X)
+> 	  X->on_rq = 0
+> 
+> 					  if (p->on_rq)
+> 
+> 					  smp_rmb();
+> 
+> 					  if (p->on_cpu && ttwu_queue_wakelist(..)) [*]
+> 
+> 					  smp_cond_load_acquire(&p->on_cpu, !VAL)
+> 
+> 					  cpu = select_task_rq(X, X->wake_cpu, ...)
+> 					  if (X->cpu != cpu)
+> 	switch_to(Y)
+> 	  X->on_cpu = 0
+> 	UNLOCK rq(0)->lock
+> 
+> 
+> Furthermore, without the fancy new path [*] we would have hit
+> smp_cond_load_acquire(), and if we _really_ would have had ->on_cpu==1
+> and cpu==this_cpu there, that'd have been a deadlock, but no such
+> deadlocks have ever been observed.
+> 
+> Also, note how the rest of the code never actually uses the @cpu value
+> loaded earlier, all that is re-loaded after the load_aquire of
+> X->on_cpu.
+> 
+> I'm having trouble convincing myself that's actually possible on
+> x86_64 -- after all, every LOCK implies an smp_mb there, so if ttwu
+> observes ->state != RUNNING, it must also observe ->cpu != 1.
+> 
+> Most of the previous ttwu() races were found on very large PowerPC
+> machines which are far more 'interesting'. I suppose I should go write
+> me litmus tests...
 
-https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
+You should be able to get access to a modest PowerPC system here:
 
-While investigating the root cause, there were no sign that the uclamp
-code is doing anything particularly expensive but could suffer from bad
-cache behavior under certain circumstances that are yet to be
-understood.
+https://osuosl.org/services/powerdev/request_hosting/
 
-https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+> Anyway, IFF any of this holds true; then I suppose a patch like the below
+> ought to cure things.
 
-To reduce the pressure on the fast path anyway, add a static key that is
-by default will skip executing uclamp logic in the
-enqueue/dequeue_task() fast path until it's needed.
+I have started an initial 140-hour test which should complete by about
+4PM PDT.
 
-As soon as the user start using util clamp by:
+Last night's all-scenarios run on current -rcu (without any scheduler
+patch) saw two failures in three 10-hour runs of TREE03.  And I might as
+well use the failure times to get tighter bounds on the probability of
+occurrence, though with only two failures it is pretty dicey -- getting
+decent bounds would require something like 30 failures.  But we must
+work with what we have.
 
-	1. Changing uclamp value of a task with sched_setattr()
-	2. Modifying the default sysctl_sched_util_clamp_{min, max}
-	3. Modifying the default cpu.uclamp.{min, max} value in cgroup
+The failures occurred at 18680 and 20018 seconds, respectively, and
+the failure-free run was 36000 seconds long.  Using maxima to help:
 
-We flip the static key now that the user has opted to use util clamp.
-Effectively re-introducing uclamp logic in the enqueue/dequeue_task()
-fast path. It stays on from that point forward until the next reboot.
+	load(distrib);
+	bfloat(18680/3600+20018/3600+10);
+		2.074944444444444b1
+	1-bfloat(cdf_poisson(0,140/(2.074944444444444b1/2)));
+		9.999986212554204b-1
 
-This should help minimize the effect of util clamp on workloads that
-don't need it but still allow distros to ship their kernels with uclamp
-compiled in by default.
+So a 140-hour failure-free run gives a 99.9999% confidence of some degree
+of improvement.  But "some degree of improvement" might be a very small
+improvement.  So let's look at an order of magnitude:
 
-SCHED_WARN_ON() in uclamp_rq_dec_id() was removed since now we can end
-up with unbalanced call to uclamp_rq_dec_id() if we flip the key while
-a task is running in the rq. Since we know it is harmless we just
-quietly return if we attempt a uclamp_rq_dec_id() when
-rq->uclamp[].bucket[].tasks is 0.
+	1-bfloat(cdf_poisson(0,0.1*140/(2.074944444444444b1/2)));
+		7.406128951482777b-1
 
-The following results demonstrates how this helps on 2 Sockets Xeon E5
-2x10-Cores system.
+So a 140-hour failure-free run gives a 74% confidence that the
+patch gave an order-of-magnitude improvement.  So if that passes, an
+additional 420-hour failure-free run would get to 99.5% confidence of
+an order-of-magnitude improvement.
 
-                                   nouclamp                 uclamp      uclamp-static-key
-Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
-Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
-Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
-Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
-Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
-Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
-Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
-Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
-Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
+Statistics is rather unforgiving.  :-/
 
-The perf diff between nouclamp and uclamp-static-key when uclamp is
-disabled in the fast path:
+> If not, I'm, once again, defeated by this...
 
-     8.73%     -1.55%  [kernel.kallsyms]        [k] try_to_wake_up
-     0.07%     +0.04%  [kernel.kallsyms]        [k] deactivate_task
-     0.13%     -0.02%  [kernel.kallsyms]        [k] activate_task
+Here is hoping that this patch cures things!
 
-The diff between nouclamp and uclamp-static-key when uclamp is enabled
-in the fast path:
+							Thanx, Paul
 
-     8.73%     -0.72%  [kernel.kallsyms]        [k] try_to_wake_up
-     0.13%     +0.39%  [kernel.kallsyms]        [k] activate_task
-     0.07%     +0.38%  [kernel.kallsyms]        [k] deactivate_task
-
-Reported-by: Mel Gorman <mgorman@suse.de>
-Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc: Chris Redpath <chris.redpath@arm.com>
-Cc: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-kernel@vger.kernel.org
----
-
-This takes a different approach to PSI which introduces a config option
-
-```
-      CONFIG_PSI_DEFAULT_DISABLED
-
-        Require boot parameter to enable pressure stall information
-        tracking (NEW)
-
-      boot param psi
-```
-
-via commit e0c274472d5d "psi: make disabling/enabling easier for vendor kernels"
-
-uclamp has a clearer points of entry when userspace would like to use it so we
-can automatically flip the switch if the kernel is running on a userspace that
-wants to user utilclamp without any extra userspace visible switches.
-
-I wanted to make this dependent on schedutil being the governor too, but beside
-the complexity, uclamp is used for capacity awareness. We could certainly
-construct a more complex condition, but I'm not sure it's worth it. Open to
-hear more opinions and points of views on this :)
- kernel/sched/core.c | 58 +++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 54 insertions(+), 4 deletions(-)
-
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 4265861e13e9..9ab22f699613 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -793,6 +793,25 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
- /* All clamps are required to be less or equal than these values */
- static struct uclamp_se uclamp_default[UCLAMP_CNT];
- 
-+/*
-+ * This static key is used to reduce the uclamp overhead in the fast path. It
-+ * only disables the call to uclamp_rq_{inc, dec}() in enqueue/dequeue_task().
-+ *
-+ * This allows users to continue to enable uclamp in their kernel config with
-+ * minimum uclamp overhead in the fast path.
-+ *
-+ * As soon as userspace modifies any of the uclamp knobs, the static key is
-+ * disabled, since we have an actual users that make use of uclamp
-+ * functionality.
-+ *
-+ * The knobs that would disable this static key are:
-+ *
-+ *   * A task modifying its uclamp value with sched_setattr().
-+ *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
-+ *   * An admin modifying the cgroup cpu.uclamp.{min, max}
-+ */
-+static DEFINE_STATIC_KEY_TRUE(sched_uclamp_unused);
-+
- /* Integer rounded range for each bucket */
- #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
- 
-@@ -993,9 +1012,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
- 	lockdep_assert_held(&rq->lock);
- 
- 	bucket = &uc_rq->bucket[uc_se->bucket_id];
--	SCHED_WARN_ON(!bucket->tasks);
--	if (likely(bucket->tasks))
--		bucket->tasks--;
-+
-+	/*
-+	 * This could happen if sched_uclamp_unused was disabled while the
-+	 * current task was running, hence we could end up with unbalanced call
-+	 * to uclamp_rq_dec_id().
-+	 */
-+	if (unlikely(!bucket->tasks))
-+		return;
-+
-+	bucket->tasks--;
- 	uc_se->active = false;
- 
- 	/*
-@@ -1031,6 +1057,13 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
- 
-+	/*
-+	 * Avoid any overhead until uclamp is actually used by the userspace.
-+	 * Including the potential JMP if we use static_branch_unlikely()
-+	 */
-+	if (static_branch_likely(&sched_uclamp_unused))
-+		return;
-+
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
-@@ -1046,6 +1079,13 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
- 
-+	/*
-+	 * Avoid any overhead until uclamp is actually used by the userspace.
-+	 * Including the potential JMP if we use static_branch_unlikely()
-+	 */
-+	if (static_branch_likely(&sched_uclamp_unused))
-+		return;
-+
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
-@@ -1155,9 +1195,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- 		update_root_tg = true;
- 	}
- 
--	if (update_root_tg)
-+	if (update_root_tg) {
- 		uclamp_update_root_tg();
- 
-+		if (static_branch_unlikely(&sched_uclamp_unused))
-+			static_branch_disable(&sched_uclamp_unused);
-+	}
-+
- 	/*
- 	 * We update all RUNNABLE tasks only when task groups are in use.
- 	 * Otherwise, keep it simple and do just a lazy update at each next
-@@ -1221,6 +1265,9 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
- 
-+	if (static_branch_unlikely(&sched_uclamp_unused))
-+		static_branch_disable(&sched_uclamp_unused);
-+
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
-@@ -7315,6 +7362,9 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
- 	if (req.ret)
- 		return req.ret;
- 
-+	if (static_branch_unlikely(&sched_uclamp_unused))
-+		static_branch_disable(&sched_uclamp_unused);
-+
- 	mutex_lock(&uclamp_mutex);
- 	rcu_read_lock();
- 
--- 
-2.17.1
-
+> ---
+>  kernel/sched/core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 8298b2c240ce..5534eb1ab79a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2378,6 +2378,9 @@ static inline bool ttwu_queue_cond(int cpu, int wake_flags)
+>  static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
+>  {
+>  	if (sched_feat(TTWU_QUEUE) && ttwu_queue_cond(cpu, wake_flags)) {
+> +		if (WARN_ON(cpu == smp_processor_id()))
+> +			return false;
+> +
+>  		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+>  		__ttwu_queue_wakelist(p, cpu, wake_flags);
+>  		return true;
+> @@ -2550,7 +2553,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  
+>  	/* We're going to change ->state: */
+>  	success = 1;
+> -	cpu = task_cpu(p);
+>  
+>  	/*
+>  	 * Ensure we load p->on_rq _after_ p->state, otherwise it would
+> @@ -2615,7 +2617,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  	 * let the waker make forward progress. This is safe because IRQs are
+>  	 * disabled and the IPI will deliver after on_cpu is cleared.
+>  	 */
+> -	if (READ_ONCE(p->on_cpu) && ttwu_queue_wakelist(p, cpu, wake_flags | WF_ON_RQ))
+> +	if (smp_load_acquire(&p->on_cpu) &&
+> +	    ttwu_queue_wakelist(p, task_cpu(p), wake_flags | WF_ON_RQ))
+>  		goto unlock;
+>  
+>  	/*
+> @@ -2635,6 +2638,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  		psi_ttwu_dequeue(p);
+>  		set_task_cpu(p, cpu);
+>  	}
+> +#else
+> +	cpu = task_cpu(p);
+>  #endif /* CONFIG_SMP */
+>  
+>  	ttwu_queue(p, cpu, wake_flags);
+> 
