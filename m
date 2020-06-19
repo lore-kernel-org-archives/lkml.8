@@ -2,138 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82986C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22264204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FA9204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585400;
-	bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WDCDwIFjNmfc9cYZZ1K1OE+YMPpiI3sSMc8oYM+sb6XQXCgvjVtHPVzq75irpz9ne
-	 zvSLtn/V5krtOin5QL9vlc3BXKEOdEZ4m47zAx3XiF0tIN+Ri3CaDkfwvYNX0FkfEM
-	 xJMisFrD/WKlQglJmnFk/Ty9m6SrWaH2iOlL4D1w=
+	s=default; t=1592585403;
+	bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YSMsCf5iu8D+jmuYy3bCBSl7uHh0ai4DeNAgwESypxl6d1QECkxKcf7vuATJEHJ13
+	 vt3jroHWAGrYIhkagTWC4oJ4UKrKRx51Rv94iM2wMXwL79UaoD6OTPD+uRdAtOm4Cm
+	 8QKo34a/DP19wKmGN/IiQvpNUf1JnkWOdnTR2b2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405701AbgFSQt5 (ORCPT
+        id S2387966AbgFSOjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387986AbgFSOjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:09 -0400
-Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
+        id S2387945AbgFSOi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 673B320DD4;
-        Fri, 19 Jun 2020 14:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B21920DD4;
+        Fri, 19 Jun 2020 14:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577548;
-        bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b6Q4n+E5Dk+L+BUYxW++OziNU6+ncxzIZSDlPwNkoW0CxkAggKh8nfcXgFXLzxuDx
-         EJ/7nNdgDgcw81Mjo+PHn4VfVxOsxOopZmTnRo56r2nc44BOoraHqojrIopiFOUiUt
-         vAjcvxaaljitJIN4Mfu9h37y+E93LduiyX1ThH3Q=
-Received: by earth.universe (Postfix, from userid 1000)
-        id C348B3C08CD; Fri, 19 Jun 2020 16:39:06 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 16:39:06 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: power: supply: bq25890: Document
- required interrupt
-Message-ID: <20200619143906.33twapu6mgyay4yr@earth.universe>
-References: <20200617102305.14241-1-krzk@kernel.org>
- <20200617102305.14241-2-krzk@kernel.org>
+        s=default; t=1592577537;
+        bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rFTivql9sd/kEwN9TllJMNa7KyDyQHaFBmFmaDzjd6S6CkoGw2Vy344ml1fgMlomJ
+         VWujn3ChaffkgqLfcv/epGJfx1grEglAWjkaP/Oi1Np9YDgfdtaAX0xAYDs9R35isJ
+         BN7YOiVnR1s6OGId0rycAwQWtj1zkmsNoFOGm9d4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 090/101] power: vexpress: add suppress_bind_attrs to true
+Date:   Fri, 19 Jun 2020 16:33:19 +0200
+Message-Id: <20200619141618.685917411@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
+References: <20200619141614.001544111@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gyqjsa47ulgkpkl2"
-Content-Disposition: inline
-In-Reply-To: <20200617102305.14241-2-krzk@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Anders Roxell <anders.roxell@linaro.org>
 
---gyqjsa47ulgkpkl2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
 
-Hi,
+Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
+attributes available via the sysfs, so lets be explicit here and use
+".suppress_bind_attrs = true" to prevent userspace from doing something
+silly.
 
-On Wed, Jun 17, 2020 at 12:23:05PM +0200, Krzysztof Kozlowski wrote:
-> The driver requires interrupts (fails probe if it is not provided) so
-> document this requirement in bindings.
->=20
-> Fixes: 4aeae9cb0dad ("power_supply: Add support for TI BQ25890 charger ch=
-ip")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks, queued.
+---
+ drivers/power/reset/vexpress-poweroff.c |    1 +
+ 1 file changed, 1 insertion(+)
 
--- Sebastian
+--- a/drivers/power/reset/vexpress-poweroff.c
++++ b/drivers/power/reset/vexpress-poweroff.c
+@@ -150,6 +150,7 @@ static struct platform_driver vexpress_r
+ 	.driver = {
+ 		.name = "vexpress-reset",
+ 		.of_match_table = vexpress_reset_of_match,
++		.suppress_bind_attrs = true,
+ 	},
+ };
+ 
 
->  Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b=
-/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> index 51ecc756521f..3b4c69a7fa70 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> @@ -10,6 +10,7 @@ Required properties:
->      * "ti,bq25895"
->      * "ti,bq25896"
->  - reg: integer, i2c address of the device.
-> +- interrupts: interrupt line;
->  - ti,battery-regulation-voltage: integer, maximum charging voltage (in u=
-V);
->  - ti,charge-current: integer, maximum charging current (in uA);
->  - ti,termination-current: integer, charge will be terminated when curren=
-t in
-> @@ -39,6 +40,9 @@ bq25890 {
->  	compatible =3D "ti,bq25890";
->  	reg =3D <0x6a>;
-> =20
-> +	interrupt-parent =3D <&gpio1>;
-> +	interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;
-> +
->  	ti,battery-regulation-voltage =3D <4200000>;
->  	ti,charge-current =3D <1000000>;
->  	ti,termination-current =3D <50000>;
-> --=20
-> 2.17.1
->=20
 
---gyqjsa47ulgkpkl2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7szgoACgkQ2O7X88g7
-+pobjw/8Cpw1OzyHiGjyxlvzVKNvp4LndLYSD4J8cdqGPeSNEAHae4sCqmae3G89
-ZCd2Zohd2LwXXire9sQtIXJb96o+1ocWQIzR3wMIypCO8dy83IZqqy+SfZW4ivGW
-K2KmQChB/8os3O74Jw9DSPc4UfK0ISy+7HR4Ot8kyfhg1Dvm9z4NVnId2dHohXoL
-EOn4KYAvjSrevUfXSRwIadCxLxLW7dA1IV1+AS13p0XHdjq4OGQ5dsxNoqYd/X1Q
-MyF3f01Dfic0PDQE3StBTYKW8sYaXI73IftAxZ3gPTcPjS7AzFj+3wpXVEKjfxqR
-e7G40IJYwKtXiyIBg0aQhXOvC3/32LQV4c7suPNmNez4tSn6BkrnFvBOPiVeNZRq
-PLrFNdtatoX3otvbuJEoULD7jLIgSg3Oi8Fkbxu3zmpeCO8yNDPGTmZdhHyxfk7s
-xxUTNlOr7f5rbxYGVe2q0Vz7o5H6s5ukgjSsiqCSMZrNkJd2DYfnvPsSL6Ymd+jP
-SCdfiauLIwrXOzoX/lJXHj/fGzmJGUnU7ogW7OWqclWIGoTxAjIuen+lEWXNIjOH
-L/sAxLp/Sp1gS4rTRFJSite5x8A6h4QGxmsCN1mxuiKgeu9Lyrw4JmKEo40hYa8S
-Ayr385VFbX//luhm435eFe27tMPikUC1GdQwu/tFJk+mkoq5XVs=
-=XIWY
------END PGP SIGNATURE-----
-
---gyqjsa47ulgkpkl2--
