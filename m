@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E479C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C378217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D10E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583355;
-	bh=UXODAnyXH2Tc+R2Su4d7FG46pp0SS5cd9xx6upBrECw=;
+	s=default; t=1592583363;
+	bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTPqe4e3CXKulmLY4lJ79UhAM0lzZHZDrgmv6PuuCLAorXixxrsg2d1kQnrSnt5op
-	 Gg++Xzq2Z4BS7asPLeBxn527nDfJwQcg0tNGz9tVu2UeyRBYz5CforCF+N8SaPzkng
-	 ml+Zrd9m0EeZPfZdzEqCce3ag5D5oI4ZQqZfLpLI=
+	b=N7ShkzqnbGAqYxypyHzPEg9/QzQWGPTHt409/ojEbXBc3XkL9pbZgSLVNt7cGC8cN
+	 l/HbgHRMsZQ4ctcVVvC+DYLSl7nwTYbGLlcWZcAQ4Q78HmrgsxkHcAQ6MhDYn/g9SR
+	 QJxV6VtZwLRRecrUeV3N7OzGJqNSAfujT+Q88fvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394483AbgFSQPx (ORCPT
+        id S2394332AbgFSQQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60196 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391002AbgFSPD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:27 -0400
+        id S2390989AbgFSPDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E4021841;
-        Fri, 19 Jun 2020 15:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F26021974;
+        Fri, 19 Jun 2020 15:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579007;
-        bh=UXODAnyXH2Tc+R2Su4d7FG46pp0SS5cd9xx6upBrECw=;
+        s=default; t=1592579001;
+        bh=/9nBmvLwtWmlQVQtLPJkWEypThtx126eI/Y7IuF+/M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hl3z1WCdzEtyNxVWYYApOJ7ipS6W8bZwaJU302jzGyCxKKHzrYJkCnwOYRfrNIZjh
-         uBQ9tSm1sc8HuAZt9r4/KF1orvRng6TfSsH7I923dchuCwIj9ZOscSCKieV8awAEEz
-         Oc+QeD5zK3ysIgNfzeMBAQncprabguCL7aedeH80=
+        b=gD3hCJPEVc+vfz8lWH/SBbe96l5qPO3Yvk9uuahPrKF723ud+v+8b90MAsd/9GxEe
+         8YtTFJqBkY7eFbjyi/Goff0gMF6HMXeblnfOvoTDwDPm7RVJyL9cYtBprPY0D2eibB
+         oGlIw88FNECsag6KZPDEV5vs8vKr5++yd1HJVebo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 240/267] media: ov5640: fix use of destroyed mutex
-Date:   Fri, 19 Jun 2020 16:33:45 +0200
-Message-Id: <20200619141700.208218465@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Rui Salvaterra <rsalvaterra@gmail.com>
+Subject: [PATCH 4.19 238/267] b43: Fix connection problem with WPA3
+Date:   Fri, 19 Jun 2020 16:33:43 +0200
+Message-Id: <20200619141700.122883187@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,52 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit bfcba38d95a0aed146a958a84a2177af1459eddc upstream.
+commit 75d057bda1fbca6ade21378aa45db712e5f7d962 upstream.
 
-v4l2_ctrl_handler_free() uses hdl->lock, which in ov5640 driver is set
-to sensor's own sensor->lock. In ov5640_remove(), the driver destroys the
-sensor->lock first, and then calls v4l2_ctrl_handler_free(), resulting
-in the use of the destroyed mutex.
+Since the driver was first introduced into the kernel, it has only
+handled the ciphers associated with WEP, WPA, and WPA2. It fails with
+WPA3 even though mac80211 can handle those additional ciphers in software,
+b43 did not report that it could handle them. By setting MFP_CAPABLE using
+ieee80211_set_hw(), the problem is fixed.
 
-Fix this by calling moving the mutex_destroy() to the end of the cleanup
-sequence, as there's no need to destroy the mutex as early as possible.
+With this change, b43 will handle the ciphers it knows in hardware,
+and let mac80211 handle the others in software. It is not necessary to
+use the module parameter NOHWCRYPT to turn hardware encryption off.
+Although this change essentially eliminates that module parameter,
+I am choosing to keep it for cases where the hardware is broken,
+and software encryption is required for all ciphers.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: stable@vger.kernel.org # v4.14+
-Reviewed-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reported-and-tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200526155909.5807-2-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov5640.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43/main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -2829,8 +2829,8 @@ static int ov5640_probe(struct i2c_clien
- free_ctrls:
- 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
- entity_cleanup:
--	mutex_destroy(&sensor->lock);
- 	media_entity_cleanup(&sensor->sd.entity);
-+	mutex_destroy(&sensor->lock);
- 	return ret;
- }
- 
-@@ -2840,9 +2840,9 @@ static int ov5640_remove(struct i2c_clie
- 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
- 
- 	v4l2_async_unregister_subdev(&sensor->sd);
--	mutex_destroy(&sensor->lock);
- 	media_entity_cleanup(&sensor->sd.entity);
- 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
-+	mutex_destroy(&sensor->lock);
- 
- 	return 0;
- }
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -5596,7 +5596,7 @@ static struct b43_wl *b43_wireless_init(
+ 	/* fill hw info */
+ 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
+ 	ieee80211_hw_set(hw, SIGNAL_DBM);
+-
++	ieee80211_hw_set(hw, MFP_CAPABLE);
+ 	hw->wiphy->interface_modes =
+ 		BIT(NL80211_IFTYPE_AP) |
+ 		BIT(NL80211_IFTYPE_MESH_POINT) |
 
 
