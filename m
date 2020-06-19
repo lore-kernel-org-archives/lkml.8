@@ -2,95 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7200CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6314C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5B5206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02C420707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="OrBsnhQJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WS9AnGmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgFSHVY (ORCPT
+        id S1730578AbgFSHWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:21:24 -0400
-Received: from www.zeus03.de ([194.117.254.33]:34382 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbgFSHVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:21:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=Tx1HKfhcOXw7ejBWKidFnCtFoaUu
-        r9y0RAg5uUGEalE=; b=OrBsnhQJjJUlLKpVyJLvgJDRgFo6cVeSKwNw5whAk1AS
-        duWZ4NZ9Ch+3QWEsGdZREuHzzRqPWAfkp64Av2jnS/dA2KVd6SzqUUm7NBVOyIVj
-        GkNDuReFg/5jGv2PZfkYPbR8qhANBWxMzw9SkNK6sXj38epcHqUXGxog472xQc8=
-Received: (qmail 2435058 invoked from network); 19 Jun 2020 09:21:20 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Jun 2020 09:21:20 +0200
-X-UD-Smtp-Session: l3s3148p1@FpZVvWqoYMdQT+F6
-Date:   Fri, 19 Jun 2020 09:21:19 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 0/6] remove deprecated i2c_new_device API
-Message-ID: <20200619072119.GB1705@kunai>
-References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
+        Fri, 19 Jun 2020 03:22:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6882 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgFSHWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:22:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eec673c0001>; Fri, 19 Jun 2020 00:20:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jun 2020 00:22:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jun 2020 00:22:09 -0700
+Received: from [10.2.62.75] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
+ 2020 07:22:06 +0000
+Subject: Re: [PATCH] docs: mm/gup: Minor documentation update
+To:     Souptick Joarder <jrdr.linux@gmail.com>, <corbet@lwn.net>,
+        <akpm@linux-foundation.org>, <jack@suse.cz>,
+        <kirill.shutemov@linux.intel.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1592422023-7401-1-git-send-email-jrdr.linux@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <79febf94-8c04-dd41-90a7-19f4060fea38@nvidia.com>
+Date:   Fri, 19 Jun 2020 00:22:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
-Content-Disposition: inline
-In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <1592422023-7401-1-git-send-email-jrdr.linux@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592551228; bh=EL/459CEMaLaR/s1LjSbQdMlm1+MQ+IuZaLoXAFw+Ps=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WS9AnGmHYzAORjufc3RyrBZYp62LeCBP8PF22t8JI82aXDKrOLgbw6zBo8b2gP/iE
+         /56+GA9bX/pUms9LW6JajUObpfYncLNKPFU9bUUei5BeLq2Dasj8ATm17tHQyiFqtg
+         kaochTbtJwLeKtkIxUdYlxKS9WbqY1HOXBgoALpURoAoF/8mYBQn2GvoA3a5feR6Fz
+         7aRZ4h1hIOavS1jWoTLR9Y2s6yeGZAAAEU6dTd+srOEul0sSsMBYmYdtVKCpKp4HRA
+         lBE4xMMjpDGiUUJZtG+j4E8QydLVgwqmUTb9ZXtnjKDhRNFCqHL3RIbeMap102GS3s
+         0JobRbl/Dwv5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---LpQ9ahxlCli8rRTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 15, 2020 at 09:58:09AM +0200, Wolfram Sang wrote:
-> I want to remove the above API this cycle, and just a few patches have
-> not made it into 5.8-rc1. They have been reviewed and most had been
-> promised to get into linux-next, but well, things happen. So, I hope it
-> is okay for everyone to collect them like this and push them via I2C for
-> 5.8-rc2.
->=20
-> One minor exception is the media documentation patch which I simply have
-> missed so far, but it is trivial.
->=20
-> And then, finally, there is the removal of the old API as the final
-> patch. Phew, that's been a long ride.
->=20
-> I am open for comments, of course.
-
-Applied to for-current, thanks!
+On 2020-06-17 12:27, Souptick Joarder wrote:
+> Now there are 5 cases. Updated the same.
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> ---
+>   Documentation/core-api/pin_user_pages.rst | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
+> index 6068266..7ca8c7b 100644
+> --- a/Documentation/core-api/pin_user_pages.rst
+> +++ b/Documentation/core-api/pin_user_pages.rst
+> @@ -33,7 +33,7 @@ all combinations of get*(), pin*(), FOLL_LONGTERM, and more. Also, the
+>   pin_user_pages*() APIs are clearly distinct from the get_user_pages*() APIs, so
+>   that's a natural dividing line, and a good point to make separate wrapper calls.
+>   In other words, use pin_user_pages*() for DMA-pinned pages, and
+> -get_user_pages*() for other cases. There are four cases described later on in
+> +get_user_pages*() for other cases. There are five cases described later on in
 
 
---LpQ9ahxlCli8rRTG
-Content-Type: application/pgp-signature; name="signature.asc"
+Probably better to just say "several" instead of "five", but either way is fine.
 
------BEGIN PGP SIGNATURE-----
+     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7sZ2sACgkQFA3kzBSg
-KbZVtBAAjxj8/yCiqHPP8gPXOpd8hStQqYaqlvw6NW5ddjUNy8nDaA/ztSbvpdDv
-RKtamlqk9b6JKoOgP0Fxe6xQfysX5qdg9DOKGlAS+atbNTQNydlCovfYbUARyJtz
-RoiP0jzxCquuoLcSWAtGWzBhG350v33bysM+zVe4yakWp2ILF8Y1y5l+7/tgXFZB
-HbVGxYihsGm76WPlXRRACWrKB1HsieEPVUXDCzG9BLMicuy1Ly7en7UdhkiJnzpz
-+Pk1OVCXpDHoKewKv2uK8sbf+TSy9hdesPCO40TZC1Oe1hB2fJGPOV3XsR0CZ7iS
-mC7vRPd3rNw62m4zMDxIX0Le5QlCQCpwiW8uSNj7IuadxM5p34b2J6cqTeQBEz5K
-y33mJTVybc2yClSvrFDnXNj1Zagz1M4vMVpDLGTBX45rzxmShlzl2inG9hVZblw8
-EMSYAefZUHfgc7HptbdTQsTQkjlS1Q5wg9lHXWXGdtFE/oEhOV/DGQOLQwlBH6jD
-shVnrzLQcr7mUgJCq2+x8dTs73TnupyVCcRIDh2iTXPmd6UGByIAUN5yTC5GkUIf
-wmtRQyJfYHNEvtdFC+jehCarVj0zO0JmzDX434FUDJMFvXa9a2vqJLORds5ASJl7
-3K+Xupy+eSX6trVDd7StjIQYraYbn2rFko60famD5ePLbfpGuDE=
-=kh1x
------END PGP SIGNATURE-----
-
---LpQ9ahxlCli8rRTG--
+thanks,
+-- 
+John Hubbard
+NVIDIA
