@@ -2,160 +2,140 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51827C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15880C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CDC20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E214120809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584619;
+	bh=+7xSC7baK2rJ6RKvXIBkiCjVWwrDJ7VnUbuuAawk+gs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=boU7x1OTWCGBecbH6hSopyAOHKcxtGjPOXIZT7CG5+Ckf9N0ipJegDCC8+j62dC90
+	 7jp/i7XXoW1xjsGfD+fPJ3NMwYl72Hi/SNH3wM4Xu5/DGNuleZfOEfuKk+F2nx+hrS
+	 YYzpAAhO/uQT/3osCGtF9lSrN+zU/zKYhCMmAmyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389412AbgFSQgy (ORCPT
+        id S2395306AbgFSQg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:36:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43707 "EHLO mga12.intel.com"
+        Fri, 19 Jun 2020 12:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389154AbgFSOs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:59 -0400
-IronPort-SDR: bBxUbdwyVW6kWjdtq2MYHIV24VKQeddX7RODMW9hZdFqJZ0ZEk4bVIvJnQkOFt7swK6qibkUCS
- fHtdgd4+ySmw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="122702962"
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="122702962"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:48:59 -0700
-IronPort-SDR: wWwwSMERFTz9/ebtIv2uP4Ew5ChxpDuaT34KfgKOffFPzRqXckZ+FvQj2Nkpn1rBPjHPfAs8uO
- hp5+wXuKDp0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="278018554"
-Received: from mcrum-mobl1.amr.corp.intel.com (HELO [10.255.0.127]) ([10.255.0.127])
-  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 07:48:56 -0700
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Richard Hughes <hughsient@gmail.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
- <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
- <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
- <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
- <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
- <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
- <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
- <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com>
- <CAD2FfiF8QEarhyFD1GkfnaR+spyH86sChgRZm37ab_gzS2m_wg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <aef4ff03-3a98-4425-2b01-203a88401370@intel.com>
-Date:   Fri, 19 Jun 2020 07:48:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2389149AbgFSOs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 237C620DD4;
+        Fri, 19 Jun 2020 14:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578136;
+        bh=+7xSC7baK2rJ6RKvXIBkiCjVWwrDJ7VnUbuuAawk+gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VxSQ5UFxUz3MhEnj8U2HvjkltulWuOYfpEKmNMXWuc4VgyRVrQgf/uQZYpXRzPV+5
+         phfUhOyZUQ9FiJLpxNvhgDsoAeYgWD8GHyGnVxEBcauEZRZwUKJvkxO4m3yTgfXksm
+         yfJ51cEokM0QBFz8TgoBMGHDg6LK1VfbLFmRDNko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 067/190] mm/slub: fix a memory leak in sysfs_slab_add()
+Date:   Fri, 19 Jun 2020 16:31:52 +0200
+Message-Id: <20200619141636.925531744@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAD2FfiF8QEarhyFD1GkfnaR+spyH86sChgRZm37ab_gzS2m_wg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 7:36 AM, Richard Hughes wrote:
-> On Fri, 19 Jun 2020 at 15:23, Dave Hansen <dave.hansen@intel.com> wrote:
->> Last night, I asked my kids if they brushed their teeth.  They said:
->> "Dad, my toothbrush was available."  They argued that mere availability
->> was a better situation than not *having* a toothbrush.  They were
->> logically right, of course, but they still got cavities.
-> 
-> I don't see how that's comparable, sorry. Surely Intel wants to sell
-> hardware advertising TME as a security feature?
+From: Wang Hai <wanghai38@huawei.com>
 
-Of course!  Just like AVX-512 or VNNI or whatever, Intel will totally
-tell you about the stuff baked into its silicon!  But, just like
-AVX-512, there's a lot of work to do on top of mere presence in the
-silicon to ensure it is providing benefit.
+commit dde3c6b72a16c2db826f54b2d49bdea26c3534a2 upstream.
 
->>> So my take-away from that is that it's currently impossible to
->>> actually say if your system is *actually* using TME.
->> Not in a generic way, and it can't be derived from cpuid or MSRs alone.
-> 
-> Well, it seems not in any way at the moment.
-> 
->> I'm pretty sure I'm using TME, but I didn't become sure from
->> poking at sysfs.
-> 
-> How do you know that Lenovo didn't disable TME without looking at
-> dmesg? I don't think "pretty sure" is good enough when TME is
-> considered a security feature.
+syzkaller reports for memory leak when kobject_init_and_add() returns an
+error in the function sysfs_slab_add() [1]
 
-You cut out the important part.  The "pretty sure" involves a bunch of
-preconditions and knowing what your hardware configuration is in the
-first place.
+When this happened, the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-Let's take a step back.  We add read-only ABIs so that decisions can be
-made.  What decision will somebody make from the ABI being proposed here?
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails.
 
-Someone does 'cat /proc/mktme' (or whatever) and it says "1" or
-whatever, which means yay, encryption is on.  What do they do?
+[1]
+  BUG: memory leak
+  unreferenced object 0xffff8880a6d4be88 (size 8):
+  comm "syz-executor.3", pid 946, jiffies 4295772514 (age 18.396s)
+  hex dump (first 8 bytes):
+    70 69 64 5f 33 00 ff ff                          pid_3...
+  backtrace:
+     kstrdup+0x35/0x70 mm/util.c:60
+     kstrdup_const+0x3d/0x50 mm/util.c:82
+     kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+     kobject_set_name_vargs+0x55/0x130 lib/kobject.c:289
+     kobject_add_varg lib/kobject.c:384 [inline]
+     kobject_init_and_add+0xd8/0x170 lib/kobject.c:473
+     sysfs_slab_add+0x1d8/0x290 mm/slub.c:5811
+     __kmem_cache_create+0x50a/0x570 mm/slub.c:4384
+     create_cache+0x113/0x1e0 mm/slab_common.c:407
+     kmem_cache_create_usercopy+0x1a1/0x260 mm/slab_common.c:505
+     kmem_cache_create+0xd/0x10 mm/slab_common.c:564
+     create_pid_cachep kernel/pid_namespace.c:54 [inline]
+     create_pid_namespace kernel/pid_namespace.c:96 [inline]
+     copy_pid_ns+0x77c/0x8f0 kernel/pid_namespace.c:148
+     create_new_namespaces+0x26b/0xa30 kernel/nsproxy.c:95
+     unshare_nsproxy_namespaces+0xa7/0x1e0 kernel/nsproxy.c:229
+     ksys_unshare+0x3d2/0x770 kernel/fork.c:2969
+     __do_sys_unshare kernel/fork.c:3037 [inline]
+     __se_sys_unshare kernel/fork.c:3035 [inline]
+     __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3035
+     do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
 
-What do they do differently when it says "0"?
+Fixes: 80da026a8e5d ("mm/slub: fix slab double-free in case of duplicate sysfs filename")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200602115033.1054-1-wanghai38@huawei.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/slub.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5727,8 +5727,10 @@ static int sysfs_slab_add(struct kmem_ca
+ 
+ 	s->kobj.kset = kset;
+ 	err = kobject_init_and_add(&s->kobj, &slab_ktype, NULL, "%s", name);
+-	if (err)
++	if (err) {
++		kobject_put(&s->kobj);
+ 		goto out;
++	}
+ 
+ 	err = sysfs_create_group(&s->kobj, &slab_attr_group);
+ 	if (err)
+
+
