@@ -2,50 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B281C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D732C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBBF2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5642A21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579725;
-	bh=AQ2qJA/CQlrwmS2DMffeqHx1aRMKJZZOKPK/n6ZrwEY=;
+	s=default; t=1592579727;
+	bh=YbqtuQXTkWQFQNXjZrD5f/zRbkD1TxaNOZmWnwI/YpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ph3GGT14VxWfRmbiIP1ZtqWf/NA9vmiNqGjzbpK3gCa6NWVvpIhbSYzYUP5hVacdb
-	 2c1WGWwqGtJVCyP7LoTaWZae3eIHlxaDW/v+xMRMTMFnYlzJT2r/jbzPSLmIYEG31l
-	 +AKNwzm+yaG1KuL0B1tFL3Ex6Qt01peIk7PVkTgw=
+	b=j7o4azIoWcAQiVqpn1A8A+5HAzEFVl9voz78TBQ4dfDbpe45yvBHkiYL5bNDOvuqw
+	 MZXKAJhAkcL8Ki1jeB7bBenTJxstRQwPSYWl3wCRIhLRru+wwykV86K6p7w5BPzLQs
+	 W64UPP7gk169DMrwd5voP4GJ/hj0hHknf7Bijb/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392405AbgFSPPX (ORCPT
+        id S2392410AbgFSPP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392374AbgFSPPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:09 -0400
+        id S2392385AbgFSPPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6194C20776;
-        Fri, 19 Jun 2020 15:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A0A720776;
+        Fri, 19 Jun 2020 15:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579708;
-        bh=AQ2qJA/CQlrwmS2DMffeqHx1aRMKJZZOKPK/n6ZrwEY=;
+        s=default; t=1592579714;
+        bh=YbqtuQXTkWQFQNXjZrD5f/zRbkD1TxaNOZmWnwI/YpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3beFNeOJjAp2cmOIv4I32lrmDPWzOXjicKaui80sbmNCLrFYS0JkUhABgb3IWDIu
-         XosIUZ4NXDzBY0r/kiZSD2iwYN0gtWc3lkm4mlH+q1EKqNkS4x5Nm+nyVo7z9L9yfO
-         n1/zz4MPpX9IOnv/MrOw9YPT/9MjOsQLHiigumxs=
+        b=tUVwk3TuoCIJ2eZ54UrKPfmr//Dsfe0nT4sGu1cUdfOR1A2x3j2SF4SO850S9NeLM
+         4H74qKZdY0SL7M8T/rrQnwdfg+8eP3N4cFgQseCyE13mOYYzqlO7WKG9n2sYgIfbRs
+         ay4WA+FdGHHC/jIuwxq2rPnYayg6p7SYhrlvxC7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.4 237/261] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
-Date:   Fri, 19 Jun 2020 16:34:08 +0200
-Message-Id: <20200619141701.234980613@linuxfoundation.org>
+        stable@vger.kernel.org, Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 221/261] powerpc/fadump: use static allocation for reserved memory ranges
+Date:   Fri, 19 Jun 2020 16:33:52 +0200
+Message-Id: <20200619141700.466879544@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -58,57 +60,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Hari Bathini <hbathini@linux.ibm.com>
 
-commit 4b50c8c4eaf06a825d1c005c0b1b4a8307087b83 upstream.
+commit 02c04e374e176ae3a3f64a682f80702f8d2fb65d upstream.
 
-This code does not work as stated in the comment.
+At times, memory ranges have to be looked up during early boot, when
+kernel couldn't be initialized for dynamic memory allocation. In fact,
+reserved-ranges look up is needed during FADump memory reservation.
+Without accounting for reserved-ranges in reserving memory for FADump,
+MPIPL boot fails with memory corruption issues. So, extend memory
+ranges handling to support static allocation and populate reserved
+memory ranges during early boot.
 
-$(CONFIG_MODVERSIONS) is always empty because it is expanded before
-include/config/auto.conf is included. Hence, 'make modules' with
-CONFIG_MODVERSION=y cannot record the version CRCs.
-
-This has been broken since 2003, commit ("kbuild: Enable modules to be
-build using the "make dir/" syntax"). [1]
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
-Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: dda9dbfeeb7a ("powerpc/fadump: consider reserved ranges while releasing memory")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/158737294432.26700.4830263187856221314.stgit@hbathini.in.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/fadump-internal.h |    4 +
+ arch/powerpc/kernel/fadump.c               |   77 ++++++++++++++++-------------
+ 2 files changed, 48 insertions(+), 33 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -587,12 +587,8 @@ KBUILD_MODULES :=
- KBUILD_BUILTIN := 1
+--- a/arch/powerpc/include/asm/fadump-internal.h
++++ b/arch/powerpc/include/asm/fadump-internal.h
+@@ -64,12 +64,14 @@ struct fadump_memory_range {
+ };
  
- # If we have only "make modules", don't compile built-in objects.
--# When we're building modules with modversions, we need to consider
--# the built-in objects during the descend as well, in order to
--# make sure the checksums are up to date before we record them.
--
- ifeq ($(MAKECMDGOALS),modules)
--  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
-+  KBUILD_BUILTIN :=
- endif
+ /* fadump memory ranges info */
++#define RNG_NAME_SZ			16
+ struct fadump_mrange_info {
+-	char				name[16];
++	char				name[RNG_NAME_SZ];
+ 	struct fadump_memory_range	*mem_ranges;
+ 	u32				mem_ranges_sz;
+ 	u32				mem_range_cnt;
+ 	u32				max_mem_ranges;
++	bool				is_static;
+ };
  
- # If we have "make <whatever> modules", compile modules
-@@ -1282,6 +1278,13 @@ ifdef CONFIG_MODULES
+ /* Platform specific callback functions */
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -38,8 +38,17 @@ static void __init fadump_reserve_crash_
  
- all: modules
- 
-+# When we're building modules with modversions, we need to consider
-+# the built-in objects during the descend as well, in order to
-+# make sure the checksums are up to date before we record them.
-+ifdef CONFIG_MODVERSIONS
-+  KBUILD_BUILTIN := 1
-+endif
+ #ifndef CONFIG_PRESERVE_FA_DUMP
+ static DEFINE_MUTEX(fadump_mutex);
+-struct fadump_mrange_info crash_mrange_info = { "crash", NULL, 0, 0, 0 };
+-struct fadump_mrange_info reserved_mrange_info = { "reserved", NULL, 0, 0, 0 };
++struct fadump_mrange_info crash_mrange_info = { "crash", NULL, 0, 0, 0, false };
 +
- # Build modules
- #
- # A module can be listed more than once in obj-m resulting in
++#define RESERVED_RNGS_SZ	16384 /* 16K - 128 entries */
++#define RESERVED_RNGS_CNT	(RESERVED_RNGS_SZ / \
++				 sizeof(struct fadump_memory_range))
++static struct fadump_memory_range rngs[RESERVED_RNGS_CNT];
++struct fadump_mrange_info reserved_mrange_info = { "reserved", rngs,
++						   RESERVED_RNGS_SZ, 0,
++						   RESERVED_RNGS_CNT, true };
++
++static void __init early_init_dt_scan_reserved_ranges(unsigned long node);
+ 
+ #ifdef CONFIG_CMA
+ static struct cma *fadump_cma;
+@@ -108,6 +117,11 @@ static int __init fadump_cma_init(void)
+ int __init early_init_dt_scan_fw_dump(unsigned long node, const char *uname,
+ 				      int depth, void *data)
+ {
++	if (depth == 0) {
++		early_init_dt_scan_reserved_ranges(node);
++		return 0;
++	}
++
+ 	if (depth != 1)
+ 		return 0;
+ 
+@@ -726,10 +740,14 @@ void fadump_free_cpu_notes_buf(void)
+ 
+ static void fadump_free_mem_ranges(struct fadump_mrange_info *mrange_info)
+ {
++	if (mrange_info->is_static) {
++		mrange_info->mem_range_cnt = 0;
++		return;
++	}
++
+ 	kfree(mrange_info->mem_ranges);
+-	mrange_info->mem_ranges = NULL;
+-	mrange_info->mem_ranges_sz = 0;
+-	mrange_info->max_mem_ranges = 0;
++	memset((void *)((u64)mrange_info + RNG_NAME_SZ), 0,
++	       (sizeof(struct fadump_mrange_info) - RNG_NAME_SZ));
+ }
+ 
+ /*
+@@ -786,6 +804,12 @@ static inline int fadump_add_mem_range(s
+ 		if (mrange_info->mem_range_cnt == mrange_info->max_mem_ranges) {
+ 			int ret;
+ 
++			if (mrange_info->is_static) {
++				pr_err("Reached array size limit for %s memory ranges\n",
++				       mrange_info->name);
++				return -ENOSPC;
++			}
++
+ 			ret = fadump_alloc_mem_ranges(mrange_info);
+ 			if (ret)
+ 				return ret;
+@@ -1202,20 +1226,19 @@ static void sort_and_merge_mem_ranges(st
+  * Scan reserved-ranges to consider them while reserving/releasing
+  * memory for FADump.
+  */
+-static inline int fadump_scan_reserved_mem_ranges(void)
++static void __init early_init_dt_scan_reserved_ranges(unsigned long node)
+ {
+-	struct device_node *root;
+ 	const __be32 *prop;
+ 	int len, ret = -1;
+ 	unsigned long i;
+ 
+-	root = of_find_node_by_path("/");
+-	if (!root)
+-		return ret;
++	/* reserved-ranges already scanned */
++	if (reserved_mrange_info.mem_range_cnt != 0)
++		return;
+ 
+-	prop = of_get_property(root, "reserved-ranges", &len);
++	prop = of_get_flat_dt_prop(node, "reserved-ranges", &len);
+ 	if (!prop)
+-		return ret;
++		return;
+ 
+ 	/*
+ 	 * Each reserved range is an (address,size) pair, 2 cells each,
+@@ -1237,7 +1260,8 @@ static inline int fadump_scan_reserved_m
+ 		}
+ 	}
+ 
+-	return ret;
++	/* Compact reserved ranges */
++	sort_and_merge_mem_ranges(&reserved_mrange_info);
+ }
+ 
+ /*
+@@ -1251,32 +1275,21 @@ static void fadump_release_memory(u64 be
+ 	u64 ra_start, ra_end, tstart;
+ 	int i, ret;
+ 
+-	fadump_scan_reserved_mem_ranges();
+-
+ 	ra_start = fw_dump.reserve_dump_area_start;
+ 	ra_end = ra_start + fw_dump.reserve_dump_area_size;
+ 
+ 	/*
+-	 * Add reserved dump area to reserved ranges list
+-	 * and exclude all these ranges while releasing memory.
++	 * If reserved ranges array limit is hit, overwrite the last reserved
++	 * memory range with reserved dump area to ensure it is excluded from
++	 * the memory being released (reused for next FADump registration).
+ 	 */
+-	ret = fadump_add_mem_range(&reserved_mrange_info, ra_start, ra_end);
+-	if (ret != 0) {
+-		/*
+-		 * Not enough memory to setup reserved ranges but the system is
+-		 * running shortage of memory. So, release all the memory except
+-		 * Reserved dump area (reused for next fadump registration).
+-		 */
+-		if (begin < ra_end && end > ra_start) {
+-			if (begin < ra_start)
+-				fadump_release_reserved_area(begin, ra_start);
+-			if (end > ra_end)
+-				fadump_release_reserved_area(ra_end, end);
+-		} else
+-			fadump_release_reserved_area(begin, end);
++	if (reserved_mrange_info.mem_range_cnt ==
++	    reserved_mrange_info.max_mem_ranges)
++		reserved_mrange_info.mem_range_cnt--;
+ 
++	ret = fadump_add_mem_range(&reserved_mrange_info, ra_start, ra_end);
++	if (ret != 0)
+ 		return;
+-	}
+ 
+ 	/* Get the reserved ranges list in order first. */
+ 	sort_and_merge_mem_ranges(&reserved_mrange_info);
 
 
