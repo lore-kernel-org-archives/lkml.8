@@ -2,54 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B18C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C6221582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A167921582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577904;
-	bh=OSvM96E4UrNyHkxD3I4QZ1xFXLCQ9560OclVcaLVjUQ=;
+	s=default; t=1592577907;
+	bh=bsL2vyOy8pegqBawPjnA9McV2ew99oX3Akpc3n5eyjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZYe5UyT10ost8YZwYuqaBXjjzeR+6JHAYUOKndp8Ej/fC1mU/kqu84QLesumDwgRS
-	 rxI4itGp1HOH2XIygfYub43+OFDIdKhqms9zjk6V8s3MuF0Wtev8yA2FoAmL72xh2s
-	 lPbi1LJ0qVDszhOoqeKcTij/ovq3CDUMAThkV/Mo=
+	b=aoAOJ972637A6XB+dco1/nk/HUd27wnEQ3b3tbMyG/hpA7QjwdOygMnqrvzTUGcL4
+	 kbXmAV0VG7vWXKQsHBxiWftn/QQ0maTcxxzxCw4a+vyNctEqBS+Hgu2tFU8MF5isv0
+	 pyN207bvh7v849hVNDv/K5QirTaoGphyUNArXc8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbgFSOpD (ORCPT
+        id S2388649AbgFSOpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387562AbgFSOol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:41 -0400
+        id S2387470AbgFSOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABBA820A8B;
-        Fri, 19 Jun 2020 14:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3493A21556;
+        Fri, 19 Jun 2020 14:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577881;
-        bh=OSvM96E4UrNyHkxD3I4QZ1xFXLCQ9560OclVcaLVjUQ=;
+        s=default; t=1592577883;
+        bh=bsL2vyOy8pegqBawPjnA9McV2ew99oX3Akpc3n5eyjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1O0sYcnw9XHgkqsdc/h/yG/kBQWQ1A0I1pKYkLxv19c6gPhjB39tM+Btw2YvzmggJ
-         MQ06KiODwf2dtv9ueBaC/u6kI8amY7AsDOqtmNlSXnV9NKGmbuxxwrKiIgOm/ZLV57
-         NHcE+jZa4VKx0ivNOPLrnkwVbB9oe3YW9gKNSNlc=
+        b=JgENVrfgLKT3MmvYz7hU8S8rGEMqYK8L/1UQxOiRAUqE3FfgC2hd/0YPxyayeLeru
+         t7lZTab88FB1IUgRa1jZDCX0qpopYc1Hmb0W/0LtPrmyyAn85VPvT2OWERTLaU3eao
+         kUeKKVC8t0+Nj3YIIYZ8UFpB3+I1egzTY20ejiZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 087/128] x86/mm: Stop printing BRK addresses
-Date:   Fri, 19 Jun 2020 16:33:01 +0200
-Message-Id: <20200619141624.747780000@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 4.9 121/128] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
+Date:   Fri, 19 Jun 2020 16:33:35 +0200
+Message-Id: <20200619141626.506133658@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,37 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 67d631b7c05eff955ccff4139327f0f92a5117e5 ]
+commit 4b50c8c4eaf06a825d1c005c0b1b4a8307087b83 upstream.
 
-This currently leaks kernel physical addresses into userspace.
+This code does not work as stated in the comment.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lkml.kernel.org/r/20200229231120.1147527-1-nivedita@alum.mit.edu
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+$(CONFIG_MODVERSIONS) is always empty because it is expanded before
+include/config/auto.conf is included. Hence, 'make modules' with
+CONFIG_MODVERSION=y cannot record the version CRCs.
+
+This has been broken since 2003, commit ("kbuild: Enable modules to be
+build using the "make dir/" syntax"). [1]
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
+Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+ Makefile |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index ce092a62fc5d..bc2455c2fcab 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -110,8 +110,6 @@ __ref void *alloc_low_pages(unsigned int num)
- 	} else {
- 		pfn = pgt_buf_end;
- 		pgt_buf_end += num;
--		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
--			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
- 	}
+--- a/Makefile
++++ b/Makefile
+@@ -313,12 +313,8 @@ KBUILD_MODULES :=
+ KBUILD_BUILTIN := 1
  
- 	for (i = 0; i < num; i++) {
--- 
-2.25.1
-
+ # If we have only "make modules", don't compile built-in objects.
+-# When we're building modules with modversions, we need to consider
+-# the built-in objects during the descend as well, in order to
+-# make sure the checksums are up to date before we record them.
+-
+ ifeq ($(MAKECMDGOALS),modules)
+-  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
++  KBUILD_BUILTIN :=
+ endif
+ 
+ # If we have "make <whatever> modules", compile modules
+@@ -1237,6 +1233,13 @@ ifdef CONFIG_MODULES
+ 
+ all: modules
+ 
++# When we're building modules with modversions, we need to consider
++# the built-in objects during the descend as well, in order to
++# make sure the checksums are up to date before we record them.
++ifdef CONFIG_MODVERSIONS
++  KBUILD_BUILTIN := 1
++endif
++
+ # Build modules
+ #
+ # A module can be listed more than once in obj-m resulting in
 
 
