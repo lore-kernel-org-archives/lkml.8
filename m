@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2321C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E07C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B9A21532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133F020809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582583;
-	bh=tpqTBR22NuBLOVppNdw3lVPmj8gh6mVdDPt1DD3rdc0=;
+	s=default; t=1592582594;
+	bh=uWfmU8P4UvHMt0yiTCGzu8jTK7nAwlBS5Twm3Rv9hKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9YJj6D228/84q4hG9afwZxijBPTvnPYCAFB1xnyATZW9uwiqYgjuGI2EcmK8l+38
-	 0IEmqpX9L84VvzdOUMxxbrc9ea+ptIxEy3zorOtcabxkn5RdNug1nOmFAa5kPaovr9
-	 7zhmdu4D/BFAMZsv+RI/dq90969vy+0oXAgFSe54=
+	b=2lcXmKGXTz2ZxTvipU9UGUT8Vdc2Ne4TZ12eJq2+RcAATqa7UsNUtYKgIF/9Tcz0f
+	 zDUEKpawa6CA6G8gvA3lOg1+2IMadPVCOWAPbInLhNMQmOmRqgvWnSON9ZAW3MG3qv
+	 YbVe9m+DgmfVdrcneDc6lgVwLLYA4CIUq5DIIkXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbgFSQDC (ORCPT
+        id S2405398AbgFSQDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42372 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391293AbgFSPL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:56 -0400
+        id S2403862AbgFSPLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03259206FA;
-        Fri, 19 Jun 2020 15:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB5021582;
+        Fri, 19 Jun 2020 15:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579515;
-        bh=tpqTBR22NuBLOVppNdw3lVPmj8gh6mVdDPt1DD3rdc0=;
+        s=default; t=1592579510;
+        bh=uWfmU8P4UvHMt0yiTCGzu8jTK7nAwlBS5Twm3Rv9hKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=un05N9AQ9qw5HEoMNvX088PROxrn2fsEbb+BAMARBIitTXdq6PRnZHqmISaZsTvQu
-         ZkN6Bihbh3NsnPeS03gkd+EvcQhn6Jp52+K87IvtHzUOVsUe6TKSt7MRYOcyOjgQ2J
-         p+gedQlmgKgaqZor5DDqT63tPeBHeDRqHy324Fdw=
+        b=LJ82AAv18QTQLAzuxO4urzwKq6C5hzrTSj29sRnyxmg8l/iLybHjbaxEyo9FeCyJ5
+         mDqtbC7ST58nW+fIToxUEXSygwBf9bpoAYleSMSTSim9dUZ6ZwMnSETNsN/imsUcnt
+         YWfs9IEVDrKKqvfoLVgdON9y91MFWEY7I2qV6vO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 165/261] btrfs: fix wrong file range cleanup after an error filling dealloc range
-Date:   Fri, 19 Jun 2020 16:32:56 +0200
-Message-Id: <20200619141657.809417840@linuxfoundation.org>
+Subject: [PATCH 5.4 163/261] btrfs: force chunk allocation if our global rsv is larger than metadata
+Date:   Fri, 19 Jun 2020 16:32:54 +0200
+Message-Id: <20200619141657.697361153@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,39 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit e2c8e92d1140754073ad3799eb6620c76bab2078 upstream.
+commit 9c343784c4328781129bcf9e671645f69fe4b38a upstream.
 
-If an error happens while running dellaloc in COW mode for a range, we can
-end up calling extent_clear_unlock_delalloc() for a range that goes beyond
-our range's end offset by 1 byte, which affects 1 extra page. This results
-in clearing bits and doing page operations (such as a page unlock) outside
-our target range.
+Nikolay noticed a bunch of test failures with my global rsv steal
+patches.  At first he thought they were introduced by them, but they've
+been failing for a while with 64k nodes.
 
-Fix that by calling extent_clear_unlock_delalloc() with an inclusive end
-offset, instead of an exclusive end offset, at cow_file_range().
+The problem is with 64k nodes we have a global reserve that calculates
+out to 13MiB on a freshly made file system, which only has 8MiB of
+metadata space.  Because of changes I previously made we no longer
+account for the global reserve in the overcommit logic, which means we
+correctly allow overcommit to happen even though we are already
+overcommitted.
 
-Fixes: a315e68f6e8b30 ("Btrfs: fix invalid attempt to free reserved space on failure to cow range")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+However in some corner cases, for example btrfs/170, we will allocate
+the entire file system up with data chunks before we have enough space
+pressure to allocate a metadata chunk.  Then once the fs is full we
+ENOSPC out because we cannot overcommit and the global reserve is taking
+up all of the available space.
+
+The most ideal way to deal with this is to change our space reservation
+stuff to take into account the height of the tree's that we're
+modifying, so that our global reserve calculation does not end up so
+obscenely large.
+
+However that is a huge undertaking.  Instead fix this by forcing a chunk
+allocation if the global reserve is larger than the total metadata
+space.  This gives us essentially the same behavior that happened
+before, we get a chunk allocated and these tests can pass.
+
+This is meant to be a stop-gap measure until we can tackle the "tree
+height only" project.
+
+Fixes: 0096420adb03 ("btrfs: do not account global reserve in can_overcommit")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Tested-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/block-rsv.c   |    3 +++
+ fs/btrfs/transaction.c |   18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -1132,7 +1132,7 @@ out_unlock:
- 	 */
- 	if (extent_reserved) {
- 		extent_clear_unlock_delalloc(inode, start,
--					     start + cur_alloc_size,
-+					     start + cur_alloc_size - 1,
- 					     locked_page,
- 					     clear_bits,
- 					     page_ops);
+--- a/fs/btrfs/block-rsv.c
++++ b/fs/btrfs/block-rsv.c
+@@ -5,6 +5,7 @@
+ #include "block-rsv.h"
+ #include "space-info.h"
+ #include "transaction.h"
++#include "block-group.h"
+ 
+ static u64 block_rsv_release_bytes(struct btrfs_fs_info *fs_info,
+ 				    struct btrfs_block_rsv *block_rsv,
+@@ -313,6 +314,8 @@ void btrfs_update_global_block_rsv(struc
+ 	else
+ 		block_rsv->full = 0;
+ 
++	if (block_rsv->size >= sinfo->total_bytes)
++		sinfo->force_alloc = CHUNK_ALLOC_FORCE;
+ 	spin_unlock(&block_rsv->lock);
+ 	spin_unlock(&sinfo->lock);
+ }
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -21,6 +21,7 @@
+ #include "dev-replace.h"
+ #include "qgroup.h"
+ #include "block-group.h"
++#include "space-info.h"
+ 
+ #define BTRFS_ROOT_TRANS_TAG 0
+ 
+@@ -451,6 +452,7 @@ start_transaction(struct btrfs_root *roo
+ 	u64 num_bytes = 0;
+ 	u64 qgroup_reserved = 0;
+ 	bool reloc_reserved = false;
++	bool do_chunk_alloc = false;
+ 	int ret;
+ 
+ 	/* Send isn't supposed to start transactions. */
+@@ -513,6 +515,9 @@ start_transaction(struct btrfs_root *roo
+ 							  delayed_refs_bytes);
+ 			num_bytes -= delayed_refs_bytes;
+ 		}
++
++		if (rsv->space_info->force_alloc)
++			do_chunk_alloc = true;
+ 	} else if (num_items == 0 && flush == BTRFS_RESERVE_FLUSH_ALL &&
+ 		   !delayed_refs_rsv->full) {
+ 		/*
+@@ -595,6 +600,19 @@ got_it:
+ 		current->journal_info = h;
+ 
+ 	/*
++	 * If the space_info is marked ALLOC_FORCE then we'll get upgraded to
++	 * ALLOC_FORCE the first run through, and then we won't allocate for
++	 * anybody else who races in later.  We don't care about the return
++	 * value here.
++	 */
++	if (do_chunk_alloc && num_bytes) {
++		u64 flags = h->block_rsv->space_info->flags;
++
++		btrfs_chunk_alloc(h, btrfs_get_alloc_profile(fs_info, flags),
++				  CHUNK_ALLOC_NO_FORCE);
++	}
++
++	/*
+ 	 * btrfs_record_root_in_trans() needs to alloc new extents, and may
+ 	 * call btrfs_join_transaction() while we're also starting a
+ 	 * transaction.
 
 
