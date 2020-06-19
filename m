@@ -2,59 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD538C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F10208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7971C20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592542166;
-	bh=TcXqcTniiLxhxc5DU8KIFe2LdVfDIxl9gdz/Z4xE8qQ=;
+	s=default; t=1592542504;
+	bh=bFexccscXk2UlaIa+BaEhorrfA99CZlAzpnuwyv3vSg=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=coZ7NA2zDsR2X5uTV5ORHJIzFB2SVdfCx/zbBoA7uVLn9B/UfoKT6mdLj2RMu9ptX
-	 yMFcRVSwogeDahz1kW36QSnzpldVsAJVvNoQXGMOiuT/LrfS1Q3joPpv4WV3P45H22
-	 d3LVnFOUK6JaAQbBg8+GhlQdnZiYiGx/3pQTjUzY=
+	b=qzcq6Lx0zLcB/nq1GprBMO47ZY8cQzVQJHlvlkGeYFeXai3mNEJIZtUPbJ7XXCHKZ
+	 Lu3BzqGOFAF+KcQZ+CrRHZP69qmatMhSruge+8qUYOrYKWGvIiwj9H5EMdGPcYlteJ
+	 3XZd4GfF3fnup4fJ5tfvoZ/O7HcoApJM3WFolLeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFSEtZ (ORCPT
+        id S1727114AbgFSEzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:49:25 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:32689 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgFSEtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:49:24 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 05J4mTiI004103;
-        Fri, 19 Jun 2020 13:48:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05J4mTiI004103
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592542109;
-        bh=4rA0auD5UHtK39rgTINnfk8iRh3kcMgz0E+K3tWV1bs=;
+        Fri, 19 Jun 2020 00:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgFSEzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 00:55:02 -0400
+Received: from localhost.localdomain (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5FF220890;
+        Fri, 19 Jun 2020 04:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592542502;
+        bh=bFexccscXk2UlaIa+BaEhorrfA99CZlAzpnuwyv3vSg=;
         h=From:To:Cc:Subject:Date:From;
-        b=t4wrpDkn0sGbFNPqcvU2nw/3SooDaTwIeBuD3QIRo0qK6wE8TkBkIenkPkD6F1I4D
-         VMqAlsS23fcB+h/qch+pzMu09HWIKVXTaoGFwaqtGyF+4Bptyb2xe+xZF0EpdrW3nL
-         Ga8BlMvo1MPU/m5PRKcoD5uICObYaLaIA7xPtcQxzLExFpADePvE2Mi8Gfh2v5nKUl
-         LQXSSl6rkb5IAxL3bgxGdU0zY8OzWGp8CC8oXKf0VfPTokvQgGN8ewUoPnyeKIQyGS
-         5d1kApNdW/hl7IVtJ+gbqL72LkBZrqWJ6pTotVCJR9Y1ytGN3jhQscdTQwAH9T2Haq
-         J/tAeeRPaBoNg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "Makefile: install modules.builtin even if CONFIG_MODULES=n"
-Date:   Fri, 19 Jun 2020 13:48:23 +0900
-Message-Id: <20200619044823.863461-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        b=LnGKm3Z2NDS1Q4yfFCee0znsKJe5Whm49EzlQ8HMzD5RrWZGsRVFNp2o3ULielKJD
+         u9jM6X0PdR2qWV1GMfwV6Gava33WXp6GOgV6yBXS/fJ9v+SmdZBL09VhI5BODQiHbC
+         Rj92N5hz4OKVc+QsVudgvfjkZj5e3LjOaS/MuONw=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] ALSA: compress: Document stream states and fix gaplless SM
+Date:   Fri, 19 Jun 2020 10:24:45 +0530
+Message-Id: <20200619045449.3966868-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,64 +55,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit e0b250b57dcf403529081e5898a9de717f96b76b.
+Srini found issue with gapless implementation which prompted to look deeper
+into SM for compressed stream.
 
-Now that "make install" copies modules.builtin to $(INSTALL_MOD_PATH),
-it breaks systems that do not set INSTALL_MOD_PATH for "make install".
+So documenting SM was first step, so first two patches add that. Last patch
+fixes the issue by keeping track on partial_drain and then moving state to
+'running' in snd_compr_drain_notify() for partial_drain case on success.
+While at it, noticed snd_compr_drain_notify() is lockless state change, so
+fixed that as well.
 
-While modules.builtin is useful for CONFIG_MODULES=n, this way gives
-unexpected impact to existing systems. Maybe "make modules_install"
-can install modules.builtin irrespective of CONFIG_MODULES as Jonas
-originally suggested. Anyway, this commit should be reverted ASAP.
+I have tested this on Dragon board RB3, compressed audio works out of the
+box on that platform and Srini will send driver and fcplay patches for
+gapless soon.
 
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Vinod Koul (3):
+  ALSA: compress: document the compress audio state machine
+  ALSA: compress: document the compress gapless audio state machine
+  ALSA: compress: fix partial_drain completion state
 
- Makefile | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ .../sound/designs/compress-offload.rst        | 84 +++++++++++++++++++
+ include/sound/compress_driver.h               | 12 ++-
+ sound/core/compress_offload.c                 |  4 +
+ 3 files changed, 99 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 29abe44ada91..9880e911afe3 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1336,16 +1336,6 @@ dt_binding_check: scripts_dtc
- # ---------------------------------------------------------------------------
- # Modules
- 
--# install modules.builtin regardless of CONFIG_MODULES
--PHONY += _builtin_inst_
--_builtin_inst_:
--	@mkdir -p $(MODLIB)/
--	@cp -f modules.builtin $(MODLIB)/
--	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
--
--PHONY += install
--install: _builtin_inst_
--
- ifdef CONFIG_MODULES
- 
- # By default, build modules as well
-@@ -1389,7 +1379,7 @@ PHONY += modules_install
- modules_install: _modinst_ _modinst_post
- 
- PHONY += _modinst_
--_modinst_: _builtin_inst_
-+_modinst_:
- 	@rm -rf $(MODLIB)/kernel
- 	@rm -f $(MODLIB)/source
- 	@mkdir -p $(MODLIB)/kernel
-@@ -1399,6 +1389,8 @@ _modinst_: _builtin_inst_
- 		ln -s $(CURDIR) $(MODLIB)/build ; \
- 	fi
- 	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
-+	@cp -f modules.builtin $(MODLIB)/
-+	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
- 
- # This depmod is only for convenience to give the initial
 -- 
-2.25.1
+2.26.2
 
