@@ -7,49 +7,72 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E11EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BAB21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BF32158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584500;
-	bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
+	s=default; t=1592584508;
+	bh=UUwxL5xLHGXldFQX6wmblQgeNowCOvhWYxiVUwwxI3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTT6hgxU0dwsRLkD+1P+JTSj1zr7pwWfeoaECUWzR/gQh6h3Edc9F+lPbqH76n44w
-	 W+gYSMEUwOYooHUdZDxza2Isdf41/QEhCZyDK6PxDJ8M7fuM14/TUzfjrpZaqBfrcs
-	 MdlxezbrzEP7QvEsBYfM+LpBT6Z9Q6ZPt7IJIiRg=
+	b=A9b39kE4+FpEiitRh+JP6tnfRz41tZguIQAHFfbMCvgFzREyEHQoAS7yUWBY/dRH5
+	 au63qKfDNtHrPrsFv4bSmdM/Ju9wE1ZCToTiTfzHu8WFIIzkSICOk7YYK7sVMJLrEw
+	 QEEO4ldrrs+ZnzIT1bydZl5G6N2YsXCpfFD5j9vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395194AbgFSQe7 (ORCPT
+        id S2388655AbgFSQfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43368 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389303AbgFSOuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:25 -0400
+        id S2389282AbgFSOuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D54DC20776;
-        Fri, 19 Jun 2020 14:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2640B20776;
+        Fri, 19 Jun 2020 14:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578225;
-        bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
+        s=default; t=1592578209;
+        bh=UUwxL5xLHGXldFQX6wmblQgeNowCOvhWYxiVUwwxI3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhzMK27gjld7/GhmVRtR1dy21/5qrhbgUf/kqEGVJ2RaE9KUBOqK2sBCJ99yGxaRz
-         V+mLNkkSlje2rlJ1vKLDzFdnr0Txc0vJktZJasCEmLWBuonn0DOYw5hgyD1+qWlStD
-         qwLjh9IR4T0kPFxrRF+tOPuZEQ+X5xvxYnnaQfqg=
+        b=tMtR2DKOkHHBJ/tW4OJB2rx1hKXZBui5Q/0JAEBKbhvXZZXWWrIePhluEOJNKezNB
+         zq6QXuEdgtypdyX7c2ARuYhaLygOQ/DEDcufeEcjocXsFKk73qVbqTTCGtoQcuuG1H
+         mFAQ7NFvvHus2+a4ihWFOnFNfgcA8pArUe65Jd/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/190] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
-Date:   Fri, 19 Jun 2020 16:32:16 +0200
-Message-Id: <20200619141638.139733524@linuxfoundation.org>
+Subject: [PATCH 4.14 095/190] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Fri, 19 Jun 2020 16:32:20 +0200
+Message-Id: <20200619141638.344026345@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -62,63 +85,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
+[ Upstream commit 5bf9917452112694b2c774465ee4dbe441c84b77 ]
 
-Recent work with KASan exposed the folling hard-coded bitmask
-in arch/arm/mm/proc-macros.S:
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-  bic     rd, sp, #8128
-  bic     rd, rd, #63
-
-This forms the bitmask 0x1FFF that is coinciding with
-(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
-that THREAD_SIZE is always 8K (8192).
-
-As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
-this bug.
-
-Fix it by this little oneline suggested by Ard:
-
-  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
-
-Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
-
-We have to also include <linux/const.h> since the THREAD_SIZE
-expands to use the _AC() macro.
-
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200414131348.444715-4-hch@lst.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/proc-macros.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
-index 5461d589a1e2..60ac7c5999a9 100644
---- a/arch/arm/mm/proc-macros.S
-+++ b/arch/arm/mm/proc-macros.S
-@@ -5,6 +5,7 @@
-  *  VMA_VM_FLAGS
-  *  VM_EXEC
-  */
-+#include <linux/const.h>
- #include <asm/asm-offsets.h>
- #include <asm/thread_info.h>
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index babbd94c32d9..33a9777e7a99 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -105,12 +105,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
  
-@@ -30,7 +31,7 @@
-  * act_mm - get current->active_mm
-  */
- 	.macro	act_mm, rd
--	bic	\rd, sp, #8128
-+	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
- 	bic	\rd, \rd, #63
- 	ldr	\rd, [\rd, #TI_TASK]
- 	.if (TSK_ACTIVE_MM > IMM12_MASK)
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP, pgprot);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
