@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E994C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E13C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2754D20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C951C20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581869;
-	bh=9bnpDbtIjXuK5hf81+Zi0XxGmFb2an6nsBRCwIBobCo=;
+	s=default; t=1592581872;
+	bh=0kTjp2ybDUM0ctaeDR3fOgYBPE7QHYAKia5yuuniklk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUKKD/mjTsV5Gq+Ag2WFXe94DPuVr/Zc/T26VNoiFRsjo4dO2p2rDIWO8iKMJFzZd
-	 8eFs1kRJcYU3z4X29zb2X3iaFGVc35zEHdFjtd8NSqJpr3d68Ag59ekOpAnQi9WZ2L
-	 JCWZWsYD0QjUQXVvIp8+nQ6d7rcboG2DQXAH7Mco=
+	b=PsfFIMls5T+MUDsmi+NZQjZ7q9DnThdUmEmi2TXyMfucqWV2IKLAiIbaosbxZc6t9
+	 SDV5LyMSwmdzdXszwH+uhCdRhDHk8LpfpmUkUPLy+SPpIucUg9dQ84RBfz+pn0xWOf
+	 7h9mDr9t5OAhd91kMNSLRbVofH+/61kGUjbDUSu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404031AbgFSPYL (ORCPT
+        id S2394157AbgFSPvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51688 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:51:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392705AbgFSPUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:33 -0400
+        id S2404009AbgFSPYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74AB20706;
-        Fri, 19 Jun 2020 15:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA08B21548;
+        Fri, 19 Jun 2020 15:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580032;
-        bh=9bnpDbtIjXuK5hf81+Zi0XxGmFb2an6nsBRCwIBobCo=;
+        s=default; t=1592580250;
+        bh=0kTjp2ybDUM0ctaeDR3fOgYBPE7QHYAKia5yuuniklk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nv0khmXpvNa5lz0VofQUqRpH2pPq6zXDQdbWvME482nCSjGYvvM95hBKwuV/6qltb
-         /xtokXDkeSR29bdEwrtTXGmYBXQ+NLoBNojn38mMjXecxN2kistXJ8YsCloqY37Rcm
-         mC7Km+kG1LteGeQe4C/xlB00198c3AyWh3pzqzQs=
+        b=b1M7Rqm7y4llSkVbJ00sLzZULuq4l+n9qxj+6cScx/j0U9wqgsKPNPQCydvPqoQkH
+         Mvu0F/F8C6+/fXJKdrfoJaUb1fJACjtRkRopKYUOyQtZz35eBAzM0FECPbG4ItQVqe
+         muGvOeyIlYoQWHtJkio3E0CL0beMr91GEp9kJbmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 097/376] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Fri, 19 Jun 2020 16:30:15 +0200
-Message-Id: <20200619141714.940296667@linuxfoundation.org>
+Subject: [PATCH 5.7 148/376] ath11k: fix error return code in ath11k_dp_alloc()
+Date:   Fri, 19 Jun 2020 16:31:06 +0200
+Message-Id: <20200619141717.334193760@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit f76f750aeea47fd98b6502eb6d37f84ca33662bf ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+Fix to return negative error code -ENOMEM from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: d0998eb84ed3 ("ath11k: optimise ath11k_dp_tx_completion_handler")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200427104621.23752-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/ath/ath11k/dp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index 58914cf681b8..77def4456706 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -17,6 +17,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
+diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
+index 50350f77b309..2f35d325f7a5 100644
+--- a/drivers/net/wireless/ath/ath11k/dp.c
++++ b/drivers/net/wireless/ath/ath11k/dp.c
+@@ -909,8 +909,10 @@ int ath11k_dp_alloc(struct ath11k_base *ab)
+ 		dp->tx_ring[i].tx_status_head = 0;
+ 		dp->tx_ring[i].tx_status_tail = DP_TX_COMP_RING_SIZE - 1;
+ 		dp->tx_ring[i].tx_status = kmalloc(size, GFP_KERNEL);
+-		if (!dp->tx_ring[i].tx_status)
++		if (!dp->tx_ring[i].tx_status) {
++			ret = -ENOMEM;
+ 			goto fail_cmn_srng_cleanup;
++		}
+ 	}
  
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
-+
- Example:
- 
- dpi0: dpi@1401d000 {
-@@ -27,6 +30,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
+ 	for (i = 0; i < HAL_DSCP_TID_MAP_TBL_NUM_ENTRIES_MAX; i++)
 -- 
 2.25.1
 
