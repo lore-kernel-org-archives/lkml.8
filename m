@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8456CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F800C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A3D21D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E259D21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579366;
-	bh=04xDDYmF3tfwCnDYyMSKeMQzlCv1zmNKzYkpvL64Kog=;
+	s=default; t=1592579369;
+	bh=Ny6OLHVagwxrZCDCRrhIeIZMK/BoUcOcooQhmFSmkh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oz3RHaEpRzwzWY84rbw2FPNnkjoSILxx9R5PKiQ+6Z3JUdFpV+G0npo22RgyjKuek
-	 Cl1Hz36IaInYq7f3zH5BU3P9JJNoRNS+Nh3RlVc/8TnNpbsfRdK7Ke5KlEEyPYLYfa
-	 bl+HuXMj/eDEp7PzXQZPTfBPn4fhSG7cWaO4ufLo=
+	b=QgvX8ZRG+Wpe9Ytz6nwadmZR1gVtuNEIzL7/qT4GKGj0lQR8z1YAKvZ71PhQ0qqbR
+	 ts+NbYYZmpKip7a0Qc57hOTrLg9auO5rNoz5Ngwhk1O2NFsn4/8dmFT73KU9loV0kJ
+	 6MhBf9+T4Gvgz/+OEKxki0rZpzCWcnWfF11G1cUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391908AbgFSPJY (ORCPT
+        id S2391915AbgFSPJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:09:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390822AbgFSPJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:22 -0400
+        id S2391892AbgFSPJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:09:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AAA21852;
-        Fri, 19 Jun 2020 15:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5135721D7B;
+        Fri, 19 Jun 2020 15:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579361;
-        bh=04xDDYmF3tfwCnDYyMSKeMQzlCv1zmNKzYkpvL64Kog=;
+        s=default; t=1592579358;
+        bh=Ny6OLHVagwxrZCDCRrhIeIZMK/BoUcOcooQhmFSmkh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfQ9UqHVaYhigt0toD+zF1OfFukOeybY8S9VIobyL+QHj9+xTY2qZaJ9I3khQ4Kkj
-         pvPka15LMJIwpSgJsaajViZs4IBFZNU/mUdLsVdFdwcO+tJU54kaDXRhrrWepiJIkr
-         sJmZxtKEZLqZ62pBHa4ckWF7uL9ZbGy9Am+IYx1w=
+        b=0pwW4juvpNLTpKzn1yFIX4uIP1pXPxT/Ym41ai4Fr6BTzQxqNUOk9UFOwxzF3g0PW
+         yIIClFxSLP2FCrdlAB1pqUUlByvUVkfbKhiPx7/vm/r7ycACAh9VBgVjdWUc/aKEz3
+         tyRJCg2Sb2PnriTGhK+8RkrwurXOH58vzNlW/ObE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 107/261] ath10k: Remove msdu from idr when management pkt send fails
-Date:   Fri, 19 Jun 2020 16:31:58 +0200
-Message-Id: <20200619141654.997575581@linuxfoundation.org>
+Subject: [PATCH 5.4 106/261] nvme-tcp: use bh_lock in data_ready
+Date:   Fri, 19 Jun 2020 16:31:57 +0200
+Message-Id: <20200619141654.943851986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,120 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit c730c477176ad4af86d9aae4d360a7ad840b073a ]
+[ Upstream commit 386e5e6e1aa90b479fcf0467935922df8524393d ]
 
-Currently when the sending of any management pkt
-via wmi command fails, the packet is being unmapped
-freed in the error handling. But the idr entry added,
-which is used to track these packet is not getting removed.
+data_ready may be invoked from send context or from
+softirq, so need bh locking for that.
 
-Hence, during unload, in wmi cleanup, all the entries
-in IDR are removed and the corresponding buffer is
-attempted to be freed. This can cause a situation where
-one packet is attempted to be freed twice.
-
-Fix this error by rmeoving the msdu from the idr
-list when the sending of a management packet over
-wmi fails.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1588667015-25490-1-git-send-email-pillair@codeaurora.org
+Fixes: 3f2304f8c6d6 ("nvme-tcp: add NVMe over TCP host driver")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c     |  3 +++
- drivers/net/wireless/ath/ath10k/wmi-ops.h | 10 ++++++++++
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
- 3 files changed, 28 insertions(+)
+ drivers/nvme/host/tcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index c6ab1fcde84d..d373602a8014 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3911,6 +3911,9 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
- 			if (ret) {
- 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
- 					    ret);
-+				/* remove this msdu from idr tracking */
-+				ath10k_wmi_cleanup_mgmt_tx_send(ar, skb);
-+
- 				dma_unmap_single(ar->dev, paddr, skb->len,
- 						 DMA_TO_DEVICE);
- 				ieee80211_free_txskb(ar->hw, skb);
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-index 1491c25518bb..edccabc667e8 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-@@ -133,6 +133,7 @@ struct wmi_ops {
- 	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
- 					    struct sk_buff *skb,
- 					    dma_addr_t paddr);
-+	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
- 	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
- 					  u32 log_level);
- 	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
-@@ -441,6 +442,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
- 	return ar->wmi.ops->get_txbf_conf_scheme(ar);
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 11e84ed4de36..7900814355c2 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -784,11 +784,11 @@ static void nvme_tcp_data_ready(struct sock *sk)
+ {
+ 	struct nvme_tcp_queue *queue;
+ 
+-	read_lock(&sk->sk_callback_lock);
++	read_lock_bh(&sk->sk_callback_lock);
+ 	queue = sk->sk_user_data;
+ 	if (likely(queue && queue->rd_enabled))
+ 		queue_work_on(queue->io_cpu, nvme_tcp_wq, &queue->io_work);
+-	read_unlock(&sk->sk_callback_lock);
++	read_unlock_bh(&sk->sk_callback_lock);
  }
  
-+static inline int
-+ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
-+{
-+	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
-+		return -EOPNOTSUPP;
-+
-+	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
-+}
-+
- static inline int
- ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 			dma_addr_t paddr)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index eb0c963d9fd5..9d5b9df29c35 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2837,6 +2837,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
- 	return skb;
- }
- 
-+static int
-+ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
-+				       struct sk_buff *msdu)
-+{
-+	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
-+	struct ath10k_wmi *wmi = &ar->wmi;
-+
-+	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
-+
-+	return 0;
-+}
-+
- static int
- ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
- 				 dma_addr_t paddr)
-@@ -2911,6 +2923,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if (desc_id < 0)
- 		goto err_free_skb;
- 
-+	cb->msdu_id = desc_id;
-+
- 	ptr = (void *)skb->data;
- 	tlv = ptr;
- 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
-@@ -4339,6 +4353,7 @@ static const struct wmi_ops wmi_tlv_ops = {
- 	.gen_force_fw_hang = ath10k_wmi_tlv_op_gen_force_fw_hang,
- 	/* .gen_mgmt_tx = not implemented; HTT is used */
- 	.gen_mgmt_tx_send = ath10k_wmi_tlv_op_gen_mgmt_tx_send,
-+	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
- 	.gen_dbglog_cfg = ath10k_wmi_tlv_op_gen_dbglog_cfg,
- 	.gen_pktlog_enable = ath10k_wmi_tlv_op_gen_pktlog_enable,
- 	.gen_pktlog_disable = ath10k_wmi_tlv_op_gen_pktlog_disable,
+ static void nvme_tcp_write_space(struct sock *sk)
 -- 
 2.25.1
 
