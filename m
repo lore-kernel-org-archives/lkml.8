@@ -2,131 +2,125 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00336C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F066DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2998217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584130;
-	bh=iA6IPZ+8Tod7dXsCMS4bm29UsmZAqdxGD/VBkEX85WA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6e7pgGqSq9m9d2yUADCqDW8cRzis/QLcSGCl+YuOXwKMAro2aJePP/deOz400XRl
-	 qICfxwk3se86Azo4LNmzhTzY9hyy90ihdl4oS911Vorphet2AJ2kp52K8ZFWf9xQVJ
-	 thQ4JE1q7CBdeP+QuQRst0LgAXy6dt8yw3ObeViY=
+	by mail.kernel.org (Postfix) with ESMTP id CFE50217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404769AbgFSQ2S (ORCPT
+        id S2394953AbgFSQ2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389567AbgFSOzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE742206F7;
-        Fri, 19 Jun 2020 14:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578523;
-        bh=iA6IPZ+8Tod7dXsCMS4bm29UsmZAqdxGD/VBkEX85WA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gApwQ8fUuMkPGQUol59wztbqLeKv//5cxY6FZgS+f4i4MAiTJsgWnRJsxKsoV7GRc
-         4+prbIyD+jy3kFCkx/XZ0bfSWWm7TM+IfkifuLRTnMZLgfCMeyCaxXrIrB3My9EpPI
-         L0TeeTHqdOOZ8GpvsInaJPSODDApBhHfiHm3lzgw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/267] perf probe: Accept the instance number of kretprobe event
-Date:   Fri, 19 Jun 2020 16:30:09 +0200
-Message-Id: <20200619141650.031116312@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:28:52 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2345 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389951AbgFSQ22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:28:28 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 562AE804842AEAABF565;
+        Fri, 19 Jun 2020 17:28:24 +0100 (IST)
+Received: from localhost (10.52.127.178) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 19 Jun
+ 2020 17:28:23 +0100
+Date:   Fri, 19 Jun 2020 17:27:33 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.4 23/60] iio: buffer: Don't allow buffers
+ without any channels enabled to be activated
+Message-ID: <20200619172733.00005d9d@Huawei.com>
+In-Reply-To: <20200618013004.610532-23-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
+        <20200618013004.610532-23-sashal@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.178]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Wed, 17 Jun 2020 21:29:27 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> 
+> [ Upstream commit b7329249ea5b08b2a1c2c3f24a2f4c495c4f14b8 ]
+> 
+> Before activating a buffer make sure that at least one channel is enabled.
+> Activating a buffer with 0 channels enabled doesn't make too much sense and
+> disallowing this case makes sure that individual driver don't have to add
+> special case code to handle it.
+> 
+> Currently, without this patch enabling a buffer is possible and no error is
+> produced. With this patch -EINVAL is returned.
+> 
+> An example of execution with this patch and some instrumented print-code:
+>    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+>    1: iio_verify_update 753
+>    2:__iio_update_buffers 1115 ret -22
+>    3: iio_buffer_store_enable 1241 ret -22
+>    -bash: echo: write error: Invalid argument
+> 1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
+> rergardless of error path.
+> 
+> Without this patch (and same instrumented print-code):
+>    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer#
+> Buffer is enabled with no error.
+> 
+> Note from Jonathan: Probably not suitable for automatic application to stable.
+> This has been there from the very start.  It tidies up an odd corner
+> case but won't effect any 'real' users.
+> 
 
-Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
-on kprobe_events") introduced to show the instance number of kretprobe
-events, the length of the 1st format of the kprobe event will not 1, but
-it can be longer.  This caused a parser error in perf-probe.
+As noted. I don't think it matters if we do apply this to stable.
+It closes an interface oddity rather than an actual known bug.
 
-Skip the length check the 1st format of the kprobe event to accept this
-instance number.
-
-Without this fix:
-
-  # perf probe -a vfs_read%return
-  Added new event:
-    probe:vfs_read__return (on vfs_read%return)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read__return -aR sleep 1
-
-  # perf probe -l
-  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
-    Error: Failed to show event list.
-
-And with this fixes:
-
-  # perf probe -a vfs_read%return
-  ...
-  # perf probe -l
-    probe:vfs_read__return (on vfs_read%return)
-
-Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
-Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/probe-event.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index a22e1f538aea..4dd79e08cb7b 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1753,8 +1753,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
- 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
- 	fmt2_str = strtok_r(NULL, "/", &fmt);
- 	fmt3_str = strtok_r(NULL, " \t", &fmt);
--	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
--	    || fmt3_str == NULL) {
-+	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
- 		semantic_error("Failed to parse event name: %s\n", argv[0]);
- 		ret = -EINVAL;
- 		goto out;
--- 
-2.25.1
-
+> Fixes: 84b36ce5f79c0 ("staging:iio: Add support for multiple buffers")
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/iio/industrialio-buffer.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index 864a61b05665..fea41b328ab9 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -641,6 +641,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
+>  	bool scan_timestamp;
+>  	unsigned int modes;
+>  
+> +	if (insert_buffer &&
+> +	    bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
+> +		dev_dbg(&indio_dev->dev,
+> +			"At least one scan element must be enabled first\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	memset(config, 0, sizeof(*config));
+>  
+>  	/*
 
 
