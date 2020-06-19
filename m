@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14452C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A065CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE90121707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C66921707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583591;
-	bh=Bavk9QbyY+cBR5Q37haU6BSR4Badx9cgk1Oa4nFKzzI=;
+	s=default; t=1592583596;
+	bh=W3ZhRUwNiWudInO1qOqNzl8fJ3VzFMEDoRHUiQYNBKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5D66xf6Wc8V/wj7IvQe8Hn5Nfz6U+hp7158YSZm9Qt8KWtoPSTMSTfcK++IEa24D
-	 vORMYdW7T2IssHynyS4ShOn03FZTdc2pKcbPyb4LnZoVtQLYEK6fquc1oksBlgL4ZO
-	 83xTm6feqPjsf7kafekgk3sga+s3KuRZjcUAt+tQ=
+	b=wdQH6FEpFzImOO8RHeXZtnHWH+1jMCI4U9R9fSQTZqjdmDd9fXgyqPoqO0nQcsL+U
+	 KvzKIkyiwkxgibsmBoQvchlsthgMQt3xl9wsGj5hwqHZ2ypTwoZ48Wvub3W49a/i41
+	 kuahxCJ1VwxzhYHjBdPbdU6cnrHbjZICd43B1Llg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394608AbgFSQTt (ORCPT
+        id S2388896AbgFSQTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389657AbgFSPBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:45 -0400
+        id S2390424AbgFSPBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A60920734;
-        Fri, 19 Jun 2020 15:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CF3D2193E;
+        Fri, 19 Jun 2020 15:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578905;
-        bh=Bavk9QbyY+cBR5Q37haU6BSR4Badx9cgk1Oa4nFKzzI=;
+        s=default; t=1592578908;
+        bh=W3ZhRUwNiWudInO1qOqNzl8fJ3VzFMEDoRHUiQYNBKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKjFqojThTZMkGaJ7VH3CnOgSN6weQMU8a72zKzvs8vzpzPuEZBr9CzpP6Z5vj9Tp
-         M/NCLtYXLYCOLBMb9Vac/uIbsgoiOPv4IXn1cbUBdZocSwCPaSvw56RM5qbgJRJ02m
-         DqzGyG3PeRGK7JcVYZ4lQBYi/GP0K2fxfCoAmpM4=
+        b=aM41MsvC44MpcWJRq2VjtICLtZDN05UUWMqgCwria5KumwtGuZbZluTEdWk7KbewT
+         oeOXxQiflcBGNb9P33OjEU+iSS/978u9/lw0Ks7GAnKiFCq0AXHO3ULBJTyclj979b
+         bm62FZD5LQFyHKWwqhyGfvB4Gq0pO4kQz7nyypzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhinav Ratna <abhinav.ratna@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Scott Branden <scott.branden@broadcom.com>,
+        stable@vger.kernel.org,
+        Nickolai Kozachenko <daemongloom@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 202/267] PCI: Add ACS quirk for iProc PAXB
-Date:   Fri, 19 Jun 2020 16:33:07 +0200
-Message-Id: <20200619141658.429157336@linuxfoundation.org>
+Subject: [PATCH 4.19 185/267] platform/x86: intel-hid: Add a quirk to support HP Spectre X2 (2015)
+Date:   Fri, 19 Jun 2020 16:32:50 +0200
+Message-Id: <20200619141657.628149888@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+From: Nickolai Kozachenko <daemongloom@gmail.com>
 
-[ Upstream commit 46b2c32df7a462d0e64b68c513e5c4c1b2a399a7 ]
+[ Upstream commit 8fe63eb757ac6e661a384cc760792080bdc738dc ]
 
-iProc PAXB Root Ports don't advertise an ACS capability, but they do not
-allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
-each Root Port can be in a separate IOMMU group.
+HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
+does not have this control method (the same was for Wacom MobileStudio Pro).
+Expand previous DMI quirk by Alex Hung to also enable 5 button array
+for this system.
 
-[bhelgaas: commit log, comment, use common implementation style]
-Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
-Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/platform/x86/intel-hid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 92892b1c35fa..013b84880e1d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4543,6 +4543,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
- 	return acs_flags ? 0 : 1;
- }
- 
-+static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	/*
-+	 * iProc PAXB Root Ports don't advertise an ACS capability, but
-+	 * they do not allow peer-to-peer transactions between Root Ports.
-+	 * Allow each Root Port to be in a separate IOMMU group by masking
-+	 * SV/RR/CR/UF bits.
-+	 */
-+	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+
-+	return acs_flags ? 0 : 1;
-+}
-+
- static const struct pci_dev_acs_enabled {
- 	u16 vendor;
- 	u16 device;
-@@ -4634,6 +4647,7 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	{ 0 }
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 3201a83073b5..c514cb73bb50 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -87,6 +87,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
+ 		},
+ 	},
++	{
++		.ident = "HP Spectre x2 (2015)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
++		},
++	},
+ 	{ }
  };
  
 -- 
