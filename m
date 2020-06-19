@@ -2,53 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76929C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5110121556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC4D2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578332;
-	bh=qZzGSYMamJhxwefjLo2x0UV9tBBc30LX2T7wPSzplg8=;
+	s=default; t=1592578338;
+	bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yza0/58MeO1GrjANc7TyJpkFpL3KRsNuUjaAKf7XYN8fBEp3PNFlC6KWehjz0hQSq
-	 w15l8QRhsFDrzBFvA0a4CE4sZTLmXz5LFKn/lQXtNqsecqufs46o3cPRs/sB5dmZAW
-	 JBOOhsPC/nLMz5j51lfuhPdfo9j1hkLOFnKFHThk=
+	b=Gaon7mqtU0GWJ/yVKNYogj1ETnGo3CPrTwKlbZY+/H4NE8HRJLwQVrWBh/X84Fl4Y
+	 m2nLOnced0zHdVfUlVBjZiq2hNyqPaSSTM0n5PkXhKibJUUtG8uYbeEOTU41iKMfAm
+	 8+VQroyEFU4NCHI79JbVIhq3HHVnW2Qt31ooOpgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389537AbgFSOwK (ORCPT
+        id S2389555AbgFSOwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389493AbgFSOvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:45 -0400
+        id S2389402AbgFSOwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE6621852;
-        Fri, 19 Jun 2020 14:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B12A21556;
+        Fri, 19 Jun 2020 14:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578305;
-        bh=qZzGSYMamJhxwefjLo2x0UV9tBBc30LX2T7wPSzplg8=;
+        s=default; t=1592578329;
+        bh=4JFtDNHFFW5pg3sH6TQO9VaAPDJzQon9y+GOPrV4sBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdEqaH5TZ5Vizy/hN9AXpgcu/+1AW2Ds3UYGAbUZKR+sdIvxVhlxIoRcbB+KjGLX0
-         NOfnO9mVPt7nRlXkLM2GlehMDW8+jbhLgra5usF2UQKsPicxz9LrnOwvLGZ6BkW4lG
-         SMvp8Yz06HV14I4cgjVHr0ukThseRVyPMf/IlZBw=
+        b=CROfPqyDUETcZ3dXKdLTeqn3qSC5xchjmxzuiEtUp7IBUm+2PQb9893cdiPAwn/rg
+         FFdW6NMZxe/q7IVhQ9UjEAudG713xOCAZKqj5xOx1Zss688sJxykQreeUuHHNi5dol
+         YjfxeS2+2yl/JBjGTNeFHHy85Kwa4eRABsf9thCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        greybus-dev@lists.linaro.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 132/190] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
-Date:   Fri, 19 Jun 2020 16:32:57 +0200
-Message-Id: <20200619141640.221168613@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 172/190] power: vexpress: add suppress_bind_attrs to true
+Date:   Fri, 19 Jun 2020 16:33:37 +0200
+Message-Id: <20200619141642.371011429@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,66 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
+commit 73174acc9c75960af2daa7dcbdb9781fc0d135cb upstream.
 
-Using a fixed 1s timeout for all commands is a bit problematic.
+Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
+attributes available via the sysfs, so lets be explicit here and use
+".suppress_bind_attrs = true" to prevent userspace from doing something
+silly.
 
-For some commands it means waiting longer than needed for the timeout to
-expire, which may not a big issue, but still. For other commands, like for
-an erase (CMD38) that uses a R1B response, may require longer timeouts than
-1s. In these cases, we may end up treating the command as it failed, while
-it just needed some more time to complete successfully.
+Link: https://lore.kernel.org/r/20200527112608.3886105-2-anders.roxell@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix the problem by respecting the cmd->busy_timeout, which is provided by
-the mmc core.
-
-Cc: Rui Miguel Silva <rmfrfs@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Alex Elder <elder@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greybus-dev@lists.linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/sdio.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/power/reset/vexpress-poweroff.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
-index 101ca5097fc9..93e2c091c565 100644
---- a/drivers/staging/greybus/sdio.c
-+++ b/drivers/staging/greybus/sdio.c
-@@ -412,6 +412,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
- 	struct gb_sdio_command_request request = {0};
- 	struct gb_sdio_command_response response;
- 	struct mmc_data *data = host->mrq->data;
-+	unsigned int timeout_ms;
- 	u8 cmd_flags;
- 	u8 cmd_type;
- 	int i;
-@@ -470,9 +471,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
- 		request.data_blksz = cpu_to_le16(data->blksz);
- 	}
+--- a/drivers/power/reset/vexpress-poweroff.c
++++ b/drivers/power/reset/vexpress-poweroff.c
+@@ -150,6 +150,7 @@ static struct platform_driver vexpress_r
+ 	.driver = {
+ 		.name = "vexpress-reset",
+ 		.of_match_table = vexpress_reset_of_match,
++		.suppress_bind_attrs = true,
+ 	},
+ };
  
--	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
--				&request, sizeof(request), &response,
--				sizeof(response));
-+	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
-+		GB_OPERATION_TIMEOUT_DEFAULT;
-+
-+	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
-+					&request, sizeof(request), &response,
-+					sizeof(response), timeout_ms);
- 	if (ret < 0)
- 		goto out;
- 
--- 
-2.25.1
-
 
 
