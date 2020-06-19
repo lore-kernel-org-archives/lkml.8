@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7839C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B395FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEFC2193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8818F21941
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579083;
-	bh=qkh8x50DtSsGOIs+mAzF4Ft84em9T1CXLn7vNnHAcJs=;
+	s=default; t=1592579087;
+	bh=X+fYMIqv9aW3zx9EKxEdSSMi/yaBPVv4khSCIkS3DbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ir+xxbIZ5r5MGkKcu2c/SOf6KJ2BOf4GszLD350zg4LYGQmZ1piU6qHxVas87LzT9
-	 p1EBh9IEHm5MbltqmW4Yi1Ue6ZUS/6jPbetq8tI5WhofLfS2FeLCDsGl7qHN1OfOz9
-	 3MIxJSEn4y7JoZ8VwPDJzc8MwFMsPKAobsNC3Jpw=
+	b=evh/jY0XuNtLdXiXLxYBwftKNS9Ii1vRl7d+ecqitEZbuIXhOn107phkdDp0zy+lS
+	 dmWxLN0khpdC/rtZXtoHtPMYpPSaOMaZDYjJ4kJH8rEXLPCd5rUZrP6khPaMf/zya8
+	 VYyicRiLuDTZm7OpMD6ge+T4/OeGSopot8Fmg1vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390500AbgFSPEm (ORCPT
+        id S2391185AbgFSPEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390706AbgFSPEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:37 -0400
+        id S2391179AbgFSPEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 366F821841;
-        Fri, 19 Jun 2020 15:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC1D21841;
+        Fri, 19 Jun 2020 15:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579076;
-        bh=qkh8x50DtSsGOIs+mAzF4Ft84em9T1CXLn7vNnHAcJs=;
+        s=default; t=1592579082;
+        bh=X+fYMIqv9aW3zx9EKxEdSSMi/yaBPVv4khSCIkS3DbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cqjgheSAMnaBXprLL+RbvjvGsTMZhJpswuQ5GyNeVBxDo/Js5BMN8THBJB6fnd7SC
-         YNs2tat8Qb0BmhqNIYYshREK0jUYkoIGb4VJri9p46IhaGKXnZbn1BD9rGzBGpwaZt
-         NkXqa+2cuzKSP1kNIxN/v/ZBR+QaLDRQtLh7VLZA=
+        b=Uqbou9Dddl3JSCMDZGEQid9VI1kqp/2a4CFqS6EOB/zzFPBiCbxNuUVea2MiUBRj7
+         oMdzrTGk28MiXmThvT/6OBEpE4gXQy18IcJ32xyz+ScwwdSbtVxun+Pn6sxqU537Q6
+         qVBk5ZCK/MdbyK1cnTd8KSKW26vQkoq5V2HIdswg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Travis Downs <travis.downs@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 267/267] perf symbols: Fix debuginfo search for Ubuntu
-Date:   Fri, 19 Jun 2020 16:34:12 +0200
-Message-Id: <20200619141701.489097695@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.19 252/267] ARM: dts: exynos: Fix GPIO polarity for thr GalaxyS3 CM36651 sensors bus
+Date:   Fri, 19 Jun 2020 16:33:57 +0200
+Message-Id: <20200619141700.760834318@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,123 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 85afd35575a3c1a3a905722dde5ee70b49282e70 upstream.
+commit 8807d356bfea92b0a8f04ce421800ed83400cd22 upstream.
 
-Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
-debug symbol files, putting files expected to be in
-/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
-another dso_binary_type.
+GPIO lines for the CM36651 sensor I2C bus use the normal not the inverted
+polarity. This bug has been there since adding the CM36651 sensor by
+commit 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node
+for exynos4412-trats2"), but went unnoticed because the "i2c-gpio"
+driver ignored the GPIO polarity specified in the device-tree.
 
-Example on Ubuntu 20.04
+The recent conversion of "i2c-gpio" driver to the new, descriptor based
+GPIO API, automatically made it the DT-specified polarity aware, what
+broke the CM36651 sensor operation.
 
-  Before:
-
-    $ perf record -e intel_pt//u uname
-    Linux
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.030 MB perf.data ]
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
-
-  After:
-
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-
-Reported-by: Travis Downs <travis.downs@gmail.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200526155207.9172-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node for exynos4412-trats2")
+CC: stable@vger.kernel.org # 4.16+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/dso.c          |   16 ++++++++++++++++
- tools/perf/util/dso.h          |    1 +
- tools/perf/util/probe-finder.c |    1 +
- tools/perf/util/symbol.c       |    2 ++
- 4 files changed, 20 insertions(+)
+ arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -38,6 +38,7 @@ char dso__symtab_origin(const struct dso
- 		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
- 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
- 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
-+		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
- 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
- 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
- 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
-@@ -120,6 +121,21 @@ int dso__read_binary_type_filename(const
- 		snprintf(filename + len, size - len, "%s", dso->long_name);
- 		break;
+--- a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
++++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+@@ -50,7 +50,7 @@
  
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+		/*
-+		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
-+		 * /usr/lib/debug/lib when it is expected to be in
-+		 * /usr/lib/debug/usr/lib
-+		 */
-+		if (strlen(dso->long_name) < 9 ||
-+		    strncmp(dso->long_name, "/usr/lib/", 9)) {
-+			ret = -1;
-+			break;
-+		}
-+		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
-+		break;
-+
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 	{
- 		const char *last_slash;
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -25,6 +25,7 @@ enum dso_binary_type {
- 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
- 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
- 	DSO_BINARY_TYPE__GUEST_KMODULE,
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -114,6 +114,7 @@ enum dso_binary_type distro_dwarf_types[
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
- 
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -65,6 +65,7 @@ static enum dso_binary_type binary_type_
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
- 
-@@ -1419,6 +1420,7 @@ static bool dso__is_compatible_symtab_ty
- 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
- 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
- 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
- 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 		return !kmod && dso->kernel == DSO_TYPE_USER;
+ 	i2c_cm36651: i2c-gpio-2 {
+ 		compatible = "i2c-gpio";
+-		gpios = <&gpf0 0 GPIO_ACTIVE_LOW>, <&gpf0 1 GPIO_ACTIVE_LOW>;
++		gpios = <&gpf0 0 GPIO_ACTIVE_HIGH>, <&gpf0 1 GPIO_ACTIVE_HIGH>;
+ 		i2c-gpio,delay-us = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 
 
