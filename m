@@ -2,141 +2,118 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D658DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C01CC21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xt+ERAcz"
+	by mail.kernel.org (Postfix) with ESMTP id B29ED21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592601428;
+	bh=WgPtfgMjjtFmet4xi5SWvdFv7XIRzwyM6syM2L1nqZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DPp+MmALyQFraSy3Bomu9ztUNM/xcr+MzJQhiAECXJneMGU3pbTVF/V/hdY7TFRLq
+	 N36FhzPSGrOilQ68IqjqelOX5J4Kv8ScGxdvlio5IneOMiFjcOsDJzZj0cuxR30/I3
+	 Fw9ts3k476t9ILNnRzHRVtQ+iHg0iCTZtopQxNjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392294AbgFSVMQ (ORCPT
+        id S1727820AbgFSVRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392091AbgFSVMJ (ORCPT
+        Fri, 19 Jun 2020 17:17:06 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38222 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgFSVRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:12:09 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B483FC06174E;
-        Fri, 19 Jun 2020 14:12:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id gl26so11616376ejb.11;
-        Fri, 19 Jun 2020 14:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KMBNaqmBbj9htNDag97z0bn7cN5DmjB31K/2q35ybKs=;
-        b=Xt+ERAczMjZ5VwzchOiLz2WSckbRaMvRMHmHlkReP29Uod92e0e1ioG8V+RkzSEgWJ
-         V3GXll6AHBebYlNtGn8Y7vr3xKZgY+Q15a5kdw3I0KGzFfUevDuvQbLf0/A8tbew17H7
-         HAhJENkAawKNsnVCqTrA2Ky5TRisZXzzcF9UcGhSrVTuVBN2DgQQZJQVp4mkR5cP7MQO
-         O4MUeE8X1kUgc9lz8/iwEeoKEyOt+8vQd3HIJoAqYvjdPJkqf40Uo7WIqiE7F5YaZBvV
-         NNEo7fNmqIZY0ABGTXXp+Q60EGeLbeJobHd5NMY4nyfJlKGd0vdpImuh//P+baFQ+vk6
-         oXsg==
+        Fri, 19 Jun 2020 17:17:05 -0400
+Received: by mail-pj1-f68.google.com with SMTP id d6so4814960pjs.3;
+        Fri, 19 Jun 2020 14:17:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KMBNaqmBbj9htNDag97z0bn7cN5DmjB31K/2q35ybKs=;
-        b=D3flwsY1TN6cx+xyZqdJeADpt1IG1yIpVE17HR/U3Iq04ofxtXSTFip+cM2z3Yssf0
-         gelo5OpA35YmYf0KR5rNXm29TAB4FFL0andEc2h7g/WOyBQ8BPlNeUJpJ3JGxrQNrtT1
-         GcSn/wFmnvBrPS4S5XfFk3bQRxEsTelHKZMhl2KP0mx2vkaj5SF8KjSor7kL+l0npLzy
-         NNq28jl8IP3w18GndjO+375e9+XjNY8FyHZb7I+ZKSeEvKUFvX0f/FrLxiDMa2uqwuIi
-         38aTTdGRh+yV5XRLmQzs6BvSz493Uktprch0VGUy9K6N8YWEZK6ue2s/1Lyr62XzQT22
-         2Jzg==
-X-Gm-Message-State: AOAM532TbEYewY6BBzd4wN0HTqxNDeSdodiEPHy82uTyaiJuX0bg82hj
-        uYZV4j4emkyssqHC1sFtkc0=
-X-Google-Smtp-Source: ABdhPJyhe2+WW0hS1ywIY94bX4KQCWNto2I3Plf2M3dquuOAxpUzYIJyWAHUvLTbyMt1mGxsoLKAKA==
-X-Received: by 2002:a17:907:7294:: with SMTP id dt20mr5300331ejc.355.1592601126447;
-        Fri, 19 Jun 2020 14:12:06 -0700 (PDT)
-Received: from net.saheed (54001B7F.dsl.pool.telekom.hu. [84.0.27.127])
-        by smtp.gmail.com with ESMTPSA id kt10sm5485833ejb.54.2020.06.19.14.12.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7hNihcV3mvm2VbgzMCb3VuZiHFSALZHgtjxranVJTmE=;
+        b=dFoRRUIOPhGwq71xQ3P5RaSFVt3bmwjhvl5AdFG+meSI/NEIzNPMMe/xEPhAxzdJ2r
+         d50+IrkTF9f1gGmcHySTy01RmU8QPumj3DOkYArg6zbHLPBcw8QAg2cFZul0l3Sfs5Ob
+         NVZGBZgPzPK/dF4mW9jtu+ycQkiChDdC242EIgLwTR5vM4A45huK/cVwNkPc7kfAs1FK
+         m7UJxPpQrCKNg5x8vWei+3cZ5f2S2K93IBHb8+03qBUtQ3soUjocdfODW8pK0tITf5Vj
+         D4165oNfL+4ZtFffGDbWOQc0n+3yUNv/uGpxRsf6guBFMPf8m7zetLKit9qzowIDS4L/
+         BPFw==
+X-Gm-Message-State: AOAM53268EVEXHpnR3d9xMFMIGRV9mClDCGDRBXanluYcF3KQrPbMdqW
+        AL+PA3LJMsLIrsDQrzB1QNQ=
+X-Google-Smtp-Source: ABdhPJzVFn2+ANNt35xVqck48K2jzOLKssbmFAqliq16/KCjcWBHQm/+K7WAIhdQVl6WxrZdgzhwhg==
+X-Received: by 2002:a17:90a:7a8f:: with SMTP id q15mr4751132pjf.116.1592601423167;
+        Fri, 19 Jun 2020 14:17:03 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id s188sm6551320pfb.118.2020.06.19.14.17.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 14:12:05 -0700 (PDT)
-From:   refactormyself@gmail.com
-To:     helgaas@kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PCI: pciehp: Fix wrong failure check on pcie_capability_read_*()
-Date:   Fri, 19 Jun 2020 22:12:19 +0200
-Message-Id: <20200619201219.32126-3-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200619201219.32126-1-refactormyself@gmail.com>
-References: <20200619201219.32126-1-refactormyself@gmail.com>
+        Fri, 19 Jun 2020 14:17:01 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0E5884063E; Fri, 19 Jun 2020 21:17:00 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 21:17:00 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] kernel: add a kernel_wait helper
+Message-ID: <20200619211700.GS11244@42.do-not-panic.com>
+References: <20200618144627.114057-1-hch@lst.de>
+ <20200618144627.114057-7-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618144627.114057-7-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Thu, Jun 18, 2020 at 04:46:27PM +0200, Christoph Hellwig wrote:
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
+>  	return ret;
+>  }
+>  
+> +int kernel_wait(pid_t pid, int *stat)
+> +{
+> +	struct wait_opts wo = {
+> +		.wo_type	= PIDTYPE_PID,
+> +		.wo_pid		= find_get_pid(pid),
+> +		.wo_flags	= WEXITED,
+> +	};
+> +	int ret;
+> +
+> +	ret = do_wait(&wo);
+> +	if (ret > 0 && wo.wo_stat)
+> +		*stat = wo.wo_stat;
 
-On failure, pcie_capabiility_read_*() will set the status value,
-its last parameter to 0 and not ~0.
-This bug fix checks for the proper value.
+Since all we care about is WEXITED, that could be simplified
+to something like this:
 
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+if (ret > 0 && KWIFEXITED(wo.wo_stat)
+ 	*stat = KWEXITSTATUS(wo.wo_stat)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 53433b37e181..c1a67054948a 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
- 
- 	do {
- 		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
--		if (slot_status == (u16) ~0) {
-+		if (slot_status == (u16)0) {
- 			ctrl_info(ctrl, "%s: no response from device\n",
- 				  __func__);
- 			return 0;
-@@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
- 	pcie_wait_cmd(ctrl);
- 
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
--	if (slot_ctrl == (u16) ~0) {
-+	if (slot_ctrl == (u16)0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
- 		goto out;
- 	}
-@@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
- 	int ret;
- 
- 	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
--	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)0)
- 		return -ENODEV;
- 
- 	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-@@ -440,7 +440,7 @@ int pciehp_card_present(struct controller *ctrl)
- 	int ret;
- 
- 	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
--	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)0)
- 		return -ENODEV;
- 
- 	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
-@@ -592,7 +592,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 
- read_status:
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
--	if (status == (u16) ~0) {
-+	if (status == (u16)0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
- 		if (parent)
- 			pm_runtime_put(parent);
--- 
-2.18.2
+Otherwise callers have to use W*() wrappers.
 
+> +	put_pid(wo.wo_pid);
+> +	return ret;
+> +}
+
+Then we don't get *any* in-kernel code dealing with the W*() crap.
+I just unwrapped this for the umh [0], given that otherwise we'd
+have to use KW*() callers elsewhere. Doing it upshot one level
+further would be even better.
+
+[0] https://lkml.kernel.org/r/20200610154923.27510-1-mcgrof@kernel.org              
+
+  Luis
