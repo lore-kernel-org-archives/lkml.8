@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB04C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97472C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124B020734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6389E20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580904;
-	bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
+	s=default; t=1592580907;
+	bh=9H0pb9nyF82D0RChfTgtrtnr37Clfu71gcae5tuzRuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MlYMWjeDIQN7hWCcvn89FOt19knnI3ZppswuEXP3P+5Vfg71uQkdHYXh3PbU+FDl
-	 GSnqavX5UDytcEExjq3y0O6AtLFq1oUVLMas/8eJOiQ27Oy4vgyUaMT21Hx0c+0WZ5
-	 I3LFkUjnBi1FCXudrenhgrvbjSP8KzEef7yI1oKc=
+	b=pfumW3XqqjC8lFVjm1RCw8rX/LAELB+IyzBux0/2pDjJ5TzAyEwJ3oB5mQS0f8Dph
+	 W6UtBBFhZlGk+AxF9ZTvbHs7a6FYeN4+mEmGvhNsfL3bQUu1PfLG5C3iiYjUz6ygzQ
+	 Y5i0Ab1SacsEZ3cgTz5HnzKXcQZZB2X3FhSV2K+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393842AbgFSPb4 (ORCPT
+        id S2404969AbgFSPfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404854AbgFSPbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:31:41 -0400
+        id S2404891AbgFSPbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B3920734;
-        Fri, 19 Jun 2020 15:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D4020734;
+        Fri, 19 Jun 2020 15:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580700;
-        bh=Aau8Fz/kmFsQg6cbPI1I441hvSSkrvN3v8hY2af6fyk=;
+        s=default; t=1592580711;
+        bh=9H0pb9nyF82D0RChfTgtrtnr37Clfu71gcae5tuzRuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RHVWLnfR4gONxmB5EIYvqzthxgq1tnppB3ODtdjm0gIH+HmPVpVcSRT+x9CJuIzUM
-         1mkz+9qelkt7y2FRiT8766VWoi8mkvT1cREqkaF10hvFsY+BpM5d1qaWo6VUNJ/W+1
-         AeqXo10b1PEIBjVY/h8sYuF0YEoiQXWwF8OdEfck=
+        b=Q+0+wFqgNo6RabiKl8Ki4wCQWeU7FZfycHS897vpndv65CFslHldv4Q2EwN8vMm13
+         j0xaWO3g9QzRyiqB5z7RtDQ+TGHKuSER+8s9eT6GMBeHt1YugOMp/qipVlQ2wl1Pdb
+         FTu6a3r4dUA3xEw22u/HKuw4MnQUiWw6sE3F+rZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.7 309/376] clk: mediatek: assign the initial value to clk_init_data of mtk_mux
-Date:   Fri, 19 Jun 2020 16:33:47 +0200
-Message-Id: <20200619141724.963339494@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 354/376] mtd: rawnand: brcmnand: fix hamming oob layout
+Date:   Fri, 19 Jun 2020 16:34:32 +0200
+Message-Id: <20200619141727.077858707@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,40 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiyi Lu <weiyi.lu@mediatek.com>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-commit 571cfadcc628dd5591444f7289e27445ea732f4c upstream.
+commit 130bbde4809b011faf64f99dddc14b4b01f440c3 upstream.
 
-When some new clock supports are introduced, e.g. [1]
-it might lead to an error although it should be NULL because
-clk_init_data is on the stack and it might have random values
-if using without initialization.
-Add the missing initial value to clk_init_data.
+First 2 bytes are used in large-page nand.
 
-[1] https://android-review.googlesource.com/c/kernel/common/+/1278046
-
-Fixes: a3ae549917f1 ("clk: mediatek: Add new clkmux register API")
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1590560749-29136-1-git-send-email-weiyi.lu@mediatek.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
+Cc: stable@vger.kernel.org
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200512075733.745374-2-noltari@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/mediatek/clk-mux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/clk/mediatek/clk-mux.c
-+++ b/drivers/clk/mediatek/clk-mux.c
-@@ -160,7 +160,7 @@ struct clk *mtk_clk_register_mux(const s
- 				 spinlock_t *lock)
- {
- 	struct mtk_clk_mux *clk_mux;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	struct clk *clk;
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -1116,11 +1116,14 @@ static int brcmnand_hamming_ooblayout_fr
+ 		if (!section) {
+ 			/*
+ 			 * Small-page NAND use byte 6 for BBI while large-page
+-			 * NAND use byte 0.
++			 * NAND use bytes 0 and 1.
+ 			 */
+-			if (cfg->page_size > 512)
+-				oobregion->offset++;
+-			oobregion->length--;
++			if (cfg->page_size > 512) {
++				oobregion->offset += 2;
++				oobregion->length -= 2;
++			} else {
++				oobregion->length--;
++			}
+ 		}
+ 	}
  
- 	clk_mux = kzalloc(sizeof(*clk_mux), GFP_KERNEL);
 
 
