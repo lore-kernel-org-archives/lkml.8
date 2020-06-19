@@ -2,105 +2,93 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CF0208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APfopFZR"
+	by mail.kernel.org (Postfix) with ESMTP id 9A1EB2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392251AbgFSRZY (ORCPT
+        id S2392314AbgFSRZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731175AbgFSRZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:25:23 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D3AC06174E;
-        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id u8so4323723pje.4;
-        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OIGAZSabrhFgy3X+4oVeL5X78+6UeCl/BmE8pXuAxYE=;
-        b=APfopFZRKxDNenAFDX8N8y2gNRPGw63S9Fo/wxCush+BUzDCx1IsYOrIsmlnqJWvJf
-         6PffcoyW55FLPoI1OHOTtVUBhFyOM1a1W560fFXsqOBMKt6tw7TNy4p/icfX3+N0AUcX
-         7r7VMuiH274BHevz78l03bSfVMo+1EboLjY/ijqHAWgoQqF8mjvVgmjDugT9aURnz0A5
-         WD0NvDsoiuhN9U6jK6xcmhRiVwlAvurpkxUADyLJrHaY/IolKPkjVBgmYICQqqHG6Udq
-         Gso4xXl+fyOm7goGcaLhQSXw1NVVbAsOuw+FaL5jc+ABVZ1A18xMC8vJ5u8E/3g/Mj7Q
-         0pBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OIGAZSabrhFgy3X+4oVeL5X78+6UeCl/BmE8pXuAxYE=;
-        b=SKBO9uMifl55JJ9SWconDXRP6A95Voh/D7x3a3Nsj8YN/BEDr5yQ16VyNjYtdomQv+
-         vCU+2fRqDzs3X7FXKojxYZQpC3JCwnYhdQbm/igIBlWzFngWCTpDRoy57WtXs9DKk9NM
-         fyvcZJMMZgqQnBqKXFxTPUP9ReV8kBJRlVSC7TBuZ7Ic2h7lLDniHpMuoOGGZfnzE49h
-         1sAWL37xoHy8k6LyFNZKB6qzxwcJsRyhitzXBTWOx+1oVm28Zu0gsVOhL47eCKb2wQGI
-         DZb9zpDQeqkPZ8nop3U0ELO4JCIlnL2MwJoxHPAQQ+wza/XFVNbVx3sLg8t+EVH3Ib1g
-         cGbA==
-X-Gm-Message-State: AOAM532b7klLByyaqkD3irSVHIHpbUtgPIMFAv6Og5mt+9B1NWZU/L7F
-        RxPljbRBAieoruexbqZDHz8=
-X-Google-Smtp-Source: ABdhPJxM2HsJThgQl1f7W+yXmwyvSlEtgzAVT2RQk+OmiyMzQieee/yq9elAEyvDireL8vfQwQ77uw==
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr9332975pll.18.1592587522468;
-        Fri, 19 Jun 2020 10:25:22 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id m16sm6319376pfh.187.2020.06.19.10.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 10:25:21 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sat, 20 Jun 2020 02:25:19 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Fri, 19 Jun 2020 13:25:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:49546 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731175AbgFSRZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:25:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26B9DD6E;
+        Fri, 19 Jun 2020 10:25:29 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78B443F71F;
+        Fri, 19 Jun 2020 10:25:27 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 18:25:25 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v1 0/6] console: unify return codes from ->setup() hook
-Message-ID: <20200619172519.GC310968@jagdpanzerIV.localdomain>
-References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
- <20200619093917.GK3617@alley>
- <20200619094726.GD2428291@smile.fi.intel.com>
- <20200619102132.GB310968@jagdpanzerIV.localdomain>
- <20200619112638.GL3617@alley>
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619172524.y66a4hz6g6hr3thr@e107158-lin.cambridge.arm.com>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-3-qais.yousef@arm.com>
+ <jhjwo43cpfl.mognet@arm.com>
+ <20200619125148.y4cq3hwllgozbutq@e107158-lin.cambridge.arm.com>
+ <jhjsgerchmn.mognet@arm.com>
+ <20200619141348.5o5iqomwe6lofgiu@e107158-lin.cambridge.arm.com>
+ <jhjr1ubccg2.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200619112638.GL3617@alley>
+In-Reply-To: <jhjr1ubccg2.mognet@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/19 13:26), Petr Mladek wrote:
-> On Fri 2020-06-19 19:21:32, Sergey Senozhatsky wrote:
-> > On (20/06/19 12:47), Andy Shevchenko wrote:
-> > > On Fri, Jun 19, 2020 at 11:39:18AM +0200, Petr Mladek wrote:
-> > > > On Thu 2020-06-18 19:47:45, Andy Shevchenko wrote:
-> > [..]
-> > > > I am going to push it the following week via printk tree unless
-> > > > anybody complains.
-> > > 
-> > > Thanks, Petr, I guess you may also incorporate Sergey's patch
-> > > he proposed. Sergey, are you going to submit it officially?
-> > 
-> > I can send a patch, unless Petr has objections.
+On 06/19/20 16:17, Valentin Schneider wrote:
+
+[...]
+
+> > But here this is
+> > just extra churn.
+> >
+> > If an imbalance has happend this means either:
+> >
+> >       1. enqueue/dequeue_task() is imablanced itself
+> >       2. uclamp_update_active() calls dec without inc.
+> >
+> > If 1 happened we have more reasons to be worried about. For 2 the function
+> > takes task_rq_lock() and does dec/inc in obvious way.
+> >
 > 
-> Go ahead :-)
+> True. I won't argue over the feasibility of the scenarios we are currently
+> aware of, my point was that if they do happen, it's nice to have debug
+> helps in the right places as the final breakage can happen much further
+> downstream.
+> 
+> FWIW I don't like the diff I suggested at all, but if we can come up with a
+> cleverer scheme I think we should do it, as per the above.
 
-Oops, I just sent it, but I forgot to specify in-reply-to message-id :(
+There's the fact as well that this whole thing is to deal with potentially
+avoid doing anything that is stricly not necessary in the fast path.
 
-	-ss
+keep in mind that my patch of introducing the sysctl is not accepted yet
+because it introduces such thing, but in that case it's not a debug only
+feature. CONFIG_SCHED_DEBUG do get enabled by distros because it exports a lot
+of useful info.
+
+--
+Qais Yousef
