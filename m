@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA80FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51B320706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC66821548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580077;
-	bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
+	s=default; t=1592580092;
+	bh=QvvVCvpXuafBpUcquVWzRQSZlm/2kfM6wsz5kMmPuOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v8LmPk+EycNgOzX4nbGsEAQlyy/paXSdPmN8rgBpa6dm6cH82/DW5e2WznTo26V/D
-	 fKq6c7dgD0VytTCLR5CGyRJNlrx2BJtthGCw5ouLGVLqUq4x5iZ3NbgUnwhaccIuB/
-	 v4HYdY3FkTITtrq0oicXImOAK20ptXhkY50BIWwg=
+	b=XGBIEDrYMcnYepBm96xxPanfUAOBQOMgckNVAvWzsjjdkI0tGUJ+nOrdpEWOjr9kT
+	 bildiHyCg9WeCkPixPPLBAncPFtS2SICDgFmpWJ1Dghx3Q9d7WKrPtdUOTu0nL8+6q
+	 ptnBZecqXk3o+4TbcBwiCTrMSOllIgTNyR0wa6y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392830AbgFSPVQ (ORCPT
+        id S2392528AbgFSPVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392590AbgFSPSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:35 -0400
+        id S2392592AbgFSPSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A423217D8;
-        Fri, 19 Jun 2020 15:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 826FD206DB;
+        Fri, 19 Jun 2020 15:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579913;
-        bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
+        s=default; t=1592579919;
+        bh=QvvVCvpXuafBpUcquVWzRQSZlm/2kfM6wsz5kMmPuOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvLaKlLpQk31EZlwf6T0UPT1UuTs+sHoZhu29mYNbvNXtdaf5otO5lHtz2hNwkoeP
-         2PLshzTZgoXQ9TAlbrz8wryhvJpInVXYkswUrvLt5pFc3i8MHIcGb7mMY+ePA7OXC0
-         LB2KeDpkUgQYV6DIY2xpj9GqcOZhU3jwYR5yWu9I=
+        b=xnSiCQ/4vHTVijhEZeFf+hBusMZUbw3GAw3eiqNWeNFHWdxkhvHwciIb9U7A9EAFf
+         XDWFiv6KtAAUyN0fgjqwFGiCkSaJMOc3QYVNKLCUtnH7m3Gmo/0W+PFLOnN0dPGcN1
+         9RZyMtRaaHOI9kYhIX6fmoIIwBG1odu7bVyju8fQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Veronika Kabatova <vkabatov@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 021/376] selftests/bpf: Copy runqslower to OUTPUT directory
-Date:   Fri, 19 Jun 2020 16:28:59 +0200
-Message-Id: <20200619141711.365228398@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 013/376] objtool: Ignore empty alternatives
+Date:   Fri, 19 Jun 2020 16:28:51 +0200
+Message-Id: <20200619141710.991167259@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,46 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veronika Kabatova <vkabatov@redhat.com>
+From: Julien Thierry <jthierry@redhat.com>
 
-[ Upstream commit b26d1e2b60284dc9f66ffad9ccd5c5da1100bb4b ]
+[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
 
-$(OUTPUT)/runqslower makefile target doesn't actually create runqslower
-binary in the $(OUTPUT) directory. As lib.mk expects all
-TEST_GEN_PROGS_EXTENDED (which runqslower is a part of) to be present in
-the OUTPUT directory, this results in an error when running e.g. `make
-install`:
+The .alternatives section can contain entries with no original
+instructions. Objtool will currently crash when handling such an entry.
 
-rsync: link_stat "tools/testing/selftests/bpf/runqslower" failed: No
-       such file or directory (2)
+Just skip that entry, but still give a warning to discourage useless
+entries.
 
-Copy the binary into the OUTPUT directory after building it to fix the
-error.
-
-Fixes: 3a0d3092a4ed ("selftests/bpf: Build runqslower from selftests")
-Signed-off-by: Veronika Kabatova <vkabatov@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200428173742.2988395-1-vkabatov@redhat.com
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 7729892e0b04..4e654d41c7af 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -141,7 +141,8 @@ VMLINUX_BTF := $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
- $(OUTPUT)/runqslower: $(BPFOBJ)
- 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
- 		    OUTPUT=$(SCRATCH_DIR)/ VMLINUX_BTF=$(VMLINUX_BTF)   \
--		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR)
-+		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR) &&	\
-+		    cp $(SCRATCH_DIR)/runqslower $@
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3c6da70e6084..5a867a469ba5 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -916,6 +916,12 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
  
- $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
- 
+ 		if (special_alt->group) {
++			if (!special_alt->orig_len) {
++				WARN_FUNC("empty alternative entry",
++					  orig_insn->sec, orig_insn->offset);
++				continue;
++			}
++
+ 			ret = handle_group_alt(file, special_alt, orig_insn,
+ 					       &new_insn);
+ 			if (ret)
 -- 
 2.25.1
 
