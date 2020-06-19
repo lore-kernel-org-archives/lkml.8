@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA26C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7A120706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4E7217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580035;
-	bh=x7XNxG+6Ey9iNd/8UiXWD76fUZIbSvQFJ+JJaQo5fqk=;
+	s=default; t=1592580040;
+	bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dor+qGrAixKBJFl8GE0BWAy3by1yc7GagQSsKRoLuaomUZ1kfUCAj30eEpeFbvzpQ
-	 iuP42tcMRzzVDPuAz0CjWksXFe/9e8S8eOyYUi4G27a5db1jlermpxoIr0XT2ztTw0
-	 JszhMTgYUlU7pJGUyjKyFK48KBiHKtklohXIeSo8=
+	b=aYH/z2dpOfNN8BCyds8/ufBLTfv1HI2pN0riEW64P+rDASOgmtAyt4aUKknJslkVp
+	 ApMcxzBi3/QmB+ZacYYNtBWpUDNDJptx0er4GBLNiZ8UfkWg/qZUfTCVsaJgdhh0JR
+	 lLS2/IuuyZUJvg/D261CxhtHKjLTgzhjjG/tlTrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392710AbgFSPUe (ORCPT
+        id S2392727AbgFSPUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392586AbgFSPSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:23 -0400
+        id S2392312AbgFSPRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A116F206DB;
-        Fri, 19 Jun 2020 15:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3158921835;
+        Fri, 19 Jun 2020 15:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579903;
-        bh=x7XNxG+6Ey9iNd/8UiXWD76fUZIbSvQFJ+JJaQo5fqk=;
+        s=default; t=1592579849;
+        bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwMwkNTyvb/3kwduxI/Bxk7m9YuSESNKX0OyErRc1GN0uS5z7TErSdY2e+SMzn6uJ
-         lctye9bLx5ZLwioA6pffmfb/zgecp2P/u/TD+k1q3NHGq8ghPJUUHhYkCbI2Bz5UCp
-         WnFN9VknbldpH060cP4NJn+YGecFOT+rNlt6wUwc=
+        b=1ITf6nJJtjY5fQCKAB64cc6aNfKU20nWG4vt+UeyD2JsmGwtgzOtT7JAW782Kjzzf
+         ANU9b8AOBRwR+4haV9DgjJZsG12MA5ezJ0SQw2TqpZ9H81mf7stO7n7cQuVSXFiFjp
+         V7cRggw0mZQXFKzWR3OdKFDIQwtHK5ut4i9d6O0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, limingyu <limingyu@uniontech.com>,
-        zhoubinbin <zhoubinbin@uniontech.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fangrui Song <maskray@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 017/376] drm/amdgpu: Init data to avoid oops while reading pp_num_states.
-Date:   Fri, 19 Jun 2020 16:28:55 +0200
-Message-Id: <20200619141711.185922893@linuxfoundation.org>
+Subject: [PATCH 5.7 028/376] efi/libstub/x86: Work around LLVM ELF quirk build regression
+Date:   Fri, 19 Jun 2020 16:29:06 +0200
+Message-Id: <20200619141711.695718724@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,51 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: limingyu <limingyu@uniontech.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 6f81b2d047c59eb77cd04795a44245d6a52cdaec ]
+[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
 
-For chip like CHIP_OLAND with si enabled(amdgpu.si_support=1),
-the amdgpu will expose pp_num_states to the /sys directory.
-In this moment, read the pp_num_states file will excute the
-amdgpu_get_pp_num_states func. In our case, the data hasn't
-been initialized, so the kernel will access some ilegal
-address, trigger the segmentfault and system will reboot soon:
+When building the x86 EFI stub with Clang, the libstub Makefile rules
+that manipulate the ELF object files may throw an error like:
 
-    uos@uos-PC:~$ cat /sys/devices/pci0000\:00/0000\:00\:00.0/0000\:01\:00
-    .0/pp_num_states
+    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
+  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
 
-    Message from syslogd@uos-PC at Apr 22 09:26:20 ...
-     kernel:[   82.154129] Internal error: Oops: 96000004 [#1] SMP
+This is the result of a LLVM feature [0] where symbol references are
+stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
+causing generic ELF tools such as strip or objcopy to choke on them.
 
-This patch aims to fix this problem, avoid that reading file
-triggers the kernel sementfault.
+So force the compiler not to emit these sections, by passing the
+appropriate command line option.
 
-Signed-off-by: limingyu <limingyu@uniontech.com>
-Signed-off-by: zhoubinbin <zhoubinbin@uniontech.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
+
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-index abe94a55ecad..49e2e43f2e4a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -444,8 +444,11 @@ static ssize_t amdgpu_get_pp_num_states(struct device *dev,
- 		ret = smu_get_power_num_states(&adev->smu, &data);
- 		if (ret)
- 			return ret;
--	} else if (adev->powerplay.pp_funcs->get_pp_num_states)
-+	} else if (adev->powerplay.pp_funcs->get_pp_num_states) {
- 		amdgpu_dpm_get_pp_num_states(adev, &data);
-+	} else {
-+		memset(&data, 0, sizeof(data));
-+	}
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 094eabdecfe6..d85016553f14 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -30,6 +30,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   -D__NO_FORTIFY \
+ 				   $(call cc-option,-ffreestanding) \
+ 				   $(call cc-option,-fno-stack-protector) \
++				   $(call cc-option,-fno-addrsig) \
+ 				   -D__DISABLE_EXPORTS
  
- 	pm_runtime_mark_last_busy(ddev->dev);
- 	pm_runtime_put_autosuspend(ddev->dev);
+ GCOV_PROFILE			:= n
 -- 
 2.25.1
 
