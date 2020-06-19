@@ -2,99 +2,324 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C55C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C089FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B277207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDB920771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBI/P+6P"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qOF78Yld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgFSAxx (ORCPT
+        id S1729709AbgFSA4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 20:53:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47244 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726926AbgFSAxv (ORCPT
+        Thu, 18 Jun 2020 20:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgFSA4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 20:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592528030;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=OzO0DZvXOyrs2UoWemzcvke5bgA0xlYm3qpRtsparnk=;
-        b=TBI/P+6P3KO3sM8YAQiKhC61le5W4Z6id5z42aAvGxN+WrHiM8K2eyU+dMUn+ff4H/HwCK
-        y6h+WhiKZFtd6CGCvjYFOkz/z8YuzVzoPX4vB2MVLSwpqYQSKDpkMRWRqF8iEM3ozQUe8A
-        9C3851v8ha0JZ4Z1G6bPCiSRAYuQ+no=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-h2Yb40AUNjWauPfmd-LYGw-1; Thu, 18 Jun 2020 20:53:49 -0400
-X-MC-Unique: h2Yb40AUNjWauPfmd-LYGw-1
-Received: by mail-qv1-f69.google.com with SMTP id j4so5433226qvt.20
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 17:53:49 -0700 (PDT)
+        Thu, 18 Jun 2020 20:56:19 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C3A1C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 17:56:19 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z1so6054038qtn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 17:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FqdHfX7diRV6tuWl6cEnyyK73KE85h+FlGmpNyfbvvM=;
+        b=qOF78YldryuSvc8g5pjQE65eUUmOtXpM9QcO3jG99oP2Ry/3UJ439hIk86rE6CZeVR
+         3QhGVd6nGHGHFTQlC9L7VClwLNY6hubhPrpR4TfKcwuVMW42T6MtkibMpE11kiN/1egA
+         XemMaBR+898aSoOP3S+3kqzFYPZ5NxZTaCFKQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=OzO0DZvXOyrs2UoWemzcvke5bgA0xlYm3qpRtsparnk=;
-        b=g0wtl2JEDrS2KEa/zwX0HgLZBRaLhJOXc88hsfMla8tFyMyqQf5eJOnidB2lJZTUlU
-         vhj0v+B/zOyYXJ0+MrtAmO1VWjQonhcKLH3StkXuUvLa7XNvxUNgA5Jj6xi45QEP0FIT
-         wAPernGsVVYugsB8DW0jxMnzJ7no1G9peZm4Q1lZcur1krS5fUQl85JJrB6AFI/lTTyn
-         ghQ7Uuyzruw4TeU0As09/VGWJknSHryjUm54wl0CieJVgvDE3FSk7fTtDVNDuCYqSNE+
-         gK1yVKrxagH8TLaChuk37S+qzvRsETat6U/w3Yw/bywY3sChXJpnrEBnlLmClNMvOFTF
-         sqxQ==
-X-Gm-Message-State: AOAM532e2YSpY6/9JCRB7z/+sTipeFjj4f/eiOPViTY9grVweOOzUCjQ
-        58/8IPMMF4kNv/wNXhbJQWp7h4TzQKhQOmNSiRWFSPShTjAcbFDR9ZVUIdtJXUvdC6q6Cfas412
-        /I14o4BS/aSbLKmfY06RfKtD/
-X-Received: by 2002:a37:8fc4:: with SMTP id r187mr866379qkd.101.1592528028648;
-        Thu, 18 Jun 2020 17:53:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxiA+6cMQVXFq5FeGfedcN1zN2nB+rxmpe65HllqoVigwROBWuwpKS7U3/P27ciI3EUh+2wXQ==
-X-Received: by 2002:a37:8fc4:: with SMTP id r187mr866367qkd.101.1592528028392;
-        Thu, 18 Jun 2020 17:53:48 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id f3sm4364250qta.44.2020.06.18.17.53.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FqdHfX7diRV6tuWl6cEnyyK73KE85h+FlGmpNyfbvvM=;
+        b=pXh+1QRxSFlch62Wi1drtXal3EAE1R9lFIdqXJGKYAn0dHBCwCSY+b40oEXMgor9up
+         lYIndrO0C1CloJK+U/zA0nccy2WB65M8DK1rzOVsJvns/riVhhT/IpJZPRp/oDnuktED
+         mtrGeQ6YyQ4cbr48FUc8EBrWuJ9EV562gfOjMweZ0Io2By1wl162hcaslx810CUgtTLt
+         9HcFsW+8eFFDssQ+nJkMxaIZ3hVwtv84ku1mlWhGmwYbli/DdfRe4AekMVkc8m0NoIiO
+         P52Ql494uWd/TgfPrGJrQnsaXgQasW+0TWeaRokTXNxsuwRPZVjrakGtkNWHxwBo8Uae
+         qv3w==
+X-Gm-Message-State: AOAM531wEbS+g9li0W8uc/us09O/LBrgbAmbktPUi0zYNam/TzUprh00
+        jcE51lDBHgiBr8l9THScjq0ZOTxKZ3Q=
+X-Google-Smtp-Source: ABdhPJyfjWovTW80s8h3ZiLQCDVQJpNNgeqJV1P2xQUfnsYYWJt145bhd2UtNZtU/PnxEdyye5Y2Lw==
+X-Received: by 2002:ac8:668f:: with SMTP id d15mr993403qtp.113.1592528178083;
+        Thu, 18 Jun 2020 17:56:18 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r14sm4657719qke.62.2020.06.18.17.56.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 17:53:47 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 17:53:46 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix misuse of iommu_domain_identity_map()
-Message-ID: <20200619005346.2myy4lwbquxuch76@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
-        linux-kernel@vger.kernel.org
-References: <20200618233650.9214-1-baolu.lu@linux.intel.com>
+        Thu, 18 Jun 2020 17:56:17 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:56:16 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: Re: [PATCH 3/7] rcu/trace: Add name of the source for gp_seq
+Message-ID: <20200619005616.GF40119@google.com>
+References: <20200618202955.4024-1-joel@joelfernandes.org>
+ <20200618202955.4024-3-joel@joelfernandes.org>
+ <20200618221901.GZ2723@paulmck-ThinkPad-P72>
+ <20200618235117.GA40119@google.com>
+ <20200619001201.GF2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618233650.9214-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20200619001201.GF2723@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Jun 19 20, Lu Baolu wrote:
->The iommu_domain_identity_map() helper takes start/end PFN as arguments.
->Fix a misuse case where the start and end addresses are passed.
->
->Fixes: e70b081c6f376 ("iommu/vt-d: Remove IOVA handling code from the non-dma_ops path")
->Cc: Tom Murphy <murphyt7@tcd.ie>
->Reported-by: Alex Williamson <alex.williamson@redhat.com>
->Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+On Thu, Jun 18, 2020 at 05:12:01PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 18, 2020 at 07:51:17PM -0400, Joel Fernandes wrote:
+> > On Thu, Jun 18, 2020 at 03:19:01PM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 18, 2020 at 04:29:51PM -0400, Joel Fernandes (Google) wrote:
+> > > > The gp_seq value can come from either of rdp, rsp or rnp.
+> > > > 
+> > > > Only the rsp is the global source of truth (most accurate GP info). The
+> > > > rnp can be off by ~1 and the rdp can be off by way more. Add some more
+> > > > context to traces to clarify where it comes from.
+> > > 
+> > > This would be better done in scripting that processes the trace messages.
+> > > I must pass on this one.
+> > 
+> > I don't think so. I think people reading traces would get confused.  Recently
+> > I had to talk with someone about this as well when going over traces. I
+> > myself struggle with it.
+> > 
+> > > For future reference, the TPS() around strings is not optional.  Without
+> > > it, trace messages from crash dumps are garbled, if I remember correctly.
+> > 
+> > Ok. I will fix that.
+> 
+> Then please sort this patch after the others.  I am quite unconvinced
+> about this one, but some of the others looked quite valuable.
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Sure sounds good :) will do :) thanks!
 
+ - Joel
+
+> 							Thanx, Paul
+> 
+> > thanks,
+> > 
+> >  - Joel
+> > 
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > ---
+> > > >  include/trace/events/rcu.h | 12 ++++++++----
+> > > >  kernel/rcu/tree.c          | 32 ++++++++++++++++----------------
+> > > >  kernel/rcu/tree_plugin.h   |  2 +-
+> > > >  3 files changed, 25 insertions(+), 21 deletions(-)
+> > > > 
+> > > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> > > > index a6d49864dcc27..cb5363564f7ed 100644
+> > > > --- a/include/trace/events/rcu.h
+> > > > +++ b/include/trace/events/rcu.h
+> > > > @@ -68,24 +68,28 @@ TRACE_EVENT(rcu_utilization,
+> > > >   */
+> > > >  TRACE_EVENT_RCU(rcu_grace_period,
+> > > >  
+> > > > -	TP_PROTO(const char *rcuname, unsigned long gp_seq, const char *gpevent),
+> > > > +	TP_PROTO(const char *rcuname, const char *gp_seq_src,
+> > > > +		unsigned long gp_seq, const char *gpevent),
+> > > >  
+> > > > -	TP_ARGS(rcuname, gp_seq, gpevent),
+> > > > +	TP_ARGS(rcuname, gp_seq_src, gp_seq, gpevent),
+> > > >  
+> > > >  	TP_STRUCT__entry(
+> > > >  		__field(const char *, rcuname)
+> > > > +		__field(const char *, gp_seq_src)
+> > > >  		__field(unsigned long, gp_seq)
+> > > >  		__field(const char *, gpevent)
+> > > >  	),
+> > > >  
+> > > >  	TP_fast_assign(
+> > > >  		__entry->rcuname = rcuname;
+> > > > +		__entry->gp_seq_src = gp_seq_src;
+> > > >  		__entry->gp_seq = gp_seq;
+> > > >  		__entry->gpevent = gpevent;
+> > > >  	),
+> > > >  
+> > > > -	TP_printk("%s %lu %s",
+> > > > -		  __entry->rcuname, __entry->gp_seq, __entry->gpevent)
+> > > > +	TP_printk("%s %s_gp_seq=%lu %s",
+> > > > +		  __entry->rcuname, __entry->gp_seq_src,
+> > > > +		  __entry->gp_seq, __entry->gpevent)
+> > > >  );
+> > > >  
+> > > >  /*
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index c61af6a33fbfd..81df1b837dd9d 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -1334,7 +1334,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
+> > > >  		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
+> > > >  		goto unlock_out;
+> > > >  	}
+> > > > -	trace_rcu_grace_period(rcu_state.name, data_race(rcu_state.gp_seq), TPS("newreq"));
+> > > > +	trace_rcu_grace_period(rcu_state.name, "rsp", data_race(rcu_state.gp_seq), TPS("newreq"));
+> > > >  	ret = true;  /* Caller must wake GP kthread. */
+> > > >  unlock_out:
+> > > >  	/* Push furthest requested GP to leaf node and rcu_data structure. */
+> > > > @@ -1437,9 +1437,9 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
+> > > >  
+> > > >  	/* Trace depending on how much we were able to accelerate. */
+> > > >  	if (rcu_segcblist_restempty(&rdp->cblist, RCU_WAIT_TAIL))
+> > > > -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccWaitCB"));
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccWaitCB"));
+> > > >  	else
+> > > > -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccReadyCB"));
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccReadyCB"));
+> > > >  
+> > > >  	/* Count CBs for tracing. */
+> > > >  	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+> > > > @@ -1543,7 +1543,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+> > > >  		if (!offloaded)
+> > > >  			ret = rcu_advance_cbs(rnp, rdp); /* Advance CBs. */
+> > > >  		rdp->core_needs_qs = false;
+> > > > -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuend"));
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("cpuend"));
+> > > >  	} else {
+> > > >  		if (!offloaded)
+> > > >  			ret = rcu_accelerate_cbs(rnp, rdp); /* Recent CBs. */
+> > > > @@ -1559,7 +1559,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+> > > >  		 * set up to detect a quiescent state, otherwise don't
+> > > >  		 * go looking for one.
+> > > >  		 */
+> > > > -		trace_rcu_grace_period(rcu_state.name, rnp->gp_seq, TPS("cpustart"));
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rnp", rnp->gp_seq, TPS("cpustart"));
+> > > >  		need_qs = !!(rnp->qsmask & rdp->grpmask);
+> > > >  		rdp->cpu_no_qs.b.norm = need_qs;
+> > > >  		rdp->core_needs_qs = need_qs;
+> > > > @@ -1660,7 +1660,7 @@ static bool rcu_gp_init(void)
+> > > >  	/* Record GP times before starting GP, hence rcu_seq_start(). */
+> > > >  	rcu_seq_start(&rcu_state.gp_seq);
+> > > >  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> > > > -	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+> > > > +	trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("start"));
+> > > >  	raw_spin_unlock_irq_rcu_node(rnp);
+> > > >  
+> > > >  	/*
+> > > > @@ -1828,7 +1828,7 @@ static void rcu_gp_fqs_loop(void)
+> > > >  			WRITE_ONCE(rcu_state.jiffies_kick_kthreads,
+> > > >  				   jiffies + (j ? 3 * j : 2));
+> > > >  		}
+> > > > -		trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  				       TPS("fqswait"));
+> > > >  		rcu_state.gp_state = RCU_GP_WAIT_FQS;
+> > > >  		ret = swait_event_idle_timeout_exclusive(
+> > > > @@ -1843,7 +1843,7 @@ static void rcu_gp_fqs_loop(void)
+> > > >  		/* If time for quiescent-state forcing, do it. */
+> > > >  		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
+> > > >  		    (gf & RCU_GP_FLAG_FQS)) {
+> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  					       TPS("fqsstart"));
+> > > >  			rcu_gp_fqs(first_gp_fqs);
+> > > >  			gf = 0;
+> > > > @@ -1851,7 +1851,7 @@ static void rcu_gp_fqs_loop(void)
+> > > >  				first_gp_fqs = false;
+> > > >  				gf = rcu_state.cbovld ? RCU_GP_FLAG_OVLD : 0;
+> > > >  			}
+> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  					       TPS("fqsend"));
+> > > >  			cond_resched_tasks_rcu_qs();
+> > > >  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+> > > > @@ -1862,7 +1862,7 @@ static void rcu_gp_fqs_loop(void)
+> > > >  			cond_resched_tasks_rcu_qs();
+> > > >  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+> > > >  			WARN_ON(signal_pending(current));
+> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  					       TPS("fqswaitsig"));
+> > > >  			ret = 1; /* Keep old FQS timing. */
+> > > >  			j = jiffies;
+> > > > @@ -1945,7 +1945,7 @@ static void rcu_gp_cleanup(void)
+> > > >  	raw_spin_lock_irq_rcu_node(rnp); /* GP before ->gp_seq update. */
+> > > >  
+> > > >  	/* Declare grace period done, trace first to use old GP number. */
+> > > > -	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("end"));
+> > > > +	trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("end"));
+> > > >  	rcu_seq_end(&rcu_state.gp_seq);
+> > > >  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> > > >  	rcu_state.gp_state = RCU_GP_IDLE;
+> > > > @@ -1962,7 +1962,7 @@ static void rcu_gp_cleanup(void)
+> > > >  	if ((offloaded || !rcu_accelerate_cbs(rnp, rdp)) && needgp) {
+> > > >  		WRITE_ONCE(rcu_state.gp_flags, RCU_GP_FLAG_INIT);
+> > > >  		WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
+> > > > -		trace_rcu_grace_period(rcu_state.name,
+> > > > +		trace_rcu_grace_period(rcu_state.name, "rsp",
+> > > >  				       rcu_state.gp_seq,
+> > > >  				       TPS("newreq"));
+> > > >  	} else {
+> > > > @@ -1982,7 +1982,7 @@ static int __noreturn rcu_gp_kthread(void *unused)
+> > > >  
+> > > >  		/* Handle grace-period start. */
+> > > >  		for (;;) {
+> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  					       TPS("reqwait"));
+> > > >  			rcu_state.gp_state = RCU_GP_WAIT_GPS;
+> > > >  			swait_event_idle_exclusive(rcu_state.gp_wq,
+> > > > @@ -1996,7 +1996,7 @@ static int __noreturn rcu_gp_kthread(void *unused)
+> > > >  			cond_resched_tasks_rcu_qs();
+> > > >  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+> > > >  			WARN_ON(signal_pending(current));
+> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> > > > +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+> > > >  					       TPS("reqwaitsig"));
+> > > >  		}
+> > > >  
+> > > > @@ -2240,7 +2240,7 @@ int rcutree_dying_cpu(unsigned int cpu)
+> > > >  		return 0;
+> > > >  
+> > > >  	blkd = !!(rnp->qsmask & rdp->grpmask);
+> > > > -	trace_rcu_grace_period(rcu_state.name, READ_ONCE(rnp->gp_seq),
+> > > > +	trace_rcu_grace_period(rcu_state.name, "rsp", READ_ONCE(rnp->gp_seq),
+> > > >  			       blkd ? TPS("cpuofl") : TPS("cpuofl-bgp"));
+> > > >  	return 0;
+> > > >  }
+> > > > @@ -3733,7 +3733,7 @@ int rcutree_prepare_cpu(unsigned int cpu)
+> > > >  	rdp->core_needs_qs = false;
+> > > >  	rdp->rcu_iw_pending = false;
+> > > >  	rdp->rcu_iw_gp_seq = rdp->gp_seq - 1;
+> > > > -	trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuonl"));
+> > > > +	trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("cpuonl"));
+> > > >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> > > >  	rcu_prepare_kthreads(cpu);
+> > > >  	rcu_spawn_cpu_nocb_kthread(cpu);
+> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > > index 982fc5be52698..32f761cf16c33 100644
+> > > > --- a/kernel/rcu/tree_plugin.h
+> > > > +++ b/kernel/rcu/tree_plugin.h
+> > > > @@ -262,7 +262,7 @@ static void rcu_qs(void)
+> > > >  {
+> > > >  	RCU_LOCKDEP_WARN(preemptible(), "rcu_qs() invoked with preemption enabled!!!\n");
+> > > >  	if (__this_cpu_read(rcu_data.cpu_no_qs.s)) {
+> > > > -		trace_rcu_grace_period(TPS("rcu_preempt"),
+> > > > +		trace_rcu_grace_period(TPS("rcu_preempt"), "rdp",
+> > > >  				       __this_cpu_read(rcu_data.gp_seq),
+> > > >  				       TPS("cpuqs"));
+> > > >  		__this_cpu_write(rcu_data.cpu_no_qs.b.norm, false);
+> > > > -- 
+> > > > 2.27.0.111.gc72c7da667-goog
+> > > > 
