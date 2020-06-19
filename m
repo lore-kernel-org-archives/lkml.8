@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F28DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28972C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BE320786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0A820786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580842;
-	bh=9bceEJ9pJZhQjQluZuGetqYQXAYC7KXWl/AlOJEesNk=;
+	s=default; t=1592580848;
+	bh=52hVFjVhLh2OoAw3LAR/P2MpsdMw6E97K8yE7KBRUrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KotXo6KDA8iFUcvj+ZkKQnZG22HHtmOAWa+RLwRgKKZaCYkYF+11sGvAXW7w2Fs22
-	 BWf1m0ZPn2kEreIhLCh0RihI4j37DGR19VQul6+Jz99pZyIbqF4GrFuDwe2OCk279e
-	 adBvm9MBbxYuAsiqsPw8Ypn+0rd3E7SzP2H49cos=
+	b=SkZraf0DzpIqDpcXIDD6cRMbnH29L+Tn03Y2l8cPdUsRnq8GYatoqm9WJyAAz8PR0
+	 +AWfHgJTlZim3rtZdavCSVLxP0qqcq1h1l3qU3va4oncO0JcQrP1Z5d/YrBe8AxhAb
+	 s/cOr7nhmlfBVtfAEpUbUaD1Ms+fYWe4oHy4KKkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393687AbgFSPdz (ORCPT
+        id S2404916AbgFSPeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404915AbgFSPdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:33:05 -0400
+        id S2404763AbgFSPdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:33:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAE920786;
-        Fri, 19 Jun 2020 15:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A817C20786;
+        Fri, 19 Jun 2020 15:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580784;
-        bh=9bceEJ9pJZhQjQluZuGetqYQXAYC7KXWl/AlOJEesNk=;
+        s=default; t=1592580779;
+        bh=52hVFjVhLh2OoAw3LAR/P2MpsdMw6E97K8yE7KBRUrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J1um2GMFMKAs7kOUqHyHkyaTaDaClE/iI7jyH6sHIyvzuo0b7zMFKlOp00MZFRRky
-         PH5iTi5dX6NFwloMt+pWM81/xf+c0HqgRHgdKLB1durV1kar4r/2hbGv3Zf+uhBzyu
-         GoC/hp2nw4mZxgQwheOYoA6NmH4PNP9qEs+jncqI=
+        b=O7cwfrHukGXiS+VpD0wZRwG1g+KlR3uxu44kAeKQF8rFpOf31qI0eitsG+yA1UV6v
+         1AHqy3t7Wpigngwh5hfVE/etWTZNBxUqpFbilYKeil8d9zFJUwgvflTFWV7wbEpurr
+         DKRR/AC4aPgI+DzEfR+LUtowMJdaR8XNyisYl1Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 5.7 351/376] pwm: jz4740: Enhance precision in calculation of duty cycle
-Date:   Fri, 19 Jun 2020 16:34:29 +0200
-Message-Id: <20200619141726.940210748@linuxfoundation.org>
+        stable@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
+        Zong Li <zong.li@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 5.7 349/376] RISC-V: Dont mark init section as non-executable
+Date:   Fri, 19 Jun 2020 16:34:27 +0200
+Message-Id: <20200619141726.847148265@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,44 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Anup Patel <anup.patel@wdc.com>
 
-commit 9017dc4fbd59c09463019ce494cfe36d654495a8 upstream.
+commit 4e0f9e3a6104261f25b16fcab02fc96f5666ba11 upstream.
 
-Calculating the hardware value for the duty from the hardware value of
-the period resulted in a precision loss versus calculating it from the
-clock rate directly.
+The head text section (i.e. _start, secondary_start_sbi, etc) and the
+init section fall under same page table level-1 mapping.
 
-(Also remove a cast that doesn't really need to be here)
+Currently, the runtime CPU hotplug is broken because we are marking
+init section as non-executable which in-turn marks head text section
+as non-executable.
 
-Fixes: f6b8a5700057 ("pwm: Add Ingenic JZ4740 support")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Further investigating other architectures, it seems marking the init
+section as non-executable is redundant because the init section pages
+are anyway poisoned and freed.
+
+To fix broken runtime CPU hotplug, we simply remove the code marking
+the init section as non-executable.
+
+Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Reviewed-by: Zong Li <zong.li@sifive.com>
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pwm/pwm-jz4740.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/riscv/mm/init.c |   11 -----------
+ 1 file changed, 11 deletions(-)
 
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -158,11 +158,11 @@ static int jz4740_pwm_apply(struct pwm_c
- 	/* Calculate period value */
- 	tmp = (unsigned long long)rate * state->period;
- 	do_div(tmp, NSEC_PER_SEC);
--	period = (unsigned long)tmp;
-+	period = tmp;
- 
- 	/* Calculate duty value */
--	tmp = (unsigned long long)period * state->duty_cycle;
--	do_div(tmp, state->period);
-+	tmp = (unsigned long long)rate * state->duty_cycle;
-+	do_div(tmp, NSEC_PER_SEC);
- 	duty = period - tmp;
- 
- 	if (duty >= period)
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -479,17 +479,6 @@ static void __init setup_vm_final(void)
+ 	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
+ 	local_flush_tlb_all();
+ }
+-
+-void free_initmem(void)
+-{
+-	unsigned long init_begin = (unsigned long)__init_begin;
+-	unsigned long init_end = (unsigned long)__init_end;
+-
+-	/* Make the region as non-execuatble. */
+-	set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
+-	free_initmem_default(POISON_FREE_INITMEM);
+-}
+-
+ #else
+ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ {
 
 
