@@ -2,382 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF01C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761282080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF045214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr0x9R1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgFSIta (ORCPT
+        id S1729512AbgFSIvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:49:30 -0400
-Received: from mx.wingtech.com ([180.166.216.14]:50531 "EHLO mail.wingtech.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbgFSIt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:49:29 -0400
-Received: from mx.wingtech.com ([192.168.2.43])
-        by mail.wingtech.com  with SMTP id 05J8nNPW001466-05J8nNPX001466
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 16:49:23 +0800
-Received: from 192.168.51.143 (HELO ZHAOWUYUN); Fri, 19 Jun 2020 16:49:20 +0800
-From:   "Zac" <zhaowuyun@wingtech.com>
-To:     "'Chao Yu'" <yuchao0@huawei.com>, <jaegeuk@kernel.org>
-Cc:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592548634-1065-1-git-send-email-zhaowuyun@wingtech.com> <2b44ed71-deba-2c48-bd8a-6b6099fe5a8f@huawei.com>
-In-Reply-To: <2b44ed71-deba-2c48-bd8a-6b6099fe5a8f@huawei.com>
-Subject: =?gb2312?B?u9i4tDogW1BBVENIIHYyXSBmMmZzLXRvb2xzOiBpbnRyb2R1Y2Ugcw==?=
-        =?gb2312?B?ZXRfbm9kZV9mb290ZXIgdG8gaW5pdGlhbGl6ZSBub2RlIGZvb3Rlcg==?=
-Date:   Fri, 19 Jun 2020 16:49:22 +0800
-Message-ID: <008901d64616$874db550$95e91ff0$@wingtech.com>
+        Fri, 19 Jun 2020 04:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgFSIv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:51:29 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEAEC06174E;
+        Fri, 19 Jun 2020 01:51:29 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f185so8374924wmf.3;
+        Fri, 19 Jun 2020 01:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VNz1wqgYkZ4nhaFJ3Q49yOh75bUAhI2XzNoMFaOBP2c=;
+        b=Cr0x9R1l118oYOHpAxQu6yt75qygnLjjnOUJUITYkjjFBLi1PbwPtCovaOCs6CzM/c
+         dnLwV9KJCMNRReLuJ1a/Tqmc8K/PzZmq6vm4konGmjHRYp2hapfpofsNl5xH+nQERsN3
+         rmSD7Vbd+CIlMAKvYph3fNjDtrXSRE28s5vh9+9mPp/pZJF8GbX9PB7SOAmVssFCUswg
+         tqL2XNf+rJaMWlYzETNoby2M2pSJ86Hz5WfNhFhTUFjvjB6vP2cFFY5chJg45h9sfNiw
+         Pcq5n9DA1ONWs0HGhSsv1VCZzz/ygrEf+iwJDX3j6YAKkUUrjA8apzwEc5i2hi9hq1E9
+         cC8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VNz1wqgYkZ4nhaFJ3Q49yOh75bUAhI2XzNoMFaOBP2c=;
+        b=kjDRk5IGu7QZYIS2tjubeD/WoXFnbGKdK4uRBinz3nQ3cMET2pgLabJlF9l/NA5wu6
+         pEkLTLF6TIMiz2TyEjzKjydel06G/svyx8uhJcZxJBMcpX+I/384xzavlDg6cL9NhdSd
+         rEthV2u8V97FRnxRlmPNdJ2KMIquT8RLU18f+RcxQ59tsLNjg8GHfo0ezcEBUgCZB1S3
+         ZeGDY1dmgG77o4Hk9qJ19VHKbmMd758sVCwUqhL3JLR7HOy7CmEaFnoWPXo0VwVq+RNX
+         B9Ka3xRmIF/5vA8RASelIxMa9ro4nTqn72RNJ6XtWqDWe46BJNSSnDi4pueUqZDAZTr1
+         UqvA==
+X-Gm-Message-State: AOAM533MhmfwK+TACr9E2X8UbCAdzC0uvHsD+O3paXqXWiBpgTNM/X/n
+        xjWcoHJM6bXz/wnQrtJ1GrQ=
+X-Google-Smtp-Source: ABdhPJzVGH3ksKTZpYDC7GC36NRN1yR/52R3NNWLxirM/G482gskN7sgucPaMdIlLEWLsnmLotV8gA==
+X-Received: by 2002:a1c:7e49:: with SMTP id z70mr2575009wmc.24.1592556687637;
+        Fri, 19 Jun 2020 01:51:27 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id l1sm6674331wrb.31.2020.06.19.01.51.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 01:51:27 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v4 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+Date:   Fri, 19 Jun 2020 10:51:22 +0200
+Message-Id: <20200619085124.4029400-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="gb2312"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNxN4T3+exOUcEf2ChiBNKnJXFQ9wJkgBdrpZaZEmA=
-Content-Language: zh-cn
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2020/6/19 14:37, zhaowuyun@wingtech.com wrote:
-> > From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> >
-> > the filesystem will use the cold flag, so deal with it to avoid
-> > potential issue of inconsistency
-> >
-> > Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-> > ---
-> >  fsck/dir.c         |  6 +-----
-> >  fsck/node.c        |  9 +++++----
-> >  include/f2fs_fs.h  | 20 ++++++++++++++++++++
-> >  mkfs/f2fs_format.c | 14 +++++---------
-> >  4 files changed, 31 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/fsck/dir.c b/fsck/dir.c
-> > index 5f4f75e..64aa539 100644
-> > --- a/fsck/dir.c
-> > +++ b/fsck/dir.c
-> > @@ -517,11 +517,7 @@ static void init_inode_block(struct f2fs_sb_info
-> *sbi,
-> >  	}
-> >
-> >  	set_file_temperature(sbi, node_blk, de->name);
-> > -
-> > -	node_blk->footer.ino = cpu_to_le32(de->ino);
-> > -	node_blk->footer.nid = cpu_to_le32(de->ino);
-> > -	node_blk->footer.flag = 0;
-> > -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> > +	set_node_footer(node_blk, de->ino, de->ino, 0,
-> le64_to_cpu(ckpt->checkpoint_ver), S_ISDIR(mode));
-> >
-> >  	if (S_ISDIR(mode)) {
-> >  		make_empty_dir(sbi, node_blk);
-> > diff --git a/fsck/node.c b/fsck/node.c
-> > index 229a99c..66e8a81 100644
-> > --- a/fsck/node.c
-> > +++ b/fsck/node.c
-> > @@ -69,16 +69,17 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
-> >  	block_t blkaddr = NULL_ADDR;
-> >  	int type;
-> >  	int ret;
-> > +	u32 ino;
-> 
-> nid_t ino;
-> 
-> > +	u64 cp_ver;
-> >
-> >  	f2fs_inode = dn->inode_blk;
-> >
-> >  	node_blk = calloc(BLOCK_SZ, 1);
-> >  	ASSERT(node_blk);
-> >
-> > -	node_blk->footer.nid = cpu_to_le32(dn->nid);
-> > -	node_blk->footer.ino = f2fs_inode->footer.ino;
-> > -	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> > -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> > +	ino = le32_to_cpu(f2fs_inode->footer.ino);
-> > +	cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
-> > +	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver,
-> S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
-> >
-> >  	type = CURSEG_COLD_NODE;
-> >  	if (IS_DNODE(node_blk)) {
-> > diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
-> > index 709bfd8..3583df4 100644
-> > --- a/include/f2fs_fs.h
-> > +++ b/include/f2fs_fs.h
-> > @@ -923,6 +923,26 @@ struct f2fs_node {
-> >  	struct node_footer footer;
-> >  } __attribute__((packed));
-> >
-> > +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
-> > +{
-> > +	unsigned int flag = le32_to_cpu(rn->footer.flag);
-> > +
-> > +	if (is_dir)
-> > +		flag &= ~(0x1 << COLD_BIT_SHIFT);
-> > +	else
-> > +		flag |= (0x1 << COLD_BIT_SHIFT);
-> > +	rn->footer.flag = cpu_to_le32(flag);
-> > +}
-> > +
-> > +static inline void set_node_footer(struct f2fs_node *rn, u32 nid, u32
-ino,
-> u32 ofs, u64 ver, bool is_dir)
-> 
-> Sorry, I forgot to add parameter for next_blkaddr...
-> 
-> Could you check this?
+Add BCM63xx USBH PHY driver for BMIPS.
 
-Sent v3 patch, please help to review, thanks.
+v4: fix dt-bindings documentation and improve device mode config.
+v3: introduce changes suggested by Florian:
+ - Add support for device mode.
+v2: introduce changes suggested by Florian:
+ - phy-cells changed to 1.
+ - Drop OF dependency (use device_get_match_data).
+ - Drop __initconst from variant tables.
+ - Use devm_clk_get_optional.
 
-> From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> Subject: [PATCH] f2fs-tools: introduce set_node_footer to initialize node
->  footer
-> 
-> the filesystem will use the cold flag, so deal with it to avoid
-> potential issue of inconsistency
-> 
-> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-> ---
->  fsck/dir.c         |  7 ++-----
->  fsck/node.c        |  8 ++++----
->  include/f2fs_fs.h  | 23 +++++++++++++++++++++++
->  mkfs/f2fs_format.c | 34 +++++++++++++---------------------
->  4 files changed, 42 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fsck/dir.c b/fsck/dir.c
-> index 5f4f75ebed77..b067aec9cffd 100644
-> --- a/fsck/dir.c
-> +++ b/fsck/dir.c
-> @@ -517,11 +517,8 @@ static void init_inode_block(struct f2fs_sb_info
-> *sbi,
->  	}
-> 
->  	set_file_temperature(sbi, node_blk, de->name);
-> -
-> -	node_blk->footer.ino = cpu_to_le32(de->ino);
-> -	node_blk->footer.nid = cpu_to_le32(de->ino);
-> -	node_blk->footer.flag = 0;
-> -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> +	set_node_footer(node_blk, de->ino, de->ino, 0,
-> +			le64_to_cpu(ckpt->checkpoint_ver), 0,
-S_ISDIR(mode));
-> 
->  	if (S_ISDIR(mode)) {
->  		make_empty_dir(sbi, node_blk);
-> diff --git a/fsck/node.c b/fsck/node.c
-> index 229a99cab481..da010ff669cc 100644
-> --- a/fsck/node.c
-> +++ b/fsck/node.c
-> @@ -69,16 +69,16 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
->  	block_t blkaddr = NULL_ADDR;
->  	int type;
->  	int ret;
-> +	nid_t ino = le32_to_cpu(f2fs_inode->footer.ino);
-> +	u64 cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
-> 
->  	f2fs_inode = dn->inode_blk;
-> 
->  	node_blk = calloc(BLOCK_SZ, 1);
->  	ASSERT(node_blk);
-> 
-> -	node_blk->footer.nid = cpu_to_le32(dn->nid);
-> -	node_blk->footer.ino = f2fs_inode->footer.ino;
-> -	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
-> +	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver, 0,
-> +			S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
-> 
->  	type = CURSEG_COLD_NODE;
->  	if (IS_DNODE(node_blk)) {
-> diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
-> index 265f50c69fd1..0fe478ed820c 100644
-> --- a/include/f2fs_fs.h
-> +++ b/include/f2fs_fs.h
-> @@ -923,6 +923,29 @@ struct f2fs_node {
->  	struct node_footer footer;
->  } __attribute__((packed));
-> 
-> +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
-> +{
-> +	unsigned int flag = le32_to_cpu(rn->footer.flag);
-> +
-> +	if (is_dir)
-> +		flag &= ~(0x1 << COLD_BIT_SHIFT);
-> +	else
-> +		flag |= (0x1 << COLD_BIT_SHIFT);
-> +	rn->footer.flag = cpu_to_le32(flag);
-> +}
-> +
-> +static inline void set_node_footer(struct f2fs_node *rn, u32 nid, u32
-ino,
-> +					u32 ofs, u64 ver, block_t blkaddr,
-> +					bool is_dir)
-> +{
-> +	rn->footer.nid = cpu_to_le32(nid);
-> +	rn->footer.ino = cpu_to_le32(ino);
-> +	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> +	rn->footer.cp_ver = cpu_to_le64(ver);
-> +	rn->footer.next_blkaddr = cpu_to_le32(blkaddr);
-> +	set_cold_node(rn, is_dir);
-> +}
-> +
->  /*
->   * For NAT entries
->   */
-> diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
-> index 44575e0049fa..cb40e5a76332 100644
-> --- a/mkfs/f2fs_format.c
-> +++ b/mkfs/f2fs_format.c
-> @@ -1094,6 +1094,9 @@ static int f2fs_write_root_inode(void)
->  	struct f2fs_node *raw_node = NULL;
->  	u_int64_t blk_size_bytes, data_blk_nor;
->  	u_int64_t main_area_node_seg_blk_offset = 0;
-> +	nid_t nid = le32_to_cpu(sb->root_ino);
-> +	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
-> +				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg
-+ 1);
-> 
->  	raw_node = calloc(F2FS_BLKSIZE, 1);
->  	if (raw_node == NULL) {
-> @@ -1101,13 +1104,7 @@ static int f2fs_write_root_inode(void)
->  		return -1;
->  	}
-> 
-> -	raw_node->footer.nid = sb->root_ino;
-> -	raw_node->footer.ino = sb->root_ino;
-> -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> -	raw_node->footer.next_blkaddr = cpu_to_le32(
-> -			get_sb(main_blkaddr) +
-> -			c.cur_seg[CURSEG_HOT_NODE] *
-> -			c.blks_per_seg + 1);
-> +	set_node_footer(raw_node, nid, nid, 0, 1, blkaddr, 1);
-> 
->  	raw_node->i.i_mode = cpu_to_le16(0x41ed);
->  	if (c.lpf_ino)
-> @@ -1256,6 +1253,10 @@ static int f2fs_write_qf_inode(int qtype)
->  	u_int64_t main_area_node_seg_blk_offset = 0;
->  	__le32 raw_id;
->  	int i;
-> +	nid_t qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
-> +	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
-> +					c.cur_seg[CURSEG_HOT_NODE] *
-> +					c.blks_per_seg + 1 + qtype + 1);
-> 
->  	raw_node = calloc(F2FS_BLKSIZE, 1);
->  	if (raw_node == NULL) {
-> @@ -1263,13 +1264,7 @@ static int f2fs_write_qf_inode(int qtype)
->  		return -1;
->  	}
-> 
-> -	raw_node->footer.nid = sb->qf_ino[qtype];
-> -	raw_node->footer.ino = sb->qf_ino[qtype];
-> -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> -	raw_node->footer.next_blkaddr = cpu_to_le32(
-> -			get_sb(main_blkaddr) +
-> -			c.cur_seg[CURSEG_HOT_NODE] *
-> -			c.blks_per_seg + 1 + qtype + 1);
-> +	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, blkaddr, 0);
-> 
->  	raw_node->i.i_mode = cpu_to_le16(0x8180);
->  	raw_node->i.i_links = cpu_to_le32(1);
-> @@ -1447,6 +1442,9 @@ static int f2fs_write_lpf_inode(void)
->  	struct f2fs_node *raw_node;
->  	u_int64_t blk_size_bytes, main_area_node_seg_blk_offset;
->  	block_t data_blk_nor;
-> +	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
-> +				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg
-+
-> +				1 + c.quota_inum + 1);
->  	int err = 0;
-> 
->  	ASSERT(c.lpf_ino);
-> @@ -1457,13 +1455,7 @@ static int f2fs_write_lpf_inode(void)
->  		return -1;
->  	}
-> 
-> -	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
-> -	raw_node->footer.ino = raw_node->footer.nid;
-> -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> -	raw_node->footer.next_blkaddr = cpu_to_le32(
-> -			get_sb(main_blkaddr) +
-> -			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
-> -			1 + c.quota_inum + 1);
-> +	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, blkaddr, 1);
-> 
->  	raw_node->i.i_mode = cpu_to_le16(0x41c0); /* 0700 */
->  	raw_node->i.i_links = cpu_to_le32(2);
-> --
-> 2.26.2
-> 
-> 
-> 
-> 
-> > +{
-> > +	rn->footer.nid = cpu_to_le32(nid);
-> > +	rn->footer.ino = cpu_to_le32(ino);
-> > +	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
-> > +	rn->footer.cp_ver = cpu_to_le64(ver);
-> > +	set_cold_node(rn, is_dir);
-> > +}
-> > +
-> >  /*
-> >   * For NAT entries
-> >   */
-> > diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
-> > index 44575e0..b371adf 100644
-> > --- a/mkfs/f2fs_format.c
-> > +++ b/mkfs/f2fs_format.c
-> > @@ -1101,9 +1101,7 @@ static int f2fs_write_root_inode(void)
-> >  		return -1;
-> >  	}
-> >
-> > -	raw_node->footer.nid = sb->root_ino;
-> > -	raw_node->footer.ino = sb->root_ino;
-> > -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> > +	set_node_footer(raw_node, le32_to_cpu(sb->root_ino),
-> le32_to_cpu(sb->root_ino), 0, 1, 1);
-> >  	raw_node->footer.next_blkaddr = cpu_to_le32(
-> >  			get_sb(main_blkaddr) +
-> >  			c.cur_seg[CURSEG_HOT_NODE] *
-> > @@ -1256,6 +1254,7 @@ static int f2fs_write_qf_inode(int qtype)
-> >  	u_int64_t main_area_node_seg_blk_offset = 0;
-> >  	__le32 raw_id;
-> >  	int i;
-> > +	u32 qf_ino;
-> >
-> >  	raw_node = calloc(F2FS_BLKSIZE, 1);
-> >  	if (raw_node == NULL) {
-> > @@ -1263,9 +1262,8 @@ static int f2fs_write_qf_inode(int qtype)
-> >  		return -1;
-> >  	}
-> >
-> > -	raw_node->footer.nid = sb->qf_ino[qtype];
-> > -	raw_node->footer.ino = sb->qf_ino[qtype];
-> > -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> > +	qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
-> > +	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, 0);
-> >  	raw_node->footer.next_blkaddr = cpu_to_le32(
-> >  			get_sb(main_blkaddr) +
-> >  			c.cur_seg[CURSEG_HOT_NODE] *
-> > @@ -1457,9 +1455,7 @@ static int f2fs_write_lpf_inode(void)
-> >  		return -1;
-> >  	}
-> >
-> > -	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
-> > -	raw_node->footer.ino = raw_node->footer.nid;
-> > -	raw_node->footer.cp_ver = cpu_to_le64(1);
-> > +	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, 1);
-> >  	raw_node->footer.next_blkaddr = cpu_to_le32(
-> >  			get_sb(main_blkaddr) +
-> >  			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
-> >
+Álvaro Fernández Rojas (2):
+  dt-bindings: phy: add bcm63xx-usbh bindings
+  phy: bcm63xx-usbh: Add BCM63xx USBH driver
+
+ .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   |  84 ++++
+ drivers/phy/broadcom/Kconfig                  |   9 +
+ drivers/phy/broadcom/Makefile                 |   1 +
+ drivers/phy/broadcom/phy-bcm63xx-usbh.c       | 457 ++++++++++++++++++
+ 4 files changed, 551 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+ create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
+
+-- 
+2.27.0
 
