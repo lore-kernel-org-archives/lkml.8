@@ -2,119 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 206B121BE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579247;
-	bh=Ry7ffsonlHv7a5vi0afMmIH01N+u6fWs+CVFyp4Y7tE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bojONUZxF7o2G0spxj0EN/KQE+iwiWaiCFWNfVHlJUJgH1XPitwO7S8AFAWV4zxCu
-	 4EXl6LhDeMRUv9oulYhx/tVvIG5CNZ8CAMWsyB+gmKv2Qkov7D+uFh0OOT1JGkf9+h
-	 URC86x9yW6s2ASC4T4NwCrvAUTuK/BmlbwgaTk9c=
+	by mail.kernel.org (Postfix) with ESMTP id 4541821974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391577AbgFSPHZ (ORCPT
+        id S2389602AbgFSPHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36282 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:07:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62953 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391523AbgFSPHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4548621835;
-        Fri, 19 Jun 2020 15:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579224;
-        bh=Ry7ffsonlHv7a5vi0afMmIH01N+u6fWs+CVFyp4Y7tE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14UOJBFBXzyfdWAyPQQ/4omCx0CJDYaIUkRMciZvAlSkCGpUu3C3B3xedhDGcqTEq
-         NNDV1D6QV6v0vtIS35ktp9zDB8yd4cJaldJt724PygROhkfRT0wo5ibVSkRNdKQ4zl
-         NSvf3z3iCTRM8EAIha0kIrkqO5JVjBPjoBujP/3w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/261] spi: dw: Fix Rx-only DMA transfers
-Date:   Fri, 19 Jun 2020 16:31:04 +0200
-Message-Id: <20200619141652.470882659@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2391525AbgFSPHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49pMbP6FZrz9v09t;
+        Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id r47RiLH63nh6; Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbP5XS2z9v09j;
+        Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA2588B868;
+        Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id KAW_dSQhF3_R; Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 645308B879;
+        Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3E4C365AF4; Fri, 19 Jun 2020 15:06:56 +0000 (UTC)
+Message-Id: <de47e3d8dd3ef4c5f0a93c5ff19b5af52390cb9c.1592578278.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1592578278.git.christophe.leroy@csgroup.eu>
+References: <cover.1592578278.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v1 5/8] powerpc: Use MODULES_VADDR if defined
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 19 Jun 2020 15:06:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+In order to allow allocation of modules outside of vmalloc space,
+use MODULES_VADDR and MODULES_END when MODULES_VADDR is defined.
 
-[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
+Redefine module_alloc() when MODULES_VADDR defined.
+Unmap corresponding KASAN shadow memory.
 
-Tx-only DMA transfers are working perfectly fine since in this case
-the code just ignores the Rx FIFO overflow interrupts. But it turns
-out the SPI Rx-only transfers are broken since nothing pushing any
-data to the shift registers, so the Rx FIFO is left empty and the
-SPI core subsystems just returns a timeout error. Since DW DMAC
-driver doesn't support something like cyclic write operations of
-a single byte to a device register, the only way to support the
-Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-This is what we intend to fix in this commit by setting the
-SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- drivers/spi/spi-dw.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/module.c          | 11 +++++++++++
+ arch/powerpc/mm/kasan/kasan_init_32.c |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 82c5c027ec4c..07d1c170c657 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -529,6 +529,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 			dws->dma_inited = 0;
- 		} else {
- 			master->can_dma = dws->dma_ops->can_dma;
-+			master->flags |= SPI_CONTROLLER_MUST_TX;
- 		}
- 	}
+diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
+index df649acb5631..a211b0253cdb 100644
+--- a/arch/powerpc/kernel/module.c
++++ b/arch/powerpc/kernel/module.c
+@@ -86,3 +86,14 @@ int module_finalize(const Elf_Ehdr *hdr,
  
+ 	return 0;
+ }
++
++#ifdef MODULES_VADDR
++void *module_alloc(unsigned long size)
++{
++	BUILD_BUG_ON(TASK_SIZE > MODULES_VADDR);
++
++	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END, GFP_KERNEL,
++				    PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
++				    __builtin_return_address(0));
++}
++#endif
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0760e1e754e4..f1bc267d42af 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -115,6 +115,12 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
+ 	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
+ 
+ 	kasan_update_early_region(k_start, k_end, __pte(0));
++
++#ifdef MODULES_VADDR
++	k_start = (unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR);
++	k_end = (unsigned long)kasan_mem_to_shadow((void *)MODULES_END);
++	kasan_update_early_region(k_start, k_end, __pte(0));
++#endif
+ }
+ 
+ static void __init kasan_mmu_init(void)
 -- 
-2.25.1
-
-
+2.25.0
 
