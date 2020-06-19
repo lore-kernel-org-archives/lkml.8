@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A84C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40132C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278D021D7A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD8221974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579127;
-	bh=JhpQfRsModk5sQ9aL2T3NULoav7X7hkWKs2gzjta+OE=;
+	s=default; t=1592579132;
+	bh=wYOBonMFOcw+NCR1S5pFDveiILnmyP7Jt2GUW7nzcvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOhNwyNhSRY2kyWhlnDtT0UUcbYMBWWVPtBTlbL0RlazC/D43H88g0oyx2M50O4CI
-	 4UVBK3FA0Lad0O6s/2K0mBlC90u7fHVxOvrcl95K2SmRvnhPkf5CyJkTekMO0VXKKR
-	 LwEn4cLJcaj1ssmYjzSPDAEvPFX7nPMeHDT93KcI=
+	b=ESLcUTw9S6bschqD0MqVLetZVnUuhLrpcF7Y2z4Pn6AMJp61KPAMb07RWZ7vky/jp
+	 orFBFmzYvWL4Sg+06ejvDMiZpXoaUL7NOsYUMo5lrIMMy061Wh4mTnPmqOsjX6J3EF
+	 q+CCU+V7vh1FSKRkuWafpt9t4erXUwwJNLUS0hX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391296AbgFSPFZ (ORCPT
+        id S2391306AbgFSPF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:05:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34156 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391269AbgFSPFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:16 -0400
+        id S2391287AbgFSPFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE2221835;
-        Fri, 19 Jun 2020 15:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2821521974;
+        Fri, 19 Jun 2020 15:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579116;
-        bh=JhpQfRsModk5sQ9aL2T3NULoav7X7hkWKs2gzjta+OE=;
+        s=default; t=1592579121;
+        bh=wYOBonMFOcw+NCR1S5pFDveiILnmyP7Jt2GUW7nzcvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jscg9vrZ4eTE7pl+9LbcRTpCR5A6Zv3frOESdnKM/foeO6yy9rEye+w8bWXeoehNk
-         IlwoIea1Tw/RYQp6dONac6XsU3M9PfzQLt1Ml4wGdoLY6zoT1+hCbxFaBKDVVpkRUL
-         yM/fs6GgFl4MoSSbiyEFCb6cRC+JkkHbLR6Ygn6U=
+        b=CM51Vx6h/eaYH11Y6s2J/t0xhi237qrPElF8pc+YyuigLYJabN2nI6uFaYbcMd4Jf
+         vnDAMXTlVm/0WbVoyaF6A8aogc2Xtei/CIeBQGFQfwVN31ZM3pjP0Fk68M3phE+9G4
+         Up77uYUX69gbPSPLnf0b14MmacO/z1x7YA349p5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alston Tang <alston64@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/261] libbpf: Fix memory leak and possible double-free in hashmap__clear
-Date:   Fri, 19 Jun 2020 16:30:25 +0200
-Message-Id: <20200619141650.554719956@linuxfoundation.org>
+Subject: [PATCH 5.4 016/261] x86,smap: Fix smap_{save,restore}() alternatives
+Date:   Fri, 19 Jun 2020 16:30:27 +0200
+Message-Id: <20200619141650.638210102@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,42 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 229bf8bf4d910510bc1a2fd0b89bd467cd71050d ]
+[ Upstream commit 1ff865e343c2b59469d7e41d370a980a3f972c71 ]
 
-Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
-of the remaining entries. Also NULL-out bucket list to prevent possible
-double-free between hashmap__clear() and hashmap__free().
+As reported by objtool:
 
-Running test_progs-asan flavor clearly showed this problem.
+  lib/ubsan.o: warning: objtool: .altinstr_replacement+0x0: alternative modifies stack
+  lib/ubsan.o: warning: objtool: .altinstr_replacement+0x7: alternative modifies stack
 
-Reported-by: Alston Tang <alston64@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
+the smap_{save,restore}() alternatives violate (the newly enforced)
+rule on stack invariance. That is, due to there only being a single
+ORC table it must be valid to any alternative. These alternatives
+violate this with the direct result that unwinds will not be correct
+when it hits between the PUSH and POP instructions.
+
+Rewrite the functions to only have a conditional jump.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20200429101802.GI13592@hirez.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/hashmap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/smap.h | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index 6122272943e6..9ef9f6201d8b 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -56,7 +56,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
- 
- void hashmap__clear(struct hashmap *map)
+diff --git a/arch/x86/include/asm/smap.h b/arch/x86/include/asm/smap.h
+index 27c47d183f4b..8b58d6975d5d 100644
+--- a/arch/x86/include/asm/smap.h
++++ b/arch/x86/include/asm/smap.h
+@@ -57,8 +57,10 @@ static __always_inline unsigned long smap_save(void)
  {
-+	struct hashmap_entry *cur, *tmp;
-+	int bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
-+	}
- 	free(map->buckets);
-+	map->buckets = NULL;
- 	map->cap = map->cap_bits = map->sz = 0;
+ 	unsigned long flags;
+ 
+-	asm volatile (ALTERNATIVE("", "pushf; pop %0; " __ASM_CLAC,
+-				  X86_FEATURE_SMAP)
++	asm volatile ("# smap_save\n\t"
++		      ALTERNATIVE("jmp 1f", "", X86_FEATURE_SMAP)
++		      "pushf; pop %0; " __ASM_CLAC "\n\t"
++		      "1:"
+ 		      : "=rm" (flags) : : "memory", "cc");
+ 
+ 	return flags;
+@@ -66,7 +68,10 @@ static __always_inline unsigned long smap_save(void)
+ 
+ static __always_inline void smap_restore(unsigned long flags)
+ {
+-	asm volatile (ALTERNATIVE("", "push %0; popf", X86_FEATURE_SMAP)
++	asm volatile ("# smap_restore\n\t"
++		      ALTERNATIVE("jmp 1f", "", X86_FEATURE_SMAP)
++		      "push %0; popf\n\t"
++		      "1:"
+ 		      : : "g" (flags) : "memory", "cc");
  }
  
 -- 
