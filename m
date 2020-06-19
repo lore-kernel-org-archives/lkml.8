@@ -2,112 +2,273 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A92C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D2920CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ic8WHFaX"
+	by mail.kernel.org (Postfix) with ESMTP id 661CD20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592577429;
+	bh=yLYnTleeoXSWyJIkEEDdyuexv97IxY+Y0O7kq8QfJt4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0PR0ffJppx6GzNXpLpzMXP0oGy8D4AfxyYtj50LqzzTPw80uXOA6KG732ugj/+7Zy
+	 quhQT4CfSbsgSmlYF8N6PcWLRN2Oj0LasoQU3+1yyT7pBYYyr56SrZFz83jit+XFJs
+	 z9ORYWHc/73nqNBml0fpTbmSEXo6fYSscv/seqsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbgFSOgz (ORCPT
+        id S2387664AbgFSOhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387568AbgFSOgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:36:41 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4DBC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:36:41 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id q2so5724245vsr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p64fS/M7iBclbiXTSpgx3EjtiGyRATOfe8ygdOBbL8k=;
-        b=Ic8WHFaX1OgEjYWYHCaiPKgCONLHc18JvsQw7PDHNkGvuc4vqW3jWk5o/ob138BjEQ
-         Zd229mEfPxOZ6iEbirc+I2meMJZTOwHcmZX/z0AfYOP8sFKP3qvqOMSVdoKmXKGjc5bZ
-         MU/NuLF+0kRrF1hZUakchQh8oM3d9zkPkoBLEtS846kWCFIHrOs82affjmruJmcXLSmv
-         tRc646pgixkWl7ooq5shgp9bqq4wjX15wOyWepOeZMrMSNXfSr3edJt7NlVEpwhn9B+H
-         yY9hvHl6EwXt7zqiUlZlijpnOrTK7Py93/GxGHtgmaXVkJbkGzJT4YIBwmQnoupCpq9q
-         59Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p64fS/M7iBclbiXTSpgx3EjtiGyRATOfe8ygdOBbL8k=;
-        b=fZARC2zLkGpOo47k6fA6zjafiswL1eagzrFtAY42/BwgI1602p4JbxjaYmKkS7M1w2
-         pbt/cShHlQAqHc2zkxIYFDZb6yzkkC9smMYRgdIabHxgyV06wcCZNYZFxj1JbUSMDB3d
-         vDkRB97h+UsrkuUuF08H8RVXhiPm2LKHZ7XkFucPXWswxGKtuxIqgCV3ifJB9zSjPQH9
-         UD0Ei5cGeHVqmzcUEYMwNq4e+zYInXpxutc77VDeWUs/Oe7+qMha53eKHp5rYNhzECze
-         2Rz7LVttdr8pUEfDlLstNsiCPfZReT2e2MS7WQH2MJJlPo1mMEjIx15nNmGvpGNeVQal
-         5a5A==
-X-Gm-Message-State: AOAM531BkHfmFto10f2QnqTaZA9JMP+y47+N86i20PWuItg547V9x2Kd
-        iLwQk9A5YZ5zY2sz95+85VrMc+d4plHKAu2iHeI=
-X-Google-Smtp-Source: ABdhPJyo4v3gLO2yZSZ2qxIhlB2KbZ+4o+ZP77/7ro9oJa7nh1bjHaeq6ChnElhdq4f5/zHWAX+1/ai1AwE3lrPAeCQ=
-X-Received: by 2002:a67:f595:: with SMTP id i21mr7915748vso.3.1592577400075;
- Fri, 19 Jun 2020 07:36:40 -0700 (PDT)
+        Fri, 19 Jun 2020 10:37:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387616AbgFSOgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:36:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FBAF20CC7;
+        Fri, 19 Jun 2020 14:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577412;
+        bh=yLYnTleeoXSWyJIkEEDdyuexv97IxY+Y0O7kq8QfJt4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yy8t13kb05woM5aGF2NIWl/FfvoZbvTDVsiNCaIBTIzFWq5r+2sfYXYhWU3FoRCD6
+         LFftjR4G9k+FJVKjpkQZLRGuloKt9Lby6fAaO7YlnYTYODEoUTxPuo7oGfVf8b+yYo
+         UG91Kcxx+9e4Z7fnwIrCFhWkxBaQyhhqPiaV1TbE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 041/101] ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+Date:   Fri, 19 Jun 2020 16:32:30 +0200
+Message-Id: <20200619141616.263341518@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
+References: <20200619141614.001544111@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
- <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com> <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
- <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com> <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
- <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com>
-In-Reply-To: <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 15:36:28 +0100
-Message-ID: <CAD2FfiF8QEarhyFD1GkfnaR+spyH86sChgRZm37ab_gzS2m_wg@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 15:23, Dave Hansen <dave.hansen@intel.com> wrote:
-> Last night, I asked my kids if they brushed their teeth.  They said:
-> "Dad, my toothbrush was available."  They argued that mere availability
-> was a better situation than not *having* a toothbrush.  They were
-> logically right, of course, but they still got cavities.
+From: Qiujun Huang <hqjagain@gmail.com>
 
-I don't see how that's comparable, sorry. Surely Intel wants to sell
-hardware advertising TME as a security feature?
+commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
 
-> > So my take-away from that is that it's currently impossible to
-> > actually say if your system is *actually* using TME.
-> Not in a generic way, and it can't be derived from cpuid or MSRs alone.
+In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
+usb_ifnum_to_if(urb->dev, 0)
+But it isn't always true.
 
-Well, it seems not in any way at the moment.
+The case reported by syzbot:
+https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.com
+usb 2-1: new high-speed USB device number 2 using dummy_hcd
+usb 2-1: config 1 has an invalid interface number: 2 but max is 0
+usb 2-1: config 1 has no interface number 0
+usb 2-1: New USB device found, idVendor=0cf3, idProduct=9271, bcdDevice=
+1.08
+usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+general protection fault, probably for non-canonical address
+0xdffffc0000000015: 0000 [#1] SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
 
-> I'm pretty sure I'm using TME, but I didn't become sure from
-> poking at sysfs.
+Call Trace
+__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+expire_timers kernel/time/timer.c:1449 [inline]
+__run_timers kernel/time/timer.c:1773 [inline]
+__run_timers kernel/time/timer.c:1740 [inline]
+run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+__do_softirq+0x21e/0x950 kernel/softirq.c:292
+invoke_softirq kernel/softirq.c:373 [inline]
+irq_exit+0x178/0x1a0 kernel/softirq.c:413
+exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
 
-How do you know that Lenovo didn't disable TME without looking at
-dmesg? I don't think "pretty sure" is good enough when TME is
-considered a security feature.
+Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200404041838.10426-6-hqjagain@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Richard
+---
+ drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++++++++++++++++++--------
+ drivers/net/wireless/ath/ath9k/hif_usb.h |    5 +++
+ 2 files changed, 42 insertions(+), 11 deletions(-)
+
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -639,9 +639,9 @@ err:
+ 
+ static void ath9k_hif_usb_rx_cb(struct urb *urb)
+ {
+-	struct sk_buff *skb = (struct sk_buff *) urb->context;
+-	struct hif_device_usb *hif_dev =
+-		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
++	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
++	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
++	struct sk_buff *skb = rx_buf->skb;
+ 	int ret;
+ 
+ 	if (!skb)
+@@ -681,14 +681,15 @@ resubmit:
+ 	return;
+ free:
+ 	kfree_skb(skb);
++	kfree(rx_buf);
+ }
+ 
+ static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
+ {
+-	struct sk_buff *skb = (struct sk_buff *) urb->context;
++	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
++	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
++	struct sk_buff *skb = rx_buf->skb;
+ 	struct sk_buff *nskb;
+-	struct hif_device_usb *hif_dev =
+-		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
+ 	int ret;
+ 
+ 	if (!skb)
+@@ -746,6 +747,7 @@ resubmit:
+ 	return;
+ free:
+ 	kfree_skb(skb);
++	kfree(rx_buf);
+ 	urb->context = NULL;
+ }
+ 
+@@ -791,7 +793,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
+ 	init_usb_anchor(&hif_dev->mgmt_submitted);
+ 
+ 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
+-		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
++		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
+ 		if (!tx_buf)
+ 			goto err;
+ 
+@@ -828,8 +830,9 @@ static void ath9k_hif_usb_dealloc_rx_urb
+ 
+ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
+ {
+-	struct urb *urb = NULL;
++	struct rx_buf *rx_buf = NULL;
+ 	struct sk_buff *skb = NULL;
++	struct urb *urb = NULL;
+ 	int i, ret;
+ 
+ 	init_usb_anchor(&hif_dev->rx_submitted);
+@@ -837,6 +840,12 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
+ 
+ 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
+ 
++		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
++		if (!rx_buf) {
++			ret = -ENOMEM;
++			goto err_rxb;
++		}
++
+ 		/* Allocate URB */
+ 		urb = usb_alloc_urb(0, GFP_KERNEL);
+ 		if (urb == NULL) {
+@@ -851,11 +860,14 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
+ 			goto err_skb;
+ 		}
+ 
++		rx_buf->hif_dev = hif_dev;
++		rx_buf->skb = skb;
++
+ 		usb_fill_bulk_urb(urb, hif_dev->udev,
+ 				  usb_rcvbulkpipe(hif_dev->udev,
+ 						  USB_WLAN_RX_PIPE),
+ 				  skb->data, MAX_RX_BUF_SIZE,
+-				  ath9k_hif_usb_rx_cb, skb);
++				  ath9k_hif_usb_rx_cb, rx_buf);
+ 
+ 		/* Anchor URB */
+ 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
+@@ -881,6 +893,8 @@ err_submit:
+ err_skb:
+ 	usb_free_urb(urb);
+ err_urb:
++	kfree(rx_buf);
++err_rxb:
+ 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
+ 	return ret;
+ }
+@@ -892,14 +906,21 @@ static void ath9k_hif_usb_dealloc_reg_in
+ 
+ static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+ {
+-	struct urb *urb = NULL;
++	struct rx_buf *rx_buf = NULL;
+ 	struct sk_buff *skb = NULL;
++	struct urb *urb = NULL;
+ 	int i, ret;
+ 
+ 	init_usb_anchor(&hif_dev->reg_in_submitted);
+ 
+ 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
+ 
++		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
++		if (!rx_buf) {
++			ret = -ENOMEM;
++			goto err_rxb;
++		}
++
+ 		/* Allocate URB */
+ 		urb = usb_alloc_urb(0, GFP_KERNEL);
+ 		if (urb == NULL) {
+@@ -914,11 +935,14 @@ static int ath9k_hif_usb_alloc_reg_in_ur
+ 			goto err_skb;
+ 		}
+ 
++		rx_buf->hif_dev = hif_dev;
++		rx_buf->skb = skb;
++
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				  usb_rcvintpipe(hif_dev->udev,
+ 						  USB_REG_IN_PIPE),
+ 				  skb->data, MAX_REG_IN_BUF_SIZE,
+-				  ath9k_hif_usb_reg_in_cb, skb, 1);
++				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+ 
+ 		/* Anchor URB */
+ 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
+@@ -944,6 +968,8 @@ err_submit:
+ err_skb:
+ 	usb_free_urb(urb);
+ err_urb:
++	kfree(rx_buf);
++err_rxb:
+ 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
+ 	return ret;
+ }
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.h
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
+@@ -84,6 +84,11 @@ struct tx_buf {
+ 	struct list_head list;
+ };
+ 
++struct rx_buf {
++	struct sk_buff *skb;
++	struct hif_device_usb *hif_dev;
++};
++
+ #define HIF_USB_TX_STOP  BIT(0)
+ #define HIF_USB_TX_FLUSH BIT(1)
+ 
+
+
