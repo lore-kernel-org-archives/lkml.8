@@ -4,50 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD87C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44279C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA0E206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253F4206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581428;
-	bh=BCMxLLUVL/GAQayZQJbT4GVwOVpnytU/QSFr1+km1qY=;
+	s=default; t=1592581437;
+	bh=h07Z37vc4lsb8abLGkmrAV4a9DYuCzNCEUwO+VeYHxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhW0fqxDECX3ByVMZXR7oQqrnbA9H7+QH+qo+5A9apROFZsK53Rp+Yu6/yE8GtoUD
-	 EnFo9NXDUOBhl3tpqEbppXP+cBdYub3uuu9jdKdAGY43DGQbx4+UDwoJZpeutG7Bil
-	 U7T9lv6WAy6OuSZgd8yujetLgavbQzzyCLvyip7I=
+	b=xPD6dUmJqGaeW6QxW/z30pgO3ThbGCPcNiJhOp8h1Gs86J+QxGYSpvJgnTNwrnwSg
+	 yW/+rCZUuHIOhvjhMi9NWnypWEXpMC82A9kLkNyO085V+GZePaTtopJtnEwKfH2YVO
+	 drJsuwDRhz6PqPeJiJBdvtJ2VVxHLNnO2P7P+MJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404630AbgFSPnq (ORCPT
+        id S2404844AbgFSPn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392996AbgFSP2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:15 -0400
+        id S2393614AbgFSP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A19A320734;
-        Fri, 19 Jun 2020 15:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FAE5218AC;
+        Fri, 19 Jun 2020 15:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580494;
-        bh=BCMxLLUVL/GAQayZQJbT4GVwOVpnytU/QSFr1+km1qY=;
+        s=default; t=1592580491;
+        bh=h07Z37vc4lsb8abLGkmrAV4a9DYuCzNCEUwO+VeYHxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02QRRtCUjtq+fjvbdQj8CPoUfXYPrKlLMwUH/tM6sMelC+oA6WSxI7vrb9Z+f5elY
-         uNu/REOn336kvbpBd3h0D9Rx+PPjPSvCh+De/y+4uMeERtJOnYZ+4ZxmFLIPA2F7h0
-         xhAIEtVkIg37R13ECthzstBWGp4l+5Gtsv/MGNbc=
+        b=z8Kt5FS+05D1WHOnADW6MahbuFqt8/OBJ6+R5ZU8EjgHJsmrIRmCLcKmJWILXgpbQ
+         wYDiDhxT/UsNTbm9O1DuCTn9AY65D9518hWrqnXklB2gvZ3zWLYDtJDJJSlaS9Nl7n
+         FML33pRyXDI5erBg3LMWWqVdXUiH7sLG0fP+kB2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lichao Liu <liulichao@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.7 270/376] MIPS: CPU_LOONGSON2EF need software to maintain cache consistency
-Date:   Fri, 19 Jun 2020 16:33:08 +0200
-Message-Id: <20200619141723.109778191@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        James Morris <jmorris@namei.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>, Yiqian Wei <yiwei@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 269/376] mm: initialize deferred pages with interrupts enabled
+Date:   Fri, 19 Jun 2020 16:33:07 +0200
+Message-Id: <20200619141723.062076316@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,33 +70,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lichao Liu <liulichao@loongson.cn>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-commit a202bf71f08b3ef15356db30535e30b03cf23aec upstream.
+commit 3d060856adfc59afb9d029c233141334cfaba418 upstream.
 
-CPU_LOONGSON2EF need software to maintain cache consistency,
-so modify the 'cpu_needs_post_dma_flush' function to return true
-when the cpu type is CPU_LOONGSON2EF.
+Initializing struct pages is a long task and keeping interrupts disabled
+for the duration of this operation introduces a number of problems.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Lichao Liu <liulichao@loongson.cn>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+1. jiffies are not updated for long period of time, and thus incorrect time
+   is reported. See proposed solution and discussion here:
+   lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+2. It prevents farther improving deferred page initialization by allowing
+   intra-node multi-threading.
+
+We are keeping interrupts disabled to solve a rather theoretical problem
+that was never observed in real world (See 3a2d7fa8a3d5).
+
+Let's keep interrupts enabled. In case we ever encounter a scenario where
+an interrupt thread wants to allocate large amount of memory this early in
+boot we can deal with that by growing zone (see deferred_grow_zone()) by
+the needed amount before starting deferred_init_memmap() threads.
+
+Before:
+[    1.232459] node 0 initialised, 12058412 pages in 1ms
+
+After:
+[    1.632580] node 0 initialised, 12051227 pages in 436ms
+
+Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Yiqian Wei <yiwei@redhat.com>
+Cc: <stable@vger.kernel.org>	[4.17+]
+Link: http://lkml.kernel.org/r/20200403140952.17177-3-pasha.tatashin@soleen.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/dma-noncoherent.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mmzone.h |    2 ++
+ mm/page_alloc.c        |   20 +++++++-------------
+ 2 files changed, 9 insertions(+), 13 deletions(-)
 
---- a/arch/mips/mm/dma-noncoherent.c
-+++ b/arch/mips/mm/dma-noncoherent.c
-@@ -33,6 +33,7 @@ static inline bool cpu_needs_post_dma_fl
- 	case CPU_R10000:
- 	case CPU_R12000:
- 	case CPU_BMIPS5000:
-+	case CPU_LOONGSON2EF:
- 		return true;
- 	default:
- 		/*
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -678,6 +678,8 @@ typedef struct pglist_data {
+ 	/*
+ 	 * Must be held any time you expect node_start_pfn,
+ 	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
++	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
++	 * init.
+ 	 *
+ 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
+ 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1845,6 +1845,13 @@ static int __init deferred_init_memmap(v
+ 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+ 	pgdat->first_deferred_pfn = ULONG_MAX;
+ 
++	/*
++	 * Once we unlock here, the zone cannot be grown anymore, thus if an
++	 * interrupt thread must allocate this early in boot, zone must be
++	 * pre-grown prior to start of deferred page initialization.
++	 */
++	pgdat_resize_unlock(pgdat, &flags);
++
+ 	/* Only the highest zone is deferred so find it */
+ 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+ 		zone = pgdat->node_zones + zid;
+@@ -1865,8 +1872,6 @@ static int __init deferred_init_memmap(v
+ 	while (spfn < epfn)
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+ zone_empty:
+-	pgdat_resize_unlock(pgdat, &flags);
+-
+ 	/* Sanity check that the next zone really is unpopulated */
+ 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+ 
+@@ -1909,17 +1914,6 @@ deferred_grow_zone(struct zone *zone, un
+ 	pgdat_resize_lock(pgdat, &flags);
+ 
+ 	/*
+-	 * If deferred pages have been initialized while we were waiting for
+-	 * the lock, return true, as the zone was grown.  The caller will retry
+-	 * this zone.  We won't return to this function since the caller also
+-	 * has this static branch.
+-	 */
+-	if (!static_branch_unlikely(&deferred_pages)) {
+-		pgdat_resize_unlock(pgdat, &flags);
+-		return true;
+-	}
+-
+-	/*
+ 	 * If someone grew this zone while we were waiting for spinlock, return
+ 	 * true, as there might be enough pages already.
+ 	 */
 
 
