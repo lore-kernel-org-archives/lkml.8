@@ -2,69 +2,92 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7311C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF5020DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86802184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mT3EQLiA"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="d6JTVPWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbgFSNWD (ORCPT
+        id S1732121AbgFSNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        Fri, 19 Jun 2020 09:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728606AbgFSNWD (ORCPT
+        with ESMTP id S1726124AbgFSNWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:22:03 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE47C06174E;
-        Fri, 19 Jun 2020 06:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Zm98zvF5j8AfZqZkius+G07hdqS+tdgYDCOmBq/2Xao=; b=mT3EQLiA63auy9vEBqzzaf7fpB
-        F5AqegH9Sbtx1Th0BsEa/weK0kjUDVexFMQ+eUGtmppiyGg0FFB3d0bgxMr1KJju4ANyYjZTkC5L9
-        d/Fp3Cz+M4voBpJpu5/T+6+4vRuVX9qOvjZmy5rOOId1LTdA1GdmpuPsNVg3ROhibDKMUtaCIAPRc
-        iSwEAAgD17rl03TsO8aME4fVpCFbXN8F69xsZxHmVDfomaoXoKEAQrXc6F8IlnwqXJi2q9bvg0p+f
-        mbICSv+7DK9sdk9IP2ukie/PVgj85McV6RrCyL54+mvx8UouolLhJrfBLmFUdJ5m+2riduXZnDmYX
-        v8hdE6Kw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmGxv-0001bd-Dp; Fri, 19 Jun 2020 13:21:55 +0000
-Date:   Fri, 19 Jun 2020 06:21:55 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 19 Jun 2020 09:22:52 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE3EC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:22:52 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bac004d57d24caa4a0e33.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ac00:4d57:d24c:aa4a:e33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1747A1EC03D0;
+        Fri, 19 Jun 2020 15:22:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592572970;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gEMLO6KVm1oIKIAxLPOc4rRHgVZxc+y/BwsFuOfLTRE=;
+        b=d6JTVPWK6JBiDGrITcwYYDhlXhKkzeVLRPbq6uoLnES4BND4yX3uHsRq2vAbtGeY+Bb0W/
+        myqVvLmlEO0kJ8Y3l1WCGAo+w8vke9bE3kRcXsw3/H72OQFnS3DmGmp5Nzv/YTO3+5O5bv
+        jwUx6ekS+qY6Y5iL8MGHE4RcWxm2mBQ=
+Date:   Fri, 19 Jun 2020 15:22:43 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200619132155.GA27677@infradead.org>
-References: <20200617175310.20912-1-longman@redhat.com>
- <20200617175310.20912-3-longman@redhat.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+Message-ID: <20200619132243.GC32683@zn.tnic>
+References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
+ <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
+ <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
+ <20200618220139.GH27951@zn.tnic>
+ <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
+ <20200619074053.GA32683@zn.tnic>
+ <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200617175310.20912-3-longman@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I find it really confusing that we record this in current->flags.
-per-thread state makes total sense for not dipping into fs reclaim.
-But for annotating something related to memory allocation passing flags
-seems a lot more descriptive to me, as it is about particular locks.
+On Fri, Jun 19, 2020 at 10:01:36AM -0300, Daniel Gutson wrote:
+> Then the user will not know that he/she could improve the security of the
+> system by enabling the feature in the BIOS.
+
+And how is the user going to know from your "module"? AFAICT, your
+module loads on any system - not only on ones which have MKTME in CPUID.
+
+> The fact that the CPU has the cap and the BIOS disables it, can
+> trigger a prevention action.
+
+I can only venture guesses what "prevention action" is - you'll have to
+be more verbose here.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
