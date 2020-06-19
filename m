@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B678C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50B52158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223902186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580146;
-	bh=io4lJXAVX3uRYaGKl4DRd0WJPif3kVGHmSl/0zcyPaQ=;
+	s=default; t=1592580154;
+	bh=L6uAw5u2g44VN+ZMX5Ve2cEJ80HOp3drfSC9s8OfhG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GgiBOVwOpGkwko4gQ19weSs+O5bgYF+5Sf1fIS7epGMrGfS2ZFsNdUl8DH5AiWGjV
-	 YL7ekEZ7RBOZ0Yrbb+EWNxqzF/F++oSMOP8XMHB55eXiD+D7zdjCG3o2Ka+lAf0Hb2
-	 vEIGMHH46tjDWqiIMNx0qZnxC2skxe6pSMa+oSRw=
+	b=J4MtG6iGSv2JknReI1ziBlZY6tEJR2+CKjpRqa6uqwPaNsuAv1Rokwa0vN2f8VN8t
+	 lIwPyjfHVhyRx68+Jb55Ze4rpthBnoyywjZUdaL6HrsHL6+LxpInz4DkMmbaHclMvB
+	 xN8Q85On2/2ihR6ZGibOOwlFFHu60qXijIi4eX7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgFSPWY (ORCPT
+        id S2393014AbgFSPWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:22:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391694AbgFSPPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:15:44 -0400
+        id S2404033AbgFSPPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27121206DB;
-        Fri, 19 Jun 2020 15:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9AB72080C;
+        Fri, 19 Jun 2020 15:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579743;
-        bh=io4lJXAVX3uRYaGKl4DRd0WJPif3kVGHmSl/0zcyPaQ=;
+        s=default; t=1592579738;
+        bh=L6uAw5u2g44VN+ZMX5Ve2cEJ80HOp3drfSC9s8OfhG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iaZBkGIOYzwS2HMcnxDwHdnfRn3lWTE1F4C/YcePbQGd60tJ/SV7XoFQi0xeFALLE
-         mmWRjxL0/bI7FPOJaMciWElTRi7ajiEd0NCVT5jtuw7FMqBPAkZXf0GCV0OGIH1Zgt
-         knFti3374ZerJDdW1LwWnGZezhcite+Irpdp58jw=
+        b=n6TjL3YWMqLqMU/DzhV1qynznEUdmjA4L0p35o8HJZIly+YFZDyoi658iPl+bM5uv
+         pgbu2/mahD8bnimudHRY7mbIDrVgcSBEg6mRm2wtB+BM7w2HK3hxlMeiq72KD4CqjU
+         g8wJP+9MlJlKfs2GPswF+RCpe252h3xUhD4Bbc5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 222/261] powerpc/fadump: consider reserved ranges while reserving memory
-Date:   Fri, 19 Jun 2020 16:33:53 +0200
-Message-Id: <20200619141700.512564632@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 247/261] mtd: rawnand: orion: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:18 +0200
+Message-Id: <20200619141701.727685758@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,141 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 140777a3d8dfdb3d3f20ea7707c0f1c0ce1b0aa5 upstream.
+commit be238fbf78e4c7c586dac235ab967d3e565a4d1a upstream.
 
-Commit 0962e8004e97 ("powerpc/prom: Scan reserved-ranges node for
-memory reservations") enabled support to parse reserved-ranges DT
-node and reserve kernel memory falling in these ranges for F/W
-purposes. Memory reserved for FADump should not overlap with these
-ranges as it could corrupt memory meant for F/W or crash'ed kernel
-memory to be exported as vmcore.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-But since commit 579ca1a27675 ("powerpc/fadump: make use of memblock's
-bottom up allocation mode"), memblock_find_in_range() is being used to
-find the appropriate area to reserve memory for FADump, which can't
-account for reserved-ranges as these ranges are reserved only after
-FADump memory reservation.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-With reserved-ranges now being populated during early boot, look out
-for these memory ranges while reserving memory for FADump. Without
-this change, MPIPL on PowerNV systems aborts with hostboot failure,
-when memory reserved for FADump is less than 4096MB.
-
-Fixes: 579ca1a27675 ("powerpc/fadump: make use of memblock's bottom up allocation mode")
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/158737297693.26700.16193820746269425424.stgit@hbathini.in.ibm.com
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-34-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/fadump.c |   76 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 67 insertions(+), 9 deletions(-)
+ drivers/mtd/nand/raw/orion_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -443,10 +443,72 @@ static int __init fadump_get_boot_mem_re
- 	return ret;
- }
+--- a/drivers/mtd/nand/raw/orion_nand.c
++++ b/drivers/mtd/nand/raw/orion_nand.c
+@@ -180,7 +180,7 @@ static int __init orion_nand_probe(struc
+ 	mtd->name = "orion_nand";
+ 	ret = mtd_device_register(mtd, board->parts, board->nr_parts);
+ 	if (ret) {
+-		nand_release(nc);
++		nand_cleanup(nc);
+ 		goto no_dev;
+ 	}
  
-+/*
-+ * Returns true, if the given range overlaps with reserved memory ranges
-+ * starting at idx. Also, updates idx to index of overlapping memory range
-+ * with the given memory range.
-+ * False, otherwise.
-+ */
-+static bool overlaps_reserved_ranges(u64 base, u64 end, int *idx)
-+{
-+	bool ret = false;
-+	int i;
-+
-+	for (i = *idx; i < reserved_mrange_info.mem_range_cnt; i++) {
-+		u64 rbase = reserved_mrange_info.mem_ranges[i].base;
-+		u64 rend = rbase + reserved_mrange_info.mem_ranges[i].size;
-+
-+		if (end <= rbase)
-+			break;
-+
-+		if ((end > rbase) &&  (base < rend)) {
-+			*idx = i;
-+			ret = true;
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * Locate a suitable memory area to reserve memory for FADump. While at it,
-+ * lookup reserved-ranges & avoid overlap with them, as they are used by F/W.
-+ */
-+static u64 __init fadump_locate_reserve_mem(u64 base, u64 size)
-+{
-+	struct fadump_memory_range *mrngs;
-+	phys_addr_t mstart, mend;
-+	int idx = 0;
-+	u64 i, ret = 0;
-+
-+	mrngs = reserved_mrange_info.mem_ranges;
-+	for_each_free_mem_range(i, NUMA_NO_NODE, MEMBLOCK_NONE,
-+				&mstart, &mend, NULL) {
-+		pr_debug("%llu) mstart: %llx, mend: %llx, base: %llx\n",
-+			 i, mstart, mend, base);
-+
-+		if (mstart > base)
-+			base = PAGE_ALIGN(mstart);
-+
-+		while ((mend > base) && ((mend - base) >= size)) {
-+			if (!overlaps_reserved_ranges(base, base+size, &idx)) {
-+				ret = base;
-+				goto out;
-+			}
-+
-+			base = mrngs[idx].base + mrngs[idx].size;
-+			base = PAGE_ALIGN(base);
-+		}
-+	}
-+
-+out:
-+	return ret;
-+}
-+
- int __init fadump_reserve_mem(void)
- {
--	u64 base, size, mem_boundary, bootmem_min, align = PAGE_SIZE;
--	bool is_memblock_bottom_up = memblock_bottom_up();
-+	u64 base, size, mem_boundary, bootmem_min;
- 	int ret = 1;
- 
- 	if (!fw_dump.fadump_enabled)
-@@ -467,9 +529,9 @@ int __init fadump_reserve_mem(void)
- 			PAGE_ALIGN(fadump_calculate_reserve_size());
- #ifdef CONFIG_CMA
- 		if (!fw_dump.nocma) {
--			align = FADUMP_CMA_ALIGNMENT;
- 			fw_dump.boot_memory_size =
--				ALIGN(fw_dump.boot_memory_size, align);
-+				ALIGN(fw_dump.boot_memory_size,
-+				      FADUMP_CMA_ALIGNMENT);
- 		}
- #endif
- 
-@@ -537,11 +599,7 @@ int __init fadump_reserve_mem(void)
- 		 * Reserve memory at an offset closer to bottom of the RAM to
- 		 * minimize the impact of memory hot-remove operation.
- 		 */
--		memblock_set_bottom_up(true);
--		base = memblock_find_in_range(base, mem_boundary, size, align);
--
--		/* Restore the previous allocation mode */
--		memblock_set_bottom_up(is_memblock_bottom_up);
-+		base = fadump_locate_reserve_mem(base, size);
- 
- 		if (!base) {
- 			pr_err("Failed to find memory chunk for reservation!\n");
 
 
