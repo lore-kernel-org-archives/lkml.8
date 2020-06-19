@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8638CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6350821532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC54621556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582239;
-	bh=74wKcSC/1/uY7MLx3rVRs5Efvh1k7Obe/4c2cXj8RbU=;
+	s=default; t=1592582246;
+	bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BVHV0puUUGXRefgMGIB9QXLeDuPPq40fPJrc/jl/esaPiqszSW2TBhXII0Gdue0SN
-	 5DUgqBo+3j1y+8nZunMlLxaiyxx8ic4RQMXx3YvxCqBu2pC7w0Zez5ccy6CPB6gieJ
-	 z934FOn7DtqGdwCtb6D2XT7oBEz6iGBKGfS6vIqA=
+	b=U7R3a9I8QgKu4rKLdOMECpwHFSC75T2v7m6gdQ9DGkhz6ISblIfoZa0rbvlNGLzNT
+	 UGRjTjKrVTHjkMxqlCf+HiAP/RIkutbCKA9zT1bhF9hiIMtm6zHZ6HVghDNHPYbMo4
+	 ks/4BFCtN8MCXyKhwEmyeW/wCzXodMKNNLQI+pQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405450AbgFSP5R (ORCPT
+        id S2405459AbgFSP5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:57:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390560AbgFSPUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:20:25 -0400
+        id S2392234AbgFSPUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:20:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A135820771;
-        Fri, 19 Jun 2020 15:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5579D20706;
+        Fri, 19 Jun 2020 15:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580024;
-        bh=74wKcSC/1/uY7MLx3rVRs5Efvh1k7Obe/4c2cXj8RbU=;
+        s=default; t=1592580016;
+        bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVSS48iR8o5gteYU+s/04b+nXJasyYT61zb5RomzVMz0sETCX2UMPDoO0QG5YQmOa
-         t5phOCq2S7wMHlsHtwvAHCcmCVO5a53vviDvGxOGP0g0x74DpFEE9zKbKnXGDNYP7w
-         FNGt/6chFcnr5nuEp6+SkHDriFDhQ3kv8dROKT8U=
+        b=nSxUnuSdrfSyaCQYMmY+PxkWn4+LhfVB6Bq9TMkVzEzhaxGsUFD3EQwcPxaJ6eoz8
+         yCe8gp/BonnduLhnVpQCyr9fWLpniXueZWLfaBJHGys8ijxlRkfo/QqhwsubZJCSYg
+         ArqPyI/T28DeeEBKJQse/D4YYv+kJlvV5U8CZejY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 094/376] e1000: Distribute switch variables for initialization
-Date:   Fri, 19 Jun 2020 16:30:12 +0200
-Message-Id: <20200619141714.789670361@linuxfoundation.org>
+Subject: [PATCH 5.7 091/376] brcmfmac: fix wrong location to get firmware feature
+Date:   Fri, 19 Jun 2020 16:30:09 +0200
+Message-Id: <20200619141714.650515602@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,62 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
-
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 0d51cbc88028..05bc6e216bca 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3136,8 +3136,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 5da0dda0d899..0dcefbd0c000 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -285,13 +285,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+ 
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
 +
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3158,6 +3159,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 
+ 	brcmf_feat_firmware_overrides(drvr);
+ 
 -- 
 2.25.1
 
