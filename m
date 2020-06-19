@@ -2,54 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F04C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC892168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EEE2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577824;
-	bh=C2yTplfXnz0lDxjv2W+yY3SAan1E8kfM48w4mLwAyDU=;
+	s=default; t=1592577828;
+	bh=HR4gwka30yFDMqj/us9MNam3p8IddmIDqG+OvkbeWrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/oPlPsAZ1pFICx1PmTaYOt2ruqCeTOFFtHNj+eFPODtsYsTBgecjFGp4oByDRdCj
-	 B+LxUsiLoovWUAL6Lj1Hz24IV8478YMKWjpMm7a60Cmwo0fjhryAzbCWnBYZuk8lHW
-	 L7DTPyRX6Z2cHCUy7KeaHOSE26C95uNdpMbddqJ4=
+	b=mkNPPYOA0edPzJ8T284eAKZA6OonbiFwZ/jI7MTw1o6cltDWdvJb8tNI9naV3TwuI
+	 uILJxG9OHziGfIxW71EEi6CZOgLVgiBEGbutqtdNhBKHt/uAX2Prm+q5ZlVwwKvkwZ
+	 KL85fK6MO6WAoLpZyy3Z2/r6xHstnwYaVR2SCloU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgFSOnm (ORCPT
+        id S2387554AbgFSOnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34342 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388466AbgFSOnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:18 -0400
+        id S2388492AbgFSOnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8185020A8B;
-        Fri, 19 Jun 2020 14:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9842220CC7;
+        Fri, 19 Jun 2020 14:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577798;
-        bh=C2yTplfXnz0lDxjv2W+yY3SAan1E8kfM48w4mLwAyDU=;
+        s=default; t=1592577820;
+        bh=HR4gwka30yFDMqj/us9MNam3p8IddmIDqG+OvkbeWrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiSYGn/3c5plGQSjZeqUhTgLDMU+BeBRwbN80jce8NKrkDDV24s1udSftuUTjjD96
-         3keC2DQwUG5+1Y3BddVVyyUaeCSuVoePCCRbVNA8NcuPO80rBp6W+AdOnAblDgV8eq
-         NZwrJtVnkm81KKwA8SVZLA4CdB1nZWKW9oVqqqLA=
+        b=2Odk4GUmv7x6uy1L5J3wNl2GoygInETJtfUoibHBKqWQlb7CfmUJEQlVATG+LYhVH
+         1wsEj8zk+5M8n2BbnjF2FBWCFm7e3rG0whjg3YJiH4w1fR3ueTG48nlRI0FstJJMWE
+         z+wANBvzdhGgk/I99EfnB86YI0sCubF++8sycCcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 064/128] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
-Date:   Fri, 19 Jun 2020 16:32:38 +0200
-Message-Id: <20200619141623.596611139@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 103/128] ext4: fix race between ext4_sync_parent() and rename()
+Date:   Fri, 19 Jun 2020 16:33:17 +0200
+Message-Id: <20200619141625.565865733@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -62,65 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
+commit 08adf452e628b0e2ce9a01048cfbec52353703d7 upstream.
 
-Recent work with KASan exposed the folling hard-coded bitmask
-in arch/arm/mm/proc-macros.S:
+'igrab(d_inode(dentry->d_parent))' without holding dentry->d_lock is
+broken because without d_lock, d_parent can be concurrently changed due
+to a rename().  Then if the old directory is immediately deleted, old
+d_parent->inode can be NULL.  That causes a NULL dereference in igrab().
 
-  bic     rd, sp, #8128
-  bic     rd, rd, #63
+To fix this, use dget_parent() to safely grab a reference to the parent
+dentry, which pins the inode.  This also eliminates the need to use
+d_find_any_alias() other than for the initial inode, as we no longer
+throw away the dentry at each step.
 
-This forms the bitmask 0x1FFF that is coinciding with
-(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
-that THREAD_SIZE is always 8K (8192).
+This is an extremely hard race to hit, but it is possible.  Adding a
+udelay() in between the reads of ->d_parent and its ->d_inode makes it
+reproducible on a no-journal filesystem using the following program:
 
-As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
-this bug.
+    #include <fcntl.h>
+    #include <unistd.h>
 
-Fix it by this little oneline suggested by Ard:
+    int main()
+    {
+        if (fork()) {
+            for (;;) {
+                mkdir("dir1", 0700);
+                int fd = open("dir1/file", O_RDWR|O_CREAT|O_SYNC);
+                write(fd, "X", 1);
+                close(fd);
+            }
+        } else {
+            mkdir("dir2", 0700);
+            for (;;) {
+                rename("dir1/file", "dir2/file");
+                rmdir("dir1");
+            }
+        }
+    }
 
-  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
+Fixes: d59729f4e794 ("ext4: fix races in ext4_sync_parent()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20200506183140.541194-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
-
-We have to also include <linux/const.h> since the THREAD_SIZE
-expands to use the _AC() macro.
-
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/proc-macros.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/fsync.c |   28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
-index f8bb65032b79..796e8f675a93 100644
---- a/arch/arm/mm/proc-macros.S
-+++ b/arch/arm/mm/proc-macros.S
-@@ -4,6 +4,7 @@
-  *  VMA_VM_FLAGS
-  *  VM_EXEC
+--- a/fs/ext4/fsync.c
++++ b/fs/ext4/fsync.c
+@@ -43,30 +43,28 @@
   */
-+#include <linux/const.h>
- #include <asm/asm-offsets.h>
- #include <asm/thread_info.h>
+ static int ext4_sync_parent(struct inode *inode)
+ {
+-	struct dentry *dentry = NULL;
+-	struct inode *next;
++	struct dentry *dentry, *next;
+ 	int ret = 0;
  
-@@ -34,7 +35,7 @@
-  * act_mm - get current->active_mm
-  */
- 	.macro	act_mm, rd
--	bic	\rd, sp, #8128
-+	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
- 	bic	\rd, \rd, #63
- 	ldr	\rd, [\rd, #TI_TASK]
- 	ldr	\rd, [\rd, #TSK_ACTIVE_MM]
--- 
-2.25.1
-
+ 	if (!ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
+ 		return 0;
+-	inode = igrab(inode);
++	dentry = d_find_any_alias(inode);
++	if (!dentry)
++		return 0;
+ 	while (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY)) {
+ 		ext4_clear_inode_state(inode, EXT4_STATE_NEWENTRY);
+-		dentry = d_find_any_alias(inode);
+-		if (!dentry)
+-			break;
+-		next = igrab(d_inode(dentry->d_parent));
++
++		next = dget_parent(dentry);
+ 		dput(dentry);
+-		if (!next)
+-			break;
+-		iput(inode);
+-		inode = next;
++		dentry = next;
++		inode = dentry->d_inode;
++
+ 		/*
+ 		 * The directory inode may have gone through rmdir by now. But
+ 		 * the inode itself and its blocks are still allocated (we hold
+-		 * a reference to the inode so it didn't go through
+-		 * ext4_evict_inode()) and so we are safe to flush metadata
+-		 * blocks and the inode.
++		 * a reference to the inode via its dentry), so it didn't go
++		 * through ext4_evict_inode()) and so we are safe to flush
++		 * metadata blocks and the inode.
+ 		 */
+ 		ret = sync_mapping_buffers(inode->i_mapping);
+ 		if (ret)
+@@ -75,7 +73,7 @@ static int ext4_sync_parent(struct inode
+ 		if (ret)
+ 			break;
+ 	}
+-	iput(inode);
++	dput(dentry);
+ 	return ret;
+ }
+ 
 
 
