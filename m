@@ -2,130 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC41C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C40C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D88AC2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5C321919
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579943;
-	bh=UEOOXWngWN83R5j4Pi/o/Dcm/fqzKyyBB3Vt398Ofeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lX50yUlIjweLaqq93oMgAU2rJeZvDXAMIT2kPnsmf3QXSRu/q13lKJXLTueljtcGs
-	 sP44wLaWMhHUBFYobpTkaWNS01BPjqNlKjzn4hwVwA+WInlidorZ2khod8UY0OUMo/
-	 tc2NPo94i2zfZVWybr8B69uCODNLFsMAhWyM5TVk=
+	s=default; t=1592579944;
+	bh=KphcNiZ+eOvakmzLYKXPGmvws0QzDnSkfXg63EaWeFw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DZYgB5aveu4NmFrvYgfpyarrgpjhKotMcem7e6qSlyxk/SRPNZhnjtGMmLwJDamjP
+	 H/yjpa74YpZdqh+IHdJKTteiemo6GtMIU4zEMAfa017HprEnhson/nObwTtJjPBFr4
+	 nV3b1BJVO7hOyDRPRbt5s7PAUXqlPUHjjjeg7MxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392572AbgFSPR4 (ORCPT
+        id S2392561AbgFSPRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48472 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392555AbgFSPRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2392551AbgFSPRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:17:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86344218AC;
-        Fri, 19 Jun 2020 15:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC5E2206DB;
+        Fri, 19 Jun 2020 15:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579869;
-        bh=UEOOXWngWN83R5j4Pi/o/Dcm/fqzKyyBB3Vt398Ofeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vXN+mD5PP3w4cOHhOURB1wp6S0pItj9Lv2MtK4xP8u/KcD/DeA76FrZ4Xux1jUVHZ
-         7bs8c8lFp4lWayAEscM4naiGN3Cm1p8hOLJwYUkKANHvLXbN09AauMtq+P7o7yoBGc
-         1WPUPT+rPAVWsTNqLXp2J01bb9664fCb8LEq4G8o=
-Date:   Fri, 19 Jun 2020 16:17:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Tudor.Ambarus@microchip.com
-Cc:     vigneshr@ti.com, bbrezillon@kernel.org,
-        vadivel.muruganx.ramuthevar@linux.intel.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
-        dinguyen@kernel.org, marex@denx.de
-Subject: Re: [RESEND PATCH v3 0/8] mtd: spi-nor: Move cadence-qaudspi to
- spi-mem framework
-Message-ID: <20200619151746.GF5396@sirena.org.uk>
-References: <20200601070444.16923-1-vigneshr@ti.com>
- <20200619105701.GD5396@sirena.org.uk>
- <0007c019-1ecf-1913-56a7-facffe345b1f@microchip.com>
+        s=default; t=1592579868;
+        bh=KphcNiZ+eOvakmzLYKXPGmvws0QzDnSkfXg63EaWeFw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=maD3qAjwo0Zg5sAqGbLfYwsrn+pkKZHrdZlpPtorkKsDHXrgXu2j7ICk3XP7GYtAC
+         JvWHZLvjPYgHhZ6/yetiVDMdNUHnRHkmmeH04CKR8ceng6FaBPzTiv+BlHYRz/Dnpz
+         fIN3kiKyvv/i/dWhZpVyWIe5u3cKCvti4rs5QvYI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 034/376] spi: dw: Zero DMA Tx and Rx configurations on stack
+Date:   Fri, 19 Jun 2020 16:29:12 +0200
+Message-Id: <20200619141711.967157295@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uTRFFR9qmiCqR05s"
-Content-Disposition: inline
-In-Reply-To: <0007c019-1ecf-1913-56a7-facffe345b1f@microchip.com>
-X-Cookie: Robot, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
---uTRFFR9qmiCqR05s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
 
-On Fri, Jun 19, 2020 at 11:47:08AM +0000, Tudor.Ambarus@microchip.com wrote:
+Some DMA controller drivers do not tolerate non-zero values in
+the DMA configuration structures. Zero them to avoid issues with
+such DMA controller drivers. Even despite above this is a good
+practice per se.
 
-> Would you please provide an immutable tag on top of v5.8-rc1 so that I
-> can merge back in spi-nor/next?
+Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Feng Tang <feng.tang@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-dw-mid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Here you go:
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 0d86c37e0aeb..1058b8a6c8a0 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -147,6 +147,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	if (!xfer->tx_buf)
+ 		return NULL;
+ 
++	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+ 	txconf.dst_maxburst = 16;
+@@ -193,6 +194,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	if (!xfer->rx_buf)
+ 		return NULL;
+ 
++	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+ 	rxconf.src_maxburst = 16;
+-- 
+2.25.1
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/cadence-mtd-spi-move
-
-for you to fetch changes up to 31fb632b5d43ca16713095b3a4fe17e3d7331e28:
-
-  spi: Move cadence-quadspi driver to drivers/spi/ (2020-06-19 14:26:54 +0100)
-
-----------------------------------------------------------------
-mtd/spi: Move the cadence-quadspi driver to spi-mem
-
-----------------------------------------------------------------
-Ramuthevar Vadivel Murugan (2):
-      mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
-      spi: Move cadence-quadspi driver to drivers/spi/
-
-Vignesh Raghavendra (6):
-      mtd: spi-nor: cadence-quadspi: Make driver independent of flash geometry
-      mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
-      mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on failure
-      mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire reset lines
-      mtd: spi-nor: cadence-quadspi: Handle probe deferral while requesting DMA channel
-      mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
-
- drivers/mtd/spi-nor/controllers/Kconfig            |  11 -
- drivers/mtd/spi-nor/controllers/Makefile           |   1 -
- drivers/spi/Kconfig                                |  11 +
- drivers/spi/Makefile                               |   1 +
- .../spi-cadence-quadspi.c}                         | 541 ++++++++-------------
- 5 files changed, 222 insertions(+), 343 deletions(-)
- rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (74%)
-
---uTRFFR9qmiCqR05s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7s1xkACgkQJNaLcl1U
-h9CkZwf/bn/NzkeSHpXBj+R11qSg1PNvnUXgrdmG3O2NoZyp3uimOHDbJOXGe/4Z
-9V4XQpiJRI1PPz+7mEQbbKev+mGBt4mVuZ3TlTYn9w5omw33LJhBjnTdwgA/Ik3j
-uAHE2kytqegcm30R27bLC5kiNQYT8RKm8MqkgYxwrUREapBGPHJ3LASu1c9mBjns
-2FFv7w8YpjzK0cGCE8h/PGT/kPGvnkatMOs5sOXCXfCan3ZQ9F++d6hquYRAhYEG
-T1D+GSJJAYOL0pJ2/B39g7ha+EILEhh9P9pNcKw68IM9NdbDMYjE0MJrJ4oj1q4f
-JuLI56TLnG1VpcXzRvUAbHgsIkfL4w==
-=VBZQ
------END PGP SIGNATURE-----
-
---uTRFFR9qmiCqR05s--
