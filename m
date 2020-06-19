@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D67EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB766C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D01F62158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973422158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584454;
-	bh=ed5UvQWkwOySrDiddzC7rusa9jUpPSdfPpjp03LaDyM=;
+	s=default; t=1592584459;
+	bh=TcGHcLnHLGz7sGNPgaP4VkVQZqw9UyLcABa8s7T6V/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GY3dksoX+6RsgW2677ZGkSKQRWisJDfCS5i7s+z9Q1xx2tew+EBncDOjbd76F4TRW
-	 1QSBx649x6YNnJ7o7GvWTnnA1kzbTG7aZOBoeS9lczAOZ3Un+HAJueoLd258mOmioh
-	 12Ioxj8MCxZZ7L+pKLNXjwCnXLddpJGyy6sIDy+o=
+	b=PM850Oz9s+G9g3V4YEYubrKID5xK8lHJINkbM343ge8OMSpYNenly+3FdubwjOW1G
+	 sOM9LXZmzsQmfpn8qK+/zbKE6PGVXEA8fKUGPvbCQyQBpnLa4ZVQ6WqnG7UUS12oHJ
+	 0xPzTIWonnlHq8REzoPORHagwug37xnXV9XnTEJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393839AbgFSQeN (ORCPT
+        id S2395159AbgFSQeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389418AbgFSOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:09 -0400
+        id S2389032AbgFSOvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64AC521548;
-        Fri, 19 Jun 2020 14:51:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2379F206DB;
+        Fri, 19 Jun 2020 14:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578269;
-        bh=ed5UvQWkwOySrDiddzC7rusa9jUpPSdfPpjp03LaDyM=;
+        s=default; t=1592578264;
+        bh=TcGHcLnHLGz7sGNPgaP4VkVQZqw9UyLcABa8s7T6V/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOTqPGWoxbxuFitDULY3YrBu96WbYjBQ6vKg1Xbq5vQd59Ly7dWkREALcXQglXymr
-         B5+v5Zt8+M8YYiCl7JJtgy1qCT2MLPmKRDwPWn/TZ3twH/FLZ2X5yqgURrL6mUR6DS
-         LEDDxEz73Vgpx7v3nJpiTJpsWAvve75OIQpCRLMU=
+        b=XXizpK7eYJ/lV+2Uff50uQMWZQNsl8Ocwjp7CZNIFf/oWnTF2jcUk4Sqp2NwmHods
+         39vPOoKhtGvIXKatj/156FuT9k/+8cTRhBRJ5HwyDIoPttrSfnNrxu0FHu7MsiffZt
+         e4PEkINQHwmiU8f0oV/nW5u8mdBuE9VpqOhn/SQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 148/190] PCI: Disable MSI for Freescale Layerscape PCIe RC mode
-Date:   Fri, 19 Jun 2020 16:33:13 +0200
-Message-Id: <20200619141641.120639909@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.14 146/190] ext4: fix error pointer dereference
+Date:   Fri, 19 Jun 2020 16:33:11 +0200
+Message-Id: <20200619141640.995132268@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,42 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-[ Upstream commit 06dc4ee54e306eff61cbdac3593b42b09f618103 ]
+commit 8418897f1bf87da0cb6936489d57a4320c32c0af upstream.
 
-The Freescale PCIe controller advertises the MSI/MSI-X capability in both
-RC and Endpoint mode, but in RC mode it doesn't support MSI/MSI-X by
-itself; it can only transfer MSI/MSI-X from downstream devices.
+Don't pass error pointers to brelse().
 
-Add a quirk to prevent use of MSI/MSI-X in RC mode.
+commit 7159a986b420 ("ext4: fix some error pointer dereferences") has fixed
+some cases, fix the remaining one case.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Once ext4_xattr_block_find()->ext4_sb_bread() failed, error pointer is
+stored in @bs->bh, which will be passed to brelse() in the cleanup
+routine of ext4_xattr_set_handle(). This will then cause a NULL panic
+crash in __brelse().
+
+BUG: unable to handle kernel NULL pointer dereference at 000000000000005b
+RIP: 0010:__brelse+0x1b/0x50
+Call Trace:
+ ext4_xattr_set_handle+0x163/0x5d0
+ ext4_xattr_set+0x95/0x110
+ __vfs_setxattr+0x6b/0x80
+ __vfs_setxattr_noperm+0x68/0x1b0
+ vfs_setxattr+0xa0/0xb0
+ setxattr+0x12c/0x1a0
+ path_setxattr+0x8d/0xc0
+ __x64_sys_setxattr+0x27/0x30
+ do_syscall_64+0x60/0x250
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+In this case, @bs->bh stores '-EIO' actually.
+
+Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: stable@kernel.org # 2.6.19
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/1587628004-95123-1-git-send-email-jefflexu@linux.alibaba.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/ext4/xattr.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index e7ed051ec125..c751f2f81142 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4912,3 +4912,11 @@ static void quirk_no_ats(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
- #endif /* CONFIG_PCI_ATS */
-+
-+/* Freescale PCIe doesn't support MSI in RC mode */
-+static void quirk_fsl_no_msi(struct pci_dev *pdev)
-+{
-+	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
-+		pdev->no_msi = 1;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
--- 
-2.25.1
-
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -1823,8 +1823,11 @@ ext4_xattr_block_find(struct inode *inod
+ 	if (EXT4_I(inode)->i_file_acl) {
+ 		/* The inode already has an extended attribute block. */
+ 		bs->bh = ext4_sb_bread(sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
+-		if (IS_ERR(bs->bh))
+-			return PTR_ERR(bs->bh);
++		if (IS_ERR(bs->bh)) {
++			error = PTR_ERR(bs->bh);
++			bs->bh = NULL;
++			return error;
++		}
+ 		ea_bdebug(bs->bh, "b_count=%d, refcount=%d",
+ 			atomic_read(&(bs->bh->b_count)),
+ 			le32_to_cpu(BHDR(bs->bh)->h_refcount));
 
 
