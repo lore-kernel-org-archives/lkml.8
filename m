@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E86BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76231C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB04206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C53206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585056;
-	bh=jIWMJy0Y8klCuejhD7uNt/cCKtnlVzy7LJ0nZ60RZzA=;
+	s=default; t=1592585065;
+	bh=qn7AOa62G/27kavDCg6/ccOrtB4coHWNJVvquYcj4Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gBFrehuvlmSTHvkxfUbsgp0o/iaMWJwFCAsM6Lx87Rh/WLTomEB942Hafpe4jd11W
-	 SJxYyKRUca8iJFZhX54LaHrmmZgbt01ewuZPTQUPri2arpoLhd3XI9Lc3RGsw+RW5V
-	 /Ts6OOBCyiprMnhs5i6lvqaJZ7RxfOFli9/C/rGg=
+	b=IL7f+kosEabChnKn0yeN26VMa/m9lS2l1bLJw50xd21LdlyorO+VCqGbfI6qGgoRn
+	 ejCU4R3Y2iezAm/1XBhiZ7lD00L83+hbBWwr91XtarMEP4Buu6qv/XEK0WbbFQYaI7
+	 NlWZHrJmACPV5mLMq+fJqVRLANHZhwQpzWKGTmKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388472AbgFSQoP (ORCPT
+        id S2393986AbgFSQoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388469AbgFSOnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:20 -0400
+        id S2388455AbgFSOnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20CE20CC7;
-        Fri, 19 Jun 2020 14:43:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C617C20CC7;
+        Fri, 19 Jun 2020 14:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577800;
-        bh=jIWMJy0Y8klCuejhD7uNt/cCKtnlVzy7LJ0nZ60RZzA=;
+        s=default; t=1592577795;
+        bh=qn7AOa62G/27kavDCg6/ccOrtB4coHWNJVvquYcj4Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiANZbh9KEBk1ecpjj1LIWt3ualLyzs9Pw2Jd5RQ1Xceo3eoKHOtZ3u+RShltpUtK
-         bg0kZURHMnevMsAD3eWQhxBSQDvVD5jeG+J9Tv/jFcLUAfr6+I4yI45mF4zX7Fn996
-         QlIymtvk57+3o4Ysa/vLMBOmaYlDEETvsUx8ZFrw=
+        b=F6oRga5qwmEw9JkAnP9058FSxJTfTjR0idssvVolWEc3dtKz3rzJbO02zqu121ciF
+         Bj8/SXCDt2F39z8DvsmrMJkFnBwICuxqyeGIGo0KVKw7PjimSqfurnjYFXX7Kl5eWV
+         cjwySp1P5krLQHjeWROETF6vfKekSus2i60hP/qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 055/128] media: si2157: Better check for running tuner in init
-Date:   Fri, 19 Jun 2020 16:32:29 +0200
-Message-Id: <20200619141623.108911162@linuxfoundation.org>
+Subject: [PATCH 4.9 063/128] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
+Date:   Fri, 19 Jun 2020 16:32:37 +0200
+Message-Id: <20200619141623.547732225@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,59 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
+[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
 
-Getting the Xtal trim property to check if running is less error prone.
-Reset if_frequency if state is unknown.
+We are currently treating any non-zero return value from btrfs_next_leaf()
+the same way, by going to the code that inserts a new checksum item in the
+tree. However if btrfs_next_leaf() returns an error (a value < 0), we
+should just stop and return the error, and not behave as if nothing has
+happened, since in that case we do not have a way to know if there is a
+next leaf or we are currently at the last leaf already.
 
-Replaces the previous "garbage check".
+So fix that by returning the error from btrfs_next_leaf().
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/tuners/si2157.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ fs/btrfs/file-item.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index 57b250847cd3..72a47da0db2a 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -84,24 +84,23 @@ static int si2157_init(struct dvb_frontend *fe)
- 	struct si2157_cmd cmd;
- 	const struct firmware *fw;
- 	const char *fw_name;
--	unsigned int uitmp, chip_id;
-+	unsigned int chip_id, xtal_trim;
- 
- 	dev_dbg(&client->dev, "\n");
- 
--	/* Returned IF frequency is garbage when firmware is not running */
--	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
-+	/* Try to get Xtal trim property, to verify tuner still running */
-+	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
- 	cmd.wlen = 4;
- 	cmd.rlen = 4;
- 	ret = si2157_cmd_execute(client, &cmd);
--	if (ret)
--		goto err;
- 
--	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
--	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
-+	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
- 
--	if (uitmp == dev->if_frequency / 1000)
-+	if (ret == 0 && xtal_trim < 16)
- 		goto warm;
- 
-+	dev->if_frequency = 0; /* we no longer know current tuner state */
-+
- 	/* power up */
- 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
- 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index d0d571c47d33..4f919628137c 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -779,10 +779,12 @@ again:
+ 		nritems = btrfs_header_nritems(path->nodes[0]);
+ 		if (!nritems || (path->slots[0] >= nritems - 1)) {
+ 			ret = btrfs_next_leaf(root, path);
+-			if (ret == 1)
++			if (ret < 0) {
++				goto out;
++			} else if (ret > 0) {
+ 				found_next = 1;
+-			if (ret != 0)
+ 				goto insert;
++			}
+ 			slot = path->slots[0];
+ 		}
+ 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
 -- 
 2.25.1
 
