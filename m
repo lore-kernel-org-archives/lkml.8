@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F88C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF64C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415AB2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D7021707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583169;
-	bh=WCVFemPCvvEAHresKQipQbskeWxyB4CvxzJtpyrJpng=;
+	s=default; t=1592583174;
+	bh=3xz76eFH3Rk6ECGnzWsr2A5OJGdDAjvgNxRKMAjuu2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCGuo0+IkDxLVgAOHUrTmjn7st7TfrnSiWdoin3Gyn702s3ppRKmY8Qia2sD/kvkl
-	 PJQP0Rk7dEWrSI4d/B4oWUxLKHeASnmscp1yZw7QfpnRu0Rh2AA+5ydkBW56qM4EPd
-	 ThmMJsHb2IXj41gRWEvK+kBNrfvji40jYoNwXUyQ=
+	b=1x9eT0SV79937bXrC509ycGi1HtXEB+a1ABCdJbWa1o/gvkt+Mo/YLN1WeOd4D8b+
+	 m0nA+tPqWRrUgA+lHeUNNdtjBtvZThMP5QLHRms97nAtIu0S/8amAagLjhF/mcz1ou
+	 XAYs22PRPlKQ2hAtHOKCWejEHku25pro9lhufOx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394183AbgFSQMr (ORCPT
+        id S2391132AbgFSPE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33218 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390563AbgFSPEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:32 -0400
+        id S2391123AbgFSPEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8FF721841;
-        Fri, 19 Jun 2020 15:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1946E2193E;
+        Fri, 19 Jun 2020 15:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579071;
-        bh=WCVFemPCvvEAHresKQipQbskeWxyB4CvxzJtpyrJpng=;
+        s=default; t=1592579060;
+        bh=3xz76eFH3Rk6ECGnzWsr2A5OJGdDAjvgNxRKMAjuu2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwF/aqRLwQ0PhJwix0TWjMyDUBD1H2DFaHfw44sWzLBGAkff5bAyJYKBNeNPaGy61
-         MX9R9KOtIiGOznBbJYMQbDg8WyEalCcA6wTRJa/7g1pWWDuMpxjkxu1NYv8ZsIgGmZ
-         BA3+FLqbkgcQgfcgTui9TAcypSl+GSKfHsHxNAZ4=
+        b=mtaQF16x8x8TtoNmajBAQsFBQcyz452I8zaezPy2IajXIEuV41jKUuqBPXnhugJ3A
+         On8LKmq93MgBiXxvV5HUMEsaw28tCN33h3q0E+YpsAnmq/vq/C6qbPf7qQr9wPrHgd
+         mFBLffGq6n9Y40gsEzihQ1NEhHYsHA7sYxWgbn/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.19 265/267] perf probe: Fix to check blacklist address correctly
-Date:   Fri, 19 Jun 2020 16:34:10 +0200
-Message-Id: <20200619141701.388317468@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 261/267] mtd: rawnand: brcmnand: fix hamming oob layout
+Date:   Fri, 19 Jun 2020 16:34:06 +0200
+Message-Id: <20200619141701.183626966@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,119 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
+commit 130bbde4809b011faf64f99dddc14b4b01f440c3 upstream.
 
-Fix to check kprobe blacklist address correctly with relocated address
-by adjusting debuginfo address.
+First 2 bytes are used in large-page nand.
 
-Since the address in the debuginfo is same as objdump, it is different
-from relocated kernel address with KASLR.  Thus, 'perf probe' always
-misses to catch the blacklisted addresses.
-
-Without this patch, 'perf probe' can not detect the blacklist addresses
-on a KASLR enabled kernel.
-
-  # perf probe kprobe_dispatcher
-  Failed to write event: Invalid argument
-    Error: Failed to add events.
-  #
-
-With this patch, it correctly shows the error message.
-
-  # perf probe kprobe_dispatcher
-  kprobe_dispatcher is blacklisted function, skip it.
-  Probe point 'kprobe_dispatcher' not found.
-    Error: Failed to add events.
-  #
-
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200512075733.745374-2-noltari@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-event.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -111,7 +111,7 @@ void exit_probe_symbol_maps(void)
- 	symbol__exit();
- }
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -911,11 +911,14 @@ static int brcmnand_hamming_ooblayout_fr
+ 		if (!section) {
+ 			/*
+ 			 * Small-page NAND use byte 6 for BBI while large-page
+-			 * NAND use byte 0.
++			 * NAND use bytes 0 and 1.
+ 			 */
+-			if (cfg->page_size > 512)
+-				oobregion->offset++;
+-			oobregion->length--;
++			if (cfg->page_size > 512) {
++				oobregion->offset += 2;
++				oobregion->length -= 2;
++			} else {
++				oobregion->length--;
++			}
+ 		}
+ 	}
  
--static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-+static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
- {
- 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
- 	struct kmap *kmap;
-@@ -123,6 +123,10 @@ static struct ref_reloc_sym *kernel_get_
- 	kmap = map__kmap(map);
- 	if (!kmap)
- 		return NULL;
-+
-+	if (pmap)
-+		*pmap = map;
-+
- 	return kmap->ref_reloc_sym;
- }
- 
-@@ -134,7 +138,7 @@ static int kernel_get_symbol_address_by_
- 	struct map *map;
- 
- 	/* ref_reloc_sym is just a label. Need a special fix*/
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
- 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
- 	else {
-@@ -751,6 +755,7 @@ post_process_kernel_probe_trace_events(s
- 				       int ntevs)
- {
- 	struct ref_reloc_sym *reloc_sym;
-+	struct map *map;
- 	char *tmp;
- 	int i, skipped = 0;
- 
-@@ -759,7 +764,7 @@ post_process_kernel_probe_trace_events(s
- 		return post_process_offline_probe_trace_events(tevs, ntevs,
- 						symbol_conf.vmlinux_name);
- 
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (!reloc_sym) {
- 		pr_warning("Relocated base symbol is not found!\n");
- 		return -EINVAL;
-@@ -770,9 +775,13 @@ post_process_kernel_probe_trace_events(s
- 			continue;
- 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
- 			continue;
--		/* If we found a wrong one, mark it by NULL symbol */
-+		/*
-+		 * If we found a wrong one, mark it by NULL symbol.
-+		 * Since addresses in debuginfo is same as objdump, we need
-+		 * to convert it to addresses on memory.
-+		 */
- 		if (kprobe_warn_out_range(tevs[i].point.symbol,
--					  tevs[i].point.address)) {
-+			map__objdump_2mem(map, tevs[i].point.address))) {
- 			tmp = NULL;
- 			skipped++;
- 		} else {
-@@ -2887,7 +2896,7 @@ static int find_probe_trace_events_from_
- 	/* Note that the symbols in the kmodule are not relocated */
- 	if (!pev->uprobes && !pev->target &&
- 			(!pp->retprobe || kretprobe_offset_is_supported())) {
--		reloc_sym = kernel_get_ref_reloc_sym();
-+		reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 		if (!reloc_sym) {
- 			pr_warning("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
 
 
