@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A272C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06031C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9AD20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D844420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581956;
-	bh=YP48rbtDsCt7cPYauRcjGLjAc3a4MGalUtGGAlwwvpg=;
+	s=default; t=1592581968;
+	bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NLJ46FCChOCIG4G4Sc1zBIDLI0qlrkrLWBecCmNfavHpw4ihmtgzFTn9QSEj00+HO
-	 LJHQZnlyC/MnwE5Gj6DiAPesDRei6va4CZB2sx7prraUzqkZkEGi9dtUXTmP9qwMkf
-	 1Sk6nrF6n0Tr/rI94OLafHUrPI/io/8QDGZbAh04=
+	b=tVq0ryLw9GJf5XV4u2lAF6So6zfJYgiHn5gwysEj2Plx7xKXN6Q3aElUSnGvbBQzW
+	 CLm4nb2kBB/+XBjotfPWv0jcEve2VI73Gr57KOb/TG5n1x8AeVvSp0CfikI5KRS7V1
+	 hfVQlCnf0C6dJI0n8zYrOhg9T/F97MvLgFGs8dHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405377AbgFSPwf (ORCPT
+        id S2392222AbgFSPwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391970AbgFSPXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:23:03 -0400
+        id S1727032AbgFSPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2478F217A0;
-        Fri, 19 Jun 2020 15:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1549E21582;
+        Fri, 19 Jun 2020 15:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580182;
-        bh=YP48rbtDsCt7cPYauRcjGLjAc3a4MGalUtGGAlwwvpg=;
+        s=default; t=1592580177;
+        bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kblRO297nVEOxm3cjPY5+iZOWoT+f2h9xCHlsArgqoNMruEdQXg6mt8jwiUhzoYwO
-         E/4N+E+VrUFVGk7TCDGQPsxBjvgj6v9/dqHpp7k0U0cm0ciaFCsafw4FUEM7KSCVLv
-         LLSZXDSkD7jbt8qS+D8Td43I37yNjQ+dFyiWW3wc=
+        b=lzYyD4VL7F9Aya/qYS1MLuJPl/+8LiNS7+J0yPA+hyMrxe/NZP8riCK7VXHiZJ+qj
+         i/coBp2Y0R9rintOu2xTgwe3nirIwuALPmryyoMbZdDYHIloduCgN0bHW3x8GMF4oc
+         EU16qH3oH8n6cgeEDriq89StCpA4i2B1D87BDq8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 154/376] libertas_tf: avoid a null dereference in pointer priv
-Date:   Fri, 19 Jun 2020 16:31:12 +0200
-Message-Id: <20200619141717.612882249@linuxfoundation.org>
+Subject: [PATCH 5.7 111/376] efi/libstub/random: Align allocate size to EFI_ALLOC_ALIGN
+Date:   Fri, 19 Jun 2020 16:30:29 +0200
+Message-Id: <20200619141715.603524839@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,47 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 049ceac308b0d57c4f06b9fb957cdf95d315cf0b ]
+[ Upstream commit e1df73e2d18b3b7d66f2ec38d81d9566b3a7fb21 ]
 
-Currently there is a check if priv is null when calling lbtf_remove_card
-but not in a previous call to if_usb_reset_dev that can also dereference
-priv.  Fix this by also only calling lbtf_remove_card if priv is null.
+The EFI stub uses a per-architecture #define for the minimum base
+and size alignment of page allocations, which is set to 4 KB for
+all architecures except arm64, which uses 64 KB, to ensure that
+allocations can always be (un)mapped efficiently, regardless of
+the page size used by the kernel proper, which could be a kexec'ee
 
-It is noteable that there don't seem to be any bugs reported that the
-null pointer dereference has ever occurred, so I'm not sure if the null
-check is required, but since we're doing a null check anyway it should
-be done for both function calls.
+The API wrappers around page based allocations assume that this
+alignment is always taken into account, and so efi_free() will
+also round up its size argument to EFI_ALLOC_ALIGN.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: baa0280f08c7 ("libertas_tf: don't defer firmware loading until start()")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200501173900.296658-1-colin.king@canonical.com
+Currently, efi_random_alloc() does not honour this alignment for
+the allocated size, and so freeing such an allocation may result
+in unrelated memory to be freed, potentially leading to issues
+after boot. So let's round up size in efi_random_alloc() as well.
+
+Fixes: 2ddbfc81eac84a29 ("efi: stub: add implementation of efi_random_alloc()")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas_tf/if_usb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/libstub/randomalloc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/if_usb.c b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-index 25ac9db35dbf..bedc09215088 100644
---- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-@@ -247,10 +247,10 @@ static void if_usb_disconnect(struct usb_interface *intf)
+diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
+index 4578f59e160c..6200dfa650f5 100644
+--- a/drivers/firmware/efi/libstub/randomalloc.c
++++ b/drivers/firmware/efi/libstub/randomalloc.c
+@@ -74,6 +74,8 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 	if (align < EFI_ALLOC_ALIGN)
+ 		align = EFI_ALLOC_ALIGN;
  
- 	lbtf_deb_enter(LBTF_DEB_MAIN);
++	size = round_up(size, EFI_ALLOC_ALIGN);
++
+ 	/* count the suitable slots in each memory map entry */
+ 	for (map_offset = 0; map_offset < map_size; map_offset += desc_size) {
+ 		efi_memory_desc_t *md = (void *)memory_map + map_offset;
+@@ -109,7 +111,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 		}
  
--	if_usb_reset_device(priv);
--
--	if (priv)
-+	if (priv) {
-+		if_usb_reset_device(priv);
- 		lbtf_remove_card(priv);
-+	}
+ 		target = round_up(md->phys_addr, align) + target_slot * align;
+-		pages = round_up(size, EFI_PAGE_SIZE) / EFI_PAGE_SIZE;
++		pages = size / EFI_PAGE_SIZE;
  
- 	/* Unlink and free urb */
- 	if_usb_free(cardp);
+ 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+ 				     EFI_LOADER_DATA, pages, &target);
 -- 
 2.25.1
 
