@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA90C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60CE2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E512A20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577738;
-	bh=5Je26gO6C3CocQCMRXvtb19WLm+OtkVowkKyukTrP44=;
+	s=default; t=1592577745;
+	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k66rrqb9rv+4UeLvC9gjl1jSeSrXK49EQo+QTqA2UotNohsvy6wxhtA2gsT56jGwy
-	 h3/KQD5lul2Km2JB8+SGEk58kTdaERVpkfVE5VIBHU25hlJX4PoLw88K7PU+QYS2+X
-	 Zhdvdud+ZdqzAiuX+qGYHT/8LonSXmHLMeMg5Drg=
+	b=N/SfMWN9qy0hgOXhOcB/k5uG4HCvtnq7WLQf5mjKanZrR87otIKdxkLqG57aA+Fq+
+	 RuCleynp9hDh8duMa+EEa4uNHJtm+HfQpupTlSyoPekXy3Iay4oUTlxJ18V6S1dWVs
+	 5thB4OquDnWi6Q/7xSVnpxAFHvm4p6xB9pjgMfdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733291AbgFSOmR (ORCPT
+        id S2388361AbgFSOmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387999AbgFSOmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:13 -0400
+        id S2388315AbgFSOmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED8820CC7;
-        Fri, 19 Jun 2020 14:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CD820A8B;
+        Fri, 19 Jun 2020 14:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577733;
-        bh=5Je26gO6C3CocQCMRXvtb19WLm+OtkVowkKyukTrP44=;
+        s=default; t=1592577735;
+        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbKxH4j8+CKOrDFdPRyNCtsqIy940NcejMo/ha9hlJLicCk5amNYQSYOQ9hbk7JyV
-         kOjMD2GXstEdniy/HnmviY7hbHtF+BQgDqj+ZrN/R1Lt+MsjZ8c+WMqiwcvPYj+2Ka
-         lAkY5wZxBz/kLmNNqvaKYZcO05owkj5f6m+xcsrQ=
+        b=XV5Vf/7CA3Ka0FaHSANJ3Rt4QrGgRKuLEwqrpO4TYr2Qs6RCOD+YvzGLnl3E8mV+X
+         25tu2qWyLKVC0XH+GTsE2fLp3Qz7WkKbs5yw0HCQ9Q0mJJ/TCH3EehTShSXEDsuxvl
+         jcTcLd45onh6uHtukv84eR/HIKkgUlc+dd4tio7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/128] e1000: Distribute switch variables for initialization
-Date:   Fri, 19 Jun 2020 16:32:42 +0200
-Message-Id: <20200619141623.808308755@linuxfoundation.org>
+Subject: [PATCH 4.9 069/128] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
+Date:   Fri, 19 Jun 2020 16:32:43 +0200
+Message-Id: <20200619141623.862526356@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,62 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jitao Shi <jitao.shi@mediatek.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
+Set the dpi pins to gpio mode and output-low to avoid leakage current
+when dpi disabled.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
-
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 39a09e18c1b7..3b16ee0de246 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3167,8 +3167,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index b6a7e7397b8b..b944fe067188 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -16,6 +16,9 @@ Required properties:
+   Documentation/devicetree/bindings/graph.txt. This port should be connected
+   to the input port of an attached HDMI or LVDS encoder chip.
+ 
++Optional properties:
++- pinctrl-names: Contain "default" and "sleep".
 +
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3189,6 +3190,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+ Example:
+ 
+ dpi0: dpi@1401d000 {
+@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
+ 		 <&mmsys CLK_MM_DPI_ENGINE>,
+ 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+ 	clock-names = "pixel", "engine", "pll";
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&dpi_pin_func>;
++	pinctrl-1 = <&dpi_pin_idle>;
+ 
+ 	port {
+ 		dpi0_out: endpoint {
 -- 
 2.25.1
 
