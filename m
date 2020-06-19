@@ -2,37 +2,36 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC65C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7568AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191DA207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D88C21531
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="PtMOFRBk"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="QePdyPao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392898AbgFSRfV (ORCPT
+        id S2392678AbgFSRfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:35:21 -0400
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:46140 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391252AbgFSRfS (ORCPT
+        Fri, 19 Jun 2020 13:35:17 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:62029 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732307AbgFSRfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:35:18 -0400
-Date:   Fri, 19 Jun 2020 17:35:10 +0000
+        Fri, 19 Jun 2020 13:35:16 -0400
+Date:   Fri, 19 Jun 2020 17:35:02 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1592588113; bh=+6q9jCMs1YMxn+QrQJ+ZC1L8yFHVEKZ59NR+XfU2XrA=;
+        t=1592588111; bh=pmcgB8cIWmktL8m7nzcLgHPgxr84gMsapvN9vA7VbRQ=;
         h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=PtMOFRBkvdC0WfCR3euZ+gTBw+Tt02ulTnjyh7OWCoJbHI4lF/X/akbot/lrG6gCV
-         Mx0PHvVQcQLG6MalzP1A7cm9zprXLluzxyU32okvvEFAxrzU6lZsN8PcpBBFBELv6G
-         D4CHpnzDUzcwV3TNe9b29sptRN8viB2fj+9V+8YVnBScb+B/XIJAI/UKz98jrpgA3w
-         pb2uiw9QwtTw63JkfXzfiNl3xXBLBG1hYVpnsDq5RWoNvRSAh/p+P3I2gDH+//U1TS
-         wKgImEsQTgFpfLGtT1XXdeA9A5A2ZjBsQgmRy3WSufynde++1BJlb3wLROOGgrwzPt
-         QrebTrLIfoDHA==
+        b=QePdyPaod+pKMacktRWNzHWsjJrj3nxq+JWWbCnDXbS/XssWQheK7VvLrcMZFk2TB
+         tE6C6kVxHHDZGWQSt4YUXJGXoF2xlHDw9Nj4aNVf1feMzuXoYFjlNqeqf/Bkogl1sN
+         Gdd4U/c1Ul12Xg+pO2TRkX3u8u0U7IUkHORviBlTfSK1tjI1ZcOtCXZLZ/hLQ0B3Q7
+         /Ruv9nJHKEmLkQ3Si7B4scvBY5q0MInhS+i6cseXRzT7cOS7QhGcpbpsYd+MahWE7D
+         NUVIGh8kYWqdls84gtjAdA//pd+ORdZNtzWFX451SUecJOE3fuxEtOPSNq92vAIqq4
+         LjyhnBMB6pXZQ==
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 From:   Alexander Lobakin <alobakin@pm.me>
@@ -46,8 +45,8 @@ Cc:     Michal Kubecek <mkubecek@suse.cz>,
         Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: [PATCH net 2/3] net: ethtool: fix indentation of netdev_features_strings
-Message-ID: <jU_RtZK4S4t4c89SZyp3kPYgtU5AXRsAUfNQY1zQiyh2AEx9U-CFfDYgJSV_Dw2bikF21kF_yjyBchJPenh7Rry9K6Cpi9hg5_5rDUKARU8=@pm.me>
+Subject: [PATCH net 0/3] net: ethtool: netdev_features_strings[] cleanup
+Message-ID: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -56,149 +55,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current indentation is an absolute mess of tabs, spaces and their
-mixes in different proportions. Convert it all to plain tabs and move
-assignment operation char to the right, which is the most commonly
-used style in Linux code.
+This little series adds the last forgotten feature string for
+NETIF_F_GSO_TUNNEL_REMCSUM and attempts to prevent such losses
+in future.
 
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
----
- net/ethtool/common.c | 120 +++++++++++++++++++++----------------------
- 1 file changed, 60 insertions(+), 60 deletions(-)
+Patches 2-3 seem more like net-next candidates rather than net-fixes,
+but if we don't stop it now, no guarantees that it won't happen again
+soon.
 
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index aaecfc916a4d..c8e3fce6e48d 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -6,66 +6,66 @@
- #include "common.h"
-=20
- const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] =
-=3D {
--=09[NETIF_F_SG_BIT] =3D               "tx-scatter-gather",
--=09[NETIF_F_IP_CSUM_BIT] =3D          "tx-checksum-ipv4",
--=09[NETIF_F_HW_CSUM_BIT] =3D          "tx-checksum-ip-generic",
--=09[NETIF_F_IPV6_CSUM_BIT] =3D        "tx-checksum-ipv6",
--=09[NETIF_F_HIGHDMA_BIT] =3D          "highdma",
--=09[NETIF_F_FRAGLIST_BIT] =3D         "tx-scatter-gather-fraglist",
--=09[NETIF_F_HW_VLAN_CTAG_TX_BIT] =3D  "tx-vlan-hw-insert",
--
--=09[NETIF_F_HW_VLAN_CTAG_RX_BIT] =3D  "rx-vlan-hw-parse",
--=09[NETIF_F_HW_VLAN_CTAG_FILTER_BIT] =3D "rx-vlan-filter",
--=09[NETIF_F_HW_VLAN_STAG_TX_BIT] =3D  "tx-vlan-stag-hw-insert",
--=09[NETIF_F_HW_VLAN_STAG_RX_BIT] =3D  "rx-vlan-stag-hw-parse",
--=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT] =3D "rx-vlan-stag-filter",
--=09[NETIF_F_VLAN_CHALLENGED_BIT] =3D  "vlan-challenged",
--=09[NETIF_F_GSO_BIT] =3D              "tx-generic-segmentation",
--=09[NETIF_F_LLTX_BIT] =3D             "tx-lockless",
--=09[NETIF_F_NETNS_LOCAL_BIT] =3D      "netns-local",
--=09[NETIF_F_GRO_BIT] =3D              "rx-gro",
--=09[NETIF_F_GRO_HW_BIT] =3D           "rx-gro-hw",
--=09[NETIF_F_LRO_BIT] =3D              "rx-lro",
--
--=09[NETIF_F_TSO_BIT] =3D              "tx-tcp-segmentation",
--=09[NETIF_F_GSO_ROBUST_BIT] =3D       "tx-gso-robust",
--=09[NETIF_F_TSO_ECN_BIT] =3D          "tx-tcp-ecn-segmentation",
--=09[NETIF_F_TSO_MANGLEID_BIT] =3D=09 "tx-tcp-mangleid-segmentation",
--=09[NETIF_F_TSO6_BIT] =3D             "tx-tcp6-segmentation",
--=09[NETIF_F_FSO_BIT] =3D              "tx-fcoe-segmentation",
--=09[NETIF_F_GSO_GRE_BIT] =3D=09=09 "tx-gre-segmentation",
--=09[NETIF_F_GSO_GRE_CSUM_BIT] =3D=09 "tx-gre-csum-segmentation",
--=09[NETIF_F_GSO_IPXIP4_BIT] =3D=09 "tx-ipxip4-segmentation",
--=09[NETIF_F_GSO_IPXIP6_BIT] =3D=09 "tx-ipxip6-segmentation",
--=09[NETIF_F_GSO_UDP_TUNNEL_BIT] =3D=09 "tx-udp_tnl-segmentation",
--=09[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] =3D "tx-udp_tnl-csum-segmentation",
--=09[NETIF_F_GSO_PARTIAL_BIT] =3D=09 "tx-gso-partial",
--=09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT] =3D "tx-tunnel-remcsum-segmentation",
--=09[NETIF_F_GSO_SCTP_BIT] =3D=09 "tx-sctp-segmentation",
--=09[NETIF_F_GSO_ESP_BIT] =3D=09=09 "tx-esp-segmentation",
--=09[NETIF_F_GSO_UDP_L4_BIT] =3D=09 "tx-udp-segmentation",
--=09[NETIF_F_GSO_FRAGLIST_BIT] =3D=09 "tx-gso-list",
--
--=09[NETIF_F_FCOE_CRC_BIT] =3D         "tx-checksum-fcoe-crc",
--=09[NETIF_F_SCTP_CRC_BIT] =3D        "tx-checksum-sctp",
--=09[NETIF_F_FCOE_MTU_BIT] =3D         "fcoe-mtu",
--=09[NETIF_F_NTUPLE_BIT] =3D           "rx-ntuple-filter",
--=09[NETIF_F_RXHASH_BIT] =3D           "rx-hashing",
--=09[NETIF_F_RXCSUM_BIT] =3D           "rx-checksum",
--=09[NETIF_F_NOCACHE_COPY_BIT] =3D     "tx-nocache-copy",
--=09[NETIF_F_LOOPBACK_BIT] =3D         "loopback",
--=09[NETIF_F_RXFCS_BIT] =3D            "rx-fcs",
--=09[NETIF_F_RXALL_BIT] =3D            "rx-all",
--=09[NETIF_F_HW_L2FW_DOFFLOAD_BIT] =3D "l2-fwd-offload",
--=09[NETIF_F_HW_TC_BIT] =3D=09=09 "hw-tc-offload",
--=09[NETIF_F_HW_ESP_BIT] =3D=09=09 "esp-hw-offload",
--=09[NETIF_F_HW_ESP_TX_CSUM_BIT] =3D=09 "esp-tx-csum-hw-offload",
--=09[NETIF_F_RX_UDP_TUNNEL_PORT_BIT] =3D=09 "rx-udp_tunnel-port-offload",
--=09[NETIF_F_HW_TLS_RECORD_BIT] =3D=09"tls-hw-record",
--=09[NETIF_F_HW_TLS_TX_BIT] =3D=09 "tls-hw-tx-offload",
--=09[NETIF_F_HW_TLS_RX_BIT] =3D=09 "tls-hw-rx-offload",
--=09[NETIF_F_GRO_FRAGLIST_BIT] =3D=09 "rx-gro-list",
--=09[NETIF_F_HW_MACSEC_BIT] =3D=09 "macsec-hw-offload",
-+=09[NETIF_F_SG_BIT]=09=09=09=3D "tx-scatter-gather",
-+=09[NETIF_F_IP_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv4",
-+=09[NETIF_F_HW_CSUM_BIT]=09=09=09=3D "tx-checksum-ip-generic",
-+=09[NETIF_F_IPV6_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv6",
-+=09[NETIF_F_HIGHDMA_BIT]=09=09=09=3D "highdma",
-+=09[NETIF_F_FRAGLIST_BIT]=09=09=09=3D "tx-scatter-gather-fraglist",
-+=09[NETIF_F_HW_VLAN_CTAG_TX_BIT]=09=09=3D "tx-vlan-hw-insert",
-+
-+=09[NETIF_F_HW_VLAN_CTAG_RX_BIT]=09=09=3D "rx-vlan-hw-parse",
-+=09[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]=09=3D "rx-vlan-filter",
-+=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
-+=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
-+=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
-+=09[NETIF_F_VLAN_CHALLENGED_BIT]=09=09=3D "vlan-challenged",
-+=09[NETIF_F_GSO_BIT]=09=09=09=3D "tx-generic-segmentation",
-+=09[NETIF_F_LLTX_BIT]=09=09=09=3D "tx-lockless",
-+=09[NETIF_F_NETNS_LOCAL_BIT]=09=09=3D "netns-local",
-+=09[NETIF_F_GRO_BIT]=09=09=09=3D "rx-gro",
-+=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
-+=09[NETIF_F_LRO_BIT]=09=09=09=3D "rx-lro",
-+
-+=09[NETIF_F_TSO_BIT]=09=09=09=3D "tx-tcp-segmentation",
-+=09[NETIF_F_GSO_ROBUST_BIT]=09=09=3D "tx-gso-robust",
-+=09[NETIF_F_TSO_ECN_BIT]=09=09=09=3D "tx-tcp-ecn-segmentation",
-+=09[NETIF_F_TSO_MANGLEID_BIT]=09=09=3D "tx-tcp-mangleid-segmentation",
-+=09[NETIF_F_TSO6_BIT]=09=09=09=3D "tx-tcp6-segmentation",
-+=09[NETIF_F_FSO_BIT]=09=09=09=3D "tx-fcoe-segmentation",
-+=09[NETIF_F_GSO_GRE_BIT]=09=09=09=3D "tx-gre-segmentation",
-+=09[NETIF_F_GSO_GRE_CSUM_BIT]=09=09=3D "tx-gre-csum-segmentation",
-+=09[NETIF_F_GSO_IPXIP4_BIT]=09=09=3D "tx-ipxip4-segmentation",
-+=09[NETIF_F_GSO_IPXIP6_BIT]=09=09=3D "tx-ipxip6-segmentation",
-+=09[NETIF_F_GSO_UDP_TUNNEL_BIT]=09=09=3D "tx-udp_tnl-segmentation",
-+=09[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT]=09=3D "tx-udp_tnl-csum-segmentation",
-+=09[NETIF_F_GSO_PARTIAL_BIT]=09=09=3D "tx-gso-partial",
-+=09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]=09=3D "tx-tunnel-remcsum-segmentation"=
-,
-+=09[NETIF_F_GSO_SCTP_BIT]=09=09=09=3D "tx-sctp-segmentation",
-+=09[NETIF_F_GSO_ESP_BIT]=09=09=09=3D "tx-esp-segmentation",
-+=09[NETIF_F_GSO_UDP_L4_BIT]=09=09=3D "tx-udp-segmentation",
-+=09[NETIF_F_GSO_FRAGLIST_BIT]=09=09=3D "tx-gso-list",
-+
-+=09[NETIF_F_FCOE_CRC_BIT]=09=09=09=3D "tx-checksum-fcoe-crc",
-+=09[NETIF_F_SCTP_CRC_BIT]=09=09=09=3D "tx-checksum-sctp",
-+=09[NETIF_F_FCOE_MTU_BIT]=09=09=09=3D "fcoe-mtu",
-+=09[NETIF_F_NTUPLE_BIT]=09=09=09=3D "rx-ntuple-filter",
-+=09[NETIF_F_RXHASH_BIT]=09=09=09=3D "rx-hashing",
-+=09[NETIF_F_RXCSUM_BIT]=09=09=09=3D "rx-checksum",
-+=09[NETIF_F_NOCACHE_COPY_BIT]=09=09=3D "tx-nocache-copy",
-+=09[NETIF_F_LOOPBACK_BIT]=09=09=09=3D "loopback",
-+=09[NETIF_F_RXFCS_BIT]=09=09=09=3D "rx-fcs",
-+=09[NETIF_F_RXALL_BIT]=09=09=09=3D "rx-all",
-+=09[NETIF_F_HW_L2FW_DOFFLOAD_BIT]=09=09=3D "l2-fwd-offload",
-+=09[NETIF_F_HW_TC_BIT]=09=09=09=3D "hw-tc-offload",
-+=09[NETIF_F_HW_ESP_BIT]=09=09=09=3D "esp-hw-offload",
-+=09[NETIF_F_HW_ESP_TX_CSUM_BIT]=09=09=3D "esp-tx-csum-hw-offload",
-+=09[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]=09=3D "rx-udp_tunnel-port-offload",
-+=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
-+=09[NETIF_F_HW_TLS_TX_BIT]=09=09=09=3D "tls-hw-tx-offload",
-+=09[NETIF_F_HW_TLS_RX_BIT]=09=09=09=3D "tls-hw-rx-offload",
-+=09[NETIF_F_GRO_FRAGLIST_BIT]=09=09=3D "rx-gro-list",
-+=09[NETIF_F_HW_MACSEC_BIT]=09=09=09=3D "macsec-hw-offload",
- };
-=20
- const char
+I was thinking about some kind of static assertion to have an early
+prevention mechanism for this, but the existing of 2 intended holes
+(former NO_CSUM and UFO) makes this problematic, at least at first
+sight.
+
+Alexander Lobakin (3):
+  net: ethtool: add missing string for NETIF_F_GSO_TUNNEL_REMCSUM
+  net: ethtool: fix indentation of netdev_features_strings
+  net: ethtool: sync netdev_features_strings order with enum
+    netdev_features
+
+ net/ethtool/common.c | 133 ++++++++++++++++++++++++-------------------
+ 1 file changed, 74 insertions(+), 59 deletions(-)
+
 --=20
 2.27.0
 
