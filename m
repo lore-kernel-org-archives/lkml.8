@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2885C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C38221707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A042221707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583581;
-	bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
+	s=default; t=1592583584;
+	bh=I4j9cgFKmU/e3A06B8j3e0Dn3D6aWeZNdZzrQfrzmSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5LfpoaBGoio7ekeKzZn44ItirKycFwN0rdLmwwWLHo058dCu2so2U7Pd2faA4DFr
-	 O4NLrMqHGeD7QkyiVNvUswbH58GDSa9+Xm82qCH5x/2qe6oapTdd4laGHtBjU/Ewsw
-	 n1xI1mjJOucPlmw9MbMBZmK4/T8TXg0m0WxZle9c=
+	b=1ErkkYbjUOhsYZo/ubZgREg8zlSIwW5oL3Nv64t1fgc0MewL0CjMxckr06BWRsimA
+	 V9+nVmZnmRxVP70799LoLKo/8f9eKdQvNfgxkTKCBRp69GoB09e7ntbPIamhkabF96
+	 P7gibBsRWOk31hUJvAsazGMe5VULgrHI5cp+9fS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390729AbgFSPBv (ORCPT
+        id S2394602AbgFSQTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57500 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390678AbgFSPBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:00 -0400
+        id S2390742AbgFSPBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3307B20734;
-        Fri, 19 Jun 2020 15:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5520F21841;
+        Fri, 19 Jun 2020 15:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578860;
-        bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
+        s=default; t=1592578911;
+        bh=I4j9cgFKmU/e3A06B8j3e0Dn3D6aWeZNdZzrQfrzmSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ID/WVkzO0Lhuu0qtfH3sSzlToIEjH+0HORgX62Uw4y2bE8jjJKrfXsxQp1fEVjL4x
-         gOPElzjNpVAGBVf0hZrJ7/Mk0EdCpT4L63Ws7PY+OSQfK0Z68Rqf1RzgLkjurNOeZb
-         bddQYo5UsmIzlZUhkKu6J79c/e/4Oq9AlrgupFsg=
+        b=mIwTmoAjg98Ci/46JyAwVjF/z6v95g782EsyFhQFt97csPIyxVcGQOiZl7do4GTuJ
+         wW5OaPO9n0y6Bp1JtKIMqwFlx0WQiLdD54BtrR4Z0aEs0PXCxIZFkWkd1n/8OA/sVh
+         6B2etcYYPGHz8uSaYUBzUsAIqfNPxvipSf/7kt44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 155/267] wcn36xx: Fix error handling path in wcn36xx_probe()
-Date:   Fri, 19 Jun 2020 16:32:20 +0200
-Message-Id: <20200619141656.251971234@linuxfoundation.org>
+        stable@vger.kernel.org, Darrel Goeddel <dgoeddel@forcepoint.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Mark Scott <mscott@forcepoint.com>
+Subject: [PATCH 4.19 203/267] PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints
+Date:   Fri, 19 Jun 2020 16:33:08 +0200
+Message-Id: <20200619141658.474621270@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,54 +65,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ashok Raj <ashok.raj@intel.com>
 
-[ Upstream commit a86308fc534edeceaf64670c691e17485436a4f4 ]
+[ Upstream commit 3247bd10a4502a3075ce8e1c3c7d31ef76f193ce ]
 
-In case of error, 'qcom_wcnss_open_channel()' must be undone by a call to
-'rpmsg_destroy_ept()', as already done in the remove function.
+All Intel platforms guarantee that all root complex implementations must
+send transactions up to IOMMU for address translations. Hence for Intel
+RCiEP devices, we can assume some ACS-type isolation even without an ACS
+capability.
 
-Fixes: 5052de8deff5 ("soc: qcom: smd: Transition client drivers from smd to rpmsg")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200507043619.200051-1-christophe.jaillet@wanadoo.fr
+>From the Intel VT-d spec, r3.1, sec 3.16 ("Root-Complex Peer to Peer
+Considerations"):
+
+  When DMA remapping is enabled, peer-to-peer requests through the
+  Root-Complex must be handled as follows:
+
+  - The input address in the request is translated (through first-level,
+    second-level or nested translation) to a host physical address (HPA).
+    The address decoding for peer addresses must be done only on the
+    translated HPA. Hardware implementations are free to further limit
+    peer-to-peer accesses to specific host physical address regions (or
+    to completely disallow peer-forwarding of translated requests).
+
+  - Since address translation changes the contents (address field) of
+    the PCI Express Transaction Layer Packet (TLP), for PCI Express
+    peer-to-peer requests with ECRC, the Root-Complex hardware must use
+    the new ECRC (re-computed with the translated address) if it
+    decides to forward the TLP as a peer request.
+
+  - Root-ports, and multi-function root-complex integrated endpoints, may
+    support additional peer-to-peer control features by supporting PCI
+    Express Access Control Services (ACS) capability. Refer to ACS
+    capability in PCI Express specifications for details.
+
+Since Linux didn't give special treatment to allow this exception, certain
+RCiEP MFD devices were grouped in a single IOMMU group. This doesn't permit
+a single device to be assigned to a guest for instance.
+
+In one vendor system: Device 14.x were grouped in a single IOMMU group.
+
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+
+After this patch:
+
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+  /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+  /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+
+14.0 and 14.2 are integrated devices, but legacy end points, whereas 14.3
+was a PCIe-compliant RCiEP.
+
+  00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+    Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+
+This permits assigning this device to a guest VM.
+
+[bhelgaas: drop "Fixes" tag since this doesn't fix a bug in that commit]
+Link: https://lore.kernel.org/r/1590699462-7131-1-git-send-email-ashok.raj@intel.com
+Tested-by: Darrel Goeddel <dgoeddel@forcepoint.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Mark Scott <mscott@forcepoint.com>,
+Cc: Romil Sharma <rsharma@forcepoint.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wcn36xx/main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
-index 79998a3ddb7a..ad051f34e65b 100644
---- a/drivers/net/wireless/ath/wcn36xx/main.c
-+++ b/drivers/net/wireless/ath/wcn36xx/main.c
-@@ -1341,7 +1341,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
- 	if (addr && ret != ETH_ALEN) {
- 		wcn36xx_err("invalid local-mac-address\n");
- 		ret = -EINVAL;
--		goto out_wq;
-+		goto out_destroy_ept;
- 	} else if (addr) {
- 		wcn36xx_info("mac address: %pM\n", addr);
- 		SET_IEEE80211_PERM_ADDR(wcn->hw, addr);
-@@ -1349,7 +1349,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 013b84880e1d..d6236bb26950 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4543,6 +4543,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+ 	return acs_flags ? 0 : 1;
+ }
  
- 	ret = wcn36xx_platform_get_resources(wcn, pdev);
- 	if (ret)
--		goto out_wq;
-+		goto out_destroy_ept;
- 
- 	wcn36xx_init_ieee80211(wcn);
- 	ret = ieee80211_register_hw(wcn->hw);
-@@ -1361,6 +1361,8 @@ static int wcn36xx_probe(struct platform_device *pdev)
- out_unmap:
- 	iounmap(wcn->ccu_base);
- 	iounmap(wcn->dxe_base);
-+out_destroy_ept:
-+	rpmsg_destroy_ept(wcn->smd_channel);
- out_wq:
- 	ieee80211_free_hw(hw);
- out_err:
++static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	/*
++	 * Intel RCiEP's are required to allow p2p only on translated
++	 * addresses.  Refer to Intel VT-d specification, r3.1, sec 3.16,
++	 * "Root-Complex Peer to Peer Considerations".
++	 */
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
++		return -ENOTTY;
++
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++}
++
+ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	/*
+@@ -4626,6 +4640,7 @@ static const struct pci_dev_acs_enabled {
+ 	/* I219 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+ 	/* QCOM QDF2xxx root ports */
+ 	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
+ 	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
 -- 
 2.25.1
 
