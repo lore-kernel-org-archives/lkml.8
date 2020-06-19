@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8DB206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF8C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584819;
-	bh=qYHsVPLeJyJtI5aSyfx39wYG2ZSr8ZIZm0DUZYpNNs4=;
+	s=default; t=1592584835;
+	bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYmYJ6790sHRxVk9/588JVhQSN27DRUIPgNw7Jbl2+PQA5MMAREG9TX2WSjLJmbJL
-	 GJUOZjN0oity+bE+Vf2OiG1q5lG43hZCoUcfqWHUL0fVe86TuSijZLzn5tZ8TjsnkX
-	 n7Gu0a4RGGKwzUfn+KdmiAGuYrG0Hf7LC2RnrjgM=
+	b=0Ace7QefyIE/lZYjM3X9wbQXFAN257f8CQ86Uy3nYLNtGZRk0jRErnLsURPptKKMZ
+	 8RHf4RFNrL4Tgw+51y8Wr4NDkonxKYtOg3O6GCs7lru024/EEiW0JbEPqed6wnMFx1
+	 pLkRB/LYzXBnArIAhR7FZLL42eicnkma2Vsx7BHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395437AbgFSQkQ (ORCPT
+        id S2394923AbgFSQkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37574 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388772AbgFSOpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:54 -0400
+        id S2388682AbgFSOpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C46021556;
-        Fri, 19 Jun 2020 14:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB6DD20DD4;
+        Fri, 19 Jun 2020 14:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577954;
-        bh=qYHsVPLeJyJtI5aSyfx39wYG2ZSr8ZIZm0DUZYpNNs4=;
+        s=default; t=1592577933;
+        bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDGY3Ew8y5zQRdZlo2kWOVxhxnMCN55I29yjgTIq3F1bbsbrCQXJS/HWfk+ItTEQl
-         Dse5XUWTXG4z8HWIcSXysQR5xCFRLktTy3E7zWV5RobmybdG0OZF6U6GLdMrgKfLzw
-         /IQu8tEAqpwD2qvvVziVMGphCB1mQaUeRq9b5+XU=
+        b=LVq0+ljMw04z6ayGMABrS869t8yVvY1NZ0T9gsGZ//du5HZ58EOuO2Cg07DVfEOMC
+         TdXWiqhHYHCKONrc2Koo1VkiRCIOy4+mjv8wqDhNh/mFpmjA3JlGt+pXHnhQ/908Ce
+         N0AjA/JtZOqaksr/m4hFU77HSxBOSaeGwThstwd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH 4.14 003/190] make user_access_begin() do access_ok()
-Date:   Fri, 19 Jun 2020 16:30:48 +0200
-Message-Id: <20200619141633.635178494@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 019/190] x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
+Date:   Fri, 19 Jun 2020 16:31:04 +0200
+Message-Id: <20200619141634.432134989@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,201 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Xiaochun Lee <lixc17@lenovo.com>
 
-commit 594cc251fdd0d231d342d88b2fdff4bc42fb0690 upstream.
+commit 1574051e52cb4b5b7f7509cfd729b76ca1117808 upstream.
 
-Originally, the rule used to be that you'd have to do access_ok()
-separately, and then user_access_begin() before actually doing the
-direct (optimized) user access.
+The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
+registers (undocumented in the public spec) where BAR 0 is supposed to be,
+which results in messages like this:
 
-But experience has shown that people then decide not to do access_ok()
-at all, and instead rely on it being implied by other operations or
-similar.  Which makes it very hard to verify that the access has
-actually been range-checked.
+  pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
 
-If you use the unsafe direct user accesses, hardware features (either
-SMAP - Supervisor Mode Access Protection - on x86, or PAN - Privileged
-Access Never - on ARM) do force you to use user_access_begin().  But
-nothing really forces the range check.
+Mark these MROM functions as having non-compliant BARs so we don't try to
+probe any of them.  There are no other BARs on these devices.
 
-By putting the range check into user_access_begin(), we actually force
-people to do the right thing (tm), and the range check vill be visible
-near the actual accesses.  We have way too long a history of people
-trying to avoid them.
+See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
+May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+[bhelgaas: commit log, add 0xa26d]
+Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
+Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/uaccess.h             |   12 +++++++++++-
- drivers/gpu/drm/i915/i915_gem_execbuffer.c |   17 +++++++++++++++--
- include/linux/uaccess.h                    |    2 +-
- kernel/compat.c                            |    6 ++----
- kernel/exit.c                              |    6 ++----
- lib/strncpy_from_user.c                    |    9 +++++----
- lib/strnlen_user.c                         |    9 +++++----
- 7 files changed, 41 insertions(+), 20 deletions(-)
 
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -711,7 +711,17 @@ extern struct movsl_mask {
-  * checking before using them, but you have to surround them with the
-  * user_access_begin/end() pair.
-  */
--#define user_access_begin()	__uaccess_begin()
-+static __must_check inline bool user_access_begin(int type,
-+						  const void __user *ptr,
-+						  size_t len)
-+{
-+	if (unlikely(!access_ok(type, ptr, len)))
-+		return 0;
-+	__uaccess_begin();
-+	return 1;
-+}
-+
-+#define user_access_begin(a, b, c)	user_access_begin(a, b, c)
- #define user_access_end()	__uaccess_end()
+---
+ arch/x86/pci/fixup.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
  
- #define unsafe_put_user(x, ptr, err_label)					\
---- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-@@ -1566,7 +1566,9 @@ static int eb_copy_relocations(const str
- 		 * happened we would make the mistake of assuming that the
- 		 * relocations were valid.
- 		 */
--		user_access_begin();
-+		if (!user_access_begin(VERIFY_WRITE, urelocs, size))
-+			goto end_user;
-+
- 		for (copied = 0; copied < nreloc; copied++)
- 			unsafe_put_user(-1,
- 					&urelocs[copied].presumed_offset,
-@@ -2601,6 +2603,7 @@ i915_gem_execbuffer2(struct drm_device *
- 	struct drm_i915_gem_execbuffer2 *args = data;
- 	struct drm_i915_gem_exec_object2 *exec2_list;
- 	struct drm_syncobj **fences = NULL;
-+	const size_t count = args->buffer_count;
- 	int err;
- 
- 	if (args->buffer_count < 1 || args->buffer_count > SIZE_MAX / sz - 1) {
-@@ -2649,7 +2652,17 @@ i915_gem_execbuffer2(struct drm_device *
- 		unsigned int i;
- 
- 		/* Copy the new buffer offsets back to the user's exec list. */
--		user_access_begin();
-+		/*
-+		 * Note: count * sizeof(*user_exec_list) does not overflow,
-+		 * because we checked 'count' in check_buffer_count().
-+		 *
-+		 * And this range already got effectively checked earlier
-+		 * when we did the "copy_from_user()" above.
-+		 */
-+		if (!user_access_begin(VERIFY_WRITE, user_exec_list,
-+				       count * sizeof(*user_exec_list)))
-+			goto end_user;
-+
- 		for (i = 0; i < args->buffer_count; i++) {
- 			if (!(exec2_list[i].offset & UPDATE))
- 				continue;
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -267,7 +267,7 @@ extern long strncpy_from_unsafe(char *ds
- 	probe_kernel_read(&retval, addr, sizeof(retval))
- 
- #ifndef user_access_begin
--#define user_access_begin() do { } while (0)
-+#define user_access_begin(type, ptr, len) access_ok(type, ptr, len)
- #define user_access_end() do { } while (0)
- #define unsafe_get_user(x, ptr, err) do { if (unlikely(__get_user(x, ptr))) goto err; } while (0)
- #define unsafe_put_user(x, ptr, err) do { if (unlikely(__put_user(x, ptr))) goto err; } while (0)
---- a/kernel/compat.c
-+++ b/kernel/compat.c
-@@ -437,10 +437,9 @@ long compat_get_bitmap(unsigned long *ma
- 	bitmap_size = ALIGN(bitmap_size, BITS_PER_COMPAT_LONG);
- 	nr_compat_longs = BITS_TO_COMPAT_LONGS(bitmap_size);
- 
--	if (!access_ok(VERIFY_READ, umask, bitmap_size / 8))
-+	if (!user_access_begin(VERIFY_READ, umask, bitmap_size / 8))
- 		return -EFAULT;
- 
--	user_access_begin();
- 	while (nr_compat_longs > 1) {
- 		compat_ulong_t l1, l2;
- 		unsafe_get_user(l1, umask++, Efault);
-@@ -467,10 +466,9 @@ long compat_put_bitmap(compat_ulong_t __
- 	bitmap_size = ALIGN(bitmap_size, BITS_PER_COMPAT_LONG);
- 	nr_compat_longs = BITS_TO_COMPAT_LONGS(bitmap_size);
- 
--	if (!access_ok(VERIFY_WRITE, umask, bitmap_size / 8))
-+	if (!user_access_begin(VERIFY_WRITE, umask, bitmap_size / 8))
- 		return -EFAULT;
- 
--	user_access_begin();
- 	while (nr_compat_longs > 1) {
- 		unsigned long m = *mask++;
- 		unsafe_put_user((compat_ulong_t)m, umask++, Efault);
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1597,10 +1597,9 @@ SYSCALL_DEFINE5(waitid, int, which, pid_
- 	if (!infop)
- 		return err;
- 
--	if (!access_ok(VERIFY_WRITE, infop, sizeof(*infop)))
-+	if (!user_access_begin(VERIFY_WRITE, infop, sizeof(*infop)))
- 		return -EFAULT;
- 
--	user_access_begin();
- 	unsafe_put_user(signo, &infop->si_signo, Efault);
- 	unsafe_put_user(0, &infop->si_errno, Efault);
- 	unsafe_put_user(info.cause, &infop->si_code, Efault);
-@@ -1725,10 +1724,9 @@ COMPAT_SYSCALL_DEFINE5(waitid,
- 	if (!infop)
- 		return err;
- 
--	if (!access_ok(VERIFY_WRITE, infop, sizeof(*infop)))
-+	if (!user_access_begin(VERIFY_WRITE, infop, sizeof(*infop)))
- 		return -EFAULT;
- 
--	user_access_begin();
- 	unsafe_put_user(signo, &infop->si_signo, Efault);
- 	unsafe_put_user(0, &infop->si_errno, Efault);
- 	unsafe_put_user(info.cause, &infop->si_code, Efault);
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -115,10 +115,11 @@ long strncpy_from_user(char *dst, const
- 
- 		kasan_check_write(dst, count);
- 		check_object_size(dst, count, false);
--		user_access_begin();
--		retval = do_strncpy_from_user(dst, src, count, max);
--		user_access_end();
--		return retval;
-+		if (user_access_begin(VERIFY_READ, src, max)) {
-+			retval = do_strncpy_from_user(dst, src, count, max);
-+			user_access_end();
-+			return retval;
-+		}
- 	}
- 	return -EFAULT;
- }
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -114,10 +114,11 @@ long strnlen_user(const char __user *str
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
- 
--		user_access_begin();
--		retval = do_strnlen_user(str, count, max);
--		user_access_end();
--		return retval;
-+		if (user_access_begin(VERIFY_READ, str, max)) {
-+			retval = do_strnlen_user(str, count, max);
-+			user_access_end();
-+			return retval;
-+		}
- 	}
- 	return 0;
- }
+ /*
+  * Device [1022:7808]
 
 
