@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B4820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535F420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581558;
-	bh=sUAeO8rbA0N30Grcc1+ej5kBzyS6iBFuX9rKypyt0+Q=;
+	s=default; t=1592581561;
+	bh=gJS+b6GNXzHhvclf1Xkyzwi8iPGNLwhFWy7di66hKhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEZ8qoqXOuCWtj0v0rDWEdfrLe6bvmbIU/c3IZ9E+KifNJkQLjrl9cMwn1aA99FWI
-	 38Vv41uhK9Rx0p8vffsFPSRJV5z2Y22yAz5GlKs6FQfB931w+4oVAvRQ1wMhcb01U5
-	 QFFGHRxoWbMTBxg0gH9YbuC5YUCj/jWN+tmXvK3s=
+	b=GnSSBLIH11iMlJFbnXGiDdcTvTgmCKiKRLV4ciQ8NANpguUYWo4ioe+zixIp8Yk0R
+	 lP797oqw3y15nBXJi0fQdW/K3cl4orcrVcejdyr5rVVUNNAY5Y/+fuil+SiItcdlA+
+	 9vm3F6XWxaOPitgDl+E6a9lNG/YC08NLMW+jrJFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405251AbgFSPp5 (ORCPT
+        id S2392779AbgFSP06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393519AbgFSP1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:02 -0400
+        id S2393371AbgFSPZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5D520734;
-        Fri, 19 Jun 2020 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9258721548;
+        Fri, 19 Jun 2020 15:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580421;
-        bh=sUAeO8rbA0N30Grcc1+ej5kBzyS6iBFuX9rKypyt0+Q=;
+        s=default; t=1592580306;
+        bh=gJS+b6GNXzHhvclf1Xkyzwi8iPGNLwhFWy7di66hKhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kiioj7lSBKS1pJ1kVh3o+owwHqdEdn4G7X/ys0Ni2nLrv6ObH9fR0CqAR7GIwCfwD
-         JAU4j5AE+sS9SVrMwexzEhU+pdyClw23Q9fmEA+7zo0kHuVjHj3Ts+awsfUTPMSYEm
-         x/a72UnfxvySCx9RF8o/eTcSX0XurYXaQdVALWzg=
+        b=PsbotpFGjtLZ18ac+EIqAK3hqEsxWu2kg6z5KA9Ca8k+aRxbv0zzmFbqnkp1OP381
+         FXelXSAqiRWIU/5skU9m1Ld710bDZcWCXTgqE4vG9dJtHmL8zPnagC13O2lw0HFoeF
+         hX63AgLR4q5HtTk2Pb4UFn8dbHu+N3CspQzurpvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 241/376] io_uring: fix overflowed reqs cancellation
-Date:   Fri, 19 Jun 2020 16:32:39 +0200
-Message-Id: <20200619141721.739474082@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 199/376] x86/boot: Correct relocation destination on old linkers
+Date:   Fri, 19 Jun 2020 16:31:57 +0200
+Message-Id: <20200619141719.763805907@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,43 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 7b53d59859bc932b37895d2d37388e7fa29af7a5 ]
+[ Upstream commit 5214028dd89e49ba27007c3ee475279e584261f0 ]
 
-Overflowed requests in io_uring_cancel_files() should be shed only of
-inflight and overflowed refs. All other left references are owned by
-someone else.
+For the 32-bit kernel, as described in
 
-If refcount_sub_and_test() fails, it will go further and put put extra
-ref, don't do that. Also, don't need to do io_wq_cancel_work()
-for overflowed reqs, they will be let go shortly anyway.
+  6d92bc9d483a ("x86/build: Build compressed x86 kernels as PIE"),
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+pre-2.26 binutils generates R_386_32 relocations in PIE mode. Since the
+startup code does not perform relocation, any reloc entry with R_386_32
+will remain as 0 in the executing code.
+
+Commit
+
+  974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
+                 decompression buffer")
+
+added a new symbol _end but did not mark it hidden, which doesn't give
+the correct offset on older linkers. This causes the compressed kernel
+to be copied beyond the end of the decompression buffer, rather than
+flush against it. This region of memory may be reserved or already
+allocated for other purposes by the bootloader.
+
+Mark _end as hidden to fix. This changes the relocation from R_386_32 to
+R_386_RELATIVE even on the pre-2.26 binutils.
+
+For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
+built as PIE if the linker supports -z noreloc-overflow, which implies
+binutils-2.27+, but for consistency, mark _end as hidden here too.
+
+The below illustrates the before/after impact of the patch using
+binutils-2.25 and gcc-4.6.4 (locally compiled from source) and QEMU.
+
+  Disassembly before patch:
+    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
+    4e:   2d 00 00 00 00          sub    $0x0,%eax
+                          4f: R_386_32    _end
+  Disassembly after patch:
+    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
+    4e:   2d 00 f0 76 00          sub    $0x76f000,%eax
+                          4f: R_386_RELATIVE      *ABS*
+
+Dump from extract_kernel before patch:
+	early console in extract_kernel
+	input_data: 0x0207c098 <--- this is at output + init_size
+	input_len: 0x0074fef1
+	output: 0x01000000
+	output_len: 0x00fa63d0
+	kernel_total_size: 0x0107c000
+	needed_size: 0x0107c000
+
+Dump from extract_kernel after patch:
+	early console in extract_kernel
+	input_data: 0x0190d098 <--- this is at output + init_size - _end
+	input_len: 0x0074fef1
+	output: 0x01000000
+	output_len: 0x00fa63d0
+	kernel_total_size: 0x0107c000
+	needed_size: 0x0107c000
+
+Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200207214926.3564079-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/head_32.S | 5 +++--
+ arch/x86/boot/compressed/head_64.S | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 2d5f81a1bf9c..2698e9b08490 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7477,10 +7477,11 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 				finish_wait(&ctx->inflight_wait, &wait);
- 				continue;
- 			}
-+		} else {
-+			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
-+			io_put_req(cancel_req);
- 		}
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index ab3307036ba4..03557f2174bf 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -49,16 +49,17 @@
+  * Position Independent Executable (PIE) so that linker won't optimize
+  * R_386_GOT32X relocation to its fixed symbol address.  Older
+  * linkers generate R_386_32 relocations against locally defined symbols,
+- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
++ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
+  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
+  * R_386_32 relocations when relocating the kernel.  To generate
+- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
++ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
+  * hidden:
+  */
+ 	.hidden _bss
+ 	.hidden _ebss
+ 	.hidden _got
+ 	.hidden _egot
++	.hidden _end
  
--		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
--		io_put_req(cancel_req);
- 		schedule();
- 		finish_wait(&ctx->inflight_wait, &wait);
- 	}
+ 	__HEAD
+ SYM_FUNC_START(startup_32)
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 4f7e6b84be07..76d1d64d51e3 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -42,6 +42,7 @@
+ 	.hidden _ebss
+ 	.hidden _got
+ 	.hidden _egot
++	.hidden _end
+ 
+ 	__HEAD
+ 	.code32
 -- 
 2.25.1
 
