@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5956CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325F920734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADDB20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585622;
-	bh=IWwugB8J0T2HwlfDvqTqvYRdo+b31C/P+vvrxhblFWk=;
+	s=default; t=1592585624;
+	bh=wiiAPxDAcgLdZnc+pWOGvgVltEwCs8Md4gzwodKMssw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svvsdWB5XvIHNp2IWHjsnCTIsQiDZ8jQRpzP10VPQW8dcoioA8KrY3IIP1oZiHW5m
-	 +WOy3scVPCKO/CWeyRSYhRyKFZ3M6RvA+7XaY3u5YGnaIN/ehJ4hzoKR/K/Uvp36ta
-	 rw3wCZhYcXTnI3Zol2hS5YsnisVsz6dpfQ9YcfEk=
+	b=Yud/yuxSLUnSAHhRgwjs0ZbpUUXThG0PDeVwSsx8tRKZoZOuDkQb86Dc+NtQc70I7
+	 q9l/euexof+7ZyHvcjV2qCwvT+8KFmsCy5ga4uU1ddY6DrdT8ix6XFt7k77HWuiKKT
+	 NB4Rh9URqqlY2eo5w27GmLShBZtePtlaLH0W4Ts4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388468AbgFSQxl (ORCPT
+        id S2387651AbgFSOhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53834 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbgFSOhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:02 -0400
+        id S2387623AbgFSOgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:36:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32F021582;
-        Fri, 19 Jun 2020 14:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A63C208B8;
+        Fri, 19 Jun 2020 14:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577422;
-        bh=IWwugB8J0T2HwlfDvqTqvYRdo+b31C/P+vvrxhblFWk=;
+        s=default; t=1592577414;
+        bh=wiiAPxDAcgLdZnc+pWOGvgVltEwCs8Md4gzwodKMssw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fU4DzqB0vLuabe/Qz8mZb5nG3pfXSfkH7p1sT5QpB1mxBSfM8Dq+L7Rky5ZPprnmN
-         etQJ8ypvIkDg8ReVYRRtWsXZidCiSdStMMMHMnHc0x4AZUe5uZKgWkJMd37nPZSzF4
-         InnnjYVP5aQibMq91B4c3hGRNtyrAW+3CpsuJYr0=
+        b=fHSUdCdK6p65Ku3TLhlyCCRSM0mGThMVF8Lekyy2NhUvEL1Tv0myD00W/pjNeVlHv
+         lL+7DxWsbo76i3+3nIhw3j1VSSMp6Cmkz6xK41c9jc0DdNCunWKmZiW1awZvsiWI8C
+         SHSV462OuJ+ZnaZ3XEFUBiXYmzdmls6HVb/CSJCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaolong Huang <butterflyhuangxx@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 045/101] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
-Date:   Fri, 19 Jun 2020 16:32:34 +0200
-Message-Id: <20200619141616.459095266@linuxfoundation.org>
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 4.4 042/101] Smack: slab-out-of-bounds in vsscanf
+Date:   Fri, 19 Jun 2020 16:32:31 +0200
+Message-Id: <20200619141616.316549056@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -61,54 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolong Huang <butterflyhuangxx@gmail.com>
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
+commit 84e99e58e8d1e26f04c097f4266e431a33987f36 upstream.
 
-Uninitialized Kernel memory can leak to USB devices.
+Add barrier to soob. Return -EOVERFLOW if the buffer
+is exceeded.
 
-Fix this by using kzalloc() instead of kmalloc().
-
-Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
-Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-[bwh: Backported to 4.9: adjust filename, context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/kvaser_usb.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ security/smack/smackfs.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/net/can/usb/kvaser_usb.c
-+++ b/drivers/net/can/usb/kvaser_usb.c
-@@ -787,7 +787,7 @@ static int kvaser_usb_simple_msg_async(s
- 		return -ENOMEM;
- 	}
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -912,11 +912,21 @@ static ssize_t smk_set_cipso(struct file
+ 	else
+ 		rule += strlen(skp->smk_known) + 1;
  
--	buf = kmalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
-+	buf = kzalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
- 	if (!buf) {
- 		usb_free_urb(urb);
- 		return -ENOMEM;
-@@ -1457,7 +1457,7 @@ static int kvaser_usb_set_opt_mode(const
- 	struct kvaser_msg *msg;
- 	int rc;
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
++	}
++
+ 	ret = sscanf(rule, "%d", &maplevel);
+ 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
+ 		goto out;
  
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
- 
-@@ -1590,7 +1590,7 @@ static int kvaser_usb_flush_queue(struct
- 	struct kvaser_msg *msg;
- 	int rc;
- 
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
- 
+ 	rule += SMK_DIGITLEN;
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
++	}
++
+ 	ret = sscanf(rule, "%d", &catlen);
+ 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
+ 		goto out;
 
 
