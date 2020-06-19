@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F04C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1EEE2158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA3B2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577828;
-	bh=HR4gwka30yFDMqj/us9MNam3p8IddmIDqG+OvkbeWrI=;
+	s=default; t=1592577836;
+	bh=d9zKPQGRM6WNnUeRxiEl6bU9G95v89PXKZSFUxaLP+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mkNPPYOA0edPzJ8T284eAKZA6OonbiFwZ/jI7MTw1o6cltDWdvJb8tNI9naV3TwuI
-	 uILJxG9OHziGfIxW71EEi6CZOgLVgiBEGbutqtdNhBKHt/uAX2Prm+q5ZlVwwKvkwZ
-	 KL85fK6MO6WAoLpZyy3Z2/r6xHstnwYaVR2SCloU=
+	b=h79NHrN16OzKwNnEMF7s3+qMMVYY4nwG0K1BYyWifwe2EQvEzsMq1HrUgWqpBnmy7
+	 hVXzWKHhH5r4HPukWUPCU+vnsG31wRY6kVjTSgeYBFFfx/QmRFa2ifBXv2FzPtR5yb
+	 mc5gMalx+3iVbLMw37bWz4mfqZC0L7mLhrDQBwFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbgFSOnr (ORCPT
+        id S2388512AbgFSOnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388492AbgFSOnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:40 -0400
+        id S2387946AbgFSOnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9842220CC7;
-        Fri, 19 Jun 2020 14:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5B121556;
+        Fri, 19 Jun 2020 14:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577820;
-        bh=HR4gwka30yFDMqj/us9MNam3p8IddmIDqG+OvkbeWrI=;
+        s=default; t=1592577827;
+        bh=d9zKPQGRM6WNnUeRxiEl6bU9G95v89PXKZSFUxaLP+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Odk4GUmv7x6uy1L5J3wNl2GoygInETJtfUoibHBKqWQlb7CfmUJEQlVATG+LYhVH
-         1wsEj8zk+5M8n2BbnjF2FBWCFm7e3rG0whjg3YJiH4w1fR3ueTG48nlRI0FstJJMWE
-         z+wANBvzdhGgk/I99EfnB86YI0sCubF++8sycCcU=
+        b=QB/pSwMu7EdYXbFT1YyZlghY3hPhgy/7V1nI4zdFHdY9D0IGiCa2xu/PIim0RLYq+
+         rqAavo4MLwM6Tkky7XJGzROaLVlszAh0456eHmny28+NyRj/qAubHk4eMUQ7P8B+jr
+         Yv0ssa95JHtUWMZiwEqOwqqnwUTx6ww0bTT/w+EM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 103/128] ext4: fix race between ext4_sync_parent() and rename()
-Date:   Fri, 19 Jun 2020 16:33:17 +0200
-Message-Id: <20200619141625.565865733@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.9 106/128] PCI: Program MPS for RCiEP devices
+Date:   Fri, 19 Jun 2020 16:33:20 +0200
+Message-Id: <20200619141625.752300209@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,109 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Ashok Raj <ashok.raj@intel.com>
 
-commit 08adf452e628b0e2ce9a01048cfbec52353703d7 upstream.
+commit aa0ce96d72dd2e1b0dfd0fb868f82876e7790878 upstream.
 
-'igrab(d_inode(dentry->d_parent))' without holding dentry->d_lock is
-broken because without d_lock, d_parent can be concurrently changed due
-to a rename().  Then if the old directory is immediately deleted, old
-d_parent->inode can be NULL.  That causes a NULL dereference in igrab().
+Root Complex Integrated Endpoints (RCiEPs) do not have an upstream bridge,
+so pci_configure_mps() previously ignored them, which may result in reduced
+performance.
 
-To fix this, use dget_parent() to safely grab a reference to the parent
-dentry, which pins the inode.  This also eliminates the need to use
-d_find_any_alias() other than for the initial inode, as we no longer
-throw away the dentry at each step.
+Instead, program the Max_Payload_Size of RCiEPs to the maximum supported
+value (unless it is limited for the PCIE_BUS_PEER2PEER case).  This also
+affects the subsequent programming of Max_Read_Request_Size because Linux
+programs MRRS based on the MPS value.
 
-This is an extremely hard race to hit, but it is possible.  Adding a
-udelay() in between the reads of ->d_parent and its ->d_inode makes it
-reproducible on a no-journal filesystem using the following program:
-
-    #include <fcntl.h>
-    #include <unistd.h>
-
-    int main()
-    {
-        if (fork()) {
-            for (;;) {
-                mkdir("dir1", 0700);
-                int fd = open("dir1/file", O_RDWR|O_CREAT|O_SYNC);
-                write(fd, "X", 1);
-                close(fd);
-            }
-        } else {
-            mkdir("dir2", 0700);
-            for (;;) {
-                rename("dir1/file", "dir2/file");
-                rmdir("dir1");
-            }
-        }
-    }
-
-Fixes: d59729f4e794 ("ext4: fix races in ext4_sync_parent()")
+Fixes: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()")
+Link: https://lore.kernel.org/r/1585343775-4019-1-git-send-email-ashok.raj@intel.com
+Tested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200506183140.541194-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/fsync.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ drivers/pci/probe.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/fsync.c
-+++ b/fs/ext4/fsync.c
-@@ -43,30 +43,28 @@
-  */
- static int ext4_sync_parent(struct inode *inode)
- {
--	struct dentry *dentry = NULL;
--	struct inode *next;
-+	struct dentry *dentry, *next;
- 	int ret = 0;
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1360,13 +1360,33 @@ static void pci_configure_mps(struct pci
+ 	struct pci_dev *bridge = pci_upstream_bridge(dev);
+ 	int mps, p_mps, rc;
  
- 	if (!ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
- 		return 0;
--	inode = igrab(inode);
-+	dentry = d_find_any_alias(inode);
-+	if (!dentry)
-+		return 0;
- 	while (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY)) {
- 		ext4_clear_inode_state(inode, EXT4_STATE_NEWENTRY);
--		dentry = d_find_any_alias(inode);
--		if (!dentry)
--			break;
--		next = igrab(d_inode(dentry->d_parent));
+-	if (!pci_is_pcie(dev) || !bridge || !pci_is_pcie(bridge))
++	if (!pci_is_pcie(dev))
+ 		return;
+ 
+ 	/* MPS and MRRS fields are of type 'RsvdP' for VFs, short-circuit out */
+ 	if (dev->is_virtfn)
+ 		return;
+ 
++	/*
++	 * For Root Complex Integrated Endpoints, program the maximum
++	 * supported value unless limited by the PCIE_BUS_PEER2PEER case.
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		if (pcie_bus_config == PCIE_BUS_PEER2PEER)
++			mps = 128;
++		else
++			mps = 128 << dev->pcie_mpss;
++		rc = pcie_set_mps(dev, mps);
++		if (rc) {
++			pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
++				 mps);
++		}
++		return;
++	}
 +
-+		next = dget_parent(dentry);
- 		dput(dentry);
--		if (!next)
--			break;
--		iput(inode);
--		inode = next;
-+		dentry = next;
-+		inode = dentry->d_inode;
++	if (!bridge || !pci_is_pcie(bridge))
++		return;
 +
- 		/*
- 		 * The directory inode may have gone through rmdir by now. But
- 		 * the inode itself and its blocks are still allocated (we hold
--		 * a reference to the inode so it didn't go through
--		 * ext4_evict_inode()) and so we are safe to flush metadata
--		 * blocks and the inode.
-+		 * a reference to the inode via its dentry), so it didn't go
-+		 * through ext4_evict_inode()) and so we are safe to flush
-+		 * metadata blocks and the inode.
- 		 */
- 		ret = sync_mapping_buffers(inode->i_mapping);
- 		if (ret)
-@@ -75,7 +73,7 @@ static int ext4_sync_parent(struct inode
- 		if (ret)
- 			break;
- 	}
--	iput(inode);
-+	dput(dentry);
- 	return ret;
- }
+ 	mps = pcie_get_mps(dev);
+ 	p_mps = pcie_get_mps(bridge);
  
 
 
