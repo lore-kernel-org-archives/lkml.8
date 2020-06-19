@@ -2,52 +2,60 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9100C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B90CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFC921974
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7572193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578689;
-	bh=hAWr0Dq4DWCd3YCGURfNx79O6opztkOeSirdgo20uJ4=;
+	s=default; t=1592578694;
+	bh=b0upL9JkLpI43yNFRNa9oHcH4kXrrHkdJKVIVNeOG/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqd4SggdSxfjn5MMrUNMwLJvK5javOjMKI4c7bK8xEC1xJAnVvWY1FCxDgZ2a2dAX
-	 ZANCmGZ5EvEMxKzpRRafRafLQogU//YUmc8SCOXQtSAbFX79VeYuZf6cjm7f0rdvKw
-	 uJGcd/oNFNPAa79hTyX0R0XCLElZXlv99pL4T+rs=
+	b=OoV3eQMEmxApXDiCpJ5aqfZjVRs/6MDl4wMuexRtvhQHfmmkntOmFrrj1EAcDF/a1
+	 jHsW4YDjlqEMiCqbow/RArGn66bOSejshgXV/X5tm1F7d97iTrbtmkQgQwoduYftbA
+	 I/ChD/zDUKRuQxcJ8lf2B6EtiYPV9wOj6dsn6/QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390319AbgFSO6H (ORCPT
+        id S2390354AbgFSO6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:58:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390336AbgFSO6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:01 -0400
+        id S2390349AbgFSO6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D5C217D8;
-        Fri, 19 Jun 2020 14:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CFE321941;
+        Fri, 19 Jun 2020 14:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578681;
-        bh=hAWr0Dq4DWCd3YCGURfNx79O6opztkOeSirdgo20uJ4=;
+        s=default; t=1592578688;
+        bh=b0upL9JkLpI43yNFRNa9oHcH4kXrrHkdJKVIVNeOG/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3ja+I+16wXzqfVrkd+EoPoxgpNcRAzU23rBOCzmtjQK1fhAXhsnJQHhdl3ePB0Ki
-         ViFouc8hZXqquAsl9oBJt2iy4dcShMbbfyRN7RpEsD+BoLYd4ZsX7gqQWPaJx1OeRt
-         ZWgzkLdqx0o3yElxR4mk0jdbbvdl3HUHUNVRjx/U=
+        b=KayzA13sdnJHWsaZ7YriMkHn69in1Vm9XuZMq/M/tBZGldlrp8RQ65oYI9FYBC3J1
+         ZtkoRP07A1OoR4z46jSpC9s8mpXvz55mbIoyG8mxKur/u8BOcP1K9RSkkdM+feL2Wu
+         A9c6KxNAAwuYLpixHvCB/5hmBiS3c79VzqXghI78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 088/267] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
-Date:   Fri, 19 Jun 2020 16:31:13 +0200
-Message-Id: <20200619141653.095322399@linuxfoundation.org>
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 117/267] spi: dw: Fix Rx-only DMA transfers
+Date:   Fri, 19 Jun 2020 16:31:42 +0200
+Message-Id: <20200619141654.452822528@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,42 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
+[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
 
-Clear tuning_done flag while executing tuning to ensure vendor
-specific HS400 settings are applied properly when the controller
-is re-initialized in HS400 mode.
+Tx-only DMA transfers are working perfectly fine since in this case
+the code just ignores the Rx FIFO overflow interrupts. But it turns
+out the SPI Rx-only transfers are broken since nothing pushing any
+data to the shift registers, so the Rx FIFO is left empty and the
+SPI core subsystems just returns a timeout error. Since DW DMAC
+driver doesn't support something like cyclic write operations of
+a single byte to a device register, the only way to support the
+Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+This is what we intend to fix in this commit by setting the
+SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Without this, re-initialization of the qcom SDHC in HS400 mode fails
-while resuming the driver from runtime-suspend or system-suspend.
-
-Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1084,6 +1084,12 @@ static int sdhci_msm_execute_tuning(stru
- 	msm_host->use_cdr = true;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index ac888a3d03aa..3fbd6f01fb10 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -533,6 +533,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 			dws->dma_inited = 0;
+ 		} else {
+ 			master->can_dma = dws->dma_ops->can_dma;
++			master->flags |= SPI_CONTROLLER_MUST_TX;
+ 		}
+ 	}
  
- 	/*
-+	 * Clear tuning_done flag before tuning to ensure proper
-+	 * HS400 settings.
-+	 */
-+	msm_host->tuning_done = 0;
-+
-+	/*
- 	 * For HS400 tuning in HS200 timing requires:
- 	 * - select MCLK/2 in VENDOR_SPEC
- 	 * - program MCLK to 400MHz (or nearest supported) in GCC
+-- 
+2.25.1
+
 
 
