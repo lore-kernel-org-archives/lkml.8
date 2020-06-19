@@ -2,61 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1393C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC1220734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DE720786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585702;
-	bh=5tm4Dg00/ubgsCOtNbBlHdNQPOrTqmqY8p/BQos8OGk=;
+	s=default; t=1592585707;
+	bh=c7SLgyVDoRo4h+rVjcS9GAUD3QtJz1n2CTV5nhc8540=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tH13Ylo8JlIutsY/ZaW0ugJDYcai9xEjGUrchI2Qegnonwf0nOk7h7w/782JqOhgL
-	 8G4o01L09CeKzdJPGAJSUZ78EdzBUREbQD8V9m1XkfSjYjhts6PZVn1icDAd4jS3fh
-	 P6O3ww1gLRNrFah/eFM+oBuJABWIU5Xf5YFf8fsA=
+	b=qaZ1lElavuaKTIm+uLenz7EfMVJ4OPuPrqSyVz04RCCUM4CSa/zIcXCtEdiKUvSbK
+	 30nlymRVc7yROgI7TI4qskV51Ks/UCuQmVUrk21JPKvKPHhnTs3Sh5xGmG/+bC4m45
+	 fhJG7mljgQkAZU/OXoqdMrzXrL3UYxeF5HNOgyro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405945AbgFSQzB (ORCPT
+        id S2387425AbgFSOf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52480 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387461AbgFSOgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:36:08 -0400
+        id S1733303AbgFSOft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:35:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A9F92070A;
-        Fri, 19 Jun 2020 14:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1172070A;
+        Fri, 19 Jun 2020 14:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577367;
-        bh=5tm4Dg00/ubgsCOtNbBlHdNQPOrTqmqY8p/BQos8OGk=;
+        s=default; t=1592577347;
+        bh=c7SLgyVDoRo4h+rVjcS9GAUD3QtJz1n2CTV5nhc8540=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqKnitEM7O65hyxmQI3wzjAwen1yElQ9VVeANrZbKiFk1mWvDKjayHzOUO1XqOkCX
-         14uwxcQzn1i/yp8svXl2elaXp8GlKLBSBnSAZC9OmWNAYuXUXz4LzqCJ7p1vaue957
-         NXmMpshhJMNcvIsamiCLwW8VPSRMX61zXRSbU0Ts=
+        b=upMfG9CxwI3au+Qzhuh8KCVRTIOnjgFlOovz2fg3If3hJWhvjMEYebg3qUs1hZjcO
+         INeBjWHYYMPxAPViULvEKQMwIg2QfSpygfKQaXararjmfwRAkkQ83ibCrxP4MKdzHm
+         03UIt4V7m/WhlKvliZc/+jDkCNmxLxwp4p7KhRiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 022/101] x86/speculation: Change misspelled STIPB to STIBP
-Date:   Fri, 19 Jun 2020 16:32:11 +0200
-Message-Id: <20200619141615.260874344@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Macpaul Lin <macpaul.lin@mediatek.com>
+Subject: [PATCH 4.4 015/101] ALSA: usb-audio: Fix inconsistent card PM state after resume
+Date:   Fri, 19 Jun 2020 16:32:04 +0200
+Message-Id: <20200619141614.786080695@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -69,81 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit aa77bfb354c495fc4361199e63fc5765b9e1e783 ]
+commit 862b2509d157c629dd26d7ac6c6cdbf043d332eb upstream.
 
-STIBP stands for Single Thread Indirect Branch Predictors. The acronym,
-however, can be easily mis-spelled as STIPB. It is perhaps due to the
-presence of another related term - IBPB (Indirect Branch Predictor
-Barrier).
+When a USB-audio interface gets runtime-suspended via auto-pm feature,
+the driver suspends all functionality and increment
+chip->num_suspended_intf.  Later on, when the system gets suspended to
+S3, the driver increments chip->num_suspended_intf again, skips the
+device changes, and sets the card power state to
+SNDRV_CTL_POWER_D3hot.  In return, when the system gets resumed from
+S3, the resume callback decrements chip->num_suspended_intf.  Since
+this refcount is still not zero (it's been runtime-suspended), the
+whole resume is skipped.  But there is a small pitfall here.
 
-Fix the mis-spelling in the code.
+The problem is that the driver doesn't restore the card power state
+after this resume call, leaving it as SNDRV_CTL_POWER_D3hot.  So,
+even after the system resume finishes, the card instance still appears
+as if it were system-suspended, and this confuses many ioctl accesses
+that are blocked unexpectedly.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1544039368-9009-1-git-send-email-longman@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In details, we have two issues behind the scene: one is that the card
+power state is changed only when the refcount becomes zero, and
+another is that the prior auto-suspend check is kept in a boolean
+flag.  Although the latter problem is almost negligible since the
+auto-pm feature is imposed only on the primary interface, but this can
+be a potential problem on the devices with multiple interfaces.
+
+This patch addresses those issues by the following:
+
+- Replace chip->autosuspended boolean flag with chip->system_suspend
+  counter
+
+- At the first system-suspend, chip->num_suspended_intf is recorded to
+  chip->system_suspend
+
+- At system-resume, the card power state is restored when the
+  chip->num_suspended_intf refcount reaches to chip->system_suspend,
+  i.e. the state returns to the auto-suspended
+
+Also, the patch fixes yet another hidden problem by the code
+refactoring along with the fixes above: namely, when some resume
+procedure failed, the driver left chip->num_suspended_intf that was
+already decreased, and it might lead to the refcount unbalance.
+In the new code, the refcount decrement is done after the whole resume
+procedure, and the problem is avoided as well.
+
+Fixes: 0662292aec05 ("ALSA: usb-audio: Handle normal and auto-suspend equally")
+Reported-and-tested-by: Macpaul Lin <macpaul.lin@mediatek.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603153709.6293-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/cpu/bugs.c | 6 +++---
- arch/x86/kernel/process.h  | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ sound/usb/card.c     |   20 +++++++++++++-------
+ sound/usb/usbaudio.h |    2 +-
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 1a0ab4af93b7..9fddbdcc1874 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -59,7 +59,7 @@ static u64 x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
- u64 x86_amd_ls_cfg_base;
- u64 x86_amd_ls_cfg_ssbd_mask;
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -713,9 +713,6 @@ static int usb_audio_suspend(struct usb_
+ 	if (chip == (void *)-1L)
+ 		return 0;
  
--/* Control conditional STIPB in switch_to() */
-+/* Control conditional STIBP in switch_to() */
- DEFINE_STATIC_KEY_FALSE(switch_to_cond_stibp);
- /* Control conditional IBPB in switch_mm() */
- DEFINE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
-@@ -725,12 +725,12 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 			"always-on" : "conditional");
+-	chip->autosuspended = !!PMSG_IS_AUTO(message);
+-	if (!chip->autosuspended)
+-		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
+ 	if (!chip->num_suspended_intf++) {
+ 		list_for_each_entry(as, &chip->pcm_list, list) {
+ 			snd_pcm_suspend_all(as->pcm);
+@@ -728,6 +725,11 @@ static int usb_audio_suspend(struct usb_
+ 			snd_usb_mixer_suspend(mixer);
  	}
  
--	/* If enhanced IBRS is enabled no STIPB required */
-+	/* If enhanced IBRS is enabled no STIBP required */
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
++	if (!PMSG_IS_AUTO(message) && !chip->system_suspend) {
++		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D3hot);
++		chip->system_suspend = chip->num_suspended_intf;
++	}
++
+ 	return 0;
+ }
  
+@@ -740,10 +742,11 @@ static int __usb_audio_resume(struct usb
+ 
+ 	if (chip == (void *)-1L)
+ 		return 0;
+-	if (--chip->num_suspended_intf)
+-		return 0;
+ 
+ 	atomic_inc(&chip->active); /* avoid autopm */
++	if (chip->num_suspended_intf > 1)
++		goto out;
++
  	/*
--	 * If SMT is not possible or STIBP is not available clear the STIPB
-+	 * If SMT is not possible or STIBP is not available clear the STIBP
- 	 * mode.
- 	 */
- 	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
-index 898e97cf6629..320ab978fb1f 100644
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -19,7 +19,7 @@ static inline void switch_to_extra(struct task_struct *prev,
- 	if (IS_ENABLED(CONFIG_SMP)) {
- 		/*
- 		 * Avoid __switch_to_xtra() invocation when conditional
--		 * STIPB is disabled and the only different bit is
-+		 * STIBP is disabled and the only different bit is
- 		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
- 		 * in the TIF_WORK_CTXSW masks.
- 		 */
--- 
-2.25.1
-
+ 	 * ALSA leaves material resumption to user space
+ 	 * we just notify and restart the mixers
+@@ -758,9 +761,12 @@ static int __usb_audio_resume(struct usb
+ 		snd_usbmidi_resume(p);
+ 	}
+ 
+-	if (!chip->autosuspended)
++ out:
++	if (chip->num_suspended_intf == chip->system_suspend) {
+ 		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
+-	chip->autosuspended = 0;
++		chip->system_suspend = 0;
++	}
++	chip->num_suspended_intf--;
+ 
+ err_out:
+ 	atomic_dec(&chip->active); /* allow autopm after this point */
+--- a/sound/usb/usbaudio.h
++++ b/sound/usb/usbaudio.h
+@@ -37,7 +37,7 @@ struct snd_usb_audio {
+ 	struct usb_interface *pm_intf;
+ 	u32 usb_id;
+ 	struct mutex mutex;
+-	unsigned int autosuspended:1;	
++	unsigned int system_suspend;
+ 	atomic_t active;
+ 	atomic_t shutdown;
+ 	atomic_t usage_count;
 
 
