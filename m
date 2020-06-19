@@ -2,132 +2,103 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D13CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EAA221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLnUGLWA"
+	by mail.kernel.org (Postfix) with ESMTP id 74FA2221F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592603344;
+	bh=Xzr/+QfY6CtZJxt8lOGxsNXu9vgdJe1YUoiDmUaj8tc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=eaNPPghYBHKvRmJ8zxajcz4f9vcrJ0Be7dolRl2lWFgMlENBtW2D4z+vK4ejwMa2S
+	 k+tGlgkzeit1zmxV2lkcBC4w/37p9/FI1i+LJYhp0TFTP79crN7YeS5ThlJT9DcxHF
+	 +VSTifh3DXzOrLbNOxiTdnF36UTy3C0j1PBWK4U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgFSVqS (ORCPT
+        id S1728100AbgFSVtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgFSVqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:46:17 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE87C06174E;
-        Fri, 19 Jun 2020 14:46:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i8so6396411lfo.4;
-        Fri, 19 Jun 2020 14:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A2wfnvUJcArOzvROBSxEDoq/2XoIUAY6WzwwQK6XXBA=;
-        b=nLnUGLWAs48Qa1AROnzflrVrnCMRfjEeC6MyFecZs6Oasf93l21ztEgIrdY2KtNx1K
-         2p27y+xawFZoVJYq1xw2kTX2YDQQCYljEBBmVQfZxy4Wfb6FQjiixh3E3BtTEx3EaI0A
-         iGOfbOGUZXcU40AeUlMw5R8mcyRPPNrikomeI3CkDC//fMrg7nWgsMCgfUKAbTPnEfj/
-         qaFieEIEyFBb/Ihz5mu/lSzOtprP62AG9GOV4rlzVHmv/JJHEozRPeZL30wJ3s/P+5Df
-         yVP+rCkMO/3Imq4eJhTLcWxYY8SbjKHC8BlbgebI3tAj0onkSUkwcDRYHr2aKTUQrEWB
-         zYdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A2wfnvUJcArOzvROBSxEDoq/2XoIUAY6WzwwQK6XXBA=;
-        b=JdAXSE6OXNjQUJg9pBWsdUPYP+8wZH6LnZZ/+vh5utdeQ66Q5FLU/QdvQaY5UuisxP
-         RsMJx07McBPDorCZe3iaaTbScIJ2NChN84fbdxUcqZtGRQmNiTai7dGmFxBJjVlO0vy+
-         Vzo2/EZyDiF1bAQCW/GOZ+s7+Tx06Fl+L2zmYLZZ5A7o5u9Nx5Vw0IINhfKZrJdS7zoH
-         9XwqcvOEc2Y8jbBmI2v7zLRi/xF1QaHcYeEOVbJrqoQUMQY2yT14rgtZKhxN7PN4ZYh/
-         wBW414yef/vryYtrOV+JEcb4K32cI5LGd18VrZ6tI3A/ZZyu04Tso+/0ryrTLKCvHOy/
-         TWsg==
-X-Gm-Message-State: AOAM530565kZNTgZjUYSCVL8FJxbTTJFe14sgKd83pWBMk0bZ2zJYV1A
-        tUgpvCXQ9YZw99aYk+Yf/L2pzLMjHTRcgZ2Ujg0=
-X-Google-Smtp-Source: ABdhPJwWM6oTSAjc4wRs57WscBG5w+nASFiuy+YVLKsV9iMVF+FCGc49KUQHQWCk1HhyNLNvYNpZTOhdDg0A4ZqvkK4=
-X-Received: by 2002:a19:c214:: with SMTP id l20mr1072998lfc.56.1592603175449;
- Fri, 19 Jun 2020 14:46:15 -0700 (PDT)
+        Fri, 19 Jun 2020 17:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728040AbgFSVtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:49:02 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4841221F2;
+        Fri, 19 Jun 2020 21:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592603341;
+        bh=Xzr/+QfY6CtZJxt8lOGxsNXu9vgdJe1YUoiDmUaj8tc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CDDEq/aBaRT7m7+Szx1dQselTg/zpsaKdPelKvdR87PO/tSF1nRFFRUjRNphv6BKq
+         hF/9tUveikVRHShVvD4vKnOsZixuMKblvlVQ3IPMWgWfDYJb5UdfMDrUyM6vGmGW/a
+         Y48133UPY+dibAPtUcB64wn/Hm0rxaY5HJh0pzVU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 74B913522B50; Fri, 19 Jun 2020 14:49:01 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 14:49:01 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     will@kernel.org, peterz@infradead.org, bp@alien8.de,
+        tglx@linutronix.de, mingo@kernel.org, dvyukov@google.com,
+        cai@lca.pw, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] kcsan: Re-add GCC support, and compiler flags
+ improvements
+Message-ID: <20200619214901.GA12084@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618093118.247375-1-elver@google.com>
+ <20200619032530.GI2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200619213347.27826-1-horia.geanta@nxp.com> <20200619213347.27826-5-horia.geanta@nxp.com>
-In-Reply-To: <20200619213347.27826-5-horia.geanta@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 19 Jun 2020 18:46:04 -0300
-Message-ID: <CAOMZO5AZLUxXhX-Maop8iQc0Qan5YqH2QFXaDpYq0hL+BP-L+w@mail.gmail.com>
-Subject: Re: [PATCH 4/4] hwrng: imx-rngc: enable driver for i.MX6
-To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619032530.GI2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 6:34 PM Horia Geant=C4=83 <horia.geanta@nxp.com> wr=
-ote:
->
-> i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
->
-> Since imx-rngc driver supports also rngb,
-> let's enable it for these SoCs too.
->
-> Signed-off-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
-> ---
->  drivers/char/hw_random/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kcon=
-fig
-> index 0ad17efc96df..53f6a7e4392f 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -245,7 +245,7 @@ config HW_RANDOM_MXC_RNGA
->  config HW_RANDOM_IMX_RNGC
->         tristate "Freescale i.MX RNGC Random Number Generator"
->         depends on HAS_IOMEM && HAVE_CLK
-> -       depends on SOC_IMX25 || COMPILE_TEST
-> +       depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL |=
-| COMPILE_TEST
+On Thu, Jun 18, 2020 at 08:25:30PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 18, 2020 at 11:31:15AM +0200, Marco Elver wrote:
+> > Re-add GCC as a supported compiler and clean up compiler flags.
+> > 
+> > To use KCSAN with GCC before GCC 11 is released, the following will get
+> > a stable GCC 10 and cherry-pick the patches required for KCSAN support:
+> > 
+> > 	git clone git://gcc.gnu.org/git/gcc.git && cd gcc
+> > 	git checkout -b gcc-10-for-kcsan releases/gcc-10.1.0
+> > 	git cherry-pick \
+> > 	    4089df8ef4a63126b0774c39b6638845244c20d2 \
+> > 	    ab2789ec507a94f1a75a6534bca51c7b39037ce0 \
+> > 	    06712fc68dc9843d9af7c7ac10047f49d305ad76
+> > 	./configure --prefix <your-prefix> --enable-languages=c,c++
+> > 	make -j$(nproc) && make install
+> 
+> Unless there are objections, I will pull this in Friday (tomorrow)
+> afternoon, Pacific Time.
 
-If in the future more SoCs will use this IP, then we will need to keep
-extending this list over and over again.
+Hearing no objections, queued and pushd, thank you!
 
-Maybe you could use:
+							Thanx, Paul
 
-depends on MACH_IMX || COMPILE_TEST
-
-
-
->         default HW_RANDOM
->         help
->           This driver provides kernel-side support for the Random Number
-> --
-> 2.17.1
->
+> > Marco Elver (3):
+> >   kcsan: Re-add GCC as a supported compiler
+> >   kcsan: Simplify compiler flags
+> >   kcsan: Disable branch tracing in core runtime
+> > 
+> >  Documentation/dev-tools/kcsan.rst | 3 ++-
+> >  kernel/kcsan/Makefile             | 4 ++--
+> >  lib/Kconfig.kcsan                 | 3 ++-
+> >  scripts/Makefile.kcsan            | 2 +-
+> >  4 files changed, 7 insertions(+), 5 deletions(-)
+> > 
+> > -- 
+> > 2.27.0.290.gba653c62da-goog
+> > 
