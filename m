@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F22DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50120C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6303E217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2224421582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580394;
-	bh=JmjN4SKRjIMoEBWFAxnMdHJm535jSOrlTjFMyuVq29s=;
+	s=default; t=1592580399;
+	bh=5itkUDluYpaS3Zxz7oL2dZm1OCRzVTnguZY9d4Ovqcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iAupp45fNMI/G46xonHB4DyCr/FLGou7HsRSvJIRhHYYM7ySGVH39cS3mzDVI5Zhn
-	 qtSn4ENmJ2IGRHnIdqHHxwO5eNNNDoY1TrN1KiOXsY7+dLt6BGDwB3AJwjGShzO5cj
-	 I5Wr7t+z0ruXD/Wp3mv6PtuN82q3cUB2TYMUwpOU=
+	b=YGZ37I8iWBVCZleyigcawcnQvBHJy2ohd2tNuOrUOI25XelCjK7WP3VMQ12x3hErs
+	 8fjXp8RtCb6IsGOtgKfNpukJAAQrovOR9q1P+FiWIW2KGOIZJlGR28SXx+1z/0CgJc
+	 c6cIUdQENibnSi52s6HxiHkY1pcdZZLFF9ttdnoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404327AbgFSP0d (ORCPT
+        id S2393006AbgFSP0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56006 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404140AbgFSPYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:19 -0400
+        id S2388599AbgFSPYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF84A21582;
-        Fri, 19 Jun 2020 15:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BCBD21548;
+        Fri, 19 Jun 2020 15:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580258;
-        bh=JmjN4SKRjIMoEBWFAxnMdHJm535jSOrlTjFMyuVq29s=;
+        s=default; t=1592580269;
+        bh=5itkUDluYpaS3Zxz7oL2dZm1OCRzVTnguZY9d4Ovqcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sY+zDvfyPGCMmwrnYNS0XZhnvcUWqgtwS0VbyDCEGoWBi+8SXKcHP8QRwiofqY7fg
-         HNd9TSJLXkpBQjLky45AUxdTAeHVbzzlMnEDqhXq1+RfSWQBIVHVfgwd0OH0vFEOyj
-         74NuPpCsf43QPGN7US1AnhjiySMMSnOdVHNCKvgk=
+        b=UYH+yIq7+p673tfPFaG2wKSXwRioVrEzQ01gYF8rskqDdo8WIeLboZSi8B2mdfzkb
+         TsHX6HmKXQM8iFdEAKncdJGKrYO/gDuff9M/XWzyclzeVvRdDJkvawTErmpUTp7Ahp
+         NdlcV8D0/u167zwwORc37ze86/97jsL7E2DoU91Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 151/376] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Fri, 19 Jun 2020 16:31:09 +0200
-Message-Id: <20200619141717.474853020@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 178/376] mt76: mt7663: fix mt7615_mac_cca_stats_reset routine
+Date:   Fri, 19 Jun 2020 16:31:36 +0200
+Message-Id: <20200619141718.780052087@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,43 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+[ Upstream commit 886a862d3677ac0d3b57d19ffcf5b2d48b9c5267 ]
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+Fix PHYMUX_5 register definition for mt7663 in
+mt7615_mac_cca_stats_reset routine
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c  | 8 +++++++-
+ drivers/net/wireless/mediatek/mt76/mt7615/regs.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 18d3b4340bd4..b3b8a8010142 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -417,7 +417,7 @@ static void emac_timeout(struct net_device *dev, unsigned int txqueue)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index a27a6d164009..656231786d55 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -1574,8 +1574,14 @@ void mt7615_mac_cca_stats_reset(struct mt7615_phy *phy)
  {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -425,7 +425,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	struct mt7615_dev *dev = phy->dev;
+ 	bool ext_phy = phy != &dev->phy;
+-	u32 reg = MT_WF_PHY_R0_PHYMUX_5(ext_phy);
++	u32 reg;
  
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
++	if (is_mt7663(&dev->mt76))
++		reg = MT7663_WF_PHY_R0_PHYMUX_5;
++	else
++		reg = MT_WF_PHY_R0_PHYMUX_5(ext_phy);
++
++	/* reset PD and MDRDY counters */
+ 	mt76_clear(dev, reg, GENMASK(22, 20));
+ 	mt76_set(dev, reg, BIT(22) | BIT(20));
+ }
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
+index 1e0d95b917e1..f7c2a633841c 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/regs.h
+@@ -151,6 +151,7 @@ enum mt7615_reg_base {
+ #define MT_WF_PHY_WF2_RFCTRL0_LPBCN_EN	BIT(9)
  
- 	channel = (channel == 1 ? 1 : 0);
+ #define MT_WF_PHY_R0_PHYMUX_5(_phy)	MT_WF_PHY(0x0614 + ((_phy) << 9))
++#define MT7663_WF_PHY_R0_PHYMUX_5	MT_WF_PHY(0x0414)
  
+ #define MT_WF_PHY_R0_PHYCTRL_STS0(_phy)	MT_WF_PHY(0x020c + ((_phy) << 9))
+ #define MT_WF_PHYCTRL_STAT_PD_OFDM	GENMASK(31, 16)
 -- 
 2.25.1
 
