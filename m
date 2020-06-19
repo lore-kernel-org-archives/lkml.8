@@ -2,52 +2,58 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED42C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F08C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73A721941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F502168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583449;
-	bh=gmj+Br+HToX3ZlOMqeTRODhQcojaGCX6mxZXoLyYtyA=;
+	s=default; t=1592583457;
+	bh=7w10rXu2sVvzKN7TaS3j1o+cBwIhXDiwMwU0dEUW7Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zv8qnbUzzmQx280KP744BQ/H/Uu3iUnEQGpos2lZppw8PTv8ETDuw0frBY/ml3gqF
-	 PLWL/0CK8GGZyLE6I3xIeMUoFqSmgpW0BwES/gqI4wt8Le6No7pNQQY1HLjVHHVdLO
-	 jSnmGgCxovHHbx5iJNU/SBpS5v5UvEjDFA+k1bFI=
+	b=BHdNOXWOLkVe+4zNCLfuLibWirvN/V9qKgDHg/4/Gla4Wv2rMKsKN2AJRtrEXcIQz
+	 TLNbVZil5nQ6F5UJXyrX21VuKc8mryAhTXpNWO0w8xZPBBhoiyVROJs7P+Idjv8qEu
+	 kDZNFd4Djf8AqfJvKR+dsv++MxzDDK3ZulWyi69g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394517AbgFSQR1 (ORCPT
+        id S2405577AbgFSQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390481AbgFSPCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:31 -0400
+        id S2390483AbgFSPCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F958217BA;
-        Fri, 19 Jun 2020 15:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D890F20734;
+        Fri, 19 Jun 2020 15:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578949;
-        bh=gmj+Br+HToX3ZlOMqeTRODhQcojaGCX6mxZXoLyYtyA=;
+        s=default; t=1592578944;
+        bh=7w10rXu2sVvzKN7TaS3j1o+cBwIhXDiwMwU0dEUW7Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uA5K7SFCl8xpyfF7Omd5rHlSiTknw5m1slbqa1v37BXnQlKzimC0U2yq9GxRUbWkD
-         iyNT+2BnUhV0oxaC/Wc/6eLQBW5zSGTUgzQoPHjCDgbaBPIc9+hkobefZwe6YAkaXT
-         7GzIFj25++ffhFkTtSYQounXCUuwwH8iHann5ktY=
+        b=UkjED8wHXhJUEXltBCR8V9K8d4j0SCMwfiR0/wvYugIPN2HOXMSwfLqsUvWOYN9Gs
+         qF+iH1l/qFkJ7a3oENl3+9EUWbJRr8vhdmB6u7XF10sB+8XV/uUSM3TYJYjzaJsOEo
+         JDGY60tHTRtPYKjkhIosKtO044ZAO8Y1/dLjeDLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 188/267] btrfs: include non-missing as a qualifier for the latest_bdev
-Date:   Fri, 19 Jun 2020 16:32:53 +0200
-Message-Id: <20200619141657.767619929@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 215/267] PCI: Enable NVIDIA HDA controllers
+Date:   Fri, 19 Jun 2020 16:33:20 +0200
+Message-Id: <20200619141659.038588653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,77 +66,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 998a0671961f66e9fad4990ed75f80ba3088c2f1 upstream.
+[ Upstream commit b516ea586d717472178e6ef1c152e85608b0ce32 ]
 
-btrfs_free_extra_devids() updates fs_devices::latest_bdev to point to
-the bdev with greatest device::generation number.  For a typical-missing
-device the generation number is zero so fs_devices::latest_bdev will
-never point to it.
+Many NVIDIA GPUs can be configured as either a single-function video device
+or a multi-function device with video at function 0 and an HDA audio
+controller at function 1.  The HDA controller can be enabled or disabled by
+a bit in the function 0 config space.
 
-But if the missing device is due to alienation [1], then
-device::generation is not zero and if it is greater or equal to the rest
-of device  generations in the list, then fs_devices::latest_bdev ends up
-pointing to the missing device and reports the error like [2].
+Some BIOSes leave the HDA disabled, which means the HDMI connector from the
+NVIDIA GPU may not work.  Sometimes the BIOS enables the HDA if an HDMI
+cable is connected at boot time, but that doesn't handle hotplug cases.
 
-[1] We maintain devices of a fsid (as in fs_device::fsid) in the
-fs_devices::devices list, a device is considered as an alien device
-if its fsid does not match with the fs_device::fsid
+Enable the HDA controller on device enumeration and resume and re-read the
+header type, which tells us whether the GPU is a multi-function device.
 
-Consider a working filesystem with raid1:
+This quirk is limited to NVIDIA PCI devices with the VGA Controller device
+class.  This is expected to correspond to product configurations where the
+NVIDIA GPU has connectors attached.  Other products where the device class
+is 3D Controller are expected to correspond to configurations where the
+NVIDIA GPU is dedicated (dGPU) and has no connectors.  See original post
+(URL below) for more details.
 
-  $ mkfs.btrfs -f -d raid1 -m raid1 /dev/sda /dev/sdb
-  $ mount /dev/sda /mnt-raid1
-  $ umount /mnt-raid1
+This commit takes inspiration from an earlier patch by Daniel Drake.
 
-While mnt-raid1 was unmounted the user force-adds one of its devices to
-another btrfs filesystem:
-
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt-single
-  $ btrfs dev add -f /dev/sda /mnt-single
-
-Now the original mnt-raid1 fails to mount in degraded mode, because
-fs_devices::latest_bdev is pointing to the alien device.
-
-  $ mount -o degraded /dev/sdb /mnt-raid1
-
-[2]
-mount: wrong fs type, bad option, bad superblock on /dev/sdb,
-       missing codepage or helper program, or other error
-
-       In some cases useful info is found in syslog - try
-       dmesg | tail or so.
-
-  kernel: BTRFS warning (device sdb): devid 1 uuid 072a0192-675b-4d5a-8640-a5cf2b2c704d is missing
-  kernel: BTRFS error (device sdb): failed to read devices
-  kernel: BTRFS error (device sdb): open_ctree failed
-
-Fix the root cause by checking if the device is not missing before it
-can be considered for the fs_devices::latest_bdev.
-
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20190708051744.24039-1-drake@endlessm.com v2
+Link: https://lore.kernel.org/r/20190613063514.15317-1-drake@endlessm.com v1
+Link: https://devtalk.nvidia.com/default/topic/1024022
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=75985
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+[bhelgaas: commit log, log message, return early if already enabled]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Aaron Plattner <aplattner@nvidia.com>
+Cc: Peter Wu <peter@lekensteyn.nl>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Maik Freudenberg <hhfeuer@gmx.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/quirks.c    | 30 ++++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 2 files changed, 31 insertions(+)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -951,6 +951,8 @@ again:
- 							&device->dev_state)) {
- 			if (!test_bit(BTRFS_DEV_STATE_REPLACE_TGT,
- 			     &device->dev_state) &&
-+			    !test_bit(BTRFS_DEV_STATE_MISSING,
-+				      &device->dev_state) &&
- 			     (!latest_dev ||
- 			      device->generation > latest_dev->generation)) {
- 				latest_dev = device;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 8ac2d5a4a224..502dca568d6c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5120,6 +5120,36 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+ 			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+ 			      quirk_gpu_usb_typec_ucsi);
+ 
++/*
++ * Enable the NVIDIA GPU integrated HDA controller if the BIOS left it
++ * disabled.  https://devtalk.nvidia.com/default/topic/1024022
++ */
++static void quirk_nvidia_hda(struct pci_dev *gpu)
++{
++	u8 hdr_type;
++	u32 val;
++
++	/* There was no integrated HDA controller before MCP89 */
++	if (gpu->device < PCI_DEVICE_ID_NVIDIA_GEFORCE_320M)
++		return;
++
++	/* Bit 25 at offset 0x488 enables the HDA controller */
++	pci_read_config_dword(gpu, 0x488, &val);
++	if (val & BIT(25))
++		return;
++
++	pci_info(gpu, "Enabling HDA controller\n");
++	pci_write_config_dword(gpu, 0x488, val | BIT(25));
++
++	/* The GPU becomes a multi-function device when the HDA is enabled */
++	pci_read_config_byte(gpu, PCI_HEADER_TYPE, &hdr_type);
++	gpu->multifunction = !!(hdr_type & 0x80);
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
++DECLARE_PCI_FIXUP_CLASS_RESUME_EARLY(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
++
+ /*
+  * Some IDT switches incorrectly flag an ACS Source Validation error on
+  * completions for config read requests even though PCIe r4.0, sec
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 47833d8f8928..b952f1557f5d 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1336,6 +1336,7 @@
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP78S_SMBUS    0x0752
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP77_IDE       0x0759
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP73_SMBUS     0x07D8
++#define PCI_DEVICE_ID_NVIDIA_GEFORCE_320M           0x08A0
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
+ 
+-- 
+2.25.1
+
 
 
