@@ -2,53 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D42206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF8920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585144;
-	bh=0ambyJKz5RjjLK0EaA4PkU3GfZROwDupON57dM5hrAE=;
+	s=default; t=1592585148;
+	bh=AoCJP4443lKj4hyl1GTi/yV8cWeVgsfTrVCN5IgjCE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qe3/pIOs1jGxYC5zU20l4RY+57UPdx3/34EiSDsA9TN760PoeGl5DkklUPFn1N1E+
-	 le5oC35aimebfjvVBtaachHtJhUE2ghT08N4cUOvXQiL0f4Zi9zODeiE+G8nY4bYSv
-	 I19vHQWXB9rOh8i6IeY0oQdvU17+uuY1S/kftINA=
+	b=xi9259TCjqzTE9gXgIfDJH0Jk4vCSRataXAy52+gVYYfc471Ta8xoplDpYgyp6pJr
+	 okrXZgS1lkohFTRKytTqmTiQyKk18IQt365aF0DO2ylHfKxm5SC7A083A3pR4Yx8DA
+	 vj1eQEg/Bs4eLNq7PlIAQB2M4bmZFDfVzat05XY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbgFSOl6 (ORCPT
+        id S2387944AbgFSOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388300AbgFSOlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:52 -0400
+        id S2387470AbgFSOlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:41:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77EB321527;
-        Fri, 19 Jun 2020 14:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FAF12070A;
+        Fri, 19 Jun 2020 14:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577711;
-        bh=0ambyJKz5RjjLK0EaA4PkU3GfZROwDupON57dM5hrAE=;
+        s=default; t=1592577695;
+        bh=AoCJP4443lKj4hyl1GTi/yV8cWeVgsfTrVCN5IgjCE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Xjz2tPXKNBsLtbQhRzgHKfxlDVw3L5cGLBrXwyEuPRJnnmrxVJP/uWq8+IS1lASB
-         SMvhWyzY4rCo3n3egf9ZcWLSsHtAHTBxcAfAWyzJA0Fke+BtmdZljalUucvcIhwAzr
-         e+VwjtvuU4kuCz0bLtwzzoRo5l+sXofQxwaZZiTg=
+        b=Qw6JWJreidvE1Kd2g2GT0T08FxtpjbAVJOzUlEinGNu2xfkHrLkkLmmqEeBmXN8Bk
+         0ZgtYefhDHzmdpgFwaIF29L4Oyg7QKePQBsPn/ceNC5wX/5wbH3dlULfEf3oEveJM7
+         wuP95CKRKlVKrdea/uDACx1mt43eIry2axh5H5ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/128] x86/speculation: PR_SPEC_FORCE_DISABLE enforcement for indirect branches.
-Date:   Fri, 19 Jun 2020 16:32:02 +0200
-Message-Id: <20200619141621.659073783@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Andi Shyti <andi.shyti@intel.com>
+Subject: [PATCH 4.9 051/128] agp/intel: Reinforce the barrier after GTT updates
+Date:   Fri, 19 Jun 2020 16:32:25 +0200
+Message-Id: <20200619141622.889134311@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,53 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Steinhauser <asteinhauser@google.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 4d8df8cbb9156b0a0ab3f802b80cb5db57acc0bf ]
+commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
 
-Currently, it is possible to enable indirect branch speculation even after
-it was force-disabled using the PR_SPEC_FORCE_DISABLE option. Moreover, the
-PR_GET_SPECULATION_CTRL command gives afterwards an incorrect result
-(force-disabled when it is in fact enabled). This also is inconsistent
-vs. STIBP and the documention which cleary states that
-PR_SPEC_FORCE_DISABLE cannot be undone.
+After changing the timing between GTT updates and execution on the GPU,
+we started seeing sporadic failures on Ironlake. These were narrowed
+down to being an insufficiently strong enough barrier/delay after
+updating the GTT and scheduling execution on the GPU. By forcing the
+uncached read, and adding the missing barrier for the singular
+insert_page (relocation paths), the sporadic failures go away.
 
-Fix this by actually enforcing force-disabled indirect branch
-speculation. PR_SPEC_ENABLE called after PR_SPEC_FORCE_DISABLE now fails
-with -EPERM as described in the documentation.
+Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
+Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Andi Shyti <andi.shyti@intel.com>
+Cc: stable@vger.kernel.org # v4.0+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 9137bb27e60e ("x86/speculation: Add prctl() control for indirect branch speculation")
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/bugs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/char/agp/intel-gtt.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 2ab65f0ec56d..85c1cc0305f3 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1257,11 +1257,14 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- 			return 0;
- 		/*
- 		 * Indirect branch speculation is always disabled in strict
--		 * mode.
-+		 * mode. It can neither be enabled if it was force-disabled
-+		 * by a  previous prctl call.
-+
- 		 */
- 		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
- 		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
--		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED ||
-+		    task_spec_ib_force_disable(task))
- 			return -EPERM;
- 		task_clear_spec_ib_disable(task);
- 		task_update_spec_tif(task);
--- 
-2.25.1
-
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -845,6 +845,7 @@ void intel_gtt_insert_page(dma_addr_t ad
+ 			   unsigned int flags)
+ {
+ 	intel_private.driver->write_entry(addr, pg, flags);
++	readl(intel_private.gtt + pg);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -870,7 +871,7 @@ void intel_gtt_insert_sg_entries(struct
+ 			j++;
+ 		}
+ 	}
+-	wmb();
++	readl(intel_private.gtt + j - 1);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -1104,6 +1105,7 @@ static void i9xx_cleanup(void)
+ 
+ static void i9xx_chipset_flush(void)
+ {
++	wmb();
+ 	if (intel_private.i9xx_flush_page)
+ 		writel(1, intel_private.i9xx_flush_page);
+ }
 
 
