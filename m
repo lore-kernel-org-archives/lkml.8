@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F84721707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE44221707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583975;
-	bh=jCryk4k0o3BpZ0fejcLGz8XNlSe7sOCzy0JTI2zsA7I=;
+	s=default; t=1592583978;
+	bh=NeY9Dw1PfcNqA93uXUO9KWQuMobJOvL1Ii05Q6rjy7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhMEU0zXXBTFyafEnSG4J8xizpL8rNGGLSEANGBcfiOQudoakKJYVqrusz2giAc7G
-	 0T7WcNewH8f6aFBjFfUO3ZiPJ2WWihNcX+FQoEhbDTr7oT41aF5FGf2FiHu/UuySAy
-	 BSwOnCvx9Xv2ggyijZOBPGlFy0n8XH04723e1Y+g=
+	b=CWM2zOHqT4QOJGMt1r30IaE7f1hrVEtGUVy8WoeRrtNHtc451qVrHbLUFo7xQOITg
+	 g1Mm6D788UT1RpvKN9EBLZe+odj3mLoMzmiBiNzA+KGNc51D/LYmVEOWlgTA8SCLf0
+	 j7HkGMbsfX3YA2tixZXle+pvDWkm4KDav0zlpzAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394558AbgFSQ0M (ORCPT
+        id S2390211AbgFSO5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390217AbgFSO5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:18 -0400
+        id S2390162AbgFSO45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD527217D8;
-        Fri, 19 Jun 2020 14:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AA002158C;
+        Fri, 19 Jun 2020 14:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578638;
-        bh=jCryk4k0o3BpZ0fejcLGz8XNlSe7sOCzy0JTI2zsA7I=;
+        s=default; t=1592578617;
+        bh=NeY9Dw1PfcNqA93uXUO9KWQuMobJOvL1Ii05Q6rjy7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCyuawCtOdo4jNz7IX921vk3j4pyPCiO4QMGUskUIGp12zESTGOqEDEbeRHKbyWQ2
-         chgjLv8bq2hD8IJQ3WbwSYrEX9GkNyhy3D9Iwu+LJJUDoG3vvYdQJ1lLfeOM+MCBtw
-         P3O4o9biY0vK/NVJG8imE1eu/tnHdFa4KCXI8qCU=
+        b=qGn25tm2csQ87H3y4j9MpHD3QzzqwSn4YYagOPmxAUV5viN1r2mGZVzDVTC395Mtl
+         LkV7123VQH2vj/jbSYM59Bk7R0rGUZRipaVte+JrpOdJcQODCi2nH+GDVI8w3vmHkM
+         z76bMWiPtIH/20uRF3MNqBpVCqX598tPDnofwd8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/267] net: atlantic: make hw_get_regs optional
-Date:   Fri, 19 Jun 2020 16:31:24 +0200
-Message-Id: <20200619141653.621908074@linuxfoundation.org>
+Subject: [PATCH 4.19 060/267] spi: pxa2xx: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:30:45 +0200
+Message-Id: <20200619141651.747601511@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,43 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Starovoytov <mstarovoitov@marvell.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit d0f23741c202c685447050713907f3be39a985ee ]
+[ Upstream commit 32e5b57232c0411e7dea96625c415510430ac079 ]
 
-This patch fixes potential crash in case if hw_get_regs is NULL.
+The PXA2xx SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+pxa2xx_spi_remove() before unregistering the SPI controller via
+devres_release_all().
 
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This order is incorrect:  pxa2xx_spi_remove() disables the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
+
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
+
+Fix by reverting to the non-devm variant of spi_register_controller().
+
+An alternative approach would be to use device-managed functions for all
+steps in pxa2xx_spi_remove(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
+
+The improper use of devm_spi_register_controller() was introduced in 2013
+by commit a807fcd090d6 ("spi: pxa2xx: use devm_spi_register_master()"),
+but all earlier versions of the driver going back to 2006 were likewise
+broken because they invoked spi_unregister_master() at the end of
+pxa2xx_spi_remove(), rather than at the beginning.
+
+Fixes: e0c9905e87ac ("[PATCH] SPI: add PXA2xx SSP SPI Driver")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v2.6.17+
+Cc: Tsuchiya Yuto <kitakar@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206403#c1
+Link: https://lore.kernel.org/r/834c446b1cf3284d2660f1bee1ebe3e737cd02a9.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-pxa2xx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 15dcfb6704e5..adac5df0d6b4 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -620,6 +620,9 @@ int aq_nic_get_regs(struct aq_nic_s *self, struct ethtool_regs *regs, void *p)
- 	u32 *regs_buff = p;
- 	int err = 0;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index e4482823d8d7..d6c30bd1583f 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1739,7 +1739,7 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
  
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return -EOPNOTSUPP;
+ 	/* Register with the SPI framework */
+ 	platform_set_drvdata(pdev, drv_data);
+-	status = devm_spi_register_controller(&pdev->dev, master);
++	status = spi_register_controller(master);
+ 	if (status != 0) {
+ 		dev_err(&pdev->dev, "problem registering spi master\n");
+ 		goto out_error_clock_enabled;
+@@ -1773,6 +1773,8 @@ static int pxa2xx_spi_remove(struct platform_device *pdev)
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
++	spi_unregister_controller(drv_data->master);
 +
- 	regs->version = 1;
- 
- 	err = self->aq_hw_ops->hw_get_regs(self->aq_hw,
-@@ -634,6 +637,9 @@ err_exit:
- 
- int aq_nic_get_regs_count(struct aq_nic_s *self)
- {
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return 0;
-+
- 	return self->aq_nic_cfg.aq_hw_caps->mac_regs_count;
- }
- 
+ 	/* Disable the SSP at the peripheral and SOC level */
+ 	pxa2xx_spi_write(drv_data, SSCR0, 0);
+ 	clk_disable_unprepare(ssp->clk);
 -- 
 2.25.1
 
