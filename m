@@ -2,98 +2,95 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3219FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B16C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 151332080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D8F2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbgFSJo7 (ORCPT
+        id S1732112AbgFSJr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:44:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39246 "EHLO mx2.suse.de"
+        Fri, 19 Jun 2020 05:47:28 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17096 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729718AbgFSJo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:44:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DB8E6AEB2;
-        Fri, 19 Jun 2020 09:44:56 +0000 (UTC)
-Message-ID: <bdc91c1b015d2f02bd0ea90ae81a122123c62b38.camel@suse.de>
-Subject: Re: [PATCH v5 00/27] clk: bcm: rpi: Add support for BCM2711
- firmware clocks
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stephen Boyd <sboyd@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 19 Jun 2020 11:44:54 +0200
-In-Reply-To: <159255945796.62212.5838238989498858379@swboyd.mtv.corp.google.com>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
-         <159255945796.62212.5838238989498858379@swboyd.mtv.corp.google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-fZ7yXxkuArogoYxiG0Gc"
-User-Agent: Evolution 3.36.3 
+        id S1729195AbgFSJr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:47:27 -0400
+IronPort-SDR: cgRpmXvdMW8UGbiPp3oL8e9Q2yp/PcqV6W/XX6gfD+kf0Imnof3ijzu9g5BkDKQwNce8IZZiJD
+ eswpKQTonOTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="227591803"
+X-IronPort-AV: E=Sophos;i="5.75,254,1589266800"; 
+   d="scan'208";a="227591803"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 02:47:26 -0700
+IronPort-SDR: E5YIUSutHfRfHqgpuop/R4ZPq4wQO+Qt/jK4cjePgZJLJgGSIdiomGH/aJ3aOAfXaxgUsGd5LN
+ 7NsNUQxm5z0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,254,1589266800"; 
+   d="scan'208";a="277950284"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 02:47:24 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jmDcM-00ES0f-RQ; Fri, 19 Jun 2020 12:47:26 +0300
+Date:   Fri, 19 Jun 2020 12:47:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v1 0/6] console: unify return codes from ->setup() hook
+Message-ID: <20200619094726.GD2428291@smile.fi.intel.com>
+References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
+ <20200619093917.GK3617@alley>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619093917.GK3617@alley>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 11:39:18AM +0200, Petr Mladek wrote:
+> On Thu 2020-06-18 19:47:45, Andy Shevchenko wrote:
+> > Some of the console providers treat error code, returned by ->setup() hook,
+> > differently. Here is the unification of the behaviour.
+> > 
+> > The drivers checked by one of the below criteria:
+> > 1/ the driver has explicit struct console .setup assignment
+> > 2/ the driver has assigned callback to the setup member
+> > 
+> > All such drivers were read in order to see if there is any problematic return
+> > codes, and fixed accordingly which is this series in the result.
+> > 
+> > Andy Shevchenko (6):
+> >   mips: Return proper error code from console ->setup() hook
+> >   serial: sunsab: Return proper error code from console ->setup() hook
+> >   serial: sunzilog: Return proper error code from console ->setup() hook
+> >   tty: hvc: Return proper error code from console ->setup() hook
+> >   console: Propagate error code from console ->setup()
+> >   console: Fix trivia typo 'change' -> 'chance'
+> 
+> For the entire patchset:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> I am going to push it the following week via printk tree unless
+> anybody complains.
 
---=-fZ7yXxkuArogoYxiG0Gc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks, Petr, I guess you may also incorporate Sergey's patch he proposed. Sergey, are you going to submit it officially?
 
-On Fri, 2020-06-19 at 02:37 -0700, Stephen Boyd wrote:
-> Quoting Maxime Ripard (2020-06-15 01:40:40)
-> > Hi,
-> >=20
-> > Since the whole DRM/HDMI support began to grow fairly big, I've chosen
-> > to split away the two discussions between the firmware clocks and the
-> > HDMI support.
-> >=20
-> > Let me know what you think,
-> > Maxime
->=20
-> Do you want this to go through clk tree? Or looking for acks/review
-> tags?
->=20
+-- 
+With Best Regards,
+Andy Shevchenko
 
-FWIW I don't mind taking the device tree changes trough the RPi soc tree.
-
-Regards,
-Nicolas
-
-
---=-fZ7yXxkuArogoYxiG0Gc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7siRYACgkQlfZmHno8
-x/5pSQf/exFv/66MuXsAeM5ue9vwfKbkmJ1AI4WY+HeyniqK7yARVlufqNDDHNry
-JW+BPgp/zFe6ZMhVfD/l9xc/tf3dn0vT/CINKP2Uhgey4GeVZ+TuekJ9pOQmlDjt
-HaormE0veBP+pk07pwOj7vXUNEd5spHlMjdu/xPT0NgZXQanvBy+NYIRZjWSXjs2
-pmxNSsSr9LGT2ypipzUtyqAtILTUobwgXFAWNeSp9uxyHD+V2qLatUtJCbP+Lqii
-nrosXYxiGw4CaZ2Ypl14pcOfQ24nsaAQNInTDetN47MCJtJZDcINclfqG0IWfvE3
-2+ZxejWhAankUhgBWQDZXcoPsLcgkA==
-=Fnq6
------END PGP SIGNATURE-----
-
---=-fZ7yXxkuArogoYxiG0Gc--
 
