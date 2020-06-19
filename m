@@ -2,178 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F47C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19D5B21527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584306;
-	bh=rzKaMy4Yfk8V9lopnriwFQl3pjILtoYV/ZHODAvrUpQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjdaJDGlBwREak6x57pm0na/nI84XNF8HDLV/3J/miwQqd9uoy0Z3NgEBjhUIokZ2
-	 cG2qKcovGKMLtAqqIfcgNTeq13NHEsnMA3ZSlosmllO8MlDC7t3GSRxua2mhAGAD5A
-	 I3tHYpM3rd/YobkdqpB3DPjCoTUf/dZiKz1piQH0=
+	by mail.kernel.org (Postfix) with ESMTP id 5329F2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGBlgQlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395053AbgFSQbo (ORCPT
+        id S2393728AbgFSQbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389617AbgFSOwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C90D21556;
-        Fri, 19 Jun 2020 14:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578363;
-        bh=rzKaMy4Yfk8V9lopnriwFQl3pjILtoYV/ZHODAvrUpQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKl9y7qmugu5F1MajNeU5OuO3pZXLykNwdM5iVq+1eX1UJs+hAO/SJ7/a/t797uRy
-         p9awF6PdJjVCxh6+6r6kT7i5BBouLUSBAIsXo6AF3J4tdXrKkD1YLFCrP6NTPsYQB5
-         9AmD1Sy4P2lyZNSRf9SqDZT29mYQp6IzYKV85PW0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 184/190] sunrpc: clean up properly in gss_mech_unregister()
-Date:   Fri, 19 Jun 2020 16:33:49 +0200
-Message-Id: <20200619141643.048820763@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395042AbgFSQbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:31:40 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7090C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:31:39 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id s192so2431210vkh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dEf83idZXvrPsVKGcPR3p3YRd+fKXVKhp9TXt5Kn60U=;
+        b=DGBlgQlCnRLuOM3zrU/WFVPlQWoH3/GzaxHTx7AqPPQ5bnm1kf7M3WdU0IEjH0YpoD
+         /SfedgbVSc+qL4Xnuqg2YoRwDs5k0GM8lEgD5rLnYyomCnpJss/+90Qf0kIGFDNbvcHQ
+         0T+jhrh9b8lGPjrLghzK2xc4+MG8m7I3gPuS5rQOySza9Ewp8TBsL60R6i6day2Qb7GT
+         eYXBgGK0X67NR4eIkTC1DOgtIYA88hk70LNH036MzfrQyrdF0BatJS+sML7zIo4Q2Vjw
+         XRq9r7E/lh+kolFEz65lAECGDlKwZcXCBXvaUHKV9G2scpUFYMSuT/Kg+LOHFv+besKq
+         8c1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dEf83idZXvrPsVKGcPR3p3YRd+fKXVKhp9TXt5Kn60U=;
+        b=pjc5ZYPdhmoaeFd7aevUHVhZKxiWvX46ZZz6dO2WlWrQ4I4kTQLtLOgv61kW9hkunE
+         cDJh3DQ4sUAvFHKoHIM39eK05gNfh5Y9gxLa0bRieqHk/9sImrx62soh44587Tao8EK9
+         Wzqx2p5UItzDnEecpabYNTmQ0SMkGbDskD7E6cZF4ZMnvtdwki6NBsQlLmAk0W3gHLo3
+         R/iMyGoiUXAJirFz2eY6Yzgf+g1NH9xZORS7RvMmWgioc4vr5VuegPPYJYopJz1+i/qL
+         hNpgoR7scXZdtxuFbfpAW3CWHW+ekrOcf65nAIEYhhyUZXsV2BZKeKdxYwmnjkErsuwN
+         A6qQ==
+X-Gm-Message-State: AOAM530dafxv0qNYboDqDS6CfXkNtSaxAge7KdH8K92HGdqxv5OFy4u8
+        f/E9b7DlpvnPRIiuvzVRPT/biMKcDDpjT7LWkkk=
+X-Google-Smtp-Source: ABdhPJwWPW63BfO1YDNPwCOSif9q+11rpQa+AaCJvnFL8cqqzFrXlVBHqmDD9oS9TmjW1375YHGcBAWEmte6ApUzeo8=
+X-Received: by 2002:a1f:4303:: with SMTP id q3mr8159836vka.65.1592584298930;
+ Fri, 19 Jun 2020 09:31:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
+ <0DD7FAE4-3976-4835-8090-80B84B737F3E@amacapital.net> <20200619161752.GG32683@zn.tnic>
+In-Reply-To: <20200619161752.GG32683@zn.tnic>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Fri, 19 Jun 2020 17:31:27 +0100
+Message-ID: <CAD2FfiFt0zm1uk6Z8RF_EUFeEd8ZT61B9+jtdAHrF5hOrcTk_w@mail.gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Daniel Gutson <daniel@eclypsium.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+On Fri, 19 Jun 2020 at 17:17, Borislav Petkov <bp@alien8.de> wrote:
+> Well, I believe all the kernel can do is supply bits of information -
+> just like MSRs - and depending on the settings of those bits, userspace
+> can decide what the situation is. For example:
+> bit 0 - CPUID support
+> bit 1 - BIOS enabled
 
-commit 24c5efe41c29ee3e55bcf5a1c9f61ca8709622e8 upstream.
+Yes, something like this would be entirely fine for my purpose -- I
+don't mind where or how I get the data out of the kernel, but parsing
+the entire systemd journal for a magic string is something I really
+want to avoid.
 
-gss_mech_register() calls svcauth_gss_register_pseudoflavor() for each
-flavour, but gss_mech_unregister() does not call auth_domain_put().
-This is unbalanced and makes it impossible to reload the module.
-
-Change svcauth_gss_register_pseudoflavor() to return the registered
-auth_domain, and save it for later release.
-
-Cc: stable@vger.kernel.org (v2.6.12+)
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/sunrpc/gss_api.h        |    1 +
- include/linux/sunrpc/svcauth_gss.h    |    3 ++-
- net/sunrpc/auth_gss/gss_mech_switch.c |   12 +++++++++---
- net/sunrpc/auth_gss/svcauth_gss.c     |   12 ++++++------
- 4 files changed, 18 insertions(+), 10 deletions(-)
-
---- a/include/linux/sunrpc/gss_api.h
-+++ b/include/linux/sunrpc/gss_api.h
-@@ -83,6 +83,7 @@ struct pf_desc {
- 	u32	service;
- 	char	*name;
- 	char	*auth_domain_name;
-+	struct auth_domain *domain;
- 	bool	datatouch;
- };
- 
---- a/include/linux/sunrpc/svcauth_gss.h
-+++ b/include/linux/sunrpc/svcauth_gss.h
-@@ -21,7 +21,8 @@ int gss_svc_init(void);
- void gss_svc_shutdown(void);
- int gss_svc_init_net(struct net *net);
- void gss_svc_shutdown_net(struct net *net);
--int svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name);
-+struct auth_domain *svcauth_gss_register_pseudoflavor(u32 pseudoflavor,
-+						      char *name);
- u32 svcauth_gss_flavor(struct auth_domain *dom);
- 
- #endif /* __KERNEL__ */
---- a/net/sunrpc/auth_gss/gss_mech_switch.c
-+++ b/net/sunrpc/auth_gss/gss_mech_switch.c
-@@ -61,6 +61,8 @@ gss_mech_free(struct gss_api_mech *gm)
- 
- 	for (i = 0; i < gm->gm_pf_num; i++) {
- 		pf = &gm->gm_pfs[i];
-+		if (pf->domain)
-+			auth_domain_put(pf->domain);
- 		kfree(pf->auth_domain_name);
- 		pf->auth_domain_name = NULL;
- 	}
-@@ -83,6 +85,7 @@ make_auth_domain_name(char *name)
- static int
- gss_mech_svc_setup(struct gss_api_mech *gm)
- {
-+	struct auth_domain *dom;
- 	struct pf_desc *pf;
- 	int i, status;
- 
-@@ -92,10 +95,13 @@ gss_mech_svc_setup(struct gss_api_mech *
- 		status = -ENOMEM;
- 		if (pf->auth_domain_name == NULL)
- 			goto out;
--		status = svcauth_gss_register_pseudoflavor(pf->pseudoflavor,
--							pf->auth_domain_name);
--		if (status)
-+		dom = svcauth_gss_register_pseudoflavor(
-+			pf->pseudoflavor, pf->auth_domain_name);
-+		if (IS_ERR(dom)) {
-+			status = PTR_ERR(dom);
- 			goto out;
-+		}
-+		pf->domain = dom;
- 	}
- 	return 0;
- out:
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -779,7 +779,7 @@ u32 svcauth_gss_flavor(struct auth_domai
- 
- EXPORT_SYMBOL_GPL(svcauth_gss_flavor);
- 
--int
-+struct auth_domain *
- svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name)
- {
- 	struct gss_domain	*new;
-@@ -802,17 +802,17 @@ svcauth_gss_register_pseudoflavor(u32 ps
- 			name);
- 		stat = -EADDRINUSE;
- 		auth_domain_put(test);
--		kfree(new->h.name);
--		goto out_free_dom;
-+		goto out_free_name;
- 	}
--	return 0;
-+	return test;
- 
-+out_free_name:
-+	kfree(new->h.name);
- out_free_dom:
- 	kfree(new);
- out:
--	return stat;
-+	return ERR_PTR(stat);
- }
--
- EXPORT_SYMBOL_GPL(svcauth_gss_register_pseudoflavor);
- 
- static inline int
-
-
+Richard.
