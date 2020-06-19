@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE6D620B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B4820809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581556;
-	bh=MPww2KMiIHzg/oIztqFpjBj3n/wGtvouVkgda4QhFYo=;
+	s=default; t=1592581558;
+	bh=sUAeO8rbA0N30Grcc1+ej5kBzyS6iBFuX9rKypyt0+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A7pxJNW8bWrWhzL4sz0vNafd4UAcbb2pTHNJJmMPEmb5ISN7gymLZ6OXeHjNsTb/r
-	 WuRBg1rwdA7XRv0aVzTa4xc6T3t/7SHy5osld1DqPMKAmnab/QZuhL27c5hTURQDkQ
-	 rJs3wjuc+LGRGY6rZ8RnQXKCUSDQUDY6XsQh/v1A=
+	b=LEZ8qoqXOuCWtj0v0rDWEdfrLe6bvmbIU/c3IZ9E+KifNJkQLjrl9cMwn1aA99FWI
+	 38Vv41uhK9Rx0p8vffsFPSRJV5z2Y22yAz5GlKs6FQfB931w+4oVAvRQ1wMhcb01U5
+	 QFFGHRxoWbMTBxg0gH9YbuC5YUCj/jWN+tmXvK3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391055AbgFSP1B (ORCPT
+        id S2405251AbgFSPp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393395AbgFSPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:20 -0400
+        id S2393519AbgFSP1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5109420734;
-        Fri, 19 Jun 2020 15:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5D520734;
+        Fri, 19 Jun 2020 15:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580319;
-        bh=MPww2KMiIHzg/oIztqFpjBj3n/wGtvouVkgda4QhFYo=;
+        s=default; t=1592580421;
+        bh=sUAeO8rbA0N30Grcc1+ej5kBzyS6iBFuX9rKypyt0+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXxW9avdXkLmzb1ZSrRcEmhTu7dKfxtDMOczlYBeLAEZDF6jTUn0Z5J0nNZ4PAAz0
-         Zpka9JEk7InTIoKoLvjWQNpTA8pNmwjCn1alNGn02sbxBi4TQF6wHlpIfvQS8HsCKe
-         OKQ6Pc+i44e4iUtWpnMe0waFp0d6SUIfO075lDkM=
+        b=Kiioj7lSBKS1pJ1kVh3o+owwHqdEdn4G7X/ys0Ni2nLrv6ObH9fR0CqAR7GIwCfwD
+         JAU4j5AE+sS9SVrMwexzEhU+pdyClw23Q9fmEA+7zo0kHuVjHj3Ts+awsfUTPMSYEm
+         x/a72UnfxvySCx9RF8o/eTcSX0XurYXaQdVALWzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Joyner <eric.joyner@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 204/376] ice: Fix resource leak on early exit from function
-Date:   Fri, 19 Jun 2020 16:32:02 +0200
-Message-Id: <20200619141719.995181180@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 241/376] io_uring: fix overflowed reqs cancellation
+Date:   Fri, 19 Jun 2020 16:32:39 +0200
+Message-Id: <20200619141721.739474082@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,41 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Joyner <eric.joyner@intel.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 857a4f0e9f4956fffc0cedcaa2ba187a2e987153 ]
+[ Upstream commit 7b53d59859bc932b37895d2d37388e7fa29af7a5 ]
 
-Memory allocated in the ice_add_prof_id_vsig() function wasn't being
-properly freed if an error occurred inside the for-loop in the function.
+Overflowed requests in io_uring_cancel_files() should be shed only of
+inflight and overflowed refs. All other left references are owned by
+someone else.
 
-In particular, 'p' wasn't being freed if an error occurred before it was
-added to the resource list at the end of the for-loop.
+If refcount_sub_and_test() fails, it will go further and put put extra
+ref, don't do that. Also, don't need to do io_wq_cancel_work()
+for overflowed reqs, they will be let go shortly anyway.
 
-Signed-off-by: Eric Joyner <eric.joyner@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_flex_pipe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-index e7a2671222d2..abfec38bb483 100644
---- a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-+++ b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-@@ -3705,8 +3705,10 @@ ice_add_prof_id_vsig(struct ice_hw *hw, enum ice_block blk, u16 vsig, u64 hdl,
- 					      t->tcam[i].prof_id,
- 					      t->tcam[i].ptg, vsig, 0, 0,
- 					      vl_msk, dc_msk, nm_msk);
--		if (status)
-+		if (status) {
-+			devm_kfree(ice_hw_to_dev(hw), p);
- 			goto err_ice_add_prof_id_vsig;
-+		}
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2d5f81a1bf9c..2698e9b08490 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7477,10 +7477,11 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+ 				finish_wait(&ctx->inflight_wait, &wait);
+ 				continue;
+ 			}
++		} else {
++			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
++			io_put_req(cancel_req);
+ 		}
  
- 		/* log change */
- 		list_add(&p->list_entry, chg);
+-		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
+-		io_put_req(cancel_req);
+ 		schedule();
+ 		finish_wait(&ctx->inflight_wait, &wait);
+ 	}
 -- 
 2.25.1
 
