@@ -7,49 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B660AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8559820CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0E520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577438;
-	bh=WgAg0khaNIffBS03mIfrXfCWjgE0Tum93tuXxBi0yRc=;
+	s=default; t=1592577443;
+	bh=3CaXAki9ormthkm7aWOGt25u/X87hCKqFQXmSQjyyFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gz06q6dH6LBC2sAWttaIk9qDtosgbJYylWiTbXuOcgdSRioN2WsSkvZj3D+tBHF7c
-	 xH9gcpnSbvae2x4a1d2O9sGJGfedCZE3DHHSqoiaDzh3ct50m7O2UKet/dN4V2ttIK
-	 D8UK7QHGF3FhLIhcynyj6KC4gCnk640ts8G9DfhQ=
+	b=WZFRIBCSB+IQO8rG0E95IxJOsi4QImVzdeV9Kgvoul3HE4vp+HCskxYKLkKLLqq6I
+	 1vdMoYC+7yaM/C8VrruFulixmg0iACcTv9/6p4zkR5nfc/f0KAx7E42/MCgfznprCP
+	 40lvajipOyoHnt0HXg3jb2SaP4MlZlxhweq/0Q18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbgFSOhO (ORCPT
+        id S2387707AbgFSOhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387673AbgFSOhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:05 -0400
+        id S2387673AbgFSOhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:37:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C26208C7;
-        Fri, 19 Jun 2020 14:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4B4F2070A;
+        Fri, 19 Jun 2020 14:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577425;
-        bh=WgAg0khaNIffBS03mIfrXfCWjgE0Tum93tuXxBi0yRc=;
+        s=default; t=1592577435;
+        bh=3CaXAki9ormthkm7aWOGt25u/X87hCKqFQXmSQjyyFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJLxdaXpIFC1hVzQm+/K4/V2HkQKCBCeVj9biDbXg7liLxIeVrAprtEiTKdSsYu5S
-         L4naKOAqbeMMx0tis4w6arGxvoHy1XbeTG+v1fDXhVe7kAEq2Aci0E3XPTRQw4b+8v
-         y3C5l/JAi6Y8/ZZoK2rJwUQjdnsimTdjEAPWLqRo=
+        b=RZjt/ysMYcqy6maMtKOvDC+AcuhBHmc0dPX2ssMrMjPnhDdhLiX0iJ9+wYEcUF3/9
+         h8sPBkg4+1ov14VrIw+Vlf0RQx6a7Vtd+ix3p7i0DRD5tqBkFfaPvEIwckfba17zg1
+         GI2YI3gKJcZuaOWUiQBME7aiWzqrVUT1GXVj02A0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 046/101] spi: dw: Zero DMA Tx and Rx configurations on stack
-Date:   Fri, 19 Jun 2020 16:32:35 +0200
-Message-Id: <20200619141616.509632756@linuxfoundation.org>
+Subject: [PATCH 4.4 050/101] clocksource: dw_apb_timer_of: Fix missing clockevent timers
+Date:   Fri, 19 Jun 2020 16:32:39 +0200
+Message-Id: <20200619141616.692135866@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -62,46 +70,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
+[ Upstream commit 6d2e16a3181bafb77b535095c39ad1c8b9558c8c ]
 
-Some DMA controller drivers do not tolerate non-zero values in
-the DMA configuration structures. Zero them to avoid issues with
-such DMA controller drivers. Even despite above this is a good
-practice per se.
+Commit 100214889973 ("clocksource: dw_apb_timer_of: use
+clocksource_of_init") replaced a publicly available driver
+initialization method with one called by the timer_probe() method
+available after CLKSRC_OF. In current implementation it traverses
+all the timers available in the system and calls their initialization
+methods if corresponding devices were either in dtb or in acpi. But
+if before the commit any number of available timers would be installed
+as clockevent and clocksource devices, after that there would be at most
+two. The rest are just ignored since default case branch doesn't do
+anything. I don't see a reason of such behaviour, neither the commit
+message explains it. Moreover this might be wrong if on some platforms
+these timers might be used for different purpose, as virtually CPU-local
+clockevent timers and as an independent broadcast timer. So in order
+to keep the compatibility with the platforms where the order of the
+timers detection has some meaning, lets add the secondly discovered
+timer to be of clocksource/sched_clock type, while the very first and
+the others would provide the clockevents service.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 100214889973 ("clocksource: dw_apb_timer_of: use clocksource_of_init")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200521204818.25436-7-Sergey.Semin@baikalelectronics.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/dw_apb_timer_of.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index bb1052e748f2..4d6434b244e2 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -155,6 +155,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	if (!xfer->tx_buf)
- 		return NULL;
+diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
+index a19a3f619cc7..99e5fd59964b 100644
+--- a/drivers/clocksource/dw_apb_timer_of.c
++++ b/drivers/clocksource/dw_apb_timer_of.c
+@@ -134,16 +134,14 @@ static int num_called;
+ static void __init dw_apb_timer_init(struct device_node *timer)
+ {
+ 	switch (num_called) {
+-	case 0:
+-		pr_debug("%s: found clockevent timer\n", __func__);
+-		add_clockevent(timer);
+-		break;
+ 	case 1:
+ 		pr_debug("%s: found clocksource timer\n", __func__);
+ 		add_clocksource(timer);
+ 		init_sched_clock();
+ 		break;
+ 	default:
++		pr_debug("%s: found clockevent timer\n", __func__);
++		add_clockevent(timer);
+ 		break;
+ 	}
  
-+	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
- 	txconf.dst_maxburst = 16;
-@@ -201,6 +202,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	if (!xfer->rx_buf)
- 		return NULL;
- 
-+	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
- 	rxconf.src_maxburst = 16;
 -- 
 2.25.1
 
