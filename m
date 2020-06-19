@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9259720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C723208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 04:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MHihjPeC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q/rFgF1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgFSEei (ORCPT
+        id S1730215AbgFSEek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44118 "EHLO
+        Fri, 19 Jun 2020 00:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729926AbgFSEe2 (ORCPT
+        with ESMTP id S1729845AbgFSEeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 00:34:28 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C515C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:27 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id e192so8684081ybf.17
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:27 -0700 (PDT)
+        Fri, 19 Jun 2020 00:34:25 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AEEC0613EF
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:23 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s90so8754051ybi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 21:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=4pz6j2VMR470Gj2vfpwgwF4Ge32U12Q9ReGlHMPbcFw=;
-        b=MHihjPeCpQTRl/vgwU2BFl1mQW9VlRPJqLY6d1wSnp0FnnwHG1UXK2A0VDxSE4FOlB
-         Wo4WhspBqpgQESsRe4VLhg6CMtBZvctEdO50xMQx29Ts03zCdQBvDldsysyEP737PHiV
-         HScrjYsfUz7EQqLwjubGSvbOp1tUzkqO48t38dMcaLUCnC0GP0L/OnDI8U/hljvNhucC
-         qi2JikfCW+Jyr6uryXGJScMv0hSzjH9R3iKYl+nQsMuYvswNkAQ16OQdkLc+bYLqpYak
-         CvRy+8KltLS42O/2F13DovNB9hWYvFvE7EWjleknLXlXr99/Ce5eEHTNa1pmhbcJGY9w
-         sB9w==
+        bh=EJMwko4UK0ri92xnZnwrKFeARTwovDj6WxcQH1Rg5vQ=;
+        b=q/rFgF1O/3gKbIDyQ0NDYNPXL8JGyr5m8PGEIp1Z4ONs9ZG+WeEyIFgJgnQzt9DXOO
+         9x+cPns8rHjbzZYj1LJQGww2yzIgMUWFXqVIkb6qKYmyLqLJpqvdsimMffdd/ADF+iD1
+         B4ux3RrDHW+fKSyLLoBmyin5nukdpDD6j//nYnvnup7ylbAiHE/1OINoj1xAiUI7APtc
+         ZsgzQ8qe6VurC8RpuG5pfiMdOMUA0cBCCtf3Wkhb/OLFkSx08NZ4ciLKJF1Zs8AHlek2
+         FOpoapZBOC8FWvtXqqKcPROdmBAmGz3usGWREA7jFjKgQtcYguIlaVDSevQdPg2Wk3JS
+         +kqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=4pz6j2VMR470Gj2vfpwgwF4Ge32U12Q9ReGlHMPbcFw=;
-        b=MKzCwmWA/eleOSImm3a9DrwPrKvcJQQkt/qhVSfenKZ1Vf/Tj7BPV898WmN2uWUIEF
-         sL8K5qJRe32eR+NYLBgJR0duWqF4HQSos55n0wvaaUdSCTUsf1lyvNKuW6VJ22ACOk0t
-         cVmgVl9GdvI7xfFWxyhEarCq7F7iOn5h97sQjMeMtpvUsx8ChO8R6q4vn+bi+8sMuUjg
-         R2Eq/LZWt0Y0eQfbnAplrbFq5IkmT7Ox3BFe6pkBrBei5kJwCgQ36HXZs2vYE++zEnyg
-         FVJfhbqR9+72unzvh5tRVHs91yzGCQWxWz/gPf+BrzWag7UZBMKsGIoH0fKSw1Ir9tNp
-         L1xA==
-X-Gm-Message-State: AOAM5313ajm8iHI7mRoaHiIPY5lsNAnWlIrJkphwxr8Aa1hzW2iH8fa3
-        D2ZpntWIwMmWDUDzX8Y0zN+UfDd/zrDN
-X-Google-Smtp-Source: ABdhPJzXw5t3HnTRsyjNEvvn80kALIMkdYENFQA6HunonNMZZ8xaO0gDehpSoNFY7orzKYCR6v0t/l+msgyX
-X-Received: by 2002:a25:32d1:: with SMTP id y200mr3238063yby.507.1592541266635;
- Thu, 18 Jun 2020 21:34:26 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 21:33:56 -0700
+        bh=EJMwko4UK0ri92xnZnwrKFeARTwovDj6WxcQH1Rg5vQ=;
+        b=p3letMfLj+CA6zxq9t8VudiuS5X6dDY6DfPqJ/N7t3kVXXe4BmDv6T86zVgfd19DqG
+         DqSFc2BRnsji5kdiinzwIyFtHTVbqGb+KijXPI+djEEYF724YFH4c75Sq8N2ErJ2sqeg
+         gyMHdfo8OtQlGDD2JSpkaPzp5udvJNfcYriYtvlglyR15tBvV1+UqPxv+RCDZv47gh1h
+         HQfT0a6oqOPcnr1b7pvIbvH3FjSWsO5lG78GGDgcbk64qH9oCpy9GPCpMiQEST7F1/OD
+         8olU74c338ZcAyGHa/VjKnqiWNBZgFcoBS49SjzBH9PJvq7PUa9A2+9a3SzoRdU/fvPR
+         M7xQ==
+X-Gm-Message-State: AOAM533dS9mMiBxinh3oMAeqEOa7g5uBwVTklxYqE2FsekkfvDOD/KbN
+        57RbMMWQbFe97IyGYA3a2dAL+giWzLRM
+X-Google-Smtp-Source: ABdhPJzJAoTlu5hLFopZznAeigi2E3Wt7/NPrsne9PXyyYFKEZe1u4HKgXcyi/bfBOG8p2xE+jznJJE/dNrT
+X-Received: by 2002:a25:8b05:: with SMTP id i5mr2973012ybl.301.1592541263092;
+ Thu, 18 Jun 2020 21:34:23 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 21:33:54 -0700
 In-Reply-To: <20200619043356.90024-1-irogers@google.com>
-Message-Id: <20200619043356.90024-11-irogers@google.com>
+Message-Id: <20200619043356.90024-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20200619043356.90024-1-irogers@google.com>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2 10/10] perf parse-events: Disable a subset of bison warnings
+Subject: [PATCH v2 08/10] perf expr: Avoid implicit lex function declaration
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,40 +83,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than disable all warnings with -w, disable specific warnings.
-Predicate enabling the warnings on a recent version of bison.
-Tested with GCC 9.3.0 and clang 9.0.1.
+Add include and a dependency.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/Build | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ tools/perf/util/Build  | 2 ++
+ tools/perf/util/expr.y | 2 ++
+ 2 files changed, 4 insertions(+)
 
 diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 935ba132614c..c1692076469c 100644
+index 53383bd6f4e2..43a9ae712544 100644
 --- a/tools/perf/util/Build
 +++ b/tools/perf/util/Build
-@@ -234,9 +234,17 @@ endif
- CFLAGS_parse-events-flex.o  += $(flex_flags)
- CFLAGS_pmu-flex.o           += $(flex_flags)
- CFLAGS_expr-flex.o          += $(flex_flags)
--CFLAGS_parse-events-bison.o += -DYYENABLE_NLS=0 -w
--CFLAGS_pmu-bison.o          += -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -w
--CFLAGS_expr-bison.o         += -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -w
-+
-+bison_flags := -DYYENABLE_NLS=0
-+BISON_GE_353 := $(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 353)
-+ifeq ($(BISON_GE_353),1)
-+  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-error=implicit-function-declaration
-+else
-+  bison_flags += -w
-+endif
-+CFLAGS_parse-events-bison.o += $(bison_flags)
-+CFLAGS_pmu-bison.o          += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
-+CFLAGS_expr-bison.o         += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
+@@ -211,6 +211,8 @@ $(OUTPUT)util/expr-bison.c $(OUTPUT)util/expr-bison.h: util/expr.y
+ 	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) \
+ 		-o $(OUTPUT)util/expr-bison.c -p expr_
  
- $(OUTPUT)util/parse-events.o: $(OUTPUT)util/parse-events-flex.c $(OUTPUT)util/parse-events-bison.c
- $(OUTPUT)util/pmu.o: $(OUTPUT)util/pmu-flex.c $(OUTPUT)util/pmu-bison.c
++$(OUTPUT)util/expr-bison.o: $(OUTPUT)util/expr-flex.h
++
+ $(OUTPUT)util/pmu-flex.c $(OUTPUT)util/pmu-flex.h: util/pmu.l $(OUTPUT)util/pmu-bison.c
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/pmu-flex.c \
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index bf3e898e3055..f34a5e544a41 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -39,6 +39,8 @@
+ %type <num> expr if_expr
+ 
+ %{
++#include "expr-flex.h"
++
+ static void expr_error(double *final_val __maybe_unused,
+ 		       struct expr_parse_ctx *ctx __maybe_unused,
+ 		       void *scanner,
 -- 
 2.27.0.111.gc72c7da667-goog
 
