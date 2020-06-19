@@ -2,58 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C79CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97972070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF1A2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577584;
-	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+	s=default; t=1592577587;
+	bh=u/0ZqK8dt9XK1q2f+clP9/xK0hXJJC12WcXKPRY2uK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0y1PfU95KwbR/PaIsSSUuZXA1jLYR3F7LTyE9mOl5sVCvuToTNAkjiu/yJPbhuIHk
-	 rLPBQ0ctSzaWYcE2s/nubP048cIB3s0mf88tkpZtpVtET60bMEXl+N7mRw4n/sr3Sq
-	 YQaNk15oMS4Q16skExkVWuw/jwd5yuTMfdWUtsk8=
+	b=wJt7qunLExA0Fi/3V+DhMB15RAvw5lsuit5FJSSxOtAb65oo0pPRN8v8RgxADMxAo
+	 6x9OB5SLj5nBalZMvDlRZq14no/h1DnSiqpXGIaodOg+A4OLxxU1oxIJf7RUggHYFL
+	 eU8HQUbYmbedG8JqmWyYDz3EiFXqOcBYQaSx0tmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388062AbgFSOjk (ORCPT
+        id S2387575AbgFSOjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388035AbgFSOjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:32 -0400
+        id S2388040AbgFSOje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24DDD20CC7;
-        Fri, 19 Jun 2020 14:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D7621527;
+        Fri, 19 Jun 2020 14:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577571;
-        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+        s=default; t=1592577574;
+        bh=u/0ZqK8dt9XK1q2f+clP9/xK0hXJJC12WcXKPRY2uK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vP4GRk+M1/tO6DODghujz7zAPt+7iEyoT2+O1hLBrd/PoZ0u3hK5Mw6NmX1tjXOo6
-         sEq5F8TMTHMuHu+VpwhPU4GDs+Y8iTPFH8ah1+mHXyQC96oxSt3u6lnQW23uqAJRg6
-         ZT/yatm3zXs8x5UnL3qnLeoRHEH+4dNku1jP6Yn8=
+        b=oNrcOXsA7KZNDn5cTGGUkQkWomQfwg3ncDaHLTVtKdgmMoTzjccNwMTjWqAwv+yIM
+         JbX9Rx4OZKTM9FUy0uWk6TMVfp26qb6NIMbLXkJywvLVzsUY0/vmY+gIbQBnec+4W/
+         tAQYvGqDwjjwwZNcbBVdYRmT8Pqk6n1fCF+1S9h4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 063/101] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Fri, 19 Jun 2020 16:32:52 +0200
-Message-Id: <20200619141617.359180596@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.4 097/101] sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
+Date:   Fri, 19 Jun 2020 16:33:26 +0200
+Message-Id: <20200619141619.059564972@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -66,53 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: NeilBrown <neilb@suse.de>
 
-[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
+commit d47a5dc2888fd1b94adf1553068b8dad76cec96c upstream.
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+There is no valid case for supporting duplicate pseudoflavor
+registrations.
+Currently the silent acceptance of such registrations is hiding a bug.
+The rpcsec_gss_krb5 module registers 2 flavours but does not unregister
+them, so if you load, unload, reload the module, it will happily
+continue to use the old registration which now has pointers to the
+memory were the module was originally loaded.  This could lead to
+unexpected results.
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So disallow duplicate registrations.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
+Cc: stable@vger.kernel.org (v2.6.12+)
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 76f18c56141c..3458d23d230c 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -789,9 +789,11 @@ svcauth_gss_register_pseudoflavor(u32 ps
+ 	new->h.flavour = &svcauthops_gss;
+ 	new->pseudoflavor = pseudoflavor;
  
--- 
-2.25.1
-
+-	stat = 0;
+ 	test = auth_domain_lookup(name, &new->h);
+-	if (test != &new->h) { /* Duplicate registration */
++	if (test != &new->h) {
++		pr_warn("svc: duplicate registration of gss pseudo flavour %s.\n",
++			name);
++		stat = -EADDRINUSE;
+ 		auth_domain_put(test);
+ 		kfree(new->h.name);
+ 		goto out_free_dom;
 
 
