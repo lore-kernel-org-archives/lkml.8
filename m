@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9114420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3F7208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577555;
-	bh=/yiwJt2Ym0/+aaH/zOczKqsSnUNtR8CrvV3jupuKf0M=;
+	s=default; t=1592577561;
+	bh=R+ifgLXHI4Pzdgt06iB2enKJaJy7DKMeB2/15uzO1Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/xm/VI/vchloEDrQ93IulmEUrJLRa3LVX8dv8y4SjGDv3GNEeituLl+BKbWrBebx
-	 l7OQVZ5Zjs7oTMA8aWVK7EcsWUxSW9wRbtshubDydFC3caQQQofR+4Ld4k7t9Siidw
-	 XoulX8ww+ioheWwij9KVcxY0t+LXsgncb7Psb0Xo=
+	b=RUGQa2uxjenhO8MMiRA8jowROmqGNulPeVd7FrRbKy9CYyyKIpwswBlhMy19Jjbdr
+	 UXzXMbnVymdi1pHYy3QYTvDNaSy0ULmqEJI17GdNxkn4oDDyWdK/uMjokzUeX6hYjn
+	 J9RUwOqulj2aIdpo4MeHONOc5voRYIiHQoaGAApo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbgFSOjN (ORCPT
+        id S2388015AbgFSOjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:39:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387991AbgFSOjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:10 -0400
+        id S2388001AbgFSOjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1DB20CC7;
-        Fri, 19 Jun 2020 14:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED4152070A;
+        Fri, 19 Jun 2020 14:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577548;
-        bh=/yiwJt2Ym0/+aaH/zOczKqsSnUNtR8CrvV3jupuKf0M=;
+        s=default; t=1592577551;
+        bh=R+ifgLXHI4Pzdgt06iB2enKJaJy7DKMeB2/15uzO1Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cL70GwHe+K1NUFyXWN2OrL0uHWfL6REE636pFsawz4V/Gnga6o812LoDC+wubtAJM
-         mYggl06ZZcOPMLW0vKhajLeH5bG0rQ7hRfXm06xz+gSY4pE7xigeU89ggNwBnf6h1m
-         K/9J1VU5fcZNgCthFmTpFSw/ggvdfZj1X08s+AlU=
+        b=xeE9uBKAo2Mf6Fl3Z5Aoyophy5r80Iy6YDeLCTZSxhXY3d/923aAYIxncg9f2gjHy
+         FBpEg1v3Af0z9ySoNH2JxU4UBiYphDaQ+uy/WKxXR1EQDnOXknnY1stus/lwuw3h62
+         6qXKpC7iuD2hP9BeLuAu4s5cSUBo4QYKZwqMGQ2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.4 093/101] kernel/cpu_pm: Fix uninitted local in cpu_pm
-Date:   Fri, 19 Jun 2020 16:33:22 +0200
-Message-Id: <20200619141618.842658814@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.4 094/101] ARM: tegra: Correct PL310 Auxiliary Control Register initialization
+Date:   Fri, 19 Jun 2020 16:33:23 +0200
+Message-Id: <20200619141618.891513888@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -62,54 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit b5945214b76a1f22929481724ffd448000ede914 upstream.
+commit 35509737c8f958944e059d501255a0bf18361ba0 upstream.
 
-cpu_pm_notify() is basically a wrapper of notifier_call_chain().
-notifier_call_chain() doesn't initialize *nr_calls to 0 before it
-starts incrementing it--presumably it's up to the callers to do this.
+The PL310 Auxiliary Control Register shouldn't have the "Full line of
+zero" optimization bit being set before L2 cache is enabled. The L2X0
+driver takes care of enabling the optimization by itself.
 
-Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
-This potentially means you could get too many or two few calls to
-CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
-luck of the stack.
+This patch fixes a noisy error message on Tegra20 and Tegra30 telling
+that cache optimization is erroneously enabled without enabling it for
+the CPU:
 
-Let's fix this.
+	L2C-310: enabling full line of zeros but not enabled in Cortex-A9
 
-Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
-Cc: stable@vger.kernel.org
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu_pm.c |    4 ++--
+ arch/arm/mach-tegra/tegra.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/cpu_pm.c
-+++ b/kernel/cpu_pm.c
-@@ -97,7 +97,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_unregister_noti
-  */
- int cpu_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
+--- a/arch/arm/mach-tegra/tegra.c
++++ b/arch/arm/mach-tegra/tegra.c
+@@ -155,8 +155,8 @@ static const char * const tegra_dt_board
+ };
  
- 	read_lock(&cpu_pm_notifier_lock);
-@@ -156,7 +156,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_exit);
-  */
- int cpu_cluster_pm_enter(void)
- {
--	int nr_calls;
-+	int nr_calls = 0;
- 	int ret = 0;
- 
- 	read_lock(&cpu_pm_notifier_lock);
+ DT_MACHINE_START(TEGRA_DT, "NVIDIA Tegra SoC (Flattened Device Tree)")
+-	.l2c_aux_val	= 0x3c400001,
+-	.l2c_aux_mask	= 0xc20fc3fe,
++	.l2c_aux_val	= 0x3c400000,
++	.l2c_aux_mask	= 0xc20fc3ff,
+ 	.smp		= smp_ops(tegra_smp_ops),
+ 	.map_io		= tegra_map_common_io,
+ 	.init_early	= tegra_init_early,
 
 
