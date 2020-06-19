@@ -2,127 +2,112 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC60C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E31820786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581190;
-	bh=WZMaHur++RhpkhRGztBlS0TjHQSd7jczDBuY8HGaB+M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K21MWbZbS+sAYpUhnAOVDzIF0R/Et6pwSqoeQOynXqPWUMekVaMWmyKFpcGCiZBSx
-	 jumgn19kidQQbn2ZarjMuzBQdwQd2U3e5XCbDgvOblGyxMTBzs72i/kG3DfiIZES/H
-	 5RARkpSOjCwxXYHJSvu8vgBVSJKztMHJDtbN7zbo=
+	by mail.kernel.org (Postfix) with ESMTP id 4F12C20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRBrjBVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393742AbgFSPjs (ORCPT
+        id S2393878AbgFSPkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393602AbgFSP2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jun 2020 11:40:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53004 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393654AbgFSPjx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:39:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592581192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y+5DkcNUxP1bFMVZ/Wx9pVXm5AvA2/umLhzGlXJcybs=;
+        b=IRBrjBVEZ84OHM9HrV7fcUQNyb9shUbOllWret5JjvdbY8/SxNHm5u+vp3Z48lbY62JE5M
+        tUQwBSj8HRg0dNG/gH3lyo2V+cBxdBomgyuL8sDyXzsEGZatfREImsHc/oTfIxLYmRITE5
+        5rlBBGNsACSVIiR73i+8AhVAq0T8kM8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-4gCsF_yDMyyK1HfAJ6MBIA-1; Fri, 19 Jun 2020 11:39:48 -0400
+X-MC-Unique: 4gCsF_yDMyyK1HfAJ6MBIA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 782AD21924;
-        Fri, 19 Jun 2020 15:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580532;
-        bh=WZMaHur++RhpkhRGztBlS0TjHQSd7jczDBuY8HGaB+M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M1m1umflEpd0k1zAC5ZAq8TyDdZNgO12DTdrLdcpLwOsUmNZC5N0ySJqWynfQPvOR
-         Z57l99YZhItp+QawQZKKZkv187Gtw9PlJrRh8Ix1hsKvV6NioGrDN7EkGMXplapiW1
-         KzXXZ6f3L7H7mTokLeIwNmulUA2Z86ugwj8cvI/E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 286/376] PCI: Avoid FLR for AMD Starship USB 3.0
-Date:   Fri, 19 Jun 2020 16:33:24 +0200
-Message-Id: <20200619141723.869731037@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 034AA10753F2;
+        Fri, 19 Jun 2020 15:39:42 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-112-254.ams2.redhat.com [10.36.112.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7390760BF4;
+        Fri, 19 Jun 2020 15:39:37 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
+        babu.moger@amd.com, Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH v2 02/11] KVM: x86: mmu: Move translate_gpa() to mmu.c
+Date:   Fri, 19 Jun 2020 17:39:16 +0200
+Message-Id: <20200619153925.79106-3-mgamal@redhat.com>
+In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
+References: <20200619153925.79106-1-mgamal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+Also no point of it being inline since it's always called through
+function pointers. So remove that.
 
-[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
-
-The AMD Starship USB 3.0 host controller advertises Function Level Reset
-support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
-on this device.
-
-Without this quirk, when attempting to assign (pass through) an AMD
-Starship USB 3.0 host controller to a guest OS, the system becomes
-increasingly unresponsive over the course of several minutes, eventually
-requiring a hard reset.  Shortly after attempting to start the guest, I see
-these messages:
-
-  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
-
-And then eventually:
-
-  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
-  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
-  ...
-  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
-
-Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
-motherboard with an AMD Ryzen Threadripper 3970X.
-
-Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 6 ------
+ arch/x86/kvm/mmu/mmu.c          | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 9d00ecb1f5b5..226a4c5b2b7a 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5133,6 +5133,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * FLR may cause the following to devices to hang:
-  *
-  * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Starship USB 3.0 Host Controller 0x148c
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-@@ -5143,6 +5144,7 @@ static void quirk_no_flr(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f8998e97457f..bc0fb116cc5c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1551,12 +1551,6 @@ void kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd, bool skip_tlb_flush,
+ 
+ void kvm_configure_mmu(bool enable_tdp, int tdp_page_level);
+ 
+-static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
+-				  struct x86_exception *exception)
+-{
+-	return gpa;
+-}
+-
+ static inline struct kvm_mmu_page *page_header(hpa_t shadow_page)
+ {
+ 	struct page *page = pfn_to_page(shadow_page >> PAGE_SHIFT);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index fdd05c233308..ee113fc1f1bf 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -515,6 +515,12 @@ static bool check_mmio_spte(struct kvm_vcpu *vcpu, u64 spte)
+ 	return likely(kvm_gen == spte_gen);
  }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+ 
++static gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
++                                  struct x86_exception *exception)
++{
++        return gpa;
++}
++
+ /*
+  * Sets the shadow PTE masks used by the MMU.
+  *
 -- 
-2.25.1
-
-
+2.26.2
 
