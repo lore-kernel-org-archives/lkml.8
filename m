@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6944C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832FB20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A00E20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581674;
-	bh=ZI3l1S8gQpmiNJU5zPaXkISX8iBWee5MzLByTO5zS8k=;
+	s=default; t=1592581679;
+	bh=56mqz//yRO8dwLkzCXAUJh+8sRp/R6L45fiWOsiVU5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhoMQpunEwkmi31ft+qcwbT3pRmgImRI3qZ6umBP0eViMfcFH6qtdks+Slyiqi/Y4
-	 QP6UeYooM8mUx/fpAjO9qhAgzM0oB8Eja7TSlSGVe/9RnpCdzhw3p4RGjwLcgxwV8N
-	 MiNxDNuHQwVP5V89QvSb35KPNNt6SueVS8TzdlY8=
+	b=AYhdHh4Y+6VtBlqr3yTRt6DtHa9zNpQR6hcoQJS4ZfV4nIPo6a9m1g3xbouLKxtIG
+	 PSFsMCom0wKCCJReSZuQxi4ujZMadLhJR3orxmTpstmDV9QtcWg6uogrIN7D1SAtLc
+	 WCgqEoGHySDd/ALVS1e8j66/DAEBqeNYVcdiQtRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405315AbgFSPru (ORCPT
+        id S2393446AbgFSPZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393461AbgFSPZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:47 -0400
+        id S2393080AbgFSPWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D877E20B80;
-        Fri, 19 Jun 2020 15:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A6B21582;
+        Fri, 19 Jun 2020 15:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580346;
-        bh=ZI3l1S8gQpmiNJU5zPaXkISX8iBWee5MzLByTO5zS8k=;
+        s=default; t=1592580172;
+        bh=56mqz//yRO8dwLkzCXAUJh+8sRp/R6L45fiWOsiVU5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2PoS7h3JElRRQt2zCJednmmexUcsrKhYyLaalM+3UFhpraMbczu95q+NyxuJYljSY
-         9lz8SqPf+wl+aPUbtbVaZBMV7cXHZTTjo8dn40/dgKV9FSX90in1ISh0Y9tMMluZys
-         FfSWAhzis06u3TGLxdHx2iyGoq3krF8MA9nzFhfo=
+        b=CbXxg+07iGEUP+1aA0fTQK221ko6RKYC5E3GzITulcavkBxazNgUIfAxRbBOcvsSo
+         al7t6i653kzLO//iH650nRhYOHMDSeLO0bKQ1b+nLkXyJ7d8MSs6lM+4HUzPnkwb4R
+         9w8mzvDG+HeYiVda29DKThBAW7u/Xd6gU2qbT4Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chih-Min Chen <chih-min.chen@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 184/376] mt76: avoid rx reorder buffer overflow
-Date:   Fri, 19 Jun 2020 16:31:42 +0200
-Message-Id: <20200619141719.061058574@linuxfoundation.org>
+        stable@vger.kernel.org, Sung Lee <sung.lee@amd.com>,
+        Yongqiang Sun <yongqiang.sun@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 119/376] drm/amd/display: Do not disable pipe split if mode is not supported
+Date:   Fri, 19 Jun 2020 16:30:37 +0200
+Message-Id: <20200619141715.978900903@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,78 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Sung Lee <sung.lee@amd.com>
 
-[ Upstream commit 7c4f744d6703757be959f521a7a441bf34745d99 ]
+[ Upstream commit 1dfedb39d38f813357885e19badd1971c17f79a7 ]
 
-Enlarge slot to support 11ax 256 BA (256 MPDUs in an AMPDU)
+[WHY]
+If mode is not supported, pipe split should not be disabled.
+This may cause more modes to fail.
 
-Signed-off-by: Chih-Min Chen <chih-min.chen@mediatek.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+[HOW]
+Check for mode support before disabling pipe split.
+
+This commit was previously reverted as it was thought to
+have problems, but those issues have been resolved.
+
+Signed-off-by: Sung Lee <sung.lee@amd.com>
+Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/agg-rx.c | 8 ++++----
- drivers/net/wireless/mediatek/mt76/mt76.h   | 6 +++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-index f77f03530259..acdbe6f8248d 100644
---- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
-+++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-@@ -152,8 +152,8 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
- 	struct ieee80211_sta *sta;
- 	struct mt76_rx_tid *tid;
- 	bool sn_less;
--	u16 seqno, head, size;
--	u8 ackp, idx;
-+	u16 seqno, head, size, idx;
-+	u8 ackp;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index e4348e3b6389..2719cdecc1cb 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -2597,19 +2597,24 @@ int dcn20_validate_apply_pipe_split_flags(
  
- 	__skb_queue_tail(frames, skb);
+ 	/* Avoid split loop looks for lowest voltage level that allows most unsplit pipes possible */
+ 	if (avoid_split) {
++		int max_mpc_comb = context->bw_ctx.dml.vba.maxMpcComb;
++
+ 		for (i = 0, pipe_idx = 0; i < dc->res_pool->pipe_count; i++) {
+ 			if (!context->res_ctx.pipe_ctx[i].stream)
+ 				continue;
  
-@@ -239,7 +239,7 @@ out:
- }
+ 			for (vlevel_split = vlevel; vlevel <= context->bw_ctx.dml.soc.num_states; vlevel++)
+-				if (context->bw_ctx.dml.vba.NoOfDPP[vlevel][0][pipe_idx] == 1)
++				if (context->bw_ctx.dml.vba.NoOfDPP[vlevel][0][pipe_idx] == 1 &&
++						context->bw_ctx.dml.vba.ModeSupport[vlevel][0])
+ 					break;
+ 			/* Impossible to not split this pipe */
+ 			if (vlevel > context->bw_ctx.dml.soc.num_states)
+ 				vlevel = vlevel_split;
++			else
++				max_mpc_comb = 0;
+ 			pipe_idx++;
+ 		}
+-		context->bw_ctx.dml.vba.maxMpcComb = 0;
++		context->bw_ctx.dml.vba.maxMpcComb = max_mpc_comb;
+ 	}
  
- int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno,
--		       u16 ssn, u8 size)
-+		       u16 ssn, u16 size)
- {
- 	struct mt76_rx_tid *tid;
- 
-@@ -264,7 +264,7 @@ EXPORT_SYMBOL_GPL(mt76_rx_aggr_start);
- 
- static void mt76_rx_aggr_shutdown(struct mt76_dev *dev, struct mt76_rx_tid *tid)
- {
--	u8 size = tid->size;
-+	u16 size = tid->size;
- 	int i;
- 
- 	spin_lock_bh(&tid->lock);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index 8e4759bc8f59..37641ad14d49 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -241,8 +241,8 @@ struct mt76_rx_tid {
- 	struct delayed_work reorder_work;
- 
- 	u16 head;
--	u8 size;
--	u8 nframes;
-+	u16 size;
-+	u16 nframes;
- 
- 	u8 num;
- 
-@@ -788,7 +788,7 @@ int mt76_get_survey(struct ieee80211_hw *hw, int idx,
- void mt76_set_stream_caps(struct mt76_dev *dev, bool vht);
- 
- int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid,
--		       u16 ssn, u8 size);
-+		       u16 ssn, u16 size);
- void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid);
- 
- void mt76_wcid_key_setup(struct mt76_dev *dev, struct mt76_wcid *wcid,
+ 	/* Split loop sets which pipe should be split based on dml outputs and dc flags */
 -- 
 2.25.1
 
