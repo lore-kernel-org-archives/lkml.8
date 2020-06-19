@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B5E21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7A2217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579799;
-	bh=mqr9exFqAx+o9z9cMyeEzZd5rsb+pZimb4CE6tee+6Y=;
+	s=default; t=1592579804;
+	bh=8s7unfe+GuuuqKiQwBF2A355/C9ArBFhCefUl/pMFy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yhOKBF3HpZ9g8RDxr52hh2+lIS4JDjbdiPMbIzkWrNRwbcGrj15cxMNearIuseILP
-	 8KFFA90dEH1e6wzR2ghu8cNbN5ZcVzmtkAGF0Dl8feoYxYcxJkWuVNkQIDBc4QCDKn
-	 WbMcWPfv7f8L9zEYNg278/VJSlR4JzyMOOv6/6fU=
+	b=uLM9a4UuBONko4VCVBK8s4xuwED3H4hWKT4VnILR9VgKhnPTTGE7v6nyj3/3tkjz0
+	 l3uWL9VaDvFPXyEjDSofDfVSCuWZEUsrFykSQA6uFjMAUPATdginM1kAPZelM0fVjZ
+	 Lxo+MdTz1zxBoRENr8f0CU/HZYjoRACuHWqHa9P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbgFSPQh (ORCPT
+        id S2392488AbgFSPQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404085AbgFSPQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:32 -0400
+        id S2391927AbgFSPQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:16:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B36B2158C;
-        Fri, 19 Jun 2020 15:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFA9721582;
+        Fri, 19 Jun 2020 15:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579791;
-        bh=mqr9exFqAx+o9z9cMyeEzZd5rsb+pZimb4CE6tee+6Y=;
+        s=default; t=1592579796;
+        bh=8s7unfe+GuuuqKiQwBF2A355/C9ArBFhCefUl/pMFy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ft4R0eNT5quwIBqcTbhtk/88InDwx8werl7tIvekIUmfxz1SdXLAuKRJ6TewopwXi
-         KjoIB0tiNQe/Af1JPKzycmPIIB/nFWz3sYGvB5SKpRoDyY+6tK4HJKS0x8jDXc0u7I
-         NR0dScJw2llC/h/SkWSWr/WZMDDI26aYgFOHNu2M=
+        b=UOcZCRrlc6VDgAx/ezph/z8AXzBZmxpZIi+gkeT+2un/nRU8zBtgvyqVJfK9lO1V+
+         KOfUa2RXowVWXhwUttvPFxrZ/Nywg7q6Q7Y4XAkL1H5C1E2M5+pmUTk0M3aqWXznLF
+         iprSZV0zZBqhQbcMERmHC/YewsF4ZbttdFZj6Tyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Travis Downs <travis.downs@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 260/261] perf symbols: Fix debuginfo search for Ubuntu
-Date:   Fri, 19 Jun 2020 16:34:31 +0200
-Message-Id: <20200619141702.337817556@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 252/261] mtd: rawnand: pasemi: Fix the probe error path
+Date:   Fri, 19 Jun 2020 16:34:23 +0200
+Message-Id: <20200619141701.951193560@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,123 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 85afd35575a3c1a3a905722dde5ee70b49282e70 upstream.
+commit f51466901c07e6930435d30b02a21f0841174f61 upstream.
 
-Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
-debug symbol files, putting files expected to be in
-/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
-another dso_binary_type.
+nand_cleanup() is supposed to be called on error after a successful
+call to nand_scan() to free all NAND resources.
 
-Example on Ubuntu 20.04
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible, hence pointing it as the commit to
+fix for backporting purposes, even if this commit is not introducing
+any bug.
 
-  Before:
-
-    $ perf record -e intel_pt//u uname
-    Linux
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.030 MB perf.data ]
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
-
-  After:
-
-    $ perf script --call-trace | head -5
-           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
-           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
-           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-
-Reported-by: Travis Downs <travis.downs@gmail.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200526155207.9172-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-41-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/dso.c          |   16 ++++++++++++++++
- tools/perf/util/dso.h          |    1 +
- tools/perf/util/probe-finder.c |    1 +
- tools/perf/util/symbol.c       |    2 ++
- 4 files changed, 20 insertions(+)
+ drivers/mtd/nand/raw/pasemi_nand.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso
- 		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
- 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
- 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
-+		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
- 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
- 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
- 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
-@@ -129,6 +130,21 @@ int dso__read_binary_type_filename(const
- 		snprintf(filename + len, size - len, "%s", dso->long_name);
- 		break;
+--- a/drivers/mtd/nand/raw/pasemi_nand.c
++++ b/drivers/mtd/nand/raw/pasemi_nand.c
+@@ -146,7 +146,7 @@ static int pasemi_nand_probe(struct plat
+ 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
+ 		dev_err(dev, "Unable to register MTD device\n");
+ 		err = -ENODEV;
+-		goto out_lpc;
++		goto out_cleanup_nand;
+ 	}
  
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+		/*
-+		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
-+		 * /usr/lib/debug/lib when it is expected to be in
-+		 * /usr/lib/debug/usr/lib
-+		 */
-+		if (strlen(dso->long_name) < 9 ||
-+		    strncmp(dso->long_name, "/usr/lib/", 9)) {
-+			ret = -1;
-+			break;
-+		}
-+		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
-+		break;
-+
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 	{
- 		const char *last_slash;
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -30,6 +30,7 @@ enum dso_binary_type {
- 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
- 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
- 	DSO_BINARY_TYPE__GUEST_KMODULE,
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
+ 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
+@@ -154,6 +154,8 @@ static int pasemi_nand_probe(struct plat
  
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
+ 	return 0;
  
-@@ -1530,6 +1531,7 @@ static bool dso__is_compatible_symtab_ty
- 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
- 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
- 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
- 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
- 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
- 		return !kmod && dso->kernel == DSO_TYPE_USER;
++ out_cleanup_nand:
++	nand_cleanup(chip);
+  out_lpc:
+ 	release_region(lpcctl, 4);
+  out_ior:
 
 
