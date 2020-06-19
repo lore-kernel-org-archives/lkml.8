@@ -2,199 +2,136 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48996C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2497320809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592525567;
-	bh=rvKW+hIbAYj73rdDZn2HVrADx6qXHZ+iJvUCz4FW/R0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=BSze4m+HhvzK7DdxCW/nwJvjcAGBP0sjfn4B54mVxsQ+BGihw8vct9rFKL9pqiIxn
-	 VDHmeglOXKCN47c7tXfztD5Hqri2BrpIJiUZN/caYX7mEDBbiZS0Mk1s2Ei28QGS47
-	 E00GxhkIY8D/YMWCCoM8+fnyKGiTcH4zVDwjBE8s=
+	by mail.kernel.org (Postfix) with ESMTP id 25F72207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WcoHXo64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgFSAMp (ORCPT
+        id S1728554AbgFSATF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 20:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgFSAMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 20:12:44 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D303207D8;
-        Fri, 19 Jun 2020 00:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592525564;
-        bh=rvKW+hIbAYj73rdDZn2HVrADx6qXHZ+iJvUCz4FW/R0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=TNBs43wjOzdALfUplj59a+kTlLH+H9Z379NZlhBs5fGCYaOiZWhWWYV/tHwe7Eeyl
-         sH+VWs/bKXp/+TfQpxSv5YKqdi+UYPmhMhTcSHyDnqERGgzt9G0OU0hWb7xYL7O+UK
-         GRNFWESs8XHNxUbvDXm/sUvPgwDetB56EntYkfJs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5806B352264E; Thu, 18 Jun 2020 17:12:44 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 17:12:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 6/7] rcutorture: Add support to get the number of wakeups
- of main GP kthread
-Message-ID: <20200619001244.GG2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618202955.4024-6-joel@joelfernandes.org>
- <20200618224058.GD2723@paulmck-ThinkPad-P72>
- <20200619000156.GD40119@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619000156.GD40119@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 18 Jun 2020 20:19:05 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:51033 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgFSASF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 20:18:05 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200619001802epoutp010f2f759711b043fc60b955b5d9910787~ZydotO0M01214812148epoutp01B
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 00:18:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200619001802epoutp010f2f759711b043fc60b955b5d9910787~ZydotO0M01214812148epoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592525882;
+        bh=NOzT7vcRqkUZDzcSZQg51RrlT8m1JaJOcP0aBnou8x0=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=WcoHXo64NSq1YW4xtb0aUyA9BJuG3natt6KmHANxxr5X5LRPphn0hJLCnvXqgyI5H
+         DnDXQItbQVL8AMQijk2NO0tig42PMZ5zgddegilSbQ5ixAW8yB3dYbNQa5bk6tfKp4
+         ykz2dKDi0jZY8DWccDu5D3Auy8vMv516Eb04cKU8=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200619001801epcas1p25d0372cb0e391f0113c090f5210ea760~ZydoOis2a1582515825epcas1p2C;
+        Fri, 19 Jun 2020 00:18:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: RE: [RFC PATCH v2 4/5] scsi: ufs: L2P map management for HPB read
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <SN6PR04MB4640B1D4FBDF68A59D993F21FC9B0@SN6PR04MB4640.namprd04.prod.outlook.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01592525881606.JavaMail.epsvc@epcpadp2>
+Date:   Fri, 19 Jun 2020 09:12:20 +0900
+X-CMS-MailID: 20200619001220epcms2p8ab5f114df7a40f2694b8e87468582921
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
+References: <SN6PR04MB4640B1D4FBDF68A59D993F21FC9B0@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
+        <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
+        <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
+        <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
+        <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
+        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 08:01:56PM -0400, Joel Fernandes wrote:
-> On Thu, Jun 18, 2020 at 03:40:58PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 18, 2020 at 04:29:54PM -0400, Joel Fernandes (Google) wrote:
-> > > This is useful to check for any improvements or degradation related to
-> > > number of GP kthread wakeups during testing.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > This was a good way to collect the data for your testing, but
-> > we can expect rcutorture to only do so much.  ;-)
-> 
-> np, I will push this one into a git tag for the next time I need it ;)
+> +static void ufshpb_run_active_subregion_list(struct ufshpb_lu *hpb)
+> > +{
+> > +       struct ufshpb_region *rgn;
+> > +       struct ufshpb_subregion *srgn;
+> > +       struct ufshpb_map_ctx *mctx;
+> mctx  doesn't really do anything here
 
-Sounds like a plan!
+OK, I will delete it.
 
-							Thanx, Paul
-
-> thanks,
+> > +       unsigned long flags;
+> > +       int ret = 0;
+> > +
+> > +       spin_lock_irqsave(&hpb->rsp_list_lock, flags);
+> > +       while ((srgn = list_first_entry_or_null(&hpb->lh_act_srgn,
+> > +                                               struct ufshpb_subregion,
+> > +                                               list_act_srgn))) {
+> > +               list_del_init(&srgn->list_act_srgn);
+> > +               spin_unlock_irqrestore(&hpb->rsp_list_lock, flags);
+> > +
+> > +               rgn = hpb->rgn_tbl + srgn->rgn_idx;
+> > +               mctx = NULL;
+> > +               ret = ufshpb_add_region(hpb, rgn);
+> > +               if (ret)
+> > +                       break;
+> > +
+> > +               ret = ufshpb_issue_map_req(hpb, rgn, srgn);
+> > +               if (ret) {
+> > +                       dev_notice(&hpb->hpb_lu_dev,
+> > +                           "issue map_req failed. ret %d, region %d - %d\n",
+> > +                           ret, rgn->rgn_idx, srgn->srgn_idx);
+> > +                       break;
+> > +               }
+> > +               spin_lock_irqsave(&hpb->rsp_list_lock, flags);
+> > +       }
+> > +
+> > +       if (ret) {
+> > +               dev_notice(&hpb->hpb_lu_dev, "region %d - %d, will retry\n",
+> > +                          rgn->rgn_idx, srgn->srgn_idx);
+> > +               spin_lock_irqsave(&hpb->rsp_list_lock, flags);
+> > +               ufshpb_add_active_list(hpb, rgn, srgn);
+> > +       }
+> > +       spin_unlock_irqrestore(&hpb->rsp_list_lock, flags);
+> > +}
 > 
->  - Joel
 > 
-> 
-> > 							Thanx, Paul
-> > 
-> > > ---
-> > >  kernel/rcu/Kconfig.debug |  1 +
-> > >  kernel/rcu/rcu.h         |  2 ++
-> > >  kernel/rcu/rcutorture.c  | 23 ++++++++++++++++++++++-
-> > >  kernel/rcu/tree.c        |  7 +++++++
-> > >  4 files changed, 32 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> > > index 3cf6132a4bb9f..3323e3378af5a 100644
-> > > --- a/kernel/rcu/Kconfig.debug
-> > > +++ b/kernel/rcu/Kconfig.debug
-> > > @@ -50,6 +50,7 @@ config RCU_TORTURE_TEST
-> > >  	select TASKS_RCU
-> > >  	select TASKS_RUDE_RCU
-> > >  	select TASKS_TRACE_RCU
-> > > +	select SCHEDSTATS
-> > >  	default n
-> > >  	help
-> > >  	  This option provides a kernel module that runs torture tests
-> > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> > > index cf66a3ccd7573..7e867e81d9738 100644
-> > > --- a/kernel/rcu/rcu.h
-> > > +++ b/kernel/rcu/rcu.h
-> > > @@ -511,6 +511,7 @@ srcu_batches_completed(struct srcu_struct *sp) { return 0; }
-> > >  static inline void rcu_force_quiescent_state(void) { }
-> > >  static inline void show_rcu_gp_kthreads(void) { }
-> > >  static inline int rcu_get_gp_kthreads_prio(void) { return 0; }
-> > > +static inline struct task_struct *rcu_get_main_gp_kthread(void) { return 0; }
-> > >  static inline void rcu_fwd_progress_check(unsigned long j) { }
-> > >  #else /* #ifdef CONFIG_TINY_RCU */
-> > >  bool rcu_dynticks_zero_in_eqs(int cpu, int *vp);
-> > > @@ -519,6 +520,7 @@ unsigned long rcu_exp_batches_completed(void);
-> > >  unsigned long srcu_batches_completed(struct srcu_struct *sp);
-> > >  void show_rcu_gp_kthreads(void);
-> > >  int rcu_get_gp_kthreads_prio(void);
-> > > +struct task_struct *rcu_get_main_gp_kthread(void);
-> > >  void rcu_fwd_progress_check(unsigned long j);
-> > >  void rcu_force_quiescent_state(void);
-> > >  extern struct workqueue_struct *rcu_gp_wq;
-> > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > > index d0d265304d147..959a1f84d6904 100644
-> > > --- a/kernel/rcu/rcutorture.c
-> > > +++ b/kernel/rcu/rcutorture.c
-> > > @@ -23,6 +23,7 @@
-> > >  #include <linux/rcupdate_wait.h>
-> > >  #include <linux/interrupt.h>
-> > >  #include <linux/sched/signal.h>
-> > > +#include <linux/sched/stat.h>
-> > >  #include <uapi/linux/sched/types.h>
-> > >  #include <linux/atomic.h>
-> > >  #include <linux/bitops.h>
-> > > @@ -460,9 +461,29 @@ static void rcu_sync_torture_init(void)
-> > >  	INIT_LIST_HEAD(&rcu_torture_removed);
-> > >  }
-> > >  
-> > > +unsigned long rcu_gp_nr_wakeups;
-> > > +
-> > > +static void rcu_flavor_init(void)
-> > > +{
-> > > +	rcu_sync_torture_init();
-> > > +
-> > > +	/* Make sure schedstat is enabled for GP thread wakeup count. */
-> > > +	force_schedstat_enabled();
-> > > +	rcu_gp_nr_wakeups = rcu_get_main_gp_kthread()->se.statistics.nr_wakeups;
-> > > +}
-> > > +
-> > > +static void rcu_flavor_cleanup(void)
-> > > +{
-> > > +	unsigned long now_nr = rcu_get_main_gp_kthread()->se.statistics.nr_wakeups;
-> > > +
-> > > +	pr_alert("End-test: Cleanup: Total GP-kthread wakeups: %lu\n",
-> > > +		now_nr - rcu_gp_nr_wakeups);
-> > > +}
-> > > +
-> > >  static struct rcu_torture_ops rcu_ops = {
-> > >  	.ttype		= RCU_FLAVOR,
-> > > -	.init		= rcu_sync_torture_init,
-> > > +	.init		= rcu_flavor_init,
-> > > +	.cleanup	= rcu_flavor_cleanup,
-> > >  	.readlock	= rcu_torture_read_lock,
-> > >  	.read_delay	= rcu_read_delay,
-> > >  	.readunlock	= rcu_torture_read_unlock,
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index c3bae7a83d792..a3a175feb310a 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -175,6 +175,13 @@ int rcu_get_gp_kthreads_prio(void)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
-> > >  
-> > > +/* Retrieve RCU's main GP kthread task_struct */
-> > > +struct task_struct *rcu_get_main_gp_kthread(void)
-> > > +{
-> > > +	return rcu_state.gp_kthread;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(rcu_get_main_gp_kthread);
-> > > +
-> > >  /*
-> > >   * Number of grace periods between delays, normalized by the duration of
-> > >   * the delay.  The longer the delay, the more the grace periods between
-> > > -- 
-> > > 2.27.0.111.gc72c7da667-goog
-> > > 
