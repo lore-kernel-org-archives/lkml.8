@@ -2,98 +2,110 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC66D2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848062078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 06:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="MgSsavce"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TbEJ3ffF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgFSGU4 (ORCPT
+        id S1726928AbgFSG0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:20:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:49909 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgFSGUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 02:20:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49p7wL5jVwz9sRk;
-        Fri, 19 Jun 2020 16:20:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592547653;
-        bh=EKAlwH7KMWYrcFWL23SicxqJVWA6PUXsyMOdTXnR/PY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=MgSsavcewAYAsBdDFbtoBeCs4pwI8Pw44ofaqZsWzbBvq/8XIIX5HBYIj1OGZ1RBH
-         SBR3aXYv3KyrTy7uZZA6Ur26SBqzW3f7GzJbauWhV9BiSvkNmgcZwl45966TlljNL0
-         0nC02luelmCpLqXFfsCx2pS9OC+R6l8V+mpwjFC5NjZuUC84niSlpcfs65KBIo7uW4
-         0a5huAuSz3bWTfax5WFGP6PRj+NVuer2xaCuJpOiGu5FbQmcmIXXAcEr+86kSl8LY3
-         K0TG3L7/8QwVal78sg2tT7Pb2WSUFxZN19KK+34iL6sa2mMOupHRyg6ziGP1+vzjs0
-         fHbErT7mhl2zA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Tony Luck <tony.luck@intel.com>, Helge Deller <deller@gmx.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: rename probe_kernel_* and probe_user_*
-In-Reply-To: <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
-References: <20200617073755.8068-1-hch@lst.de> <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
-Date:   Fri, 19 Jun 2020 16:21:18 +1000
-Message-ID: <87lfkjd19d.fsf@mpe.ellerman.id.au>
+        Fri, 19 Jun 2020 02:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgFSG0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 02:26:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511D3C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 23:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=U+XtLWpHPp9STA62dagelcykteGUqdAd/GAg50BIhdU=; b=TbEJ3ffF0kJIocQBwOa24HmyE4
+        oMV5vl7GwSYxs+Fb/R4EXWkrdh/ZouwrOTUyBd7BevL5i3XsqShCdxXQn5+u23f0l7kOHs8eYSkOd
+        AEpR32vxNzUHuwuXlQwOO8xz3F0Ub8zThpMSALDhlDBoc4Z44eBXOrsAzBTt2edwyza3PFJ9UpO9b
+        WIKCUE07lCKZk1hB+Yyrof3oTUn7S/kSJWzKxwj/HGoY8GlurNvoLPxMoht/jz6tDI8alGI6aaVW/
+        JLJX3GA4vaeHoCRShYqHcx8xyXiVf4ZKbnQVwinNK2NMJbOqxH7TbNk6Cc+Mprm0OgVG7DTJtuAo5
+        fv0EUKqw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmATu-0002k2-Au; Fri, 19 Jun 2020 06:26:30 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        linux-ntfs-dev@lists.sourceforge.net
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] ntfs: delete extraneous semicolons
+Message-ID: <b7762026-6390-128d-a253-9b66f8f43708@infradead.org>
+Date:   Thu, 18 Jun 2020 23:26:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> [ Explicitly added architecture lists and developers to the cc to make
-> this more visible ]
->
-> On Wed, Jun 17, 2020 at 12:38 AM Christoph Hellwig <hch@lst.de> wrote:
->>
->> Andrew and I decided to drop the patches implementing your suggested
->> rename of the probe_kernel_* and probe_user_* helpers from -mm as there
->> were way to many conflicts.  After -rc1 might be a good time for this as
->> all the conflicts are resolved now.
->
-> So I've merged this renaming now, together with my changes to make
-> 'get_kernel_nofault()' look and act a lot more like 'get_user()'.
->
-> It just felt wrong (and potentially dangerous) to me to have a
-> 'get_kernel_nofault()' naming that implied semantics that we're all
-> familiar with from 'get_user()', but acting very differently.
->
-> But part of the fixups I made for the type checking are for
-> architectures where I didn't even compile-test the end result. I
-> looked at every case individually, and the patch looks sane, but I
-> could have screwed something up.
->
-> Basically, 'get_kernel_nofault()' doesn't do the same automagic type
-> munging from the pointer to the target that 'get_user()' does, but at
-> least now it checks that the types are superficially compatible.
-> There should be build failures if they aren't, but I hopefully fixed
-> everything up properly for all architectures.
->
-> This email is partly to ask people to double-check, but partly just as
-> a heads-up so that _if_ I screwed something up, you'll have the
-> background and it won't take you by surprise.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-The powerpc changes look right, compile cleanly and seem to work
-correctly.
+Coccinelle scripts report:
 
-cheers
+fs/ntfs/lcnalloc.c:902:2-3: Unneeded semicolon
+fs/ntfs/super.c:1615:2-3: Unneeded semicolon
+fs/ntfs/super.c:1684:2-3: Unneeded semicolon
+
+so remove the extraneous semicolons.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Anton Altaparmakov <anton@tuxera.com>
+Cc: linux-ntfs-dev@lists.sourceforge.net
+---
+ fs/ntfs/lcnalloc.c |    2 +-
+ fs/ntfs/super.c    |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+--- linux-next-20200617.orig/fs/ntfs/lcnalloc.c
++++ linux-next-20200617/fs/ntfs/lcnalloc.c
+@@ -899,7 +899,7 @@ s64 __ntfs_cluster_free(ntfs_inode *ni,
+ 		}
+ 		/* We have freed @to_free real clusters. */
+ 		real_freed = to_free;
+-	};
++	}
+ 	/* Go to the next run and adjust the number of clusters left to free. */
+ 	++rl;
+ 	if (count >= 0)
+--- linux-next-20200617.orig/fs/ntfs/super.c
++++ linux-next-20200617/fs/ntfs/super.c
+@@ -1612,7 +1612,7 @@ read_partial_attrdef_page:
+ 		memcpy((u8*)vol->attrdef + (index++ << PAGE_SHIFT),
+ 				page_address(page), size);
+ 		ntfs_unmap_page(page);
+-	};
++	}
+ 	if (size == PAGE_SIZE) {
+ 		size = i_size & ~PAGE_MASK;
+ 		if (size)
+@@ -1681,7 +1681,7 @@ read_partial_upcase_page:
+ 		memcpy((char*)vol->upcase + (index++ << PAGE_SHIFT),
+ 				page_address(page), size);
+ 		ntfs_unmap_page(page);
+-	};
++	}
+ 	if (size == PAGE_SIZE) {
+ 		size = i_size & ~PAGE_MASK;
+ 		if (size)
+
+
