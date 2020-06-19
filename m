@@ -2,173 +2,120 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE11621707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637DF21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="p8LdRkUm";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="p8LdRkUm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1BTs/NP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405613AbgFSQV2 (ORCPT
+        id S2394693AbgFSQVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:21:28 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53378 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390663AbgFSPAw (ORCPT
+        Fri, 19 Jun 2020 12:21:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28824 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390661AbgFSPAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A11F68EE181;
-        Fri, 19 Jun 2020 08:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1592578846;
-        bh=zaOfjMLUicfvkFqmOv15FzKipwPwAhku6LgsJnkaFCQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=p8LdRkUmPri2dS1AzivVmaFMMNqMakT3EjlWS2ud4bHoPUae0D1rxgD3z1IuUPLeQ
-         jGBdWsfgGCHgTRRkzl/rp6uCndRHHKDQ4Wnw3jBbXfgHDaj+UpNH9vJKs8l3XEUejs
-         p5yJs5WAnMhSK3Ga2lYWHsIYcy+D6tQxshS0U4Xs=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vTJBUrhddUy4; Fri, 19 Jun 2020 08:00:46 -0700 (PDT)
-Received: from jarvis (unknown [216.116.10.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jun 2020 11:00:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592578846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZKQQ3TSN3kM3Cb8dTgCKmUaoa0Mo3XfrlHvCQ5ywFhw=;
+        b=f1BTs/NPzetpirbEi3J7FSXEXl0YMZQxalxi79y8DuBQA6iaQ6euChvam0dEHSj0Q5wJZG
+        Wt/dJqFNFsVL/iERWBIN8siBcNJpiWL+rRGbvVuJQxoqJe5Ii174ZWEVsZXNj31YDwrqVY
+        NoXXWKkEaiPCoK2Rxs6Iu9/wurtU9zY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-396-tYa_nW_TODO6rlo-ACXqqw-1; Fri, 19 Jun 2020 11:00:43 -0400
+X-MC-Unique: tYa_nW_TODO6rlo-ACXqqw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9CE508EE149;
-        Fri, 19 Jun 2020 08:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1592578846;
-        bh=zaOfjMLUicfvkFqmOv15FzKipwPwAhku6LgsJnkaFCQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=p8LdRkUmPri2dS1AzivVmaFMMNqMakT3EjlWS2ud4bHoPUae0D1rxgD3z1IuUPLeQ
-         jGBdWsfgGCHgTRRkzl/rp6uCndRHHKDQ4Wnw3jBbXfgHDaj+UpNH9vJKs8l3XEUejs
-         p5yJs5WAnMhSK3Ga2lYWHsIYcy+D6tQxshS0U4Xs=
-Message-ID: <1592578844.4369.5.camel@HansenPartnership.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Jerome Forissier <jerome@forissier.org>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
-Date:   Fri, 19 Jun 2020 08:00:44 -0700
-In-Reply-To: <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
-         <20200604175851.758-2-maxim.uvarov@linaro.org>
-         <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
-         <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
-         <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
-         <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
-         <1592507935.15159.5.camel@HansenPartnership.com>
-         <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A757F107ACF4;
+        Fri, 19 Jun 2020 15:00:42 +0000 (UTC)
+Received: from gimli.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63A695C1D0;
+        Fri, 19 Jun 2020 15:00:39 +0000 (UTC)
+Subject: [PATCH v2] vfio: Cleanup allowed driver naming
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        cohuck@redhat.com
+Date:   Fri, 19 Jun 2020 09:00:39 -0600
+Message-ID: <159257872055.20595.16949396190256140801.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-19 at 13:42 +0530, Sumit Garg wrote:
-> On Fri, 19 Jun 2020 at 00:49, James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > 
-> > On Thu, 2020-06-18 at 10:42 +0530, Sumit Garg wrote:
-> > > On Thu, 18 Jun 2020 at 10:29, Sumit Garg <sumit.garg@linaro.org>
-> > > wrote:
-> > 
-> > [...]
-> > > > > typedef struct
-> > > > > {
-> > > > >         uint32_t timeLow;
-> > > > >         uint16_t timeMid;
-> > > > >         uint16_t timeHiAndVersion;
-> > > > >         uint8_t clockSeqAndNode[8];
-> > > > > } TEE_UUID;
-> > > > > 
-> > > > > (GlobalPlatform TEE Internal Core API spec v1.2.1 section
-> > > > > 3.2.4)
-> > > > > 
-> > > > > - The spec does not mandate any particular endianness and
-> > > > > simply
-> > > > > warnsabout possible issues if secure and non-secure worlds
-> > > > > differ
-> > > > > in endianness.
-> > > > > - OP-TEE uses %pUl assuming that host order is little endian
-> > > > > (that is true for the Arm platforms that run OP-TEE
-> > > > > currently).
-> > > > > By the same logic %pUl should be fine in the kernel.
-> > > 
-> > > I think Linux adheres to this RFC [1] for UUID byte order. See
-> > > below
-> > > snippet from section: "Layout and Byte Order":
-> > > 
-> > >    The fields are encoded as 16 octets, with the sizes and order
-> > > of
-> > > the
-> > >    fields defined above, and with each field encoded with the
-> > > Most
-> > >    Significant Byte first (known as network byte order).  Note
-> > > that
-> > > the
-> > >    field names, particularly for multiplexed fields, follow
-> > > historical
-> > >    practice.
-> > 
-> > Actually, that's not quite true.  We used to support both little
-> > and
-> > big endian uuids until we realised it was basically microsoft vs
-> > everyone else (as codified by RFC 4122).  Now we support UUIDs
-> > which
-> > are big endian and GUIDs which are little endian.  This was the
-> > commit
-> > that sorted out the confusion:
-> > 
-> > commit f9727a17db9bab71ddae91f74f11a8a2f9a0ece6
-> > Author: Christoph Hellwig <hch@lst.de>
-> > Date:   Wed May 17 10:02:48 2017 +0200
-> > 
-> >     uuid: rename uuid types
-> > 
-> 
-> Thanks for providing the background here.
-> 
-> > so if you're using a little endian uuid, you should probably be
-> > using GUID for TEE_UUID.
-> 
-> IMO, using GUID in kernel for TEE_UUID in OP-TEE OS will lead to
-> deviation from GlobalPlatform TEE client spec [1] as the spec only
-> references it as UUID and we would like to keep kernel TEE client
-> interface to be compatible with GP specs.
-> 
-> [1] https://globalplatform.org/specs-library/tee-client-api-specifica
-> tion/
+No functional change, avoid non-inclusive naming schemes.
 
-So having read the above, you know uuid_t is for big endian and guid_t
-for little endian.  However in your patch:
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
-> -static int optee_register_device(const uuid_t *device_uuid, u32
-> device_id)
-> +static int optee_register_device(const uuid_t *device_uuid)
-> 
+v2: Wrap vfio_dev_driver_allowed to 80 column for consistency,
+    checkpatch no longer warns about this.
 
-You're using uuid_t for little endian, you should be using guid_t. 
-It's not about consistency with the OP-TEE docs (although I'm pretty
-sure they don't mandate what kernel type to use), it's about
-consistency with what the kernel types mean.  When some checker detects
-your using little endian operations on a big endian structure (like in
-the prink for instance) they're going to keep emailing you about it.
+ drivers/vfio/vfio.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-James
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index 580099afeaff..262ab0efd06c 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -627,9 +627,10 @@ static struct vfio_device *vfio_group_get_device(struct vfio_group *group,
+  * that error notification via MSI can be affected for platforms that handle
+  * MSI within the same IOVA space as DMA.
+  */
+-static const char * const vfio_driver_whitelist[] = { "pci-stub" };
++static const char * const vfio_driver_allowed[] = { "pci-stub" };
+ 
+-static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
++static bool vfio_dev_driver_allowed(struct device *dev,
++				    struct device_driver *drv)
+ {
+ 	if (dev_is_pci(dev)) {
+ 		struct pci_dev *pdev = to_pci_dev(dev);
+@@ -638,8 +639,8 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
+ 			return true;
+ 	}
+ 
+-	return match_string(vfio_driver_whitelist,
+-			    ARRAY_SIZE(vfio_driver_whitelist),
++	return match_string(vfio_driver_allowed,
++			    ARRAY_SIZE(vfio_driver_allowed),
+ 			    drv->name) >= 0;
+ }
+ 
+@@ -648,7 +649,7 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
+  * one of the following states:
+  *  - driver-less
+  *  - bound to a vfio driver
+- *  - bound to a whitelisted driver
++ *  - bound to an otherwise allowed driver
+  *  - a PCI interconnect device
+  *
+  * We use two methods to determine whether a device is bound to a vfio
+@@ -674,7 +675,7 @@ static int vfio_dev_viable(struct device *dev, void *data)
+ 	}
+ 	mutex_unlock(&group->unbound_lock);
+ 
+-	if (!ret || !drv || vfio_dev_whitelisted(dev, drv))
++	if (!ret || !drv || vfio_dev_driver_allowed(dev, drv))
+ 		return 0;
+ 
+ 	device = vfio_group_get_device(group, dev);
 
