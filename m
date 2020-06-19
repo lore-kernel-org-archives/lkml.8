@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 444A221835
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64396217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584010;
-	bh=cNEPnpJuqJuNxVcYVsD15L0dyU2BmeLWUz8WDDfN57w=;
+	s=default; t=1592584015;
+	bh=/sfETGudfvtXrKEqBs/kMint8AgPuzqGMFoW0I246Kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrTsbRnVcj8s+RLkofULxJnqr0Id37QYqT7LjshmWsENIHPs2JBUDp85pQ7u4TAqY
-	 EwkyyHIxX3Ge2I4GG5s6C1PSvUL3qh6aWVERi2Jn0i1XgfTsAVioLjjDhUs8V27uE4
-	 XaYchdy/M8q/+ik1hG82Epp8/KNBBhomZ7nciqtc=
+	b=krbYIDm+hio0OFzwUt+iUNRjN1xsbM0+XOZ0D3LXq2a3Vvg75HgbFnwzztwOzJocb
+	 JzlrrlvKZTiBw6KnzfWpjJnNTWS90BIJmR4GgNuBnzVyO4OxQ80VNvXNfasTSU3hSm
+	 GsJ4Pgn1JX7it64ClvdZ9GzqTyONzA6nK8oTVVLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394842AbgFSQ0s (ORCPT
+        id S2390115AbgFSO4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390126AbgFSO4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:56:44 -0400
+        id S2390073AbgFSO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C5C421852;
-        Fri, 19 Jun 2020 14:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A47D217D8;
+        Fri, 19 Jun 2020 14:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578604;
-        bh=cNEPnpJuqJuNxVcYVsD15L0dyU2BmeLWUz8WDDfN57w=;
+        s=default; t=1592578585;
+        bh=/sfETGudfvtXrKEqBs/kMint8AgPuzqGMFoW0I246Kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLsCfj3xvz8vz/gQPj7rZysU8EpQ76VpVHG08ka7RJKEFafheO5rwzZaY241Z+Avm
-         U9/4eX1+Wi2lYdZPTTFWaPiBE3GpW5Po3lJsBdy9jXqhVuEwfPyHigjc3M0y8Wckp1
-         9eBXRJFT5jjdEafN+Q5VB48bLdXGPgoxPV7JOuJo=
+        b=0Frj0380adKK0zwnyJJhaCuEGb+u8W31BABx6xOxAh/JaNbuu8ysG1GDnRai5SFDO
+         WQgBGBLqxFeOy5ynL/OlOPn2vxHfrwUl2Cg/niXF/A3Z4FrJ2Tmir8nVmJKaed8amM
+         7WkGSbhrRbH2PRmJxjoFgNSGFnyMaucAXtu08OW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 084/267] mm/slub: fix a memory leak in sysfs_slab_add()
-Date:   Fri, 19 Jun 2020 16:31:09 +0200
-Message-Id: <20200619141652.922828053@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 078/267] ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+Date:   Fri, 19 Jun 2020 16:31:03 +0200
+Message-Id: <20200619141652.630602163@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -65,77 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit dde3c6b72a16c2db826f54b2d49bdea26c3534a2 upstream.
+commit abeaa85054ff8cfe8b99aafc5c70ea067e5d0908 upstream.
 
-syzkaller reports for memory leak when kobject_init_and_add() returns an
-error in the function sysfs_slab_add() [1]
+Free wmi later after cmd urb has been killed, as urb cb will access wmi.
 
-When this happened, the function kobject_put() is not called for the
-corresponding kobject, which potentially leads to memory leak.
+the case reported by syzbot:
+https://lore.kernel.org/linux-usb/0000000000000002fc05a1d61a68@google.com
+BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500
+drivers/net/wireless/ath/ath9k/wmi.c:215
+Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
 
-This patch fixes the issue by calling kobject_put() even if
-kobject_init_and_add() fails.
+Call Trace:
+<IRQ>
+ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
+ath9k_htc_rx_msg+0x2da/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ath9k_hif_usb_reg_in_cb+0x1ba/0x630
+drivers/net/wireless/ath/ath9k/hif_usb.c:718
+__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+expire_timers kernel/time/timer.c:1449 [inline]
+__run_timers kernel/time/timer.c:1773 [inline]
+__run_timers kernel/time/timer.c:1740 [inline]
+run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
 
-[1]
-  BUG: memory leak
-  unreferenced object 0xffff8880a6d4be88 (size 8):
-  comm "syz-executor.3", pid 946, jiffies 4295772514 (age 18.396s)
-  hex dump (first 8 bytes):
-    70 69 64 5f 33 00 ff ff                          pid_3...
-  backtrace:
-     kstrdup+0x35/0x70 mm/util.c:60
-     kstrdup_const+0x3d/0x50 mm/util.c:82
-     kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
-     kobject_set_name_vargs+0x55/0x130 lib/kobject.c:289
-     kobject_add_varg lib/kobject.c:384 [inline]
-     kobject_init_and_add+0xd8/0x170 lib/kobject.c:473
-     sysfs_slab_add+0x1d8/0x290 mm/slub.c:5811
-     __kmem_cache_create+0x50a/0x570 mm/slub.c:4384
-     create_cache+0x113/0x1e0 mm/slab_common.c:407
-     kmem_cache_create_usercopy+0x1a1/0x260 mm/slab_common.c:505
-     kmem_cache_create+0xd/0x10 mm/slab_common.c:564
-     create_pid_cachep kernel/pid_namespace.c:54 [inline]
-     create_pid_namespace kernel/pid_namespace.c:96 [inline]
-     copy_pid_ns+0x77c/0x8f0 kernel/pid_namespace.c:148
-     create_new_namespaces+0x26b/0xa30 kernel/nsproxy.c:95
-     unshare_nsproxy_namespaces+0xa7/0x1e0 kernel/nsproxy.c:229
-     ksys_unshare+0x3d2/0x770 kernel/fork.c:2969
-     __do_sys_unshare kernel/fork.c:3037 [inline]
-     __se_sys_unshare kernel/fork.c:3035 [inline]
-     __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3035
-     do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-
-Fixes: 80da026a8e5d ("mm/slub: fix slab double-free in case of duplicate sysfs filename")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200602115033.1054-1-wanghai38@huawei.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200404041838.10426-3-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/hif_usb.c      |    5 +++--
+ drivers/net/wireless/ath/ath9k/hif_usb.h      |    1 +
+ drivers/net/wireless/ath/ath9k/htc_drv_init.c |   10 +++++++---
+ drivers/net/wireless/ath/ath9k/wmi.c          |    5 ++++-
+ drivers/net/wireless/ath/ath9k/wmi.h          |    3 ++-
+ 5 files changed, 17 insertions(+), 7 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5738,8 +5738,10 @@ static int sysfs_slab_add(struct kmem_ca
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -973,7 +973,7 @@ err:
+ 	return -ENOMEM;
+ }
  
- 	s->kobj.kset = kset;
- 	err = kobject_init_and_add(&s->kobj, &slab_ktype, NULL, "%s", name);
--	if (err)
-+	if (err) {
-+		kobject_put(&s->kobj);
- 		goto out;
-+	}
+-static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
++void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
+ {
+ 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
+ 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
+@@ -1341,8 +1341,9 @@ static void ath9k_hif_usb_disconnect(str
  
- 	err = sysfs_create_group(&s->kobj, &slab_attr_group);
- 	if (err)
+ 	if (hif_dev->flags & HIF_USB_READY) {
+ 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
+-		ath9k_htc_hw_free(hif_dev->htc_handle);
+ 		ath9k_hif_usb_dev_deinit(hif_dev);
++		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
++		ath9k_htc_hw_free(hif_dev->htc_handle);
+ 	}
+ 
+ 	usb_set_intfdata(interface, NULL);
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.h
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
+@@ -133,5 +133,6 @@ struct hif_device_usb {
+ 
+ int ath9k_hif_usb_init(void);
+ void ath9k_hif_usb_exit(void);
++void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev);
+ 
+ #endif /* HTC_USB_H */
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+@@ -933,8 +933,9 @@ err_init:
+ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
+ 			   u16 devid, char *product, u32 drv_info)
+ {
+-	struct ieee80211_hw *hw;
++	struct hif_device_usb *hif_dev;
+ 	struct ath9k_htc_priv *priv;
++	struct ieee80211_hw *hw;
+ 	int ret;
+ 
+ 	hw = ieee80211_alloc_hw(sizeof(struct ath9k_htc_priv), &ath9k_htc_ops);
+@@ -969,7 +970,10 @@ int ath9k_htc_probe_device(struct htc_ta
+ 	return 0;
+ 
+ err_init:
+-	ath9k_deinit_wmi(priv);
++	ath9k_stop_wmi(priv);
++	hif_dev = (struct hif_device_usb *)htc_handle->hif_dev;
++	ath9k_hif_usb_dealloc_urbs(hif_dev);
++	ath9k_destoy_wmi(priv);
+ err_free:
+ 	ieee80211_free_hw(hw);
+ 	return ret;
+@@ -984,7 +988,7 @@ void ath9k_htc_disconnect_device(struct
+ 			htc_handle->drv_priv->ah->ah_flags |= AH_UNPLUGGED;
+ 
+ 		ath9k_deinit_device(htc_handle->drv_priv);
+-		ath9k_deinit_wmi(htc_handle->drv_priv);
++		ath9k_stop_wmi(htc_handle->drv_priv);
+ 		ieee80211_free_hw(htc_handle->drv_priv->hw);
+ 	}
+ }
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -112,14 +112,17 @@ struct wmi *ath9k_init_wmi(struct ath9k_
+ 	return wmi;
+ }
+ 
+-void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
++void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
+ {
+ 	struct wmi *wmi = priv->wmi;
+ 
+ 	mutex_lock(&wmi->op_mutex);
+ 	wmi->stopped = true;
+ 	mutex_unlock(&wmi->op_mutex);
++}
+ 
++void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
++{
+ 	kfree(priv->wmi);
+ }
+ 
+--- a/drivers/net/wireless/ath/ath9k/wmi.h
++++ b/drivers/net/wireless/ath/ath9k/wmi.h
+@@ -179,7 +179,6 @@ struct wmi {
+ };
+ 
+ struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv);
+-void ath9k_deinit_wmi(struct ath9k_htc_priv *priv);
+ int ath9k_wmi_connect(struct htc_target *htc, struct wmi *wmi,
+ 		      enum htc_endpoint_id *wmi_ctrl_epid);
+ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
+@@ -189,6 +188,8 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum
+ void ath9k_wmi_event_tasklet(unsigned long data);
+ void ath9k_fatal_work(struct work_struct *work);
+ void ath9k_wmi_event_drain(struct ath9k_htc_priv *priv);
++void ath9k_stop_wmi(struct ath9k_htc_priv *priv);
++void ath9k_destoy_wmi(struct ath9k_htc_priv *priv);
+ 
+ #define WMI_CMD(_wmi_cmd)						\
+ 	do {								\
 
 
