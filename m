@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A456DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2BB621841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EA02193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578962;
-	bh=M7PwrjrfdXODKnOalC4KUpH+lCIGVEORQmdBrMCqeqI=;
+	s=default; t=1592578965;
+	bh=XWha5jXmnuxZxzTaqc8WB8sPmWy5ZZSU3aqYtCVwTZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2b7NIp+PggPj0Ub34CE8TdX8cFEBXKqnkZHoH6mIELIx7s6FechdFYmtoL0it/CD
-	 6Ju9aQ2VJDDg9pAZYWkYN6e9jazpHJqIrfnFeCoQx4mPBI3wKsnL69EHCwCYCLNIoH
-	 Fi189Tzq0DLSvJR0u6hM5VVCRXMUgTrCqHM9dQOQ=
+	b=kWJSPzFTrJGwUP46ohmc0/2QfWRyCJk5epjm325A40MdkYF35PuLPV5JnnPLrZ4vE
+	 vAYkUfM84iZ+E7c9obXYf81zYqAOe2cf6lBksWDV2Rouy1I0W5uxmVfXVUzTuIkDzu
+	 MyW1z73bX7suHB9T0j9cV8BQiXlS0Ikvs70fPY0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390864AbgFSPCi (ORCPT
+        id S2390879AbgFSPCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58488 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390086AbgFSPCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:01 -0400
+        id S2390773AbgFSPCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE0820734;
-        Fri, 19 Jun 2020 15:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0036206DB;
+        Fri, 19 Jun 2020 15:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578920;
-        bh=M7PwrjrfdXODKnOalC4KUpH+lCIGVEORQmdBrMCqeqI=;
+        s=default; t=1592578923;
+        bh=XWha5jXmnuxZxzTaqc8WB8sPmWy5ZZSU3aqYtCVwTZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRlvGArJgNPbN73sxC9ZAXAOscsCptuUkxUDPns+pOrbr/qAn7CnsmFXF5gkbp2Ez
-         LOm22lwu4+Sn+cXc+JlGscff01u6b6Vf7pSBSGmdJqkg1Envu2I7CwAUs9D3vM+t69
-         UITTOPKY6sdSQaOqB3w9sgc6mJA9UAMI3kLul3Dk=
+        b=azR8cR83HJHEXWRTyzM9xiFGJbVE5QeYHUtLOMmOxXj7w1jxw/9zz7lIjEd119cye
+         8qqbsj2qWaQ3KRzArU/HaSISVTjOpfO8LTlakBSR8NPo4/JOLRJlr6GpMQl3ZMo3Wr
+         wwN2XyBUXgTqxa4zqW13FCeHKOIXOzGudT9sV1MY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Woods <brian.woods@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jia Zhang <qianyue.zj@alibaba-inc.com>,
-        linux-hwmon@vger.kernel.org, linux-pci@vger.kernel.org,
-        Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 207/267] x86/amd_nb: Add PCI device IDs for family 17h, model 30h
-Date:   Fri, 19 Jun 2020 16:33:12 +0200
-Message-Id: <20200619141658.664008157@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 208/267] PCI: add USR vendor id and use it in r8169 and w6692 driver
+Date:   Fri, 19 Jun 2020 16:33:13 +0200
+Message-Id: <20200619141658.711479858@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -68,89 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Woods, Brian <Brian.Woods@amd.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit be3518a16ef270e3b030a6ae96055f83f51bd3dd ]
+[ Upstream commit 9206eb0bc5679d06d2f54b9db86fe2b9a55e07e4 ]
 
-Add the PCI device IDs for family 17h model 30h, since they are needed
-for accessing various registers via the data fabric/SMN interface.
+The PCI vendor id of U.S. Robotics isn't defined in pci_ids.h so far,
+only ISDN driver w6692 has a private definition. Move the definition
+to pci_ids.h and use it in the r8169 driver too.
 
-Signed-off-by: Brian Woods <brian.woods@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Clemens Ladisch <clemens@ladisch.de>
-CC: Guenter Roeck <linux@roeck-us.net>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Jean Delvare <jdelvare@suse.com>
-CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
-CC: <linux-hwmon@vger.kernel.org>
-CC: <linux-pci@vger.kernel.org>
-CC: Pu Wen <puwen@hygon.cn>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/20181106200754.60722-4-brian.woods@amd.com
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/amd_nb.c | 6 ++++++
- include/linux/pci_ids.h  | 1 +
- 2 files changed, 7 insertions(+)
+ drivers/isdn/hardware/mISDN/w6692.c  | 3 ---
+ drivers/net/ethernet/realtek/r8169.c | 2 +-
+ include/linux/pci_ids.h              | 2 ++
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index bf440af5ff9c..b95db8ce83bf 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -16,8 +16,10 @@
- 
- #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
- #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
-+#define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
- #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
-+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
- 
- /* Protect the PCI config register pairs used for SMN and DF indirect access. */
- static DEFINE_MUTEX(smn_mutex);
-@@ -27,9 +29,11 @@ static u32 *flush_words;
- static const struct pci_device_id amd_root_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_ROOT) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
- 	{}
+diff --git a/drivers/isdn/hardware/mISDN/w6692.c b/drivers/isdn/hardware/mISDN/w6692.c
+index 5acf6ab67cd3..6f60aced11c5 100644
+--- a/drivers/isdn/hardware/mISDN/w6692.c
++++ b/drivers/isdn/hardware/mISDN/w6692.c
+@@ -52,10 +52,7 @@ static const struct w6692map  w6692_map[] =
+ 	{W6692_USR, "USR W6692"}
  };
  
-+
- #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
+-#ifndef PCI_VENDOR_ID_USR
+-#define PCI_VENDOR_ID_USR	0x16ec
+ #define PCI_DEVICE_ID_USR_6692	0x3409
+-#endif
  
- const struct pci_device_id amd_nb_misc_ids[] = {
-@@ -43,6 +47,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
- 	{}
- };
-@@ -56,6 +61,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
- 	{}
- };
+ struct w6692_ch {
+ 	struct bchannel		bch;
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index 807ef43a3cda..6df404e3dd27 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -229,7 +229,7 @@ static const struct pci_device_id rtl8169_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_DLINK,	0x4300), 0, 0, RTL_CFG_0 },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_DLINK,	0x4302), 0, 0, RTL_CFG_0 },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AT,		0xc107), 0, 0, RTL_CFG_0 },
+-	{ PCI_DEVICE(0x16ec,			0x0116), 0, 0, RTL_CFG_0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_USR,		0x0116), 0, 0, RTL_CFG_0 },
+ 	{ PCI_VENDOR_ID_LINKSYS,		0x1032,
+ 		PCI_ANY_ID, 0x0024, 0, 0, RTL_CFG_0 },
+ 	{ 0x0001,				0x8168,
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 857cfd6281a0..81c7af243a31 100644
+index 81c7af243a31..2792bca03088 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -547,6 +547,7 @@
- #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F4 0x1584
- #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
-+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
- #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
- #define PCI_DEVICE_ID_AMD_LANCE		0x2000
- #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+@@ -2362,6 +2362,8 @@
+ 
+ #define PCI_VENDOR_ID_SYNOPSYS		0x16c3
+ 
++#define PCI_VENDOR_ID_USR		0x16ec
++
+ #define PCI_VENDOR_ID_VITESSE		0x1725
+ #define PCI_DEVICE_ID_VITESSE_VSC7174	0x7174
+ 
 -- 
 2.25.1
 
