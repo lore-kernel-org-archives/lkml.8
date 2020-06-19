@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF61C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D25E21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583631;
-	bh=YizDRSUzjNO8ndVbmOGqc3pfS12tFWy066Lzh/CPDlk=;
+	s=default; t=1592583635;
+	bh=AWo+FzPtuscLoyhgxZsRwU07bUkaec074OF380jB8Z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZBLFO9r1RcELxTqPkoq3d9mX5rnJGG1YWGu6m0XjR3eDj5yffPdvcfIlsoeT33qS
-	 TcY9izvpHIvcWNjN2sApxx9niIVw+g6gWiSHWUTpw7MmhtsW84gcGkq9t68o22fA0T
-	 ApSHzj5pp4iirD4IOuaXaeiJmxiOkGzzR7ZGboo8=
+	b=u/4ErCnXskwFZr54h/SOYtdim7kMlu3UiA38G1oVDq93t6A8GqiCWDJvrnqtNTR5f
+	 nIjIJwsdVrqDwui0fYmqf7H7ITGBkPMUDqwd7vJkGF897vchdEuEGnD50hZI7bcy4Z
+	 w+YxtmFn0GQpHgs6GMYf4Mi+9s5UFlTaJJUCD68s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394637AbgFSQU3 (ORCPT
+        id S2394645AbgFSQUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390717AbgFSPBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:33 -0400
+        id S2390410AbgFSPBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E2321582;
-        Fri, 19 Jun 2020 15:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A3720776;
+        Fri, 19 Jun 2020 15:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578892;
-        bh=YizDRSUzjNO8ndVbmOGqc3pfS12tFWy066Lzh/CPDlk=;
+        s=default; t=1592578884;
+        bh=AWo+FzPtuscLoyhgxZsRwU07bUkaec074OF380jB8Z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pF6sPMxrWNEL1vvuw58mBATPq2ze7SxuUVqquIBlxVQ2j1XBaZP0RpOKGDGq0HqbT
-         WaKvI7NUFyLcwJCNYmJKLcoshSO9W3hWkiUbYe1IxOYSDYi7TbRuA9KkA1MwDBJshh
-         1F59FjrYOaawANtYzZ+UunJS9P5nauAdKQE0gc1I=
+        b=WrS+LSY+I5YdsRWXaiZOK+NfktKr2omYsFrmHPiC6tywGfIUrzbCrENqQN2VdI4qV
+         VZfhwAMmK14zkdNlW4hjObErXi2AcOSVpVtH1XTi58yP6sx0zT4HV/uH1c8JmULIRB
+         FkZeeX5oLg3usO/rav0clcizFRrR6Sc8B3QQc2Mw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.19 197/267] ext4: fix error pointer dereference
-Date:   Fri, 19 Jun 2020 16:33:02 +0200
-Message-Id: <20200619141658.201246929@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 4.19 194/267] ima: Directly assign the ima_default_policy pointer to ima_rules
+Date:   Fri, 19 Jun 2020 16:32:59 +0200
+Message-Id: <20200619141658.058225592@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -62,65 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 8418897f1bf87da0cb6936489d57a4320c32c0af upstream.
+commit 067a436b1b0aafa593344fddd711a755a58afb3b upstream.
 
-Don't pass error pointers to brelse().
+This patch prevents the following oops:
 
-commit 7159a986b420 ("ext4: fix some error pointer dereferences") has fixed
-some cases, fix the remaining one case.
+[   10.771813] BUG: kernel NULL pointer dereference, address: 0000000000000
+[...]
+[   10.779790] RIP: 0010:ima_match_policy+0xf7/0xb80
+[...]
+[   10.798576] Call Trace:
+[   10.798993]  ? ima_lsm_policy_change+0x2b0/0x2b0
+[   10.799753]  ? inode_init_owner+0x1a0/0x1a0
+[   10.800484]  ? _raw_spin_lock+0x7a/0xd0
+[   10.801592]  ima_must_appraise.part.0+0xb6/0xf0
+[   10.802313]  ? ima_fix_xattr.isra.0+0xd0/0xd0
+[   10.803167]  ima_must_appraise+0x4f/0x70
+[   10.804004]  ima_post_path_mknod+0x2e/0x80
+[   10.804800]  do_mknodat+0x396/0x3c0
 
-Once ext4_xattr_block_find()->ext4_sb_bread() failed, error pointer is
-stored in @bs->bh, which will be passed to brelse() in the cleanup
-routine of ext4_xattr_set_handle(). This will then cause a NULL panic
-crash in __brelse().
+It occurs when there is a failure during IMA initialization, and
+ima_init_policy() is not called. IMA hooks still call ima_match_policy()
+but ima_rules is NULL. This patch prevents the crash by directly assigning
+the ima_default_policy pointer to ima_rules when ima_rules is defined. This
+wouldn't alter the existing behavior, as ima_rules is always set at the end
+of ima_init_policy().
 
-BUG: unable to handle kernel NULL pointer dereference at 000000000000005b
-RIP: 0010:__brelse+0x1b/0x50
-Call Trace:
- ext4_xattr_set_handle+0x163/0x5d0
- ext4_xattr_set+0x95/0x110
- __vfs_setxattr+0x6b/0x80
- __vfs_setxattr_noperm+0x68/0x1b0
- vfs_setxattr+0xa0/0xb0
- setxattr+0x12c/0x1a0
- path_setxattr+0x8d/0xc0
- __x64_sys_setxattr+0x27/0x30
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-In this case, @bs->bh stores '-EIO' actually.
-
-Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: stable@kernel.org # 2.6.19
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/1587628004-95123-1-git-send-email-jefflexu@linux.alibaba.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org # 3.7.x
+Fixes: 07f6a79415d7d ("ima: add appraise action keywords and default rules")
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/xattr.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_policy.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -1824,8 +1824,11 @@ ext4_xattr_block_find(struct inode *inod
- 	if (EXT4_I(inode)->i_file_acl) {
- 		/* The inode already has an extended attribute block. */
- 		bs->bh = ext4_sb_bread(sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
--		if (IS_ERR(bs->bh))
--			return PTR_ERR(bs->bh);
-+		if (IS_ERR(bs->bh)) {
-+			error = PTR_ERR(bs->bh);
-+			bs->bh = NULL;
-+			return error;
-+		}
- 		ea_bdebug(bs->bh, "b_count=%d, refcount=%d",
- 			atomic_read(&(bs->bh->b_count)),
- 			le32_to_cpu(BHDR(bs->bh)->h_refcount));
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -196,7 +196,7 @@ static struct ima_rule_entry secure_boot
+ static LIST_HEAD(ima_default_rules);
+ static LIST_HEAD(ima_policy_rules);
+ static LIST_HEAD(ima_temp_rules);
+-static struct list_head *ima_rules;
++static struct list_head *ima_rules = &ima_default_rules;
+ 
+ static int ima_policy __initdata;
+ 
+@@ -544,7 +544,6 @@ void __init ima_init_policy(void)
+ 			temp_ima_appraise |= IMA_APPRAISE_POLICY;
+ 	}
+ 
+-	ima_rules = &ima_default_rules;
+ 	ima_update_policy_flag();
+ }
+ 
 
 
