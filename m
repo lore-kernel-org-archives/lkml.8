@@ -2,145 +2,503 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D931C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04900C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9AEF20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rd8C+Aa2"
+	by mail.kernel.org (Postfix) with ESMTP id CE4B620890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592555312;
+	bh=S79gsW+74BIDc7GKPImFAz0hb5fGrtyPpGZfOrQbLK0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LlyFtl/DVeVXmiz9HGF87zpKjAvIfc0mw2R21sw/af3ky4XsI8gK04vd0aNSF4ajB
+	 DZVQEWjj6k7F+GpewlzCEmGe1qA8wLp4qpdBGYj/HL3LSj16lqdfzfQebYkHyRqaPa
+	 TIH9fpBJAeAPgJICDKWNVSr0QOTiQVVbWYzUsseE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbgFSI1T (ORCPT
+        id S1731338AbgFSI2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731227AbgFSI1R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:27:17 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D24AC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q8so8151663qkm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gHRO6u53fICxpVEP0QhHKvY/XKkf310c1oLvKRI/vuQ=;
-        b=Rd8C+Aa2deIZLBQoqhRSSDJ1aEEQQJ4chyGZ6tJROToja0WjQU0vGuFdeLXJj0+Y6P
-         0rs6oE7UChzpbRU99ZenQAAcsIISjoPEGMLHwNHBmVABtErAentMmxrWSnVCe9cgtDhn
-         pn47NaBswHuzBtqotO5cTqzztbHMmZXBz0/SquKdT/jqYiQdy1zI+9EwulWEc4BNTazx
-         gYFJc3OOPU7g2H8DsuAUiKO0iZn4k2xWviZ0ctDM89z9qzzAwtqNnD0OpqsrNWW5EyW/
-         fQg7g+oAiv4ioTydeQ0KA9KY7TWESUhn4zyc1Q9BCCWm/EFwQRWv/VgYXrK7Vo5y5/gI
-         BbQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gHRO6u53fICxpVEP0QhHKvY/XKkf310c1oLvKRI/vuQ=;
-        b=jeMsBs6vicUJR6BvCYIj0dpS+4PczyUzw3ibIROzz27hrCpVYccXjK7QEW1oEZHsHV
-         7GVrPMjmmKoCIyPKThe8NiMKaCvzPtskQC0333BBPxoOp7/qk5NRB+YUFzDrFC2fGy4v
-         IwE6MQlAlWNgEWrZTILVQriRfts6NnsiPphIvoEAXPEC3wIBA5rTbXJOTc0EG3IQMY1v
-         KBPqfSNfD05gc41ahzMe2Ihnx51VwtiAuprBBC8KXqJhskoSWAVTYj4fsEgwJPbzhpFw
-         ZjFPXmdpTsMksTWBdfDnCOCOjQ32PY1lqESb62DpC26V33x3TchT/R8CF+tO6M0schuy
-         gyEQ==
-X-Gm-Message-State: AOAM531zVrxJCbw9R/Sc5guVaW8WX7JHWNXob+UkqPtkgcV3tzg6eHDv
-        9InGZzRWl+n1Tfqfz9Xg6l/m6mmRcvI=
-X-Google-Smtp-Source: ABdhPJzBngVrHQEWjHdgpo7pKCGKg4TafzzHNdsOgG4sXtHASTuG4EtIpKHKoYyVi38p5pWUqK7elw==
-X-Received: by 2002:a37:90f:: with SMTP id 15mr2357299qkj.339.1592555236064;
-        Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
-Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
-        by smtp.gmail.com with ESMTPSA id x4sm5077822qtj.50.2020.06.19.01.27.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Jun 2020 01:27:15 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 08:27:14 +0000
-From:   Rodolfo C Villordo <rodolfovillordo@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Richard Yeh <rcy@google.com>,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>
-Subject: Re: [PATCH] staging: gasket: replace symbolic permissions
-Message-ID: <20200619082714.GA7780@ip-172-31-24-31.ec2.internal>
-References: <20200601005240.6315-1-rodolfovillordo@gmail.com>
- <20200618074750.GA186463@kroah.com>
+        Fri, 19 Jun 2020 04:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730849AbgFSI2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:28:25 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F0B20885;
+        Fri, 19 Jun 2020 08:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592555303;
+        bh=S79gsW+74BIDc7GKPImFAz0hb5fGrtyPpGZfOrQbLK0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hHuVuKdfeVR6d0OmT1exnTrTvuB5j83aEEsfAc9qbNZm8HYDOHs1ny2bjTG21OTF7
+         drbBan2JItMO8YU5EeJPxk4YR2YTNmVq8DNTvkC7QRhW/fKBfbxx4M6psKy9hmJiFJ
+         mUv5cz1KDp5JRgYGUB58R2eOHG5kGM5v9tPX/Mo4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jmCNq-004Or3-83; Fri, 19 Jun 2020 09:28:22 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618074750.GA186463@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 19 Jun 2020 09:28:22 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH v3 07/15] arm64: kvm: Split hyp/tlb.c to VHE/nVHE
+In-Reply-To: <20200618122537.9625-8-dbrazdil@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
+ <20200618122537.9625-8-dbrazdil@google.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <63418803e5801279f012ce8c6fc824c6@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 09:47:50AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jun 01, 2020 at 12:52:40AM +0000, Rodolfo C. Villordo wrote:
-> > WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
-> > +               .attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-> > warning detected by checkpatch.pl
-> > 
-> > Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
-> > ---
-> >  drivers/staging/gasket/gasket_sysfs.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
-> > index ab5aa351d555..d5e167dfbe76 100644
-> > --- a/drivers/staging/gasket/gasket_sysfs.h
-> > +++ b/drivers/staging/gasket/gasket_sysfs.h
-> > @@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
-> >  
-> >  #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
-> >  	{                                                                      \
-> > -		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-> > +		.attr = __ATTR(_name, 0444, _show_function, NULL),          \
+On 2020-06-18 13:25, David Brazdil wrote:
+> This patch is part of a series which builds KVM's non-VHE hyp code 
+> separately
+> from VHE and the rest of the kernel.
 > 
-> What about using __ATTR_RO() instead?
+> tlb.c contains code for flushing the TLB, with parts shared between 
+> VHE/nVHE.
+> These common routines are moved into a header file tlb.h, VHE-specific 
+> code
+> remains in tlb.c and nVHE-specific code is moved to nvhe/tlb.c.
 > 
-
-I'm not sure if __ATTR_RO() is a good match here. The
-GASKET_SYSFS_RO() is invoked with different show functions across the
-code. These functions don't follow the name pattern attr_name_show
-used in __ATTR_RO(). Please correct me if I misunderstood anything.
-
-### from include/linux/sysfs.h ###
-#define __ATTR_RO(_name) {                                              \
-        .attr   = { .name = __stringify(_name), .mode = 0444 },         \
-        .show   = _name##_show,                                         \
-}
-###
-
-### macro usage across the driver: ###
-$ grep GASKET_SYSFS_RO drivers/staging/gasket/*
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_page_table_entries, sysfs_show,
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_simple_page_table_entries, sysfs_show,
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_num_mapped_pages, sysfs_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_offsets, gasket_sysfs_data_show, ATTR_BAR_OFFSETS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_sizes, gasket_sysfs_data_show, ATTR_BAR_SIZES),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(driver_version, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(framework_version, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_type, gasket_sysfs_data_show, ATTR_DEVICE_TYPE),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(revision, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(pci_address, gasket_sysfs_data_show, ATTR_PCI_ADDRESS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(status, gasket_sysfs_data_show, ATTR_STATUS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(is_device_owned, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_owner, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(write_open_count, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(reset_count, gasket_sysfs_data_show, ATTR_RESET_COUNT),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(user_mem_ranges, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_interrupt.c:      GASKET_SYSFS_RO(interrupt_counts, interrupt_sysfs_show,
-###
-
-Thank you!
-
-> thanks,
+> The header file expects its users to implement two helper functions 
+> declared
+> at the top of the file.
 > 
-> greg k-h
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/kernel/image-vars.h   |   8 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile |   2 +-
+>  arch/arm64/kvm/hyp/nvhe/tlb.c    |  70 +++++++++++++
+>  arch/arm64/kvm/hyp/tlb.c         | 171 +++----------------------------
+>  arch/arm64/kvm/hyp/tlb.h         | 134 ++++++++++++++++++++++++
+>  5 files changed, 222 insertions(+), 163 deletions(-)
+>  create mode 100644 arch/arm64/kvm/hyp/nvhe/tlb.c
+>  create mode 100644 arch/arm64/kvm/hyp/tlb.h
+> 
+> diff --git a/arch/arm64/kernel/image-vars.h 
+> b/arch/arm64/kernel/image-vars.h
+> index 4dc969ccda9e..e8a8aa6bc7bd 100644
+> --- a/arch/arm64/kernel/image-vars.h
+> +++ b/arch/arm64/kernel/image-vars.h
+> @@ -63,13 +63,10 @@ __efistub__ctype		= _ctype;
+> 
+>  __kvm_nvhe___guest_exit = __guest_exit;
+>  __kvm_nvhe___hyp_stub_vectors = __hyp_stub_vectors;
+> +__kvm_nvhe___icache_flags = __icache_flags;
+
+This is new, and definitely deserves a comment, together with much of 
+the other kernel symbols you added. You probably want to keep these 
+symbols separate from the KVM-specific symbols for ease of maintenance.
+
+>  __kvm_nvhe___kvm_enable_ssbs = __kvm_enable_ssbs;
+> -__kvm_nvhe___kvm_flush_vm_context = __kvm_flush_vm_context;
+>  __kvm_nvhe___kvm_get_mdcr_el2 = __kvm_get_mdcr_el2;
+>  __kvm_nvhe___kvm_timer_set_cntvoff = __kvm_timer_set_cntvoff;
+> -__kvm_nvhe___kvm_tlb_flush_local_vmid = __kvm_tlb_flush_local_vmid;
+> -__kvm_nvhe___kvm_tlb_flush_vmid = __kvm_tlb_flush_vmid;
+> -__kvm_nvhe___kvm_tlb_flush_vmid_ipa = __kvm_tlb_flush_vmid_ipa;
+>  __kvm_nvhe___kvm_vcpu_run_nvhe = __kvm_vcpu_run_nvhe;
+>  __kvm_nvhe___vgic_v3_get_ich_vtr_el2 = __vgic_v3_get_ich_vtr_el2;
+>  __kvm_nvhe___vgic_v3_init_lrs = __vgic_v3_init_lrs;
+> @@ -79,8 +76,11 @@ __kvm_nvhe___vgic_v3_save_aprs = 
+> __vgic_v3_save_aprs;
+>  __kvm_nvhe___vgic_v3_write_vmcr = __vgic_v3_write_vmcr;
+>  __kvm_nvhe_abort_guest_exit_end = abort_guest_exit_end;
+>  __kvm_nvhe_abort_guest_exit_start = abort_guest_exit_start;
+> +__kvm_nvhe_arm64_const_caps_ready = arm64_const_caps_ready;
+>  __kvm_nvhe_arm64_enable_wa2_handling = arm64_enable_wa2_handling;
+>  __kvm_nvhe_arm64_ssbd_callback_required = 
+> arm64_ssbd_callback_required;
+> +__kvm_nvhe_cpu_hwcap_keys = cpu_hwcap_keys;
+> +__kvm_nvhe_cpu_hwcaps = cpu_hwcaps;
+>  __kvm_nvhe_hyp_panic = hyp_panic;
+>  __kvm_nvhe_idmap_t0sz = idmap_t0sz;
+>  __kvm_nvhe_kimage_voffset = kimage_voffset;
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile 
+> b/arch/arm64/kvm/hyp/nvhe/Makefile
+> index fef6f1881765..3bfc51de1679 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -7,7 +7,7 @@ asflags-y := -D__KVM_NVHE_HYPERVISOR__
+>  ccflags-y := -D__KVM_NVHE_HYPERVISOR__ -fno-stack-protector \
+>  	     -DDISABLE_BRANCH_PROFILING $(DISABLE_STACKLEAK_PLUGIN)
+> 
+> -obj-y := hyp-init.o ../hyp-entry.o
+> +obj-y := tlb.o hyp-init.o ../hyp-entry.o
+> 
+>  obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
+>  extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
+> diff --git a/arch/arm64/kvm/hyp/nvhe/tlb.c 
+> b/arch/arm64/kvm/hyp/nvhe/tlb.c
+> new file mode 100644
+> index 000000000000..111c4b0a23d3
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/nvhe/tlb.c
+> @@ -0,0 +1,70 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2015 - ARM Ltd
+> + * Author: Marc Zyngier <marc.zyngier@arm.com>
+> + */
+> +
+> +#include <linux/irqflags.h>
+
+Unnecessary non !VHE.
+
+> +
+> +#include <asm/kvm_hyp.h>
+> +#include <asm/kvm_mmu.h>
+> +#include <asm/tlbflush.h>
+
+At least tlbflush.h should directly be dragged by tlb.h, since that's 
+where the actual TLB ops are done.
+
+> +
+> +#include "../tlb.h"
+> +
+> +static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
+> +					     struct tlb_inv_context *cxt)
+> +{
+> +	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+> +		u64 val;
+> +
+> +		/*
+> +		 * For CPUs that are affected by ARM 1319367, we need to
+> +		 * avoid a host Stage-1 walk while we have the guest's
+> +		 * VMID set in the VTTBR in order to invalidate TLBs.
+> +		 * We're guaranteed that the S1 MMU is enabled, so we can
+> +		 * simply set the EPD bits to avoid any further TLB fill.
+> +		 */
+> +		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
+> +		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
+> +		write_sysreg_el1(val, SYS_TCR);
+> +		isb();
+> +	}
+> +
+> +	/* __load_guest_stage2() includes an ISB for the workaround. */
+> +	__load_guest_stage2(kvm);
+> +	asm(ALTERNATIVE("isb", "nop", ARM64_WORKAROUND_SPECULATIVE_AT));
+> +}
+> +
+> +static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
+> +					    struct tlb_inv_context *cxt)
+> +{
+> +	write_sysreg(0, vttbr_el2);
+> +
+> +	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+> +		/* Ensure write of the host VMID */
+> +		isb();
+> +		/* Restore the host's TCR_EL1 */
+> +		write_sysreg_el1(cxt->tcr, SYS_TCR);
+> +	}
+> +}
+> +
+> +void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t 
+> ipa)
+> +{
+> +	__tlb_flush_vmid_ipa(kvm, ipa);
+> +}
+> +
+> +void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
+> +{
+> +	__tlb_flush_vmid(kvm);
+> +}
+> +
+> +void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+> +{
+> +	__tlb_flush_local_vmid(vcpu);
+> +}
+> +
+> +void __hyp_text __kvm_flush_vm_context(void)
+> +{
+> +	__tlb_flush_vm_context();
+> +}
+
+Overall, I find the result hard to reason about. Too many things happen 
+in the .h file, and reading the .c file feels puzzling (no apparent 
+users of the two static functions, for example).
+
+The VHE/nVHE files only differ by the the __tlb_switch_to_*() helpers 
+(and the __hyp_text annotation that ends up going away). Why can't this 
+be structured in a more conventionnal way, where the TLB code stays in a 
+C file, and per-mode .h files providing the two helpers? It would 
+certainly look much more readable.
+
+> diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+> index d063a576d511..4e190f8c7e9c 100644
+> --- a/arch/arm64/kvm/hyp/tlb.c
+> +++ b/arch/arm64/kvm/hyp/tlb.c
+> @@ -10,14 +10,10 @@
+>  #include <asm/kvm_mmu.h>
+>  #include <asm/tlbflush.h>
+> 
+> -struct tlb_inv_context {
+> -	unsigned long	flags;
+> -	u64		tcr;
+> -	u64		sctlr;
+> -};
+> +#include "tlb.h"
+> 
+> -static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
+> -						 struct tlb_inv_context *cxt)
+> +static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
+> +					     struct tlb_inv_context *cxt)
+>  {
+>  	u64 val;
+> 
+> @@ -60,41 +56,8 @@ static void __hyp_text
+> __tlb_switch_to_guest_vhe(struct kvm *kvm,
+>  	isb();
+>  }
+> 
+> -static void __hyp_text __tlb_switch_to_guest_nvhe(struct kvm *kvm,
+> -						  struct tlb_inv_context *cxt)
+> -{
+> -	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+> -		u64 val;
+> -
+> -		/*
+> -		 * For CPUs that are affected by ARM 1319367, we need to
+> -		 * avoid a host Stage-1 walk while we have the guest's
+> -		 * VMID set in the VTTBR in order to invalidate TLBs.
+> -		 * We're guaranteed that the S1 MMU is enabled, so we can
+> -		 * simply set the EPD bits to avoid any further TLB fill.
+> -		 */
+> -		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
+> -		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
+> -		write_sysreg_el1(val, SYS_TCR);
+> -		isb();
+> -	}
+> -
+> -	/* __load_guest_stage2() includes an ISB for the workaround. */
+> -	__load_guest_stage2(kvm);
+> -	asm(ALTERNATIVE("isb", "nop", ARM64_WORKAROUND_SPECULATIVE_AT));
+> -}
+> -
+> -static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
+> -					     struct tlb_inv_context *cxt)
+> -{
+> -	if (has_vhe())
+> -		__tlb_switch_to_guest_vhe(kvm, cxt);
+> -	else
+> -		__tlb_switch_to_guest_nvhe(kvm, cxt);
+> -}
+> -
+> -static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
+> -						struct tlb_inv_context *cxt)
+> +static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
+> +					    struct tlb_inv_context *cxt)
+>  {
+>  	/*
+>  	 * We're done with the TLB operation, let's restore the host's
+> @@ -113,130 +76,22 @@ static void __hyp_text
+> __tlb_switch_to_host_vhe(struct kvm *kvm,
+>  	local_irq_restore(cxt->flags);
+>  }
+> 
+> -static void __hyp_text __tlb_switch_to_host_nvhe(struct kvm *kvm,
+> -						 struct tlb_inv_context *cxt)
+> -{
+> -	write_sysreg(0, vttbr_el2);
+> -
+> -	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+> -		/* Ensure write of the host VMID */
+> -		isb();
+> -		/* Restore the host's TCR_EL1 */
+> -		write_sysreg_el1(cxt->tcr, SYS_TCR);
+> -	}
+> -}
+> -
+> -static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
+> -					    struct tlb_inv_context *cxt)
+> -{
+> -	if (has_vhe())
+> -		__tlb_switch_to_host_vhe(kvm, cxt);
+> -	else
+> -		__tlb_switch_to_host_nvhe(kvm, cxt);
+> -}
+> -
+> -void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t 
+> ipa)
+> +void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+>  {
+> -	struct tlb_inv_context cxt;
+> -
+> -	dsb(ishst);
+> -
+> -	/* Switch to requested VMID */
+> -	kvm = kern_hyp_va(kvm);
+> -	__tlb_switch_to_guest(kvm, &cxt);
+> -
+> -	/*
+> -	 * We could do so much better if we had the VA as well.
+> -	 * Instead, we invalidate Stage-2 for this IPA, and the
+> -	 * whole of Stage-1. Weep...
+> -	 */
+> -	ipa >>= 12;
+> -	__tlbi(ipas2e1is, ipa);
+> -
+> -	/*
+> -	 * We have to ensure completion of the invalidation at Stage-2,
+> -	 * since a table walk on another CPU could refill a TLB with a
+> -	 * complete (S1 + S2) walk based on the old Stage-2 mapping if
+> -	 * the Stage-1 invalidation happened first.
+> -	 */
+> -	dsb(ish);
+> -	__tlbi(vmalle1is);
+> -	dsb(ish);
+> -	isb();
+> -
+> -	/*
+> -	 * If the host is running at EL1 and we have a VPIPT I-cache,
+> -	 * then we must perform I-cache maintenance at EL2 in order for
+> -	 * it to have an effect on the guest. Since the guest cannot hit
+> -	 * I-cache lines allocated with a different VMID, we don't need
+> -	 * to worry about junk out of guest reset (we nuke the I-cache on
+> -	 * VMID rollover), but we do need to be careful when remapping
+> -	 * executable pages for the same guest. This can happen when KSM
+> -	 * takes a CoW fault on an executable page, copies the page into
+> -	 * a page that was previously mapped in the guest and then needs
+> -	 * to invalidate the guest view of the I-cache for that page
+> -	 * from EL1. To solve this, we invalidate the entire I-cache when
+> -	 * unmapping a page from a guest if we have a VPIPT I-cache but
+> -	 * the host is running at EL1. As above, we could do better if
+> -	 * we had the VA.
+> -	 *
+> -	 * The moral of this story is: if you have a VPIPT I-cache, then
+> -	 * you should be running with VHE enabled.
+> -	 */
+> -	if (!has_vhe() && icache_is_vpipt())
+> -		__flush_icache_all();
+> -
+> -	__tlb_switch_to_host(kvm, &cxt);
+> +	__tlb_flush_vmid_ipa(kvm, ipa);
+>  }
+> 
+> -void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
+> +void __kvm_tlb_flush_vmid(struct kvm *kvm)
+>  {
+> -	struct tlb_inv_context cxt;
+> -
+> -	dsb(ishst);
+> -
+> -	/* Switch to requested VMID */
+> -	kvm = kern_hyp_va(kvm);
+> -	__tlb_switch_to_guest(kvm, &cxt);
+> -
+> -	__tlbi(vmalls12e1is);
+> -	dsb(ish);
+> -	isb();
+> -
+> -	__tlb_switch_to_host(kvm, &cxt);
+> +	__tlb_flush_vmid(kvm);
+>  }
+> 
+> -void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+> +void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+>  {
+> -	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
+> -	struct tlb_inv_context cxt;
+> -
+> -	/* Switch to requested VMID */
+> -	__tlb_switch_to_guest(kvm, &cxt);
+> -
+> -	__tlbi(vmalle1);
+> -	dsb(nsh);
+> -	isb();
+> -
+> -	__tlb_switch_to_host(kvm, &cxt);
+> +	__tlb_flush_local_vmid(vcpu);
+>  }
+> 
+> -void __hyp_text __kvm_flush_vm_context(void)
+> +void __kvm_flush_vm_context(void)
+>  {
+> -	dsb(ishst);
+> -	__tlbi(alle1is);
+> -
+> -	/*
+> -	 * VIPT and PIPT caches are not affected by VMID, so no maintenance
+> -	 * is necessary across a VMID rollover.
+> -	 *
+> -	 * VPIPT caches constrain lookup and maintenance to the active VMID,
+> -	 * so we need to invalidate lines with a stale VMID to avoid an ABA
+> -	 * race after multiple rollovers.
+> -	 *
+> -	 */
+> -	if (icache_is_vpipt())
+> -		asm volatile("ic ialluis");
+> -
+> -	dsb(ish);
+> +	__tlb_flush_vm_context();
+>  }
+> diff --git a/arch/arm64/kvm/hyp/tlb.h b/arch/arm64/kvm/hyp/tlb.h
+> new file mode 100644
+> index 000000000000..841ef400c8ec
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/tlb.h
+> @@ -0,0 +1,134 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2015 - ARM Ltd
+> + * Author: Marc Zyngier <marc.zyngier@arm.com>
+> + */
+> +
+> +#ifndef __ARM64_KVM_HYP_TLB_H__
+> +#define __ARM64_KVM_HYP_TLB_H__
+> +
+> +#include <linux/irqflags.h>
+> +
+> +#include <asm/kvm_hyp.h>
+> +#include <asm/kvm_mmu.h>
+> +#include <asm/tlbflush.h>
+> +
+> +struct tlb_inv_context {
+> +	unsigned long	flags;
+> +	u64		tcr;
+> +	u64		sctlr;
+> +};
+> +
+> +static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
+> +					     struct tlb_inv_context *cxt);
+> +static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
+> +					    struct tlb_inv_context *cxt);
+> +
+> +static inline void __hyp_text
+> +__tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+
+For things that you move around, please do not reformat the code, This 
+will lead to unnecessary conflicts. And long lines are just fine (screw 
+checkpatch!).
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
