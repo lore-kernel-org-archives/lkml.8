@@ -2,240 +2,372 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC95C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA80223BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592606878;
-	bh=VEWCMebtebCiHARyRfJKcj78UzbRt8EmH3qeu4CJQN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UbCqPlTPVm5FPeEy2F+x8dVaSnPFCMRJUn4Yg1R+Ujop8jlyZ9LPWIpYhhDsuCqr/
-	 hlloOXNMXwVOVo0RBub/OoZh+mgc5+tx/8BgiLXqJOwWnSCozyTxmpfK8h6IUhbxiR
-	 gq3tg7Z3CeZljrQCu+/S+aShRc7VfElEe3kxgyBE=
+	by mail.kernel.org (Postfix) with ESMTP id 16EB420734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 22:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4+3GNNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgFSWr5 (ORCPT
+        id S1729871AbgFSWzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 18:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgFSWr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 18:47:56 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jun 2020 18:55:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25882 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729852AbgFSWzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 18:55:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592607342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1fEONkl9Gy02J0c8XlWrhRAhX7Fsb4oNDGiD/9Th2Aw=;
+        b=X4+3GNNf5ePxHfn2X+F/ycm5RCiFojQjLRO94TNfDDCMq+M1NcgQXpLAwiI3et36jq+DXZ
+        N46Wn0Cde8804lqSDaZK4K0AjBGVQTdFSfox9UcG1s7Y63rRYbO8TIJbmzjgGzki7WAOz5
+        jdmTFrbMOqS5YYZqq2jFoYD7g5kBS3Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-wu38IFGPONCQkEv5id5BfQ-1; Fri, 19 Jun 2020 18:55:38 -0400
+X-MC-Unique: wu38IFGPONCQkEv5id5BfQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE7AC221F2;
-        Fri, 19 Jun 2020 22:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592606875;
-        bh=VEWCMebtebCiHARyRfJKcj78UzbRt8EmH3qeu4CJQN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mcg3MHnOvEkenGVjNnOfmMoSF2aPUSAJQGrfWdH2n+CvGroVVrjURLDRvLQQBE+vB
-         6EpNoCKM6m2jNZkvvekFSs1EB3P8eOFkHAR8/evYrfzaVv2h1Mo+XVUWGS00+SyEgr
-         7RIvcLpZC/FJYHD3tf4GOPBEGait2SnYcg9cSKmU=
-Date:   Fri, 19 Jun 2020 15:47:55 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
-Message-ID: <20200619224755.GA60059@google.com>
-References: <20200618063625.110273-1-yuchao0@huawei.com>
- <20200618235932.GA227771@google.com>
- <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
- <20200619054922.GC227771@google.com>
- <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B211800053;
+        Fri, 19 Jun 2020 22:55:36 +0000 (UTC)
+Received: from w520.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3802871661;
+        Fri, 19 Jun 2020 22:55:35 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 16:55:34 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200619165534.6d0c22e2@w520.home>
+In-Reply-To: <20200610052314.GB13961@joy-OptiPlex-7040>
+References: <20200601065726.GA5906@joy-OptiPlex-7040>
+        <20200601104307.259b0fe1@x1.home>
+        <20200602082858.GA8915@joy-OptiPlex-7040>
+        <20200602133435.1ab650c5@x1.home>
+        <20200603014058.GA12300@joy-OptiPlex-7040>
+        <20200603170452.7f172baf@x1.home>
+        <20200604024228.GD12300@joy-OptiPlex-7040>
+        <20200603221058.1927a0fc@x1.home>
+        <20200605020231.GE12300@joy-OptiPlex-7040>
+        <20200605101301.6abb8a3b@x1.home>
+        <20200610052314.GB13961@joy-OptiPlex-7040>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/19, Chao Yu wrote:
-> On 2020/6/19 13:49, Jaegeuk Kim wrote:
-> > On 06/19, Chao Yu wrote:
-> >> Hi Jaegeuk,
-> >>
-> >> On 2020/6/19 7:59, Jaegeuk Kim wrote:
-> >>> Hi Chao,
-> >>>
-> >>> On 06/18, Chao Yu wrote:
-> >>>> to make page content stable for special device like raid.
-> >>>
-> >>> Could you elaborate the problem a bit?
-> >>
-> >> Some devices like raid5 wants page content to be stable, because
-> >> it will calculate parity info based page content, if page is not
-> >> stable, parity info could be corrupted, result in data inconsistency
-> >> in stripe.
-> > 
-> > I don't get the point, since those pages are brand new pages which were not
-> > modified before. If it's on writeback, we should not modify them regardless
-> > of whatever raid configuration. For example, f2fs_new_node_page() waits for
-> > writeback. Am I missing something?
-> 
-> I think we should use f2fs_bug_on(, PageWriteback()) rather than
-> f2fs_wait_on_page_writeback() for brand new page which is allocated just now.
-> For other paths, we can keep rule that waiting for writeback before updating.
-> 
-> How do you think?
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>> ---
-> >>>>  fs/f2fs/dir.c          |  2 ++
-> >>>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
-> >>>>  fs/f2fs/f2fs.h         |  2 +-
-> >>>>  fs/f2fs/file.c         |  1 +
-> >>>>  fs/f2fs/inline.c       |  2 ++
-> >>>>  fs/f2fs/inode.c        |  3 +--
-> >>>>  6 files changed, 16 insertions(+), 12 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >>>> index d35976785e8c..91e86747a604 100644
-> >>>> --- a/fs/f2fs/dir.c
-> >>>> +++ b/fs/f2fs/dir.c
-> >>>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
-> >>>>  	if (IS_ERR(dentry_page))
-> >>>>  		return PTR_ERR(dentry_page);
-> >>>>  
-> >>>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
-> >>>> +
-> >>>>  	dentry_blk = page_address(dentry_page);
-> >>>>  
-> >>>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
-> >>>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-> >>>> index e60078460ad1..686c68b98610 100644
-> >>>> --- a/fs/f2fs/extent_cache.c
-> >>>> +++ b/fs/f2fs/extent_cache.c
-> >>>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
-> >>>>  }
-> >>>>  
-> >>>>  /* return true, if inode page is changed */
-> >>>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>  {
-> >>>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> >>>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
-> >>>>  	struct extent_tree *et;
-> >>>>  	struct extent_node *en;
-> >>>>  	struct extent_info ei;
-> >>>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>  	if (!f2fs_may_extent_tree(inode)) {
-> >>>>  		/* drop largest extent */
-> >>>>  		if (i_ext && i_ext->len) {
-> >>>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> >>>>  			i_ext->len = 0;
-> >>>> -			return true;
-> >>>> +			set_page_dirty(ipage);
-> >>>> +			return;
-> >>>>  		}
-> >>>> -		return false;
-> >>>> +		return;
-> >>>>  	}
-> >>>>  
-> >>>>  	et = __grab_extent_tree(inode);
-> >>>>  
-> >>>>  	if (!i_ext || !i_ext->len)
-> >>>> -		return false;
-> >>>> +		return;
-> >>>>  
-> >>>>  	get_extent_info(&ei, i_ext);
-> >>>>  
-> >>>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>  	}
-> >>>>  out:
-> >>>>  	write_unlock(&et->lock);
-> >>>> -	return false;
-> >>>>  }
-> >>>>  
-> >>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>  {
-> >>>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
-> >>>> +	__f2fs_init_extent_tree(inode, ipage);
-> >>>>  
-> >>>>  	if (!F2FS_I(inode)->extent_tree)
-> >>>>  		set_inode_flag(inode, FI_NO_EXTENT);
-> >>>> -
-> >>>> -	return ret;
-> >>>>  }
-> >>>>  
-> >>>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
-> >>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>> index b35a50f4953c..326c12fa0da5 100644
-> >>>> --- a/fs/f2fs/f2fs.h
-> >>>> +++ b/fs/f2fs/f2fs.h
-> >>>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
-> >>>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
-> >>>>  						struct rb_root_cached *root);
-> >>>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
-> >>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
-> >>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
-> >>>>  void f2fs_drop_extent_tree(struct inode *inode);
-> >>>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
-> >>>>  void f2fs_destroy_extent_tree(struct inode *inode);
-> >>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>>> index 3268f8dd59bb..1862073b96d2 100644
-> >>>> --- a/fs/f2fs/file.c
-> >>>> +++ b/fs/f2fs/file.c
-> >>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
-> >>>>  				f2fs_put_page(psrc, 1);
-> >>>>  				return PTR_ERR(pdst);
-> >>>>  			}
-> >>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+On Wed, 10 Jun 2020 01:23:14 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Do you mean pdst can be under writeback?
-
-> >>>>  			f2fs_copy_page(psrc, pdst);
-> >>>>  			set_page_dirty(pdst);
-> >>>>  			f2fs_put_page(pdst, 1);
-> >>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-> >>>> index dbade310dc79..4bcbc486c9e2 100644
-> >>>> --- a/fs/f2fs/inline.c
-> >>>> +++ b/fs/f2fs/inline.c
-> >>>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
-> >>>>  	struct f2fs_dentry_ptr d;
-> >>>>  	void *inline_dentry;
-> >>>>  
-> >>>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> >>>> +
-> >>>>  	inline_dentry = inline_data_addr(inode, ipage);
-> >>>>  
-> >>>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
-> >>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> >>>> index 44582a4db513..7c156eb26dd7 100644
-> >>>> --- a/fs/f2fs/inode.c
-> >>>> +++ b/fs/f2fs/inode.c
-> >>>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
-> >>>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
-> >>>>  	fi->i_dir_level = ri->i_dir_level;
-> >>>>  
-> >>>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
-> >>>> -		set_page_dirty(node_page);
-> >>>> +	f2fs_init_extent_tree(inode, node_page);
-> >>>>  
-> >>>>  	get_inline_info(inode, ri);
-> >>>>  
-> >>>> -- 
-> >>>> 2.18.0.rc1
-> >>> .
-> >>>
-> > .
+> On Fri, Jun 05, 2020 at 10:13:01AM -0600, Alex Williamson wrote:
+> > On Thu, 4 Jun 2020 22:02:31 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > On Wed, Jun 03, 2020 at 10:10:58PM -0600, Alex Williamson wrote:  
+> > > > On Wed, 3 Jun 2020 22:42:28 -0400
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > >     
+> > > > > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:    
+> > > > > > On Tue, 2 Jun 2020 21:40:58 -0400
+> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > >       
+> > > > > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:      
+> > > > > > > > I'm not at all happy with this.  Why do we need to hide the migration
+> > > > > > > > sparse mmap from the user until migration time?  What if instead we
+> > > > > > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
+> > > > > > > > where the existing capability is the normal runtime sparse setup and
+> > > > > > > > the user is required to use this new one prior to enabled device_state
+> > > > > > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
+> > > > > > > > the region and refuse to change device_state if there are outstanding
+> > > > > > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
+> > > > > > > > required, no new irqfds, an incremental change to the protocol,
+> > > > > > > > backwards compatible to the extent that a vendor driver requiring this
+> > > > > > > > will automatically fail migration.
+> > > > > > > >         
+> > > > > > > right. looks we need to use this approach to solve the problem.
+> > > > > > > thanks for your guide.
+> > > > > > > so I'll abandon the current remap irq way for dirty tracking during live
+> > > > > > > migration.
+> > > > > > > but anyway, it demos how to customize irq_types in vendor drivers.
+> > > > > > > then, what do you think about patches 1-5?      
+> > > > > > 
+> > > > > > In broad strokes, I don't think we've found the right solution yet.  I
+> > > > > > really question whether it's supportable to parcel out vfio-pci like
+> > > > > > this and I don't know how I'd support unraveling whether we have a bug
+> > > > > > in vfio-pci, the vendor driver, or how the vendor driver is making use
+> > > > > > of vfio-pci.
+> > > > > >
+> > > > > > Let me also ask, why does any of this need to be in the kernel?  We
+> > > > > > spend 5 patches slicing up vfio-pci so that we can register a vendor
+> > > > > > driver and have that vendor driver call into vfio-pci as it sees fit.
+> > > > > > We have two patches creating device specific interrupts and a BAR
+> > > > > > remapping scheme that we've decided we don't need.  That brings us to
+> > > > > > the actual i40e vendor driver, where the first patch is simply making
+> > > > > > the vendor driver work like vfio-pci already does, the second patch is
+> > > > > > handling the migration region, and the third patch is implementing the
+> > > > > > BAR remapping IRQ that we decided we don't need.  It's difficult to
+> > > > > > actually find the small bit of code that's required to support
+> > > > > > migration outside of just dealing with the protocol we've defined to
+> > > > > > expose this from the kernel.  So why are we trying to do this in the
+> > > > > > kernel?  We have quirk support in QEMU, we can easily flip
+> > > > > > MemoryRegions on and off, etc.  What access to the device outside of
+> > > > > > what vfio-pci provides to the user, and therefore QEMU, is necessary to
+> > > > > > implement this migration support for i40e VFs?  Is this just an
+> > > > > > exercise in making use of the migration interface?  Thanks,
+> > > > > >       
+> > > > > hi Alex
+> > > > > 
+> > > > > There was a description of intention of this series in RFC v1
+> > > > > (https://www.spinics.net/lists/kernel/msg3337337.html).
+> > > > > sorry, I didn't include it in starting from RFC v2.
+> > > > > 
+> > > > > "
+> > > > > The reason why we don't choose the way of writing mdev parent driver is
+> > > > > that    
+> > > > 
+> > > > I didn't mention an mdev approach, I'm asking what are we accomplishing
+> > > > by doing this in the kernel at all versus exposing the device as normal
+> > > > through vfio-pci and providing the migration support in QEMU.  Are you
+> > > > actually leveraging having some sort of access to the PF in supporting
+> > > > migration of the VF?  Is vfio-pci masking the device in a way that
+> > > > prevents migrating the state from QEMU?
+> > > >    
+> > > yes, communication to PF is required. VF state is managed by PF and is
+> > > queried from PF when VF is stopped.
+> > > 
+> > > migration support in QEMU seems only suitable to devices with dirty
+> > > pages and device state available by reading/writing device MMIOs, which
+> > > is not the case for most devices.  
 > > 
+> > Post code for such a device.
+> >  
+> hi Alex,
+> There's an example in i40e vf. virtual channel related resources are in
+> guest memory. dirty page tracking requires the info stored in those
+> guest memory.
+> 
+> there're two ways to get the resources addresses:
+> (1) always trap VF registers related. as in Alex Graf's qemu code.
+> 
+> starting from beginning, it tracks rw of Admin Queue Configuration registers.
+> Then in the write handler vfio_i40evf_aq_mmio_mem_region_write(), guest
+> commands are processed to record the guest dma addresses of the virtual
+> channel related resources.
+> e.g. vdev->vsi_config is read from the guest dma addr contained in
+> command I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES.
+> 
+> 
+> vfio_i40evf_initfn()
+> {
+>  ...
+>  memory_region_init_io(&vdev->aq_mmio_mem, OBJECT(dev),
+>                           &vfio_i40evf_aq_mmio_mem_region_ops,
+>                           vdev, "i40evf AQ config",
+>                           I40E_VFGEN_RSTAT - I40E_VF_ARQBAH1);
+>  ...
+> }
+> 
+> vfio_i40evf_aq_mmio_mem_region_write()
+> {
+>    ...
+>     switch (addr) {
+>     case I40E_VF_ARQBAH1:
+>     case I40E_VF_ARQBAL1:
+>     case I40E_VF_ARQH1:
+>     case I40E_VF_ARQLEN1:
+>     case I40E_VF_ARQT1:
+>     case I40E_VF_ATQBAH1:
+>     case I40E_VF_ATQBAL1:
+>     case I40E_VF_ATQH1:
+>     case I40E_VF_ATQT1:
+>     case I40E_VF_ATQLEN1:
+>         vfio_i40evf_vw32(vdev, addr, data);
+>         vfio_i40e_aq_update(vdev); ==> update & process atq commands
+>         break;
+>     default:
+>         vfio_i40evf_w32(vdev, addr, data);
+>         break;
+>     }
+> }
+> vfio_i40e_aq_update(vdev)
+> 	|->vfio_i40e_atq_process_one(vdev, vfio_i40evf_vr32(vdev, I40E_VF_ATQH1)
+> 		|-> hwaddr addr = vfio_i40e_get_atqba(vdev) + (index * sizeof(desc));
+> 		|   pci_dma_read(pdev, addr, &desc, sizeof(desc));//read guest's command
+> 		|   vfio_i40e_record_atq_cmd(vdev, pdev, &desc)
+> 			
+> 		
+> 
+> vfio_i40e_record_atq_cmd(...I40eAdminQueueDescriptor *desc) {
+> 	data_addr = desc->params.external.addr_high;
+> 	...
+> 
+> 	switch (desc->cookie_high) {
+> 	...
+> 	case I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES:
+> 	pci_dma_read(pdev, data_addr, &vdev->vsi_config,
+> 		         MIN(desc->datalen, sizeof(vdev->vsi_config)));
+> 	...
+> 	}
+> 	...
+> }
+> 
+> 
+> (2) pass through all guest MMIO accesses and only do MMIO trap when migration
+> is about to start.
+> This is the way we're using in the host vfio-pci vendor driver (or mdev parent driver)
+> of i40e vf device (sorry for no public code available still).
+> 
+> when migration is about to start, it's already too late to get the guest dma
+> address for those virtual channel related resources merely by MMIO
+> trapping, so we have to ask for them from PF.
+> 
+> 
+> 
+> <...>
+> 
+> > > > > for interfaces exported in patch 3/10-5/10, they anyway need to be
+> > > > > exported for writing mdev parent drivers that pass through devices at
+> > > > > normal time to avoid duplication. and yes, your worry about    
+> > > > 
+> > > > Where are those parent drivers?  What are their actual requirements?
+> > > >    
+> > > if this way of registering vendor ops to vfio-pci is not permitted,
+> > > vendors have to resort to writing its mdev parent drivers for VFs. Those
+> > > parent drivers need to pass through VFs at normal time, doing exactly what
+> > > vfio-pci does and only doing what vendor ops does during migration.
+> > > 
+> > > if vfio-pci could export common code to those parent drivers, lots of
+> > > duplicated code can be avoided.  
+> > 
+> > There are two sides to this argument though.  We could also argue that
+> > mdev has already made it too easy to implement device emulation in the
+> > kernel, the barrier is that such emulation is more transparent because
+> > it does require a fair bit of code duplication from vfio-pci.  If we
+> > make it easier to simply re-use vfio-pci for much of this, and even
+> > take it a step further by allowing vendor drivers to masquerade behind
+> > vfio-pci, then we're creating an environment where vendors don't need
+> > to work with QEMU to get their device emulation accepted.  They can
+> > write their own vendor drivers, which are now simplified and sanctioned
+> > by exported functions in vfio-pci.  They can do this easily and open up
+> > massive attack vectors, hiding behind vfio-pci.
+> >   
+> your concern is reasonable.
+> 
+> > I know that I was advocating avoiding user driver confusion, ie. does
+> > the user bind a device to vfio-pci, i40e_vf_vfio, etc, but maybe that's
+> > the barrier we need such that a user can make an informed decision
+> > about what they're actually using.  If a vendor then wants to implement
+> > a feature in vfio-pci, we'll need to architect an interface for it
+> > rather than letting them pick and choose which pieces of vfio-pci to
+> > override.
+> >   
+> > > > > identification of bug sources is reasonable. but if a device is binding
+> > > > > to vfio-pci with a vendor module loaded, and there's a bug, they can do at
+> > > > > least two ways to identify if it's a bug in vfio-pci itself.
+> > > > > (1) prevent vendor modules from loading and see if the problem exists
+> > > > > with pure vfio-pci.
+> > > > > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
+> > > > > operations to vfio-pci.    
+> > > > 
+> > > > The code split is still extremely ad-hoc, there's no API.  An mdev
+> > > > driver isn't even a sub-driver of vfio-pci like you're trying to
+> > > > accomplish here, there would need to be a much more defined API when
+> > > > the base device isn't even a vfio_pci_device.  I don't see how this
+> > > > series would directly enable an mdev use case.
+> > > >     
+> > > similar to Yi's series https://patchwork.kernel.org/patch/11320841/.
+> > > we can parcel the vdev creation code in vfio_pci_probe() to allow calling from
+> > > mdev parent probe routine. (of course, also need to parcel code to free vdev)
+> > > e.g.
+> > > 
+> > > void *vfio_pci_alloc_vdev(struct pci_dev *pdev, const struct pci_device_id *id)
+> > > {
+> > > 	struct vfio_pci_device *vdev;
+> > >         vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
+> > >         if (!vdev) {
+> > >                 ret = -ENOMEM;
+> > >                 goto out_group_put;
+> > >         }
+> > > 
+> > >         vdev->pdev = pdev;
+> > >         vdev->irq_type = VFIO_PCI_NUM_IRQS;
+> > >         mutex_init(&vdev->igate);
+> > >         spin_lock_init(&vdev->irqlock);
+> > >         mutex_init(&vdev->ioeventfds_lock);
+> > >         INIT_LIST_HEAD(&vdev->ioeventfds_list);
+> > > 	...
+> > > 	vfio_pci_probe_power_state(vdev);
+> > > 
+> > >         if (!disable_idle_d3) {
+> > >                 vfio_pci_set_power_state(vdev, PCI_D0);
+> > >                 vfio_pci_set_power_state(vdev, PCI_D3hot);
+> > >         }
+> > > 	return vdev;
+> > > }
+> > > 
+> > > static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev, const struct pci_device_id *id))
+> > > {
+> > > 
+> > >        void *vdev = vfio_pci_alloc_vdev(pdev, id);
+> > > 
+> > >        //save the vdev pointer 
+> > > 
+> > > }
+> > > then all the exported interfaces from this series can also benefit the
+> > > mdev use case.  
+> > 
+> > You need to convince me that we're not just doing this for the sake of
+> > re-using a migration interface.  We do need vendor specific drivers to
+> > support migration, but implementing those vendor specific drivers in
+> > the kernel just because we have that interface is the wrong answer.  If
+> > we can implement that device specific migration support in QEMU and
+> > limit the attack surface from the hypervisor or guest into the host
+> > kernel, that's a better answer.  As I've noted above, I'm afraid all of
+> > these attempts to parcel out vfio-pci are only going to serve to
+> > proliferate vendor modules that have limited community review, expand
+> > the attack surface, and potentially harm the vfio ecosystem overall
+> > through bad actors and reduced autonomy.  Thanks,
+> >  
+> The requirement to access PF as mentioned above is one of the reason for
+> us to implement the emulation in kernel.
+> Another reason is that we don't want to duplicate a lot of kernel logic in
+> QEMU as what'd done in Alex Graf's "vfio-i40e". then QEMU has to be
+> updated along kernel driver changing. The effort for maintenance and
+> version matching is a big burden to vendors.
+> But you are right, there're less review in virtualization side to code under
+> vendor specific directory. That's also the pulse for us to propose
+> common helper APIs for them to call, not only for convenience and
+> duplication-less, but also for code with full review.
+> 
+> would you mind giving us some suggestions for where to go?
+
+Not duplicating kernel code into userspace isn't a great excuse.  What
+we need to do to emulate a device is not an exact mapping to what a
+driver for that device needs to do.  If we need to keep the device
+driver and the emulation in sync then we haven't done a good job with
+the emulation.  What would it look like if we only had an additional
+device specific region on the vfio device fd we could use to get the
+descriptor information we need from the PF?  This would be more inline
+with the quirks we provide for IGD assignment.  Thanks,
+
+Alex
+
