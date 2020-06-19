@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB91C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB4E7217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE85F20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580040;
-	bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
+	s=default; t=1592580043;
+	bh=lg0K0W/aYAUtFjJepmp4AK6Gf1LVgkJTHCed3bKP0mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYH/z2dpOfNN8BCyds8/ufBLTfv1HI2pN0riEW64P+rDASOgmtAyt4aUKknJslkVp
-	 ApMcxzBi3/QmB+ZacYYNtBWpUDNDJptx0er4GBLNiZ8UfkWg/qZUfTCVsaJgdhh0JR
-	 lLS2/IuuyZUJvg/D261CxhtHKjLTgzhjjG/tlTrI=
+	b=rF7FUMObFW2Hcw1HMS55WgzKpGTk7JOiTcrsZBQ9KTJtMAYzV5ahanglR2wqe1yNX
+	 lCzEm7QigoQth+YmOZlwyrZpT4vjVLJDJuudPsd3D/hJX5ejxMUCB3wx4H3Vs9/xc4
+	 Ma//5HKHf4Q5sdfExcdm8L2Jtl/imtUr/KhyLoqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392727AbgFSPUj (ORCPT
+        id S2392733AbgFSPUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:20:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392312AbgFSPRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:17:30 -0400
+        id S2392499AbgFSPRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:17:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3158921835;
-        Fri, 19 Jun 2020 15:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D28C421582;
+        Fri, 19 Jun 2020 15:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579849;
-        bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
+        s=default; t=1592579852;
+        bh=lg0K0W/aYAUtFjJepmp4AK6Gf1LVgkJTHCed3bKP0mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ITf6nJJtjY5fQCKAB64cc6aNfKU20nWG4vt+UeyD2JsmGwtgzOtT7JAW782Kjzzf
-         ANU9b8AOBRwR+4haV9DgjJZsG12MA5ezJ0SQw2TqpZ9H81mf7stO7n7cQuVSXFiFjp
-         V7cRggw0mZQXFKzWR3OdKFDIQwtHK5ut4i9d6O0s=
+        b=Bty3civ78f1CD2F7XjGo7TlXWDySSTLmi1WHT311aAikrnYTHsiAMvopYN56VhaPp
+         YXOj6B0Euj8/k8mBuZX6dbBS3s4Zm0owQhCGPKOv5fUBDeLxu6TBxoDLLz0Sng3Cab
+         UbuWRqK6pI6W8M4Fg+1MZ1+tBAG/oXGXhsgHiuCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fangrui Song <maskray@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 028/376] efi/libstub/x86: Work around LLVM ELF quirk build regression
-Date:   Fri, 19 Jun 2020 16:29:06 +0200
-Message-Id: <20200619141711.695718724@linuxfoundation.org>
+Subject: [PATCH 5.7 029/376] ath10k: remove the max_sched_scan_reqs value
+Date:   Fri, 19 Jun 2020 16:29:07 +0200
+Message-Id: <20200619141711.742746297@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -64,49 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
+[ Upstream commit d431f8939c1419854dfe89dd345387f5397c6edd ]
 
-When building the x86 EFI stub with Clang, the libstub Makefile rules
-that manipulate the ELF object files may throw an error like:
+The struct cfg80211_wowlan of NET_DETECT WoWLAN feature share the same
+struct cfg80211_sched_scan_request together with scheduled scan request
+feature, and max_sched_scan_reqs of wiphy is only used for sched scan,
+and ath10k does not support scheduled scan request feature, so ath10k
+does not set flag NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR, but ath10k
+set max_sched_scan_reqs of wiphy to a non zero value 1, then function
+nl80211_add_commands_unsplit of cfg80211 will set it support command
+NL80211_CMD_START_SCHED_SCAN because max_sched_scan_reqs is a non zero
+value, but actually ath10k not support it, then it leads a mismatch result
+for sched scan of cfg80211, then application shill found the mismatch and
+stop running case of MAC random address scan and then the case fail.
 
-    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
-  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
-  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+After remove max_sched_scan_reqs value, it keeps match for sched scan and
+case of MAC random address scan pass.
 
-This is the result of a LLVM feature [0] where symbol references are
-stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
-causing generic ELF tools such as strip or objcopy to choke on them.
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
+Tested with QCA6174 PCIe with firmware WLAN.RM.4.4.1-00110-QCARMSWP-1.
 
-So force the compiler not to emit these sections, by passing the
-appropriate command line option.
-
-[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
-
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: ce834e280f2f875 ("ath10k: support NET_DETECT WoWLAN feature")
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20191114050001.4658-1-wgong@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/mac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 094eabdecfe6..d85016553f14 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -30,6 +30,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
- 				   $(call cc-option,-fno-stack-protector) \
-+				   $(call cc-option,-fno-addrsig) \
- 				   -D__DISABLE_EXPORTS
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 2d03b8dd3b8c..7c4ba17a0b68 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -8919,7 +8919,6 @@ int ath10k_mac_register(struct ath10k *ar)
+ 	ar->hw->wiphy->max_scan_ie_len = WLAN_SCAN_PARAMS_MAX_IE_LEN;
  
- GCOV_PROFILE			:= n
+ 	if (test_bit(WMI_SERVICE_NLO, ar->wmi.svc_map)) {
+-		ar->hw->wiphy->max_sched_scan_reqs = 1;
+ 		ar->hw->wiphy->max_sched_scan_ssids = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_match_sets = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_sched_scan_ie_len = WMI_PNO_MAX_IE_LENGTH;
 -- 
 2.25.1
 
