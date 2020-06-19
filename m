@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEA2021852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C190D21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579400;
-	bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
+	s=default; t=1592579407;
+	bh=mH81tB9upTQuVHsacg+7F8lM3/Lh0sT2+FTlCBmknr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ke1WKllJ663UeN3ASmCAHaiMTH8kpfkYjrldQOeoFc+g58LMwF2/3F06LO4JRc8nP
-	 ugNmV7pXg/s3vKtTcPQ7PVdOEvP+1oc1qTTITsCy16KHqleFA74hOaIlKXYiqIiigB
-	 FFv5xNSZKTIa4AnDS2CxwWtetyKdvb5zX9mXsxDA=
+	b=Te37+v7GZwlhu93JOy4c9PuS0oI3QjMEH272mHSu1RCe3GJo/iBqOrdDc43s0hK8I
+	 d92j8pUa7oBuHS6xDtzLLy2lvSZmvReY47eeSUzmp1ZsB2JCB3im0gP0d55HXUWrPH
+	 yyyN8Ga/gQQR92dYZzW7dbUT+jlp0Aw8OGn72lOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391991AbgFSPJ5 (ORCPT
+        id S2403770AbgFSPKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39656 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391973AbgFSPJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:51 -0400
+        id S2389171AbgFSPKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC8D21941;
-        Fri, 19 Jun 2020 15:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E03420776;
+        Fri, 19 Jun 2020 15:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579390;
-        bh=8DZyfMBj+GQYqoHgKvdO7+JnquptPSQNnrzE88QIKoc=;
+        s=default; t=1592579403;
+        bh=mH81tB9upTQuVHsacg+7F8lM3/Lh0sT2+FTlCBmknr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NibE0LNvBhdulqksjjuITGrNtcTiBgJ2jEPOP1+c6GYHyuc8FHxiX94sZh2dP8hTH
-         GA5mttl5ddSSvZj9I6hXWIh0Qzu0YefXmiG4nq/IGw8JIU0ePT71XM535SOavwc0eB
-         xi1sywGDUJ8dj+zz3XHfdwnWQM1kgsDcrweNtSlM=
+        b=Eu7RfrJTy9Nqe7OJnevqM+Jidake8qR3//xj+WRQGY9mStMuOQCTOi5y1dMfYMozW
+         EIeIw9FEnCQ4fN4Wpx1Go3zWyz5a+aynPeUccbWRPms3NYela1MMeCbGRpbrYWtqZA
+         zxV0eYHz30n1YtZ1nykzSD13S26A9a/BBOoU0jdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        Devulapally Shiva Krishna <shiva@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/261] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
-Date:   Fri, 19 Jun 2020 16:32:08 +0200
-Message-Id: <20200619141655.480886333@linuxfoundation.org>
+Subject: [PATCH 5.4 093/261] Crypto/chcr: fix for ccm(aes) failed test
+Date:   Fri, 19 Jun 2020 16:31:44 +0200
+Message-Id: <20200619141654.336380916@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,60 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Devulapally Shiva Krishna <shiva@chelsio.com>
 
-[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
+[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
 
-Seven years ago we tried to fix a leak but actually introduced a double
-free instead.  It was an understandable mistake because the code was a
-bit confusing and the free was done in the wrong place.  The "skb"
-pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
-The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
-and I've cleaned the code up a bit to hopefully make it more clear.
+The ccm(aes) test fails when req->assoclen > ~240bytes.
 
-Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
+The problem is the value assigned to auth_offset is wrong.
+As auth_offset is unsigned char, it can take max value as 255.
+So fix it by making it unsigned int.
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/crypto/chelsio/chcr_algo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 348b0072cdd6..c66c6dc00378 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -881,10 +881,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 01dd418bdadc..fe2eadc0ce83 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2818,7 +2818,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
+ 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
+ 	unsigned int c_id = a_ctx(tfm)->tx_chan_id;
+ 	unsigned int ccm_xtra;
+-	unsigned char tag_offset = 0, auth_offset = 0;
++	unsigned int tag_offset = 0, auth_offset = 0;
+ 	unsigned int assoclen;
  
- 	WARN_ON(NULL == skb);
- 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
--	if (!_urb) {
--		kfree_skb(skb);
-+	if (!_urb)
- 		return NULL;
--	}
- 	_rtl_install_trx_info(rtlusb, skb, ep_num);
- 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
- 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
-@@ -898,7 +896,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
- 	u32 ep_num;
- 	struct urb *_urb = NULL;
--	struct sk_buff *_skb = NULL;
- 
- 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
- 	if (unlikely(IS_USB_STOP(rtlusb))) {
-@@ -907,8 +904,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 		return;
- 	}
- 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
--	_skb = skb;
--	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
-+	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
- 	if (unlikely(!_urb)) {
- 		pr_err("Can't allocate urb. Drop skb!\n");
- 		kfree_skb(skb);
+ 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
 -- 
 2.25.1
 
