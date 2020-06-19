@@ -2,53 +2,62 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0646FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63954C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FC2206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E91C206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584990;
-	bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+	s=default; t=1592584993;
+	bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNyKZuIE4/ofJazeppBDaENzB5LHhZs1N6ef5KoAZxxTsesBeZLgH9VrBr2kQEq4n
-	 IMBz0GYICuNKSsSAEravNd+4gkKIR6tXjMGvRNYTVIqVhnfhUp669fj29VPJNCO1J5
-	 NYWX+IzdM5Tx3qnqkbKxAVJ1mkucHKInyiePMzU0=
+	b=Zu3RmSOUKELBVz11CDfyPK1kyDe8jNbJ+aDRDHTdSygyoffTcoxMRSo3Rau+uP6h1
+	 RYNtOb4KHPZyRYxQO2PqI+XLCSGx21SJlRfZGVtNYCJXvUpZERxPGN3otfCAzm16fL
+	 gENBi/Q1zvdVWsa+vgb03noAY8WcOjqugYU7kGno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395562AbgFSQnJ (ORCPT
+        id S2388490AbgFSOnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:43:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388515AbgFSOnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:55 -0400
+        id S2388106AbgFSOnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:43:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65E3E21582;
-        Fri, 19 Jun 2020 14:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA70C20A8B;
+        Fri, 19 Jun 2020 14:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577834;
-        bh=se+Q4k5Btw+HJigqqx9lLs6qFSbEWJIzh+4yhN0UvOc=;
+        s=default; t=1592577790;
+        bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyJgo7Ch+HrDti2xvkLzuArqtIhNpoRUPuQPEyisGIMgBPf0A+WrLLnJ1x9tjTFS4
-         t6utcySG9ssaqY2CSN6NALubA8iQsxcGzTX8JG93Ztx//BZVIzmJe3wrgtLgWZwt12
-         uH3wdj/k7w9t9D0C/4b4TbpPaCMP6BxYeELsWcb4=
+        b=yvRdasyP/IPi4I2FMJ+t+JUYuZstl/7pleBQauce0FKKOXEs7hIYJ6M+wYpDm8vUt
+         rCAT3U3ipNzXWceCZpbCkZhEhHhCBgYQAygdzNI8rFJAWse9K/4LsEfvMN3stz+K3Q
+         r+NQCaunjpBSQPTsWviz4hV3Y96UdIrLpKkxG7mA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 108/128] carl9170: remove P2P_GO support
-Date:   Fri, 19 Jun 2020 16:33:22 +0200
-Message-Id: <20200619141625.856965303@linuxfoundation.org>
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 061/128] spi: dw: Enable interrupts in accordance with DMA xfer mode
+Date:   Fri, 19 Jun 2020 16:32:35 +0200
+Message-Id: <20200619141623.446644845@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,77 +70,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
+[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
 
-This patch follows up on a bug-report by Frank Schäfer that
-discovered P2P GO wasn't working with wpa_supplicant.
-This patch removes part of the broken P2P GO support but
-keeps the vif switchover code in place.
+It's pointless to track the Tx overrun interrupts if Rx-only SPI
+transfer is issued. Similarly there is no need in handling the Rx
+overrun/underrun interrupts if Tx-only SPI transfer is executed.
+So lets unmask the interrupts only if corresponding SPI
+transactions are implied.
 
-Cc: <stable@vger.kernel.org>
-Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
-Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
- drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
- 2 files changed, 5 insertions(+), 20 deletions(-)
+ drivers/spi/spi-dw-mid.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -351,9 +351,7 @@ static int carl9170_fw(struct ar9170 *ar
- 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index f77d03b658ab..fe0ca3848d35 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
  
- 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
--			if_comb_types |=
--				BIT(NL80211_IFTYPE_AP) |
--				BIT(NL80211_IFTYPE_P2P_GO);
-+			if_comb_types |= BIT(NL80211_IFTYPE_AP);
+ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+-	u16 dma_ctrl = 0;
++	u16 imr = 0, dma_ctrl = 0;
  
- #ifdef CONFIG_MAC80211_MESH
- 			if_comb_types |=
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
- 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
- 	    (vif->type != NL80211_IFTYPE_AP));
+ 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+ 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
  
--	/* While the driver supports HW offload in a single
--	 * P2P client configuration, it doesn't support HW
--	 * offload in the favourit, concurrent P2P GO+CLIENT
--	 * configuration. Hence, HW offload will always be
--	 * disabled for P2P.
-+	/* The driver used to have P2P GO+CLIENT support,
-+	 * but since this was dropped and we don't know if
-+	 * there are any gremlins lurking in the shadows,
-+	 * so best we keep HW offload disabled for P2P.
- 	 */
- 	ar->disable_offload |= vif->p2p;
+-	if (xfer->tx_buf)
++	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+-	if (xfer->rx_buf)
++		imr |= SPI_INT_TXOI;
++	}
++	if (xfer->rx_buf) {
+ 		dma_ctrl |= SPI_DMA_RDMAE;
++		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
++	}
+ 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
  
-@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
- 			if (vif->type == NL80211_IFTYPE_STATION)
- 				break;
+ 	/* Set the interrupt mask */
+-	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
++	spi_umask_intr(dws, imr);
  
--			/* P2P GO [master] use-case
--			 * Because the P2P GO station is selected dynamically
--			 * by all participating peers of a WIFI Direct network,
--			 * the driver has be able to change the main interface
--			 * operating mode on the fly.
--			 */
--			if (main_vif->p2p && vif->p2p &&
--			    vif->type == NL80211_IFTYPE_AP) {
--				old_main = main_vif;
--				break;
--			}
--
- 			err = -EBUSY;
- 			rcu_read_unlock();
+ 	dws->transfer_handler = dma_transfer;
  
+-- 
+2.25.1
+
 
 
