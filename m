@@ -2,55 +2,51 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D460C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0182C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 545572193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72D721927
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580508;
-	bh=E/7HYZcFWCYad9Xsm1E7dzZCby4y08/7lx/4/FuHRzc=;
+	s=default; t=1592580517;
+	bh=xeRy9E+bPKOBqWJn5njVkWn/IvLX5s54PB/5clmRkck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaB5BCXqhtFFtA+0MjRG6Uns5g2TMVDWwYmYJ9FDirS1R0RexNIEaa634vlqR3BeO
-	 sgGJlx5e43Qx0ALMDaNuy+NCbnB1wBqY0l2R9dQWWtNyEcFOw4cc5PbEc/jBW50avy
-	 +XlUvwtDSx3Mwv8t9aMeiQgV8c1OBLl/N7+m32H0=
+	b=rpPZXEfwPpJ2jw4A5mBT7DOBv4WHbRlFUcn+YKO55sGVhT6UWxOOrJuzDMp1V9Cmr
+	 OQTOz0tahzzPBuTF+hFmvYkRuiZd9OWw0UbaXf2CkhP84QdrTM5hpcTqdSOnMROqwD
+	 spsdJKwr3FgPBf4yq3MfYhNB2Gzh0ksZluF/e7LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404573AbgFSP21 (ORCPT
+        id S2393462AbgFSP2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404442AbgFSP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:54 -0400
+        id S2404456AbgFSP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6FF20734;
-        Fri, 19 Jun 2020 15:27:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86D112186A;
+        Fri, 19 Jun 2020 15:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580473;
-        bh=E/7HYZcFWCYad9Xsm1E7dzZCby4y08/7lx/4/FuHRzc=;
+        s=default; t=1592580479;
+        bh=xeRy9E+bPKOBqWJn5njVkWn/IvLX5s54PB/5clmRkck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cpxfa3b7bBewY50nO54MI8B1QeyteHQn3wk0pXVbhecrWI3r0k1R7mj6QtKy1SrB9
-         kd8LsEoBV0nM/B93VVTdESi3c0OjviEnm247gWgl0zySWsMTkX3MsgjZL2p6sLPkEG
-         O0pTVpPfqf+1/WcHxqKDSDpeVXkuyjuh33ZAHJis=
+        b=CjgE3+scnkKJRDM8AJmWgjzTJiJEVayCnQVGTBrot74+GvwxCufykZ9YRwkGV35Cc
+         pdaYwzSIqGgDTXfWqfbW1OACVfHzffILo/1W4X+I7KKYwDo52yAKYpMEoQ9XZCNtWm
+         e+2le8rz5zBLW6htXw0ZGbJkB7xvC7dt6hj7FBjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 245/376] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date:   Fri, 19 Jun 2020 16:32:43 +0200
-Message-Id: <20200619141721.923424374@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 264/376] btrfs: fix wrong file range cleanup after an error filling dealloc range
+Date:   Fri, 19 Jun 2020 16:33:02 +0200
+Message-Id: <20200619141722.827995524@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,82 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+commit e2c8e92d1140754073ad3799eb6620c76bab2078 upstream.
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
+If an error happens while running dellaloc in COW mode for a range, we can
+end up calling extent_clear_unlock_delalloc() for a range that goes beyond
+our range's end offset by 1 byte, which affects 1 extra page. This results
+in clearing bits and doing page operations (such as a page unlock) outside
+our target range.
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+Fix that by calling extent_clear_unlock_delalloc() with an inclusive end
+offset, instead of an exclusive end offset, at cow_file_range().
 
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
+Fixes: a315e68f6e8b30 ("Btrfs: fix invalid attempt to free reserved space on failure to cow range")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And now we need to exten the whitelist again with 10 / "Notebook"...
-
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ fs/btrfs/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 4921fc15dc6c..a05b80955dcd 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -158,21 +158,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
- 
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
--
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
- 
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
--- 
-2.25.1
-
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1142,7 +1142,7 @@ out_unlock:
+ 	 */
+ 	if (extent_reserved) {
+ 		extent_clear_unlock_delalloc(inode, start,
+-					     start + cur_alloc_size,
++					     start + cur_alloc_size - 1,
+ 					     locked_page,
+ 					     clear_bits,
+ 					     page_ops);
 
 
