@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F88C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E6D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415AB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583161;
-	bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+	s=default; t=1592583169;
+	bh=WCVFemPCvvEAHresKQipQbskeWxyB4CvxzJtpyrJpng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4q/BZZx5Im1LvhcV72ay4ZvGLEPe7ZKJ+ADJg0ne4NMVA+SdIOvR+u+QE0Ra9OCH
-	 EQHAqT5iyFKep0vMbE3k7QkE+8Na8RYbB5HXWHeAz5iQP0QJ+2/YZ1VuI2kdRRpfc9
-	 OZH3eLZS8EEIQgbBpKtQvPQVTmQ8KhnB/AxOv2ok=
+	b=LCGuo0+IkDxLVgAOHUrTmjn7st7TfrnSiWdoin3Gyn702s3ppRKmY8Qia2sD/kvkl
+	 PJQP0Rk7dEWrSI4d/B4oWUxLKHeASnmscp1yZw7QfpnRu0Rh2AA+5ydkBW56qM4EPd
+	 ThmMJsHb2IXj41gRWEvK+kBNrfvji40jYoNwXUyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394067AbgFSQMj (ORCPT
+        id S2394183AbgFSQMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33460 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391181AbgFSPEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:45 -0400
+        id S2390563AbgFSPEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A3B92193E;
-        Fri, 19 Jun 2020 15:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FF721841;
+        Fri, 19 Jun 2020 15:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579084;
-        bh=uv2kvTbckQQzxzS5LFDIVglVH5WrWYKtxASxfY7wk0g=;
+        s=default; t=1592579071;
+        bh=WCVFemPCvvEAHresKQipQbskeWxyB4CvxzJtpyrJpng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=daK4elVxZArq9WO9Dwh5uRB+hig2b/wrxS13y2EDfa1DKZWCfNfxlv5c5Kfv6t6cu
-         rV2Yv7p2HKUBqJZJwfqGFlE28It3LxvG9ko4TDiEtsgcfeRrLsb5b4rHMii69KueTU
-         DZgMyIOGEOHbvBxotVPCLSXFN1nYof66bhhv3mNw=
+        b=kwF/aqRLwQ0PhJwix0TWjMyDUBD1H2DFaHfw44sWzLBGAkff5bAyJYKBNeNPaGy61
+         MX9R9KOtIiGOznBbJYMQbDg8WyEalCcA6wTRJa/7g1pWWDuMpxjkxu1NYv8ZsIgGmZ
+         BA3+FLqbkgcQgfcgTui9TAcypSl+GSKfHsHxNAZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.19 253/267] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
-Date:   Fri, 19 Jun 2020 16:33:58 +0200
-Message-Id: <20200619141700.808815896@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 4.19 265/267] perf probe: Fix to check blacklist address correctly
+Date:   Fri, 19 Jun 2020 16:34:10 +0200
+Message-Id: <20200619141701.388317468@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,34 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit baa998aecb75c04d62be0a4ab6b724af6d73a0f9 upstream.
+commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
 
-The gpio property for the vbus pin doesn't match the pinctrl and is
-not correct.
+Fix to check kprobe blacklist address correctly with relocated address
+by adjusting debuginfo address.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
-Link: https://lore.kernel.org/r/20200401221947.41502-1-ludovic.desroches@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Since the address in the debuginfo is same as objdump, it is different
+from relocated kernel address with KASLR.  Thus, 'perf probe' always
+misses to catch the blacklisted addresses.
+
+Without this patch, 'perf probe' can not detect the blacklist addresses
+on a KASLR enabled kernel.
+
+  # perf probe kprobe_dispatcher
+  Failed to write event: Invalid argument
+    Error: Failed to add events.
+  #
+
+With this patch, it correctly shows the error message.
+
+  # perf probe kprobe_dispatcher
+  kprobe_dispatcher is blacklisted function, skip it.
+  Probe point 'kprobe_dispatcher' not found.
+    Error: Failed to add events.
+  #
+
+Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-event.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -40,7 +40,7 @@
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -111,7 +111,7 @@ void exit_probe_symbol_maps(void)
+ 	symbol__exit();
+ }
  
- 	ahb {
- 		usb0: gadget@300000 {
--			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
-+			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usba_vbus>;
- 			status = "okay";
+-static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
++static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
+ {
+ 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
+ 	struct kmap *kmap;
+@@ -123,6 +123,10 @@ static struct ref_reloc_sym *kernel_get_
+ 	kmap = map__kmap(map);
+ 	if (!kmap)
+ 		return NULL;
++
++	if (pmap)
++		*pmap = map;
++
+ 	return kmap->ref_reloc_sym;
+ }
+ 
+@@ -134,7 +138,7 @@ static int kernel_get_symbol_address_by_
+ 	struct map *map;
+ 
+ 	/* ref_reloc_sym is just a label. Need a special fix*/
+-	reloc_sym = kernel_get_ref_reloc_sym();
++	reloc_sym = kernel_get_ref_reloc_sym(NULL);
+ 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
+ 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
+ 	else {
+@@ -751,6 +755,7 @@ post_process_kernel_probe_trace_events(s
+ 				       int ntevs)
+ {
+ 	struct ref_reloc_sym *reloc_sym;
++	struct map *map;
+ 	char *tmp;
+ 	int i, skipped = 0;
+ 
+@@ -759,7 +764,7 @@ post_process_kernel_probe_trace_events(s
+ 		return post_process_offline_probe_trace_events(tevs, ntevs,
+ 						symbol_conf.vmlinux_name);
+ 
+-	reloc_sym = kernel_get_ref_reloc_sym();
++	reloc_sym = kernel_get_ref_reloc_sym(&map);
+ 	if (!reloc_sym) {
+ 		pr_warning("Relocated base symbol is not found!\n");
+ 		return -EINVAL;
+@@ -770,9 +775,13 @@ post_process_kernel_probe_trace_events(s
+ 			continue;
+ 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
+ 			continue;
+-		/* If we found a wrong one, mark it by NULL symbol */
++		/*
++		 * If we found a wrong one, mark it by NULL symbol.
++		 * Since addresses in debuginfo is same as objdump, we need
++		 * to convert it to addresses on memory.
++		 */
+ 		if (kprobe_warn_out_range(tevs[i].point.symbol,
+-					  tevs[i].point.address)) {
++			map__objdump_2mem(map, tevs[i].point.address))) {
+ 			tmp = NULL;
+ 			skipped++;
+ 		} else {
+@@ -2887,7 +2896,7 @@ static int find_probe_trace_events_from_
+ 	/* Note that the symbols in the kmodule are not relocated */
+ 	if (!pev->uprobes && !pev->target &&
+ 			(!pp->retprobe || kretprobe_offset_is_supported())) {
+-		reloc_sym = kernel_get_ref_reloc_sym();
++		reloc_sym = kernel_get_ref_reloc_sym(NULL);
+ 		if (!reloc_sym) {
+ 			pr_warning("Relocated base symbol is not found!\n");
+ 			ret = -EINVAL;
 
 
