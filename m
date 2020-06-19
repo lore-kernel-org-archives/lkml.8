@@ -2,171 +2,180 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D79C21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579180;
-	bh=Y875Dia4Q1F7Rb7MJQgFlPzLbag97EsU+2KHsI8K/aU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1+ajxnDm/PVLn4WOnpONY8vEpMVOlxU8jdwrew3s8Bc+3qVnHm9RAgNLchKI0qFR
-	 iKavc6p4NCbg2xgo+sunG8Aj6u3ct2pvJL2AeVAo9TzDDpJ4gN0UQyMVB8Dt1wwFZl
-	 4d75b2Cjv/ZgfvZyLnRAhTH1BINCbOhrdqm9l4jg=
+	by mail.kernel.org (Postfix) with ESMTP id 29E8921852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="V1jFXKxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391412AbgFSPGR (ORCPT
+        id S2391425AbgFSPGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391398AbgFSPGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:06:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91C4221ED;
-        Fri, 19 Jun 2020 15:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579172;
-        bh=Y875Dia4Q1F7Rb7MJQgFlPzLbag97EsU+2KHsI8K/aU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lm5zWklkx0pd+RowPvbbqSf1ve+kgzd/8kwj03R8O54tGtVsOEHIYdmc+NVzqpI/e
-         pThrlD7GUqLROvC+JiPM5GoFHoerc7U3SyFnw/caG7puImIA33Kxdb0nxo2W9qkMjf
-         j49p5j+fb52pkn4ghdUYIb1Tz+hqQDUbxTlO+Jv0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 035/261] Bluetooth: Add SCO fallback for invalid LMP parameters error
-Date:   Fri, 19 Jun 2020 16:30:46 +0200
-Message-Id: <20200619141651.594215949@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 11:06:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391420AbgFSPGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:18 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFF5C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:06:17 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j189so8688938oih.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=l5bPDp6tSQ6UB25Tmr+FxCYVIvJPeZJlOAF1u+aQ9Rs=;
+        b=V1jFXKxH9JLOzMoiPIzD5AaSDKHq7RFlO6xezDKhJyRYz93hCrYjWgdK7OEyodFwM2
+         kDzGATay8IHh8e80+mnVWhb8ejljyl7TC9nAm9rnfWCRB2CH7Y5/uH3a16+C1ds/YG6W
+         L2ObS2Ab5ArSWEXfmwsNABGkjrImJGIKuRrck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=l5bPDp6tSQ6UB25Tmr+FxCYVIvJPeZJlOAF1u+aQ9Rs=;
+        b=dRPuXgYB8mI0Ar1uESYOSHf5xC1tdv2/DdEZM+5XZcAFenBcj3GbJrWv/BXgWGJNtZ
+         fXnpUBt/SC1ytfyPEcgAzOrqr2AmQjMhyszo/yAKf8KMTMlo8LISh1BvXSWoTJiqyAcm
+         JMHR/2BbS0SJJfvkP+dtIEP51dmZmRRshNNmBvpNEQNAJDE0BhAXyR3Zza0yH1mDorBT
+         ++yIAigaw9LjLj/Eqd4aE6snQSaE3nw4RSuTcYbvEmgt5D9bhY3syDfQaYXBkjO/83Qp
+         ja6rt4lGWTg7IEzPE/X2OTED13lZGhvdGnjjWOH84Sfy0Qpjqqpwhdg87wGMDWy/JG0a
+         arkg==
+X-Gm-Message-State: AOAM533FV5xUv82wRqx56EJj9i7ADnDcT080UrO41G2yQCxbkJYP2kFu
+        NTVNK0sKsNSAFJjctgaibQJFHhZw5MGw4XvfuOdLIA==
+X-Google-Smtp-Source: ABdhPJzkpCIjuIXUDXsaWuT9KnXo7xRSxKpK3kVIgCwYzrv9QHH1pbq5icbg335wwjGkDiUm4Nr1W4w/4YXBEbh0gJs=
+X-Received: by 2002:aca:aaca:: with SMTP id t193mr3427302oie.14.1592579176624;
+ Fri, 19 Jun 2020 08:06:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org> <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca> <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca> <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca> <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+In-Reply-To: <20200619113934.GN6578@ziepe.ca>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 19 Jun 2020 17:06:04 +0200
+Message-ID: <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yu Chao <hychao@chromium.org>
+On Fri, Jun 19, 2020 at 1:39 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Fri, Jun 19, 2020 at 09:22:09AM +0200, Daniel Vetter wrote:
+> > > As I've understood GPU that means you need to show that the commands
+> > > associated with the buffer have completed. This is all local stuff
+> > > within the driver, right? Why use fence (other than it already exists=
+)
+> >
+> > Because that's the end-of-dma thing. And it's cross-driver for the
+> > above reasons, e.g.
+> > - device A renders some stuff. Userspace gets dma_fence A out of that
+> > (well sync_file or one of the other uapi interfaces, but you get the
+> > idea)
+> > - userspace (across process or just different driver) issues more
+> > rendering for device B, which depends upon the rendering done on
+> > device A. So dma_fence A is an dependency and will block this dma
+> > operation. Userspace (and the kernel) gets dma_fence B out of this
+> > - because unfortunate reasons, the same rendering on device B also
+> > needs a userptr buffer, which means that dma_fence B is also the one
+> > that the mmu_range_notifier needs to wait on before it can tell core
+> > mm that it can go ahead and release those pages
+>
+> I was afraid you'd say this - this is complete madness for other DMA
+> devices to borrow the notifier hook of the first device!
 
-[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
+The first device might not even have a notifier. This is the 2nd
+device, waiting on a dma_fence of its own, but which happens to be
+queued up as a dma operation behind something else.
 
-Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
-with invalid parameter at the first SCO request expecting AG to
-attempt another SCO request with the use of "safe settings" for
-given codec, base on section 5.7.1.2 of HFP 1.7 specification.
+> What if the first device is a page faulting device and doesn't call
+> dma_fence??
 
-This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
-to the SCO fallback case. Verified with below log:
+Not sure what you mean with this ... even if it does page-faulting for
+some other reasons, it'll emit a dma_fence which the 2nd device can
+consume as a dependency.
 
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 13
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x0380
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Number of Completed Packets (0x13) plen 5
-        Num handles: 1
-        Handle: 256
-        Count: 1
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
-        Handle: 0
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x00
-        Retransmission window: 0x02
-        RX packet length: 0
-        TX packet length: 0
-        Air mode: Transparent (0x03)
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 8
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x03c8
-          EV3 may be used
-          2-EV3 may not be used
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 5
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Success (0x00)
-        Handle: 257
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x06
-        Retransmission window: 0x04
-        RX packet length: 30
-        TX packet length: 30
-        Air mode: Transparent (0x03)
+> It you are going to treat things this way then the mmu notifier really
+> needs to be part of the some core DMA buf, and not randomly sprinkled
+> in drivers
 
-Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/hci_event.c | 1 +
- 1 file changed, 1 insertion(+)
+So maybe again unclear, we don't allow such userptr dma-buf to even be
+shared. They're just for slurping in stuff in the local device
+(general from file io or something the cpu has done or similar). There
+have been attempts to use it as the general backing storage, but that
+didn't go down too well because way too many complications.
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index c1d3a303d97f..88cd410e5728 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4216,6 +4216,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
- 	case 0x11:	/* Unsupported Feature or Parameter Value */
- 	case 0x1c:	/* SCO interval rejected */
- 	case 0x1a:	/* Unsupported Remote Feature */
-+	case 0x1e:	/* Invalid LMP Parameters */
- 	case 0x1f:	/* Unspecified error */
- 	case 0x20:	/* Unsupported LMP Parameter value */
- 		if (conn->out) {
--- 
-2.25.1
+Generally most memory the gpu operates on isn't stuff that's
+mmu_notifier'ed. And also, the device with userptr support only waits
+for its own dma_fence (because well you can't share this stuff, we
+disallow that).
 
+The problem is that there's piles of other dependencies for a dma job.
+GPU doesn't just consume a single buffer each time, it consumes entire
+lists of buffers and mixes them all up in funny ways. Some of these
+buffers are userptr, entirely local to the device. Other buffers are
+just normal device driver allocations (and managed with some shrinker
+to keep them in check). And then there's the actually shared dma-buf
+with other devices. The trouble is that they're all bundled up
+together.
 
+Now we probably should have some helper code for userptr so that all
+drivers do this roughly the same, but that's just not there yet. But
+it can't be a dma-buf exporter behind the dma-buf interfaces, because
+even just pinned get_user_pages would be too different semantics
+compared to normal shared dma-buf objects, that's all very tightly
+tied into the specific driver.
 
+> But really this is what page pinning is supposed to be used for, the
+> MM behavior when it blocks on a pinned page is less invasive than if
+> it stalls inside a mmu notifier.
+>
+> You can mix it, use mmu notififers to keep track if the buffer is
+> still live, but when you want to trigger DMA then pin the pages and
+> keep them pinned until DMA is done. The pin protects things (well,
+> fork is still a problem)
+
+Hm I thought amdgpu had that (or drm/radeon as the previous
+incarnation of that stack), and was unhappy about the issues. Would
+need Christian K=C3=B6nig to chime in.
+
+> Do not need to wait on dma_fence in notifiers.
+
+Maybe :-) The goal of this series is more to document current rules
+and make them more consistent. Fixing them if we don't like them might
+be a follow-up task, but that would likely be a pile more work. First
+we need to know what the exact shape of the problem even is.
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
