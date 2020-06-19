@@ -2,56 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95F3C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBB1C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB87D2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E98321974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579946;
-	bh=MvkpziLz+OYcARuVbeGtxopmI4GZl9PufbVqxqdF9n4=;
+	s=default; t=1592579947;
+	bh=5hSc+i7R6HUFUXmaUtMDJxodRMsEDfKC53KLvuOO6t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmKI9+mFx9q4YWrZp/qewFROpGEN6cheazuq1WzsyI/W0EzQQVsZ/qHiuZV4gtRzV
-	 Pygz+tSZVoXDEWzmae3gUMsKpWG0yXOhDCo3jdD2FiJmJ6xRfbDRsWfOsKXMnNn2Sn
-	 NKQpHJ/Ql9Z/dZfDU4yFRSipZ+++/QOhdQNlyR0E=
+	b=Z6A+VQR1YGAIRZ1h87ftNN3iVYGT3TIPqCKODDCMUItekbY3Z8hMwuy42zLc9qF0E
+	 8VGbO/UTCRzhq6FlO1ib3gdB0j2zkn04nXKq/VjvoCfzXGd1wfJs9tLjMoTBS20QAK
+	 YNoxRtLx5OmkkN6j2hpqtbO08pUsP4BNkruDVJx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404136AbgFSPRE (ORCPT
+        id S2392469AbgFSPQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404119AbgFSPQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:55 -0400
+        id S2392451AbgFSPP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:15:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 934EA21582;
-        Fri, 19 Jun 2020 15:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81242184D;
+        Fri, 19 Jun 2020 15:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579815;
-        bh=MvkpziLz+OYcARuVbeGtxopmI4GZl9PufbVqxqdF9n4=;
+        s=default; t=1592579759;
+        bh=5hSc+i7R6HUFUXmaUtMDJxodRMsEDfKC53KLvuOO6t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVhnyTdijYhuIoZ1F8xjfY1KY5z+Gg6Oqlfn+MtSB3GF0bG/LeDaumMhVjKlu4NwY
-         r7b3L/Go97uVBcG8Glr2I0jftcrHvOgpIXMat+t6BLSiTrMv9zhE2Yw81one4UOqdZ
-         wW/2b+KZot3MEaVy2RsVeslVDNySNu532YdyTwwU=
+        b=CxfLaRxL57TvSrwMfoaabiNIoGmI5qzcDxd0LBsfAJjVhcZN6HHXJdxRLhO2HZDrk
+         pT9X+ubxn/673/j4btGPL4mlVDMIb2hoXzgn1lUmYYN9wqE3Akg1VGwIrQMif7rzRz
+         NIQvPVoW04kPkilh6Coy+rmQBhZTjVlOMbtsWmaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 004/376] drm: bridge: adv7511: Extend list of audio sample rates
-Date:   Fri, 19 Jun 2020 16:28:42 +0200
-Message-Id: <20200619141710.566774213@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 225/261] ARM: tegra: Correct PL310 Auxiliary Control Register initialization
+Date:   Fri, 19 Jun 2020 16:33:56 +0200
+Message-Id: <20200619141700.643109020@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,50 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bogdan Togorean <bogdan.togorean@analog.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit b97b6a1f6e14a25d1e1ca2a46c5fa3e2ca374e22 ]
+commit 35509737c8f958944e059d501255a0bf18361ba0 upstream.
 
-ADV7511 support sample rates up to 192kHz. CTS and N parameters should
-be computed accordingly so this commit extend the list up to maximum
-supported sample rate.
+The PL310 Auxiliary Control Register shouldn't have the "Full line of
+zero" optimization bit being set before L2 cache is enabled. The L2X0
+driver takes care of enabling the optimization by itself.
 
-Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200413113513.86091-2-bogdan.togorean@analog.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixes a noisy error message on Tegra20 and Tegra30 telling
+that cache optimization is erroneously enabled without enabling it for
+the CPU:
+
+	L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/mach-tegra/tegra.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-index a428185be2c1..d05b3033b510 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-@@ -19,13 +19,15 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
- {
- 	switch (fs) {
- 	case 32000:
--		*n = 4096;
-+	case 48000:
-+	case 96000:
-+	case 192000:
-+		*n = fs * 128 / 1000;
- 		break;
- 	case 44100:
--		*n = 6272;
--		break;
--	case 48000:
--		*n = 6144;
-+	case 88200:
-+	case 176400:
-+		*n = fs * 128 / 900;
- 		break;
- 	}
+--- a/arch/arm/mach-tegra/tegra.c
++++ b/arch/arm/mach-tegra/tegra.c
+@@ -106,8 +106,8 @@ static const char * const tegra_dt_board
+ };
  
--- 
-2.25.1
-
+ DT_MACHINE_START(TEGRA_DT, "NVIDIA Tegra SoC (Flattened Device Tree)")
+-	.l2c_aux_val	= 0x3c400001,
+-	.l2c_aux_mask	= 0xc20fc3fe,
++	.l2c_aux_val	= 0x3c400000,
++	.l2c_aux_mask	= 0xc20fc3ff,
+ 	.smp		= smp_ops(tegra_smp_ops),
+ 	.map_io		= tegra_map_common_io,
+ 	.init_early	= tegra_init_early,
 
 
