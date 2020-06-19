@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C88208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293B620CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577459;
-	bh=jnSIPR9S/hRqTCpAo+R2s7dCUShwvII3xa1SL2ChJ2c=;
+	s=default; t=1592577468;
+	bh=FdpUTESJ9f6tKR31I9XJPxlSZiptBJC8TU1UArWeeCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSceM8QUjm9jQPmld9I7krT+c+hwoP2SJfcz29gugvth8FVGtaGmDRoL3L8Dg9R+v
-	 la/66DfTsGLL8RxpDZ6jVjdlcbM/xitY9EVUbWPfPKNi41eTn2aXwQs2LCDPQfuBuQ
-	 jgoDBe3ofQQdMSiLGfrcGZ8B6kDgI943BYqaOpyg=
+	b=fsHWJxaWX7VpebJY4eGPK5JCTdr633MXHYukQtla3TSSMAadCPzbhEmdtC5mRxxTx
+	 k8BigbWRX89Two6kB5IF8aZ1VD+5rq8g0TduZSxXbI+DdGqgjb+NhzMzBygMJnJ7ks
+	 GosfaSJFWOqtj+j0iInttJVbSzCc3+r+zYZ2mlgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgFSOhg (ORCPT
+        id S2387769AbgFSOho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387668AbgFSOhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:37:08 -0400
+        id S2387710AbgFSOhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:37:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357D72070A;
-        Fri, 19 Jun 2020 14:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6D2421527;
+        Fri, 19 Jun 2020 14:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577427;
-        bh=jnSIPR9S/hRqTCpAo+R2s7dCUShwvII3xa1SL2ChJ2c=;
+        s=default; t=1592577443;
+        bh=FdpUTESJ9f6tKR31I9XJPxlSZiptBJC8TU1UArWeeCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3jXGg6pJv92w/VsqA7WNEKIgVwcj5OcM/y4ecYihnWXTnjGiyzFSg6AJNdQKg/aV
-         u4UkzC4ll34t/1zc1KHN/6TVlwK7FP3Nv5HzURNi2K9WO2cjvBiuTjRgCAwIAV72CT
-         d4EUsnI5KiRBxw5bNpEq6GyLlkcZ4P+R0Bjn4rL4=
+        b=kfln0CwobEvuC3+rk2bOyNf1NjqPcXVOuSVhmfu63GqizOlw3JzK3np7hRoYFvHDe
+         3iRIUZ6qYW1l9r+d4yc/4hSqw4fC+84kq3cOnyzHjR9N56Yg82OV+MdNwONVp18gVx
+         vpE167h9Wxah6UZ7Sad76iDIrXmzVRvcjTw3zip8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yu Chao <hychao@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 047/101] Bluetooth: Add SCO fallback for invalid LMP parameters error
-Date:   Fri, 19 Jun 2020 16:32:36 +0200
-Message-Id: <20200619141616.557426219@linuxfoundation.org>
+Subject: [PATCH 4.4 052/101] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
+Date:   Fri, 19 Jun 2020 16:32:41 +0200
+Message-Id: <20200619141616.787994343@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
 References: <20200619141614.001544111@linuxfoundation.org>
@@ -60,111 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yu Chao <hychao@chromium.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 56b5453a86203a44726f523b4133c1feca49ce7c ]
+[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
 
-Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
-with invalid parameter at the first SCO request expecting AG to
-attempt another SCO request with the use of "safe settings" for
-given codec, base on section 5.7.1.2 of HFP 1.7 specification.
+Recent work with KASan exposed the folling hard-coded bitmask
+in arch/arm/mm/proc-macros.S:
 
-This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
-to the SCO fallback case. Verified with below log:
+  bic     rd, sp, #8128
+  bic     rd, rd, #63
 
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 13
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x0380
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Number of Completed Packets (0x13) plen 5
-        Num handles: 1
-        Handle: 256
-        Count: 1
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
-        Handle: 0
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x00
-        Retransmission window: 0x02
-        RX packet length: 0
-        TX packet length: 0
-        Air mode: Transparent (0x03)
-< HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
-        Handle: 256
-        Transmit bandwidth: 8000
-        Receive bandwidth: 8000
-        Max latency: 8
-        Setting: 0x0003
-          Input Coding: Linear
-          Input Data Format: 1's complement
-          Input Sample Size: 8-bit
-          # of bits padding at MSB: 0
-          Air Coding Format: Transparent Data
-        Retransmission effort: Optimize for link quality (0x02)
-        Packet type: 0x03c8
-          EV3 may be used
-          2-EV3 may not be used
-          3-EV3 may not be used
-          2-EV5 may not be used
-          3-EV5 may not be used
-> HCI Event: Command Status (0x0f) plen 4
-      Setup Synchronous Connection (0x01|0x0028) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 5
-> HCI Event: Max Slots Change (0x1b) plen 3
-        Handle: 256
-        Max slots: 1
-> HCI Event: Synchronous Connect Complete (0x2c) plen 17
-        Status: Success (0x00)
-        Handle: 257
-        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
-        Link type: eSCO (0x02)
-        Transmission interval: 0x06
-        Retransmission window: 0x04
-        RX packet length: 30
-        TX packet length: 30
-        Air mode: Transparent (0x03)
+This forms the bitmask 0x1FFF that is coinciding with
+(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
+that THREAD_SIZE is always 8K (8192).
 
-Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
+this bug.
+
+Fix it by this little oneline suggested by Ard:
+
+  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
+
+Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
+
+We have to also include <linux/const.h> since the THREAD_SIZE
+expands to use the _AC() macro.
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mm/proc-macros.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 37fe2b158c2a..1d957c7f1783 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3761,6 +3761,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
- 	case 0x11:	/* Unsupported Feature or Parameter Value */
- 	case 0x1c:	/* SCO interval rejected */
- 	case 0x1a:	/* Unsupported Remote Feature */
-+	case 0x1e:	/* Invalid LMP Parameters */
- 	case 0x1f:	/* Unspecified error */
- 	case 0x20:	/* Unsupported LMP Parameter value */
- 		if (conn->out) {
+diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
+index e6bfdcc381f8..1da55d34f4d6 100644
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -4,6 +4,7 @@
+  *  VMA_VM_FLAGS
+  *  VM_EXEC
+  */
++#include <linux/const.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
+ 
+@@ -30,7 +31,7 @@
+  * act_mm - get current->active_mm
+  */
+ 	.macro	act_mm, rd
+-	bic	\rd, sp, #8128
++	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
+ 	bic	\rd, \rd, #63
+ 	ldr	\rd, [\rd, #TI_TASK]
+ 	ldr	\rd, [\rd, #TSK_ACTIVE_MM]
 -- 
 2.25.1
 
