@@ -2,84 +2,158 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D48C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C77C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB49120DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057B120DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592589719;
-	bh=UyTCtBCD12S8qQ31WKdq7c0c6851T2vdAXGJawSvP40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qZ3tX/WQzxIHwzLTe6n0PLgtTfSF+W6cqSF4Gegl7dmc1dT6LKRMBxv9/a11R8ckz
-	 GE6zt+efR2q6vHHYetXkklMEENGGJFIPlV6/iH3I03S2NN45Xs+Hx/lVdnXfsfvB8Q
-	 3uW2U/HRM6hdfM8wC4MJ0FP98rgYZc6IA432JrjA=
+	s=default; t=1592589833;
+	bh=XpQcmkHUs6scw56HIc1aqVY7nFfbPMX/4F+G2CVJtCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HiPcJr6qTUUYx4kkzwNnRSkgzfr3Rh4E7/eDnhqGDqmcM4mQvf2r/24ndW+5x3voN
+	 1iYwztVBjNQju2KEKsYOiUjH6jP4Vd3vUHxYMyibKMf+5tlKoX9xr0HyvXl1XjiDVy
+	 0yBV/D/JGrHExSMuqrjUVQplIkqPc0yliFEyEqyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733211AbgFSSB6 (ORCPT
+        id S1733240AbgFSSDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 14:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgFSSB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:01:57 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727003AbgFSSDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 14:03:51 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CCA20DD4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 18:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 239A320DD4;
+        Fri, 19 Jun 2020 18:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592589717;
-        bh=UyTCtBCD12S8qQ31WKdq7c0c6851T2vdAXGJawSvP40=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vH/MSGLRjam8b+6OoJb4UcWnI/fYy8uI3+74KWYhhp6NndblhyjUvsA9+u9PZTD6k
-         eED9/j6PeBgYOpIeahD8nMKgLvZ3iNA1CDb86vscZ/NR82/JH+kIt1blwXX7PksDW8
-         CcokqrfBJNODN5IjxB3lrDCjId5FbkO2UfCmviHw=
-Received: by mail-wm1-f51.google.com with SMTP id r15so9876134wmh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:01:56 -0700 (PDT)
-X-Gm-Message-State: AOAM532gUmbleRbvDKKrVHjJRi6/1ZnmI4NY8wddOAcCefS/jrGW0Gyb
-        HmFg8nXemRQybjp+TcuuX1qFxM9HDpePmu3CLaKj1Q==
-X-Google-Smtp-Source: ABdhPJy6kMk3kS6ULESrgKKYgL58AqmTZg+UEozUHWLeYJikzK9mzj+KP7nb36fISJIgJSd7LttQ6jVNYz4fN9w+glQ=
-X-Received: by 2002:a1c:a304:: with SMTP id m4mr5184678wme.49.1592589715431;
- Fri, 19 Jun 2020 11:01:55 -0700 (PDT)
+        s=default; t=1592589830;
+        bh=XpQcmkHUs6scw56HIc1aqVY7nFfbPMX/4F+G2CVJtCo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UJxY/L4df9jEX6dfoD6VrzqtO7UC3LKJlfUzTgxIBvb81T2/h8Ri7YmNpA1XlYNw5
+         EDWJLMJ2jc/Rybwv4aPGmjNtVPkKbsq4GelMlA30sUaYQzx7TDTaDFXH/U7s8YyIiy
+         jI17E2K3uDm6vUD1GEN+Bde7Bd6hRJpIWKFA5MiY=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 81DB63C08CD; Fri, 19 Jun 2020 20:03:48 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 20:03:48 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: max8998_charger: Correct ONLINE and add
+ STATUS props
+Message-ID: <20200619180348.hmjedqcp3uqlyj7i@earth.universe>
+References: <CY4PR04MB066382CE428A87AD131DB96CA3BA0@CY4PR04MB0663.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200619174127.22304-1-bp@alien8.de> <20200619174127.22304-2-bp@alien8.de>
-In-Reply-To: <20200619174127.22304-2-bp@alien8.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 19 Jun 2020 11:01:44 -0700
-X-Gmail-Original-Message-ID: <CALCETrXZhFJGJA2h4zP743KYTtni-rQSUME8mtSYUdk1-ZTauQ@mail.gmail.com>
-Message-ID: <CALCETrXZhFJGJA2h4zP743KYTtni-rQSUME8mtSYUdk1-ZTauQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     X86 ML <x86@kernel.org>, jpa@kernelbug.mail.kapsi.fi,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w735oymtygjx5gmu"
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB066382CE428A87AD131DB96CA3BA0@CY4PR04MB0663.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:41 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
->
-> Previously, kernel floating point code would run with the MXCSR control
-> register value last set by userland code by the thread that was active
-> on the CPU core just before kernel call. This could affect calculation
-> results if rounding mode was changed, or a crash if a FPU/SIMD exception
-> was unmasked.
->
-> Restore MXCSR to the kernel's default value.
->
->  [ bp: Carve out from a bigger patch by Petteri, add feature check, add
->    FNINIT call too (amluto). ]
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+--w735oymtygjx5gmu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-but:
+Hi,
 
-shouldn't kernel_fpu_begin() end with a barrier()?
+On Sat, May 16, 2020 at 03:35:44PM -0700, Jonathan Bakker wrote:
+> The ONLINE prop should be when the charger is present (ie able to
+> charge), however, it was for when it was actually charging or not.
+> Instead, add the STATUS prop to show whether charging is actually
+> going on or not.
+>=20
+> The magic numbers have been ported from a downstream kernel for the
+> SGH-T959V.
+>=20
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/max8998_charger.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max8998_charger.c b/drivers/power/suppl=
+y/max8998_charger.c
+> index 9a926c7c0f22..c26023b19f26 100644
+> --- a/drivers/power/supply/max8998_charger.c
+> +++ b/drivers/power/supply/max8998_charger.c
+> @@ -23,6 +23,7 @@ struct max8998_battery_data {
+>  static enum power_supply_property max8998_battery_props[] =3D {
+>  	POWER_SUPPLY_PROP_PRESENT, /* the presence of battery */
+>  	POWER_SUPPLY_PROP_ONLINE, /* charger is active or not */
+> +	POWER_SUPPLY_PROP_STATUS, /* charger is charging/discharging/full */
+>  };
+> =20
+>  /* Note that the charger control is done by a current regulator "CHARGER=
+" */
+> @@ -49,10 +50,28 @@ static int max8998_battery_get_property(struct power_=
+supply *psy,
+>  		ret =3D max8998_read_reg(i2c, MAX8998_REG_STATUS2, &reg);
+>  		if (ret)
+>  			return ret;
+> -		if (reg & (1 << 3))
+> -			val->intval =3D 0;
+> -		else
+> +
+> +		if (reg & (1 << 5))
+>  			val->intval =3D 1;
+> +		else
+> +			val->intval =3D 0;
+> +
+> +		break;
+> +	case POWER_SUPPLY_PROP_STATUS:
+> +		ret =3D max8998_read_reg(i2c, MAX8998_REG_STATUS2, &reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (!(reg & (1 << 5))) {
+> +			val->intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> +		} else {
+> +			if (reg & (1 << 6))
+> +				val->intval =3D POWER_SUPPLY_STATUS_FULL;
+> +			else if (reg & (1 << 3))
+> +				val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
+> +			else
+> +				val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +		}
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> --=20
+> 2.20.1
+>=20
+
+--w735oymtygjx5gmu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s/gQACgkQ2O7X88g7
++poW0g/5ASrparSqnyb/SlMkJRqwhDyImrnEfTNaaJz+8Ro+DKq4h4kMZW3fdPO1
+qr77SfFw/ZO/7gWqT4Wk8QcvS+jNPfAxzOhBD1Ob+LW53duR/Febes4ysejyQeBp
+C+NiFoBqZ98b8h12fo6XEsk7t9bKUDa0nUS/88h+hGkBnTW2HIJIIdjPDI82pWLF
+plS+B5evPO5puIHccegHqSRjL4ltKUL+G/ImivS8cWBlISRXRQctVXLArjyuw9c2
+SBC+Fvrg+P6oHYGDdSj+7fNeDow2rR3uGA1aW++nlHVERw0jj8ON5ZRoh3tohYue
++s16kRDQHLf6gCOJSjEeQUbt/j8XtOqOMiUjbRvNZlQbJwjVOTRJRig676cPxfgB
+HQ6Gchl1m5x9+MnNp8INX4gp7Q5lNAeS5kBn4CaU/1AXttBJlq8zQAcy4a7HjQxm
+pXeUPaGhmcEcAW5+7bukWiKXPaLm3zDqJit1xBpY8+kU3DkTfh4V+YB3W6VtuOfc
+LDmp0ylVx2yCkw+ZsjjoLDmzn2NWiqZzFKIxLDjQ1erF62DChEzqoITeHBBWXUo+
+3CwPI+NBx8cTJbzimTgmK91fam5X8x8LM6lfWkN7lJirTuECKYaEA8GKLR6Jh1z5
+V4OdU3NSrEU3EEvL7LDtK+IBlDIxWiIxCz206y1a01G6WVv5y4M=
+=4zhX
+-----END PGP SIGNATURE-----
+
+--w735oymtygjx5gmu--
