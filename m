@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBECC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFF820809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C821720809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582665;
-	bh=M+tyrRCR/fbrbhIGQkHftEMicDK86NTkiH6WntT4Quk=;
+	s=default; t=1592582667;
+	bh=iN4uu/SZtCI23lgelTAMXjz+AGc7s2h6+bTtogWffiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2VugyXWTzxJbvBH3hTaRduXaCQ4vmSjfHdWNqUpVr9BR+MJMrM08+tsBq+CxWJCXW
-	 UOWnY16GIMsMkpApmIMPRd0hpcOQUjcRweooWGsHNZ/ccaMirMd56s3n50HfxFd2Iv
-	 3v/P7sWpKKnV6DKjTFCP+m5bMLhLlgMFpdxSfOrY=
+	b=L8XF7BbHF3ABxNfnJrYYKo8yYHmO8iFm+1wy3DiKjmvivXqU5F7IVKlYyTJPBDoBw
+	 9VbOYjcOSFLNOKyB/Ln7Fxre5XsqwIVlzQ+05PNAL/JX1PEcleHeUM26P9Q0+pyzkH
+	 jr+rXKguKjTydqyQQSxCVR9FdYNM1Qy5vl/3aoVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405492AbgFSQEX (ORCPT
+        id S2405501AbgFSQEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403808AbgFSPK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:58 -0400
+        id S2403803AbgFSPKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01BE5206FA;
-        Fri, 19 Jun 2020 15:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17208206FA;
+        Fri, 19 Jun 2020 15:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579457;
-        bh=M+tyrRCR/fbrbhIGQkHftEMicDK86NTkiH6WntT4Quk=;
+        s=default; t=1592579454;
+        bh=iN4uu/SZtCI23lgelTAMXjz+AGc7s2h6+bTtogWffiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mR1c0oArYppZZFbqDYoqaSebCokTfNb4wtogwf2Lg6pTRPyfAl94xW1927eta0OLx
-         s8nNQMu7ptqhliRGjLL+M9CxDsZBFQ3TPyBaQaAEzUHQg2/P/4drQhE+PzFb9njvXT
-         R3aCyW/cNgqRQjixD5kyEoi95ggg05Vu5MO1S8hU=
+        b=xMds3ooVj8w32Jg50YF0z57W+1hOs2UmDjNBnxgZ1PfFB8RNVzlmW0YxjNIKfAq3q
+         bx2h7tgeUGmXwutF9vDEGERdB6uiYxF42L917fqCu72b3RYYpwfXAzna8WC/7rwW/G
+         fU5X2F3EFZF43lvOU5Sq4WTe+NdqB70vgwRIlrLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruce Chang <brucechang@via.com.tw>,
-        Harald Welte <HaraldWelte@viatech.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        greybus-dev@lists.linaro.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 142/261] mmc: via-sdmmc: Respect the cmd->busy_timeout from the mmc core
-Date:   Fri, 19 Jun 2020 16:32:33 +0200
-Message-Id: <20200619141656.674488729@linuxfoundation.org>
+Subject: [PATCH 5.4 141/261] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
+Date:   Fri, 19 Jun 2020 16:32:32 +0200
+Message-Id: <20200619141656.623784714@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -63,12 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 966244ccd2919e28f25555a77f204cd1c109cad8 ]
+[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
 
-Using a fixed 1s timeout for all commands (and data transfers) is a bit
-problematic.
+Using a fixed 1s timeout for all commands is a bit problematic.
 
-For some commands it means waiting longer than needed for the timer to
+For some commands it means waiting longer than needed for the timeout to
 expire, which may not a big issue, but still. For other commands, like for
 an erase (CMD38) that uses a R1B response, may require longer timeouts than
 1s. In these cases, we may end up treating the command as it failed, while
@@ -77,46 +76,48 @@ it just needed some more time to complete successfully.
 Fix the problem by respecting the cmd->busy_timeout, which is provided by
 the mmc core.
 
-Cc: Bruce Chang <brucechang@via.com.tw>
-Cc: Harald Welte <HaraldWelte@viatech.com>
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Link: https://lore.kernel.org/r/20200414161413.3036-17-ulf.hansson@linaro.org
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/via-sdmmc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/greybus/sdio.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
-index f4ac064ff471..8d96ecba1b55 100644
---- a/drivers/mmc/host/via-sdmmc.c
-+++ b/drivers/mmc/host/via-sdmmc.c
-@@ -319,6 +319,8 @@ struct via_crdr_mmc_host {
- /* some devices need a very long delay for power to stabilize */
- #define VIA_CRDR_QUIRK_300MS_PWRDELAY	0x0001
- 
-+#define VIA_CMD_TIMEOUT_MS		1000
-+
- static const struct pci_device_id via_ids[] = {
- 	{PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_9530,
- 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0,},
-@@ -551,14 +553,17 @@ static void via_sdc_send_command(struct via_crdr_mmc_host *host,
- {
- 	void __iomem *addrbase;
- 	struct mmc_data *data;
+diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
+index 68c5718be827..c4b16bb5c1a4 100644
+--- a/drivers/staging/greybus/sdio.c
++++ b/drivers/staging/greybus/sdio.c
+@@ -411,6 +411,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 	struct gb_sdio_command_request request = {0};
+ 	struct gb_sdio_command_response response;
+ 	struct mmc_data *data = host->mrq->data;
 +	unsigned int timeout_ms;
- 	u32 cmdctrl = 0;
+ 	u8 cmd_flags;
+ 	u8 cmd_type;
+ 	int i;
+@@ -469,9 +470,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 		request.data_blksz = cpu_to_le16(data->blksz);
+ 	}
  
- 	WARN_ON(host->cmd);
- 
- 	data = cmd->data;
--	mod_timer(&host->timer, jiffies + HZ);
- 	host->cmd = cmd;
- 
-+	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout : VIA_CMD_TIMEOUT_MS;
-+	mod_timer(&host->timer, jiffies + msecs_to_jiffies(timeout_ms));
+-	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
+-				&request, sizeof(request), &response,
+-				sizeof(response));
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
++		GB_OPERATION_TIMEOUT_DEFAULT;
 +
- 	/*Command index*/
- 	cmdctrl = cmd->opcode << 8;
++	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
++					&request, sizeof(request), &response,
++					sizeof(response), timeout_ms);
+ 	if (ret < 0)
+ 		goto out;
  
 -- 
 2.25.1
