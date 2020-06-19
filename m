@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9715AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6822158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6875621582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579465;
-	bh=HXy9QkS4DekEeRywjSWFzBjwCqscsZtP1slMzTKcyMU=;
+	s=default; t=1592579472;
+	bh=s5VTgz3lh6ug1RQKbvH44o1bT2kNj30b37wGwCqxAZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LAuA425dx8pQ+nRFT52dXEd+wN68WpvWYK8Z/5EK9OOXIeDlC8eKy0NNoYzw+VHEw
-	 grgYFktS4F2D6P4yQHeu6A45aTNFCdmnvA3CPbbYwSrz7uFnTh5lhbL5q3dJnhRrdq
-	 pCdUTfTteABrEmE7JhezuRNOXZBI0uWWWo/Mhnd4=
+	b=uyUx9AIt04949zFxLvXvRtTsDfXGjuQANf+46POEpO+7MVvuIjw3D9gOhSITHV6Ot
+	 LGYqw3CHLdpdZM1IGk5dxt1YfT/xb3d8uhADiZFhSnx9KpqwXBESToDhS6dd2X/Gx1
+	 s9/wA1ZKEow/3ufHKR8ZIJHEjwhQUQaH+CUT0vLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392067AbgFSPLD (ORCPT
+        id S2392082AbgFSPLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392055AbgFSPKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:50 -0400
+        id S2391649AbgFSPLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB8B620776;
-        Fri, 19 Jun 2020 15:10:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3693206FA;
+        Fri, 19 Jun 2020 15:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579449;
-        bh=HXy9QkS4DekEeRywjSWFzBjwCqscsZtP1slMzTKcyMU=;
+        s=default; t=1592579460;
+        bh=s5VTgz3lh6ug1RQKbvH44o1bT2kNj30b37wGwCqxAZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJH/HNXnTv0D68NSBzVZncT4x00gp2ZPN3IwpdRZMAR4e8d5IHLB3ZIWIOphn3Eo9
-         v2FjKbi+tMXjFzx+J+gcELfc1HpPa2yBRsNVZWyH7CUAnkRhDUSFZJqZudB74qgyrB
-         PekvRL0RXblXY2mUMFV67v3AQZsWGNeujfgSQ1ZE=
+        b=STIckhgiDlUzFldEji0qC3FGaXd0kKBJv9hv3x0jcYmkBfoznR8W6lAWdvnajvJ8c
+         MPMjISzdtbg6BLMt6ZuNkXf6HVQnN0q5dffy0RThQqbuymOl55yuwBQgPnFopUB1Z8
+         7E6LwN/ru5jWJvztfeo3Wr6mIi/toivW7R1df72U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/261] mips: MAAR: Use more precise address mask
-Date:   Fri, 19 Jun 2020 16:32:13 +0200
-Message-Id: <20200619141655.709261928@linuxfoundation.org>
+Subject: [PATCH 5.4 143/261] ice: fix potential double free in probe unrolling
+Date:   Fri, 19 Jun 2020 16:32:34 +0200
+Message-Id: <20200619141656.728832598@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -66,48 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit bbb5946eb545fab8ad8f46bce8a803e1c0c39d47 ]
+[ Upstream commit bc3a024101ca497bea4c69be4054c32a5c349f1d ]
 
-Indeed according to the MIPS32 Privileged Resource Architecgture the MAAR
-pair register address field either takes [12:31] bits for non-XPA systems
-and [12:55] otherwise. In any case the current address mask is just
-wrong for 64-bit and 32-bits XPA chips. So lets extend it to 59-bits
-of physical address value. This shall cover the 64-bits architecture and
-systems with XPA enabled, and won't cause any problem for non-XPA 32-bit
-systems, since address values exceeding the architecture specific MAAR
-mask will be just truncated with setting zeros in the unsupported upper
-bits.
+If ice_init_interrupt_scheme fails, ice_probe will jump to clearing up
+the interrupts. This can lead to some static analysis tools such as the
+compiler sanitizers complaining about double free problems.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Since ice_init_interrupt_scheme already unrolls internally on failure,
+there is no need to call ice_clear_interrupt_scheme when it fails. Add
+a new unroll label and use that instead.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mipsregs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index bdbdc19a2b8f..3afdb39d092a 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -750,7 +750,7 @@
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 2408f0de95fc..d0ccb7ad447b 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -2900,7 +2900,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 	if (err) {
+ 		dev_err(dev, "ice_init_interrupt_scheme failed: %d\n", err);
+ 		err = -EIO;
+-		goto err_init_interrupt_unroll;
++		goto err_init_vsi_unroll;
+ 	}
  
- /* MAAR bit definitions */
- #define MIPS_MAAR_VH		(_U64CAST_(1) << 63)
--#define MIPS_MAAR_ADDR		((BIT_ULL(BITS_PER_LONG - 12) - 1) << 12)
-+#define MIPS_MAAR_ADDR		GENMASK_ULL(55, 12)
- #define MIPS_MAAR_ADDR_SHIFT	12
- #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
- #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
+ 	/* Driver is mostly up */
+@@ -2986,6 +2986,7 @@ err_msix_misc_unroll:
+ 	ice_free_irq_msix_misc(pf);
+ err_init_interrupt_unroll:
+ 	ice_clear_interrupt_scheme(pf);
++err_init_vsi_unroll:
+ 	devm_kfree(dev, pf->vsi);
+ err_init_pf_unroll:
+ 	ice_deinit_pf(pf);
 -- 
 2.25.1
 
