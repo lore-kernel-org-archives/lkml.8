@@ -2,173 +2,172 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93203C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38164221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAD322202
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="znXBd2T4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KXI6tObJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgFSV5J (ORCPT
+        id S1728353AbgFSV5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:57:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55400 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgFSV5G (ORCPT
+        Fri, 19 Jun 2020 17:57:14 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8491 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbgFSV5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:57:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JLlxg9037623;
-        Fri, 19 Jun 2020 21:57:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Fh1TauyG94rhfUBSdHsqI+sTrR/HW9QksqHgZMTrwBE=;
- b=znXBd2T4mtleYKCi6c7EstsMXMARd5a6vKJLbs2GOEqSryoCxLKYTjLyJBpt5nw5bvTY
- dmSI1HoX0wSTYGBs25Lrxr0RCBiflgP0MnVlBilJSX4JjUmkHCCPFjCtLL9N2n0e3fJO
- uhsXSH8rR6gtXb0n/S9aOBmW9Ch2N2ve6+CiwLpIz1SOj50CC727B4tQ2czdkouCoSpZ
- HHa6wh8D2V5Inv6zfMl5n9JNIFR7sagELED6qkC7Qt1m/hYKrxbaqwXpcoqqSM/oyssx
- Y5RltoRP9EzPnHoOdWOPN+U9xGZC2pYQeZrEtxzlRJFe8d7rG+6R7Angrvvkin5enBc8 fQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31q6608w70-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 21:57:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05JLnIeI076693;
-        Fri, 19 Jun 2020 21:57:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31q66s28td-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 21:57:01 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05JLv0D3002185;
-        Fri, 19 Jun 2020 21:57:00 GMT
-Received: from dhcp-10-159-240-10.vpn.oracle.com (/10.159.240.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jun 2020 14:57:00 -0700
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
- dentries
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>,
-        Wengang Wang <wen.gang.wang@oracle.com>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
- <20200618233958.GV8681@bombadil.infradead.org>
- <877dw3apn8.fsf@x220.int.ebiederm.org>
- <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
- <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
- <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
- <87k1036k9y.fsf@x220.int.ebiederm.org>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
-Date:   Fri, 19 Jun 2020 14:56:58 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Fri, 19 Jun 2020 17:57:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eed344e0003>; Fri, 19 Jun 2020 14:55:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 19 Jun 2020 14:57:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 19 Jun 2020 14:57:07 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
+ 2020 21:56:59 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 19 Jun 2020 21:56:59 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5eed34ab0006>; Fri, 19 Jun 2020 14:56:59 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH 06/16] mm/hmm: test mixed normal and device private migrations
+Date:   Fri, 19 Jun 2020 14:56:39 -0700
+Message-ID: <20200619215649.32297-7-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <87k1036k9y.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=926 suspectscore=11
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006190152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 clxscore=1015 mlxlogscore=945 suspectscore=11 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006190152
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592603726; bh=WFEHCal/gCxROdrgkDzRDfE196T9tyXmpg2D/HYI1XY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=KXI6tObJ5oTpDCSapDH+P+HDDS1sHlEs6IY8U+F8yA+CNTh3TGWL08aSrGrVJDdEk
+         4+hhQ7CeAcfhYZPA1V12+m0twUBVV1/dQJNz87q+KFer73+2p9OvPiszT3nHnSqyy0
+         71alAOAQCO5Ayi3dQPAx+ja+ZGPkhoaw+JRo8Fc/QOqX9TvpJgu8gvO9Rh1Pfw1ZFH
+         Ryl7MZncUdy2sq5NLByALPlQUU8cL7A12pk+/YgpgY9FnQH9+4Kyg5c+8IWoWue1jO
+         MAvqIY0JcKxx+vn+MVEie4P2D8VVJiXgOop00f7tI6m6ax852mLbrY53XPUBS0Gbn2
+         VSsAMh+L63vXQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 10:24 AM, ebiederm@xmission.com wrote:
+Add a test to check that migrating a range of addresses with mixed
+device private pages and normal anonymous pages are all migrated.
 
-> Junxiao Bi <junxiao.bi@oracle.com> writes:
->
->> Hi Eric,
->>
->> The patch didn't improve lock contention.
-> Which raises the question where is the lock contention coming from.
->
-> Especially with my first variant.  Only the last thread to be reaped
-> would free up anything in the cache.
->
-> Can you comment out the call to proc_flush_pid entirely?
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ lib/test_hmm.c                         | 22 +++++++++++++++++-----
+ tools/testing/selftests/vm/hmm-tests.c | 18 ++++++++++++++----
+ 2 files changed, 31 insertions(+), 9 deletions(-)
 
-Still high lock contention. Collect the following hot path.
+diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+index f7c2b51a7a9d..50bdf041770a 100644
+--- a/lib/test_hmm.c
++++ b/lib/test_hmm.c
+@@ -588,12 +588,24 @@ static void dmirror_migrate_alloc_and_copy(struct mig=
+rate_vma *args,
+=20
+ 		/*
+ 		 * Don't migrate device private pages from our own driver or
+-		 * others. For our own we would do a device private memory copy
+-		 * not a migration and for others, we would need to fault the
+-		 * other device's page into system memory first.
++		 * others. Other device's private pages are skipped because
++		 * the src_owner field won't match. The migrate_vma_setup()
++		 * will have invalidated our page tables for our own device
++		 * private pages as part of isolating and locking the pages.
++		 * In this case, repopulate our page table.
+ 		 */
+-		if (spage && is_zone_device_page(spage))
++		if (spage && is_zone_device_page(spage)) {
++			unsigned long pfn =3D addr >> PAGE_SHIFT;
++			void *entry;
++
++			mutex_lock(&dmirror->mutex);
++			entry =3D spage->zone_device_data;
++			if (*src & MIGRATE_PFN_WRITE)
++				entry =3D xa_tag_pointer(entry, DPT_XA_TAG_WRITE);
++			xa_store(&dmirror->pt, pfn, entry, GFP_ATOMIC);
++			mutex_unlock(&dmirror->mutex);
+ 			continue;
++		}
+=20
+ 		dpage =3D dmirror_devmem_alloc_page(mdevice);
+ 		if (!dpage)
+@@ -703,7 +715,7 @@ static int dmirror_migrate(struct dmirror *dmirror,
+ 		args.dst =3D dst_pfns;
+ 		args.start =3D addr;
+ 		args.end =3D next;
+-		args.src_owner =3D NULL;
++		args.src_owner =3D dmirror->mdevice;
+ 		ret =3D migrate_vma_setup(&args);
+ 		if (ret)
+ 			goto out;
+diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
+ts/vm/hmm-tests.c
+index bdfa95ac9a7d..e2a36783e99d 100644
+--- a/tools/testing/selftests/vm/hmm-tests.c
++++ b/tools/testing/selftests/vm/hmm-tests.c
+@@ -881,8 +881,9 @@ TEST_F(hmm, migrate)
+ }
+=20
+ /*
+- * Migrate anonymous memory to device private memory and fault it back to =
+system
+- * memory.
++ * Migrate anonymous memory to device private memory and fault some of it =
+back
++ * to system memory, then try migrating the resulting mix of system and de=
+vice
++ * private memory to the device.
+  */
+ TEST_F(hmm, migrate_fault)
+ {
+@@ -924,8 +925,17 @@ TEST_F(hmm, migrate_fault)
+ 	for (i =3D 0, ptr =3D buffer->mirror; i < size / sizeof(*ptr); ++i)
+ 		ASSERT_EQ(ptr[i], i);
+=20
+-	/* Fault pages back to system memory and check them. */
+-	for (i =3D 0, ptr =3D buffer->ptr; i < size / sizeof(*ptr); ++i)
++	/* Fault half the pages back to system memory and check them. */
++	for (i =3D 0, ptr =3D buffer->ptr; i < size / (2 * sizeof(*ptr)); ++i)
++		ASSERT_EQ(ptr[i], i);
++
++	/* Migrate memory to the device again. */
++	ret =3D hmm_dmirror_cmd(self->fd, HMM_DMIRROR_MIGRATE, buffer, npages);
++	ASSERT_EQ(ret, 0);
++	ASSERT_EQ(buffer->cpages, npages);
++
++	/* Check what the device read. */
++	for (i =3D 0, ptr =3D buffer->mirror; i < size / sizeof(*ptr); ++i)
+ 		ASSERT_EQ(ptr[i], i);
+=20
+ 	hmm_buffer_free(buffer);
+--=20
+2.20.1
 
-     74.90%     0.01%  proc_race 
-[kernel.kallsyms]                               [k] 
-entry_SYSCALL_64_after_hwframe
-             |
-              --74.89%--entry_SYSCALL_64_after_hwframe
-                        |
-                         --74.88%--do_syscall_64
-                                   |
-                                   |--69.70%--exit_to_usermode_loop
-                                   |          |
-                                   |           --69.70%--do_signal
-                                   |                     |
-                                   | --69.69%--get_signal
-                                   | |
-                                   | |--56.30%--do_group_exit
-                                   | |          |
-                                   | |           --56.30%--do_exit
-                                   | |                     |
-                                   | |                     
-|--27.50%--_raw_write_lock_irq
-                                   | |                     |          |
-                                   | |                     | 
---27.47%--queued_write_lock_slowpath
-                                   | |                     
-|                     |
-                                   | |                     | 
---27.18%--native_queued_spin_lock_slowpath
-                                   | |                     |
-                                   | |                     
-|--26.10%--release_task.part.20
-                                   | |                     |          |
-                                   | |                     |           
---25.60%--_raw_write_lock_irq
-                                   | |                     
-|                     |
-                                   | |                     | 
---25.56%--queued_write_lock_slowpath
-                                   | |                     
-|                                |
-                                   | |                     | 
---25.23%--native_queued_spin_lock_slowpath
-                                   | |                     |
-                                   | |                      --0.56%--mmput
-                                   | |                                |
-                                   | |                                 
---0.55%--exit_mmap
-                                   | |
-|                                 --13.31%--_raw_spin_lock_irq
-|                                           |
-| --13.28%--native_queued_spin_lock_slowpath
-                                   |
-
-Thanks,
-
-Junxiao.
-
->
-> That will rule out the proc_flush_pid in d_invalidate entirely.
->
-> The only candidate I can think of d_invalidate aka (proc_flush_pid) vs ps.
->
-> Eric
