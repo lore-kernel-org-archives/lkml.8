@@ -2,102 +2,204 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF91C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F06C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86296208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVieVKFH"
+	by mail.kernel.org (Postfix) with ESMTP id 20601208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbgFSNhz (ORCPT
+        id S1732362AbgFSNi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgFSNhv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:37:51 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5A0C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:37:51 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id t26so3174134ual.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 06:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IzzMT40vU3nueiT6DTpLBRPxebRBMtj1EnEAC0klTTQ=;
-        b=lVieVKFHIMbkGfDsT0YsJFX6JvJ5/tl5Mcqj1yjwqAnYaMHyuiRLjnES4khXrwMv2R
-         26/St6t75HDZ1mdPFMMUda1uJTm8an7A4TxxAUZjUHN5jp4gio8XMweS3SoktVO7yUwI
-         oNm1nqAiAXpRbKm6CGu4Pf5wN/2XiuXYTrV/RuG81Id6nLi/1W4PfCZPm2RBSvVn4PAN
-         odLO2RWclqOqmJh9ueiL1GOcE+NjhpOLXznaVpCuyfYsyRRvp43AeaXinRLNfjARg3o8
-         PBo0nPTXwasf09Wrub66tUkO9FePfJ+j5f/isJNxG9u2i+MX8CESWrVdbxyRbBGN1WHc
-         6VqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IzzMT40vU3nueiT6DTpLBRPxebRBMtj1EnEAC0klTTQ=;
-        b=H17NvpvyD5EintDiYrWt/Rn+Sc48vxLzG3aBl+LAmJ3+Daq+rbTT98DyD8SIp5dZpw
-         sVpvLZDlnbJWRHikHhLmr7svjr7XAMy9c660QA5Z8eFlZSIW2v9aL2orfBlnVg/JUI+h
-         qr9Dv3wg89/Euaa4uh3087w2upXwmyINdscKvXHn9l4AwHnXSkmk2DIrPoIN7s52JDrz
-         6dsHz8pEvj4g3sFsmOobz+I3jpY9u0/1byfzcj/+m+qeWOcIS3lQMAZdWdxb6owBeAR7
-         pRt7ruzUXVEOYMVwcXnGCbqqjXjjkNNtpqiYtKIIWLzAqI26QhBnyuq/fNGa4Anwyjbl
-         R9jA==
-X-Gm-Message-State: AOAM530DtJaU8o5B0ufOG+87dqCPua8RxYWmB8Jju/hjtfKsFvU59HIS
-        kSfW+0R/6LBAAbMbXVo4mZ8NERQUsTIw/Y/Qc+M=
-X-Google-Smtp-Source: ABdhPJwqP4cpSQgvarPxYyjwPQGxxrCrpQXZojI2NIRRKdDcJEEr8HedRcOSMfFudxTnsQb7cw1+GTx84HgvyTzcGM0=
-X-Received: by 2002:a9f:2375:: with SMTP id 108mr2738865uae.74.1592573869965;
- Fri, 19 Jun 2020 06:37:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
- <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com> <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
- <23babf62-00cb-cb47-bb19-da9508325934@intel.com> <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
- <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
-In-Reply-To: <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 14:37:38 +0100
-Message-ID: <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Daniel Gutson <daniel@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 19 Jun 2020 09:38:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:59468 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730995AbgFSNiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:38:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9B222B;
+        Fri, 19 Jun 2020 06:38:53 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB8213F6CF;
+        Fri, 19 Jun 2020 06:38:52 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com
+Subject: [PATCH v10 0/9] SCMI Notifications Core Support
+Date:   Fri, 19 Jun 2020 14:38:25 +0100
+Message-Id: <20200619133834.18497-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 14:33, Dave Hansen <dave.hansen@intel.com> wrote:
-> On top of that, the kernel can just swap data out to unencrypted storage.
+Hi all,
 
-Right, but for the most part you'd agree that a machine with
-functioning TME and encrypted swap partition is more secure than a
-machine without TME?
+this series wants to introduce SCMI Notification Support, built on top of
+the standard Kernel notification chain subsystem.
 
-> So, I really wonder what folks want from this flag in the first place.
-> It really tells you _nothing_.
+At initialization time each SCMI Protocol takes care to register with the
+new SCMI notification core the set of its own events which it intends to
+support.
 
-Can I use TME if the CPU supports it, but the platform has disabled
-it? How do I know that my system is actually *using* the benefits the
-TME feature provides?
+Using the API exposed via scmi_handle.notify_ops a Kernel user can register
+its own notifier_t callback (via a notifier_block as usual) against any
+registered event as identified by the tuple:
 
-Richard.
+		(proto_id, event_id, src_id)
+
+where src_id represents a generic source identifier which is protocol
+dependent like domain_id, performance_id, sensor_id and so forth.
+(users can anyway do NOT provide any src_id, and subscribe instead to ALL
+ the existing (if any) src_id sources for that proto_id/evt_id combination)
+
+Each of the above tuple-specified eventis will be served on its own
+dedicated blocking notification chain, dynamically allocated on-demand when
+at least one user has shown interest on that event.
+
+Upon a notification delivery all the users' registered notifier_t callbacks
+will be in turn invoked and fed with the event_id as @action param and a
+generated custom per-event struct _report as @data param.
+(as in include/linux/scmi_protocol.h)
+
+The final step of notification delivery via users' callback invocation is
+instead delegated to a pool of deferred workers (Kernel cmwq): each
+SCMI protocol has its own dedicated worker and dedicated queue to push
+events from the rx ISR to the worker.
+
+Based on scmi-next/for-next/scmi 5.8-rc1 [1], on top of:
+
+commit dad69804b03e ("cpufreq: arm_scmi: Set fast_switch_possible
+		conditionally")
+
+This series has been tested on JUNO with an experimental firmware only
+supporting Perf Notifications.
+
+
+Thanks
+
+Cristian
+
+----
+v9 --> v10:
+- rebased on top of scmi-next 5.8-rc1
+- fixed a couple of Warnings (-Wtype-limit)
+
+v8 --> v9:
+- rebased on top of scmi-next 5.8
+- moved some pr_info() to dev_dbg()
+- moved around some macros definitions (using FIELD_PREPARE properly)
+- introduced some meaningful define
+- shrunk hashtables' sizes
+- shortened the naming of some massively long data struct
+
+v7 --> v8:
+- removed unneeded initialized/enabled atomics, added proper barriers
+- added a few comments about queueing work item and kfifos
+
+v6 --> v7:
+- rebased on top of scmi-next 5.7, dropped the initial 4 patches
+  since now already queued on base scmi-next [1]
+- fixed some events' proto initialization
+- removed some notify_enabled explicit methods exposed in some protocol_ops
+  since not supposed to be used directly when using this notification
+  framework (and of no other known use)
+- exposing SCMI_EVENT_ enums in scmi_protocol.h
+- added agent_id field in RESET_ISSUED payload as per reviewed SCMI spec
+- removed POWER_STATE_CHANGE_REQUESTED pre-notification definition and
+  handling as per reviewedSCMI spec
+- fixed report.timestamp field type
+
+v5 --> v6:
+- added handle argument to fill_custom_report() helper
+
+v4 --> v5:
+- fixed kernel-doc
+- added proper barriers around registered protocols and events
+  initialization
+- reviewed queues allocation using devm_add_action_or_reset
+- reviewed REVT_NOTIFY_ENABLE macro
+
+v3 --> v4:
+- dropped RFC tag
+- avoid one unneeded evt payload memcpy on the ISR RC code path by
+  redesigning dispatcher to handle partial queue-reads (in_flight events,
+  only header)
+- fixed the initialization issue exposed by late SCMI modules loading by
+  reviewing the init process to support possible late events registrations
+  by protocols and early callbacks registrations by users (pending)
+- cleanup/simplification of exit path: SCMI protocols are generally never
+  de-initialized after the initial device creation, so do not deinit
+  notification core either (we do halt the delivery, stop the wq and empty
+  the queues though)
+- reduced contention on regustered_events_handler to the minimum during
+  delivery by splitting the common registered_events_handlers hashtable
+  into a number of per-protocol tables
+- converted registered_protocols and registered_events hastable to
+  fixed size arrays: simpler and lockless in our usage scenario
+
+v2 --> v3:
+- added platform instance awareness to the notification core: a
+  notification instance is created for each known handle
+- reviewed notification core initialization and shutdown process
+- removed generic non-handle-rooted registration API
+- added WQ_SYSFS flag to workqueue instance
+
+v1 --> v2:
+- dropped anti-tampering patch
+- rebased on top of scmi-for-next-5.6, which includes Viresh series that
+  make SCMI core independent of transport (5c8a47a5a91d)
+- add a few new SCMI transport methods on top of Viresh patch to address
+  needs of SCMI Notifications
+- reviewed/renamed scmi_handle_xfer_delayed_resp()
+- split main SCMI Notification core patch (~1k lines) into three chunks:
+  protocol-registration / callbacks-registration / dispatch-and-delivery
+- removed awkward usage of IDR maps in favour of pure hashtables
+- added enable/disable refcounting in notification core (was broken in v1)
+- removed per-protocol candidate API: a single generic API is now proposed
+  instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
+- added handle->notify_ops as an alternative notification API
+  for scmi_driver
+- moved ALL_SRCIDs enabled handling from protocol code to core code
+- reviewed protocol registration/unregistration logic to use devres
+- reviewed cleanup phase on shutdown
+- fixed  ERROR: reference preceded by free as reported by kbuild test robot
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+
+
+Cristian Marussi (9):
+  firmware: arm_scmi: Add notification protocol-registration
+  firmware: arm_scmi: Add notification callbacks-registration
+  firmware: arm_scmi: Add notification dispatch and delivery
+  firmware: arm_scmi: Enable notification core
+  firmware: arm_scmi: Add Power notifications support
+  firmware: arm_scmi: Add Perf notifications support
+  firmware: arm_scmi: Add Sensor notifications support
+  firmware: arm_scmi: Add Reset notifications support
+  firmware: arm_scmi: Add Base notifications support
+
+ drivers/firmware/arm_scmi/Makefile  |    2 +-
+ drivers/firmware/arm_scmi/base.c    |  109 +-
+ drivers/firmware/arm_scmi/common.h  |    4 +
+ drivers/firmware/arm_scmi/driver.c  |   10 +
+ drivers/firmware/arm_scmi/notify.c  | 1497 +++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/notify.h  |   67 ++
+ drivers/firmware/arm_scmi/perf.c    |  139 ++-
+ drivers/firmware/arm_scmi/power.c   |   92 +-
+ drivers/firmware/arm_scmi/reset.c   |   96 +-
+ drivers/firmware/arm_scmi/sensors.c |   69 +-
+ include/linux/scmi_protocol.h       |  108 +-
+ 11 files changed, 2163 insertions(+), 30 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/notify.c
+ create mode 100644 drivers/firmware/arm_scmi/notify.h
+
+-- 
+2.17.1
+
