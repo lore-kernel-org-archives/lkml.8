@@ -2,106 +2,145 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D931C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC4B20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AEF20885
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NiT/3X7F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rd8C+Aa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbgFSI0X (ORCPT
+        id S1731318AbgFSI1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        Fri, 19 Jun 2020 04:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730849AbgFSI0W (ORCPT
+        with ESMTP id S1731227AbgFSI1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:26:22 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED11C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:26:22 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v11so4198711pgb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:26:22 -0700 (PDT)
+        Fri, 19 Jun 2020 04:27:17 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D24AC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q8so8151663qkm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=WXQ7rs75ysSuFXnqcpZI4RQbdQAod6KuSMFSARqJDrQ=;
-        b=NiT/3X7FtCjDbvhves0ttBJCo44g1c7YJKgUI/62LwHAz5JWAnZ8cfG+J7idLiekNp
-         L9T9P46EfV7B9fRtZ3f9BomcD1exZhuQmng35FSpTmqK1cOg81XgaM+bkCz+BRoCA6FT
-         YEIfg8/09/MUz3Jo0uFYLoKnlx5vjx+Vrse58=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gHRO6u53fICxpVEP0QhHKvY/XKkf310c1oLvKRI/vuQ=;
+        b=Rd8C+Aa2deIZLBQoqhRSSDJ1aEEQQJ4chyGZ6tJROToja0WjQU0vGuFdeLXJj0+Y6P
+         0rs6oE7UChzpbRU99ZenQAAcsIISjoPEGMLHwNHBmVABtErAentMmxrWSnVCe9cgtDhn
+         pn47NaBswHuzBtqotO5cTqzztbHMmZXBz0/SquKdT/jqYiQdy1zI+9EwulWEc4BNTazx
+         gYFJc3OOPU7g2H8DsuAUiKO0iZn4k2xWviZ0ctDM89z9qzzAwtqNnD0OpqsrNWW5EyW/
+         fQg7g+oAiv4ioTydeQ0KA9KY7TWESUhn4zyc1Q9BCCWm/EFwQRWv/VgYXrK7Vo5y5/gI
+         BbQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=WXQ7rs75ysSuFXnqcpZI4RQbdQAod6KuSMFSARqJDrQ=;
-        b=k2Z/6CrcWfxRhhvnkTkM4E12pIdnEDkCEzsVk5oEsRz1Lj1ak/0pr2lFYKLX+FFBnC
-         jMhj0TLdgBqnUr4Mxp8ro3gDDO1SyM+7rL99/E9tC24vxg6ZcV3nGLnAsnz0Tq/cyd1d
-         ny+oQ3qRWueatam4aVm12+BQr2dp3QzXKwdnMmyi6b+M0fvpuGnQqixrAA5Clo4F0wy0
-         u7MaZcufZJhawKtKSz2u8gNObjWVkVV9bq0dLBhwVJxjw6T3iXAAnyfmSyBSC2gPVXtc
-         yxRx2o75PLp7K8B99m3dAx8puzlyptf3K4M7k2Xw8012jHOaebKStJCriIKvPxNggrpJ
-         yATA==
-X-Gm-Message-State: AOAM532jQAWX8Zu4EfmJgVxaDM1JHTcNvLujW7bewo2UQvP5BLaPAgW5
-        eXTZSlMeoJyvaJRC4t3MUcn1ug==
-X-Google-Smtp-Source: ABdhPJzf9EWOeMIjHS06RooaLfY53xadIU9NuVnJQfCmehzesRrSQLbdUlX5VUm3pG0zXTw/ZgG90w==
-X-Received: by 2002:a63:e00b:: with SMTP id e11mr2108298pgh.75.1592555181824;
-        Fri, 19 Jun 2020 01:26:21 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g19sm5091669pfo.209.2020.06.19.01.26.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 01:26:21 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gHRO6u53fICxpVEP0QhHKvY/XKkf310c1oLvKRI/vuQ=;
+        b=jeMsBs6vicUJR6BvCYIj0dpS+4PczyUzw3ibIROzz27hrCpVYccXjK7QEW1oEZHsHV
+         7GVrPMjmmKoCIyPKThe8NiMKaCvzPtskQC0333BBPxoOp7/qk5NRB+YUFzDrFC2fGy4v
+         IwE6MQlAlWNgEWrZTILVQriRfts6NnsiPphIvoEAXPEC3wIBA5rTbXJOTc0EG3IQMY1v
+         KBPqfSNfD05gc41ahzMe2Ihnx51VwtiAuprBBC8KXqJhskoSWAVTYj4fsEgwJPbzhpFw
+         ZjFPXmdpTsMksTWBdfDnCOCOjQ32PY1lqESb62DpC26V33x3TchT/R8CF+tO6M0schuy
+         gyEQ==
+X-Gm-Message-State: AOAM531zVrxJCbw9R/Sc5guVaW8WX7JHWNXob+UkqPtkgcV3tzg6eHDv
+        9InGZzRWl+n1Tfqfz9Xg6l/m6mmRcvI=
+X-Google-Smtp-Source: ABdhPJzBngVrHQEWjHdgpo7pKCGKg4TafzzHNdsOgG4sXtHASTuG4EtIpKHKoYyVi38p5pWUqK7elw==
+X-Received: by 2002:a37:90f:: with SMTP id 15mr2357299qkj.339.1592555236064;
+        Fri, 19 Jun 2020 01:27:16 -0700 (PDT)
+Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
+        by smtp.gmail.com with ESMTPSA id x4sm5077822qtj.50.2020.06.19.01.27.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jun 2020 01:27:15 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 08:27:14 +0000
+From:   Rodolfo C Villordo <rodolfovillordo@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Richard Yeh <rcy@google.com>,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [PATCH] staging: gasket: replace symbolic permissions
+Message-ID: <20200619082714.GA7780@ip-172-31-24-31.ec2.internal>
+References: <20200601005240.6315-1-rodolfovillordo@gmail.com>
+ <20200618074750.GA186463@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <bca9a873-3e69-f68d-2266-5f82704580d1@arm.com>
-References: <20200617113851.607706-1-alexandru.elisei@arm.com> <20200617113851.607706-3-alexandru.elisei@arm.com> <159242468708.62212.1739215996563155762@swboyd.mtv.corp.google.com> <bca9a873-3e69-f68d-2266-5f82704580d1@arm.com>
-Subject: Re: [PATCH v5 2/7] arm64: perf: Avoid PMXEV* indirection
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
-        Jiri Olsa <jolsa@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
-        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jun 2020 01:26:20 -0700
-Message-ID: <159255518036.62212.17118495764504925359@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618074750.GA186463@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Alexandru Elisei (2020-06-18 03:51:08)
-> On 6/17/20 9:11 PM, Stephen Boyd wrote:
-> > Quoting Alexandru Elisei (2020-06-17 04:38:46)
-> >> From: Mark Rutland <mark.rutland@arm.com>
-> >> @@ -433,8 +494,9 @@ static u64 armv8pmu_read_counter(struct perf_event=
- *event)
-> >> =20
-> >>  static inline void armv8pmu_write_evcntr(int idx, u64 value)
-> >>  {
-> >> -       armv8pmu_select_counter(idx);
-> >> -       write_sysreg(value, pmxevcntr_el0);
-> >> +       u32 counter =3D ARMV8_IDX_TO_COUNTER(idx);
-> > Might be a good idea to make ARMV8_IDX_TO_COUNTER a static inline
-> > function that has a return type of u32. I had to go check the code to
-> > make sure it wasn't something larger.
->=20
-> Architecturally, there are at most 32 counter registers, which would fit =
-in an s8,
-> so I don't think type checking would really help us here.
+On Thu, Jun 18, 2020 at 09:47:50AM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Jun 01, 2020 at 12:52:40AM +0000, Rodolfo C. Villordo wrote:
+> > WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> > +               .attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
+> > warning detected by checkpatch.pl
+> > 
+> > Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
+> > ---
+> >  drivers/staging/gasket/gasket_sysfs.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
+> > index ab5aa351d555..d5e167dfbe76 100644
+> > --- a/drivers/staging/gasket/gasket_sysfs.h
+> > +++ b/drivers/staging/gasket/gasket_sysfs.h
+> > @@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
+> >  
+> >  #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
+> >  	{                                                                      \
+> > -		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
+> > +		.attr = __ATTR(_name, 0444, _show_function, NULL),          \
+> 
+> What about using __ATTR_RO() instead?
+> 
 
-Ok. It would have saved me a few seconds while reading the code, but I
-guess if I hold the architecture in my head I'll be ok too.
+I'm not sure if __ATTR_RO() is a good match here. The
+GASKET_SYSFS_RO() is invoked with different show functions across the
+code. These functions don't follow the name pattern attr_name_show
+used in __ATTR_RO(). Please correct me if I misunderstood anything.
+
+### from include/linux/sysfs.h ###
+#define __ATTR_RO(_name) {                                              \
+        .attr   = { .name = __stringify(_name), .mode = 0444 },         \
+        .show   = _name##_show,                                         \
+}
+###
+
+### macro usage across the driver: ###
+$ grep GASKET_SYSFS_RO drivers/staging/gasket/*
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_page_table_entries, sysfs_show,
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_simple_page_table_entries, sysfs_show,
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_num_mapped_pages, sysfs_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_offsets, gasket_sysfs_data_show, ATTR_BAR_OFFSETS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_sizes, gasket_sysfs_data_show, ATTR_BAR_SIZES),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(driver_version, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(framework_version, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_type, gasket_sysfs_data_show, ATTR_DEVICE_TYPE),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(revision, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(pci_address, gasket_sysfs_data_show, ATTR_PCI_ADDRESS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(status, gasket_sysfs_data_show, ATTR_STATUS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(is_device_owned, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_owner, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(write_open_count, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(reset_count, gasket_sysfs_data_show, ATTR_RESET_COUNT),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(user_mem_ranges, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_interrupt.c:      GASKET_SYSFS_RO(interrupt_counts, interrupt_sysfs_show,
+###
+
+Thank you!
+
+> thanks,
+> 
+> greg k-h
