@@ -2,55 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6280EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0773C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417B821707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F16217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583429;
-	bh=dFj03ieTKPIxULsHQ9pqrB5XgXCDpm1ISDBdSJI9s9U=;
+	s=default; t=1592583436;
+	bh=E+hxlt/8bwCfl9Fxp6Mg/WFa2VcQaQImvBC/GbPUrOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfoTkULfgam0e36jddHshpNhwjrOGmeK61g4mE83hWTRQnxFnQ+LRAgcxuAiTjyRo
-	 BLo6/fW+f2Smwe2m8MmQxbFxrxISuoquJa5yWnt4eeF2zBI253DSDLRzlcI4oHtgeE
-	 PPQADCToQ5ihF8lYzlc6CuhCIcPH5rC3hZmLzaWM=
+	b=Xo+A60b85rn2llXAEyj2zr71EuNeLYUKGMRcahXZSk1Eu4LepFngbyu/q7n95WnZd
+	 n7oDyiHA6XRFqunZzgF0aJLzSOIdxp4nSy6F8Auyq78wrMg2DJHTiPBBMoYJayytBJ
+	 qrijbjOASrwwPpMt0G08AN11ed04R+iklhSbVI9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393641AbgFSQRH (ORCPT
+        id S2390866AbgFSQRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59618 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390902AbgFSPCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:52 -0400
+        id S2390869AbgFSPCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB2120776;
-        Fri, 19 Jun 2020 15:02:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4C5320776;
+        Fri, 19 Jun 2020 15:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578972;
-        bh=dFj03ieTKPIxULsHQ9pqrB5XgXCDpm1ISDBdSJI9s9U=;
+        s=default; t=1592578960;
+        bh=E+hxlt/8bwCfl9Fxp6Mg/WFa2VcQaQImvBC/GbPUrOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R722oo/Y8mAvhHm0JYEgDwk1Ai3s7PgDii9qGgGbRD2jV/JbvdMpElrxTm4QYgzBs
-         4Ywakbe3q8uKxPmNyDiw9COYzopX1kw+iB9J2jCa5Sxdasp5EpwiY58jeu/4yewQdR
-         blTDXe5g+SyKvAG9lExBaRcNtTdmkVmGgqHOP42c=
+        b=0ZtIocqDJyZAm/ohjrpPVeZyNyoHMeY+1yoFPzFDfhoSyH8ICakcdblbEAOTpAy1V
+         hA/LJmVNWzSuT6eqbnBpCrH0efO+ymQKGziAR+KjGv8kgxa8AC98DjzH/1cU1PRi2D
+         inbcp7JEG9sgIow3e+kh331RztYA42a5L7Vkzffg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 228/267] btrfs: fix error handling when submitting direct I/O bio
-Date:   Fri, 19 Jun 2020 16:33:33 +0200
-Message-Id: <20200619141659.635299828@linuxfoundation.org>
+        stable@vger.kernel.org, Lichao Liu <liulichao@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.19 192/267] MIPS: CPU_LOONGSON2EF need software to maintain cache consistency
+Date:   Fri, 19 Jun 2020 16:32:57 +0200
+Message-Id: <20200619141657.954170501@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -63,67 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Lichao Liu <liulichao@loongson.cn>
 
-[ Upstream commit 6d3113a193e3385c72240096fe397618ecab6e43 ]
+commit a202bf71f08b3ef15356db30535e30b03cf23aec upstream.
 
-In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
-stripe or chunk, we submit orig_bio without cloning it. In this case, we
-don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
-decrement pending_bios to -1, and we never complete orig_bio. Fix it by
-initializing pending_bios to 1 instead of incrementing later.
+CPU_LOONGSON2EF need software to maintain cache consistency,
+so modify the 'cpu_needs_post_dma_flush' function to return true
+when the cpu type is CPU_LOONGSON2EF.
 
-Fixing this exposes another bug: we put orig_bio prematurely and then
-put it again from end_io. Fix it by not putting orig_bio.
+Cc: stable@vger.kernel.org
+Signed-off-by: Lichao Liu <liulichao@loongson.cn>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-After this change, pending_bios is really more of a reference count, but
-I'll leave that cleanup separate to keep the fix small.
-
-Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/mm/dma-noncoherent.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index c69e5b255745..b4f295a058d8 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8399,7 +8399,6 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
- 
- 	/* bio split */
- 	ASSERT(map_length <= INT_MAX);
--	atomic_inc(&dip->pending_bios);
- 	do {
- 		clone_len = min_t(int, submit_len, map_length);
- 
-@@ -8450,7 +8449,8 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
- 	if (!status)
- 		return 0;
- 
--	bio_put(bio);
-+	if (bio != orig_bio)
-+		bio_put(bio);
- out_err:
- 	dip->errors = 1;
- 	/*
-@@ -8491,7 +8491,7 @@ static void btrfs_submit_direct(struct bio *dio_bio, struct inode *inode,
- 	bio->bi_private = dip;
- 	dip->orig_bio = bio;
- 	dip->dio_bio = dio_bio;
--	atomic_set(&dip->pending_bios, 0);
-+	atomic_set(&dip->pending_bios, 1);
- 	io_bio = btrfs_io_bio(bio);
- 	io_bio->logical = file_offset;
- 
--- 
-2.25.1
-
+--- a/arch/mips/mm/dma-noncoherent.c
++++ b/arch/mips/mm/dma-noncoherent.c
+@@ -56,6 +56,7 @@ static inline bool cpu_needs_post_dma_fl
+ 	case CPU_R10000:
+ 	case CPU_R12000:
+ 	case CPU_BMIPS5000:
++	case CPU_LOONGSON2EF:
+ 		return true;
+ 	default:
+ 		/*
 
 
