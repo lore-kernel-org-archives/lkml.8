@@ -2,51 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08334C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91EC20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CB92186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578943;
-	bh=biZxo7xIfF834z9nqNS71nzofZ7r6Uqho9xZzSIhqPU=;
+	s=default; t=1592578946;
+	bh=5UNtXju/TGZiyi7Mp3VzIKG2SZmOupWS+VMhDKt0wRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbs+MR9FtQ/4E91VayNdOvglKHZ6EKqN60oS7mOis6Q+OFzKO7rBxlDbWnPUhSyKo
-	 JoP3nA3d2peBU9kDEnKELpKMIrqYyWCKW7AUOFgv/uIiMIIgDZieWPvfoyZ+7E/EvS
-	 IeS5NBCLDK9+lrr2DPOg4FQxzBFKav1x+3iy/Yvk=
+	b=2vwN60OCaeyff20vJrpm3YcX2WERQTKXPdCG7rsvby1Z/3g/9qID4DXYfHWnGYMzB
+	 /tAeCgmdIE31RLMBdaye6DbpZDgUF/2Rmi4BeJx0yDxlJKSpj+nReG1TdenWdLlLPS
+	 lWsLETzXupdyPV6jwxoWp5dE4BQVtNhP85pDzD+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390827AbgFSPCW (ORCPT
+        id S2390834AbgFSPCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57982 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390723AbgFSPBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:01:35 -0400
+        id S2390733AbgFSPBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:01:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4DC620734;
-        Fri, 19 Jun 2020 15:01:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C3620734;
+        Fri, 19 Jun 2020 15:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578895;
-        bh=biZxo7xIfF834z9nqNS71nzofZ7r6Uqho9xZzSIhqPU=;
+        s=default; t=1592578900;
+        bh=5UNtXju/TGZiyi7Mp3VzIKG2SZmOupWS+VMhDKt0wRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UThApr5Mt3VOW+rLLBuOdZQb1v1gbBaVmG2ReKGlIIyImLUw1OKvIZcfoLFQC0zVu
-         6lmly5UfgqiWw9iUB0SxwJGV5a7iRoVjPeIo/jfVpO0hWjimroffbnptU602Zs7yph
-         JqzCvx8DEE6AMTcaK8JAAbrEbvQrSHWrS0caLfwc=
+        b=mNYKDtI5Ci55EvW3Z/vhhPL3rW0d7ryLa0hLIwKnhRKrv/sJoU3SYSEinH/M8/8E9
+         tlxw17wnsaY2CAYq2ddPmH3CTwmsjqtlPfHAbq6I03Exhaumy5stA4CBdFRMXgntp+
+         Tj7fXj3nmLwD9j+jE6fX8U5GIoft9dz6okycExis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 198/267] ext4: fix race between ext4_sync_parent() and rename()
-Date:   Fri, 19 Jun 2020 16:33:03 +0200
-Message-Id: <20200619141658.249466430@linuxfoundation.org>
+        stable@vger.kernel.org, Marcos Scriven <marcos@scriven.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 200/267] PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
+Date:   Fri, 19 Jun 2020 16:33:05 +0200
+Message-Id: <20200619141658.342667229@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,109 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Marcos Scriven <marcos@scriven.org>
 
-commit 08adf452e628b0e2ce9a01048cfbec52353703d7 upstream.
+[ Upstream commit 0d14f06cd6657ba3446a5eb780672da487b068e7 ]
 
-'igrab(d_inode(dentry->d_parent))' without holding dentry->d_lock is
-broken because without d_lock, d_parent can be concurrently changed due
-to a rename().  Then if the old directory is immediately deleted, old
-d_parent->inode can be NULL.  That causes a NULL dereference in igrab().
+The AMD Matisse HD Audio & USB 3.0 devices advertise Function Level Reset
+support, but hang when an FLR is triggered.
 
-To fix this, use dget_parent() to safely grab a reference to the parent
-dentry, which pins the inode.  This also eliminates the need to use
-d_find_any_alias() other than for the initial inode, as we no longer
-throw away the dentry at each step.
+To reproduce the problem, attach the device to a VM, then detach and try to
+attach again.
 
-This is an extremely hard race to hit, but it is possible.  Adding a
-udelay() in between the reads of ->d_parent and its ->d_inode makes it
-reproducible on a no-journal filesystem using the following program:
+Rename the existing quirk_intel_no_flr(), which was not Intel-specific, to
+quirk_no_flr(), and apply it to prevent the use of FLR on these AMD
+devices.
 
-    #include <fcntl.h>
-    #include <unistd.h>
-
-    int main()
-    {
-        if (fork()) {
-            for (;;) {
-                mkdir("dir1", 0700);
-                int fd = open("dir1/file", O_RDWR|O_CREAT|O_SYNC);
-                write(fd, "X", 1);
-                close(fd);
-            }
-        } else {
-            mkdir("dir2", 0700);
-            for (;;) {
-                rename("dir1/file", "dir2/file");
-                rmdir("dir1");
-            }
-        }
-    }
-
-Fixes: d59729f4e794 ("ext4: fix races in ext4_sync_parent()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200506183140.541194-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com
+Signed-off-by: Marcos Scriven <marcos@scriven.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/fsync.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ drivers/pci/quirks.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/fsync.c
-+++ b/fs/ext4/fsync.c
-@@ -44,30 +44,28 @@
-  */
- static int ext4_sync_parent(struct inode *inode)
- {
--	struct dentry *dentry = NULL;
--	struct inode *next;
-+	struct dentry *dentry, *next;
- 	int ret = 0;
- 
- 	if (!ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
- 		return 0;
--	inode = igrab(inode);
-+	dentry = d_find_any_alias(inode);
-+	if (!dentry)
-+		return 0;
- 	while (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY)) {
- 		ext4_clear_inode_state(inode, EXT4_STATE_NEWENTRY);
--		dentry = d_find_any_alias(inode);
--		if (!dentry)
--			break;
--		next = igrab(d_inode(dentry->d_parent));
-+
-+		next = dget_parent(dentry);
- 		dput(dentry);
--		if (!next)
--			break;
--		iput(inode);
--		inode = next;
-+		dentry = next;
-+		inode = dentry->d_inode;
-+
- 		/*
- 		 * The directory inode may have gone through rmdir by now. But
- 		 * the inode itself and its blocks are still allocated (we hold
--		 * a reference to the inode so it didn't go through
--		 * ext4_evict_inode()) and so we are safe to flush metadata
--		 * blocks and the inode.
-+		 * a reference to the inode via its dentry), so it didn't go
-+		 * through ext4_evict_inode()) and so we are safe to flush
-+		 * metadata blocks and the inode.
- 		 */
- 		ret = sync_mapping_buffers(inode->i_mapping);
- 		if (ret)
-@@ -76,7 +74,7 @@ static int ext4_sync_parent(struct inode
- 		if (ret)
- 			break;
- 	}
--	iput(inode);
-+	dput(dentry);
- 	return ret;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index fb061e1bc084..7a835c49409e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4956,13 +4956,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
  }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
  
+-/* FLR may cause some 82579 devices to hang */
+-static void quirk_intel_no_flr(struct pci_dev *dev)
++/*
++ * FLR may cause the following to devices to hang:
++ *
++ * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Matisse USB 3.0 Host Controller 0x149c
++ * Intel 82579LM Gigabit Ethernet Controller 0x1502
++ * Intel 82579V Gigabit Ethernet Controller 0x1503
++ *
++ */
++static void quirk_no_flr(struct pci_dev *dev)
+ {
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+ 
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
+-- 
+2.25.1
+
 
 
