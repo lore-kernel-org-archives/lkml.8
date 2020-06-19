@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27579C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF11021919
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A51321BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578733;
-	bh=uZ84vTGYlo4IboKjY879TBGBz6Hhr7Vq0yu0/6vxmZ8=;
+	s=default; t=1592578738;
+	bh=zPGP4lOJJZO/ULO3wGSq0GkCG2KiAC2QR6CMUIhi3HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvZQVougkDwZQ3HiU99kBqxLIQat78stHwC8xpKJUR36n/WhFhY3PDzC+z/r7K1Ek
-	 K5XcBYsIOqT0Ybh3UTr0wA8JYnhmVloIdndk9ZepHKmwCMrG4S44FeyBuvfndoU9Q0
-	 OI9ncJFxEIdQUSN0nCy+cChqd0LTo7Zkp94dV7eQ=
+	b=OA2FzN5Sx9sJAtU4/dwXHmbf6G1oTJEUlKtut4d1jB4wsq7oKZRyOsLdG8JHnGN/7
+	 OHWne4b/+J8B3iD/CzYIy7hm2Mz6ZW61T7RjI9fdHTwv4iF8zYyp/FGtKoqEReCFM0
+	 ZECWT57x4NPSiJVuCw55OtBKSQ1Nmfuq1q4GrM7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390015AbgFSO6v (ORCPT
+        id S2390446AbgFSO65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390003AbgFSO6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:58:42 -0400
+        id S2390430AbgFSO6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B86621919;
-        Fri, 19 Jun 2020 14:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 928D121852;
+        Fri, 19 Jun 2020 14:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578722;
-        bh=uZ84vTGYlo4IboKjY879TBGBz6Hhr7Vq0yu0/6vxmZ8=;
+        s=default; t=1592578730;
+        bh=zPGP4lOJJZO/ULO3wGSq0GkCG2KiAC2QR6CMUIhi3HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AoBrptv1aLqfFRCusBhKIO+8MPYuihKpIK7nwwAhzLp1wfXx3eME6V36k36ijblyL
-         BW+b542Xl4AtcxCnJNrg76L2EmIgoXNS5xDl5a8udPDWcxsr72GZK+L1faasj289t5
-         aVhUTfWvZrWEWsGLn4jypxtR9sYNkJhl1Pm1kMxo=
+        b=Scz4JZY7d2w6M7yikjr8lKS2QrhCrWNKDV+Cms1z0nVAKOKLnTEM3Fy/BEI/hQYOF
+         j5LSulT8707Npa12Li7yjzRBeEpGX4vCTvNuNWGxWLTgkSzZHxkD85d/k9xjw93Ll8
+         ncFl3PuBTBCCa9iCItxhLrEKl6tlL8KzawHqgjZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/267] selftests/bpf: Fix memory leak in extract_build_id()
-Date:   Fri, 19 Jun 2020 16:31:57 +0200
-Message-Id: <20200619141655.160330334@linuxfoundation.org>
+Subject: [PATCH 4.19 135/267] exit: Move preemption fixup up, move blocking operations down
+Date:   Fri, 19 Jun 2020 16:32:00 +0200
+Message-Id: <20200619141655.303113928@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,34 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 9f56bb531a809ecaa7f0ddca61d2cf3adc1cb81a ]
+[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
 
-getline() allocates string, which has to be freed.
+With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
+non-preemptible context look untidy; after the main oops, the kernel prints
+a "sleeping function called from invalid context" report because
+exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
+can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
+fixup.
 
-Fixes: 81f77fd0deeb ("bpf: add selftest for stackmap with BPF_F_STACK_BUILD_ID")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-7-andriin@fb.com
+It looks like the same thing applies to profile_task_exit() and
+kcov_task_exit().
+
+Fix it by moving the preemption fixup up and the calls to
+profile_task_exit() and kcov_task_exit() down.
+
+Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/exit.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 89f8b0dae7ef..bad3505d66e0 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -1118,6 +1118,7 @@ static int extract_build_id(char *build_id, size_t size)
- 		len = size;
- 	memcpy(build_id, line, len);
- 	build_id[len] = '\0';
-+	free(line);
- 	return 0;
- err:
- 	fclose(fp);
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 894fca56a38c..eeaafd4064c9 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -772,8 +772,12 @@ void __noreturn do_exit(long code)
+ 	struct task_struct *tsk = current;
+ 	int group_dead;
+ 
+-	profile_task_exit(tsk);
+-	kcov_task_exit(tsk);
++	/*
++	 * We can get here from a kernel oops, sometimes with preemption off.
++	 * Start by checking for critical errors.
++	 * Then fix up important state like USER_DS and preemption.
++	 * Then do everything else.
++	 */
+ 
+ 	WARN_ON(blk_needs_flush_plug(tsk));
+ 
+@@ -791,6 +795,16 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	set_fs(USER_DS);
+ 
++	if (unlikely(in_atomic())) {
++		pr_info("note: %s[%d] exited with preempt_count %d\n",
++			current->comm, task_pid_nr(current),
++			preempt_count());
++		preempt_count_set(PREEMPT_ENABLED);
++	}
++
++	profile_task_exit(tsk);
++	kcov_task_exit(tsk);
++
+ 	ptrace_event(PTRACE_EVENT_EXIT, code);
+ 
+ 	validate_creds_for_do_exit(tsk);
+@@ -828,13 +842,6 @@ void __noreturn do_exit(long code)
+ 	raw_spin_lock_irq(&tsk->pi_lock);
+ 	raw_spin_unlock_irq(&tsk->pi_lock);
+ 
+-	if (unlikely(in_atomic())) {
+-		pr_info("note: %s[%d] exited with preempt_count %d\n",
+-			current->comm, task_pid_nr(current),
+-			preempt_count());
+-		preempt_count_set(PREEMPT_ENABLED);
+-	}
+-
+ 	/* sync mm's RSS info before statistics gathering */
+ 	if (tsk->mm)
+ 		sync_mm_rss(tsk->mm);
 -- 
 2.25.1
 
