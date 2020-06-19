@@ -2,97 +2,121 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F10C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 749542186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1831120734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578859;
-	bh=1oK27HoEFJF1QmKyJidF9LZ7dDibAQb3VONl+MODBtY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olW52JPrp5dKyB3TESNK2InVaTY7HiQ4ElHgq0RonokLAn4ZBAz/fhvvESRPmI6Ei
-	 zjFuvS1ozPV419ZvJ0brUzcHV/VerIG6hErZp7xalRDkn4BhdL7gDUQwb++uiE4dl0
-	 CeJnUQUtFuDEpGD4o9Jg4K63zpdTIGxx0tDb+Yko=
+	s=default; t=1592578882;
+	bh=eh8/68kbF3bfkG8umypTlt9ETupXMn/3RL63q3FNss8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EkktXUL+M4OVeRIjg/0PqoBk8eQFxQLGoTmFcHmyupfW/b1rfkjB+vjBqPwHRkINh
+	 x8R5lw5AcYyaNY6jS4DgASy+B2Uw48xZqKgY/xgBuC/GFagG2KxpcKcFk+ykcmZCMK
+	 PRIb8mC53TAPlfOVhHWvytUuhe4XqnzOFZpgU5OY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390668AbgFSPA5 (ORCPT
+        id S2390691AbgFSPBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:01:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389822AbgFSPAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:00:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2390636AbgFSPA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:29 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83FB7206DB;
-        Fri, 19 Jun 2020 15:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3F620776;
+        Fri, 19 Jun 2020 15:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578819;
-        bh=1oK27HoEFJF1QmKyJidF9LZ7dDibAQb3VONl+MODBtY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mb1SY0mtKeGc0MmFNdPz6U4PR7DYzVfBZjP4f7uP6VvzeqO7Gj6q4HuI5FoQHBeWO
-         oVU3xVU225sr/1sW9JMv8OBT1+R2sqc2WF8oQrzHK9L5gtDRMDXhvf7dUqwWKtYnJI
-         +fB7VpW+I/gu7bh1xRDbqW5B3GLlePU/F+8w0a90=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/267] x86/mm: Stop printing BRK addresses
-Date:   Fri, 19 Jun 2020 16:32:34 +0200
-Message-Id: <20200619141656.905524362@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592578828;
+        bh=eh8/68kbF3bfkG8umypTlt9ETupXMn/3RL63q3FNss8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dRXJi17MqGUpyw2FwC0Ahwetkem/jHgi1LXdzhy2rnwFplN9inUbBfgRhar8+/v0m
+         zKDbAHU7QrKjEei5ZqgRNultCzOgxgUAoSZAMWKtivDL+3bm5TrOJVqcXtLlg75/gi
+         KFfRjwp4AhaykGagt7mqzL6VcKAmrprGWZUTn4RI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id F1B623C08CD; Fri, 19 Jun 2020 17:00:26 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 17:00:26 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] power: supply: axp20x_usb_power: fix spelling mistake
+Message-ID: <20200619150026.gam2z5tslubk2xp7@earth.universe>
+References: <20200609224524.108092-1-iamkeyur96@gmail.com>
+ <20200609225035.108435-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sskekeyxm6zhep2a"
+Content-Disposition: inline
+In-Reply-To: <20200609225035.108435-1-iamkeyur96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 67d631b7c05eff955ccff4139327f0f92a5117e5 ]
+--sskekeyxm6zhep2a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This currently leaks kernel physical addresses into userspace.
+Hi,
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lkml.kernel.org/r/20200229231120.1147527-1-nivedita@alum.mit.edu
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+On Tue, Jun 09, 2020 at 06:50:35PM -0400, Keyur Patel wrote:
+> Fix typo: "triger" --> "trigger"
+>=20
+> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+> ---
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index fb5f29c60019..b1dba0987565 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -120,8 +120,6 @@ __ref void *alloc_low_pages(unsigned int num)
- 	} else {
- 		pfn = pgt_buf_end;
- 		pgt_buf_end += num;
--		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
--			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
- 	}
- 
- 	for (i = 0; i < num; i++) {
--- 
-2.25.1
+Thanks, queued.
 
+-- Sebastian Reichel
 
+>  drivers/power/supply/axp20x_usb_power.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supp=
+ly/axp20x_usb_power.c
+> index 4fde24b5f35a..d01dc0332edc 100644
+> --- a/drivers/power/supply/axp20x_usb_power.c
+> +++ b/drivers/power/supply/axp20x_usb_power.c
+> @@ -78,7 +78,7 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x=
+_usb_power *power)
+>  	/*
+>  	 * Polling is only necessary while VBUS is offline. While online, a
+>  	 * present->absent transition implies an online->offline transition
+> -	 * and will triger the VBUS_REMOVAL IRQ.
+> +	 * and will trigger the VBUS_REMOVAL IRQ.
+>  	 */
+>  	if (power->axp20x_id >=3D AXP221_ID && !power->online)
+>  		return true;
+> --=20
+> 2.26.2
+>=20
 
+--sskekeyxm6zhep2a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s0woACgkQ2O7X88g7
++pqAcw/+PjEYLRpQCa5y8T4Qp3wi2GQiVgmCWKbxFRJMjPVLo+XspUbHh5Jz1/ak
+88omrqUZf+0qlyZmcHSjyJ6HGexo90uP1frxr5zvXm6Gb4gwfFtf8HYzF0WLuaVj
+ttX4edkhEiw5lhDWUwkKj9YxCAA1Z/e7hFUdmIuKRFVos2eYNCJ48vG+lnJoFvZ8
+E7OT81amDtEzaPxLMyZUplDbxp5JvmH8FrOCwNg1R7Psx0/Oi2vqb2CZ3fB6Ad2H
+sxV+KSj5+u5j04r+TU5uQVLfBvINNk2FyZ/rr3jy/3VbMsQc0BS0W2ZusZqveHuN
+EBAWaiV2MUv6VJfW2W6m5aWvOP9xpRF3OxePCVb/EJsvs5rgQaLorEPsDfMK8FlG
+f5zxXxBDEJxaDOkkjXkUS/PEdT+Vfx2tXc52GuO+un85daWWtIzSFbmpHhkzRQeL
+XIPKb9PUhqjptelKvaCZ8D84LDHfvaP6i5Rs5p4Srw65s4RAR1sdyd1vCpA8Uziq
+AWB++zhmK+ylTz03bUrs4LCdNxHf5vL5RU6g9P0P+tsVnciczkalx0lcpqLkdNiT
+9REG+G/+d3i8gm+irC201CbrGCz4kME7/LgQF62U/hrdKNSB8ttnW1UjQJ9+0xpf
+JzuGthPgzTxvsvMcuZtpPFlJJR6jmZm9HuicaLtPUmHh7jqkqCI=
+=+QeJ
+-----END PGP SIGNATURE-----
+
+--sskekeyxm6zhep2a--
