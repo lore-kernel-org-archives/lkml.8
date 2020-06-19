@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D8C217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862042166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733170AbgFSOIv (ORCPT
+        id S1733181AbgFSOIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:08:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:54759 "EHLO mga06.intel.com"
+        Fri, 19 Jun 2020 10:08:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54754 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733096AbgFSOIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:08:22 -0400
-IronPort-SDR: EZ3jy048xGEXKI6AAnRgmIIKSIUHfwgzO7L3ud8KDc7J4VLDmCnRFK9IgsLcAxCiR3FcS4mNDn
- 3qDK761S+dOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452887"
+        id S1732664AbgFSOIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:08:21 -0400
+IronPort-SDR: RSVhp0ciGULioimL4pR9XJ2mscWeRDPjBUSg9IKD8R7N7lhFsppwrFcFXxsl8ckRynxfxx7oSv
+ 1KdRPcH1Y4hA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452880"
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="204452887"
+   d="scan'208";a="204452880"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:08:09 -0700
-IronPort-SDR: /bdzs3HYzShnCnYC/GlSHli+rnhpjOCEhFmwyZlQrp+Xt9L0upwQxYYwZE6N2x82qk7E69l9AW
- 3fwqo5Kqo00g==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:08:06 -0700
+IronPort-SDR: mI46dL1kxtgpYfA1hwaKtplMWkBvdZzsK/ybGUYpD4TA7DJ/S742ckaAh5NWlOITdjG7KYY0ym
+ s3BGHTtx8bpw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="383837539"
+   d="scan'208";a="383837527"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:08:08 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:08:05 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -45,9 +45,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 21/21] perf/x86/intel/lbr: Support XSAVES for arch LBR read
-Date:   Fri, 19 Jun 2020 07:04:09 -0700
-Message-Id: <1592575449-64278-22-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 19/21] x86/fpu/xstate: Add helpers for LBR dynamic supervisor feature
+Date:   Fri, 19 Jun 2020 07:04:07 -0700
+Message-Id: <1592575449-64278-20-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
 References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
@@ -58,179 +58,170 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Reading LBR registers in a perf NMI handler for a non-PEBS event
-causes a high overhead because the number of LBR registers is huge.
-To reduce the overhead, the XSAVES instruction should be used to replace
-the LBR registers' reading method.
+The LBR dynamic supervisor feature will be enabled in the perf
+subsystem later. A new structure, several helpers, and a macro are
+added as below to facilitate enabling the feature.
+- Currently, the structure for each state component is maintained in
+  fpu/types.h. The structure for the new LBR state component should be
+  maintained in the same place, which will be used in the following
+  patch.
+- The perf subsystem will only need to save/restore the LBR state.
+  However, the existing helpers save all supported supervisor states to
+  a kernel buffer, which will be unnecessary. Two helpers are
+  introduced to only save/restore requested dynamic supervisor states.
+  The supervisor features in XFEATURE_MASK_SUPERVISOR_SUPPORTED and
+  XFEATURE_MASK_SUPERVISOR_UNSUPPORTED mask cannot be saved/restored
+  using these helpers.
+- The XSAVE buffer must be 64-byte aligned. A new macro is added to
+  reflect the alignment requirement.
 
-The XSAVES buffer used for LBR read has to be per-CPU because the NMI
-handler invoked the lbr_read(). The existing task_ctx_data buffer
-cannot be used which is per-task and only be allocated for the LBR call
-stack mode. A new lbr_xsave pointer is introduced in the cpu_hw_events
-as an XSAVES buffer for LBR read.
-
-The XSAVES buffer should be allocated only when LBR is used by a
-non-PEBS event on the CPU because the total size of the lbr_xsave is
-not small (~1.4KB).
-
-The XSAVES buffer is allocated when a non-PEBS event is added, but it
-is lazily released in x86_release_hardware() when perf releases the
-entire PMU hardware resource, because perf may frequently schedule the
-event, e.g. high context switch. The lazy release method reduces the
-overhead of frequently allocate/free the buffer.
-
-If the lbr_xsave fails to be allocated, roll back to normal Arch LBR
-lbr_read().
+The structure, the helpers, and the macro will be used in the following
+patch.
 
 Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/core.c       |  1 +
- arch/x86/events/intel/lbr.c  | 58 +++++++++++++++++++++++++++++++++++++++++++-
- arch/x86/events/perf_event.h |  7 ++++++
- 3 files changed, 65 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/fpu/types.h  | 19 +++++++++++
+ arch/x86/include/asm/fpu/xstate.h |  5 +++
+ arch/x86/kernel/fpu/xstate.c      | 72 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 96 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index aeb6e6d..3339347 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -359,6 +359,7 @@ void x86_release_hardware(void)
- 	if (atomic_dec_and_mutex_lock(&pmc_refcount, &pmc_reserve_mutex)) {
- 		release_pmc_hardware();
- 		release_ds_buffers();
-+		release_lbr_buffers();
- 		mutex_unlock(&pmc_reserve_mutex);
+diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+index 132e9cc..975f078 100644
+--- a/arch/x86/include/asm/fpu/types.h
++++ b/arch/x86/include/asm/fpu/types.h
+@@ -236,6 +236,25 @@ struct pkru_state {
+ 	u32				pad;
+ } __packed;
+ 
++/*
++ * State component 15: Architectural LBR configuration state.
++ * The size of Arch LBR state depends on the number of LBRs (lbr_depth).
++ */
++struct arch_lbr_entry {
++	u64 lbr_from;
++	u64 lbr_to;
++	u64 lbr_info;
++};
++
++struct arch_lbr_state {
++	u64 lbr_ctl;
++	u64 lbr_depth;
++	u64 ler_from;
++	u64 ler_to;
++	u64 ler_info;
++	struct arch_lbr_entry		entries[0];
++} __packed;
++
+ struct xstate_header {
+ 	u64				xfeatures;
+ 	u64				xcomp_bv;
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 040c4d4..636c3ef 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -21,6 +21,8 @@
+ #define XSAVE_YMM_SIZE	    256
+ #define XSAVE_YMM_OFFSET    (XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET)
+ 
++#define XSAVE_ALIGNMENT     64
++
+ /* All currently supported user features */
+ #define XFEATURE_MASK_USER_SUPPORTED (XFEATURE_MASK_FP | \
+ 				      XFEATURE_MASK_SSE | \
+@@ -106,6 +108,9 @@ int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned i
+ int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf);
+ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf);
+ void copy_supervisor_to_kernel(struct xregs_state *xsave);
++void copy_dynamic_supervisor_to_kernel(struct xregs_state *xstate, u64 mask);
++void copy_kernel_to_dynamic_supervisor(struct xregs_state *xstate, u64 mask);
++
+ 
+ /* Validate an xstate header supplied by userspace (ptrace or sigreturn) */
+ int validate_user_xstate_header(const struct xstate_header *hdr);
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 58d79f1..49e0347 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -1352,6 +1352,78 @@ void copy_supervisor_to_kernel(struct xregs_state *xstate)
  	}
  }
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index dc40a76..4b0042f 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -624,6 +624,7 @@ static inline bool branch_user_callstack(unsigned br_sel)
  
- void intel_pmu_lbr_add(struct perf_event *event)
- {
-+	struct kmem_cache *kmem_cache = event->pmu->task_ctx_cache;
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
- 	if (!x86_pmu.lbr_nr)
-@@ -658,6 +659,28 @@ void intel_pmu_lbr_add(struct perf_event *event)
- 	perf_sched_cb_inc(event->ctx->pmu);
- 	if (!cpuc->lbr_users++ && !event->total_time_running)
- 		intel_pmu_lbr_reset();
-+
-+	if (x86_pmu.arch_lbr && kmem_cache && !cpuc->lbr_xsave &&
-+	    (cpuc->lbr_users != cpuc->lbr_pebs_users))
-+		cpuc->lbr_xsave = kmem_cache_alloc(kmem_cache, GFP_KERNEL);
-+}
-+
-+void release_lbr_buffers(void)
++/**
++ * copy_dynamic_supervisor_to_kernel() - Save dynamic supervisor states to
++ *                                       an xsave area
++ * @xstate: A pointer to an xsave area
++ * @mask: Represent the dynamic supervisor features saved into the xsave area
++ *
++ * Only the dynamic supervisor states sets in the mask are saved into the xsave
++ * area (See the comment in XFEATURE_MASK_DYNAMIC for the details of dynamic
++ * supervisor feature). Besides the dynamic supervisor states, the legacy
++ * region and XSAVE header are also saved into the xsave area. The supervisor
++ * features in the XFEATURE_MASK_SUPERVISOR_SUPPORTED and
++ * XFEATURE_MASK_SUPERVISOR_UNSUPPORTED are not saved.
++ *
++ * The xsave area must be 64-bytes aligned.
++ */
++void copy_dynamic_supervisor_to_kernel(struct xregs_state *xstate, u64 mask)
 +{
-+	struct kmem_cache *kmem_cache = x86_get_pmu()->task_ctx_cache;
-+	struct cpu_hw_events *cpuc;
-+	int cpu;
++	u64 dynamic_mask = xfeatures_mask_dynamic() & mask;
++	u32 lmask, hmask;
++	int err;
 +
-+	if (!x86_pmu.arch_lbr)
++	if (WARN_ON_FPU(!boot_cpu_has(X86_FEATURE_XSAVES)))
 +		return;
 +
-+	for_each_possible_cpu(cpu) {
-+		cpuc = per_cpu_ptr(&cpu_hw_events, cpu);
-+		if (kmem_cache && cpuc->lbr_xsave) {
-+			kmem_cache_free(kmem_cache, cpuc->lbr_xsave);
-+			cpuc->lbr_xsave = NULL;
-+		}
-+	}
- }
- 
- void intel_pmu_lbr_del(struct perf_event *event)
-@@ -909,6 +932,38 @@ static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
- 	cpuc->lbr_stack.nr = i;
- }
- 
-+static void intel_pmu_arch_lbr_read_xsave(struct cpu_hw_events *cpuc)
-+{
-+	struct x86_perf_task_context_arch_lbr_xsave *xsave = cpuc->lbr_xsave;
-+	struct arch_lbr_entry *lbr;
-+	int i;
++	if (WARN_ON_FPU(!dynamic_mask))
++		return;
 +
-+	if (!xsave)
-+		goto rollback;
++	lmask = dynamic_mask;
++	hmask = dynamic_mask >> 32;
 +
-+	copy_dynamic_supervisor_to_kernel(&xsave->xsave, XFEATURE_MASK_LBR);
++	XSTATE_OP(XSAVES, xstate, lmask, hmask, err);
 +
-+	for (i = 0; i < x86_pmu.lbr_nr; i++) {
-+		lbr = &xsave->lbr.entries[i];
-+
-+		/*
-+		 * Read LBR entries until invalid entry (0s) is detected.
-+		 */
-+		if (!lbr->lbr_from)
-+			break;
-+
-+		__intel_pmu_arch_lbr_read(cpuc, i, lbr->lbr_from,
-+					  lbr->lbr_to, lbr->lbr_info);
-+	}
-+
-+	cpuc->lbr_stack.nr = i;
-+
-+	return;
-+
-+rollback:
-+	intel_pmu_arch_lbr_read(cpuc);
++	/* Should never fault when copying to a kernel buffer */
++	WARN_ON_FPU(err);
 +}
 +
- void intel_pmu_lbr_read(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -1757,14 +1812,15 @@ void __init intel_pmu_arch_lbr_init(void)
- 	x86_pmu.lbr_enable = intel_pmu_arch_lbr_enable;
- 	x86_pmu.lbr_disable = intel_pmu_arch_lbr_disable;
- 	x86_pmu.lbr_reset = intel_pmu_arch_lbr_reset;
--	x86_pmu.lbr_read = intel_pmu_arch_lbr_read;
- 	if (arch_lbr_xsave) {
- 		x86_pmu.lbr_save = intel_pmu_arch_lbr_xsaves;
- 		x86_pmu.lbr_restore = intel_pmu_arch_lbr_xrstors;
-+		x86_pmu.lbr_read = intel_pmu_arch_lbr_read_xsave;
- 		pr_cont("XSAVE ");
- 	} else {
- 		x86_pmu.lbr_save = intel_pmu_arch_lbr_save;
- 		x86_pmu.lbr_restore = intel_pmu_arch_lbr_restore;
-+		x86_pmu.lbr_read = intel_pmu_arch_lbr_read;
- 	}
- 
- 	x86_pmu.arch_lbr = true;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 812980e..b9dfc55 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -251,6 +251,7 @@ struct cpu_hw_events {
- 	u64				br_sel;
- 	void				*last_task_ctx;
- 	int				last_log_id;
-+	void				*lbr_xsave;
- 
- 	/*
- 	 * Intel host/guest exclude bits
-@@ -1106,6 +1107,8 @@ void release_ds_buffers(void);
- 
- void reserve_ds_buffers(void);
- 
-+void release_lbr_buffers(void);
-+
- extern struct event_constraint bts_constraint;
- 
- void intel_pmu_enable_bts(u64 config);
-@@ -1250,6 +1253,10 @@ static inline void release_ds_buffers(void)
- {
- }
- 
-+static inline void release_lbr_buffers(void)
++/**
++ * copy_kernel_to_dynamic_supervisor() - Restore dynamic supervisor states from
++ *                                       an xsave area
++ * @xstate: A pointer to an xsave area
++ * @mask: Represent the dynamic supervisor features restored from the xsave area
++ *
++ * Only the dynamic supervisor states sets in the mask are restored from the
++ * xsave area (See the comment in XFEATURE_MASK_DYNAMIC for the details of
++ * dynamic supervisor feature). Besides the dynamic supervisor states, the
++ * legacy region and XSAVE header are also restored from the xsave area. The
++ * supervisor features in the XFEATURE_MASK_SUPERVISOR_SUPPORTED and
++ * XFEATURE_MASK_SUPERVISOR_UNSUPPORTED are not restored.
++ *
++ * The xsave area must be 64-bytes aligned.
++ */
++void copy_kernel_to_dynamic_supervisor(struct xregs_state *xstate, u64 mask)
 +{
++	u64 dynamic_mask = xfeatures_mask_dynamic() & mask;
++	u32 lmask, hmask;
++	int err;
++
++	if (WARN_ON_FPU(!boot_cpu_has(X86_FEATURE_XSAVES)))
++		return;
++
++	if (WARN_ON_FPU(!dynamic_mask))
++		return;
++
++	lmask = dynamic_mask;
++	hmask = dynamic_mask >> 32;
++
++	XSTATE_OP(XRSTORS, xstate, lmask, hmask, err);
++
++	/* Should never fault when copying from a kernel buffer */
++	WARN_ON_FPU(err);
 +}
 +
- static inline int intel_pmu_init(void)
- {
- 	return 0;
+ #ifdef CONFIG_PROC_PID_ARCH_STATUS
+ /*
+  * Report the amount of time elapsed in millisecond since last AVX512
 -- 
 2.7.4
 
