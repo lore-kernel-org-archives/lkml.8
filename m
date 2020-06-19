@@ -2,145 +2,144 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD035C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09973206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB8A20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585433;
-	bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQ8Z5dZOAKk7upN7aPwsnp6FdGPHrys4Gftw9JFqkCjSqo5+/Jqj1oB+hImt7rsQv
-	 Xg2WUp+SCXVKQFktrJpCba+lRLtfdHxjwy02EsFF1carQijtLHjbgKPXYSHPX67n36
-	 1k5y0/l6xgoU3AwP3BEfWght146zBUp2/Z6MxMSk=
+	s=default; t=1592585437;
+	bh=BfKddbrXxUWPan5CD6khEfR4aoXC3Z+AH6odX3gV2yQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CUlQK/dv18PhCff3ALjl2uURs9J5RhSV1c7TS2eT9u8UywNp+5eZSJxz+YcbkZDbY
+	 LbY53/Gx/nsY5ollAMzpGzzv1vamUl8XULFty3NoLyV/NXe8Z7GHP39vz5amLGdMSC
+	 ji26Nxjl8ZBbEZGYsBxkkEDwsDsjT/HW4uyHK/N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405830AbgFSQua (ORCPT
+        id S2405845AbgFSQug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:50:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55938 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387902AbgFSOiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2387450AbgFSOih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:38:37 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7345420DD4;
-        Fri, 19 Jun 2020 14:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82E74208B8;
+        Fri, 19 Jun 2020 14:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577526;
-        bh=exxodDtRqqIJtISOg9Z587h8XyV029GVrPWQ8BRcD6Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/xfbCWhkbEqQ5Umf9HqNYQIZsRYCGBeLd2itsy8JLM6acoPprE6Pe0WwBaah0qLc
-         XvaKC8QOM1g/bl9koLZ7FWpqn9M01ROwe4eNaidejRpPHE1yyY56CcHhbT91RA0PQ6
-         nyuqOALZRQoF+s/FEeH3bk0kNBPe+T5Mee3doPuM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 4.4 085/101] media: go7007: fix a miss of snd_card_free
-Date:   Fri, 19 Jun 2020 16:33:14 +0200
-Message-Id: <20200619141618.421043515@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
-References: <20200619141614.001544111@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592577517;
+        bh=BfKddbrXxUWPan5CD6khEfR4aoXC3Z+AH6odX3gV2yQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dENCaHB2ir0r1qUT2gfmdStMdCGpVBzh0+V6hmTvu6hIDzPhfGxyVY7gh10CfWCob
+         TT04HPLPl8gY6XAtWE2K6WgxofvEsOHwpH4FErCb4lJJwtn+x6ZtmadPUPWiqW/ULL
+         he6J7FOqbt52zRTb2Nm2pEqXgxs/hGQPqEn17UUo=
+Received: by earth.universe (Postfix, from userid 1000)
+        id DE1073C08CD; Fri, 19 Jun 2020 16:38:35 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 16:38:35 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@intel.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: power: supply: bq25890: Indent example
+ with tabs
+Message-ID: <20200619143835.unnla3s6zywxcnfj@earth.universe>
+References: <20200617102305.14241-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gwlix4ac63ohaldv"
+Content-Disposition: inline
+In-Reply-To: <20200617102305.14241-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 9453264ef58638ce8976121ac44c07a3ef375983 upstream.
+--gwlix4ac63ohaldv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-go7007_snd_init() misses a snd_card_free() in an error path.
-Add the missed call to fix it.
+Hi,
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-[Salvatore Bonaccorso: Adjust context for backport to versions which do
-not contain c0decac19da3 ("media: use strscpy() instead of strlcpy()")
-and ba78170ef153 ("media: go7007: Fix misuse of strscpy")]
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Jun 17, 2020 at 12:23:04PM +0200, Krzysztof Kozlowski wrote:
+> Fix example indentation to tabs to follow generic Linux coding style.
+> This avoids copying the space indentation to DTS when re-using the
+> example.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
----
- drivers/media/usb/go7007/snd-go7007.c |   35 ++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+Thanks, queued.
 
---- a/drivers/media/usb/go7007/snd-go7007.c
-+++ b/drivers/media/usb/go7007/snd-go7007.c
-@@ -243,22 +243,18 @@ int go7007_snd_init(struct go7007 *go)
- 	gosnd->capturing = 0;
- 	ret = snd_card_new(go->dev, index[dev], id[dev], THIS_MODULE, 0,
- 			   &gosnd->card);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_snd;
-+
- 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
- 			&go7007_snd_device_ops);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	ret = snd_pcm_new(gosnd->card, "go7007", 0, 0, 1, &gosnd->pcm);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	strlcpy(gosnd->card->driver, "go7007", sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->shortname, go->name, sizeof(gosnd->card->driver));
- 	strlcpy(gosnd->card->longname, gosnd->card->shortname,
-@@ -269,11 +265,8 @@ int go7007_snd_init(struct go7007 *go)
- 			&go7007_snd_capture_ops);
- 
- 	ret = snd_card_register(gosnd->card);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
- 
- 	gosnd->substream = NULL;
- 	go->snd_context = gosnd;
-@@ -281,6 +274,12 @@ int go7007_snd_init(struct go7007 *go)
- 	++dev;
- 
- 	return 0;
-+
-+free_card:
-+	snd_card_free(gosnd->card);
-+free_snd:
-+	kfree(gosnd);
-+	return ret;
- }
- EXPORT_SYMBOL(go7007_snd_init);
- 
+-- Sebastian
 
+>  .../bindings/power/supply/bq25890.txt         | 22 +++++++++----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b=
+/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> index dc9c8f76e06c..51ecc756521f 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> @@ -36,17 +36,17 @@ Optional properties:
+>  Example:
+> =20
+>  bq25890 {
+> -        compatible =3D "ti,bq25890";
+> -        reg =3D <0x6a>;
+> +	compatible =3D "ti,bq25890";
+> +	reg =3D <0x6a>;
+> =20
+> -        ti,battery-regulation-voltage =3D <4200000>;
+> -        ti,charge-current =3D <1000000>;
+> -        ti,termination-current =3D <50000>;
+> -        ti,precharge-current =3D <128000>;
+> -        ti,minimum-sys-voltage =3D <3600000>;
+> -        ti,boost-voltage =3D <5000000>;
+> -        ti,boost-max-current =3D <1000000>;
+> +	ti,battery-regulation-voltage =3D <4200000>;
+> +	ti,charge-current =3D <1000000>;
+> +	ti,termination-current =3D <50000>;
+> +	ti,precharge-current =3D <128000>;
+> +	ti,minimum-sys-voltage =3D <3600000>;
+> +	ti,boost-voltage =3D <5000000>;
+> +	ti,boost-max-current =3D <1000000>;
+> =20
+> -        ti,use-ilim-pin;
+> -        ti,thermal-regulation-threshold =3D <120>;
+> +	ti,use-ilim-pin;
+> +	ti,thermal-regulation-threshold =3D <120>;
+>  };
+> --=20
+> 2.17.1
+>=20
 
+--gwlix4ac63ohaldv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7szd0ACgkQ2O7X88g7
++prY8A/+NKGwIlBdgJoLJVwpEpRL4Fm1ZhekGETuQf7w5rSZsxwpmabU4ZJBVrOy
+AoqQwFOsnSkw0TbXBC4s4NEHXp8fb3T6H6XWC7eoLrKCd1NpxBNj9/ieqZepENow
+xOxguyiSiTTpMlYmsdh5fatB6npUzH0U+74nkvtjhYPdceqksKWN2M/6kXChpAXv
+SSOvEOgi+uK+w19pZSj4K8vPs0Sb/AelXBWMvnuo8pIx47P/O6B8m1ArNffi6NuL
+1T1HOVj7s5vNu9EYFDmy6RlHN+5YcD27fFBVXPlMP4OLmudobty53Ln3laGw/8E4
++ZkWlqwUvTGGLsdM6qr1MlRTW7SQxBSu6HfTgn2QjcApMeJqFy8ZExeZ+QP8rnGe
+MhuX+MRjJ4u74Ir0cIzGeYLvyPlpGUqeXxFEhPXNwS2V/5OXltdnU4AUOsb0RvYZ
+xQ0tiG+BpDI3meY+oFyMOXepZjQteLEs8LTtJPSK0G0KhxVGjAlj6keQS7FR5wMR
+zY9oa4oSlQu5ZEsq4Kce/A+RAEqy0IqhvlNLnemy57Gpsjw+qjOSgav0zyozxnDB
+iknGGpw8Ih2gNg7dC8rMaXFf4l20l6MSRw2CLJ1VAi7/yyAHiWAuNTEvax8XafJp
+1lIRaEUONMk8uFzvgigI3ifz/RwHM12x1usDvehKrUdkplrsC0c=
+=IEDH
+-----END PGP SIGNATURE-----
+
+--gwlix4ac63ohaldv--
