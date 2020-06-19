@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0DA21941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AE32080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579095;
-	bh=lC9ferR9X4gmT4FMRJp5dYkyPXSIP4zs76hVyxo4wis=;
+	s=default; t=1592579103;
+	bh=eDxLH4ouDqLNWQDr9hjpdo2YNXdlxYjycEeNZepbj/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4yH5WzJcoeYv03X5Jp1uyyuIoPZHp1h02by94uwEC5CVh9gPrfajES75zJRNYWIZ
-	 Oj9wbuj+ZxteoFxIWtKgtl9UDCbKbCc8WiRAuHAKuJgW0HLE1cGdGMrS5+OS0zkGnK
-	 T/OKEanS+IsZ3AEm5w8p//YqjIlqHRtD7YmjC8RU=
+	b=vstpi0sB4edYz6uP+wxmRrV0ZGD9U1CHvAWgb0rrcFJaRXiIvz7sIAtZTKthLV5vb
+	 SdxOMiQWNANU9HUg1G/9yKvAKFGCG+0HsF16ZWw5Afezg+HZYke38ji2Pb3d+lAsE4
+	 pjcH78af+Do8ZYN62yvAFWoY5I48J+ZqjNOBW+hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390520AbgFSPEy (ORCPT
+        id S2391226AbgFSPFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:05:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391200AbgFSPEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:50 -0400
+        id S2391205AbgFSPEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 915E521D7D;
-        Fri, 19 Jun 2020 15:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D11221841;
+        Fri, 19 Jun 2020 15:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579090;
-        bh=lC9ferR9X4gmT4FMRJp5dYkyPXSIP4zs76hVyxo4wis=;
+        s=default; t=1592579092;
+        bh=eDxLH4ouDqLNWQDr9hjpdo2YNXdlxYjycEeNZepbj/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nV5nw4qPLJJibp7DcKICFXk9LME29fNKaAnb08YPKJMaYXfovGCM3shm4+4Q6AFWM
-         5GnmSzJkHHKmsqIfDJDP4N39Y3F8J8gQ0fwLrjGpDic+NYOucxZXddP47WpQcO//Rw
-         +9mJOa1HKmT3QnpqUdTnNVa7LnZDR+w+TOoXNcAM=
+        b=sqTndp/I4WkocbDSzB+YrYCCOYARRN1mFDKk4/wJUWjSBxYAi2NV8uN3ACsRQm59k
+         rt+UwIg1Z1MNGJb8/U302F9WI1GU3EXmCS3C8uA0QV6DvfkucS4C8ZpPwwm47rOrC5
+         gIs84eYaTraiIVsNcvKBhXbE54h0C7j0+FIFH854=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 255/267] drivers/macintosh: Fix memleak in windfarm_pm112 driver
-Date:   Fri, 19 Jun 2020 16:34:00 +0200
-Message-Id: <20200619141700.894962791@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 256/267] powerpc/64s: Dont let DT CPU features set FSCR_DSCR
+Date:   Fri, 19 Jun 2020 16:34:01 +0200
+Message-Id: <20200619141700.942231187@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,98 +60,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 93900337b9ac2f4eca427eff6d187be2dc3b5551 upstream.
+commit 993e3d96fd08c3ebf7566e43be9b8cd622063e6d upstream.
 
-create_cpu_loop() calls smu_sat_get_sdb_partition() which does
-kmalloc() and returns the allocated buffer. In fact it's called twice,
-and neither buffer is freed.
+The device tree CPU features binding includes FSCR bit numbers which
+Linux is instructed to set by firmware.
 
-This results in a memory leak as reported by Erhard:
-  unreferenced object 0xc00000047081f840 (size 32):
-    comm "kwindfarm", pid 203, jiffies 4294880630 (age 5552.877s)
-    hex dump (first 32 bytes):
-      c8 06 02 7f ff 02 ff 01 fb bf 00 41 00 20 00 00  ...........A. ..
-      00 07 89 37 00 a0 00 00 00 00 00 00 00 00 00 00  ...7............
-    backtrace:
-      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
-      [<000000003010fcb7>] .pm112_wf_notify+0x104c/0x13bc [windfarm_pm112]
-      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
-      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
-      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
-      [<000000000d54838d>] .kthread+0x13c/0x190
-      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
-  unreferenced object 0xc0000004737089f0 (size 16):
-    comm "kwindfarm", pid 203, jiffies 4294880879 (age 5552.050s)
-    hex dump (first 16 bytes):
-      c4 04 01 7f 22 11 e0 e6 ff 55 7b 12 ec 11 00 00  ...."....U{.....
-    backtrace:
-      [<0000000083f0a65c>] .smu_sat_get_sdb_partition+0xc4/0x2d0 [windfarm_smu_sat]
-      [<00000000b94ef7e1>] .pm112_wf_notify+0x1294/0x13bc [windfarm_pm112]
-      [<00000000b958b2dd>] .notifier_call_chain+0xa8/0x180
-      [<0000000070490868>] .blocking_notifier_call_chain+0x64/0x90
-      [<00000000131d8149>] .wf_thread_func+0x114/0x1a0
-      [<000000000d54838d>] .kthread+0x13c/0x190
-      [<00000000669b72bc>] .ret_from_kernel_thread+0x58/0x64
+Whether that's a good idea or not, in the case of the DSCR the Linux
+implementation has a hard requirement that the FSCR_DSCR bit not be
+set by default. We use it to track when a process reads/writes to
+DSCR, so it must be clear to begin with.
 
-Fix it by rearranging the logic so we deal with each buffer
-separately, which then makes it easy to free the buffer once we're
-done with it.
+So if firmware tells us to set FSCR_DSCR we must ignore it.
 
-Fixes: ac171c46667c ("[PATCH] powerpc: Thermal control for dual core G5s")
-Cc: stable@vger.kernel.org # v2.6.16+
-Reported-by: Erhard F. <erhard_f@mailbox.org>
+Currently this does not cause a bug in our DSCR handling because the
+value of FSCR that the device tree CPU features code establishes is
+only used by swapper. All other tasks use the value hard coded in
+init_task.thread.fscr.
+
+However we'd like to fix that in a future commit, at which point this
+will become necessary.
+
+Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+Cc: stable@vger.kernel.org # v4.12+
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Erhard F. <erhard_f@mailbox.org>
-Link: https://lore.kernel.org/r/20200423060038.3308530-1-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/20200527145843.2761782-2-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/macintosh/windfarm_pm112.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/powerpc/kernel/dt_cpu_ftrs.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/macintosh/windfarm_pm112.c
-+++ b/drivers/macintosh/windfarm_pm112.c
-@@ -133,14 +133,6 @@ static int create_cpu_loop(int cpu)
- 	s32 tmax;
- 	int fmin;
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -346,6 +346,14 @@ static int __init feat_enable_dscr(struc
+ {
+ 	u64 lpcr;
  
--	/* Get PID params from the appropriate SAT */
--	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
--	if (hdr == NULL) {
--		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
--		return -EINVAL;
--	}
--	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
--
- 	/* Get FVT params to get Tmax; if not found, assume default */
- 	hdr = smu_sat_get_sdb_partition(chip, 0xC4 + core, NULL);
- 	if (hdr) {
-@@ -153,6 +145,16 @@ static int create_cpu_loop(int cpu)
- 	if (tmax < cpu_all_tmax)
- 		cpu_all_tmax = tmax;
++	/*
++	 * Linux relies on FSCR[DSCR] being clear, so that we can take the
++	 * facility unavailable interrupt and track the task's usage of DSCR.
++	 * See facility_unavailable_exception().
++	 * Clear the bit here so that feat_enable() doesn't set it.
++	 */
++	f->fscr_bit_nr = -1;
++
+ 	feat_enable(f);
  
-+	kfree(hdr);
-+
-+	/* Get PID params from the appropriate SAT */
-+	hdr = smu_sat_get_sdb_partition(chip, 0xC8 + core, NULL);
-+	if (hdr == NULL) {
-+		printk(KERN_WARNING"windfarm: can't get CPU PID fan config\n");
-+		return -EINVAL;
-+	}
-+	piddata = (struct smu_sdbp_cpupiddata *)&hdr[1];
-+
- 	/*
- 	 * Darwin has a minimum fan speed of 1000 rpm for the 4-way and
- 	 * 515 for the 2-way.  That appears to be overkill, so for now,
-@@ -175,6 +177,9 @@ static int create_cpu_loop(int cpu)
- 		pid.min = fmin;
- 
- 	wf_cpu_pid_init(&cpu_pid[cpu], &pid);
-+
-+	kfree(hdr);
-+
- 	return 0;
- }
- 
+ 	lpcr = mfspr(SPRN_LPCR);
 
 
