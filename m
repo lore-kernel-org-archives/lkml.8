@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E4F20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC19220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582162;
-	bh=EKcNGXPVsXSo798RYkf9ibs72j1OBs1xifDbNicZdtQ=;
+	s=default; t=1592582165;
+	bh=rza3GijJEHiYQS6naUd/LTVSyFhudYeYmLttrcZ8jOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyKf9tq/IVvtqB+uiMPyGYQPiO6GKH9VdQou54sjZC0QC5dCv1Sl121CQxcCljEFC
-	 aIYYRkfy6XBSqpcITy8pOigVV9CHaAiaolA61aEQCC+HaNmtfRBKlQV8ncokld10fd
-	 prL7rbEgALusSGxE3ht0bpTAu8CsGKpTPcHX738U=
+	b=kDjMIuV4ekWKLAmjS/5ILyolKBDznQbYjgoiZ3TZFwfpRKApy9Je3H45K9U6K3NZK
+	 GVhEU1HgmvUIobHDHQxMZ0jKx4PEC/NLvyg7bStJ+3oh92OBUi1r9qiggWhGLK5fqA
+	 WABAKyIt6aw+3iDOaufpDsf6c7iZvp7RPUzHIRDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392808AbgFSPVG (ORCPT
+        id S2392799AbgFSPVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404125AbgFSPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:58 -0400
+        id S2392588AbgFSPS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BC802080C;
-        Fri, 19 Jun 2020 15:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1E3021582;
+        Fri, 19 Jun 2020 15:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579817;
-        bh=EKcNGXPVsXSo798RYkf9ibs72j1OBs1xifDbNicZdtQ=;
+        s=default; t=1592579908;
+        bh=rza3GijJEHiYQS6naUd/LTVSyFhudYeYmLttrcZ8jOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=daQX8+KFTrG2+FvhYAdOq+GOL4cHv0+a3RLvb9ilyUD1izoMVRh/dzRj56to38kr4
-         1npuQnjvtyDC28Byx5NfmS4AIt+EraSvoQEbTiZ6FkEHPqzTesCh1uGyoF41rEuG4Z
-         UlNUzheYmBFGOSGV5AUyW9Fs86Yypqtm0EI711d0=
+        b=vdYpkWoGPX7sm30PUGvdIgiZhMSrdD6WXofyy/BcEUnJqP9KS8V/JnOXp62IBkUrk
+         D6NzUFH8kCKweP0v/N2fG94wAUpN6yrh2j+D1LQ0QqMh5DDGQtNsQWa8/wZnPFuV6t
+         e/9oTWvc3jbsWiFs2dL05eTWZDgNVhkfi1OKMF1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 005/376] media: staging: imgu: do not hold spinlock during freeing mmu page table
-Date:   Fri, 19 Jun 2020 16:28:43 +0200
-Message-Id: <20200619141710.613792826@linuxfoundation.org>
+Subject: [PATCH 5.7 019/376] net: ethernet: ti: fix return value check in k3_cppi_desc_pool_create_name()
+Date:   Fri, 19 Jun 2020 16:28:57 +0200
+Message-Id: <20200619141711.271206582@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,63 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bingbu Cao <bingbu.cao@intel.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit e1ebe9f9c88e5a78fcc4670a9063c9b3cd87dda4 ]
+[ Upstream commit 2ac757e4152e3322a04a6dfb3d1fa010d3521abf ]
 
-ImgU need set the mmu page table in memory as uncached, and set back
-to write-back when free the page table by set_memory_wb(),
-set_memory_wb() can not do flushing without interrupt, so the spinlock
-should not be hold during ImgU page alloc and free, the interrupt
-should be enabled during memory cache flush.
+In case of error, the function gen_pool_create() returns NULL pointer
+not ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-This patch release spinlock before freeing pages table.
-
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/ipu3/ipu3-mmu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/ti/k3-cppi-desc-pool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-mmu.c b/drivers/staging/media/ipu3/ipu3-mmu.c
-index 5f3ff964f3e7..cb9bf5fb29a5 100644
---- a/drivers/staging/media/ipu3/ipu3-mmu.c
-+++ b/drivers/staging/media/ipu3/ipu3-mmu.c
-@@ -174,8 +174,10 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	spin_lock_irqsave(&mmu->lock, flags);
+diff --git a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c b/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+index ad7cfc1316ce..38cc12f9f133 100644
+--- a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
++++ b/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+@@ -64,8 +64,8 @@ k3_cppi_desc_pool_create_name(struct device *dev, size_t size,
+ 		return ERR_PTR(-ENOMEM);
  
- 	l2pt = mmu->l2pts[l1pt_idx];
--	if (l2pt)
--		goto done;
-+	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
-+		return l2pt;
-+	}
- 
- 	spin_unlock_irqrestore(&mmu->lock, flags);
- 
-@@ -190,8 +192,9 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 
- 	l2pt = mmu->l2pts[l1pt_idx];
- 	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
- 		imgu_mmu_free_page_table(new_l2pt);
--		goto done;
-+		return l2pt;
- 	}
- 
- 	l2pt = new_l2pt;
-@@ -200,7 +203,6 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	pteval = IPU3_ADDR2PTE(virt_to_phys(new_l2pt));
- 	mmu->l1pt[l1pt_idx] = pteval;
- 
--done:
- 	spin_unlock_irqrestore(&mmu->lock, flags);
- 	return l2pt;
- }
+ 	pool->gen_pool = gen_pool_create(ilog2(pool->desc_size), -1);
+-	if (IS_ERR(pool->gen_pool)) {
+-		ret = PTR_ERR(pool->gen_pool);
++	if (!pool->gen_pool) {
++		ret = -ENOMEM;
+ 		dev_err(pool->dev, "pool create failed %d\n", ret);
+ 		kfree_const(pool_name);
+ 		goto gen_pool_create_fail;
 -- 
 2.25.1
 
