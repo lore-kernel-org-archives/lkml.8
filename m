@@ -2,144 +2,101 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD035C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB8A20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B174206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585437;
-	bh=BfKddbrXxUWPan5CD6khEfR4aoXC3Z+AH6odX3gV2yQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CUlQK/dv18PhCff3ALjl2uURs9J5RhSV1c7TS2eT9u8UywNp+5eZSJxz+YcbkZDbY
-	 LbY53/Gx/nsY5ollAMzpGzzv1vamUl8XULFty3NoLyV/NXe8Z7GHP39vz5amLGdMSC
-	 ji26Nxjl8ZBbEZGYsBxkkEDwsDsjT/HW4uyHK/N4=
+	s=default; t=1592585443;
+	bh=8fLK+Pjpfcxokj4e/RXkF66iJ9dZAUaLX/pDyeawXhY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=A0qNqiEOYympT9odyWlufJZ3abaaHZP7QDE/pwYza/D5O57lN7aVUPwDGWiBgY1sY
+	 rz4dxFvGgT8MsJFPz9d9J5CLxrJ28cExC08vsa7VDeydSXp21wX/pw/0ntogrbbHwQ
+	 dqOHHE7AEDsaikGr5dmBP/jJsIjU4LQmRIsVTZGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405845AbgFSQug (ORCPT
+        id S2404294AbgFSQuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55778 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbgFSOih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:38:37 -0400
-Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
+        id S2405838AbgFSQuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:50:37 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82E74208B8;
-        Fri, 19 Jun 2020 14:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4A4206B7;
+        Fri, 19 Jun 2020 16:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577517;
-        bh=BfKddbrXxUWPan5CD6khEfR4aoXC3Z+AH6odX3gV2yQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dENCaHB2ir0r1qUT2gfmdStMdCGpVBzh0+V6hmTvu6hIDzPhfGxyVY7gh10CfWCob
-         TT04HPLPl8gY6XAtWE2K6WgxofvEsOHwpH4FErCb4lJJwtn+x6ZtmadPUPWiqW/ULL
-         he6J7FOqbt52zRTb2Nm2pEqXgxs/hGQPqEn17UUo=
-Received: by earth.universe (Postfix, from userid 1000)
-        id DE1073C08CD; Fri, 19 Jun 2020 16:38:35 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 16:38:35 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: supply: bq25890: Indent example
- with tabs
-Message-ID: <20200619143835.unnla3s6zywxcnfj@earth.universe>
-References: <20200617102305.14241-1-krzk@kernel.org>
+        s=default; t=1592585436;
+        bh=8fLK+Pjpfcxokj4e/RXkF66iJ9dZAUaLX/pDyeawXhY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dWv0u1B2cwrZIR6QXdF5eKMnncRQydszuekOIZHLQYR2hOkxkIpgCLEgZfX8XmE9F
+         WaDNZiSrro7iqsDKv3ysZsAfltZdriad2K9OErAKFzA0wr3L6wO5Ao43NipY/r+K6b
+         3tofXaI5FmD7bbvEJ0RadaTTryL23qWpFml02x2s=
+Date:   Fri, 19 Jun 2020 11:56:00 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] s390/dasd: Use struct_size() helper
+Message-ID: <20200619165600.GA8668@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gwlix4ac63ohaldv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617102305.14241-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _datasize_.
 
---gwlix4ac63ohaldv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-Hi,
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/s390/block/dasd_diag.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-On Wed, Jun 17, 2020 at 12:23:04PM +0200, Krzysztof Kozlowski wrote:
-> Fix example indentation to tabs to follow generic Linux coding style.
-> This avoids copying the space indentation to DTS when re-using the
-> example.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
+index facb588d09e4..7f53ba015300 100644
+--- a/drivers/s390/block/dasd_diag.c
++++ b/drivers/s390/block/dasd_diag.c
+@@ -506,7 +506,7 @@ static struct dasd_ccw_req *dasd_diag_build_cp(struct dasd_device *memdev,
+ 	struct req_iterator iter;
+ 	struct bio_vec bv;
+ 	char *dst;
+-	unsigned int count, datasize;
++	unsigned int count;
+ 	sector_t recid, first_rec, last_rec;
+ 	unsigned int blksize, off;
+ 	unsigned char rw_cmd;
+@@ -534,10 +534,8 @@ static struct dasd_ccw_req *dasd_diag_build_cp(struct dasd_device *memdev,
+ 	if (count != last_rec - first_rec + 1)
+ 		return ERR_PTR(-EINVAL);
+ 	/* Build the request */
+-	datasize = sizeof(struct dasd_diag_req) +
+-		count*sizeof(struct dasd_diag_bio);
+-	cqr = dasd_smalloc_request(DASD_DIAG_MAGIC, 0, datasize, memdev,
+-				   blk_mq_rq_to_pdu(req));
++	cqr = dasd_smalloc_request(DASD_DIAG_MAGIC, 0, struct_size(dreq, bio, count),
++				   memdev, blk_mq_rq_to_pdu(req));
+ 	if (IS_ERR(cqr))
+ 		return cqr;
+ 
+-- 
+2.27.0
 
-Thanks, queued.
-
--- Sebastian
-
->  .../bindings/power/supply/bq25890.txt         | 22 +++++++++----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b=
-/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> index dc9c8f76e06c..51ecc756521f 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> @@ -36,17 +36,17 @@ Optional properties:
->  Example:
-> =20
->  bq25890 {
-> -        compatible =3D "ti,bq25890";
-> -        reg =3D <0x6a>;
-> +	compatible =3D "ti,bq25890";
-> +	reg =3D <0x6a>;
-> =20
-> -        ti,battery-regulation-voltage =3D <4200000>;
-> -        ti,charge-current =3D <1000000>;
-> -        ti,termination-current =3D <50000>;
-> -        ti,precharge-current =3D <128000>;
-> -        ti,minimum-sys-voltage =3D <3600000>;
-> -        ti,boost-voltage =3D <5000000>;
-> -        ti,boost-max-current =3D <1000000>;
-> +	ti,battery-regulation-voltage =3D <4200000>;
-> +	ti,charge-current =3D <1000000>;
-> +	ti,termination-current =3D <50000>;
-> +	ti,precharge-current =3D <128000>;
-> +	ti,minimum-sys-voltage =3D <3600000>;
-> +	ti,boost-voltage =3D <5000000>;
-> +	ti,boost-max-current =3D <1000000>;
-> =20
-> -        ti,use-ilim-pin;
-> -        ti,thermal-regulation-threshold =3D <120>;
-> +	ti,use-ilim-pin;
-> +	ti,thermal-regulation-threshold =3D <120>;
->  };
-> --=20
-> 2.17.1
->=20
-
---gwlix4ac63ohaldv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7szd0ACgkQ2O7X88g7
-+prY8A/+NKGwIlBdgJoLJVwpEpRL4Fm1ZhekGETuQf7w5rSZsxwpmabU4ZJBVrOy
-AoqQwFOsnSkw0TbXBC4s4NEHXp8fb3T6H6XWC7eoLrKCd1NpxBNj9/ieqZepENow
-xOxguyiSiTTpMlYmsdh5fatB6npUzH0U+74nkvtjhYPdceqksKWN2M/6kXChpAXv
-SSOvEOgi+uK+w19pZSj4K8vPs0Sb/AelXBWMvnuo8pIx47P/O6B8m1ArNffi6NuL
-1T1HOVj7s5vNu9EYFDmy6RlHN+5YcD27fFBVXPlMP4OLmudobty53Ln3laGw/8E4
-+ZkWlqwUvTGGLsdM6qr1MlRTW7SQxBSu6HfTgn2QjcApMeJqFy8ZExeZ+QP8rnGe
-MhuX+MRjJ4u74Ir0cIzGeYLvyPlpGUqeXxFEhPXNwS2V/5OXltdnU4AUOsb0RvYZ
-xQ0tiG+BpDI3meY+oFyMOXepZjQteLEs8LTtJPSK0G0KhxVGjAlj6keQS7FR5wMR
-zY9oa4oSlQu5ZEsq4Kce/A+RAEqy0IqhvlNLnemy57Gpsjw+qjOSgav0zyozxnDB
-iknGGpw8Ih2gNg7dC8rMaXFf4l20l6MSRw2CLJ1VAi7/yyAHiWAuNTEvax8XafJp
-1lIRaEUONMk8uFzvgigI3ifz/RwHM12x1usDvehKrUdkplrsC0c=
-=IEDH
------END PGP SIGNATURE-----
-
---gwlix4ac63ohaldv--
