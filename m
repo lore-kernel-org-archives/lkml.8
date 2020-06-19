@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD419C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D08207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD69207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582683;
-	bh=O6auuTkwi7vwrtwutuGHafNgr5U2Ux5oBVPZFBpv+P8=;
+	s=default; t=1592582686;
+	bh=W9NDGKPF9pC8bklJ+MLGv1XFofDCYAUQi70eNJtJEgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FufPhiyCgLmb1tW/YLL1wGaMgY1P94VqkO1jxkQT5RmhbMzcJYjrGG7N8HbuIATC
-	 qY9zMZ372IGy/lxG+kKUPn9yCHjR37j0DXbdZr+jvWgNjm61R1Kzl1SVJPe9f2zGNh
-	 u1cd9o7kSB0FzOrFiQr6jEOBt9Yn+6pdXGl0Iphc=
+	b=z54JuRPfk24/GgJcqR7Wz2tpwoo8HzfEj0WxRx0hZvwsTyFO84WrgI0RQNKxKGovz
+	 REMvz1HIIFy734SwJKi42Ly4OHuZ2VgO/SufHxLkyXtJRl2LTpsubhWA3qPAkkpdX3
+	 6JnlZEvtCJZYv9VhvT1YMzNWitggKmU1G8mlBy4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405507AbgFSQEl (ORCPT
+        id S2392787AbgFSQEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392044AbgFSPKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:45 -0400
+        id S2392039AbgFSPKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBE9E206FA;
-        Fri, 19 Jun 2020 15:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3438206FA;
+        Fri, 19 Jun 2020 15:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579444;
-        bh=O6auuTkwi7vwrtwutuGHafNgr5U2Ux5oBVPZFBpv+P8=;
+        s=default; t=1592579441;
+        bh=W9NDGKPF9pC8bklJ+MLGv1XFofDCYAUQi70eNJtJEgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozejsJtSmHvvgTYfrCARKS+zaueH5udRARFFar9M4b/SmESkYL5Ewml2QAyzr7FCz
-         Ux+u9+nqQzrlWwGKggVcncaevIb71w8gq/P7AMdcAMagwlyfr2BAE1f7ISDsYVIshB
-         PfWgVY15duJmxylWI7L1JTUQMp4bOkiQQVfEVZ+g=
+        b=LjUMSslsYEPUNs4oeojWMY6I0iTW40jtRR4qndSAr8nu3OPOfEMpTq5YHHKIcXw1l
+         5uRQ+we2xtd/E5c/fybHIZhA6+aaXsIw5znCKFtWBNYpiPD+wKY1ttNMQcv1nmQTRJ
+         26J3VGMuL23a2O5c971wf4mdnbouP2kWZpZJjD6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YuanJunQing <yuanjunqing66@163.com>,
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 138/261] MIPS: Fix IRQ tracing when call handle_fpe() and handle_msa_fpe()
-Date:   Fri, 19 Jun 2020 16:32:29 +0200
-Message-Id: <20200619141656.470536557@linuxfoundation.org>
+Subject: [PATCH 5.4 137/261] PCI: Dont disable decoding when mmio_always_on is set
+Date:   Fri, 19 Jun 2020 16:32:28 +0200
+Message-Id: <20200619141656.423071816@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,52 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YuanJunQing <yuanjunqing66@163.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 31e1b3efa802f97a17628dde280006c4cee4ce5e ]
+[ Upstream commit b6caa1d8c80cb71b6162cb1f1ec13aa655026c9f ]
 
-Register "a1" is unsaved in this function,
- when CONFIG_TRACE_IRQFLAGS is enabled,
- the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
- and this may change register "a1".
- The changed register "a1" as argument will be send
- to do_fpe() and do_msa_fpe().
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Acked-by: Bjorn Helgaas <helgaas@kernel.org>
 Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/genex.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-index efde27c99414..9c5f8a5d097f 100644
---- a/arch/mips/kernel/genex.S
-+++ b/arch/mips/kernel/genex.S
-@@ -474,20 +474,20 @@ NESTED(nmi_handler, PT_SIZE, sp)
- 	.endm
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index d3033873395d..48209d915de3 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1777,7 +1777,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
  
- 	.macro	__build_clear_fpe
-+	CLI
-+	TRACE_IRQS_OFF
- 	.set	push
- 	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
- 	.set	mips1
- 	SET_HARDFLOAT
- 	cfc1	a1, fcr31
- 	.set	pop
--	CLI
--	TRACE_IRQS_OFF
- 	.endm
- 
- 	.macro	__build_clear_msa_fpe
--	_cfcmsa	a1, MSA_CSR
- 	CLI
- 	TRACE_IRQS_OFF
-+	_cfcmsa	a1, MSA_CSR
- 	.endm
- 
- 	.macro	__build_clear_ade
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
 -- 
 2.25.1
 
