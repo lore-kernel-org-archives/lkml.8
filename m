@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04540C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC90C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFCAF20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248BE206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580617;
-	bh=mRprGrgwdsJrDNlMaCGk8jPiTdDXpQReQLUWRumm3ck=;
+	s=default; t=1592580621;
+	bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L90f9bVdI8j0fbegRlkLRyVwVeMcgb01vyAutHZ//VUP7h3OAVKpEkzYoRC+HMr7A
-	 qsZVLaNTLReAjDjwg50uq/vPvvE5veEEdnWKkKW7gFhHQA3a/TeyIJyZJe2d8STHQr
-	 Rjbi+DUYj2It5TkJRXr/4auaHwu3MDDNbmiDio9Y=
+	b=mN/hXn0DfFV21Wkrwm4QTFE4PTqJQjFBwlHy0VZeJ9f0qUGtLneZxJNuNrvWpRkOB
+	 Bkofc7Owy1DwX3S16AvAdlSdXQ0llgaU9hoiGVhcrdZXhCY0U6nuZyw4i7WA459gGN
+	 uIb0Cj6BSEt/G8c4+PeJTGGKIm0QiZ9cbQYbq5Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393714AbgFSPaQ (ORCPT
+        id S2404782AbgFSPaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33914 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404775AbgFSPaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:09 -0400
+        id S2393716AbgFSPaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536922186A;
-        Fri, 19 Jun 2020 15:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E711206B7;
+        Fri, 19 Jun 2020 15:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580608;
-        bh=mRprGrgwdsJrDNlMaCGk8jPiTdDXpQReQLUWRumm3ck=;
+        s=default; t=1592580616;
+        bh=n13eyRRomMJps8ls0nwvReLF+/XPiXI8h6Y4M9+PegI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dKKVEgpUCL1/PiKU+SuXVpDD0QCn178nMtQ5krDq7vPY3+Vu0uepwq95tFhm4H1cz
-         7S+2/6PIqfyRO05y29zRhD+HyFejL1UL2Bpn7jPKRPabL7EiMSR7Ghz/+k4DYecysU
-         6zbp3xUKQi7YsQcI/R98XWZJP9i6YYf1QXNfqB9s=
+        b=P9mRtqBEbixN96QC5I3VvUf6G/GaCo/FXcIdux3zLDaXClZpYbm2LRtoaR7zb2pMN
+         CXq7lqM92K23LpxaqhHH+wR6jWgGJE+G3b0R/IqcXJfeJbpMqn4W+5GdWOSmD6owtg
+         /EZ/a3vxj+avMaUYeJJqKmKO9XzI61cPJNW+tz+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 284/376] PCI: Avoid Pericom USB controller OHCI/EHCI PME# defect
-Date:   Fri, 19 Jun 2020 16:33:22 +0200
-Message-Id: <20200619141723.776433881@linuxfoundation.org>
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.7 310/376] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Fri, 19 Jun 2020 16:33:48 +0200
+Message-Id: <20200619141725.010032306@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -63,62 +64,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 68f5fc4ea9ddf9f77720d568144219c4e6452cde ]
+commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
 
-Both Pericom OHCI and EHCI devices advertise PME# support from all power
-states:
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-  06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
-    Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
-    Capabilities: [80] Power Management version 3
-      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
 
-  06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
-    Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
-    Capabilities: [80] Power Management version 3
-      Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+Since device can only be runtime suspended when there's no link partner,
+we can skip reading register and let the following logic set speed and
+duplex with correct status.
 
-But testing shows that it's unreliable: there is a 20% chance PME# won't be
-asserted when a USB device is plugged.
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
 
-Remove PME support for both devices to make USB plugging work reliably.
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
-Link: https://lore.kernel.org/r/20200508065343.32751-2-kai.heng.feng@canonical.com
+CC: stable <stable@vger.kernel.org>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
 Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ca9ed5774eb1..268f74d43a73 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5568,6 +5568,19 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -143,7 +143,8 @@ static int igb_get_link_ksettings(struct
+ 	u32 speed;
+ 	u32 supported, advertising;
  
-+/*
-+ * Device [12d8:0x400e] and [12d8:0x400f]
-+ * These devices advertise PME# support in all power states but don't
-+ * reliably assert it.
-+ */
-+static void pci_fixup_no_pme(struct pci_dev *dev)
-+{
-+	pci_info(dev, "PME# is unreliable, disabling it\n");
-+	dev->pme_support = 0;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
-+
- static void apex_pci_fixup_class(struct pci_dev *pdev)
- {
- 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
--- 
-2.25.1
-
+-	status = rd32(E1000_STATUS);
++	status = pm_runtime_suspended(&adapter->pdev->dev) ?
++		 0 : rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
+ 
+ 		supported = (SUPPORTED_10baseT_Half |
 
 
