@@ -2,94 +2,292 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4467DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A70C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1362D208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A4220663
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7Oh89HC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aV2DOjK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733140AbgFSOUZ (ORCPT
+        id S1733151AbgFSOUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732461AbgFSOUZ (ORCPT
+        Fri, 19 Jun 2020 10:20:39 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:7074 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732960AbgFSOUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:20:25 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AECA8C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:20:24 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g1so7748389edv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a8ouono3/9wkmoHXFRDJLystsfW27Vj/z6In1ogYbNs=;
-        b=G7Oh89HCJu6Kc2Am/wkdOFGgT9s4pF/E52Va+mrxV1I65mvhK8euaOFBgk0WufM5+f
-         rrE0Tk0ZJYxv/Ld9EvyLxdqqTZLvUYskhLbQV+sjPnsEesmKUK9+ar/txOM9d6tBTYho
-         /x9rjV9WvUohqpqFyrrVmClgXxnjc08t7zuYsw9h93vNwzSfoyFNxFQhnyzDMw9dZWvp
-         ZKxiy981Ki8/KwhQQPUnrISCcbRtLEMXV0VVmgWQV1vg3AyBDzKHQyy80a2f43OHGeLb
-         KFscw2zeP6EoARCNYEmPmtdl6IWS2WZyCD8eB8Obg0FGE5FtFWtceeU3dosNvLSxOcp7
-         0RFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a8ouono3/9wkmoHXFRDJLystsfW27Vj/z6In1ogYbNs=;
-        b=Z8uCP8TOAP/UTj3v/dxzCwmlgM+vxLn761t9hkx6a3i/FObvi54h4fMxzafFlIhKGQ
-         M9+5vtpfY0vqI1SCIvrb/JjOh/Dhu85jmwF883frYaN/XoZYgy3Jv48nq8b/pdKDcL3G
-         v2JSNS8/h5mmQjqTy8JrCc7VJ9rKMg1umgC9qa5F/Ingm3PDLu4Ilucbi2+VnZ83VkUY
-         v1sGNOZOPel3aoG+SE625FaXjwDo4ScKSCc+E70cX8S+OvCdaZ4cyNpcUtKYZVlX24H5
-         G0pCy5N3YELy1FPdPjRdnnhrQvgEbdRN2VPvQJjAllVx5LCMGUOoean1OorFCkuVieim
-         qV7A==
-X-Gm-Message-State: AOAM532q6u5XP4fw92xdxA2OIvybAbmcVv9y62hSbRqb02c9vG62EMI3
-        2cM1oIIvz/ZJUfjemF95FdzUozCK
-X-Google-Smtp-Source: ABdhPJzjcApG6GRvuJP0gB/OVsBNly4jMwJiRltqZIVwfUONnANMSOcVRDlPUkYTHFVl92fqnLUMnw==
-X-Received: by 2002:a05:6402:128f:: with SMTP id w15mr3700308edv.240.1592576423454;
-        Fri, 19 Jun 2020 07:20:23 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:904f:be8d:1d92:9974])
-        by smtp.gmail.com with ESMTPSA id ox27sm4871450ejb.101.2020.06.19.07.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 07:20:22 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:20:22 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sparse: use identifiers to define address spaces
-Message-ID: <20200619142022.rvv7lbuboeehdxqi@ltop.local>
-References: <20200617220226.88948-1-luc.vanoostenryck@gmail.com>
- <CANiq72nNQ+11ch7sRjLLc33s_OkftuOqgGkCDggq88tbJtdPNQ@mail.gmail.com>
- <20200618050249.lqwznznltm3lcykr@ltop.local>
- <CAMuHMdWQsirja-h3wBcZezk+H2Q_HShhAks8Hc8ps5fTAp=ObQ@mail.gmail.com>
+        Fri, 19 Jun 2020 10:20:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592576437; x=1624112437;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uI1UnBBrQLzZH0Mkfly9+1y3fM2YZcptYMawirVUvR8=;
+  b=aV2DOjK+6B5op7eis/yRF7eJYKmvMF+M7whIMNhbEgP+BdmST4LYWNC2
+   7dt2mYrlEhYM2YtzQ/Bnt8o1+qiBLzGMSCl3puoU/MD6xHc3Kd99Gvc/+
+   bL0sToFcevJJlIAoiyEUxzUMHfGMm1y1yOASU+TVisCqPh0uKJMn+pirq
+   /FkfBwgrlYuxWdYUprvmPQWVlk7c2jPng5jUQktvyJSQ0cSJCo/kBouPr
+   nyW2i3gxbgd/uLELL2+CjyudJloINMTAOFUwLBW0XziJKSV13q5CYPV67
+   q3UnFL2+OJpLet4ekNzOXqeJNOlK+fFI5XQHqINA5IvENisFMEY9kiIXy
+   A==;
+IronPort-SDR: mvNZWlag1ym8Kr8AAds/dx0clS7q35JjuHLtGMklZfl7/wEHXAp0rqLKFGDKQOvLpp5cddlbA8
+ Fjb1E5isi1WLhcWkmadmqMhcppC6owviTCsCbFVpAyT6VFHcxJP48hpcjjNsfnF87soCtg3ZDR
+ K6OI/X5SYIShOOBsvIF7P2gI+k83zWHn/wWTrygpceK8+sfE5ovUUvhSIpLjQJNouPXvnp+9do
+ isJ5FnI7NJ+TW+kfp5h3kGc34/LAZXpZh4bWPfaO/2dGUTLrxA+2KHtop04o91cM3QZyk7Y3nt
+ 7uI=
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="77180771"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2020 07:20:29 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 19 Jun 2020 07:20:28 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 19 Jun 2020 07:20:02 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <wsa@kernel.org>, <robh+dt@kernel.org>,
+        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [RFC PATCH 2/4] i2c: core: add generic I2C GPIO recovery
+Date:   Fri, 19 Jun 2020 17:19:02 +0300
+Message-ID: <20200619141904.910889-3-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWQsirja-h3wBcZezk+H2Q_HShhAks8Hc8ps5fTAp=ObQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:07:34AM +0200, Geert Uytterhoeven wrote:
-> 
-> Indeed. It looks like this whole list is completely unsorted, and was created
-> by appending new definitions at the bottom.
-> So perhaps all the address_space ones should be grouped together?
+Multiple I2C bus drivers use similar bindings to obtain information needed
+for I2C recovery. For example, for platforms using device-tree, the
+properties look something like this:
 
-Hi Geert & Miguel,
+&i2c {
+	...
+	pinctrl-names = "default", "gpio";
+	// or pinctrl-names = "default", "recovery";
+	pinctrl-0 = <&pinctrl_i2c_default>;
+	pinctrl-1 = <&pinctrl_i2c_gpio>;
+	sda-gpios = <&pio 0 GPIO_ACTIVE_HIGH>;
+	scl-gpios = <&pio 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	...
+}
 
-Yes, some cleanup is welcome, I think.
-I'll send this in a separate patch soon.
+For this reason, we can add this common initialization in the core. This
+way, other I2C bus drivers will be able to support GPIO recovery just by
+providing a pointer to platform's pinctrl and calling i2c_recover_bus()
+when SDA is stuck low.
 
-Thanks for reporting,
--- Luc
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ drivers/i2c/i2c-core-base.c | 119 ++++++++++++++++++++++++++++++++++++
+ include/linux/i2c.h         |  11 ++++
+ 2 files changed, 130 insertions(+)
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index d1f278f73011..4ee29fec4e93 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -32,6 +32,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_wakeirq.h>
+@@ -179,6 +180,8 @@ int i2c_generic_scl_recovery(struct i2c_adapter *adap)
+ 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+ 	int i = 0, scl = 1, ret = 0;
+ 
++	if (bri->pinctrl)
++		pinctrl_select_state(bri->pinctrl, bri->pins_gpio);
+ 	if (bri->prepare_recovery)
+ 		bri->prepare_recovery(adap);
+ 
+@@ -236,6 +239,8 @@ int i2c_generic_scl_recovery(struct i2c_adapter *adap)
+ 
+ 	if (bri->unprepare_recovery)
+ 		bri->unprepare_recovery(adap);
++	if (bri->pinctrl)
++		pinctrl_select_state(bri->pinctrl, bri->pins_default);
+ 
+ 	return ret;
+ }
+@@ -251,6 +256,118 @@ int i2c_recover_bus(struct i2c_adapter *adap)
+ }
+ EXPORT_SYMBOL_GPL(i2c_recover_bus);
+ 
++static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
++{
++	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
++	struct device *dev = &adap->dev;
++	struct pinctrl *p = bri->pinctrl;
++
++	/*
++	 * we can't change states without pinctrl, so remove the states if
++	 * available
++	 */
++	if (!p) {
++		bri->pins_default = NULL;
++		bri->pins_gpio = NULL;
++		return;
++	}
++
++	if (!bri->pins_default) {
++		bri->pins_default = pinctrl_lookup_state(p,
++							 PINCTRL_STATE_DEFAULT);
++		if (IS_ERR(bri->pins_default)) {
++			dev_dbg(dev, PINCTRL_STATE_DEFAULT " state not found for GPIO recovery\n");
++			bri->pins_default = NULL;
++
++			goto cleanup_pinctrl;
++		}
++	}
++	if (!bri->pins_gpio) {
++		bri->pins_gpio = pinctrl_lookup_state(p, "gpio");
++		if (IS_ERR(bri->pins_gpio))
++			bri->pins_gpio = pinctrl_lookup_state(p, "recovery");
++
++		if (IS_ERR(bri->pins_gpio)) {
++			dev_dbg(dev, "no gpio or recovery state found for GPIO recovery\n");
++			bri->pins_gpio = NULL;
++
++			goto cleanup_pinctrl;
++		}
++	}
++
++cleanup_pinctrl:
++	/* for pinctrl state changes, we need all the information */
++	if (!bri->pins_default || !bri->pins_gpio) {
++		bri->pinctrl = NULL;
++		bri->pins_default = NULL;
++		bri->pins_gpio = NULL;
++	} else {
++		dev_info(dev, "using pinctrl states for GPIO recovery");
++	}
++}
++
++static int i2c_gpio_init_generic_recovery(struct i2c_adapter *adap)
++{
++	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
++	struct device *dev = &adap->dev;
++	struct gpio_desc *gpiod;
++	int ret = 0;
++
++	/* don't touch the recovery information if the driver is not using
++	 * generic SCL recovery
++	 */
++	if (bri->recover_bus && bri->recover_bus != i2c_generic_scl_recovery)
++		return 0;
++
++	/*
++	 * pins might be taken as GPIO, so we might as well inform pinctrl about
++	 * this and move the state to GPIO
++	 */
++	if (bri->pinctrl)
++		pinctrl_select_state(bri->pinctrl, bri->pins_gpio);
++
++	/*
++	 * if there is incomplete or no recovery information, see if generic
++	 * GPIO recovery is available
++	 */
++	if (!bri->scl_gpiod) {
++		gpiod = devm_gpiod_get(dev, "scl", GPIOD_OUT_HIGH_OPEN_DRAIN);
++		if (PTR_ERR(gpiod) == -EPROBE_DEFER) {
++			ret  = -EPROBE_DEFER;
++			goto cleanup_pinctrl_state;
++		}
++		if (!IS_ERR(gpiod)) {
++			bri->scl_gpiod = gpiod;
++			bri->recover_bus = i2c_generic_scl_recovery;
++			dev_info(dev, "using generic GPIOs for recovery\n");
++		}
++	}
++
++	/* SDA GPIOD line is optional, so we care about DEFER only */
++	if (!bri->sda_gpiod) {
++		gpiod = devm_gpiod_get(dev, "sda", GPIOD_IN);
++		if (PTR_ERR(gpiod) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto cleanup_pinctrl_state;
++		}
++		if (!IS_ERR(gpiod))
++			bri->sda_gpiod = gpiod;
++	}
++
++cleanup_pinctrl_state:
++	/* change the state of the pins back to their default state */
++	if (bri->pinctrl)
++		pinctrl_select_state(bri->pinctrl, bri->pins_default);
++
++	return ret;
++}
++
++static int i2c_gpio_init_recovery(struct i2c_adapter *adap)
++{
++	i2c_gpio_init_pinctrl_recovery(adap);
++	return i2c_gpio_init_generic_recovery(adap);
++}
++
+ static void i2c_init_recovery(struct i2c_adapter *adap)
+ {
+ 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+@@ -259,6 +376,8 @@ static void i2c_init_recovery(struct i2c_adapter *adap)
+ 	if (!bri)
+ 		return;
+ 
++	i2c_gpio_init_recovery(adap);
++
+ 	if (!bri->recover_bus) {
+ 		err_str = "no recover_bus() found";
+ 		goto err;
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index c10617bb980a..c62c9b48f719 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -611,6 +611,14 @@ struct i2c_timings {
+  *	may configure padmux here for SDA/SCL line or something else they want.
+  * @scl_gpiod: gpiod of the SCL line. Only required for GPIO recovery.
+  * @sda_gpiod: gpiod of the SDA line. Only required for GPIO recovery.
++ * @pinctrl: pinctrl used by GPIO recovery to change the state of the I2C pins.
++ *      Optional.
++ * @pins_default: default state of SCL/SDA lines, when they are assigned to the
++ *      I2C bus. Optional. Populated internally for GPIO recovery, if a state with
++ *      the name PINCTRL_STATE_DEFAULT is found and pinctrl is valid.
++ * @pins_gpio: recovery state of SCL/SDA lines, when they are used as GPIOs.
++ *      Optional. Populated internally for GPIO recovery, if this state is called
++ *      "gpio" or "recovery" and pinctrl is valid.
+  */
+ struct i2c_bus_recovery_info {
+ 	int (*recover_bus)(struct i2c_adapter *adap);
+@@ -627,6 +635,9 @@ struct i2c_bus_recovery_info {
+ 	/* gpio recovery */
+ 	struct gpio_desc *scl_gpiod;
+ 	struct gpio_desc *sda_gpiod;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pins_default;
++	struct pinctrl_state *pins_gpio;
+ };
+ 
+ int i2c_recover_bus(struct i2c_adapter *adap);
+-- 
+2.25.1
+
