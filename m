@@ -2,51 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F847C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A1B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EEE21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583380;
-	bh=eUehmMnJWi9gs9W/Ve5XycfW+f5pF8W4BZWeL9TVWbQ=;
+	s=default; t=1592583387;
+	bh=YTXT8grH/sr/BUaAj3D5RuOd32qqzSywBujC0D38cBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yqzXHy19vmZdLdWJQDBDfc8QehKVA6OdATGxJTeQbPUK4P/5sBzJbz0Y0yVBPeacD
-	 Jkdjx+oHtb3nb2SlBfbKu7HfWcnTLZyBlQ57oGqnpir5YZwiVo1MoVs3eK43/toLzX
-	 2RCFozbH2gqV19ph4DedcwVBKMdFPKXtCP5ZuyZs=
+	b=oTT81rolN6MDs74hgAigD3Ez5TeDFvIRcNoDoxiEIHJixzurSChHOCYRXmJQmI6mK
+	 ZOirzC6xCIMeQf0BkdRRmPkDLiqBK5zzHN3HvWtOqg9XtPSr4fV61+L9XDOHXkjwZ+
+	 iHCx9d9sos+E1HoJ3PiknAgeSa6wpTucep+uATa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391369AbgFSQQS (ORCPT
+        id S2394492AbgFSQQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389893AbgFSPDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:13 -0400
+        id S2390958AbgFSPDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539BB21D6C;
-        Fri, 19 Jun 2020 15:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E80206DB;
+        Fri, 19 Jun 2020 15:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578993;
-        bh=eUehmMnJWi9gs9W/Ve5XycfW+f5pF8W4BZWeL9TVWbQ=;
+        s=default; t=1592578985;
+        bh=YTXT8grH/sr/BUaAj3D5RuOd32qqzSywBujC0D38cBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKBN+m9EVStAV8juqXBGi86jglBu+cw9jpPyF7M9EnUeEFbWIUmTLLsgDHeQu7mJe
-         lWSazqDxaCbbDmMMWTfLp6/p3GTvKQRvU5Ho/Dd1cpQTXNZWbzgsf9jCWs1yJjN5DQ
-         fGV8YY6n2ZyfW9/jjPKpz4mui9YzD14pN41e2QCo=
+        b=eXyeRbNOChIFheUHs0JdvlBjthU16kY+m4pMaxYpBsxmBtLjKd4QFcLmGKCp4V4cP
+         Orgo+qpIYB9f7tt6DF6IVm0eMOcyESbFiGT6Ce/YIM7AKje6Y7e3FxXqhoi9RVf+JI
+         zHJXUPm874gPcz/qaZZ2NyKqqhHrwoywcqXs/8T0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Blechmann <tim@klingt.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 218/267] ALSA: lx6464es - add support for LX6464ESe pci express variant
-Date:   Fri, 19 Jun 2020 16:33:23 +0200
-Message-Id: <20200619141659.178610450@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.19 233/267] e1000e: Relax condition to trigger reset for ME workaround
+Date:   Fri, 19 Jun 2020 16:33:38 +0200
+Message-Id: <20200619141659.894856054@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,57 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Blechmann <tim@klingt.org>
+From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
 
-[ Upstream commit 789492f0c86505e63369907bcb1afdf52dec9366 ]
+commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
 
-The pci express variant of the digigram lx6464es card has a different
-device ID, but works without changes to the driver.
-Thanks to Nikolas Slottke for reporting and testing.
+It's an error if the value of the RX/TX tail descriptor does not match
+what was written. The error condition is true regardless the duration
+of the interference from ME. But the driver only performs the reset if
+E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
+transpired. The extra condition can lead to inconsistency between the
+state of hardware as expected by the driver.
 
-Signed-off-by: Tim Blechmann <tim@klingt.org>
-Link: https://lore.kernel.org/r/20190906082119.40971-1-tim@klingt.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by dropping the check for number of delay iterations.
+
+While at it, also make __ew32_prepare() static as it's not used
+anywhere else.
+
+CC: stable <stable@vger.kernel.org>
+Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/pci_ids.h       | 2 ++
- sound/pci/lx6464es/lx6464es.c | 8 ++++++++
- 2 files changed, 10 insertions(+)
+ drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
+ drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 81ddbd891202..bd682fcb9768 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1952,6 +1952,8 @@
- #define PCI_VENDOR_ID_DIGIGRAM		0x1369
- #define PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ES_SERIAL_SUBSYSTEM	0xc001
- #define PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ES_CAE_SERIAL_SUBSYSTEM	0xc002
-+#define PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ESE_SERIAL_SUBSYSTEM		0xc021
-+#define PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ESE_CAE_SERIAL_SUBSYSTEM	0xc022
+--- a/drivers/net/ethernet/intel/e1000e/e1000.h
++++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+@@ -574,7 +574,6 @@ static inline u32 __er32(struct e1000_hw
  
- #define PCI_VENDOR_ID_KAWASAKI		0x136b
- #define PCI_DEVICE_ID_MCHIP_KL5A72002	0xff01
-diff --git a/sound/pci/lx6464es/lx6464es.c b/sound/pci/lx6464es/lx6464es.c
-index 54f6252faca6..daf25655f635 100644
---- a/sound/pci/lx6464es/lx6464es.c
-+++ b/sound/pci/lx6464es/lx6464es.c
-@@ -65,6 +65,14 @@ static const struct pci_device_id snd_lx6464es_ids[] = {
- 			 PCI_VENDOR_ID_DIGIGRAM,
- 			 PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ES_CAE_SERIAL_SUBSYSTEM),
- 	},			/* LX6464ES-CAE */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_PLX, PCI_DEVICE_ID_PLX_LX6464ES,
-+			 PCI_VENDOR_ID_DIGIGRAM,
-+			 PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ESE_SERIAL_SUBSYSTEM),
-+	},			/* LX6464ESe */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_PLX, PCI_DEVICE_ID_PLX_LX6464ES,
-+			 PCI_VENDOR_ID_DIGIGRAM,
-+			 PCI_SUBDEVICE_ID_DIGIGRAM_LX6464ESE_CAE_SERIAL_SUBSYSTEM),
-+	},			/* LX6464ESe-CAE */
- 	{ 0, },
- };
+ #define er32(reg)	__er32(hw, E1000_##reg)
  
--- 
-2.25.1
-
+-s32 __ew32_prepare(struct e1000_hw *hw);
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
+ 
+ #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -119,14 +119,12 @@ static const struct e1000_reg_info e1000
+  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
+  * and try again a number of times.
+  **/
+-s32 __ew32_prepare(struct e1000_hw *hw)
++static void __ew32_prepare(struct e1000_hw *hw)
+ {
+ 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
+ 
+ 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
+ 		udelay(50);
+-
+-	return i;
+ }
+ 
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
+@@ -607,11 +605,11 @@ static void e1000e_update_rdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = rx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, rx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
++	if (unlikely(i != readl(rx_ring->tail))) {
+ 		u32 rctl = er32(RCTL);
+ 
+ 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
+@@ -624,11 +622,11 @@ static void e1000e_update_tdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = tx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, tx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
++	if (unlikely(i != readl(tx_ring->tail))) {
+ 		u32 tctl = er32(TCTL);
+ 
+ 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
 
 
