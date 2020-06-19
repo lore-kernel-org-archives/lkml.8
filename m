@@ -2,63 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90793C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C5320A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC01920A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577940;
-	bh=33ESJF2kwlacdpC3hc9IN/bWL6ieRL7+CiuYIm/y/oI=;
+	s=default; t=1592577942;
+	bh=ka3kEogHU5cgZlRJIabM2svKkN7TSm39TvN+wuVhi5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1KDGZlZYRTbmbMzgltD6UOWySw/hjHCAlUFdfGbBDct77Nci1TmoHMnW/lEXV2xk
-	 g2fST8D5AQufznklOfuJC9UlAu5GuvwIJl9eBIFhfU5ZGxuNyLo2c0xWu1JDklt7ZJ
-	 ZIADal+ssptPqPmAYBD1H8VyzB936IHPNsXWjxKs=
+	b=FnhjwxxoFUX43XYL9oBIRPS/AgHoAbS6ui83OavvcsjeUMc25U7omEMP9xh5uGjFr
+	 y9S9PzyEUActtDSFtVRtOoeb07DR6RXmDU5tcFz+pnLFQ5NTUnOfekpkJv1xeBJ8mz
+	 n5jIn8dbH2GWid/b2Wa4Jn4tm+safvesvk1kmVkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbgFSOpj (ORCPT
+        id S2388737AbgFSOpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37034 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387678AbgFSOp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:29 -0400
+        id S2388718AbgFSOpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D742E20DD4;
-        Fri, 19 Jun 2020 14:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D9E221556;
+        Fri, 19 Jun 2020 14:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577928;
-        bh=33ESJF2kwlacdpC3hc9IN/bWL6ieRL7+CiuYIm/y/oI=;
+        s=default; t=1592577935;
+        bh=ka3kEogHU5cgZlRJIabM2svKkN7TSm39TvN+wuVhi5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaUuJFKG8j1iHNJSEJdTQxeg66bgqkEkEtBVQmS7qot4hrfagYCvjEN7OyHClFRul
-         98bvMeT+97kn/AUQhQfhEhIGUgLYUIcWKBHt+P3XLszMBueDg/zYsBajkiLDs8m8i3
-         p/TE96m+vtqloRy68/szL1YH8dGWXmdDQ1vVOn38=
+        b=hFOx/UXYNs24U8nf5EEZj8170pca/SIt7Z//QUFq3RiWFH5OeHZ5QzfEauE9R+cSs
+         2W0mgL+OCXJeWg6TztdgMfvC31iXf6Lo06qkXuRVJkB+nOcxHneos4KkfxatI0wSut
+         nkw7yLLdPe1AOhWvBbg2yn2VWwqdX+PO8pwa93Mw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 017/190] mm: add kvfree_sensitive() for freeing sensitive data objects
-Date:   Fri, 19 Jun 2020 16:31:02 +0200
-Message-Id: <20200619141634.322504266@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 002/190] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Fri, 19 Jun 2020 16:30:47 +0200
+Message-Id: <20200619141633.580477005@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -71,161 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit d4eaa2837851db2bfed572898bfc17f9a9f9151e ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-For kvmalloc'ed data object that contains sensitive information like
-cryptographic keys, we need to make sure that the buffer is always cleared
-before freeing it.  Using memset() alone for buffer clearing may not
-provide certainty as the compiler may compile it away.  To be sure, the
-special memzero_explicit() has to be used.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-This patch introduces a new kvfree_sensitive() for freeing those sensitive
-data objects allocated by kvmalloc().  The relevant places where
-kvfree_sensitive() can be used are modified to use it.
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Link: http://lkml.kernel.org/r/20200407200318.11711-1-longman@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
+
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mm.h       |  1 +
- mm/util.c                | 18 ++++++++++++++++++
- security/keys/internal.h | 11 -----------
- security/keys/keyctl.c   | 16 +++++-----------
- 4 files changed, 24 insertions(+), 22 deletions(-)
+ drivers/net/vxlan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6f852d5fbada..156940758fc5 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -548,6 +548,7 @@ static inline void *kvmalloc_array(size_t n, size_t size, gfp_t flags)
- }
- 
- extern void kvfree(const void *addr);
-+extern void kvfree_sensitive(const void *addr, size_t len);
- 
- /*
-  * Mapcount of compound page as a whole, does not include mapped sub-pages.
-diff --git a/mm/util.c b/mm/util.c
-index 842ba5fb662e..f0d773c719a1 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -417,6 +417,24 @@ void kvfree(const void *addr)
- }
- EXPORT_SYMBOL(kvfree);
- 
-+/**
-+ * kvfree_sensitive - Free a data object containing sensitive information.
-+ * @addr: address of the data object to be freed.
-+ * @len: length of the data object.
-+ *
-+ * Use the special memzero_explicit() function to clear the content of a
-+ * kvmalloc'ed object containing sensitive data to make sure that the
-+ * compiler won't optimize out the data clearing.
-+ */
-+void kvfree_sensitive(const void *addr, size_t len)
-+{
-+	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-+		memzero_explicit((void *)addr, len);
-+		kvfree(addr);
-+	}
-+}
-+EXPORT_SYMBOL(kvfree_sensitive);
-+
- static inline void *__page_rmapping(struct page *page)
- {
- 	unsigned long mapping;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 124273e500cf..d479ca71137e 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -306,15 +306,4 @@ static inline void key_check(const struct key *key)
- #define key_check(key) do {} while(0)
- 
- #endif
--
--/*
-- * Helper function to clear and free a kvmalloc'ed memory object.
-- */
--static inline void __kvzfree(const void *addr, size_t len)
--{
--	if (addr) {
--		memset((void *)addr, 0, len);
--		kvfree(addr);
--	}
--}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index c07c2e2b2478..9394d72a77e8 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -133,10 +133,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
- 
- 	key_ref_put(keyring_ref);
-  error3:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
-  error2:
- 	kfree(description);
-  error:
-@@ -351,7 +348,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	__kvzfree(payload, plen);
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
-@@ -859,7 +856,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 */
- 		if (ret > key_data_len) {
- 			if (unlikely(key_data))
--				__kvzfree(key_data, key_data_len);
-+				kvfree_sensitive(key_data, key_data_len);
- 			key_data_len = ret;
- 			continue;	/* Allocate buffer */
- 		}
-@@ -868,7 +865,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 			ret = -EFAULT;
- 		break;
- 	}
--	__kvzfree(key_data, key_data_len);
-+	kvfree_sensitive(key_data, key_data_len);
- 
- key_put_out:
- 	key_put(key);
-@@ -1170,10 +1167,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
- 		keyctl_change_reqkey_auth(NULL);
- 
- error2:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
--- 
-2.25.1
-
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1610,6 +1610,10 @@ static struct sk_buff *vxlan_na_create(s
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
