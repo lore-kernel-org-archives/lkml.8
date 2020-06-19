@@ -2,128 +2,142 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91236C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7484C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D492080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C344420888
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592535828;
+	bh=cKmkcpfwXu1EEI1wr7eaNKoi2kDhEga2lWfhy3FeS4U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i2045xbubKPPZiTeMYMpPYwkv2osJefm51y8curttSZlULlRt6LpXNMz6h2kbRveG
+	 EHFrOntA/eUt0lL62wthzxMZh5RLI0tkGnnK3oJj9JH66WjG9x1ZnSRAHimq8lVCzy
+	 2X6ZbQvnRLqLX9I2JEfrDLTO0oegFjtFlOXQwrMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgFSDCf (ORCPT
+        id S1729204AbgFSDDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:02:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34198 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726906AbgFSDCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:02:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 82E8437C03955A74C75B;
-        Fri, 19 Jun 2020 11:02:32 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.203.53) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 19 Jun 2020 11:02:21 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Prime Zeng <prime.zeng@hisilicon.com>,
-        "Robin Murphy" <robin.murphy@arm.com>
-Subject: [PATCH v3] driver core: platform: expose numa_node to users in sysfs
-Date:   Fri, 19 Jun 2020 15:00:45 +1200
-Message-ID: <20200619030045.81956-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Thu, 18 Jun 2020 23:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727814AbgFSDDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 23:03:43 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B01020899;
+        Fri, 19 Jun 2020 03:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592535822;
+        bh=cKmkcpfwXu1EEI1wr7eaNKoi2kDhEga2lWfhy3FeS4U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iPpKgB/117h3Y6qYN+jag1kQRFU7Sl9dl/4pWbUk0ct8ldUZD+/4PxSfo+rAbJWlH
+         m4k4zuL0YLAxx4WDNSwZp4MJtinDuBUGlCcFOamlv/9KvkGw0tgSydY9CgiyyG7rUi
+         wa3229W8qrw8OGIm8qgdDy3QglaO8gZga9tJmCOk=
+Received: by mail-lj1-f175.google.com with SMTP id e4so9765457ljn.4;
+        Thu, 18 Jun 2020 20:03:42 -0700 (PDT)
+X-Gm-Message-State: AOAM5306lweGZvO8DYHdToZmXLaLeOjodhOL8o+o66vMkFwBIOJDf82u
+        7qu5ziDrEQOnnmfcWfNfhAO9uZyA/j5vpmF+SIY=
+X-Google-Smtp-Source: ABdhPJwUS3CfyyNgp9baw02jk9HY+mRQomJJpWTbnU+aTkCqWgtcVr2+ACHYLw+MGcZtosKAdMsANaqnzNV2zgw9sJI=
+X-Received: by 2002:a2e:9eca:: with SMTP id h10mr708200ljk.273.1592535820451;
+ Thu, 18 Jun 2020 20:03:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.203.53]
-X-CFilter-Loop: Reflected
+References: <20200618080223.951737-1-lee.jones@linaro.org> <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
+ <20200618100704.GC954398@dell>
+In-Reply-To: <20200618100704.GC954398@dell>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Fri, 19 Jun 2020 11:03:28 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67GJUzomptOzzvafcQ-wAqrJvNNeEZsY7gVQ_kByqBT8w@mail.gmail.com>
+Message-ID: <CAGb2v67GJUzomptOzzvafcQ-wAqrJvNNeEZsY7gVQ_kByqBT8w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, DTML <devicetree@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        michael@walle.cc, Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platform devices like ARM SMMU are memory-mapped and populated by ACPI/IORT.
-In this case, NUMA topology of those platform devices are exported by firmware as
-well. Software might care about the numa_node of those devices in order to achieve
-NUMA locality.
-This patch will show the numa_node for this kind of devices in sysfs. For those
-platform devices without numa, numa_node won't be visible.
+On Thu, Jun 18, 2020 at 6:07 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Thu, 18 Jun 2020, Arnd Bergmann wrote:
+>
+> > On Thu, Jun 18, 2020 at 10:03 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > > accesses, facilitated by Regmap.  This extends support for registers
+> > > held behind I2C busses.
+> > >
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >
+> > The implementation looks fine to me, but can you explain how this is going to
+> > be used, and what the advantage is over open-coding the devm_regmap_init_i2c()
+> > in each driver that would use this?
+>
+> Does Regmap let you register/initialise an I2C address more than once?
+>
+> When I attempt it, I get:
+>
+> [    0.522988] i2c i2c-0: Failed to register i2c client tmp105 at 0x32 (-16)
+> [    0.523341] i2c i2c-0: of_i2c: Failure registering /bus@4000000/motherboard/iofpga@7,00000000/i2c@16000/temp@32
+> [    0.523691] i2c i2c-0: Failed to create I2C device for /bus@4000000/motherboard/iofpga@7,00000000/i2c@16000/temp@32
+>
+> > Is this about using proper locking through the regmap framework for
+> > shared i2c clients, or to reduce memory consumption when lots of drivers
+> > access the same regmap?
+>
+> All of those things are valid.
+>
+> My use-case is regarding MFDs sharing an I2C interfaced address space
+> with their children.
 
-Cc: Prime Zeng <prime.zeng@hisilicon.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- -v3: rebase to 5.8-rc1; refine commit log
+Is that an issue with the standard mfd + regmap pattern?
 
- Documentation/ABI/testing/sysfs-bus-platform | 10 ++++++++
- drivers/base/platform.c                      | 26 +++++++++++++++++++-
- 2 files changed, 35 insertions(+), 1 deletion(-)
+For the AXP20x PMICs, we register the regmap in the parent mfd driver [1],
+and store that in dev_data for child drivers to fetch [2]. You could
+easily just fetch the regmap with dev_get_regmap() and a pointer to the
+parent device.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-platform b/Documentation/ABI/testing/sysfs-bus-platform
-index 5172a6124b27..194ca700e962 100644
---- a/Documentation/ABI/testing/sysfs-bus-platform
-+++ b/Documentation/ABI/testing/sysfs-bus-platform
-@@ -18,3 +18,13 @@ Description:
- 		devices to opt-out of driver binding using a driver_override
- 		name such as "none".  Only a single driver may be specified in
- 		the override, there is no support for parsing delimiters.
-+
-+What:		/sys/bus/platform/devices/.../numa_node
-+Date:		June 2020
-+Contact:	Barry Song <song.bao.hua@hisilicon.com>
-+Description:
-+		This file contains the NUMA node to which the platform device
-+		is attached. It won't be visible if the node is unknown. The
-+		value comes from an ACPI _PXM method or a similar firmware
-+		source. Initial users for this file would be devices like
-+		arm smmu which are populated by arm64 acpi_iort.
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c0d0a5490ac6..4369dfd57815 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1076,13 +1076,37 @@ static ssize_t driver_override_show(struct device *dev,
- }
- static DEVICE_ATTR_RW(driver_override);
- 
-+static ssize_t numa_node_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%d\n", dev_to_node(dev));
-+}
-+static DEVICE_ATTR_RO(numa_node);
-+
-+static umode_t platform_dev_attrs_visible(struct kobject *kobj, struct attribute *a,
-+		int n)
-+{
-+	struct device *dev = container_of(kobj, typeof(*dev), kobj);
-+
-+	if (a == &dev_attr_numa_node.attr &&
-+			dev_to_node(dev) == NUMA_NO_NODE)
-+		return 0;
-+
-+	return a->mode;
-+}
- 
- static struct attribute *platform_dev_attrs[] = {
- 	&dev_attr_modalias.attr,
-+	&dev_attr_numa_node.attr,
- 	&dev_attr_driver_override.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(platform_dev);
-+
-+static struct attribute_group platform_dev_group = {
-+	.attrs = platform_dev_attrs,
-+	.is_visible = platform_dev_attrs_visible,
-+};
-+__ATTRIBUTE_GROUPS(platform_dev);
- 
- static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
--- 
-2.23.0
+> > My impression of the existing syscon code is that the main value-add over
+> > other ways of doing the same is the syscon_regmap_lookup_by_phandle()
+> > interface that gives other drivers a much simpler way of getting the
+> > regmap just based on the DT node. Are you planning to add something
+> > like that here as well? An ideal driver interface might allow
+> > syscon_regmap_lookup_by_phandle() to work for both mmio and i2c
+> > based syscons, or additional ones as well, but implementing this would
+> > be rather tricky when the i2c core is a loadable module.
 
+The current MMIO syscon is decoupled from the DM, and there is no way
+for drivers to export or register a syscon, meaning I have to open code
+syscon_regmap_lookup_by_phandle() [3] if I want to only expose certain
+registers and not the full address range, or if I want to share the
+regmap with the existing driver (for locking purposes), or both [4].
+Maybe there's room for improvement here? The same applies to the new
+I2C case, and likely any other future syscon variants.
 
+IMHO people are getting it wrong if they have both a syscon and a driver
+for the same device.
+
+> I expect the API would be expanded to cover other use-cases.  This is
+> a bare bones implementation which has been kept as atomic as possible
+> for ease of review.
+
+Regards
+ChenYu
+
+[1] https://elixir.bootlin.com/linux/latest/source/drivers/mfd/axp20x-i2c.c#L43
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/pinctrl-axp209.c#L433
+[3] https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c#L1093
+[4] https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun8i-r40.c#L1333
