@@ -2,170 +2,147 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6388C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED25E208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C80E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 00:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YuKX4BOp"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="TZYvnKIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgFSA17 (ORCPT
+        id S1729125AbgFSAbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 20:27:59 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37290 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgFSA15 (ORCPT
+        Thu, 18 Jun 2020 20:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbgFSAbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 20:27:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05J0M2u0004756;
-        Fri, 19 Jun 2020 00:27:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=mZHm+L5Ei1oR1XqCOi3sReF6y81eXJTuWYq1i07VHxc=;
- b=YuKX4BOpzlRKsrGXHMuPk/Yi06HFsG8RxziPXHMVeobCjvE6vkITeNYsd2g7VHDWuXqG
- dUJdhwrfVho+sWi/FpqTcnGKQtEiZuAa7LQosMRTjZ3qZFrdtUf0CSMnpBaoc36Wqqhf
- OUTQX5lxW6qNFMM6MydbVHVK3rrZuOkD46a2v7NfYoUnTpSIq99xrRpe3wxaNDAzm/3W
- Vw9O3QFU43p5dX+JFqTxt8EAtLrdAjQ4sdp9fePBkVIac9hQdi/7woRFQHekSXYXXCyZ
- zhrYZsf3CK6pQxI2X9ehtCfsTve3+gngerXudw3wSagIEzsX3NTNCuyGqj3UqM4Ejdga cQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31qg35a2m0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 00:27:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05J0JEVO167553;
-        Fri, 19 Jun 2020 00:27:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31q66qm8u9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 00:27:45 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05J0Rj3G017571;
-        Fri, 19 Jun 2020 00:27:45 GMT
-Received: from dhcp-10-159-251-35.vpn.oracle.com (/10.159.251.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 18 Jun 2020 17:27:45 -0700
-Subject: Re: severe proc dentry lock contention
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
- <20200618233958.GV8681@bombadil.infradead.org>
- <877dw3apn8.fsf@x220.int.ebiederm.org>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
-Date:   Thu, 18 Jun 2020 17:27:43 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <877dw3apn8.fsf@x220.int.ebiederm.org>
+        Thu, 18 Jun 2020 20:31:17 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA48C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 17:31:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b5so3612253pfp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 17:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uw4q+6RxBb1gZ8hafCJgFSIShMDUHG3YIGhQQPpjq/8=;
+        b=TZYvnKImLRzWawkHleEhvx7rGT8Wk9QkPtu0cMwu1LUjYtRJ+G5DhEXf7YUIGvStgE
+         vq3LpzuaolOsAVpzP7w1eHmxOL/BC+nd/zH0RswrD6baAehVmmOCCuAtO2fd+/UAlISS
+         iRPvzSjUhcsjA23fdhaGXUQ56oX6w4LilW61s+qQmKChHTeGTlF56x4qaCjJgU+5YCID
+         aGEXy43ZoJm6rh1j7UBWQmMCOmdGt6E7hsv9oO54c2LOzAfjOqtt4qt8a1+TT5GKzm0K
+         tpXrGOwtjRKs8L0Xu+qUYWji0XrPrU218HIw2xmZRsPnpJy/ujsiln86I2Q6UD1mo7lm
+         PEeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=uw4q+6RxBb1gZ8hafCJgFSIShMDUHG3YIGhQQPpjq/8=;
+        b=QPZVquQ7q6e7A4ovwaTaJAWuvVK0oTE3PtsDtclWqawIPKylf/bj6d4r3dcfQDmGsq
+         /+b8kwDMmezuV9nUVR/Y1oPXvV2WwtkuaE1W9XZK6oKO9SxYP/hRL9cw3AVIGCi4yJTJ
+         3Tv33V9oJJNgw9v9cemYyALgAEsjNoCRBD3tD/p1LLzkuvWGf0TOBJy3FQ0jTJnM16Q3
+         poAtKsUJzfShkcGqynNuiopeWwccdRh2cUpRSNZkEwPY02aeh+ix50tuBh78IOYNRI2Y
+         t8bcdaB2OXSXx7xbv2OefxrrURfuQQuFfGFQXB/ryoz/AZ0I0oS05i0hrBL4h+Yu1Men
+         Uo0g==
+X-Gm-Message-State: AOAM530MhrQ3g27p96PAOS47uQC1Ip/vrgnUL/Oc3pslktWV5I7z9enM
+        fc/oEV5bd7I5gkoGTV1NUzZISQ==
+X-Google-Smtp-Source: ABdhPJwau8uI/KVK0RFr+Mma2bumEKOSrKCg7KtTVps5gdvTpxpwqjvlK9D1HrbNbA9hH6yf7NDHMw==
+X-Received: by 2002:a65:594b:: with SMTP id g11mr987979pgu.168.1592526675190;
+        Thu, 18 Jun 2020 17:31:15 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id h17sm3338722pgv.41.2020.06.18.17.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 17:31:14 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 17:31:14 -0700 (PDT)
+X-Google-Original-Date: Thu, 18 Jun 2020 17:31:04 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: Don't allow write+exec only page mapping request in mmap
+In-Reply-To: <1592316186-1420-1-git-send-email-yash.shah@sifive.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        colin.king@canonical.com, aou@eecs.berkeley.edu,
+        david.abdurachmanov@gmail.com, yash.shah@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     yash.shah@sifive.com
+Message-ID: <mhng-f46325d7-1e58-4c03-b345-b39e53cabb12@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006190000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
- clxscore=1011 malwarescore=0 impostorscore=0 adultscore=0
- cotscore=-2147483648 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- suspectscore=3 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006190000
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 5:02 PM, ebiederm@xmission.com wrote:
-
-> Matthew Wilcox <willy@infradead.org> writes:
+On Tue, 16 Jun 2020 07:03:06 PDT (-0700), yash.shah@sifive.com wrote:
+> As per the table 4.2 of the RISC-V instruction set manual[0], the PTE
+> permission bit combination of "write+exec only" is invalid and reserved
+> for future use. Hence, don't allow such mapping request in mmap call.
 >
->> On Thu, Jun 18, 2020 at 03:17:33PM -0700, Junxiao Bi wrote:
->>> When debugging some performance issue, i found that thousands of threads
->>> exit around same time could cause a severe spin lock contention on proc
->>> dentry "/proc/$parent_process_pid/task/", that's because threads needs to
->>> clean up their pid file from that dir when exit. Check the following
->>> standalone test case that simulated the case and perf top result on v5.7
->>> kernel. Any idea on how to fix this?
->> Thanks, Junxiao.
->>
->> We've looked at a few different ways of fixing this problem.
->>
->> Even though the contention is within the dcache, it seems like a usecase
->> that the dcache shouldn't be optimised for -- generally we do not have
->> hundreds of CPUs removing dentries from a single directory in parallel.
->>
->> We could fix this within procfs.  We don't have a great patch yet, but
->> the current approach we're looking at allows only one thread at a time
->> to call dput() on any /proc/*/task directory.
->>
->> We could also look at fixing this within the scheduler.  Only allowing
->> one CPU to run the threads of an exiting process would fix this particular
->> problem, but might have other consequences.
->>
->> I was hoping that 7bc3e6e55acf would fix this, but that patch is in 5.7,
->> so that hope is ruled out.
-> Does anyone know if problem new in v5.7?  I am wondering if I introduced
-> this problem when I refactored the code or if I simply churned the code
-> but the issue remains effectively the same.
-It's not new issue, we see it in old kernel like v4.14
+> An issue is been reported by David Abdurachmanov, that while running
+> stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
+> specific kernel.
 >
-> Can you try only flushing entries when the last thread of the process is
-> reaped?  I think in practice we would want to be a little more
-> sophisticated but it is a good test case to see if it solves the issue.
-
-Thank you. i will try and let you know.
-
-Thanks,
-
-Junxiao.
-
+> This issue arises when the stress-sysbadaddr request for pages with
+> "write+exec only" permission bits and then passes the address obtain
+> from this mmap call to various system call. For the riscv kernel, the
+> mmap call should fail for this particular combination of permission bits
+> since it's not valid.
 >
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index cebae77a9664..d56e4eb60bdd 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -152,7 +152,7 @@ void put_task_struct_rcu_user(struct task_struct *task)
->   void release_task(struct task_struct *p)
->   {
->   	struct task_struct *leader;
-> -	struct pid *thread_pid;
-> +	struct pid *thread_pid = NULL;
->   	int zap_leader;
->   repeat:
->   	/* don't need to get the RCU readlock here - the process is dead and
-> @@ -165,7 +165,8 @@ void release_task(struct task_struct *p)
->   
->   	write_lock_irq(&tasklist_lock);
->   	ptrace_release_task(p);
-> -	thread_pid = get_pid(p->thread_pid);
-> +	if (p == p->group_leader)
-> +		thread_pid = get_pid(p->thread_pid);
->   	__exit_signal(p);
->   
->   	/*
-> @@ -188,8 +189,10 @@ void release_task(struct task_struct *p)
->   	}
->   
->   	write_unlock_irq(&tasklist_lock);
-> -	proc_flush_pid(thread_pid);
-> -	put_pid(thread_pid);
-> +	if (thread_pid) {
-> +		proc_flush_pid(thread_pid);
-> +		put_pid(thread_pid);
-> +	}
->   	release_thread(p);
->   	put_task_struct_rcu_user(p);
->   
+> [0]: https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-161.pdf
+
+That's super old.  I can't figure out how to get a stable link to a new
+privilege spec (the riscv.org website has some crazy wordpress paths that I
+don't trust, and github doesn't appear to have the PDF for the ratified 1.11
+tag).  I'm just going to put the ratified PDF on dabbelt.com, as at least I
+have control over that.  LMK if anyone knows where to find the ratified user
+PDF of the manual, as that'd be nice to have as well...
+
+It's now table 4.4 in the PDF I get from riscv.org, see
+
+https://github.com/palmer-dabbelt/website/commit/4c2676320c9b580f592bd0a1074bb3c6507d97a5
+
+or
+
+http://dabbelt.com/~palmer/keep/riscv-isa-manual/riscv-privileged-20190608-1.pdf
+
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+> ---
+>  arch/riscv/kernel/sys_riscv.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
+> index f3619f5..12f8a7f 100644
+> --- a/arch/riscv/kernel/sys_riscv.c
+> +++ b/arch/riscv/kernel/sys_riscv.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/syscalls.h>
+>  #include <asm/unistd.h>
+>  #include <asm/cacheflush.h>
+> +#include <asm-generic/mman-common.h>
+>
+>  static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+>  			   unsigned long prot, unsigned long flags,
+> @@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+>  {
+>  	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
+>  		return -EINVAL;
+> +
+> +	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
+> +		if (unlikely(!(prot & PROT_READ)))
+> +			return -EINVAL;
+> +
+>  	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
+>  			       offset >> (PAGE_SHIFT - page_shift_offset));
+>  }
+
+This is on fixes, with my cleanups.  I'd really prefer to avoid linking to
+dabbelt.com, so LMK if you have a better way to handle it.  I'm planning on
+sumbitting an rc2 PR tomorrow, though...
+
+Thanks!
