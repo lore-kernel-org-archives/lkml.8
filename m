@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC42C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBE220786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C62F20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580829;
-	bh=OyZGAjGxGydpMF6xBAyPglcnY6Ble1gwXTcS4OQ1TX0=;
+	s=default; t=1592580832;
+	bh=ctnKrlZlC9i41gZd4wzwt14jBTE8bLOOurempFZmoAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uoQuSGN9dLtjV33Tz/2W0ysO2ph0ttv92KnriX3HH5VHO9TYPowxSMhs9nB5fFX+P
-	 HqyHf7Qksm3eModN0LThOfqyFjbaxdSCrDcyarOMjMzCe1qhVCp+FuqnRuD+vpX4Yp
-	 8yZRv6jzj513RgIgKHwTH/Fl5QmAxez6zlspc9M0=
+	b=LPAwKP1IiLaSiLRy2ufuYWA9DhH2cdIlqM0/r9Ip61Yg8u+Gps1Lc4P6nYPCo59zG
+	 w4jUXQ5LfhW3FZrL/4Geal1HMGneTOZ218HDkxJTawukLFV+cIY58EFQJddwnyGUi9
+	 ivRygbRwz7O5lkSzRZE6m7CrdrT/QH36+5Z2P0VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404992AbgFSPdU (ORCPT
+        id S2404931AbgFSPdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:33:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36742 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393583AbgFSPco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:32:44 -0400
+        id S2393897AbgFSPce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:32:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747CE21BE5;
-        Fri, 19 Jun 2020 15:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D26020757;
+        Fri, 19 Jun 2020 15:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580763;
-        bh=OyZGAjGxGydpMF6xBAyPglcnY6Ble1gwXTcS4OQ1TX0=;
+        s=default; t=1592580754;
+        bh=ctnKrlZlC9i41gZd4wzwt14jBTE8bLOOurempFZmoAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFJvvIaBZCsxln7FK9B56KQHeKVv+9lB6sqXct3nTvjxpFcVGPMH8i93mWd8BdUrY
-         Js39NcYI+6tGoi7leoeYqnQaOfofZw7pvF4y2QMwkaBKK8xilbYkH3Rv3nPUKifJmm
-         aniqDnnzP26m/F/gLSlbHFXX1DTUGktbAtwBZNH4=
+        b=Cmhx8AY62PN4C0wpW8E/iYDpZcxkORVSvPptDbA7nPhzOMFAXSAI3GYMImUsM76sI
+         8mtzom4s4Dp1sq3EYPiNsL12I+BXmAVNTcHjli5YRB/EpEOf8HLK9Dq7EPXrJ1Z0cm
+         FKdR7xtTlrKaLhchlGnqJoqwknb3K2+PsgfcVgcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 5.7 373/376] perf probe: Fix to check blacklist address correctly
-Date:   Fri, 19 Jun 2020 16:34:51 +0200
-Message-Id: <20200619141727.947503024@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.7 370/376] f2fs: dont leak filename in f2fs_try_convert_inline_dir()
+Date:   Fri, 19 Jun 2020 16:34:48 +0200
+Message-Id: <20200619141727.806071516@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,119 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
+commit ff5f85c8d62a487bde415ef4c9e2d0be718021df upstream.
 
-Fix to check kprobe blacklist address correctly with relocated address
-by adjusting debuginfo address.
+We need to call fscrypt_free_filename() to free the memory allocated by
+fscrypt_setup_filename().
 
-Since the address in the debuginfo is same as objdump, it is different
-from relocated kernel address with KASLR.  Thus, 'perf probe' always
-misses to catch the blacklisted addresses.
-
-Without this patch, 'perf probe' can not detect the blacklist addresses
-on a KASLR enabled kernel.
-
-  # perf probe kprobe_dispatcher
-  Failed to write event: Invalid argument
-    Error: Failed to add events.
-  #
-
-With this patch, it correctly shows the error message.
-
-  # perf probe kprobe_dispatcher
-  kprobe_dispatcher is blacklisted function, skip it.
-  Probe point 'kprobe_dispatcher' not found.
-    Error: Failed to add events.
-  #
-
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b06af2aff28b ("f2fs: convert inline_dir early before starting rename")
+Cc: <stable@vger.kernel.org> # v5.6+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-event.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ fs/f2fs/inline.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -102,7 +102,7 @@ void exit_probe_symbol_maps(void)
- 	symbol__exit();
- }
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -559,12 +559,12 @@ int f2fs_try_convert_inline_dir(struct i
+ 	ipage = f2fs_get_node_page(sbi, dir->i_ino);
+ 	if (IS_ERR(ipage)) {
+ 		err = PTR_ERR(ipage);
+-		goto out;
++		goto out_fname;
+ 	}
  
--static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-+static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
- {
- 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
- 	struct kmap *kmap;
-@@ -114,6 +114,10 @@ static struct ref_reloc_sym *kernel_get_
- 	kmap = map__kmap(map);
- 	if (!kmap)
- 		return NULL;
-+
-+	if (pmap)
-+		*pmap = map;
-+
- 	return kmap->ref_reloc_sym;
- }
+ 	if (f2fs_has_enough_room(dir, ipage, &fname)) {
+ 		f2fs_put_page(ipage, 1);
+-		goto out;
++		goto out_fname;
+ 	}
  
-@@ -125,7 +129,7 @@ static int kernel_get_symbol_address_by_
- 	struct map *map;
- 
- 	/* ref_reloc_sym is just a label. Need a special fix*/
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
- 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
- 	else {
-@@ -745,6 +749,7 @@ post_process_kernel_probe_trace_events(s
- 				       int ntevs)
- {
- 	struct ref_reloc_sym *reloc_sym;
-+	struct map *map;
- 	char *tmp;
- 	int i, skipped = 0;
- 
-@@ -753,7 +758,7 @@ post_process_kernel_probe_trace_events(s
- 		return post_process_offline_probe_trace_events(tevs, ntevs,
- 						symbol_conf.vmlinux_name);
- 
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (!reloc_sym) {
- 		pr_warning("Relocated base symbol is not found!\n");
- 		return -EINVAL;
-@@ -764,9 +769,13 @@ post_process_kernel_probe_trace_events(s
- 			continue;
- 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
- 			continue;
--		/* If we found a wrong one, mark it by NULL symbol */
-+		/*
-+		 * If we found a wrong one, mark it by NULL symbol.
-+		 * Since addresses in debuginfo is same as objdump, we need
-+		 * to convert it to addresses on memory.
-+		 */
- 		if (kprobe_warn_out_range(tevs[i].point.symbol,
--					  tevs[i].point.address)) {
-+			map__objdump_2mem(map, tevs[i].point.address))) {
- 			tmp = NULL;
- 			skipped++;
- 		} else {
-@@ -2935,7 +2944,7 @@ static int find_probe_trace_events_from_
- 	/* Note that the symbols in the kmodule are not relocated */
- 	if (!pev->uprobes && !pev->target &&
- 			(!pp->retprobe || kretprobe_offset_is_supported())) {
--		reloc_sym = kernel_get_ref_reloc_sym();
-+		reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 		if (!reloc_sym) {
- 			pr_warning("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
+ 	inline_dentry = inline_data_addr(dir, ipage);
+@@ -572,6 +572,8 @@ int f2fs_try_convert_inline_dir(struct i
+ 	err = do_convert_inline_dir(dir, ipage, inline_dentry);
+ 	if (!err)
+ 		f2fs_put_page(ipage, 1);
++out_fname:
++	fscrypt_free_filename(&fname);
+ out:
+ 	f2fs_unlock_op(sbi);
+ 	return err;
 
 
