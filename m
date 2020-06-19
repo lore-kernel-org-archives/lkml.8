@@ -2,330 +2,125 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF69C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF3682073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C764D2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbgFSJea (ORCPT
+        id S1732145AbgFSJe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:34:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:49216 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731651AbgFSJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:31:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BD6913A1;
-        Fri, 19 Jun 2020 02:31:15 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5EEF03F71F;
-        Fri, 19 Jun 2020 02:31:09 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com, steven.price@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
-Subject: [RFC PATCH v13 4/9] ptp: Reorganize ptp_kvm module to make it arch-independent.
-Date:   Fri, 19 Jun 2020 17:30:28 +0800
-Message-Id: <20200619093033.58344-5-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619093033.58344-1-jianyong.wu@arm.com>
-References: <20200619093033.58344-1-jianyong.wu@arm.com>
+        Fri, 19 Jun 2020 05:34:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:39573 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729195AbgFSJeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:34:24 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1Mk0a0-1j1vIw3f8i-00kQSb; Fri, 19 Jun 2020 11:34:02 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id C6E456518F7;
+        Fri, 19 Jun 2020 09:34:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id imaCpHMlptGZ; Fri, 19 Jun 2020 11:34:01 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (unknown [10.10.5.94])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPSA id 7EC9B65101C;
+        Fri, 19 Jun 2020 11:34:01 +0200 (CEST)
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 39001804FB; Fri, 19 Jun 2020 11:34:01 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 11:34:01 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v5 9/9] arm64: dts: renesas: salvator: add a connection
+ from adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200619093401.GC7780@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+ <90f2c14fcbe5d06eefdaeadbe8a6efc8c91523f3.1585852001.git.alexander.riesen@cetitec.com>
+ <fd19ca3c-e815-499e-0c46-0a4e2684b6b9@ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd19ca3c-e815-499e-0c46-0a4e2684b6b9@ideasonboard.com>
+X-Provags-ID: V03:K1:6hRrqFEh5C6YLlVBCD2cmTMQVlqVh0XZanELx8BbCR+f3axPgeL
+ AN+rfxe2SLHaB2j8Jwu4tYzy8bLyyGdexHJD7SektcqP7r9CnI5bggzgkzhwtiHRS4D02+U
+ xXdLbA2mHSwf8dExOEf1Qnz39giJ77pfzF9/1zkZdQEDgSu+0l9714+LBKDL5waWfQ/Vxgt
+ NV5Du39Q/5WP0KXEjInIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZUe7ElXwZOQ=:+idjBDE4aBudMjQHkAgSLK
+ pAd2mOYTOnUBNpn61Otce9qCkHArtzF71ds7Kq51NdJHTDEyiGl+ajooz5KdM08ZprHjzsUmW
+ 2yiAOhnw72G3iskjQKp4WoaeVGZRlHePjqc8Z2MvdfRsQ6r6iP1EmsgLZVypUjU/zMxFabpSq
+ oeKTrtS65tDvnKtflB8kxurmXIcNcvnGK/0FMcnB4pGzyD7tB3G3EVx+YNm4Ill/r2Pso/amS
+ BBAafCnd03zSYU5JrBwhMWK+q0H5JYlDhZ7vJmIgqxnb1UorF3AprL9aop5iZBUovqJOLMLGC
+ Gm2OCgfDNzOi3PCLshFL/dSNiSepkAvv7U93lUyg8NnRbSZFP7UxPmvonScL/3wC1HPBWEour
+ itmUAHbsQs1eswpKu6EXQbjYpoTM3djPiXzhRF8fQmMqCX6uhDqUK01zALgd7UI+DkupKcCjU
+ ro091c+uqYyPG5IwzPpOrohkw/TGJh910tAwTEsq8OUdo8DRQ0QqeyoMNTV/w6g6bS7HPjLAO
+ DE8ngdZ42Kvi+JdZsVAvROJHeqvPmBSJinL1qCy9zhAUjdeELAQFH+8siWXfWa6JIXnunnOVf
+ wIZN2QJ56h1pt8h23P1MgM/A3YGQm4/HP3ZQzALlbEblqrsaMe61wX60x1iiNkw2JtstO9HEv
+ QJ1mmuzKCBF1sNULj6hNbn/Kxe1nuXBdfsKnbprhzgeS551wkOA4kj4Z6ShDiPp5lW9vJRogY
+ lY4P/DPNyDsnSmOPNOiO6GjKDDX8o28SS2QGlYN+Mbfj4Im//GvO46gJLDvnofKYonlrFrT5y
+ IlQJmvR7vuBSED58mZZSce1Li9zXGabjNuV+aPwisiTXSV2T6x9A4XxTtZ00VC2DKyxHb+u
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, ptp_kvm modules implementation is only for x86 which includs
-large part of arch-specific code.  This patch move all of those code
-into new arch related file in the same directory.
+Kieran Bingham, Thu, Jun 18, 2020 18:32:55 +0200:
+> On 02/04/2020 19:35, Alex Riesen wrote:
+> > --- a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+> > @@ -146,7 +146,8 @@ &sata {
+> >  &sound_card {
+> >  	dais = <&rsnd_port0	/* ak4613 */
+> >  		&rsnd_port1	/* HDMI0  */
+> > -		&rsnd_port2>;	/* HDMI1  */
+> > +		&rsnd_port2	/* HDMI1  */
+> > +		&rsnd_port3>;	/* adv7482 hdmi-in  */
+> 
+> Ah - that was confusing at first... but HDMI0 and HDMI1 are *outputs*,
+> where of course the adv7482 is an input ;-)
 
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- drivers/ptp/Makefile                        |  1 +
- drivers/ptp/ptp_kvm.h                       | 11 +++
- drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 80 +++++-------------
- drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
- 4 files changed, 122 insertions(+), 59 deletions(-)
- create mode 100644 drivers/ptp/ptp_kvm.h
- rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
- create mode 100644 drivers/ptp/ptp_kvm_x86.c
+And ak4613 is both... Why? Are the "dais" of a sound_card more commonly
+outputs than inputs?
 
-diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
-index 7aff75f745dc..baac6f5b243b 100644
---- a/drivers/ptp/Makefile
-+++ b/drivers/ptp/Makefile
-@@ -4,6 +4,7 @@
- #
- 
- ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
-+ptp_kvm-y				:= ptp_kvm_$(ARCH).o ptp_kvm_common.o
- obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
- obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
- obj-$(CONFIG_PTP_1588_CLOCK_INES)	+= ptp_ines.o
-diff --git a/drivers/ptp/ptp_kvm.h b/drivers/ptp/ptp_kvm.h
-new file mode 100644
-index 000000000000..4bf1802bbeb8
---- /dev/null
-+++ b/drivers/ptp/ptp_kvm.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Virtual PTP 1588 clock for use with KVM guests
-+ *
-+ * Copyright (C) 2017 Red Hat Inc.
-+ */
-+
-+int kvm_arch_ptp_init(void);
-+int kvm_arch_ptp_get_clock(struct timespec64 *ts);
-+int kvm_arch_ptp_get_crosststamp(unsigned long *cycle,
-+		struct timespec64 *tspec, void *cs);
-diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/ptp_kvm_common.c
-similarity index 63%
-rename from drivers/ptp/ptp_kvm.c
-rename to drivers/ptp/ptp_kvm_common.c
-index 658d33fc3195..8d8a9bcd1d22 100644
---- a/drivers/ptp/ptp_kvm.c
-+++ b/drivers/ptp/ptp_kvm_common.c
-@@ -8,15 +8,16 @@
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/slab.h>
- #include <linux/module.h>
- #include <uapi/linux/kvm_para.h>
- #include <asm/kvm_para.h>
--#include <asm/pvclock.h>
--#include <asm/kvmclock.h>
- #include <uapi/asm/kvm_para.h>
- 
- #include <linux/ptp_clock_kernel.h>
- 
-+#include "ptp_kvm.h"
-+
- struct kvm_ptp_clock {
- 	struct ptp_clock *ptp_clock;
- 	struct ptp_clock_info caps;
-@@ -24,56 +25,29 @@ struct kvm_ptp_clock {
- 
- static DEFINE_SPINLOCK(kvm_ptp_lock);
- 
--static struct pvclock_vsyscall_time_info *hv_clock;
--
--static struct kvm_clock_pairing clock_pair;
--static phys_addr_t clock_pair_gpa;
--
- static int ptp_kvm_get_time_fn(ktime_t *device_time,
- 			       struct system_counterval_t *system_counter,
- 			       void *ctx)
- {
--	unsigned long ret;
-+	unsigned long ret, cycle;
- 	struct timespec64 tspec;
--	unsigned version;
--	int cpu;
--	struct pvclock_vcpu_time_info *src;
-+	struct clocksource *cs;
- 
- 	spin_lock(&kvm_ptp_lock);
- 
- 	preempt_disable_notrace();
--	cpu = smp_processor_id();
--	src = &hv_clock[cpu].pvti;
--
--	do {
--		/*
--		 * We are using a TSC value read in the hosts
--		 * kvm_hc_clock_pairing handling.
--		 * So any changes to tsc_to_system_mul
--		 * and tsc_shift or any other pvclock
--		 * data invalidate that measurement.
--		 */
--		version = pvclock_read_begin(src);
--
--		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
--				     clock_pair_gpa,
--				     KVM_CLOCK_PAIRING_WALLCLOCK);
--		if (ret != 0) {
--			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
--			spin_unlock(&kvm_ptp_lock);
--			preempt_enable_notrace();
--			return -EOPNOTSUPP;
--		}
--
--		tspec.tv_sec = clock_pair.sec;
--		tspec.tv_nsec = clock_pair.nsec;
--		ret = __pvclock_read_cycles(src, clock_pair.tsc);
--	} while (pvclock_read_retry(src, version));
-+	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs);
-+	if (ret != 0) {
-+		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
-+		spin_unlock(&kvm_ptp_lock);
-+		preempt_enable_notrace();
-+		return -EOPNOTSUPP;
-+	}
- 
- 	preempt_enable_notrace();
- 
--	system_counter->cycles = ret;
--	system_counter->cs = &kvm_clock;
-+	system_counter->cycles = cycle;
-+	system_counter->cs = cs;
- 
- 	*device_time = timespec64_to_ktime(tspec);
- 
-@@ -116,17 +90,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 
- 	spin_lock(&kvm_ptp_lock);
- 
--	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
--			     clock_pair_gpa,
--			     KVM_CLOCK_PAIRING_WALLCLOCK);
-+	ret = kvm_arch_ptp_get_clock(&tspec);
- 	if (ret != 0) {
- 		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
- 		spin_unlock(&kvm_ptp_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
--	tspec.tv_sec = clock_pair.sec;
--	tspec.tv_nsec = clock_pair.nsec;
- 	spin_unlock(&kvm_ptp_lock);
- 
- 	memcpy(ts, &tspec, sizeof(struct timespec64));
-@@ -166,21 +136,13 @@ static void __exit ptp_kvm_exit(void)
- 
- static int __init ptp_kvm_init(void)
- {
--	long ret;
--
--	if (!kvm_para_available())
--		return -ENODEV;
--
--	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
--	hv_clock = pvclock_get_pvti_cpu0_va();
-+	int ret;
- 
--	if (!hv_clock)
--		return -ENODEV;
--
--	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
--			KVM_CLOCK_PAIRING_WALLCLOCK);
--	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
--		return -ENODEV;
-+	ret = kvm_arch_ptp_init();
-+	if (ret) {
-+		pr_err("fail to initialize ptp_kvm");
-+		return -EOPNOTSUPP;
-+	}
- 
- 	kvm_ptp_clock.caps = ptp_kvm_caps;
- 
-diff --git a/drivers/ptp/ptp_kvm_x86.c b/drivers/ptp/ptp_kvm_x86.c
-new file mode 100644
-index 000000000000..aabed1b08a0d
---- /dev/null
-+++ b/drivers/ptp/ptp_kvm_x86.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Virtual PTP 1588 clock for use with KVM guests
-+ *
-+ * Copyright (C) 2017 Red Hat Inc.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <asm/pvclock.h>
-+#include <asm/kvmclock.h>
-+#include <linux/module.h>
-+#include <uapi/asm/kvm_para.h>
-+#include <uapi/linux/kvm_para.h>
-+#include <linux/ptp_clock_kernel.h>
-+
-+phys_addr_t clock_pair_gpa;
-+struct kvm_clock_pairing clock_pair;
-+struct pvclock_vsyscall_time_info *hv_clock;
-+
-+int kvm_arch_ptp_init(void)
-+{
-+	int ret;
-+
-+	if (!kvm_para_available())
-+		return -ENODEV;
-+
-+	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
-+	hv_clock = pvclock_get_pvti_cpu0_va();
-+	if (!hv_clock)
-+		return -ENODEV;
-+
-+	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
-+			     KVM_CLOCK_PAIRING_WALLCLOCK);
-+	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+int kvm_arch_ptp_get_clock(struct timespec64 *ts)
-+{
-+	long ret;
-+
-+	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-+			     clock_pair_gpa,
-+			     KVM_CLOCK_PAIRING_WALLCLOCK);
-+	if (ret != 0)
-+		return -EOPNOTSUPP;
-+
-+	ts->tv_sec = clock_pair.sec;
-+	ts->tv_nsec = clock_pair.nsec;
-+
-+	return 0;
-+}
-+
-+int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct timespec64 *tspec,
-+			      struct clocksource **cs)
-+{
-+	unsigned long ret;
-+	unsigned int version;
-+	int cpu;
-+	struct pvclock_vcpu_time_info *src;
-+
-+	cpu = smp_processor_id();
-+	src = &hv_clock[cpu].pvti;
-+
-+	do {
-+		/*
-+		 * We are using a TSC value read in the hosts
-+		 * kvm_hc_clock_pairing handling.
-+		 * So any changes to tsc_to_system_mul
-+		 * and tsc_shift or any other pvclock
-+		 * data invalidate that measurement.
-+		 */
-+		version = pvclock_read_begin(src);
-+
-+		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-+				     clock_pair_gpa,
-+				     KVM_CLOCK_PAIRING_WALLCLOCK);
-+		tspec->tv_sec = clock_pair.sec;
-+		tspec->tv_nsec = clock_pair.nsec;
-+		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
-+	} while (pvclock_read_retry(src, version));
-+
-+	*cs = &kvm_clock;
-+
-+	return 0;
-+}
--- 
-2.17.1
+> Otherwise, I can't spot anything else yet so:
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> But I fear there may have been some churn around here, so it would be
+> good to see a rebase too.
+
+Just rebased the series on top of linux-media/master and the only conflict was
+in adding ssi4 node to rcar_sound,ssi in r8a77961.dtsi, as there was an
+addition of ssi2 in the same line.
+
+Thanks,
+Alex
 
