@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54744C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF251C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF38204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0754207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582721;
-	bh=Rhg5e+wBEhn02Vp7DUNhY6BAIHE/FzWM6qIgipmPOrw=;
+	s=default; t=1592582725;
+	bh=DlI6oCseilzi6eilp8Gz7Ep8tm7QK7mbRC7ltwIV4Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIaxeGQqlXqYv9vSwrQX52XlMqVlGD6KTsjmO0CC5f8tGbDbplqPF5YRKfcJlP8Dl
-	 rA6wSwV67EAACFAMv2bbe/pyHWK9h1dvzhbMkGKn2KsIwRnDrYb11Lom/A+e1dgIDn
-	 oYnv+RtUjciZO/sWEn2QDSkOgQewK0i71QOcVXaY=
+	b=ai/gioWYHpeoJbGbqqAgHpiFFk9snNjbtLV89YeqzN25xtmaAg5h2Pw0tS7K+pNYp
+	 3MnsIJRH4MQEkJsZbt6d3nNRPKmKbyKnsGGI2+zMYa+sTEM+ZKYwJ8Z8FpaNY5s6OC
+	 DdEdk0+TByKDoCR8er5WhsKEyWlfQyiDZTDMkA/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391950AbgFSPJm (ORCPT
+        id S2392336AbgFSQFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391935AbgFSPJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:09:38 -0400
+        id S2391959AbgFSPJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:09:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA26221D94;
-        Fri, 19 Jun 2020 15:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9AAE21D7E;
+        Fri, 19 Jun 2020 15:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579377;
-        bh=Rhg5e+wBEhn02Vp7DUNhY6BAIHE/FzWM6qIgipmPOrw=;
+        s=default; t=1592579385;
+        bh=DlI6oCseilzi6eilp8Gz7Ep8tm7QK7mbRC7ltwIV4Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zowmytZWgjgIIPMz58Vj06JZSrD0t4lzkw/024A4E1l9gYr42TkKoFaDFlKyOrQr+
-         CKKoqpuAHmRjhXfx8QRwMpyOFoZ1R8Dnerq+2yXK0Q/obrAwc61kTFp24QaxXaGbkA
-         7tXnuKk8GcOm6I7NTAUR5D7dRJKE9YyT0b9FV6w8=
+        b=KtykpfGuOlXevp4AJpO+R8cijSshbqpx0ax8PZltUnZRDHmxTR3lMdV9q7Gk9psmJ
+         VsikR1MT9HDlBZfepD4aaauYelRIyNEzyIeD3Wz9koryPBD7bd/PByTBRjwz3xVNXo
+         5O5epXfJuvmVGVDmkIsIGe8bDBQnGWvg9XeUUm2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 112/261] md: dont flush workqueue unconditionally in md_open
-Date:   Fri, 19 Jun 2020 16:32:03 +0200
-Message-Id: <20200619141655.231430519@linuxfoundation.org>
+Subject: [PATCH 5.4 115/261] veth: Adjust hard_start offset on redirect XDP frames
+Date:   Fri, 19 Jun 2020 16:32:06 +0200
+Message-Id: <20200619141655.378836850@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,161 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit f6766ff6afff70e2aaf39e1511e16d471de7c3ae ]
+[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
 
-We need to check mddev->del_work before flush workqueu since the purpose
-of flush is to ensure the previous md is disappeared. Otherwise the similar
-deadlock appeared if LOCKDEP is enabled, it is due to md_open holds the
-bdev->bd_mutex before flush workqueue.
+When native XDP redirect into a veth device, the frame arrives in the
+xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
+which can run a new XDP bpf_prog on the packet. Doing so requires
+converting xdp_frame to xdp_buff, but the tricky part is that
+xdp_frame memory area is located in the top (data_hard_start) memory
+area that xdp_buff will point into.
 
-kernel: [  154.522645] ======================================================
-kernel: [  154.522647] WARNING: possible circular locking dependency detected
-kernel: [  154.522650] 5.6.0-rc7-lp151.27-default #25 Tainted: G           O
-kernel: [  154.522651] ------------------------------------------------------
-kernel: [  154.522653] mdadm/2482 is trying to acquire lock:
-kernel: [  154.522655] ffff888078529128 ((wq_completion)md_misc){+.+.}, at: flush_workqueue+0x84/0x4b0
-kernel: [  154.522673]
-kernel: [  154.522673] but task is already holding lock:
-kernel: [  154.522675] ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522691]
-kernel: [  154.522691] which lock already depends on the new lock.
-kernel: [  154.522691]
-kernel: [  154.522694]
-kernel: [  154.522694] the existing dependency chain (in reverse order) is:
-kernel: [  154.522696]
-kernel: [  154.522696] -> #4 (&bdev->bd_mutex){+.+.}:
-kernel: [  154.522704]        __mutex_lock+0x87/0x950
-kernel: [  154.522706]        __blkdev_get+0x79/0x590
-kernel: [  154.522708]        blkdev_get+0x65/0x140
-kernel: [  154.522709]        blkdev_get_by_dev+0x2f/0x40
-kernel: [  154.522716]        lock_rdev+0x3d/0x90 [md_mod]
-kernel: [  154.522719]        md_import_device+0xd6/0x1b0 [md_mod]
-kernel: [  154.522723]        new_dev_store+0x15e/0x210 [md_mod]
-kernel: [  154.522728]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522732]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522735]        vfs_write+0xad/0x1a0
-kernel: [  154.522737]        ksys_write+0xa4/0xe0
-kernel: [  154.522745]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522748]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522749]
-kernel: [  154.522749] -> #3 (&mddev->reconfig_mutex){+.+.}:
-kernel: [  154.522752]        __mutex_lock+0x87/0x950
-kernel: [  154.522756]        new_dev_store+0xc9/0x210 [md_mod]
-kernel: [  154.522759]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522761]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522763]        vfs_write+0xad/0x1a0
-kernel: [  154.522765]        ksys_write+0xa4/0xe0
-kernel: [  154.522767]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522769]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522770]
-kernel: [  154.522770] -> #2 (kn->count#253){++++}:
-kernel: [  154.522775]        __kernfs_remove+0x253/0x2c0
-kernel: [  154.522778]        kernfs_remove+0x1f/0x30
-kernel: [  154.522780]        kobject_del+0x28/0x60
-kernel: [  154.522783]        mddev_delayed_delete+0x24/0x30 [md_mod]
-kernel: [  154.522786]        process_one_work+0x2a7/0x5f0
-kernel: [  154.522788]        worker_thread+0x2d/0x3d0
-kernel: [  154.522793]        kthread+0x117/0x130
-kernel: [  154.522795]        ret_from_fork+0x3a/0x50
-kernel: [  154.522796]
-kernel: [  154.522796] -> #1 ((work_completion)(&mddev->del_work)){+.+.}:
-kernel: [  154.522800]        process_one_work+0x27e/0x5f0
-kernel: [  154.522802]        worker_thread+0x2d/0x3d0
-kernel: [  154.522804]        kthread+0x117/0x130
-kernel: [  154.522806]        ret_from_fork+0x3a/0x50
-kernel: [  154.522807]
-kernel: [  154.522807] -> #0 ((wq_completion)md_misc){+.+.}:
-kernel: [  154.522813]        __lock_acquire+0x1392/0x1690
-kernel: [  154.522816]        lock_acquire+0xb4/0x1a0
-kernel: [  154.522818]        flush_workqueue+0xab/0x4b0
-kernel: [  154.522821]        md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522823]        __blkdev_get+0xea/0x590
-kernel: [  154.522825]        blkdev_get+0x65/0x140
-kernel: [  154.522828]        do_dentry_open+0x1d1/0x380
-kernel: [  154.522831]        path_openat+0x567/0xcc0
-kernel: [  154.522834]        do_filp_open+0x9b/0x110
-kernel: [  154.522836]        do_sys_openat2+0x201/0x2a0
-kernel: [  154.522838]        do_sys_open+0x57/0x80
-kernel: [  154.522840]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522842]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522844]
-kernel: [  154.522844] other info that might help us debug this:
-kernel: [  154.522844]
-kernel: [  154.522846] Chain exists of:
-kernel: [  154.522846]   (wq_completion)md_misc --> &mddev->reconfig_mutex --> &bdev->bd_mutex
-kernel: [  154.522846]
-kernel: [  154.522850]  Possible unsafe locking scenario:
-kernel: [  154.522850]
-kernel: [  154.522852]        CPU0                    CPU1
-kernel: [  154.522853]        ----                    ----
-kernel: [  154.522854]   lock(&bdev->bd_mutex);
-kernel: [  154.522856]                                lock(&mddev->reconfig_mutex);
-kernel: [  154.522858]                                lock(&bdev->bd_mutex);
-kernel: [  154.522860]   lock((wq_completion)md_misc);
-kernel: [  154.522861]
-kernel: [  154.522861]  *** DEADLOCK ***
-kernel: [  154.522861]
-kernel: [  154.522864] 1 lock held by mdadm/2482:
-kernel: [  154.522865]  #0: ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522868]
-kernel: [  154.522868] stack backtrace:
-kernel: [  154.522873] CPU: 1 PID: 2482 Comm: mdadm Tainted: G           O      5.6.0-rc7-lp151.27-default #25
-kernel: [  154.522875] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-kernel: [  154.522878] Call Trace:
-kernel: [  154.522881]  dump_stack+0x8f/0xcb
-kernel: [  154.522884]  check_noncircular+0x194/0x1b0
-kernel: [  154.522888]  ? __lock_acquire+0x1392/0x1690
-kernel: [  154.522890]  __lock_acquire+0x1392/0x1690
-kernel: [  154.522893]  lock_acquire+0xb4/0x1a0
-kernel: [  154.522895]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522898]  flush_workqueue+0xab/0x4b0
-kernel: [  154.522900]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522905]  ? md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522908]  md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522910]  __blkdev_get+0xea/0x590
-kernel: [  154.522912]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522914]  blkdev_get+0x65/0x140
-kernel: [  154.522916]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522918]  do_dentry_open+0x1d1/0x380
-kernel: [  154.522921]  path_openat+0x567/0xcc0
-kernel: [  154.522923]  ? __lock_acquire+0x380/0x1690
-kernel: [  154.522926]  do_filp_open+0x9b/0x110
-kernel: [  154.522929]  ? __alloc_fd+0xe5/0x1f0
-kernel: [  154.522935]  ? kmem_cache_alloc+0x28c/0x630
-kernel: [  154.522939]  ? do_sys_openat2+0x201/0x2a0
-kernel: [  154.522941]  do_sys_openat2+0x201/0x2a0
-kernel: [  154.522944]  do_sys_open+0x57/0x80
-kernel: [  154.522946]  do_syscall_64+0x64/0x2b0
-kernel: [  154.522948]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522951] RIP: 0033:0x7f98d279d9ae
+The current code tried to protect the xdp_frame area, by assigning
+xdp_buff.data_hard_start past this memory. This results in 32 bytes
+less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
 
-And md_alloc also flushed the same workqueue, but the thing is different
-here. Because all the paths call md_alloc don't hold bdev->bd_mutex, and
-the flush is necessary to avoid race condition, so leave it as it is.
+This protect step is actually not needed, because BPF-helper
+bpf_xdp_adjust_head() already reserve this area, and don't allow
+BPF-prog to expand into it. Thus, it is safe to point data_hard_start
+directly at xdp_frame memory area.
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
+Reported-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/veth.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 6b69a12ca2d8..5a378a453a2d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7607,7 +7607,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
- 		 */
- 		mddev_put(mddev);
- 		/* Wait until bdev->bd_disk is definitely gone */
--		flush_workqueue(md_misc_wq);
-+		if (work_pending(&mddev->del_work))
-+			flush_workqueue(md_misc_wq);
- 		/* Then retry the open from the top */
- 		return -ERESTARTSYS;
- 	}
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index 9f3c839f9e5f..88cfd63f08a6 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -510,13 +510,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 					struct veth_xdp_tx_bq *bq)
+ {
+ 	void *hard_start = frame->data - frame->headroom;
+-	void *head = hard_start - sizeof(struct xdp_frame);
+ 	int len = frame->len, delta = 0;
+ 	struct xdp_frame orig_frame;
+ 	struct bpf_prog *xdp_prog;
+ 	unsigned int headroom;
+ 	struct sk_buff *skb;
+ 
++	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
++	hard_start -= sizeof(struct xdp_frame);
++
+ 	rcu_read_lock();
+ 	xdp_prog = rcu_dereference(rq->xdp_prog);
+ 	if (likely(xdp_prog)) {
+@@ -538,7 +540,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			break;
+ 		case XDP_TX:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (unlikely(veth_xdp_tx(rq->dev, &xdp, bq) < 0)) {
+ 				trace_xdp_exception(rq->dev, xdp_prog, act);
+@@ -550,7 +551,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			goto xdp_xmit;
+ 		case XDP_REDIRECT:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
+ 				frame = &orig_frame;
+@@ -572,7 +572,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 	rcu_read_unlock();
+ 
+ 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
+-	skb = veth_build_skb(head, headroom, len, 0);
++	skb = veth_build_skb(hard_start, headroom, len, 0);
+ 	if (!skb) {
+ 		xdp_return_frame(frame);
+ 		goto err;
 -- 
 2.25.1
 
