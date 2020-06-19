@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A121AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2089621556
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDBD20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580318;
-	bh=KO1X9m7NPmmKUMWAX5wnckaZR418zjtg/BYnrfIAY3Y=;
+	s=default; t=1592580321;
+	bh=0iFoIg7nV2CD2R+djatO1hodQJVSkJJ3Jzd7XRmEByk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHywp2ELt+A/M1j8NlN6wJhrnALJLpASpjPjJjiIrInXe9UEKRPVKMSPal1hJbutw
-	 WDx+LUGcaOuj9ggqQa16Ktmwvv7HtQGRGEzQ+bELEVU3oFMdqgtfIflFUH6EWEG7I0
-	 r9Wv6AyMkssC4IPsEHPn7/YpqG47yxcUYstKKYbs=
+	b=YLk/8JzCpM3+9+JxR/YJA3Ad2o1ww9O/LeVNK7EUGjW3wLWqFoQ4inSkFUW8ZwlC4
+	 aoE/trr0TQdFIlKdUWB2BY7+qBF7p5qq01nvDjJXPCmWUqQCal4ecoLT35qsiq5TFb
+	 NbktoeU8AUVI53hlg9OgguGzlcv6jNL8gmPbHCkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393385AbgFSPZQ (ORCPT
+        id S2393394AbgFSPZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392990AbgFSPWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:22:22 -0400
+        id S2392996AbgFSPWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:22:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB1E21548;
-        Fri, 19 Jun 2020 15:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3078321582;
+        Fri, 19 Jun 2020 15:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580141;
-        bh=KO1X9m7NPmmKUMWAX5wnckaZR418zjtg/BYnrfIAY3Y=;
+        s=default; t=1592580143;
+        bh=0iFoIg7nV2CD2R+djatO1hodQJVSkJJ3Jzd7XRmEByk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+0JCtQx/F+RJ7f3LtnEsgxzuYyxNL/ZqPBj1S2wC8KOzAY+LdICjlC2cKnXFIsVk
-         lFLacC9n4X02isS3f230eSa01K/VAhJiTGdTtU9BOoWwQaUSyuc9vgi1mT57icEmCu
-         mvRwom43uE2oSGIO7okUfPHpOeP/4B7QoO6CVEBo=
+        b=aSmDTa27ZHoPecETeKpLKoAOd0BUxxNW4LYnmpWdTJcCiNomjEYHaVqTVoM155g2d
+         0nrirxo2uQLP1WQGki9CRNzvgAQp1VS2uzdEouxwGJJz/nDBg6OP4ipEm8ozo8u2dm
+         P2XZa7j9nFAkI6hdrOor5BduvYmHIUwm1hR1rfKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Voon Weifeng <weifeng.voon@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 137/376] stmmac: intel: Fix clock handling on error and remove paths
-Date:   Fri, 19 Jun 2020 16:30:55 +0200
-Message-Id: <20200619141716.821321733@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 138/376] arm64: kexec_file: print appropriate variable
+Date:   Fri, 19 Jun 2020 16:30:56 +0200
+Message-Id: <20200619141716.866608111@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,99 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Łukasz Stelmach <l.stelmach@samsung.com>
 
-[ Upstream commit 09f012e64e4b8126ed6f02d0a85a57c3a0465cf9 ]
+[ Upstream commit 51075e0cb759a736e60ab4f3a5fed8670dba5852 ]
 
-clk_prepare_enable() might fail, we have to check its returned value.
-Besides that we have to call clk_disable_unprepare() on the error and
-remove paths. Do above in the dwmac-intel driver.
+The value of kbuf->memsz may be different than kbuf->bufsz after calling
+kexec_add_buffer(). Hence both values should be logged.
 
-While at it, remove leftover in stmmac_pci and remove unneeded condition
-for NULL-aware clk_unregister_fixed_rate() call.
-
-Fixes: 58da0cfa6cf1 ("net: stmmac: create dwmac-intel.c to contain all Intel platform")
-Cc: Voon Weifeng <weifeng.voon@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 52b2a8af74360 ("arm64: kexec_file: load initrd and device-tree")
+Fixes: 3751e728cef29 ("arm64: kexec_file: add crash dump support")
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Link: https://lore.kernel.org/r/20200430163142.27282-2-l.stelmach@samsung.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 20 +++++++++++++++----
- .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  5 -----
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ arch/arm64/kernel/machine_kexec_file.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index 2e4aaedb93f5..d163c4b43da0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -252,6 +252,7 @@ static void common_default_data(struct plat_stmmacenet_data *plat)
- static int intel_mgbe_common_data(struct pci_dev *pdev,
- 				  struct plat_stmmacenet_data *plat)
- {
-+	int ret;
- 	int i;
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index b40c3b0def92..5ebb21b859b4 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -284,7 +284,7 @@ int load_other_segments(struct kimage *image,
+ 		image->arch.elf_headers_sz = headers_sz;
  
- 	plat->clk_csr = 5;
-@@ -324,7 +325,12 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
- 		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
- 		plat->stmmac_clk = NULL;
+ 		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-			 image->arch.elf_headers_mem, headers_sz, headers_sz);
++			 image->arch.elf_headers_mem, kbuf.bufsz, kbuf.memsz);
  	}
--	clk_prepare_enable(plat->stmmac_clk);
-+
-+	ret = clk_prepare_enable(plat->stmmac_clk);
-+	if (ret) {
-+		clk_unregister_fixed_rate(plat->stmmac_clk);
-+		return ret;
-+	}
  
- 	/* Set default value for multicast hash bins */
- 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-@@ -657,7 +663,13 @@ static int intel_eth_pci_probe(struct pci_dev *pdev,
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
+ 	/* load initrd */
+@@ -305,7 +305,7 @@ int load_other_segments(struct kimage *image,
+ 		initrd_load_addr = kbuf.mem;
  
--	return stmmac_dvr_probe(&pdev->dev, plat, &res);
-+	ret = stmmac_dvr_probe(&pdev->dev, plat, &res);
-+	if (ret) {
-+		clk_disable_unprepare(plat->stmmac_clk);
-+		clk_unregister_fixed_rate(plat->stmmac_clk);
-+	}
-+
-+	return ret;
- }
+ 		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-				initrd_load_addr, initrd_len, initrd_len);
++				initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+ 	}
  
- /**
-@@ -675,8 +687,8 @@ static void intel_eth_pci_remove(struct pci_dev *pdev)
+ 	/* load dtb */
+@@ -332,7 +332,7 @@ int load_other_segments(struct kimage *image,
+ 	image->arch.dtb_mem = kbuf.mem;
  
- 	stmmac_dvr_remove(&pdev->dev);
+ 	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-			kbuf.mem, dtb_len, dtb_len);
++			kbuf.mem, kbuf.bufsz, kbuf.memsz);
  
--	if (priv->plat->stmmac_clk)
--		clk_unregister_fixed_rate(priv->plat->stmmac_clk);
-+	clk_disable_unprepare(priv->plat->stmmac_clk);
-+	clk_unregister_fixed_rate(priv->plat->stmmac_clk);
+ 	return 0;
  
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 3fb21f7ac9fb..272cb47af9f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -217,15 +217,10 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
-  */
- static void stmmac_pci_remove(struct pci_dev *pdev)
- {
--	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
--	struct stmmac_priv *priv = netdev_priv(ndev);
- 	int i;
- 
- 	stmmac_dvr_remove(&pdev->dev);
- 
--	if (priv->plat->stmmac_clk)
--		clk_unregister_fixed_rate(priv->plat->stmmac_clk);
--
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
- 			continue;
 -- 
 2.25.1
 
