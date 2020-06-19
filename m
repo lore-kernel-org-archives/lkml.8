@@ -2,125 +2,179 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F066DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0091C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFE50217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F5C217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584142;
+	bh=nFWOCW9gwieefzH3LfOXLEYyiGCzon8cW/i3ZTGdgBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q5LsWSG8cDzgYeIyled4tx7X26+CsgN1qow2xxGM4q6BkiQs2zL321uu5txf5aQMr
+	 0PIPi/9N1454JFQB7SsT7N8vQGNfuhH1XC9k/Qv0KbQUY/uGUg2FDrhZGhCLUaRsMy
+	 mlfzl3W9dyg+pFSHxTbNrdW3DcUinNNZ6BySuKdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394953AbgFSQ2w (ORCPT
+        id S2390367AbgFSQ3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:28:52 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2345 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389951AbgFSQ22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:28:28 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 562AE804842AEAABF565;
-        Fri, 19 Jun 2020 17:28:24 +0100 (IST)
-Received: from localhost (10.52.127.178) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 19 Jun
- 2020 17:28:23 +0100
-Date:   Fri, 19 Jun 2020 17:27:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.4 23/60] iio: buffer: Don't allow buffers
- without any channels enabled to be activated
-Message-ID: <20200619172733.00005d9d@Huawei.com>
-In-Reply-To: <20200618013004.610532-23-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
-        <20200618013004.610532-23-sashal@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 19 Jun 2020 12:29:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389879AbgFSOyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E06DE21919;
+        Fri, 19 Jun 2020 14:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578486;
+        bh=nFWOCW9gwieefzH3LfOXLEYyiGCzon8cW/i3ZTGdgBk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OcGSBmoHYyGHpnSqFWHtsBffTsEx4rBrh1QAtKIowOBZr2YkkoGZA/hRbRznOam7g
+         WMCjUgB4xilmzqsNYs6g3b93Qh+oqyMFYp/LTmaLBEBAkbG3UaSZCr18CxurN5QlHe
+         fPZeR/c4YzqR3/ZJiZ1oHqbiPUMzeXLFJx8IhyEs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        youling257@gmail.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 040/267] ACPI: PM: Avoid using power resources if there are none for D0
+Date:   Fri, 19 Jun 2020 16:30:25 +0200
+Message-Id: <20200619141650.764905962@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.178]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 21:29:27 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> 
-> [ Upstream commit b7329249ea5b08b2a1c2c3f24a2f4c495c4f14b8 ]
-> 
-> Before activating a buffer make sure that at least one channel is enabled.
-> Activating a buffer with 0 channels enabled doesn't make too much sense and
-> disallowing this case makes sure that individual driver don't have to add
-> special case code to handle it.
-> 
-> Currently, without this patch enabling a buffer is possible and no error is
-> produced. With this patch -EINVAL is returned.
-> 
-> An example of execution with this patch and some instrumented print-code:
->    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
->    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
->    1: iio_verify_update 753
->    2:__iio_update_buffers 1115 ret -22
->    3: iio_buffer_store_enable 1241 ret -22
->    -bash: echo: write error: Invalid argument
-> 1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
-> rergardless of error path.
-> 
-> Without this patch (and same instrumented print-code):
->    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
->    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer#
-> Buffer is enabled with no error.
-> 
-> Note from Jonathan: Probably not suitable for automatic application to stable.
-> This has been there from the very start.  It tidies up an odd corner
-> case but won't effect any 'real' users.
-> 
+commit 956ad9d98b73f59e442cc119c98ba1e04e94fe6d upstream.
 
-As noted. I don't think it matters if we do apply this to stable.
-It closes an interface oddity rather than an actual known bug.
+As recently reported, some platforms provide a list of power
+resources for device power state D3hot, through the _PR3 object,
+but they do not provide a list of power resources for device power
+state D0.
 
-> Fixes: 84b36ce5f79c0 ("staging:iio: Add support for multiple buffers")
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/iio/industrialio-buffer.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index 864a61b05665..fea41b328ab9 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -641,6 +641,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
->  	bool scan_timestamp;
->  	unsigned int modes;
->  
-> +	if (insert_buffer &&
-> +	    bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
-> +		dev_dbg(&indio_dev->dev,
-> +			"At least one scan element must be enabled first\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	memset(config, 0, sizeof(*config));
->  
->  	/*
+Among other things, this causes acpi_device_get_power() to return
+D3hot as the current state of the device in question if all of the
+D3hot power resources are "on", because it sees the power_resources
+flag set and calls acpi_power_get_inferred_state() which finds that
+D3hot is the shallowest power state with all of the associated power
+resources turned "on", so that's what it returns.  Moreover, that
+value takes precedence over the acpi_dev_pm_explicit_get() return
+value, because it means a deeper power state.  The device may very
+well be in D0 physically at that point, however.
+
+Moreover, the presence of _PR3 without _PR0 for a given device
+means that only one D3-level power state can be supported by it.
+Namely, because there are no power resources to turn "off" when
+transitioning the device from D0 into D3cold (which should be
+supported since _PR3 is present), the evaluation of _PS3 should
+be sufficient to put it straight into D3cold, but this means that
+the effect of turning "on" the _PR3 power resources is unclear,
+so it is better to avoid doing that altogether.  Consequently,
+there is no practical way do distinguish D3cold from D3hot for
+the device in question and the power states of it can be labeled
+so that D3hot is the deepest supported one (and Linux assumes
+that putting a device into D3hot via ACPI may cause power to be
+removed from it anyway, for legacy reasons).
+
+To work around the problem described above modify the ACPI
+enumeration of devices so that power resources are only used
+for device power management if the list of D0 power resources
+is not empty and make it mart D3cold as supported only if that
+is the case and the D3hot list of power resources is not empty
+too.
+
+Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
+Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: youling257@gmail.com
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/acpi/device_pm.c |    2 +-
+ drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
+ 2 files changed, 20 insertions(+), 10 deletions(-)
+
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -172,7 +172,7 @@ int acpi_device_set_power(struct acpi_de
+ 		 * possibly drop references to the power resources in use.
+ 		 */
+ 		state = ACPI_STATE_D3_HOT;
+-		/* If _PR3 is not available, use D3hot as the target state. */
++		/* If D3cold is not supported, use D3hot as the target state. */
+ 		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
+ 			target_state = state;
+ 	} else if (!device->power.states[state].flags.valid) {
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -921,12 +921,9 @@ static void acpi_bus_init_power_state(st
+ 
+ 		if (buffer.length && package
+ 		    && package->type == ACPI_TYPE_PACKAGE
+-		    && package->package.count) {
+-			int err = acpi_extract_power_resources(package, 0,
+-							       &ps->resources);
+-			if (!err)
+-				device->power.flags.power_resources = 1;
+-		}
++		    && package->package.count)
++			acpi_extract_power_resources(package, 0, &ps->resources);
++
+ 		ACPI_FREE(buffer.pointer);
+ 	}
+ 
+@@ -973,14 +970,27 @@ static void acpi_bus_get_power_flags(str
+ 		acpi_bus_init_power_state(device, i);
+ 
+ 	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
+-	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
+-		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
+ 
+-	/* Set defaults for D0 and D3hot states (always valid) */
++	/* Set the defaults for D0 and D3hot (always supported). */
+ 	device->power.states[ACPI_STATE_D0].flags.valid = 1;
+ 	device->power.states[ACPI_STATE_D0].power = 100;
+ 	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
+ 
++	/*
++	 * Use power resources only if the D0 list of them is populated, because
++	 * some platforms may provide _PR3 only to indicate D3cold support and
++	 * in those cases the power resources list returned by it may be bogus.
++	 */
++	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
++		device->power.flags.power_resources = 1;
++		/*
++		 * D3cold is supported if the D3hot list of power resources is
++		 * not empty.
++		 */
++		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
++			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
++	}
++
+ 	if (acpi_bus_init_power(device))
+ 		device->flags.power_manageable = 0;
+ }
 
 
