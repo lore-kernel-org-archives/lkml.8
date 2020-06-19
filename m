@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70201C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAD9206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507C2206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585093;
-	bh=MNQ8mx7/YoL+DE/atTfoj3dmjqjoE2lBS0qY/fSvAME=;
+	s=default; t=1592585098;
+	bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbdR+Xsh4ekDixDMnxZMYTb0di9SzSE5f8z6ZrBzqHfU+gFVJ54oNFYDWFFSP7kJQ
-	 0z/TNlDza0bs1hZMvVWlbpBgq1YzJWwwroP7PWOqp4Csi8MPsmsMEMalsLy5h1zjjd
-	 BBH1xHegcyz3ZqHHX4AFW8TqnFQ2k5IcaySNSDzM=
+	b=ez8w5APRzfZbciwNUEs/xEjQT4hGFcnSm0JatQ9n/doP+T7ksVOyHnjIH9NoU2xuW
+	 fuNAUrrzVQBqVnmas1Mb4VpQKBZE+C93D+7q8kgCcPVE7BZ5cS8Cq9wfjwEH3XPDE7
+	 PpDjPmq1CMJxIGtegN1QEGCMkRJfiAjqeR9PoK5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404621AbgFSQov (ORCPT
+        id S2404669AbgFSQo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:44:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388415AbgFSOmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:54 -0400
+        id S2388390AbgFSOmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E242158C;
-        Fri, 19 Jun 2020 14:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8625F20CC7;
+        Fri, 19 Jun 2020 14:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577773;
-        bh=MNQ8mx7/YoL+DE/atTfoj3dmjqjoE2lBS0qY/fSvAME=;
+        s=default; t=1592577759;
+        bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycTp7R4Z+CB3ztYVUo16tFSbYnGoRToiXroiVK7Vn3N0VHZt6UJVOgLQ50LKRU//X
-         JuWPhFFGyx1PXkPLmtDh2S+Ift7aww+HCDHSNpesA5ogqdFgyB9WY+slZmAlPGXTXI
-         DCTtAxTb8XperICalY5X4C0xjxCpGGJ2njlQOH58=
+        b=o+BOkUFEAhtrjnqiUh+PL5lTr7XE6nAyP9EE451tJFQLvpea1jJ4F5msklfMhp3BH
+         GV980X+XKKRcXoir4Gjbs8D6HRaQnYN9jMMW67OtJMFzW34ozZUmsWqKQ7z1xjTp03
+         xibHvmB+lHruIJg2oAV8vbiG0joQDzfVyFH010bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 083/128] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
-Date:   Fri, 19 Jun 2020 16:32:57 +0200
-Message-Id: <20200619141624.551087995@linuxfoundation.org>
+Subject: [PATCH 4.9 077/128] net: allwinner: Fix use correct return type for ndo_start_xmit()
+Date:   Fri, 19 Jun 2020 16:32:51 +0200
+Message-Id: <20200619141624.256867958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,60 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
+[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
 
-Seven years ago we tried to fix a leak but actually introduced a double
-free instead.  It was an understandable mistake because the code was a
-bit confusing and the free was done in the wrong place.  The "skb"
-pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
-The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
-and I've cleaned the code up a bit to hopefully make it more clear.
+The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
+the ndo function to use the correct type. And emac_start_xmit() can
+leak one skb if 'channel' == 3.
 
-Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 1f02461de261..93b22a5b6878 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -927,10 +927,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 6ffdff68bfc4..672a8212c8d9 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -412,7 +412,7 @@ static void emac_timeout(struct net_device *dev)
+ /* Hardware start transmission.
+  * Send a packet to media from the upper layer.
+  */
+-static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct emac_board_info *db = netdev_priv(dev);
+ 	unsigned long channel;
+@@ -420,7 +420,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
  
- 	WARN_ON(NULL == skb);
- 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
--	if (!_urb) {
--		kfree_skb(skb);
-+	if (!_urb)
- 		return NULL;
--	}
- 	_rtl_install_trx_info(rtlusb, skb, ep_num);
- 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
- 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
-@@ -945,7 +943,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
- 	u32 ep_num;
- 	struct urb *_urb = NULL;
--	struct sk_buff *_skb = NULL;
+ 	channel = db->tx_fifo_stat & 3;
+ 	if (channel == 3)
+-		return 1;
++		return NETDEV_TX_BUSY;
  
- 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
- 	if (unlikely(IS_USB_STOP(rtlusb))) {
-@@ -955,8 +952,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 		return;
- 	}
- 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
--	_skb = skb;
--	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
-+	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
- 	if (unlikely(!_urb)) {
- 		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
- 			 "Can't allocate urb. Drop skb!\n");
+ 	channel = (channel == 1 ? 1 : 0);
+ 
 -- 
 2.25.1
 
