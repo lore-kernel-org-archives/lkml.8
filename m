@@ -2,180 +2,96 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508D8C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E8921852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="V1jFXKxH"
+	by mail.kernel.org (Postfix) with ESMTP id 66D2B21D92
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592579188;
+	bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0QOaLUpkqP4O0eoP1V1otcO3kLuGOHpkLJzhwPKAlQM9VQ6mAN62uaW+PbXXP/Y36
+	 bv/HFS6vIKnwumKTBcwhM9S8/nc5XZ2aIlRwPIjVvmO7HHV+LfIDI44FZqkKdgQy3U
+	 jhTjaXl8GCwyRXC6eXovZ5akzKVdlsvuayrwqfXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391425AbgFSPGZ (ORCPT
+        id S2391435AbgFSPG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391420AbgFSPGS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391419AbgFSPGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:06:18 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFF5C0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:06:17 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id j189so8688938oih.10
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:06:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=l5bPDp6tSQ6UB25Tmr+FxCYVIvJPeZJlOAF1u+aQ9Rs=;
-        b=V1jFXKxH9JLOzMoiPIzD5AaSDKHq7RFlO6xezDKhJyRYz93hCrYjWgdK7OEyodFwM2
-         kDzGATay8IHh8e80+mnVWhb8ejljyl7TC9nAm9rnfWCRB2CH7Y5/uH3a16+C1ds/YG6W
-         L2ObS2Ab5ArSWEXfmwsNABGkjrImJGIKuRrck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=l5bPDp6tSQ6UB25Tmr+FxCYVIvJPeZJlOAF1u+aQ9Rs=;
-        b=dRPuXgYB8mI0Ar1uESYOSHf5xC1tdv2/DdEZM+5XZcAFenBcj3GbJrWv/BXgWGJNtZ
-         fXnpUBt/SC1ytfyPEcgAzOrqr2AmQjMhyszo/yAKf8KMTMlo8LISh1BvXSWoTJiqyAcm
-         JMHR/2BbS0SJJfvkP+dtIEP51dmZmRRshNNmBvpNEQNAJDE0BhAXyR3Zza0yH1mDorBT
-         ++yIAigaw9LjLj/Eqd4aE6snQSaE3nw4RSuTcYbvEmgt5D9bhY3syDfQaYXBkjO/83Qp
-         ja6rt4lGWTg7IEzPE/X2OTED13lZGhvdGnjjWOH84Sfy0Qpjqqpwhdg87wGMDWy/JG0a
-         arkg==
-X-Gm-Message-State: AOAM533FV5xUv82wRqx56EJj9i7ADnDcT080UrO41G2yQCxbkJYP2kFu
-        NTVNK0sKsNSAFJjctgaibQJFHhZw5MGw4XvfuOdLIA==
-X-Google-Smtp-Source: ABdhPJzkpCIjuIXUDXsaWuT9KnXo7xRSxKpK3kVIgCwYzrv9QHH1pbq5icbg335wwjGkDiUm4Nr1W4w/4YXBEbh0gJs=
-X-Received: by 2002:aca:aaca:: with SMTP id t193mr3427302oie.14.1592579176624;
- Fri, 19 Jun 2020 08:06:16 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 577B121835;
+        Fri, 19 Jun 2020 15:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579177;
+        bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hz6uY6QzjtzNawpSslsUN6VRsKQe6kBNBVEfdvCOG0ieubYr1qolVh/cjCqIovoOA
+         cMR9ZENQXHeVWyoigvl8yLb8TyasbI1fJnr/vSqaY6L9Pvb0T1Atv3kc9L+Mj3BaQR
+         lKYrGxJB34GUXYnyZaSQ3fTZM3GeKxZ9yPUCF8go=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 037/261] kgdb: Prevent infinite recursive entries to the debugger
+Date:   Fri, 19 Jun 2020 16:30:48 +0200
+Message-Id: <20200619141651.695804315@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org> <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca> <20200616120719.GL20149@phenom.ffwll.local>
- <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
- <20200617152835.GF6578@ziepe.ca> <20200618150051.GS20149@phenom.ffwll.local>
- <20200618172338.GM6578@ziepe.ca> <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
-In-Reply-To: <20200619113934.GN6578@ziepe.ca>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 19 Jun 2020 17:06:04 +0200
-Message-ID: <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 1:39 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Fri, Jun 19, 2020 at 09:22:09AM +0200, Daniel Vetter wrote:
-> > > As I've understood GPU that means you need to show that the commands
-> > > associated with the buffer have completed. This is all local stuff
-> > > within the driver, right? Why use fence (other than it already exists=
-)
-> >
-> > Because that's the end-of-dma thing. And it's cross-driver for the
-> > above reasons, e.g.
-> > - device A renders some stuff. Userspace gets dma_fence A out of that
-> > (well sync_file or one of the other uapi interfaces, but you get the
-> > idea)
-> > - userspace (across process or just different driver) issues more
-> > rendering for device B, which depends upon the rendering done on
-> > device A. So dma_fence A is an dependency and will block this dma
-> > operation. Userspace (and the kernel) gets dma_fence B out of this
-> > - because unfortunate reasons, the same rendering on device B also
-> > needs a userptr buffer, which means that dma_fence B is also the one
-> > that the mmu_range_notifier needs to wait on before it can tell core
-> > mm that it can go ahead and release those pages
->
-> I was afraid you'd say this - this is complete madness for other DMA
-> devices to borrow the notifier hook of the first device!
+From: Douglas Anderson <dianders@chromium.org>
 
-The first device might not even have a notifier. This is the 2nd
-device, waiting on a dma_fence of its own, but which happens to be
-queued up as a dma operation behind something else.
+[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
 
-> What if the first device is a page faulting device and doesn't call
-> dma_fence??
+If we detect that we recursively entered the debugger we should hack
+our I/O ops to NULL so that the panic() in the next line won't
+actually cause another recursion into the debugger.  The first line of
+kgdb_panic() will check this and return.
 
-Not sure what you mean with this ... even if it does page-faulting for
-some other reasons, it'll emit a dma_fence which the 2nd device can
-consume as a dependency.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/debug/debug_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> It you are going to treat things this way then the mmu notifier really
-> needs to be part of the some core DMA buf, and not randomly sprinkled
-> in drivers
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index d0d557c0ceff..7d54c7c28054 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -501,6 +501,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
+ 
+ 	if (exception_level > 1) {
+ 		dump_stack();
++		kgdb_io_module_registered = false;
+ 		panic("Recursive entry to debugger");
+ 	}
+ 
+-- 
+2.25.1
 
-So maybe again unclear, we don't allow such userptr dma-buf to even be
-shared. They're just for slurping in stuff in the local device
-(general from file io or something the cpu has done or similar). There
-have been attempts to use it as the general backing storage, but that
-didn't go down too well because way too many complications.
 
-Generally most memory the gpu operates on isn't stuff that's
-mmu_notifier'ed. And also, the device with userptr support only waits
-for its own dma_fence (because well you can't share this stuff, we
-disallow that).
 
-The problem is that there's piles of other dependencies for a dma job.
-GPU doesn't just consume a single buffer each time, it consumes entire
-lists of buffers and mixes them all up in funny ways. Some of these
-buffers are userptr, entirely local to the device. Other buffers are
-just normal device driver allocations (and managed with some shrinker
-to keep them in check). And then there's the actually shared dma-buf
-with other devices. The trouble is that they're all bundled up
-together.
-
-Now we probably should have some helper code for userptr so that all
-drivers do this roughly the same, but that's just not there yet. But
-it can't be a dma-buf exporter behind the dma-buf interfaces, because
-even just pinned get_user_pages would be too different semantics
-compared to normal shared dma-buf objects, that's all very tightly
-tied into the specific driver.
-
-> But really this is what page pinning is supposed to be used for, the
-> MM behavior when it blocks on a pinned page is less invasive than if
-> it stalls inside a mmu notifier.
->
-> You can mix it, use mmu notififers to keep track if the buffer is
-> still live, but when you want to trigger DMA then pin the pages and
-> keep them pinned until DMA is done. The pin protects things (well,
-> fork is still a problem)
-
-Hm I thought amdgpu had that (or drm/radeon as the previous
-incarnation of that stack), and was unhappy about the issues. Would
-need Christian K=C3=B6nig to chime in.
-
-> Do not need to wait on dma_fence in notifiers.
-
-Maybe :-) The goal of this series is more to document current rules
-and make them more consistent. Fixing them if we don't like them might
-be a follow-up task, but that would likely be a pile more work. First
-we need to know what the exact shape of the problem even is.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
