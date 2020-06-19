@@ -2,55 +2,56 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2A621548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4603720B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580099;
-	bh=asHvb1M4yJnWpzR6XeynGk7s5pr0sNh85tnSYRIZyVE=;
+	s=default; t=1592580103;
+	bh=nhzK09wCodJFeA1IUmPaRWZcWfbdGnkU6PB+LiOMDRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQ6VhLqOoFgZyA9SET/YOeDmgGJXcYHr9+IaQjj+uyKcz1Rb5hKTwEG6AaW05SWJB
-	 YLSLBtyf54t9cZkG7q6mlNde8yVQbVnoIK93qfM3VokqASWBN49+e0FrrXI5SttF6a
-	 XebrNSOcCvqLb3m/qfWfN5UKC9DPDOZJyyWPJV4c=
+	b=yNaTrCF7BP+t0bZkaa2Y7tY++nsjDz34XS/BDqnayXUSycSFJOYeP+eqxyOsgPsP+
+	 Re3z0r6hvzMSxiC/4WsrkE4PF2LxTzp7i2AqGAcfsZ20qXzPHKfmF+Jxnkjv5vabyK
+	 CK++ed7qxqL7eEyqdEhneUV8E+E5gbwU3QKIRo9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392874AbgFSPVj (ORCPT
+        id S2392880AbgFSPVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392593AbgFSPSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:42 -0400
+        id S2404060AbgFSPQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:16:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F003721582;
-        Fri, 19 Jun 2020 15:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C7321582;
+        Fri, 19 Jun 2020 15:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579921;
-        bh=asHvb1M4yJnWpzR6XeynGk7s5pr0sNh85tnSYRIZyVE=;
+        s=default; t=1592579783;
+        bh=nhzK09wCodJFeA1IUmPaRWZcWfbdGnkU6PB+LiOMDRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7pQa4Xo4GiZGsEH4sJpQDr3ieY1fMsVy7t813nVOcYg7cFElxDd94d34lrMMOlmy
-         MCq2rMwzJRwU4ZPbZCeqvp/sIHyFGi+UWaXwjE4BHaQfp7+zcsVwvmhHyXSAn7HcN+
-         t2Nt5DrcMSFS4pi0sVWpR4nUWa4PS4eNIUhD+w+4=
+        b=ayS5AVPK6mkfuiJ31MGT5HYufLtffbiUOY5etwfCDcSswOANx/lC3JSJvphI4pW1H
+         jM11srDFRHPRsJMeHaN+/dyq0247JRjOZDY82DqLfmwFAf4xMX8eSr917tzV674Gsx
+         zkW6QxJIFAzIoFAOgjljkleFSXcraOFNB8yp0sp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 047/376] MIPS: Loongson: Build ATI Radeon GPU driver as module
-Date:   Fri, 19 Jun 2020 16:29:25 +0200
-Message-Id: <20200619141712.585040488@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 5.4 257/261] perf probe: Do not show the skipped events
+Date:   Fri, 19 Jun 2020 16:34:28 +0200
+Message-Id: <20200619141702.193126994@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit a44de7497f91834df0b8b6d459e259788ba66794 ]
+commit f41ebe9defacddeae96a872a33f0f22ced0bfcef upstream.
 
-When ATI Radeon GPU driver has been compiled directly into the kernel
-instead of as a module, we should make sure the firmware for the model
-(check available ones in /lib/firmware/radeon) is built-in to the kernel
-as well, otherwise there exists the following fatal error during GPU init,
-change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
+When a probe point is expanded to several places (like inlined) and if
+some of them are skipped because of blacklisted or __init function,
+those trace_events has no event name. It must be skipped while showing
+results.
 
-[    1.900997] [drm] Loading RS780 Microcode
-[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
-[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
-[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
-[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
-[    1.931729] [drm] radeon: finishing device.
+Without this fix, you can see "(null):(null)" on the list,
 
-Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  # ./perf probe request_resource
+  reserve_setup is out of .text, skip it.
+  Added new events:
+    (null):(null)        (on request_resource)
+    probe:request_resource (on request_resource)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:request_resource -aR sleep 1
+
+  #
+
+With this fix, it is ignored:
+
+  # ./perf probe request_resource
+  reserve_setup is out of .text, skip it.
+  Added new events:
+    probe:request_resource (on request_resource)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:request_resource -aR sleep 1
+
+  #
+
+Fixes: 5a51fcd1f30c ("perf probe: Skip kernel symbols which is out of .text")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158763968263.30755.12800484151476026340.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/configs/loongson3_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-probe.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 51675f5000d6..b0c24bd292b2 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -229,7 +229,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_MEDIA_USB_SUPPORT=y
- CONFIG_USB_VIDEO_CLASS=m
- CONFIG_DRM=y
--CONFIG_DRM_RADEON=y
-+CONFIG_DRM_RADEON=m
- CONFIG_FB_RADEON=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_LCD_PLATFORM=m
--- 
-2.25.1
-
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -364,6 +364,9 @@ static int perf_add_probe_events(struct
+ 
+ 		for (k = 0; k < pev->ntevs; k++) {
+ 			struct probe_trace_event *tev = &pev->tevs[k];
++			/* Skipped events have no event name */
++			if (!tev->event)
++				continue;
+ 
+ 			/* We use tev's name for showing new events */
+ 			show_perf_probe_event(tev->group, tev->event, pev,
 
 
