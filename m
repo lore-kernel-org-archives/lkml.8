@@ -2,116 +2,236 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96253C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C986C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729A8217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VVwx3ZGl"
+	by mail.kernel.org (Postfix) with ESMTP id DC3C62166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584372;
+	bh=d6fqHaRRMf3tGaHV6yly6LqbkKUS6wkDcL5VvOuKf0Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aMWGCTYOXeyfdCubqOp/+K0cuOZcPKEt9GnwjvrDEZtR1qTgl5qad4xuHdhCX4edc
+	 Mvz57Qo84HvHjhuD7gBlv23iFpvqPPigcC1WJyD4XlSBy/5UKj3woZ6G6BvR/R+IYU
+	 /uh9JYq71h6RTuhIEbW/hiaaWQm/zTTtYFtuRHQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395115AbgFSQcm (ORCPT
+        id S2395116AbgFSQcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389512AbgFSOv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:58 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C1CC0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:51:59 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p3so1894735pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:51:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=PFwcZNJJ7J9pO5V4LgviWHgUqQktGpHF/1kf5JMeuDo=;
-        b=VVwx3ZGlX2RwFbSkQjJpR+KnTKm2X8fVgt9HDsdg9laBMqpsD8A+rToclzEwT1eFa+
-         B7lNk6ClHheYaxl9v5HuDfNiTwE9uYijkbeYPKVCVcYgPnNfN7teMIUIEMeqmeebApau
-         Olk9P/8SEPfBkj4iGMXY4d5PYAWqHOuGFDWgIgmJatlXgD8WNQI8hH/GEBbcpYsODy1W
-         ac8WqvylSyLtm4RLxKHXFvN1gR3ZnTS3RHCG6u2KTPU8as2weM3XJjwlLNQde5A/Mqmw
-         7ZMv5iyYVtbhVEmFgoeTrxC1VG4TBB0PCUTuD+DGploEiDxeZSWD9JMe2BhyHINfK+6S
-         YHUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=PFwcZNJJ7J9pO5V4LgviWHgUqQktGpHF/1kf5JMeuDo=;
-        b=aVc+jI/il+ak+lj2AcVybdt2kyoKhR5Jft2uigpwspgdYjWgNAhe7298OBXIg+wqKH
-         0i20LeYs9LO1T5vCVH50mmwxe0UKUxxNFhsaRT2H7lS6R4DkLKAudo25VO9VtnMlOLqD
-         VUt+QPe3WLGKuMfNOSHcrjm7U1zAGawb7Yd9OTFWZznUcdl1IQpaPmqPzjSxfNvWbGWT
-         jS+8P3mWhLaopRUeDeuqet65RfyYw3ra8IFPhAgNyLyqbtCAVgpr+AzI5fjeY2e2BfmK
-         QiOFK4fqx60sndtPPmwN2yJVyGeUwB/8NdCzVIHeSVi83vjBLwz+HN7IiWZT3dlTVfv5
-         v9+A==
-X-Gm-Message-State: AOAM530Mocc6lBEDaJy1YSXlVReE6F7QVbSWyMFkan9ttQhXH4+ga1wo
-        hvGe3C/qweiTdqDqEwShiZmBX7WvAd6tGw==
-X-Google-Smtp-Source: ABdhPJxveQ/cPoUUnyZh3usSqy7LrbOlRjM8Jdwm6ASW0EJqk2pfxtjHXKRvby/5eylPBEfUnPIPqg==
-X-Received: by 2002:a05:6a00:2b0:: with SMTP id q16mr8456361pfs.104.1592578318472;
-        Fri, 19 Jun 2020 07:51:58 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id k126sm6297710pfd.129.2020.06.19.07.51.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 07:51:57 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] libata fixes for 5.8-rc2
-Message-ID: <c7fcf452-15af-4085-528a-7bc52110e21c@kernel.dk>
-Date:   Fri, 19 Jun 2020 08:51:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 12:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389507AbgFSOvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61DC2217D8;
+        Fri, 19 Jun 2020 14:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578314;
+        bh=d6fqHaRRMf3tGaHV6yly6LqbkKUS6wkDcL5VvOuKf0Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YvU3Tg/wvXM/Mat9h1xFmEPnB49pRZD3VtWhb4/X6aEFVj1ZWbwUX65Mw6Le82ZVu
+         JDkEWqZ0DI35s+6u06IStUWx4rySjojHB9ETdzbSVxoXjfyGZtsha3e1Fq4SbO5KbR
+         90f9apWGeUVWVk6O901G9j3iYa1ILjNVHpkTFpos=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 158/190] PCI: Unify ACS quirk desired vs provided checking
+Date:   Fri, 19 Jun 2020 16:33:23 +0200
+Message-Id: <20200619141641.637957150@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-A few minor changes that should go into this release. Please pull!
+[ Upstream commit 7cf2cba43f15c74bac46dc5f0326805d25ef514d ]
 
-The following changes since commit 6929f71e46bdddbf1c4d67c2728648176c67c555:
+Most of the ACS quirks have a similar pattern of:
 
-  atomisp: avoid warning about unused function (2020-06-03 21:22:46 -0700)
+  acs_flags &= ~( <controls provided by this device> );
+  return acs_flags ? 0 : 1;
 
-are available in the Git repository at:
+Pull this out into a helper function to simplify the quirks slightly.  The
+helper function is also a convenient place for comments about what the list
+of ACS controls means.  No functional change intended.
 
-  git://git.kernel.dk/linux-block.git tags/libata-5.8-2020-06-19
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/quirks.c | 67 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 45 insertions(+), 22 deletions(-)
 
-for you to fetch changes up to b5292111de9bb70cba3489075970889765302136:
-
-  libata: Use per port sync for detach (2020-06-18 09:21:40 -0600)
-
-----------------------------------------------------------------
-libata-5.8-2020-06-19
-
-----------------------------------------------------------------
-Kai-Heng Feng (1):
-      libata: Use per port sync for detach
-
-Navid Emamdoost (1):
-      sata_rcar: handle pm_runtime_get_sync failure cases
-
-Ye Bin (1):
-      ata/libata: Fix usage of page address by page_address in ata_scsi_mode_select_xlat function
-
- drivers/ata/libata-core.c | 11 +++++------
- drivers/ata/libata-scsi.c |  9 ++++++---
- drivers/ata/sata_rcar.c   | 11 +++++++----
- include/linux/libata.h    |  3 +++
- 4 files changed, 21 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 0472e69833c8..5f26c170315c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4236,6 +4236,24 @@ static void quirk_chelsio_T5_disable_root_port_attributes(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+ 			 quirk_chelsio_T5_disable_root_port_attributes);
+ 
++/*
++ * pci_acs_ctrl_enabled - compare desired ACS controls with those provided
++ *			  by a device
++ * @acs_ctrl_req: Bitmask of desired ACS controls
++ * @acs_ctrl_ena: Bitmask of ACS controls enabled or provided implicitly by
++ *		  the hardware design
++ *
++ * Return 1 if all ACS controls in the @acs_ctrl_req bitmask are included
++ * in @acs_ctrl_ena, i.e., the device provides all the access controls the
++ * caller desires.  Return 0 otherwise.
++ */
++static int pci_acs_ctrl_enabled(u16 acs_ctrl_req, u16 acs_ctrl_ena)
++{
++	if ((acs_ctrl_req & acs_ctrl_ena) == acs_ctrl_req)
++		return 1;
++	return 0;
++}
++
+ /*
+  * AMD has indicated that the devices below do not support peer-to-peer
+  * in any system where they are found in the southbridge with an AMD
+@@ -4279,7 +4297,7 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+ 	/* Filter out flags not applicable to multifunction */
+ 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
+ 
+-	return acs_flags & ~(PCI_ACS_RR | PCI_ACS_CR) ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, PCI_ACS_RR | PCI_ACS_CR);
+ #else
+ 	return -ENODEV;
+ #endif
+@@ -4317,9 +4335,8 @@ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+ 	 * hardware implements and enables equivalent ACS functionality for
+ 	 * these flags.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4329,9 +4346,8 @@ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
+ 	 * transactions with others, allowing masking out these bits as if they
+ 	 * were unimplemented in the ACS capability.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ /*
+@@ -4383,17 +4399,16 @@ static bool pci_quirk_intel_pch_acs_match(struct pci_dev *dev)
+ 	return false;
+ }
+ 
+-#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
+-
+ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	if (!pci_quirk_intel_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
+-		acs_flags &= ~(INTEL_PCH_ACS_FLAGS);
++		return pci_acs_ctrl_enabled(acs_flags,
++			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, 0);
+ }
+ 
+ /*
+@@ -4408,9 +4423,8 @@ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+  */
+ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ /*
+@@ -4493,7 +4507,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ 
+ 	pci_read_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, &ctrl);
+ 
+-	return acs_flags & ~ctrl ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, ctrl);
+ }
+ 
+ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4507,10 +4521,9 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+ 	 * perform peer-to-peer with other functions, allowing us to mask out
+ 	 * these bits as if they were unimplemented in the ACS capability.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
+-		       PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
++		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+ }
+ 
+ static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4535,9 +4548,8 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ 	 * Allow each Root Port to be in a separate IOMMU group by masking
+ 	 * SV/RR/CR/UF bits.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ static const struct pci_dev_acs_enabled {
+@@ -4636,6 +4648,17 @@ static const struct pci_dev_acs_enabled {
+ 	{ 0 }
+ };
+ 
++/*
++ * pci_dev_specific_acs_enabled - check whether device provides ACS controls
++ * @dev:	PCI device
++ * @acs_flags:	Bitmask of desired ACS controls
++ *
++ * Returns:
++ *   -ENOTTY:	No quirk applies to this device; we can't tell whether the
++ *		device provides the desired controls
++ *   0:		Device does not provide all the desired controls
++ *   >0:	Device provides all the controls in @acs_flags
++ */
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	const struct pci_dev_acs_enabled *i;
 -- 
-Jens Axboe
+2.25.1
+
+
 
