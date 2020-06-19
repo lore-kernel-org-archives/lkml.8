@@ -2,189 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9561AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6920220B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0p4HJd2"
+	by mail.kernel.org (Postfix) with ESMTP id 46D77206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592598065;
+	bh=pcDZ+YkyZTUiGenTdOFNJoHVPS77O76i4xkreAh2DVw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MAwLti2N+wt9HPRFn9VpKb3lgzm96sx3OUVu6F1Bs1m5UMIuta6p5KG7rFFqff8N/
+	 7m9eCmcEBmrDxosOzSLrZ8PSXkKkCNZPe3Rk5ywjNX+PBEays0b/6RxLGFqC5Ma0/1
+	 6rDGZcG+bKSJz0x7iqVO0uLfiEVItFRBjPqnPkEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391903AbgFSUTu (ORCPT
+        id S2391995AbgFSUVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgFSUTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:19:49 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1D0C06174E;
-        Fri, 19 Jun 2020 13:19:49 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id j68so6839733qkb.10;
-        Fri, 19 Jun 2020 13:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=en0bd9Z1UOgbNwil/O5E9MONyVUtQwSCd/V2jBgui+8=;
-        b=f0p4HJd2r/N4xv4vE4skYM7sxiImjJrj0X+JzFnB7xYR8O56fjwU8+wWmpiZ5XUwn8
-         tp3FRIW4rULkMVsECLzDSBZ2xlVfvhj4sYnjXkwUK7XXj1qKdC46/63riCHjM98GUE9t
-         6Os1mRIeA2ZW8wEeZ7z7vaU90BY5gERuWllNyVR8jkSskyvg4McG001VCfdRTSIIgoHZ
-         eL8BPcp4vTqmyZB30TrZcGBGYf6IyzKxiiL1COUOOtLX7bVluhGWEWoviXnhZW8PHEF4
-         Mp+fNdyByS9CE8vGU/yQtc5hnTObyOuI73958nnv/lr+UmOEFtdF0yXzxzaqgwGaOMuq
-         HZIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=en0bd9Z1UOgbNwil/O5E9MONyVUtQwSCd/V2jBgui+8=;
-        b=kgaxcCTee7MtzlsRtXQqyuW7TMiXqFMUuhpzL2sqXMoj7NRcBgdeVUk9rtcvpqCygO
-         p6L8+l0rMbPdbxNGRYwxrFM1K+GX+zTEuRBpMf+QcV3JCDz+DfCQS0ax0/5/PTiz0xXR
-         VZ1pqsK6hHF7b07wff2hHI2vkiFsiJUmU3Q7+00XBCp44YJrM826uWFsoIZDjyglFFEv
-         EzkCA6UJWpUpvNjwwqpWHdfC+N0dhLpjRq8WtztxNDiY0sqwIoGo/VuCrFfuZxZafPFk
-         lXtGNhZnVbwIbA6916+faOZ99JO7JGOOdT7RgZn5Seq1vX3dbRrFm1G9XYVxBtmhAl5a
-         7zfA==
-X-Gm-Message-State: AOAM531pTG9HRO6W979hBYpsw7jwoawtxyc8DvC7Xvp2tr6OKLvQjf3G
-        xJuVURuPpZsKM6gwBT7S6F8=
-X-Google-Smtp-Source: ABdhPJxuAUJkRoWiExKH7+YTulQfaa4Qn4Q+3e9EQwZC/3GG5D7JG1eAPc7JRaE/NVzyNGDKVa2Bow==
-X-Received: by 2002:a37:a08:: with SMTP id 8mr5481210qkk.388.1592597988125;
-        Fri, 19 Jun 2020 13:19:48 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id l2sm7265729qth.47.2020.06.19.13.19.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 13:19:47 -0700 (PDT)
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <20200616204817.GA212825@google.com>
- <CY4PR13MB1175A71AE3937C0786721ABFFD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006161703.B2E51605@keescook>
- <CY4PR13MB1175DCC4066FC0839A6B2E84FD9A0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006162032.9BF6F8F4E@keescook>
- <CABVgOSn48gw3pMSCccmF8FK=3UPF+Spe47AiDQcMiXkk3k4yqQ@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <0408a492-7d95-d34c-443c-11a2d05abd37@gmail.com>
-Date:   Fri, 19 Jun 2020 15:19:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 16:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388968AbgFSUVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 16:21:02 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C40B21556
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592598061;
+        bh=pcDZ+YkyZTUiGenTdOFNJoHVPS77O76i4xkreAh2DVw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gNp68tG3jgpnhLhT7iWUXlLv4EySeExtj/Rne7K6OaRZwdq5H74DwYs8tjR2iPuA8
+         V2I752qmxtisW+JVSDIWAABgZ2glqjW5hKn/JXm8PKUSxEuTwSiJfIO1jd8pVW18PQ
+         DQAHOW97CyJJEYY8L6M4NbCoLSgLyK0aVxpUOThE=
+Received: by mail-wr1-f44.google.com with SMTP id l11so10915334wru.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:21:01 -0700 (PDT)
+X-Gm-Message-State: AOAM532l6V4UQtUeZ5H0t6Vz3cGF+XH7Ki6goA5aigO3oqTM9pP30Adz
+        ICLIG2/fZgRHo1nl2C2extY9rW2EObkPmo+eWWV8qg==
+X-Google-Smtp-Source: ABdhPJzs5rWNk+PHWQLTvcS8vY5aiJhThlGntbf4/ks8R/LjFYgX32VrP9Kwr+pxpUoy2V16gMdSbWgma4OG7tsI+zM=
+X-Received: by 2002:adf:a111:: with SMTP id o17mr5758162wro.257.1592598059976;
+ Fri, 19 Jun 2020 13:20:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABVgOSn48gw3pMSCccmF8FK=3UPF+Spe47AiDQcMiXkk3k4yqQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200618220139.GH27951@zn.tnic> <CAFmMkTGMAu-huTnP1aeMb_W4NddbTD_b2jhbDVKBDrkwgB97wg@mail.gmail.com>
+ <20200619074053.GA32683@zn.tnic> <CAFmMkTGV0ZR6C=EBGQAiz1vw1vrUXSLTnH5ZbBUvfhPLg_tF6g@mail.gmail.com>
+ <20200619132243.GC32683@zn.tnic> <CAD2FfiEr0kRWp2ut_PVqVDEVZqwESUxv=fxM9wUgi3n=ZCzPcQ@mail.gmail.com>
+ <20200619134432.GE32683@zn.tnic> <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
+ <20200619161026.GF32683@zn.tnic> <CAD2FfiGN5kdHHEz-6Oy9S-fFT35bJH0ZOfqfn5SyCG_Y2LtE_w@mail.gmail.com>
+ <20200619164056.GB2235992@kroah.com> <CAD2FfiHVyt2hWBqcgtxbBaLEuxuzz6yAe1+8sK5J0SYWVEr5qQ@mail.gmail.com>
+ <CALCETrXKzmdXtHsdBTJB7+RYZX5UOD_Q4MVd9zVAVOjYgU5WRA@mail.gmail.com> <CAD2FfiGT5bsb0sd2k8NGNmShvW_q3UV9YXgn-EwxBCJjx6PSTw@mail.gmail.com>
+In-Reply-To: <CAD2FfiGT5bsb0sd2k8NGNmShvW_q3UV9YXgn-EwxBCJjx6PSTw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 19 Jun 2020 13:20:48 -0700
+X-Gmail-Original-Message-ID: <CALCETrVieskMnU5XHKHYm+qOfzc+o4yhsGw42pvBNhkv2zsQJA@mail.gmail.com>
+Message-ID: <CALCETrVieskMnU5XHKHYm+qOfzc+o4yhsGw42pvBNhkv2zsQJA@mail.gmail.com>
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Richard Hughes <hughsient@gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Daniel Gutson <daniel@eclypsium.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 23:05, David Gow wrote:
-> On Wed, Jun 17, 2020 at 11:36 AM Kees Cook <keescook@chromium.org> wrote:
->>
->> On Wed, Jun 17, 2020 at 02:30:45AM +0000, Bird, Tim wrote:
->>> Agreed.  You only need machine-parsable data if you expect the CI
->>> system to do something more with the data than just present it.
->>> What that would be, that would be common for all tests (or at least
->>> many test), is unclear.  Maybe there are patterns in the diagnostic
->>> data that could lead to higher-level analysis, or even automated
->>> fixes, that don't become apparent if the data is unstructured.  But
->>> it's hard to know until you have lots of data.  I think just getting
->>> the other things consistent is a good priority right now.
->>
->> Yeah. I think the main place for this is performance analysis, but I
->> think that's a separate system entirely. TAP is really strictly yes/no,
->> where as performance analysis a whole other thing. The only other thing
->> I can think of is some kind of feature analysis, but that would be built
->> out of the standard yes/no output. i.e. if I create a test that checks
->> for specific security mitigation features (*cough*LKDTM*cough*), having
->> a dashboard that shows features down one axis and architectures and/or
->> kernel versions on other axes, then I get a pretty picture. But it's
->> still being built out of the yes/no info.
->>
->> *shrug*
->>
->> I think diagnostic should be expressly non-machine-oriented.
-> 
-> So from the KUnit side, we sort-of have three kinds of diagnostic lines:
-> - Lines printed directly from tests (typically using kunit_info() or
-> similar functions): as I understand it, these are basically the
-> equivalent of what kselftest typically uses diagnostics for --
-> test-specific, human-readable messages. I don't think we need/want to
-> parse these much.
+On Fri, Jun 19, 2020 at 12:58 PM Richard Hughes <hughsient@gmail.com> wrote:
+>
+> On Fri, 19 Jun 2020 at 20:41, Andy Lutomirski <luto@kernel.org> wrote:
+> > I don't object in principle to Linux giving userspace more visibility
+> > into what's going on, but I'm not convinced that adding a new
+> > must-support-for-a-long-time interface that only solves 5% of your
+> > problem is worth it.
+>
+> At the moment the only visibility we have is "the CPU supports TME"
+> and "the kernel printed a message in the journal". The sysfs/procfs
+> file read allows us to notify the admin if the firmware is
+> deliberately disabling TME for some reason, without resorting to
+> `grep` on dmesg. I don't think perfect should be the enemy of the
+> good.
 
+I am unconvinced that this has hit the "good" bar, especially since
+SME is completely missing here.
 
-> - Kernel messages during test execution. If we get the results from
-> scraping the kernel log (which is still the default for KUnit, though
-> there is also a debugfs info), other kernel logs can be interleaved
-> with the results. Sometimes these are irrelevant things happening on
-> another thread, sometimes they're something directly related to the
-> test which we'd like to capture (KASAN errors, for instance). I don't
-> think we want these to be machine oriented, but we may want to be able
-> to filter them out.
+Boris, etc: would it be reasonable to add a list of CPU features that
+are present but turned off by firmware?  SME is far from the only
+thing that's frequently in this category.  x2apic, fast strings, and
+virtualization come to mind.
 
-This is an important conceptual difference between testing a user
-space program (which is the environment that TAP initially was
-created for) and testing kernel code.  This difference should be
-addressed in the KTAP standard.  As noted above, a kernel test
-case may call into other kernel code, where the other kernel code
-generates messages that get into the test output.
-
-One issue with the kernel issues is that they may be warnings or
-errors, and to anyone other than the test creator it is probably
-hard to determine whether the warnings and errors are reporting
-bugs or whether they are expected results triggered by the test.
-
-I created a solution to report what error(s) were expected for a
-test, and a tool to validate whether the error(s) occurred or not.
-This is currently in the devicetree unittests, but the exact
-implementation should be discussed in the KUnit context, and it
-should be included in the KTAP spec.
-
-I can describe the current implementation and start a discussion
-of any issues in this thread or I can start a new thread.  Whichever
-seems appropriate to everyone.
-
--Frank
-
-
-> - Expectation failures: as Brendan mentioned, KUnit will print some
-> diagnostic messages for individual assertion/expectation failures,
-> including the expected and actual values. We'd ideally like to be able
-> to identify and parse these, but keeping them human-readable is
-> definitely also a goal.
-> 
-> Now, to be honest, I doubt that the distinction here would be of much
-> use to kselftest, but it could be nice to not go out of our way to
-> make parsing some diagnostic lines possible. That being said,
-> personally I'm all for avoiding the yaml for diagnostic messages stuff
-> and sticking to something simple and line-based, possibly
-> standardising a the format of a few common diagnostic measurements
-> (e.g., assertions/expected values/etc) in a way that's both
-> human-readable and parsable if possible.
-> 
-> I agree that there's a lot of analysis that is possible with just the
-> yes/no data. There's probably some fancy correlation one could do even
-> with unstructured diagnostic logs, so I don't think overstructuring
-> things is a necessity by any means. Where we have different tests
-> doing similar sorts of things, though, consistency in message
-> formatting could help even if things are not explicitly parsed.
-> Ensuring that helper functions that log and the like are spitting
-> things out in the same format is probably a good starting step down
-> that path.
-> 
-> Cheers,
-> -- David
-> 
-
+>
+> Richard.
