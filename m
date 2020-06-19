@@ -2,150 +2,103 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5093FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 398C121707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="frKOBChS"
+	by mail.kernel.org (Postfix) with ESMTP id 2E04A21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583197;
+	bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AkXD9EMYpEeO+aYSUb+c3mXYaT1eP9rJ/4N3eTV6GrXbwSQ/3Gja/77AcaTAV5kIN
+	 7bxJvEP6UBQNbD9ijrMYo9plTYpvzmjwos+3v8kStW/KsPCl/ZXBHikR5/FUfHxDOM
+	 YuPvnNNsIBZRifwlGiqbnhP6p2Y64Uh9f9Y6DxOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405572AbgFSQNH (ORCPT
+        id S2405597AbgFSQNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:13:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40882 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391492AbgFSQM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592583175;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QEacpwhabx4oqP5P1sDsSQYEJDVmYeAmQf6kbwzkxic=;
-        b=frKOBChSZDWBGKLQJ1TuBeb5kPREAwqVXmitxX63uiUURXTeo+nnDHlvek/pdS46tgOGnO
-        /ujhgEx10ImwW+XXcGB6+uYiaca1amL8qD8kd/DmhhA7E9DNPZF6LUeXN8myN0XHmav7E+
-        lT/c5g8bTQzXBbKrCrHaIq/Oys0N/ns=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-499-hHKGNuUzO3CeLDiLUrre2A-1; Fri, 19 Jun 2020 12:12:54 -0400
-X-MC-Unique: hHKGNuUzO3CeLDiLUrre2A-1
-Received: by mail-qk1-f199.google.com with SMTP id a6so7517633qka.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:12:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QEacpwhabx4oqP5P1sDsSQYEJDVmYeAmQf6kbwzkxic=;
-        b=G/dwcBfiU6neU0yE7tBrLyp1Dw25oSFuE6K3v5cHqu13vfh2yLmcu9YpXPEbxaQgQX
-         fm3q8+POTJmCbK59bT1J4KdOgXNiKxQ4tFlAFxCKYy1FISJcDKRllkl1jqXd61zB9797
-         HtqZ+ED/0fc1vvGgpxLNiM8dmEPHZgUpUxzcfskMD769rnKvNFzsm5X/6IurmDIVMdWG
-         yRxzr5VLQoottm1xJ/dP5JJzTNC+XySiONh3VrcMgdzqSj9HFwQ2PG5TiKGs+sekdYiB
-         RUywNRJ7Vb723095WW6EMHj/Bi312fd3/c8pWN+783VMQrKzznLj9QQXxa4daSa+JFEC
-         23AA==
-X-Gm-Message-State: AOAM530+Emmbqb81GR499l7qWmPSGkcb2f8vyIl/DncYIu06jtyyKUvK
-        gmVXnwykX9tB6PpILqR1LMffx3E8CR3AIqnGGzCnJ3UoUF+CnCo3Rj89EJIc85Q/wPzMKcPrqOE
-        AVnUKay0+GzbXPO2nwA3RH5Sm
-X-Received: by 2002:a0c:ea4a:: with SMTP id u10mr9341636qvp.225.1592583173006;
-        Fri, 19 Jun 2020 09:12:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw/KbzvQf8GbrVk0E0Lv5jPmHcSh5JxBeheLHw2C8ZFelbbsjI3LhaiwkF4VxKMOl5dF8XE/g==
-X-Received: by 2002:a0c:ea4a:: with SMTP id u10mr9341584qvp.225.1592583172386;
-        Fri, 19 Jun 2020 09:12:52 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id f203sm499961qke.135.2020.06.19.09.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:12:51 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        openrisc@lists.librecores.org
-Subject: [PATCH 14/26] mm/openrisc: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:12:50 -0400
-Message-Id: <20200619161250.9443-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
-References: <20200619160538.8641-1-peterx@redhat.com>
+        Fri, 19 Jun 2020 12:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391075AbgFSPEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E4522193E;
+        Fri, 19 Jun 2020 15:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579055;
+        bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m47M3W2BgY25YGsgIqMJmLWB1WXiIaXsx+c8NiLTpoaMW2ym1SJBVVDmu+PctrCQ/
+         ZvUoYsG2RNPhYi+zYqLtSlmhbmlQmHKOTdV0XodBWpKNHKLzmbApFjulKkt12zZxxm
+         3rhHXwf01+YcndqF6Fo5FrAsc8fqjFfVX2e+IiXM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 259/267] sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
+Date:   Fri, 19 Jun 2020 16:34:04 +0200
+Message-Id: <20200619141701.090982953@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+From: NeilBrown <neilb@suse.de>
 
-Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
-perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+commit d47a5dc2888fd1b94adf1553068b8dad76cec96c upstream.
 
-CC: Jonas Bonn <jonas@southpole.se>
-CC: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-CC: Stafford Horne <shorne@gmail.com>
-CC: openrisc@lists.librecores.org
-Acked-by: Stafford Horne <shorne@gmail.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
+There is no valid case for supporting duplicate pseudoflavor
+registrations.
+Currently the silent acceptance of such registrations is hiding a bug.
+The rpcsec_gss_krb5 module registers 2 flavours but does not unregister
+them, so if you load, unload, reload the module, it will happily
+continue to use the old registration which now has pointers to the
+memory were the module was originally loaded.  This could lead to
+unexpected results.
+
+So disallow duplicate registrations.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
+Cc: stable@vger.kernel.org (v2.6.12+)
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/openrisc/mm/fault.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/openrisc/mm/fault.c b/arch/openrisc/mm/fault.c
-index 45aedc572361..5255d73ce180 100644
---- a/arch/openrisc/mm/fault.c
-+++ b/arch/openrisc/mm/fault.c
-@@ -15,6 +15,7 @@
- #include <linux/interrupt.h>
- #include <linux/extable.h>
- #include <linux/sched/signal.h>
-+#include <linux/perf_event.h>
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -796,9 +796,11 @@ svcauth_gss_register_pseudoflavor(u32 ps
+ 	new->h.flavour = &svcauthops_gss;
+ 	new->pseudoflavor = pseudoflavor;
  
- #include <linux/uaccess.h>
- #include <asm/siginfo.h>
-@@ -103,6 +104,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 	if (in_interrupt() || !mm)
- 		goto no_context;
- 
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
- retry:
- 	down_read(&mm->mmap_sem);
- 	vma = find_vma(mm, address);
-@@ -159,7 +162,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 	 * the fault.
- 	 */
- 
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
- 
- 	if (fault_signal_pending(fault, regs))
- 		return;
-@@ -176,10 +179,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
- 		/*RGD modeled on Cris */
--		if (fault & VM_FAULT_MAJOR)
--			tsk->maj_flt++;
--		else
--			tsk->min_flt++;
- 		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
- 
--- 
-2.26.2
+-	stat = 0;
+ 	test = auth_domain_lookup(name, &new->h);
+-	if (test != &new->h) { /* Duplicate registration */
++	if (test != &new->h) {
++		pr_warn("svc: duplicate registration of gss pseudo flavour %s.\n",
++			name);
++		stat = -EADDRINUSE;
+ 		auth_domain_put(test);
+ 		kfree(new->h.name);
+ 		goto out_free_dom;
+
 
