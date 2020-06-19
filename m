@@ -2,52 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C031EC4345D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7F7C4345B
 	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19421D82
+	by mail.kernel.org (Postfix) with ESMTP id 2972121D90
 	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592579950;
-	bh=p2jw80gpeprbwb+sbNCz+wHG6cb6m77m/gxL8Y2sdS4=;
+	bh=BMwQ/I/EzCiYY1exzqKiW4buRsydzJwRZlgQRqiVsO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqnZJXs8v6UdNzE0z60hjHEOaN3xVpU3MDK3LzwCrp1A7rYdfL14pNztxfAZLQATc
-	 yZB4gd2f4rqY4gqsuu+U1ux0fOJvID2f38j2NmFi72NEN2t3dUaf8AJbygB+TBxGFF
-	 iuJthzN7fnp2kU8vn4t6Hon99bexRNvrqUF2hdHA=
+	b=cQQKTuMFQBUhYfVHnaGiOuo1vaWLDFJTEvY9Ktb9oZq849rr2qMNKtSm5QfjvwE77
+	 y9TBkl0cQUyaNLE4t4E8lpl3DMzp5w2TpcyxyKo1b9YVh987cAEIm4xD13dNgrmhZY
+	 C0bqiofRjlAFE36Z0aCRMpxub6bvRevtLn0uzFj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392210AbgFSPPA (ORCPT
+        id S2392387AbgFSPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:15:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45310 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:15:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403994AbgFSPOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:14:43 -0400
+        id S2391800AbgFSPO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:14:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D812158C;
-        Fri, 19 Jun 2020 15:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7474206FA;
+        Fri, 19 Jun 2020 15:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579682;
-        bh=p2jw80gpeprbwb+sbNCz+wHG6cb6m77m/gxL8Y2sdS4=;
+        s=default; t=1592579698;
+        bh=BMwQ/I/EzCiYY1exzqKiW4buRsydzJwRZlgQRqiVsO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4MEAgVAN9CMZQT4Q9g9OBRiAaSvs5bxP6C50Mztlu8E9cFAUArNTu6dKrQB9xUAt
-         uFKyVlg2jTMs0Q93fmdyOx7pW620Uk2mo7Nqy689YGRExyttycaYEXdynh63Wf3SO4
-         UnYEaW77Au6fzYD+ddfo7T3HRdb3OfSvy4NjTmJI=
+        b=Nxq+uOvePpH84vJHtg0gWI5OOxDH+6QUYKqoEgJcYiGProxQthOzP2OmCxyvgz1Ho
+         aDu/J6ppXo1+3aZyFijWPTmu/1esPl6Um5aDApzu62JSbWjDRf/c8OTV28RbQjuOii
+         GuJ9f6/0msELt7uxR1XdG5wh68uxRUab8Rt1jNe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 186/261] PCI: Avoid FLR for AMD Starship USB 3.0
-Date:   Fri, 19 Jun 2020 16:33:17 +0200
-Message-Id: <20200619141658.828145534@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 233/261] powerpc/kasan: Fix shadow pages allocation failure
+Date:   Fri, 19 Jun 2020 16:34:04 +0200
+Message-Id: <20200619141701.046413635@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,69 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
+commit d2a91cef9bbdeb87b7449fdab1a6be6000930210 upstream.
 
-The AMD Starship USB 3.0 host controller advertises Function Level Reset
-support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
-on this device.
+Doing kasan pages allocation in MMU_init is too early, kernel doesn't
+have access yet to the entire memory space and memblock_alloc() fails
+when the kernel is a bit big.
 
-Without this quirk, when attempting to assign (pass through) an AMD
-Starship USB 3.0 host controller to a guest OS, the system becomes
-increasingly unresponsive over the course of several minutes, eventually
-requiring a hard reset.  Shortly after attempting to start the guest, I see
-these messages:
+Do it from kasan_init() instead.
 
-  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/c24163ee5d5f8cdf52fefa45055ceb35435b8f15.1589866984.git.christophe.leroy@csgroup.eu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And then eventually:
-
-  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
-  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
-  ...
-  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
-
-Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
-motherboard with an AMD Ryzen Threadripper 3970X.
-
-Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/include/asm/kasan.h      |    2 --
+ arch/powerpc/mm/init_32.c             |    2 --
+ arch/powerpc/mm/kasan/kasan_init_32.c |    4 +++-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ba3b114dcfa9..d59a735927f7 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5134,6 +5134,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * FLR may cause the following to devices to hang:
-  *
-  * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Starship USB 3.0 Host Controller 0x148c
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-@@ -5144,6 +5145,7 @@ static void quirk_no_flr(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -27,11 +27,9 @@
+ 
+ #ifdef CONFIG_KASAN
+ void kasan_early_init(void);
+-void kasan_mmu_init(void);
+ void kasan_init(void);
+ #else
+ static inline void kasan_init(void) { }
+-static inline void kasan_mmu_init(void) { }
+ #endif
+ 
+ #endif /* __ASSEMBLY */
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -175,8 +175,6 @@ void __init MMU_init(void)
+ 	btext_unmap();
+ #endif
+ 
+-	kasan_mmu_init();
+-
+ 	setup_kup();
+ 
+ 	/* Shortly after that, the entire linear mapping will be available */
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -129,7 +129,7 @@ static void __init kasan_remap_early_sha
+ 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
  }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
--- 
-2.25.1
-
+ 
+-void __init kasan_mmu_init(void)
++static void __init kasan_mmu_init(void)
+ {
+ 	int ret;
+ 	struct memblock_region *reg;
+@@ -156,6 +156,8 @@ void __init kasan_mmu_init(void)
+ 
+ void __init kasan_init(void)
+ {
++	kasan_mmu_init();
++
+ 	kasan_remap_early_shadow_ro();
+ 
+ 	clear_page(kasan_early_shadow_page);
 
 
