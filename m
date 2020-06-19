@@ -2,79 +2,65 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54589C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2506A2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3782A20890
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbgFSDSj (ORCPT
+        id S1730409AbgFSDTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:18:39 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:50192 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgFSDSj (ORCPT
+        Thu, 18 Jun 2020 23:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgFSDTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:18:39 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 05J3HliU032311
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 18 Jun 2020 22:17:57 -0500
-Message-ID: <3594abcaf6017ab4bcae683912bde2dff39858fb.camel@kernel.crashing.org>
-Subject: Re: [PATCH v1 6/6] console: Fix trivia typo 'change' -> 'chance'
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Date:   Fri, 19 Jun 2020 13:17:46 +1000
-In-Reply-To: <20200618164751.56828-7-andriy.shevchenko@linux.intel.com>
-References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
-         <20200618164751.56828-7-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        Thu, 18 Jun 2020 23:19:42 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA02FC06174E;
+        Thu, 18 Jun 2020 20:19:42 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D92AF120ED49C;
+        Thu, 18 Jun 2020 20:19:41 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:19:41 -0700 (PDT)
+Message-Id: <20200618.201941.1663983153607539592.davem@davemloft.net>
+To:     gustavoars@kernel.org
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, kuba@kernel.org, mcoquelin.stm32@gmail.com,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gustavo@embeddedor.com
+Subject: Re: [PATCH][next] net: stmmac: selftests: Use struct_size() helper
+ in kzalloc()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200616230328.GA23281@embeddedor>
+References: <20200616230328.GA23281@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:19:42 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 19:47 +0300, Andy Shevchenko wrote:
-> I bet the word 'chance' has to be used in 'had a chance to be called',
-> but, alas, I'm not native speaker...
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Tue, 16 Jun 2020 18:03:28 -0500
 
-Yup, typo :)
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
 > 
-
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-
-> ---
->  kernel/printk/printk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
 > 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index aaea3ad182e1..6623e975675a 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2705,7 +2705,7 @@ static int try_enable_new_console(struct console *newcon, bool user_specified)
->  	/*
->  	 * Some consoles, such as pstore and netconsole, can be enabled even
->  	 * without matching. Accept the pre-enabled consoles only when match()
-> -	 * and setup() had a change to be called.
-> +	 * and setup() had a chance to be called.
->  	 */
->  	if (newcon->flags & CON_ENABLED && c->user_specified ==	user_specified)
->  		return 0;
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Applied to net-next, thanks.
