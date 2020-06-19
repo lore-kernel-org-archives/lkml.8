@@ -2,53 +2,54 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ACBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B95C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F95206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AC0206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584928;
-	bh=+OqL3g/sf9U353eb2k/SFrF3QoYc+2uS+3VyI8316Iw=;
+	s=default; t=1592584932;
+	bh=V7t7/rNV/8i90L5LWGoUJj5anpjm3tjRYXmHt2mdNf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwRKFZXdjYdycxooxvYMwot6vowHYY9Tok7KbBKBbTEBaO8BcGbGM+Ne7hPRv/X7J
-	 y/SiIdj23b04sefgH95JqzgEVWRCqK+NdOnFQU8Dsy9x0GaY3pVa2wiT8cGrd4Q5xs
-	 Hz5itiEin5tylIy16Lglt72Wdf0hDZ11NXcsOyRE=
+	b=qJ0F/AR/atIaBzia4s6ap9zKnq3YKu3Ij2U0sW9wVR27kEfElwr8eNGZRRGV1Tl2n
+	 QBs7EFQBRuOCSR2T0VbSL2FO879kwADAJ6wvTe3TZUPMTJAlGA31w3BODXznVoqBEv
+	 qIH2+q10JS0t2ybL6/moWcVQ9SxJu3zObS1zsfIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388055AbgFSOoo (ORCPT
+        id S2388580AbgFSOoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388511AbgFSOoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:17 -0400
+        id S2388006AbgFSOoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 996B821582;
-        Fri, 19 Jun 2020 14:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3461A21556;
+        Fri, 19 Jun 2020 14:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577857;
-        bh=+OqL3g/sf9U353eb2k/SFrF3QoYc+2uS+3VyI8316Iw=;
+        s=default; t=1592577847;
+        bh=V7t7/rNV/8i90L5LWGoUJj5anpjm3tjRYXmHt2mdNf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N2H65OzxyJbjLM77SvZhmXldshMhHvAB0Uvs4GOdbIzR57cQcqLFmrThSguwm4898
-         EQaAjj+xEWagi+h/Q1p4Z7Bs5S6qgPC/Q77E/rbMAs2wM0Q+DUGMK4v80KC1n4CRj8
-         Xp+n1R1XuG5m28WpbUZiO5/UrVsZbwer5cWg6jzE=
+        b=PH/CYJPL7Ykyn+ET0B9yrU8ncif8hzpjOm6qJdYSlG1B2NqIojtN5ptbQM69rtcvy
+         1DChr2qLkyvpaWIo6wnqyvjnMUZxk230EscF3DhxeqDDMZ2ugq9kVuvL3CjHcbV14S
+         N05k9z8QGC0rPFqpnnlLWtTufac+a6CSY5zhyVOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 090/128] PCI: Dont disable decoding when mmio_always_on is set
-Date:   Fri, 19 Jun 2020 16:33:04 +0200
-Message-Id: <20200619141624.900323124@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.9 113/128] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Fri, 19 Jun 2020 16:33:27 +0200
+Message-Id: <20200619141626.112430569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,39 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit b6caa1d8c80cb71b6162cb1f1ec13aa655026c9f ]
+commit 165ae7a8feb53dc47fb041357e4b253bfc927cf9 upstream.
 
-Don't disable MEM/IO decoding when a device have both non_compliant_bars
-and mmio_always_on.
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-That would allow us quirk devices with junk in BARs but can't disable
-their decoding.
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Acked-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Since device can only be runtime suspended when there's no link partner,
+we can skip reading register and let the following logic set speed and
+duplex with correct status.
+
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
+
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
+
+CC: stable <stable@vger.kernel.org>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/igb/igb_ethtool.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 16611cf3aba4..be63f008167b 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1251,7 +1251,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	/* device class may be changed after fixup */
- 	class = dev->class >> 8;
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -153,7 +153,8 @@ static int igb_get_settings(struct net_d
+ 	u32 status;
+ 	u32 speed;
  
--	if (dev->non_compliant_bars) {
-+	if (dev->non_compliant_bars && !dev->mmio_always_on) {
- 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
- 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
- 			dev_info(&dev->dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
--- 
-2.25.1
-
+-	status = rd32(E1000_STATUS);
++	status = pm_runtime_suspended(&adapter->pdev->dev) ?
++		 0 : rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
+ 
+ 		ecmd->supported = (SUPPORTED_10baseT_Half |
 
 
