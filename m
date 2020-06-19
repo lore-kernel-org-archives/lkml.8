@@ -2,99 +2,128 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2473BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5329F2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGBlgQlC"
+	by mail.kernel.org (Postfix) with ESMTP id 06D6921527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592584313;
+	bh=bBcmiQKw5gyq64+scVj1X9IAimDWGQZI6cKI+wHMt/M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J2UbzO5FltjHJn1J+2jmL//G3VrxGA/pHjU/e+M5LqTy2ielms6LT/tui48kJ8ot5
+	 16ZZKS4GgkaDMz8+zySA6PNCvE5kCzrb146i5+TAB1DDCgHZFltrDdx26qLhYWiXdW
+	 nO7FE1YE8778EZYa0THnmBKO/NjW5AvA7G07bAfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393728AbgFSQbt (ORCPT
+        id S2389611AbgFSOwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395042AbgFSQbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:31:40 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7090C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:31:39 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id s192so2431210vkh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dEf83idZXvrPsVKGcPR3p3YRd+fKXVKhp9TXt5Kn60U=;
-        b=DGBlgQlCnRLuOM3zrU/WFVPlQWoH3/GzaxHTx7AqPPQ5bnm1kf7M3WdU0IEjH0YpoD
-         /SfedgbVSc+qL4Xnuqg2YoRwDs5k0GM8lEgD5rLnYyomCnpJss/+90Qf0kIGFDNbvcHQ
-         0T+jhrh9b8lGPjrLghzK2xc4+MG8m7I3gPuS5rQOySza9Ewp8TBsL60R6i6day2Qb7GT
-         eYXBgGK0X67NR4eIkTC1DOgtIYA88hk70LNH036MzfrQyrdF0BatJS+sML7zIo4Q2Vjw
-         XRq9r7E/lh+kolFEz65lAECGDlKwZcXCBXvaUHKV9G2scpUFYMSuT/Kg+LOHFv+besKq
-         8c1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dEf83idZXvrPsVKGcPR3p3YRd+fKXVKhp9TXt5Kn60U=;
-        b=pjc5ZYPdhmoaeFd7aevUHVhZKxiWvX46ZZz6dO2WlWrQ4I4kTQLtLOgv61kW9hkunE
-         cDJh3DQ4sUAvFHKoHIM39eK05gNfh5Y9gxLa0bRieqHk/9sImrx62soh44587Tao8EK9
-         Wzqx2p5UItzDnEecpabYNTmQ0SMkGbDskD7E6cZF4ZMnvtdwki6NBsQlLmAk0W3gHLo3
-         R/iMyGoiUXAJirFz2eY6Yzgf+g1NH9xZORS7RvMmWgioc4vr5VuegPPYJYopJz1+i/qL
-         hNpgoR7scXZdtxuFbfpAW3CWHW+ekrOcf65nAIEYhhyUZXsV2BZKeKdxYwmnjkErsuwN
-         A6qQ==
-X-Gm-Message-State: AOAM530dafxv0qNYboDqDS6CfXkNtSaxAge7KdH8K92HGdqxv5OFy4u8
-        f/E9b7DlpvnPRIiuvzVRPT/biMKcDDpjT7LWkkk=
-X-Google-Smtp-Source: ABdhPJwWPW63BfO1YDNPwCOSif9q+11rpQa+AaCJvnFL8cqqzFrXlVBHqmDD9oS9TmjW1375YHGcBAWEmte6ApUzeo8=
-X-Received: by 2002:a1f:4303:: with SMTP id q3mr8159836vka.65.1592584298930;
- Fri, 19 Jun 2020 09:31:38 -0700 (PDT)
+        Fri, 19 Jun 2020 10:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389572AbgFSOwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D97CA21556;
+        Fri, 19 Jun 2020 14:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578343;
+        bh=bBcmiQKw5gyq64+scVj1X9IAimDWGQZI6cKI+wHMt/M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hNu7ITRDVFvy2YYHI3JZZjeeAhPdALo2eFoOqSVRsregcOMTFPUow5LPDzREo9YZP
+         JXFWw8AzX8FLryuzAJQyL7abGUPuRg2S+G22CP5q6uLX98FzIT4OindVOkSyr+xMQq
+         iwFV6gedLMp+A8dV0v1GZPw3TVS+a3YQa86+bHiM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 159/190] btrfs: fix error handling when submitting direct I/O bio
+Date:   Fri, 19 Jun 2020 16:33:24 +0200
+Message-Id: <20200619141641.687665192@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CAD2FfiFRqwYGB50KK=aA0sU6uCALYneoyD=V4EfOsk-Ex=C+xg@mail.gmail.com>
- <0DD7FAE4-3976-4835-8090-80B84B737F3E@amacapital.net> <20200619161752.GG32683@zn.tnic>
-In-Reply-To: <20200619161752.GG32683@zn.tnic>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Fri, 19 Jun 2020 17:31:27 +0100
-Message-ID: <CAD2FfiFt0zm1uk6Z8RF_EUFeEd8ZT61B9+jtdAHrF5hOrcTk_w@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Daniel Gutson <daniel@eclypsium.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 at 17:17, Borislav Petkov <bp@alien8.de> wrote:
-> Well, I believe all the kernel can do is supply bits of information -
-> just like MSRs - and depending on the settings of those bits, userspace
-> can decide what the situation is. For example:
-> bit 0 - CPUID support
-> bit 1 - BIOS enabled
+From: Omar Sandoval <osandov@fb.com>
 
-Yes, something like this would be entirely fine for my purpose -- I
-don't mind where or how I get the data out of the kernel, but parsing
-the entire systemd journal for a magic string is something I really
-want to avoid.
+[ Upstream commit 6d3113a193e3385c72240096fe397618ecab6e43 ]
 
-Richard.
+In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
+stripe or chunk, we submit orig_bio without cloning it. In this case, we
+don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
+decrement pending_bios to -1, and we never complete orig_bio. Fix it by
+initializing pending_bios to 1 instead of incrementing later.
+
+Fixing this exposes another bug: we put orig_bio prematurely and then
+put it again from end_io. Fix it by not putting orig_bio.
+
+After this change, pending_bios is really more of a reference count, but
+I'll leave that cleanup separate to keep the fix small.
+
+Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 2a196bb134d9..3e65ac2d4869 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -8707,7 +8707,6 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
+ 
+ 	/* bio split */
+ 	ASSERT(map_length <= INT_MAX);
+-	atomic_inc(&dip->pending_bios);
+ 	do {
+ 		clone_len = min_t(int, submit_len, map_length);
+ 
+@@ -8758,7 +8757,8 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
+ 	if (!status)
+ 		return 0;
+ 
+-	bio_put(bio);
++	if (bio != orig_bio)
++		bio_put(bio);
+ out_err:
+ 	dip->errors = 1;
+ 	/*
+@@ -8798,7 +8798,7 @@ static void btrfs_submit_direct(struct bio *dio_bio, struct inode *inode,
+ 	bio->bi_private = dip;
+ 	dip->orig_bio = bio;
+ 	dip->dio_bio = dio_bio;
+-	atomic_set(&dip->pending_bios, 0);
++	atomic_set(&dip->pending_bios, 1);
+ 	io_bio = btrfs_io_bio(bio);
+ 	io_bio->logical = file_offset;
+ 
+-- 
+2.25.1
+
+
+
