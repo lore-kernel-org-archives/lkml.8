@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987EE217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AB0217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583933;
-	bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
+	s=default; t=1592583944;
+	bh=CY52Bl6hIbhNX7WaF6Vsas88tR+RJPp+8Q5PkrVQ+eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYZz3gti1rTi9eJgBTw3MxQH2PQIu2UfpG1L0qAXMkYiN6xs3/rYkr8gZzJHIiiWd
-	 lJa89UMiiePg4PKsU24sXwH6GwmXQb7ozr/OrkvvgQG+JLs7UsffdLmYd+rcfRqPW1
-	 pQj20sesA2QWlFuT8KF1PiM/CuISJPoaSkX0sdVQ=
+	b=EjS/bPdJTIgWYXIuz1bD04Mn+Ted52LpsmeZ+a8qCP6Y/MdOT4aM057K50ILLySPa
+	 WAP+Ymb8iQkgof+GiIOtlnQAlVK8NxL9vhp7Ps7rxYqneIyuRrUtnLXHBLWFhbxIoz
+	 sz9Z/osLZCXyBJ81duLltouowD5kza7YveMl5jW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394837AbgFSQZc (ORCPT
+        id S2389866AbgFSQZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390256AbgFSO5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:33 -0400
+        id S2390236AbgFSO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F38121924;
-        Fri, 19 Jun 2020 14:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569CA2158C;
+        Fri, 19 Jun 2020 14:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578653;
-        bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
+        s=default; t=1592578645;
+        bh=CY52Bl6hIbhNX7WaF6Vsas88tR+RJPp+8Q5PkrVQ+eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mSf+kM1MCcsJaThx/rZ7pQXDG7abrsWNl5Wh1jePrzHbGJ7lDNI6Zub6/MGx3d9eY
-         Pv/DgPg5yPUvSYvTzTM9dKzbl4gZaVbW3762nft6P//NEIgDwkloNEkhtvD+T5wGQ2
-         /yF9G6cnDZdNrWukbZ/97CwN44448FBXrqrAGSV0=
+        b=ZV5Vc2oc3j4dOmwnk/GDoA7pSOT3xTx+XCYZJ5f5//c7f2gwwf/VlDFolU3AueVAw
+         NskjQsuTp0n0YRoP+zc95P2u+0PcEBiSjGEmz5WHQ9c5auupUyaOzIK/Y+sZw8cj/Y
+         7aJicn9Hx3iyWXt5BQCx9BGUqEUEd+hEtpRXCMyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Andi Shyti <andi.shyti@intel.com>
-Subject: [PATCH 4.19 087/267] agp/intel: Reinforce the barrier after GTT updates
-Date:   Fri, 19 Jun 2020 16:31:12 +0200
-Message-Id: <20200619141653.051360365@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 102/267] arm64: cacheflush: Fix KGDB trap detection
+Date:   Fri, 19 Jun 2020 16:31:27 +0200
+Message-Id: <20200619141653.757619395@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,55 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
+[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
 
-After changing the timing between GTT updates and execution on the GPU,
-we started seeing sporadic failures on Ironlake. These were narrowed
-down to being an insufficiently strong enough barrier/delay after
-updating the GTT and scheduling execution on the GPU. By forcing the
-uncached read, and adding the missing barrier for the singular
-insert_page (relocation paths), the sporadic failures go away.
+flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
+trap handler is running because issuing IPIs is unsafe (and not needed)
+in this execution context. However the current test, based on
+kgdb_connected is flawed: it both over-matches and under-matches.
 
-Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
-Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Andi Shyti <andi.shyti@intel.com>
-Cc: stable@vger.kernel.org # v4.0+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The over match occurs because kgdb_connected is set when gdb attaches
+to the stub and remains set during normal running. This is relatively
+harmelss because in almost all cases irq_disabled() will be false.
 
+The under match is more serious. When kdb is used instead of kgdb to access
+the debugger then kgdb_connected is not set in all the places that the
+debug core updates sw breakpoints (and hence flushes the icache). This
+can lead to deadlock.
+
+Fix by replacing the ad-hoc check with the proper kgdb macro. This also
+allows us to drop the #ifdef wrapper.
+
+Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/agp/intel-gtt.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/char/agp/intel-gtt.c
-+++ b/drivers/char/agp/intel-gtt.c
-@@ -846,6 +846,7 @@ void intel_gtt_insert_page(dma_addr_t ad
- 			   unsigned int flags)
- {
- 	intel_private.driver->write_entry(addr, pg, flags);
-+	readl(intel_private.gtt + pg);
- 	if (intel_private.driver->chipset_flush)
- 		intel_private.driver->chipset_flush();
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index 19844211a4e6..a449a1c602d3 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -90,7 +90,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * IPI all online CPUs so that they undergo a context synchronization
+ 	 * event and are forced to refetch the new instructions.
+ 	 */
+-#ifdef CONFIG_KGDB
++
+ 	/*
+ 	 * KGDB performs cache maintenance with interrupts disabled, so we
+ 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
+@@ -100,9 +100,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * the patching operation, so we don't need extra IPIs here anyway.
+ 	 * In which case, add a KGDB-specific bodge and return early.
+ 	 */
+-	if (kgdb_connected && irqs_disabled())
++	if (in_dbg_master())
+ 		return;
+-#endif
++
+ 	kick_all_cpus_sync();
  }
-@@ -871,7 +872,7 @@ void intel_gtt_insert_sg_entries(struct
- 			j++;
- 		}
- 	}
--	wmb();
-+	readl(intel_private.gtt + j - 1);
- 	if (intel_private.driver->chipset_flush)
- 		intel_private.driver->chipset_flush();
- }
-@@ -1105,6 +1106,7 @@ static void i9xx_cleanup(void)
  
- static void i9xx_chipset_flush(void)
- {
-+	wmb();
- 	if (intel_private.i9xx_flush_page)
- 		writel(1, intel_private.i9xx_flush_page);
- }
+-- 
+2.25.1
+
 
 
