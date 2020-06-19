@@ -2,61 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22118C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5090EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADF521852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2198C2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578583;
-	bh=dvWepCxdi7jIX3sSPFT9LVNwFKQBWAt3kMnaBN2VAAY=;
+	s=default; t=1592578590;
+	bh=GibQffaZiT5SahzB4RVbVR61djiqNgKqwWI9cX+EDJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nt5gAmLbdvvo8Q4BHZubOKS/nYYQ08Ti8I8VRvzR9zZsTK2xgNwZiLWcE6HPaXRl/
-	 h9y5kNZKlqYDX+51LH5L2KJUPh1uuS+QaAT1dWYBIQLVAtsDdtWVQVsRqMaz6IZwOy
-	 XP5IeTzcjyoIm83yJOdBMauh4yCQM9x8BgjO62uQ=
+	b=xZ7hycFX/F6ggQINxqIWPtOV5cHN2HexnJb5eCsmPcSpuZxpwzoCYLkes3l4+8P+y
+	 s05v/OrwDa+okMueblmNhysPr6csHwGlajlmlzmazcPjE5k8Tdk4cih7kIKS0Bhevi
+	 fPdsC90V6FlgF5LwI6QF3RRM4qImdeSyiAFnjb8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390056AbgFSO4U (ORCPT
+        id S2390066AbgFSO4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:56:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390031AbgFSO4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:56:07 -0400
+        id S2390045AbgFSO4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E654F217D8;
-        Fri, 19 Jun 2020 14:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C035C2184D;
+        Fri, 19 Jun 2020 14:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578567;
-        bh=dvWepCxdi7jIX3sSPFT9LVNwFKQBWAt3kMnaBN2VAAY=;
+        s=default; t=1592578570;
+        bh=GibQffaZiT5SahzB4RVbVR61djiqNgKqwWI9cX+EDJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vny/8b3LIt9VaNXa1E/xROMjjCmTEAcEJzJE1e7LMn888rxgQhXC78/jGv2or3RpE
-         SSyyLjv8DN5pf+TEY3I6Zz/kPRlTkRF76leY4CWSggiem+VyQLiXg0TYJbxvPNIrsy
-         8s2VckAukqtmvJ1px8BBH6h2W6RN7hWWIsCSVrPQ=
+        b=oiTBFrxVBSj8SGUPUJMV0jQ8VJefVpuz8TMh9JA1O7s/BzECYBjxF4bQIwmtLF2dB
+         93Rd9whAAi4FRwu4S18t3wQJeAMjucbUnx4ZCAK/zQA123xS+L4NenEfrBbtmwMJOF
+         OIyTavOPXjMFzItYS3hvEsjUOQ1n9YQ3HsNFAxQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/267] x86/speculation: Change misspelled STIPB to STIBP
-Date:   Fri, 19 Jun 2020 16:30:39 +0200
-Message-Id: <20200619141651.470028722@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 072/267] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
+Date:   Fri, 19 Jun 2020 16:30:57 +0200
+Message-Id: <20200619141652.354659631@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -69,81 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit aa77bfb354c495fc4361199e63fc5765b9e1e783 ]
+commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
 
-STIBP stands for Single Thread Indirect Branch Predictors. The acronym,
-however, can be easily mis-spelled as STIPB. It is perhaps due to the
-presence of another related term - IBPB (Indirect Branch Predictor
-Barrier).
+Restoring the ASID from the hsave area on VMEXIT is wrong, because its
+value depends on the handling of TLB flushes.  Just skipping the field in
+copy_vmcb_control_area will do.
 
-Fix the mis-spelling in the code.
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1544039368-9009-1-git-send-email-longman@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/bugs.c | 6 +++---
- arch/x86/kernel/process.h  | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/svm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index cf07437cd106..0ea87f9095f0 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -61,7 +61,7 @@ static u64 __ro_after_init x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
- u64 __ro_after_init x86_amd_ls_cfg_base;
- u64 __ro_after_init x86_amd_ls_cfg_ssbd_mask;
- 
--/* Control conditional STIPB in switch_to() */
-+/* Control conditional STIBP in switch_to() */
- DEFINE_STATIC_KEY_FALSE(switch_to_cond_stibp);
- /* Control conditional IBPB in switch_mm() */
- DEFINE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
-@@ -750,12 +750,12 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 			"always-on" : "conditional");
- 	}
- 
--	/* If enhanced IBRS is enabled no STIPB required */
-+	/* If enhanced IBRS is enabled no STIBP required */
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	/*
--	 * If SMT is not possible or STIBP is not available clear the STIPB
-+	 * If SMT is not possible or STIBP is not available clear the STIBP
- 	 * mode.
- 	 */
- 	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
-index 898e97cf6629..320ab978fb1f 100644
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -19,7 +19,7 @@ static inline void switch_to_extra(struct task_struct *prev,
- 	if (IS_ENABLED(CONFIG_SMP)) {
- 		/*
- 		 * Avoid __switch_to_xtra() invocation when conditional
--		 * STIPB is disabled and the only different bit is
-+		 * STIBP is disabled and the only different bit is
- 		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
- 		 * in the TIF_WORK_CTXSW masks.
- 		 */
--- 
-2.25.1
-
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3319,7 +3319,7 @@ static inline void copy_vmcb_control_are
+ 	dst->iopm_base_pa         = from->iopm_base_pa;
+ 	dst->msrpm_base_pa        = from->msrpm_base_pa;
+ 	dst->tsc_offset           = from->tsc_offset;
+-	dst->asid                 = from->asid;
++	/* asid not copied, it is handled manually for svm->vmcb.  */
+ 	dst->tlb_ctl              = from->tlb_ctl;
+ 	dst->int_ctl              = from->int_ctl;
+ 	dst->int_vector           = from->int_vector;
 
 
