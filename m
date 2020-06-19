@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17361C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE02C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E233021527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E3720773
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577607;
-	bh=nNHY3TDJxrW5Nn6O2Fu0pxeR21EVZDE2AQQiYnFW0UA=;
+	s=default; t=1592577615;
+	bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Futj1K8kJ80SOWgo38B4LbJK7cJyZ6jMNV7Q4xfs3vdVwCPf/se9tgDI0ZKL+Ojop
-	 eWeYSyod8xcemnv9Z17GAuVIQa5fhA/0n3XgE86cc8SDQ9WZVGhccPIuEOyN7uNtdl
-	 eQ5bvc5/mtOSav3yGWSupWPzaNFuaHmIU8eKibz0=
+	b=foBVqAmeY0cj0WnNkwep+2WM32SZ0abnCTR+/t+msb4xKBHVJkPSamjJ8h53dlRCw
+	 buztbNkes/71DnBju3K2WPC73UUrnLOPBCYgsAd8VCDRs7hj+qy7f6sGyhsx+Afwhu
+	 WQWj6IYxG6zZv/2SBmxOKcT6UxYUR3ADunUrEdLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbgFSOkF (ORCPT
+        id S2387823AbgFSOkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388084AbgFSOjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:53 -0400
+        id S2388090AbgFSOj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85FF82070A;
-        Fri, 19 Jun 2020 14:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2D86208B8;
+        Fri, 19 Jun 2020 14:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577593;
-        bh=nNHY3TDJxrW5Nn6O2Fu0pxeR21EVZDE2AQQiYnFW0UA=;
+        s=default; t=1592577598;
+        bh=NWMLcpyikfEyP3vhtWUk2KoId6XXFoE9zxGdE35jo0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xf5vcEVfE5ie6uEzNj1DkVQReFC+Cts9id55SVZPnGQ6njHMYraIs3t8nJFIdsvxI
-         jY9ZwRkyQI3vt8GNKKNwhifPKvmZSx+fi9V6puHen4Dp2zoq1Zyu8BpjGhUxmpCSv6
-         8Rz+zPiKFyASJUfez3WZK30QRjZ9Pu5IzLNeZaz4=
+        b=lcui03UiAYGa5n3Q9CaA8kGDI1kipWj2rMOZfRRPxRsPPvgfZ0MUT5tivfBdD7cbB
+         oDVyVS2VL7I97OyaA/npXENwPiwLqPD6dKjWZj09R5SvRXu3bkOPQvwFf5bHupvVTB
+         pm29EK3v1G5Et2n6XeIZ5IPMq1gdOMWuza1krXWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 011/128] x86/speculation: Prevent rogue cross-process SSBD shutdown
-Date:   Fri, 19 Jun 2020 16:31:45 +0200
-Message-Id: <20200619141620.746865395@linuxfoundation.org>
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 4.9 013/128] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
+Date:   Fri, 19 Jun 2020 16:31:47 +0200
+Message-Id: <20200619141620.841961202@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -60,96 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Steinhauser <asteinhauser@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit dbbe2ad02e9df26e372f38cc3e70dab9222c832e upstream.
+commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
 
-On context switch the change of TIF_SSBD and TIF_SPEC_IB are evaluated
-to adjust the mitigations accordingly. This is optimized to avoid the
-expensive MSR write if not needed.
+The documentation provided by kobject_init_and_add() clearly spells out
+the need to call kobject_put() on the kobject if an error is returned.
+Add this missing call to the error path.
 
-This optimization is buggy and allows an attacker to shutdown the SSBD
-protection of a victim process.
-
-The update logic reads the cached base value for the speculation control
-MSR which has neither the SSBD nor the STIBP bit set. It then OR's the
-SSBD bit only when TIF_SSBD is different and requests the MSR update.
-
-That means if TIF_SSBD of the previous and next task are the same, then
-the base value is not updated, even if TIF_SSBD is set. The MSR write is
-not requested.
-
-Subsequently if the TIF_STIBP bit differs then the STIBP bit is updated
-in the base value and the MSR is written with a wrong SSBD value.
-
-This was introduced when the per task/process conditional STIPB
-switching was added on top of the existing SSBD switching.
-
-It is exploitable if the attacker creates a process which enforces SSBD
-and has the contrary value of STIBP than the victim process (i.e. if the
-victim process enforces STIBP, the attacker process must not enforce it;
-if the victim process does not enforce STIBP, the attacker process must
-enforce it) and schedule it on the same core as the victim process. If
-the victim runs after the attacker the victim becomes vulnerable to
-Spectre V4.
-
-To fix this, update the MSR value independent of the TIF_SSBD difference
-and dependent on the SSBD mitigation method available. This ensures that
-a subsequent STIPB initiated MSR write has the correct state of SSBD.
-
-[ tglx: Handle X86_FEATURE_VIRT_SSBD & X86_FEATURE_VIRT_SSBD correctly
-        and massaged changelog ]
-
-Fixes: 5bfbe3ad5840 ("x86/speculation: Prepare for per task indirect branch speculation control")
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/process.c |   28 ++++++++++------------------
- 1 file changed, 10 insertions(+), 18 deletions(-)
+ drivers/firmware/efi/efivars.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -337,28 +337,20 @@ static __always_inline void __speculatio
- 	u64 msr = x86_spec_ctrl_base;
- 	bool updmsr = false;
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -586,8 +586,10 @@ efivar_create_sysfs_entry(struct efivar_
+ 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+ 				   NULL, "%s", short_name);
+ 	kfree(short_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&new_var->kobj);
+ 		return ret;
++	}
  
--	/*
--	 * If TIF_SSBD is different, select the proper mitigation
--	 * method. Note that if SSBD mitigation is disabled or permanentely
--	 * enabled this branch can't be taken because nothing can set
--	 * TIF_SSBD.
--	 */
--	if (tif_diff & _TIF_SSBD) {
--		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
-+	/* Handle change of TIF_SSBD depending on the mitigation method. */
-+	if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
-+		if (tif_diff & _TIF_SSBD)
- 			amd_set_ssb_virt_state(tifn);
--		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
-+	} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
-+		if (tif_diff & _TIF_SSBD)
- 			amd_set_core_ssb_state(tifn);
--		} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
--			   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
--			msr |= ssbd_tif_to_spec_ctrl(tifn);
--			updmsr  = true;
--		}
-+	} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
-+		   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
-+		updmsr |= !!(tif_diff & _TIF_SSBD);
-+		msr |= ssbd_tif_to_spec_ctrl(tifn);
- 	}
- 
--	/*
--	 * Only evaluate TIF_SPEC_IB if conditional STIBP is enabled,
--	 * otherwise avoid the MSR write.
--	 */
-+	/* Only evaluate TIF_SPEC_IB if conditional STIBP is enabled. */
- 	if (IS_ENABLED(CONFIG_SMP) &&
- 	    static_branch_unlikely(&switch_to_cond_stibp)) {
- 		updmsr |= !!(tif_diff & _TIF_SPEC_IB);
+ 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
+ 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
 
 
