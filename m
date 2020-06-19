@@ -2,50 +2,50 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ABBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F7D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C618D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583147;
-	bh=jUNuI7oofciDkljzmgWPdaKM/dhmw9LNWH+gdQ6fsyY=;
+	s=default; t=1592583154;
+	bh=G55nFWnpw32hiv2wW5Qw8jEXLGNHxJVBMoYUIUI9F18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzpbbAHLTswH5lFnzEBNvMhSKZ0OE0375+8djpamIOadhvA0TbhIytzP0B8a0c70m
-	 8usS3EzwXiLr7iYZb2mGqkzF+rfNO7sAsO0Jv0BgZQinB0Fjn2DHwx9ubjmGaBKC9J
-	 2l0gz7e3lLcEd96Qj4MqhzsSY+msr1yIamIRf9/0=
+	b=hF5nhixuO6LuTAp/WKdryJV+yDdwLmCZrc9HgK+zq+YFZnFzXGM5lGUqIGJB3l9po
+	 Ndv655/JEIXnnuAs3ywFayAF7/gur4QSpSfNHuA4+nnwGVhCo6G1KsJ1yi94JcWaHS
+	 YNP765Ath3rXfVDLgh77ebJFJKAw/bJtw4ASUkSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391220AbgFSPE7 (ORCPT
+        id S2391759AbgFSQMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389407AbgFSPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:04:56 -0400
+        id S2390728AbgFSPE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEA7E2193E;
-        Fri, 19 Jun 2020 15:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7337721941;
+        Fri, 19 Jun 2020 15:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579095;
-        bh=jUNuI7oofciDkljzmgWPdaKM/dhmw9LNWH+gdQ6fsyY=;
+        s=default; t=1592579098;
+        bh=G55nFWnpw32hiv2wW5Qw8jEXLGNHxJVBMoYUIUI9F18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hpDOn22Vjx5UuAk/vkpSccJRZoGOMVbCM+34NyVyo2u2hj9RRNjk/9tcDO8SaEVY6
-         gsRs7DHidLCrlstd7zwk+YyAZuVVpi5VZdI26cD40bROhS6e9fpNoR4HiKJ4EUoUN0
-         ZdlV3oIKcAQZTvdBQN6lIULAvLVDpLDKttBM9NIc=
+        b=a6hvhPqA0NPLu11xjNwfH/XnquQSrK+W5D4OBPIUCeRbLOeciH/U1EAdi1Igkdi2l
+         Ht2qNiYnPy3aScqn5LmqGyE02S04gfgwbjD2HPoDTctePAWy3YezczpB0PYCIbKQ/w
+         ZLeEegCQ9xGPcl2Ecx+4pK+QsNclM5SNHXezoTR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 257/267] powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
-Date:   Fri, 19 Jun 2020 16:34:02 +0200
-Message-Id: <20200619141700.993357582@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 4.19 258/267] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
+Date:   Fri, 19 Jun 2020 16:34:03 +0200
+Message-Id: <20200619141701.041984692@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -58,81 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit 912c0a7f2b5daa3cbb2bc10f303981e493de73bd upstream.
+commit 4b50c8c4eaf06a825d1c005c0b1b4a8307087b83 upstream.
 
-At boot the FSCR is initialised via one of two paths. On most systems
-it's set to a hard coded value in __init_FSCR().
+This code does not work as stated in the comment.
 
-On newer skiboot systems we use the device tree CPU features binding,
-where firmware can tell Linux what bits to set in FSCR (and HFSCR).
+$(CONFIG_MODVERSIONS) is always empty because it is expanded before
+include/config/auto.conf is included. Hence, 'make modules' with
+CONFIG_MODVERSION=y cannot record the version CRCs.
 
-In both cases the value that's configured at boot is not propagated
-into the init_task.thread.fscr value prior to the initial fork of init
-(pid 1), which means the value is not used by any processes other than
-swapper (the idle task).
+This has been broken since 2003, commit ("kbuild: Enable modules to be
+build using the "make dir/" syntax"). [1]
 
-For the __init_FSCR() case this is OK, because the value in
-init_task.thread.fscr is initialised to something sensible. However it
-does mean that the value set in __init_FSCR() is not used other than
-for swapper, which is odd and confusing.
-
-The bigger problem is for the device tree CPU features case it
-prevents firmware from setting (or clearing) FSCR bits for use by user
-space. This means all existing kernels can not have features
-enabled/disabled by firmware if those features require
-setting/clearing FSCR bits.
-
-We can handle both cases by saving the FSCR value into
-init_task.thread.fscr after we have initialised it at boot. This fixes
-the bug for device tree CPU features, and will allow us to simplify
-the initialisation for the __init_FSCR() case in a future patch.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200527145843.2761782-3-mpe@ellerman.id.au
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
+Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/prom.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Makefile |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -685,6 +685,23 @@ static void __init tm_init(void)
- static void tm_init(void) { }
- #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+--- a/Makefile
++++ b/Makefile
+@@ -554,12 +554,8 @@ KBUILD_MODULES :=
+ KBUILD_BUILTIN := 1
  
-+#ifdef CONFIG_PPC64
-+static void __init save_fscr_to_task(void)
-+{
-+	/*
-+	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
-+	 * have configured via the device tree features or via __init_FSCR().
-+	 * That value will then be propagated to pid 1 (init) and all future
-+	 * processes.
-+	 */
-+	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
-+		init_task.thread.fscr = mfspr(SPRN_FSCR);
-+}
-+#else
-+static inline void save_fscr_to_task(void) {};
-+#endif
-+
-+
- void __init early_init_devtree(void *params)
- {
- 	phys_addr_t limit;
-@@ -770,6 +787,8 @@ void __init early_init_devtree(void *par
- 		BUG();
- 	}
+ # If we have only "make modules", don't compile built-in objects.
+-# When we're building modules with modversions, we need to consider
+-# the built-in objects during the descend as well, in order to
+-# make sure the checksums are up to date before we record them.
+-
+ ifeq ($(MAKECMDGOALS),modules)
+-  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
++  KBUILD_BUILTIN :=
+ endif
  
-+	save_fscr_to_task();
+ # If we have "make <whatever> modules", compile modules
+@@ -1229,6 +1225,13 @@ ifdef CONFIG_MODULES
+ 
+ all: modules
+ 
++# When we're building modules with modversions, we need to consider
++# the built-in objects during the descend as well, in order to
++# make sure the checksums are up to date before we record them.
++ifdef CONFIG_MODVERSIONS
++  KBUILD_BUILTIN := 1
++endif
 +
- #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
- 	/* We'll later wait for secondaries to check in; there are
- 	 * NCPUS-1 non-boot CPUs  :-)
+ # Build modules
+ #
+ # A module can be listed more than once in obj-m resulting in
 
 
