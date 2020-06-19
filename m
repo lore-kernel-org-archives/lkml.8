@@ -2,135 +2,188 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB86AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A427520B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B3620B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 20:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VuI4Xr4X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FomYuQC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391536AbgFSU4c (ORCPT
+        id S2391588AbgFSU7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389280AbgFSU4b (ORCPT
+        Fri, 19 Jun 2020 16:59:23 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40203 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391431AbgFSU7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 16:56:31 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD1FC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:31 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so4402628plk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 13:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6ZywDktM8pXlb5fMixw8rrzeWS4t9uFID6XIjv74YaI=;
-        b=VuI4Xr4X0Pm3ZLkLxP9KgFz1iQK+tNUvZUmzaR1YcSNHYG5cg2Ths1TAPJAjczSlz9
-         kGNClG4tj2wgp4rcnJaS83as67DEjWLSS9EX8W+2FYHPV+3NR0eIS326w2ttGJM+6xqW
-         6z9iQpxVU6sxlaNXLxJZLTObHOgm72L9wQHEVdJ3ElibtoOS4Vt1ovwv6q3v9ToWreYJ
-         Z+4+2AXg46fCGpaPuDxhQO+xTOsmOeIG/uLz4m51MZPXGQzzn9XpI3X/4tLmJhafcchN
-         XfG9ZHJYhtiMymiRlFlIYwlw+qk8FP51l6J+9PJDgfc0ookZBiNwNf1YVdMUrBbGfEzn
-         Ewig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=6ZywDktM8pXlb5fMixw8rrzeWS4t9uFID6XIjv74YaI=;
-        b=G4INaCnr/uitBXtUGIHASe15gn1Ia8URxUZa6W0XC0aaPlOxwP64ba4yKf4MQjCJ78
-         sPIeBBzj9zlIoJMV/Ns5gsOYn7dV+NR/yRjJVYPw5MLlPoRBrmrdO5OqChh6JqaiWRbr
-         Z79ZpNVOqlJublkzMmKM7A6GvhhAL3GVvlq/t83P9gm+Xk+9BtgNLLWMdrKlMN6L8tiF
-         St6fTmKKnEoqJoYOthFbHXMwx4+Yjw/X6qeseTrDkZyFv79VbzO3PFrrgHdd3q8U8mEt
-         FiL13PcBrj4PIG78KTVLs7pFFrw8gQNtie4t6Gr5uZXspqNQYYZS68fNLpPpzGJLKWA3
-         AutA==
-X-Gm-Message-State: AOAM532O5xkcsO6Vb3spLAzXIiiIj3FlWK9OV5bUBwIjuFZXNH8YaLYa
-        flMUGO8IEjADTtXi6oAi9/PVtg==
-X-Google-Smtp-Source: ABdhPJzhQVw6JDXXU9VTCJdrrtZbR9c4S55qPEclhLyoE6Jr2jZT95JIsmWaWnPBg6D2eplPm/7UZw==
-X-Received: by 2002:a17:902:968b:: with SMTP id n11mr9392874plp.331.1592600190725;
-        Fri, 19 Jun 2020 13:56:30 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id b7sm6530221pfo.202.2020.06.19.13.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 13:56:28 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 13:56:28 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Roman Gushchin <guro@fb.com>
-cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Yang Shi <shy828301@gmail.com>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: kernel BUG at mm/huge_memory.c:2613!
-In-Reply-To: <20200619185540.GB217189@carbon.lan>
-Message-ID: <alpine.DEB.2.22.394.2006191354080.26224@chino.kir.corp.google.com>
-References: <20200619001938.GA135965@carbon.dhcp.thefacebook.com> <CAHbLzkrDcn-GQOrAM=m7+2g5_J6obsz4K50Oqb-1RD5p1iWTPQ@mail.gmail.com> <20200619011449.GC135965@carbon.dhcp.thefacebook.com> <20200619024026.GB21081@redhat.com>
- <20200619185540.GB217189@carbon.lan>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Fri, 19 Jun 2020 16:59:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592600359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3zQCeY2hg03c0w2Pqa3443YwJLYT6nkTcSltvd+Vi4A=;
+        b=FomYuQC8Z4enCrXK/a53oyu4J6nPXwJeZ27S7SeaGt74Ov0JJ+/p+mP+9Z8eLSb+q019Uz
+        zSyOUNw+l1SfN5pq6xWDuQrS4GT1FjKObtJ5y+V+QH6Dzxj/q3q8VZWE0Y+hT1IHbTDnFZ
+        5EBkjB+Wwo+yhY5JSwo+dd6UuFpyDUQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-rrXxSD6nM6-QXDL_hIU0dg-1; Fri, 19 Jun 2020 16:59:17 -0400
+X-MC-Unique: rrXxSD6nM6-QXDL_hIU0dg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0E84193F560;
+        Fri, 19 Jun 2020 20:59:14 +0000 (UTC)
+Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A800B7C1E3;
+        Fri, 19 Jun 2020 20:59:12 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 16:59:10 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619205910.GA14480@redhat.com>
+References: <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
+ <20200619113934.GN6578@ziepe.ca>
+ <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+ <20200619201011.GB13117@redhat.com>
+ <CAKMK7uFZgQH3bP4iC9MPArpngeSHESK62KFEeJvYyV9NSJ_GRw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKMK7uFZgQH3bP4iC9MPArpngeSHESK62KFEeJvYyV9NSJ_GRw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020, Roman Gushchin wrote:
+On Fri, Jun 19, 2020 at 10:43:20PM +0200, Daniel Vetter wrote:
+> On Fri, Jun 19, 2020 at 10:10 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Fri, Jun 19, 2020 at 03:18:49PM -0300, Jason Gunthorpe wrote:
+> > > On Fri, Jun 19, 2020 at 02:09:35PM -0400, Jerome Glisse wrote:
+> > > > On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
+> > > > > On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
+> > > > >
+> > > > > > The madness is only that device B's mmu notifier might need to wait
+> > > > > > for fence_B so that the dma operation finishes. Which in turn has to
+> > > > > > wait for device A to finish first.
+> > > > >
+> > > > > So, it sound, fundamentally you've got this graph of operations across
+> > > > > an unknown set of drivers and the kernel cannot insert itself in
+> > > > > dma_fence hand offs to re-validate any of the buffers involved?
+> > > > > Buffers which by definition cannot be touched by the hardware yet.
+> > > > >
+> > > > > That really is a pretty horrible place to end up..
+> > > > >
+> > > > > Pinning really is right answer for this kind of work flow. I think
+> > > > > converting pinning to notifers should not be done unless notifier
+> > > > > invalidation is relatively bounded.
+> > > > >
+> > > > > I know people like notifiers because they give a bit nicer performance
+> > > > > in some happy cases, but this cripples all the bad cases..
+> > > > >
+> > > > > If pinning doesn't work for some reason maybe we should address that?
+> > > >
+> > > > Note that the dma fence is only true for user ptr buffer which predate
+> > > > any HMM work and thus were using mmu notifier already. You need the
+> > > > mmu notifier there because of fork and other corner cases.
+> > >
+> > > I wonder if we should try to fix the fork case more directly - RDMA
+> > > has this same problem and added MADV_DONTFORK a long time ago as a
+> > > hacky way to deal with it.
+> > >
+> > > Some crazy page pin that resolved COW in a way that always kept the
+> > > physical memory with the mm that initiated the pin?
+> >
+> > Just no way to deal with it easily, i thought about forcing the
+> > anon_vma (page->mapping for anonymous page) to the anon_vma that
+> > belongs to the vma against which the GUP was done but it would
+> > break things if page is already in other branch of a fork tree.
+> > Also this forbid fast GUP.
+> >
+> > Quite frankly the fork was not the main motivating factor. GPU
+> > can pin potentialy GBytes of memory thus we wanted to be able
+> > to release it but since Michal changes to reclaim code this is
+> > no longer effective.
+> 
+> What where how? My patch to annote reclaim paths with mmu notifier
+> possibility just landed in -mm, so if direct reclaim can't reclaim mmu
+> notifier'ed stuff anymore we need to know.
+> 
+> Also this would resolve the entire pain we're discussing in this
+> thread about dma_fence_wait deadlocking against anything that's not
+> GFP_ATOMIC ...
 
-> [   40.287524] BUG: unable to handle page fault for address: ffffa77b833df000
-> [   40.287529] #PF: supervisor write access in kernel mode
-> [   40.287531] #PF: error_code(0x000b) - reserved bit violation
-> [   40.287532] PGD 40d14e067 P4D 40d14e067 PUD 40d14f067 PMD 3ec54d067
-> PTE 80001688033d9163
-> [   40.287538] Oops: 000b [#2] SMP NOPTI
-> [   40.287542] CPU: 9 PID: 1986 Comm: pulseaudio Tainted: G      D
->       5.8.0-rc1+ #697
-> [   40.287544] Hardware name: Gigabyte Technology Co., Ltd.
-> AB350-Gaming/AB350-Gaming-CF, BIOS F25 01/16/2019
-> [   40.287550] RIP: 0010:__memset+0x24/0x30
-> [   40.287553] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89
-> d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48
-> 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89
-> d1 f3
-> [   40.287556] RSP: 0018:ffffa77b827a7e08 EFLAGS: 00010216
-> [   40.287558] RAX: 0000000000000000 RBX: ffff90f77dced800 RCX: 00000000000008a0
-> [   40.287560] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa77b833df000
-> [   40.287561] RBP: ffff90f7898c7000 R08: ffff90f78c507768 R09: ffffa77b833df000
-> [   40.287563] R10: ffffa77b833df000 R11: ffff90f7839f2d40 R12: 0000000000000000
-> [   40.287564] R13: ffff90f76a802e00 R14: ffffffffc0cb8880 R15: ffff90f770f4e700
-> [   40.287567] FS:  00007f3d8e8df880(0000) GS:ffff90f78ee40000(0000)
-> knlGS:0000000000000000
-> [   40.287569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   40.287570] CR2: ffffa77b833df000 CR3: 00000003fa556000 CR4: 00000000003406e0
-> [   40.287572] Call Trace:
-> [   40.287584]  snd_pcm_hw_params+0x3fd/0x490 [snd_pcm]
-> [   40.287593]  snd_pcm_common_ioctl+0x1c5/0x1110 [snd_pcm]
-> [   40.287601]  ? snd_pcm_info_user+0x64/0x80 [snd_pcm]
-> [   40.287608]  snd_pcm_ioctl+0x23/0x30 [snd_pcm]
-> [   40.287613]  ksys_ioctl+0x82/0xc0
-> [   40.287617]  __x64_sys_ioctl+0x16/0x20
-> [   40.287622]  do_syscall_64+0x4d/0x90
-> [   40.287627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Sorry my bad, reclaim still works, only oom skip. It was couple
+years ago and i thought that some of the things discuss while
+back did make it upstream.
 
-Hi Roman,
+It is probably a good time to also point out that what i wanted
+to do is have all the mmu notifier callback provide some kind
+of fence (not dma fence) so that we can split the notification
+into step:
+    A- schedule notification on all devices/system get fences
+       this step should minimize lock dependency and should
+       not have to wait for anything also best if you can avoid
+       memory allocation for instance by pre-allocating what
+       you need for notification.
+    B- mm can do things like unmap but can not map new page
+       so write special swap pte to cpu page table
+    C- wait on each fences from A
+    ... resume old code ie replace pte or finish unmap ...
 
-If you have CONFIG_AMD_MEM_ENCRYPT set, this should be resolved by
+The idea here is that at step C the core mm can decide to back
+off if any fence returned from A have to wait. This means that
+every device is invalidating for nothing but if we get there
+then it might still be a good thing as next time around maybe
+the kernel would be successfull without a wait.
 
-commit dbed452a078d56bc7f1abecc3edd6a75e8e4484e
-Author: David Rientjes <rientjes@google.com>
-Date:   Thu Jun 11 00:25:57 2020 -0700
+This would allow things like reclaim to make forward progress
+and skip over or limit wait time to given timeout.
 
-    dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL
+Also I thought to extend this even to multi-cpu tlb flush so
+that device and CPUs follow same pattern and we can make //
+progress on each.
 
-Or you might want to wait for 5.8-rc2 instead which includes this fix.
+
+Getting to such scheme is a lot of work. My plan was to first
+get the fence as part of the notifier user API and hide it from
+mm inside notifier common code. Then update each core mm path to
+new model and see if there is any benefit from it. Reclaim would
+be first candidate.
+
+Cheers,
+Jérôme
+
