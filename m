@@ -2,153 +2,178 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D375208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66FE21531
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7SViOXY"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qY/+QDqI";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BbJxMEVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbgFSSrc (ORCPT
+        id S2392209AbgFSSsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726993AbgFSSrb (ORCPT
+        Fri, 19 Jun 2020 14:48:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4048 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387933AbgFSSr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:47:31 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C37C06174E;
-        Fri, 19 Jun 2020 11:47:31 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id i16so7965080qtr.7;
-        Fri, 19 Jun 2020 11:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m0BuFLVukL33YBK8VGa8ymOVVw9eyFfRyEXP/K7B/g4=;
-        b=j7SViOXYXMM0PpPmcH8PZP2AoKNzj/q4ABtk6vTzD6m0XCF+YRvTqx07DM26SXH7oW
-         Ggh1N6PNojjS5xy0ag7XO51UMp4TQRPX11wGfP75S9Pk1lvsE2G5TONDCVIGQ5/GrtE0
-         m8kzlbuARBBe9xn2+hLEjd/DmvdJfzhdZawSBVEXr02ds3HMlUrwdo3rdbrnEYdZnkSx
-         N/qiHZw9nL0TBzglhdmCcIHEeYLrCzuqhoudSnC/IM/Fl6gWLiipCXVcmmi3ZXIdZ4CS
-         FtEhMTvoD3unMqYyv7m5WVikwu6YJbyvjn9mSXyFn9vUBh91aecNJG1q3kz/8zQ1QNrW
-         0CZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m0BuFLVukL33YBK8VGa8ymOVVw9eyFfRyEXP/K7B/g4=;
-        b=mx5B33y//uwSyWx4EDwD0blwzHUNDXN7tiSZcDUz1oeRhpAGe2buIZKgOOvqCPX9oD
-         VvFRf5igXvCpbDoP3q759zHhjDFuvV8kxu+bpCkkdGsBmbEIqGt8dE8RZpsH4h1FH5gt
-         2pV+CgcSwj3bscMoyQSgpQ7/pJUX0tP4ALHbaetfLyTYwwxmp+Dlu3AirfzK/aOGi7KT
-         3gK93igfwytkVtxAamtGZdVmoyY+7gYbXDyx0olNDWmMYTJxewNo76eMpBhiuFW3KoOW
-         mIt2UFwpcl2n7EClxG0D8W0Zo6IHXNGDYmFevW5e1VVMyhZXK/gjbxVXR6vxYuc9wsr7
-         YMbA==
-X-Gm-Message-State: AOAM532vAls+fN/3UPellwSEBXpb/h9Dq0TYynhgFNZPN3txGRS341Id
-        W0tYUn997KYSFRAr+erQHTk=
-X-Google-Smtp-Source: ABdhPJwPG2oejNt4OSEKhhXW/OVESl5rn7E/ndkuDOxgstagGv5DrXSSiU8RaRBkV7u4y+ct3UY0iw==
-X-Received: by 2002:ac8:794c:: with SMTP id r12mr4733460qtt.201.1592592450923;
-        Fri, 19 Jun 2020 11:47:30 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id p7sm2110818qki.61.2020.06.19.11.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 11:47:30 -0700 (PDT)
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006141120.96FF8C5@keescook>
- <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <7161fadb-45ba-c4c0-8bbb-cb47d2dd0265@redhat.com>
- <CY4PR13MB11755F5A6879CA3FFD005426FD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <CAFd5g454n4ZPgCdWaAxezFueG47TztqBx4L7x4oYwgPAR3BZNA@mail.gmail.com>
- <202006161653.15C278A5@keescook>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <398200b2-f8bc-894d-6d6f-366ff98a490e@gmail.com>
-Date:   Fri, 19 Jun 2020 13:47:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 14:47:59 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JIXR2V029357;
+        Fri, 19 Jun 2020 11:47:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=FbbnuNSVSeQv5Zog60zOpO1O537NGfRHgDR1t3p4GNo=;
+ b=qY/+QDqItksJYXgRMT8rt58jhkJ/PF7W7vfAr8axpxY+ilDwieAY8Ghq/tcLdebmEl7j
+ 0L/Vud+Z/akS86zXXs8AGzmWFkNOwZs96BiCb+bEzfrFw3rwsY0E0wMf28SPRLi8+YML
+ ATX1vNXU7ubjtSVEhxO7SpV744zJndIsVFU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31s2rcr2mx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 19 Jun 2020 11:47:43 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 19 Jun 2020 11:47:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZCUeZJ3karnFIjHNalkS7diaFlRx9+ZBrwesG83WVvBAtZF5HG5IbTbhXSFpTt0KSPOne5GqxGq5E/697DeNoqR2au2kZCFPYG1bKAJvEABfPKipI7/AOnDDWluz/HkjTFQZdYAbGYTfQXrGPlE8bUh1r0OWMi9AH0oDf815H2L5wSjUxyVQ+8/APlJgaTJDn+/EVnqFsg7igDJPNUTsHVZ3qQG8fVBtZAfNHHFxCEQS6RuRIZOk7FS/iCKwe/mywzmI5S7WtxV1BN6zr/IERFU/HBGyRaOm22uyyxXU7f3K49bdpQ0KPPL27UnsbLYZcg72uDoq0h/GyQvbbLi2wA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FbbnuNSVSeQv5Zog60zOpO1O537NGfRHgDR1t3p4GNo=;
+ b=MKocr+m9MZYB1aUXfMKFwv9r2vGQbsBuUjwPTVkHfu0cCxhlSBrSuYRkb8VFbmbweOE+n1gxSKgODdHduZXB3BmqJW4pKWwgb1Z4vduhiXzVUaK6VEW0hekIsFbMLYviL6sCYztWonsX1u5sT2dS9aiBYcCrYaH/gyYdNKv4is7dDi+ptZpBYUZ18W+T6IYXgwAj1bKliVLBUzcoAbvHCvjd6cTfffafR3+n41Y8oRZmSdRPl1l+hoheDKFhjQqXvuivlV7uKoB915IdB3+OfGz3wretL1kjKyFGfz9p5igF2zc+6G/nvjnmbdghPDOreen2xY7aEVPZqkIqdMz0QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FbbnuNSVSeQv5Zog60zOpO1O537NGfRHgDR1t3p4GNo=;
+ b=BbJxMEVAc5Bv2lCj1d0iRwVkbGaB3ZsMOwZf658LeP32Q7Wp35A3woCGTqJNAvjVUEnlEcf2dEGHd/FLewuuZCV/madyOb52d+24mBImMF2JZ16sEvlSd2W5X66BPhHAE0t5v/04LURGfv3eBI5AoMOa8yfKKaqscNBDL1JHu8A=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3285.namprd15.prod.outlook.com (2603:10b6:a03:103::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.24; Fri, 19 Jun
+ 2020 18:47:40 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 18:47:40 +0000
+Date:   Fri, 19 Jun 2020 11:47:36 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+CC:     Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Larry Woodman <lwoodman@redhat.com>
+Subject: Re: [PATCH v6 00/19] The new cgroup slab memory controller
+Message-ID: <20200619184736.GA217189@carbon.lan>
+References: <20200608230654.828134-1-guro@fb.com>
+ <CALvZod7ThL=yMwxzCLvrTtq=+Dr5ooUSX-iFP8AhiAGURByFBA@mail.gmail.com>
+ <20200617024147.GA10812@carbon.lan>
+ <CALvZod4vLQb4kns=ao8btL_g--9axZfcaxhMnj+CoTrCkyWoWQ@mail.gmail.com>
+ <20200617033217.GE10812@carbon.lan>
+ <e510e964-2703-d123-120c-816bbdd35743@suse.cz>
+ <20200618012928.GD24694@carbon.DHCP.thefacebook.com>
+ <20200618104344.6a96ac04@carbon>
+ <20200619012712.GD135965@carbon.dhcp.thefacebook.com>
+ <20200619113945.15ff3b15@carbon>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619113945.15ff3b15@carbon>
+X-ClientProxiedBy: BYAPR07CA0057.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::34) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <202006161653.15C278A5@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.lan (2620:10d:c090:400::5:c16d) by BYAPR07CA0057.namprd07.prod.outlook.com (2603:10b6:a03:60::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Fri, 19 Jun 2020 18:47:39 +0000
+X-Originating-IP: [2620:10d:c090:400::5:c16d]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 831970cc-516f-45e0-92e7-08d814813e2a
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3285:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB32850D903F89AD00A8FB32CBBE980@BYAPR15MB3285.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vcocUw2B+fiSsUYeyd3n7V4V2cEB/sf+EAPN0Hxb5rRNsA/q1kafIhl/K6nPy/8E1kkotaJXkio4Uci49Q1oQOHc3lijGFWe+cfjUV+uwUQhhVerX475FVfOqiKTnenu429ZNrUdNdTmZQqFbqcmvYJ+WJo4N9NqG+pIMPHQJkF6fq4pzuEHAxJEsFDkkBQvsYwZbG6Vi9F2qtMVD9wfp+gY6H3TMy99pAZBoouH9eu4b1IQt0xbJCYQAIOWCZ1hLmaAQbg97bQTSehdGRKxRF3hLhyxtHuoaMhQK03eoia0HMqVrjF5cLBVBM0XomKwYpLKvPngZQg8DlPlYV7BVP2QV86E1xIos/qhCFf1PQUSwn7OdcwrVeUm002jt9Do
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(136003)(366004)(39860400002)(6916009)(316002)(36756003)(6666004)(7416002)(5660300002)(6506007)(4326008)(54906003)(186003)(7696005)(16526019)(52116002)(8886007)(2906002)(66556008)(83380400001)(66476007)(55016002)(9686003)(8936002)(86362001)(66946007)(478600001)(33656002)(1076003)(8676002)(27376004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: j1OV765HGKYRq52kQzI2VElQVMvFaYO9bhVnh8RqtmVKVBC2l2vN1f+otN5x4T27d9Vr9U9LMzK6D/BYHT0wS+57E79BX5Fk+dXB8MyOQT/FegwJyJyTF71j5ZB1w/j3ZH98BJw0op0En+p7mF8vxZz29FgXFECL+2zl0UWbaMNwMDssAa90+U2U5vTzOEH3pSyCVfu1RyqOgWeI7SDiU8yYteZuTOJYRnW1nn8ku1GXQzRPCJSSA8qcYPNQvxlgOrhVozoESzyVtgSbfussfCruESGB1HsVoSM9PLT+TqQiFFoA3CDGvSnYhThBFteME573kpu4zzKvHm/ZWwYZYDmWZXWSP7Wq713TCdyoGUAVKyW8tx9QhBySkxIR+X79EbzukIhRzIr77+mylisTzRvpyAyWDEYjtIMoSsHTnGtlk1rvah98xIpl3Cs4EwwDDG7yJq+uTap/qhCxnN2frHoV2DlZV1WXgJOMedY0H/zsPbUocXR2cfXU2bgHCyDMrZZZHWZHqYM1oeh7soy3nQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 831970cc-516f-45e0-92e7-08d814813e2a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 18:47:40.1754
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GV9De2/DLNgNO92z+Bue58pPnNfz+jE8k4OWm0dpCOQMm9DFDfu39RmmbuqKO2Fy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3285
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_20:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
+ bulkscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 priorityscore=1501 clxscore=1011 adultscore=0
+ spamscore=0 mlxlogscore=818 impostorscore=0 phishscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006190135
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 18:58, Kees Cook wrote:
-> On Tue, Jun 16, 2020 at 12:44:28PM -0700, Brendan Higgins wrote:
->> On Tue, Jun 16, 2020 at 9:42 AM Bird, Tim <Tim.Bird@sony.com> wrote:
->>>> From: Paolo Bonzini <pbonzini@redhat.com>
->>>>
->>>> On 15/06/20 21:07, Bird, Tim wrote:
->>>>>> Note: making the plan line required differs from TAP13 and TAP14. I
->>>>>> think it's the right choice, but we should be clear.
->>>>
->>>> As an aside, where is TAP14?
->>> By TAP14, I was referring to the current, undocumented, KUnit
->>> conventions.
->>
->> Not so. TAP14 is the proposed next version of TAP13:
->>
->> https://github.com/TestAnything/testanything.github.io/pull/36
->> https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md
+On Fri, Jun 19, 2020 at 11:39:45AM +0200, Jesper Dangaard Brouer wrote:
+> On Thu, 18 Jun 2020 18:27:12 -0700
+> Roman Gushchin <guro@fb.com> wrote:
 > 
-> I was reading this (I haven't compared to the blob above):
+> > Theoretically speaking it should get worse (especially for non-root allocations),
+> > but if the difference is not big, it still should be better, because there is
+> > a big expected win from memory savings/smaller working set/less fragmentation etc.
+> > 
+> > The only thing I'm slightly worried is what's the effect on root allocations
+> > if we're sharing slab caches between root- and non-root allocations. Because if
+> > someone depends so much on the allocation speed, memcg-based accounting can be
+> > ignored anyway. For most users the cost of allocation is negligible.
+> > That's why the patch which merges root- and memcg slab caches is put on top
+> > and can be reverted if somebody will complain.
 > 
-> https://github.com/TestAnything/Specification/blob/tap-14-specification/specification.md
-> 
->> Based on the discussion, it seems like most of the things we wanted
->> from TAP14 would probably make it in if TAP ever accepts another pull
->> request.
-> 
-> Were our leading diagnostic lines part of their latest spec? I thought
-> we were pretty far off in left field for that particular bit.
-> 
->>> My personal preference is to have the dash.  I think it's more human readable.
->>> I note that the TAP spec has examples of result lines both with and without
->>> the dash, so even the spec is ambiguous on this.   I think not mandating it
->>> either way is probably best.  For regex parsers, it's easy to ignore with '[-]?'
->>> outside the pattern groups that grab the number and description.
->>
->> I don't think we care, because we don't use it.
-> 
-> Yeah, I'm in the same place. I don't care -- I would just like a
-> determination. (The "implied" nature of it in TAP14 bothers me.)
-> 
->>>> XFAIL/XPASS are different from SKIP.  I personally don't have a need for
->>>> them, but kselftests includes XFAIL/XPASS exit codes and they aren't
->>>> reflected into selftests/kselftest/runner.sh.
->>>>
->>>> Likewise, kselftest.h has ksft_inc_xfail_cnt but not
->>>> ksft_test_result_xfail/ksft_test_result_xpass.
-> 
-> I proposed fixing that recently[1]. seccomp uses XFAIL for "I have
-> detected you lack the config to test this, so I can't say it's working
-> or not, because it only looks like a failure without the config."
+> In general I like this work for saving memory, but you also have to be
+> aware of the negative consequences of sharing slab caches.  At Red Hat
+> we have experienced very hard to find kernel bugs, that point to memory
+> corruption at a completely wrong kernel code, because other kernel code
+> were corrupting the shared slab cache.  (Hint a workaround is to enable
+> SLUB debugging to disable this sharing).
 
-Based on that description, the case sounds like it should be a skip.
+I agree, but it must be related to the sharing of slab pages between different
+types of objects. We've also disabled cache sharing many times in order
+to compare slab usages between different major kernel version or to debug
+memory corruptions.
 
-Or if the entire test depends on the missing config then Bail out might
-be appropriate.
+But what about sharing between multiple cgroups, it just brings
+CONFIG_MEMCG_KMEM memory layout back to the !CONFIG_MEMCG_KMEM.
+I doubt that anyone ever considered the kernel memory accounting
+as a debugging mechanism. Quite opposite, we've encountered a lot of
+tricky issues related to the dynamic creation and destruction of kmem_caches
+and their life-time. Removing this code should make things simpler and
+hopefully more reliable.
 
-> 
-> [1] https://lore.kernel.org/lkml/20200611224028.3275174-7-keescook@chromium.org/
-> 
+Thanks!
+
 
