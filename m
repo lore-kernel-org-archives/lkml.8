@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9994BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78969204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A367C204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585315;
-	bh=vufx0vyQjbhKY6H1Jy6DAqwq30Pr95FUeTOb5XINOxw=;
+	s=default; t=1592585322;
+	bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgTsUUj33Xk85AtdhGzrAU0uxNWd5IqsAVoZhgK09qN50FaY8YrTC87h87V/d3v9U
-	 gKum6oHAnvdtQTzWqUodavLWQCL1HtENkgGubg1x+W/NKgp2b+sv2UQsHsNLUJcYde
-	 yLNUDSJnvQ3KvieZkXGI6jaLssc3HVaz5+CUevls=
+	b=zs5H/L+OFohTYYwFTLQ2225rGkFVCW6jDnyAmk2gy8OXzgDWzziHZpqR1gPr58aJR
+	 azj2F0mRSRx323ocX2dj0LEzUxgIqyP4yTlek3KEXJqNbZXGj8Ggjhkrt5HHBPjhXM
+	 0evpmKkGmaBu2SsoLU6ePCHkA2CeqvPzOAzGvdsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405749AbgFSQse (ORCPT
+        id S2405758AbgFSQsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58272 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387825AbgFSOkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:40:22 -0400
+        id S1733303AbgFSOkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1770620773;
-        Fri, 19 Jun 2020 14:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDA621556;
+        Fri, 19 Jun 2020 14:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577622;
-        bh=vufx0vyQjbhKY6H1Jy6DAqwq30Pr95FUeTOb5XINOxw=;
+        s=default; t=1592577610;
+        bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/UyZlNJace8g7YuDpoz/zC/Ng8ZfZQMWWAKa2L9QpX+Md9egy5Y1SMUZSovg4uXD
-         J7IQopgadXQC4Jwyxwe97PMLiHxzPPrTYfOMr8OoFIG7XEnpyDaaiFfZ4jf8SRgYDA
-         wxPdoCmplUk79uGUOf2h3vpR/2bqKK+jbJgoIQAU=
+        b=vjmM2MahXkgxn17jaaDaZa8JtsrPnmzONYZEkrqJolf90whg663DyhEGCpGKsUKBR
+         +XAPNTOG64RsQ6GAi+kPBRi838L0Lwc/9zwX6EwaE3svM1tSBhrvTLOQaB117bkGRB
+         8kbxZX/kpLMfXGOQtOlT11lEa3y8SubV64JPcmnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bart.vanassche@sandisk.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.9 003/128] scsi: return correct blkprep status code in case scsi_init_io() fails.
-Date:   Fri, 19 Jun 2020 16:31:37 +0200
-Message-Id: <20200619141620.323404815@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 018/128] ACPI: GED: add support for _Exx / _Lxx handler methods
+Date:   Fri, 19 Jun 2020 16:31:52 +0200
+Message-Id: <20200619141621.125988620@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -63,51 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <jthumshirn@suse.de>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit e7661a8e5ce10b5321882d0bbaf3f81070903319 upstream.
+commit ea6f3af4c5e63f6981c0b0ab8ebec438e2d5ef40 upstream.
 
-When instrumenting the SCSI layer to run into the
-!blk_rq_nr_phys_segments(rq) case the following warning emitted from the
-block layer:
+Per the ACPI spec, interrupts in the range [0, 255] may be handled
+in AML using individual methods whose naming is based on the format
+_Exx or _Lxx, where xx is the hex representation of the interrupt
+index.
 
-blk_peek_request: bad return=-22
+Add support for this missing feature to our ACPI GED driver.
 
-This happens because since commit fd3fc0b4d730 ("scsi: don't BUG_ON()
-empty DMA transfers") we return the wrong error value from
-scsi_prep_fn() back to the block layer.
-
-[mkp: silenced checkpatch]
-
-Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: fd3fc0b4d730 scsi: don't BUG_ON() empty DMA transfers
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Bart Van Assche <bart.vanassche@sandisk.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[iwamatsu: - backport for 4.4.y and 4.9.y
-    - Use rq->nr_phys_segments instead of blk_rq_nr_phys_segments]
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc: v4.9+ <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/scsi/scsi_lib.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1029,10 +1029,10 @@ int scsi_init_io(struct scsi_cmnd *cmd)
- 	struct scsi_device *sdev = cmd->device;
- 	struct request *rq = cmd->request;
- 	bool is_mq = (rq->mq_ctx != NULL);
--	int error;
-+	int error = BLKPREP_KILL;
+---
+ drivers/acpi/evged.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+--- a/drivers/acpi/evged.c
++++ b/drivers/acpi/evged.c
+@@ -82,6 +82,8 @@ static acpi_status acpi_ged_request_inte
+ 	struct resource r;
+ 	struct acpi_resource_irq *p = &ares->data.irq;
+ 	struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
++	char ev_name[5];
++	u8 trigger;
  
- 	if (WARN_ON_ONCE(!rq->nr_phys_segments))
--		return -EINVAL;
-+		goto err_exit;
+ 	if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
+ 		return AE_OK;
+@@ -90,14 +92,28 @@ static acpi_status acpi_ged_request_inte
+ 		dev_err(dev, "unable to parse IRQ resource\n");
+ 		return AE_ERROR;
+ 	}
+-	if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
++	if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
+ 		gsi = p->interrupts[0];
+-	else
++		trigger = p->triggering;
++	} else {
+ 		gsi = pext->interrupts[0];
++		trigger = p->triggering;
++	}
  
- 	error = scsi_init_sgtable(rq, &cmd->sdb);
- 	if (error)
+ 	irq = r.start;
+ 
+-	if (ACPI_FAILURE(acpi_get_handle(handle, "_EVT", &evt_handle))) {
++	switch (gsi) {
++	case 0 ... 255:
++		sprintf(ev_name, "_%c%02hhX",
++			trigger == ACPI_EDGE_SENSITIVE ? 'E' : 'L', gsi);
++
++		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
++			break;
++		/* fall through */
++	default:
++		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
++			break;
++
+ 		dev_err(dev, "cannot locate _EVT method\n");
+ 		return AE_ERROR;
+ 	}
 
 
