@@ -2,154 +2,65 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFF42080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526E9208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbgFSDei (ORCPT
+        id S1729509AbgFSDft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:34:38 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:51406 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgFSDeh (ORCPT
+        Thu, 18 Jun 2020 23:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgFSDft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:34:37 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jm7nV-0007NK-El; Thu, 18 Jun 2020 21:34:33 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jm7nU-0004ps-IZ; Thu, 18 Jun 2020 21:34:33 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin\@oracle.com" <joe.jin@oracle.com>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
-        <20200618233958.GV8681@bombadil.infradead.org>
-        <877dw3apn8.fsf@x220.int.ebiederm.org>
-        <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
-Date:   Thu, 18 Jun 2020 22:30:15 -0500
-In-Reply-To: <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com> (Junxiao Bi's
-        message of "Thu, 18 Jun 2020 17:27:43 -0700")
-Message-ID: <87sger91h4.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jm7nU-0004ps-IZ;;;mid=<87sger91h4.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19o0dSaAfyOt0uwUe//uvCCTnRQtYzJvXU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: severe proc dentry lock contention
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        Thu, 18 Jun 2020 23:35:49 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB46C06174E;
+        Thu, 18 Jun 2020 20:35:49 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8CD7F120ED49C;
+        Thu, 18 Jun 2020 20:35:48 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:35:47 -0700 (PDT)
+Message-Id: <20200618.203547.1927187219633676867.davem@davemloft.net>
+To:     drc@linux.vnet.ibm.com
+Cc:     netdev@vger.kernel.org, siva.kallam@broadcom.com,
+        prashant@broadcom.com, mchan@broadcom.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tg3: driver sleeps indefinitely when EEH errors
+ exceed eeh_max_freezes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200617185117.732849-1-drc@linux.vnet.ibm.com>
+References: <20200615190119.382589-1-drc@linux.vnet.ibm.com>
+        <20200617185117.732849-1-drc@linux.vnet.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jun 2020 20:35:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Junxiao Bi <junxiao.bi@oracle.com> writes:
+From: David Christensen <drc@linux.vnet.ibm.com>
+Date: Wed, 17 Jun 2020 11:51:17 -0700
 
-> On 6/18/20 5:02 PM, ebiederm@xmission.com wrote:
->
->> Matthew Wilcox <willy@infradead.org> writes:
->>
->>> On Thu, Jun 18, 2020 at 03:17:33PM -0700, Junxiao Bi wrote:
->>>> When debugging some performance issue, i found that thousands of threads
->>>> exit around same time could cause a severe spin lock contention on proc
->>>> dentry "/proc/$parent_process_pid/task/", that's because threads needs to
->>>> clean up their pid file from that dir when exit. Check the following
->>>> standalone test case that simulated the case and perf top result on v5.7
->>>> kernel. Any idea on how to fix this?
->>> Thanks, Junxiao.
->>>
->>> We've looked at a few different ways of fixing this problem.
->>>
->>> Even though the contention is within the dcache, it seems like a usecase
->>> that the dcache shouldn't be optimised for -- generally we do not have
->>> hundreds of CPUs removing dentries from a single directory in parallel.
->>>
->>> We could fix this within procfs.  We don't have a great patch yet, but
->>> the current approach we're looking at allows only one thread at a time
->>> to call dput() on any /proc/*/task directory.
->>>
->>> We could also look at fixing this within the scheduler.  Only allowing
->>> one CPU to run the threads of an exiting process would fix this particular
->>> problem, but might have other consequences.
->>>
->>> I was hoping that 7bc3e6e55acf would fix this, but that patch is in 5.7,
->>> so that hope is ruled out.
->> Does anyone know if problem new in v5.7?  I am wondering if I introduced
->> this problem when I refactored the code or if I simply churned the code
->> but the issue remains effectively the same.
-> It's not new issue, we see it in old kernel like v4.14
->>
->> Can you try only flushing entries when the last thread of the process is
->> reaped?  I think in practice we would want to be a little more
->> sophisticated but it is a good test case to see if it solves the issue.
->
-> Thank you. i will try and let you know.
+> The driver function tg3_io_error_detected() calls napi_disable twice,
+> without an intervening napi_enable, when the number of EEH errors exceeds
+> eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+> 
+> Add check for pcierr_recovery which skips code already executed for the
+> "Frozen" state.
+> 
+> Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
 
-Assuming this works we can remove the hacking part of always doing
-this by only doing this if SIGNAL_GROUP_EXIT when we know this
-thundering herd will appear.
-
-We still need to do something with the list however.
-
-If your testing works out performance wise I will figure out what
-we need to make the hack generale and safe.
-
-Eric
-
-
-
-> Thanks,
->
-> Junxiao.
->
->>
->> diff --git a/kernel/exit.c b/kernel/exit.c
->> index cebae77a9664..d56e4eb60bdd 100644
->> --- a/kernel/exit.c
->> +++ b/kernel/exit.c
->> @@ -152,7 +152,7 @@ void put_task_struct_rcu_user(struct task_struct *task)
->>   void release_task(struct task_struct *p)
->>   {
->>   	struct task_struct *leader;
->> -	struct pid *thread_pid;
->> +	struct pid *thread_pid = NULL;
->>   	int zap_leader;
->>   repeat:
->>   	/* don't need to get the RCU readlock here - the process is dead and
->> @@ -165,7 +165,8 @@ void release_task(struct task_struct *p)
->>     	write_lock_irq(&tasklist_lock);
->>   	ptrace_release_task(p);
->> -	thread_pid = get_pid(p->thread_pid);
->> +	if (p == p->group_leader)
->> +		thread_pid = get_pid(p->thread_pid);
->>   	__exit_signal(p);
->>     	/*
->> @@ -188,8 +189,10 @@ void release_task(struct task_struct *p)
->>   	}
->>     	write_unlock_irq(&tasklist_lock);
->> -	proc_flush_pid(thread_pid);
->> -	put_pid(thread_pid);
->> +	if (thread_pid) {
->> +		proc_flush_pid(thread_pid);
->> +		put_pid(thread_pid);
->> +	}
->>   	release_thread(p);
->>   	put_task_struct_rcu_user(p);
->>   
+Applied and queued up for -stable, thanks.
