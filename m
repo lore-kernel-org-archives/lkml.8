@@ -2,270 +2,130 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23497C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD222166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2ADF20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOWhq/zJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405947AbgFSQwD (ORCPT
+        id S2405952AbgFSQwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 19 Jun 2020 12:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393343AbgFSQwD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 12:52:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:45041 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393389AbgFSQv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:51:28 -0400
-IronPort-SDR: XkKbWtx1X+BA8Vk0MrOQ7OLvTmmnap19vI87SQ98rsPn8m3/yqvUrw2v/wH7O6XoOnO8e18z2z
- yO/fL/1z1Kzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="130381882"
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="130381882"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 09:51:26 -0700
-IronPort-SDR: VYgdIWErT1oXpq2uZARSO5nfHFlFYBFZemmq162OXFjqWFEmQICqM1Jf7PXXMTLHW86L82MceG
- vuJwATofRiiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="318165109"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2020 09:51:24 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>, stable@vger.kernel.org
-Subject: [char-misc-next 1/7] mei: me: disable mei interface on Mehlow server platforms
-Date:   Fri, 19 Jun 2020 19:51:15 +0300
-Message-Id: <20200619165121.2145330-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.25.4
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D7CC06174E;
+        Fri, 19 Jun 2020 09:52:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d66so4664905pfd.6;
+        Fri, 19 Jun 2020 09:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=MojqGVMm/N36ukD1qQOzNiKEH9Yim97rUfkXtpM0HIo=;
+        b=lOWhq/zJNBjesFgxGkSn+BtJRwxdpQomhyNHZjlONsvkEN01tr66aBIeORJjSlwrzc
+         FU5LcMVd9PShZF8KF7qWB2r9nJTDNzbUQFTIbtZEygCCvfx2SoWdYi3G4ThYpquzn7du
+         VjTaDYtDXrCRuMgvTdYBl0LSsSxePM1iVhw0O+4kHjzM9oruFsWA+9t6pDoSSEeytMUq
+         ztebVmkrP6goQODaIFcGYuFPm9xXGNRapQ4dceWSPlj7VfBr3vZitoPI5lAVO03aVVvO
+         7w9bYuIMXzVmT0/+BmyJmMycx1Ctm9cPdZiWG8cDdpIyaj+6wWD9lfbEGHobj4s5ya5g
+         pTkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MojqGVMm/N36ukD1qQOzNiKEH9Yim97rUfkXtpM0HIo=;
+        b=I5y4PQgEslVtNK+tqqx6lsmdWsJBAfI7qA0B/xyekGA25h54hWNTBYr0za34Z83UVB
+         uHTQ9Lvdc6Q60pP1byG7WcoJ7R9PR4ogPGlkD+Xrf79yJIXDdbG7AglejkGJIH7+Kh1V
+         oio2GCkhxx+vcCMy+CWSisYjkVPATt3CTRmIgU/cBIhm+4MsMWLks0hZiN6FrvlyYP6s
+         KpNVsqWGKAl0Bph3V8KpSUkfeW6JG4zQst6cC5Swkpb3R/7wBU57XoC8fN6ug4xJdhP/
+         +pEJUNoATrX8+q+dDJ8J7XXGFWf8V1q+QFP9+3j39wis+ZbugW5Pq8cE7VQThRaa3pY3
+         vnVA==
+X-Gm-Message-State: AOAM530mZG5qYzzDwTouwFF1zvtIawDutB8ZV3zTOlScdZA/xSltP67m
+        i0WQ5UI46tlEM6R5iDrMTJnwKV2/psc=
+X-Google-Smtp-Source: ABdhPJxQLpIde5crNDljO1wbiI8PDd931pTpWT7w4Fpd3YuE5eJBQnt/XfFKVMlmlaSaxcOe7PD3Rg==
+X-Received: by 2002:a62:8095:: with SMTP id j143mr8678422pfd.62.1592585522685;
+        Fri, 19 Jun 2020 09:52:02 -0700 (PDT)
+Received: from cnn ([112.133.236.100])
+        by smtp.gmail.com with ESMTPSA id w18sm5580656pgj.31.2020.06.19.09.51.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jun 2020 09:52:02 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 22:21:54 +0530
+From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+Message-ID: <20200619165154.GA20461@cnn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For SPS firmware versions 5.0 and newer the way detection has changed.
-The detection is done now via PCI_CFG_HFS_3 register.
-To prevent conflict the previous method will get sps_4 suffix
-Disable both CNP_H and CNP_H_3 interfaces. CNP_H_3 requires
-a separate configuration as it doesn't support DMA.
+The adm1278 temp attribute need it for openbmc platform .
+This feature not enabled by default, so PMON_CONFIG needs to enable it.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
 ---
- drivers/misc/mei/hw-me-regs.h |  2 ++
- drivers/misc/mei/hw-me.c      | 60 +++++++++++++++++++++++++++++++----
- drivers/misc/mei/hw-me.h      | 13 +++++---
- drivers/misc/mei/pci-me.c     | 16 +++++-----
- 4 files changed, 73 insertions(+), 18 deletions(-)
+---    v4 -Reported-by: kernel test robot <lkp@intel.com>
+---    v3 -fix invalid signed-off.
+---       -removed checkpath warnings.
+---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
+---    v2 -add Signed-off-by.
+---       -removed ADM1278_TEMP1_EN check.
+---
+---
+ drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
-index 9392934e3a06..01b1bf74f262 100644
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -107,6 +107,8 @@
- #  define PCI_CFG_HFS_1_D0I3_MSK     0x80000000
- #define PCI_CFG_HFS_2         0x48
- #define PCI_CFG_HFS_3         0x60
-+#  define PCI_CFG_HFS_3_FW_SKU_MSK   0x00000070
-+#  define PCI_CFG_HFS_3_FW_SKU_SPS   0x00000060
- #define PCI_CFG_HFS_4         0x64
- #define PCI_CFG_HFS_5         0x68
- #define PCI_CFG_HFS_6         0x6C
-diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
-index f620442addf5..f8155c1e811d 100644
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1366,7 +1366,7 @@ static bool mei_me_fw_type_nm(struct pci_dev *pdev)
- #define MEI_CFG_FW_NM                           \
- 	.quirk_probe = mei_me_fw_type_nm
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index 5caa37fb..d4e1925 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
+ 		tindex = 3;
  
--static bool mei_me_fw_type_sps(struct pci_dev *pdev)
-+static bool mei_me_fw_type_sps_4(struct pci_dev *pdev)
- {
- 	u32 reg;
- 	unsigned int devfn;
-@@ -1382,7 +1382,36 @@ static bool mei_me_fw_type_sps(struct pci_dev *pdev)
- 	return (reg & 0xf0000) == 0xf0000;
- }
+ 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+-			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
++			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
++			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
  
--#define MEI_CFG_FW_SPS                           \
-+#define MEI_CFG_FW_SPS_4                          \
-+	.quirk_probe = mei_me_fw_type_sps_4
-+
-+/**
-+ * mei_me_fw_sku_sps() - check for sps sku
-+ *
-+ * Read ME FW Status register to check for SPS Firmware.
-+ * The SPS FW is only signaled in pci function 0
-+ *
-+ * @pdev: pci device
-+ *
-+ * Return: true in case of SPS firmware
-+ */
-+static bool mei_me_fw_type_sps(struct pci_dev *pdev)
-+{
-+	u32 reg;
-+	u32 fw_type;
-+	unsigned int devfn;
-+
-+	devfn = PCI_DEVFN(PCI_SLOT(pdev->devfn), 0);
-+	pci_bus_read_config_dword(pdev->bus, devfn, PCI_CFG_HFS_3, &reg);
-+	trace_mei_pci_cfg_read(&pdev->dev, "PCI_CFG_HFS_3", PCI_CFG_HFS_3, reg);
-+	fw_type = (reg & PCI_CFG_HFS_3_FW_SKU_MSK);
-+
-+	dev_dbg(&pdev->dev, "fw type is %d\n", fw_type);
-+
-+	return fw_type == PCI_CFG_HFS_3_FW_SKU_SPS;
-+}
-+
-+#define MEI_CFG_FW_SPS                          \
- 	.quirk_probe = mei_me_fw_type_sps
+-		/* Enable VOUT if not enabled (it is disabled by default) */
+-		if (!(config & ADM1278_VOUT_EN)) {
+-			config |= ADM1278_VOUT_EN;
++		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
++		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
++			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
+ 			ret = i2c_smbus_write_byte_data(client,
+ 							ADM1275_PMON_CONFIG,
+ 							config);
+@@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
+ 			}
+ 		}
  
- #define MEI_CFG_FW_VER_SUPP                     \
-@@ -1452,10 +1481,17 @@ static const struct mei_cfg mei_me_pch8_cfg = {
- };
- 
- /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
--static const struct mei_cfg mei_me_pch8_sps_cfg = {
-+static const struct mei_cfg mei_me_pch8_sps_4_cfg = {
- 	MEI_CFG_PCH8_HFS,
- 	MEI_CFG_FW_VER_SUPP,
--	MEI_CFG_FW_SPS,
-+	MEI_CFG_FW_SPS_4,
-+};
-+
-+/* LBG with quirk for SPS (4.0) Firmware exclusion */
-+static const struct mei_cfg mei_me_pch12_sps_4_cfg = {
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+	MEI_CFG_FW_SPS_4,
- };
- 
- /* Cannon Lake and newer devices */
-@@ -1465,8 +1501,18 @@ static const struct mei_cfg mei_me_pch12_cfg = {
- 	MEI_CFG_DMA_128,
- };
- 
--/* LBG with quirk for SPS Firmware exclusion */
-+/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion */
- static const struct mei_cfg mei_me_pch12_sps_cfg = {
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+	MEI_CFG_DMA_128,
-+	MEI_CFG_FW_SPS,
-+};
-+
-+/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion
-+ * w/o DMA support
-+ */
-+static const struct mei_cfg mei_me_pch12_nodma_sps_cfg = {
- 	MEI_CFG_PCH8_HFS,
- 	MEI_CFG_FW_VER_SUPP,
- 	MEI_CFG_FW_SPS,
-@@ -1492,9 +1538,11 @@ static const struct mei_cfg *const mei_cfg_list[] = {
- 	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
- 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
- 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
--	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
-+	[MEI_ME_PCH8_SPS_4_CFG] = &mei_me_pch8_sps_4_cfg,
- 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
-+	[MEI_ME_PCH12_SPS_4_CFG] = &mei_me_pch12_sps_4_cfg,
- 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
-+	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
- 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
- };
- 
-diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
-index b6b94e211464..52e0c6d578f2 100644
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (c) 2012-2019, Intel Corporation. All rights reserved.
-+ * Copyright (c) 2012-2020, Intel Corporation. All rights reserved.
-  * Intel Management Engine Interface (Intel MEI) Linux driver
-  */
- 
-@@ -76,11 +76,14 @@ struct mei_me_hw {
-  *                         with quirk for Node Manager exclusion.
-  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
-  *                         client platforms.
-- * @MEI_ME_PCH8_SPS_CFG:   Platform Controller Hub Gen8 and newer
-+ * @MEI_ME_PCH8_SPS_4_CFG: Platform Controller Hub Gen8 and newer
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-  * @MEI_ME_PCH12_CFG:      Platform Controller Hub Gen12 and newer
-- * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 and newer
-+ * @MEI_ME_PCH12_SPS_4_CFG:Platform Controller Hub Gen12 up to 4.0
-+ *                         servers platforms with quirk for
-+ *                         SPS firmware exclusion.
-+ * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 5.0 and newer
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
-@@ -94,9 +97,11 @@ enum mei_cfg_idx {
- 	MEI_ME_PCH7_CFG,
- 	MEI_ME_PCH_CPT_PBG_CFG,
- 	MEI_ME_PCH8_CFG,
--	MEI_ME_PCH8_SPS_CFG,
-+	MEI_ME_PCH8_SPS_4_CFG,
- 	MEI_ME_PCH12_CFG,
-+	MEI_ME_PCH12_SPS_4_CFG,
- 	MEI_ME_PCH12_SPS_CFG,
-+	MEI_ME_PCH12_SPS_NODMA_CFG,
- 	MEI_ME_PCH15_CFG,
- 	MEI_ME_NUM_CFG,
- };
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 71f795b510ce..1bcc724a18aa 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -59,18 +59,18 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH7_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH7_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH7_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_4_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_4_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_LP, MEI_ME_PCH8_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_HR, MEI_ME_PCH8_SPS_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_HR, MEI_ME_PCH8_SPS_4_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_WPT_LP, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_WPT_LP_2, MEI_ME_PCH8_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_4_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_4_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_4_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_BXT_M, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
-@@ -84,8 +84,8 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_SPS_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_NODMA_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
+-		if (config & ADM1278_TEMP1_EN)
+-			info->func[0] |=
+-				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+ 		if (config & ADM1278_VIN_EN)
+ 			info->func[0] |= PMBUS_HAVE_VIN;
+ 		break;
 -- 
-2.25.4
+2.7.4
 
