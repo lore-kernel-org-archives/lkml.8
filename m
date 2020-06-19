@@ -2,167 +2,98 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23769C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3219FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6842080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151332080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbgFSJnv (ORCPT
+        id S1732110AbgFSJo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:43:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:49834 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 05:44:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39246 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbgFSJnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:43:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D1392B;
-        Fri, 19 Jun 2020 02:43:49 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BE7C3F71F;
-        Fri, 19 Jun 2020 02:43:47 -0700 (PDT)
-Subject: Re: [PATCH v6 35/36] videobuf2: use sgtable-based scatterlist
- wrappers
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pawel Osciak <pawel@osciak.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-References: <20200618153956.29558-1-m.szyprowski@samsung.com>
- <CGME20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755@eucas1p1.samsung.com>
- <20200618153956.29558-36-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <c2808024-943a-f46e-6ad8-5579a507bfdf@arm.com>
-Date:   Fri, 19 Jun 2020 10:43:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1729718AbgFSJo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:44:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DB8E6AEB2;
+        Fri, 19 Jun 2020 09:44:56 +0000 (UTC)
+Message-ID: <bdc91c1b015d2f02bd0ea90ae81a122123c62b38.camel@suse.de>
+Subject: Re: [PATCH v5 00/27] clk: bcm: rpi: Add support for BCM2711
+ firmware clocks
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stephen Boyd <sboyd@kernel.org>, Maxime Ripard <maxime@cerno.tech>
+Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 19 Jun 2020 11:44:54 +0200
+In-Reply-To: <159255945796.62212.5838238989498858379@swboyd.mtv.corp.google.com>
+References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
+         <159255945796.62212.5838238989498858379@swboyd.mtv.corp.google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-fZ7yXxkuArogoYxiG0Gc"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-In-Reply-To: <20200618153956.29558-36-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-18 16:39, Marek Szyprowski wrote:
-> Use recently introduced common wrappers operating directly on the struct
-> sg_table objects and scatterlist page iterators to make the code a bit
-> more compact, robust, easier to follow and copy/paste safe.
-> 
-> No functional change, because the code already properly did all the
-> scaterlist related calls.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   .../common/videobuf2/videobuf2-dma-contig.c   | 41 ++++++++-----------
->   .../media/common/videobuf2/videobuf2-dma-sg.c | 32 ++++++---------
->   .../common/videobuf2/videobuf2-vmalloc.c      | 12 ++----
->   3 files changed, 34 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> index f4b4a7c135eb..ba01a8692d88 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -48,16 +48,15 @@ struct vb2_dc_buf {
->   
->   static unsigned long vb2_dc_get_contiguous_size(struct sg_table *sgt)
->   {
-> -	struct scatterlist *s;
->   	dma_addr_t expected = sg_dma_address(sgt->sgl);
-> -	unsigned int i;
-> +	struct sg_dma_page_iter dma_iter;
->   	unsigned long size = 0;
->   
-> -	for_each_sg(sgt->sgl, s, sgt->nents, i) {
-> -		if (sg_dma_address(s) != expected)
-> +	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
-> +		if (sg_page_iter_dma_address(&dma_iter) != expected)
->   			break;
-> -		expected = sg_dma_address(s) + sg_dma_len(s);
-> -		size += sg_dma_len(s);
-> +		expected += PAGE_SIZE;
-> +		size += PAGE_SIZE;
 
-Same comment as for the DRM version. In fact, given that it's the same 
-function with the same purpose, might it be worth hoisting out as a 
-generic helper for the sg_table API itself?
+--=-fZ7yXxkuArogoYxiG0Gc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->   	}
->   	return size;
->   }
-[...]
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> index 92072a08af25..6ddf953efa11 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> @@ -142,9 +142,8 @@ static void *vb2_dma_sg_alloc(struct device *dev, unsigned long dma_attrs,
->   	 * No need to sync to the device, this will happen later when the
->   	 * prepare() memop is called.
->   	 */
-> -	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
-> -				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
-> -	if (!sgt->nents)
-> +	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
-> +			    DMA_ATTR_SKIP_CPU_SYNC)) {
+On Fri, 2020-06-19 at 02:37 -0700, Stephen Boyd wrote:
+> Quoting Maxime Ripard (2020-06-15 01:40:40)
+> > Hi,
+> >=20
+> > Since the whole DRM/HDMI support began to grow fairly big, I've chosen
+> > to split away the two discussions between the firmware clocks and the
+> > HDMI support.
+> >=20
+> > Let me know what you think,
+> > Maxime
+>=20
+> Do you want this to go through clk tree? Or looking for acks/review
+> tags?
+>=20
 
-As 0-day's explosions of nonsense imply, there's a rogue bracket here...
+FWIW I don't mind taking the device tree changes trough the RPi soc tree.
 
->   		goto fail_map;
->   
->   	buf->handler.refcount = &buf->refcount;
-> @@ -180,8 +179,8 @@ static void vb2_dma_sg_put(void *buf_priv)
->   	if (refcount_dec_and_test(&buf->refcount)) {
->   		dprintk(1, "%s: Freeing buffer of %d pages\n", __func__,
->   			buf->num_pages);
-> -		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
-> -				   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
-> +		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
-> +				  DMA_ATTR_SKIP_CPU_SYNC);
->   		if (buf->vaddr)
->   			vm_unmap_ram(buf->vaddr, buf->num_pages);
->   		sg_free_table(buf->dma_sgt);
-> @@ -202,8 +201,7 @@ static void vb2_dma_sg_prepare(void *buf_priv)
->   	if (buf->db_attach)
->   		return;
->   
-> -	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
-> -			       buf->dma_dir);
-> +	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
->   }
->   
->   static void vb2_dma_sg_finish(void *buf_priv)
-> @@ -215,7 +213,7 @@ static void vb2_dma_sg_finish(void *buf_priv)
->   	if (buf->db_attach)
->   		return;
->   
-> -	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
-> +	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
->   }
->   
->   static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
-> @@ -258,9 +256,8 @@ static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
->   	 * No need to sync to the device, this will happen later when the
->   	 * prepare() memop is called.
->   	 */
-> -	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
-> -				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
-> -	if (!sgt->nents)
-> +	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
-> +			    DMA_ATTR_SKIP_CPU_SYNC)) {
+Regards,
+Nicolas
 
-... and here.
 
-Robin.
+--=-fZ7yXxkuArogoYxiG0Gc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7siRYACgkQlfZmHno8
+x/5pSQf/exFv/66MuXsAeM5ue9vwfKbkmJ1AI4WY+HeyniqK7yARVlufqNDDHNry
+JW+BPgp/zFe6ZMhVfD/l9xc/tf3dn0vT/CINKP2Uhgey4GeVZ+TuekJ9pOQmlDjt
+HaormE0veBP+pk07pwOj7vXUNEd5spHlMjdu/xPT0NgZXQanvBy+NYIRZjWSXjs2
+pmxNSsSr9LGT2ypipzUtyqAtILTUobwgXFAWNeSp9uxyHD+V2qLatUtJCbP+Lqii
+nrosXYxiGw4CaZ2Ypl14pcOfQ24nsaAQNInTDetN47MCJtJZDcINclfqG0IWfvE3
+2+ZxejWhAankUhgBWQDZXcoPsLcgkA==
+=Fnq6
+-----END PGP SIGNATURE-----
+
+--=-fZ7yXxkuArogoYxiG0Gc--
+
