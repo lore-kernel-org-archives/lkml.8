@@ -2,108 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4541821974
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C949021941
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592579254;
+	bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sVlcmCth6zlN6bzTvgWryHPTJh7kUtIPEa1lDeEMUpDJ+HFLkeZuATl9PnvN4inmK
+	 NIGjJVRlogHNzoIqjT2ySvn2MkrtHD094XlB7LJc7N4eLA1holnMQRhlAMT1ylHaCv
+	 682oxk6EHutlRZXYjKZC2TAO0osE/yI5rtT0vzm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389602AbgFSPHb (ORCPT
+        id S2391592AbgFSPHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62953 "EHLO pegase1.c-s.fr"
+        Fri, 19 Jun 2020 11:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391525AbgFSPHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49pMbP6FZrz9v09t;
-        Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id r47RiLH63nh6; Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49pMbP5XS2z9v09j;
-        Fri, 19 Jun 2020 17:06:57 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA2588B868;
-        Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id KAW_dSQhF3_R; Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 645308B879;
-        Fri, 19 Jun 2020 17:06:59 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3E4C365AF4; Fri, 19 Jun 2020 15:06:56 +0000 (UTC)
-Message-Id: <de47e3d8dd3ef4c5f0a93c5ff19b5af52390cb9c.1592578278.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-References: <cover.1592578278.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 5/8] powerpc: Use MODULES_VADDR if defined
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 19 Jun 2020 15:06:56 +0000 (UTC)
+        id S2391535AbgFSPHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180DF21835;
+        Fri, 19 Jun 2020 15:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579226;
+        bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1+kPPzUOBzJCjyFyJFmBex48YufzjKkrJD/Wx8U5ns3GG7BE0LT8LtgDickjC93lx
+         LKRKv6OIOgR+Ywj1KE3s8vaQqE6IwRLuIRylIf4JdqNTBgSqyVelyfYUTIU3gSZDk7
+         H87XwD4DI4I+VylYfbjRUTCE28nwTbQ7rnKAakgA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jon Doron <arilou@gmail.com>,
+        Roman Kagan <rvkagan@yandex-team.ru>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 054/261] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+Date:   Fri, 19 Jun 2020 16:31:05 +0200
+Message-Id: <20200619141652.519326765@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to allow allocation of modules outside of vmalloc space,
-use MODULES_VADDR and MODULES_END when MODULES_VADDR is defined.
+From: Jon Doron <arilou@gmail.com>
 
-Redefine module_alloc() when MODULES_VADDR defined.
-Unmap corresponding KASAN shadow memory.
+[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+The problem the patch is trying to address is the fact that 'struct
+kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
+modes.
+
+In 64-bit mode the default alignment boundary is 64 bits thus
+forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
+boundary is at 32 bits thus no extra gaps.
+
+This is an issue as even when the kernel is 64 bit, the userspace using
+the interface can be both 32 and 64 bit but the same 32 bit userspace has
+to work with 32 bit kernel.
+
+The issue is fixed by forcing the 64 bit layout, this leads to ABI
+change for 32 bit builds and while we are obviously breaking '32 bit
+userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
+with 64 bit kernel' one.
+
+As the interface has no (known) users and 32 bit KVM is rather baroque
+nowadays, this seems like a reasonable decision.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Jon Doron <arilou@gmail.com>
+Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
+Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/module.c          | 11 +++++++++++
- arch/powerpc/mm/kasan/kasan_init_32.c |  6 ++++++
- 2 files changed, 17 insertions(+)
+ Documentation/virt/kvm/api.txt | 2 ++
+ include/uapi/linux/kvm.h       | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
-index df649acb5631..a211b0253cdb 100644
---- a/arch/powerpc/kernel/module.c
-+++ b/arch/powerpc/kernel/module.c
-@@ -86,3 +86,14 @@ int module_finalize(const Elf_Ehdr *hdr,
- 
- 	return 0;
- }
-+
-+#ifdef MODULES_VADDR
-+void *module_alloc(unsigned long size)
-+{
-+	BUILD_BUG_ON(TASK_SIZE > MODULES_VADDR);
-+
-+	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END, GFP_KERNEL,
-+				    PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-+				    __builtin_return_address(0));
-+}
-+#endif
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0760e1e754e4..f1bc267d42af 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -115,6 +115,12 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
- 	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
- 
- 	kasan_update_early_region(k_start, k_end, __pte(0));
-+
-+#ifdef MODULES_VADDR
-+	k_start = (unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR);
-+	k_end = (unsigned long)kasan_mem_to_shadow((void *)MODULES_END);
-+	kasan_update_early_region(k_start, k_end, __pte(0));
-+#endif
- }
- 
- static void __init kasan_mmu_init(void)
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+index 4833904d32a5..a18e996fa54b 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -4444,9 +4444,11 @@ EOI was received.
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 			__u32 type;
++			__u32 pad1;
+ 			union {
+ 				struct {
+ 					__u32 msr;
++					__u32 pad2;
+ 					__u64 control;
+ 					__u64 evt_page;
+ 					__u64 msg_page;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 52641d8ca9e8..e735bc4075dc 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 	__u32 type;
++	__u32 pad1;
+ 	union {
+ 		struct {
+ 			__u32 msr;
++			__u32 pad2;
+ 			__u64 control;
+ 			__u64 evt_page;
+ 			__u64 msg_page;
 -- 
-2.25.0
+2.25.1
+
+
 
