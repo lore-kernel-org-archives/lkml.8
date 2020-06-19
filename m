@@ -2,139 +2,224 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D63C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8B221548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8A82073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ME17mnS3"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="dS4o87kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732747AbgFSSNk (ORCPT
+        id S2389313AbgFSSRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:13:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26036 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732562AbgFSSNi (ORCPT
+        Fri, 19 Jun 2020 14:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731949AbgFSSRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:13:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592590416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z8Lv9ap/5+MGtYWPoEO0+lkl3xRdUoM0YERSQDqAgkI=;
-        b=ME17mnS3p1wQU2TaGHG19c9tf2Rr2EfgUEpsp2uDhZlzWMKBBR/ZuRu6IbmN+ARFNO1lCA
-        piz2VimXFkAK4ooU7tfhjfvtuklLDxBc7TOiWBkri9OHQ26ERNMCwR8qx1sBfU7AbYSUNc
-        KrH2V/lA8vChElgUepiddvX1l722faA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-0m28QoAtN9SxtVrQMRv6IA-1; Fri, 19 Jun 2020 14:13:32 -0400
-X-MC-Unique: 0m28QoAtN9SxtVrQMRv6IA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E8CF835B40;
-        Fri, 19 Jun 2020 18:13:30 +0000 (UTC)
-Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C9EA19723;
-        Fri, 19 Jun 2020 18:13:28 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 14:13:26 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200619181326.GB10009@redhat.com>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca>
- <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
+        Fri, 19 Jun 2020 14:17:00 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE3EC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:16:59 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u26so9321698wmn.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pdRjq7c/C/ExAewHNaf0dxUTQHfeQV9fMMSHlW7P0AE=;
+        b=dS4o87kUMtecMW/ZQvrys54WL2/itW2B/vToYbHnOcr9N48VVNJ9xgI659JhyNw4PH
+         HKSeh9slMa7USwzD2nDspF8ls9FiQhsIZLlqGaOFEtAXHzx8QHXyj9XelWR+FyreNNe8
+         60KfPSUtf3c7d/Tf5MGr9q+/5uZjYMxSgW5r4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pdRjq7c/C/ExAewHNaf0dxUTQHfeQV9fMMSHlW7P0AE=;
+        b=SY6iGuX4uvxT1mpfpgstMXTwfx5F0QmC/QaJ/pqoHr898pw6holk4dKLfPbLl7E/yO
+         SCN4Gvw8YvEMkYBUHcgTz4hrYXKZqZQbI0cB++ZurHo31PYYxIdtp7R1nc+Squ1QeDse
+         jqvJVIJn7RE0Cv90bZpuToPMQMA36aBBG8vaU0x4mk5U+eklQKRLq6hCFZluwnFt98y3
+         bUS8Oh/r15YCW14X9O40ctLTZVHphx0Lx/PcW7Cg6bXfx53Y5cJmZK7wmlYGdVwgf6FS
+         y4F04NUXorVX46cFpc/ZzkoKwzleHYnmmv2zuWyV/IKA0vV8Ky8/942+CGY/ZwMaQmQh
+         4NTg==
+X-Gm-Message-State: AOAM5332K5Cie55+CIkjIQ1SUB/MMoGReJZyImSwY4F6Nw8cOOyJMjr4
+        O4QvHmWrZvimvbzrbpxl7tzZplGw9/gJOFnfiFiU
+X-Google-Smtp-Source: ABdhPJwslo2aZ//Il/+AnJDXJ+Og9D8A3zuCJ0ipsamQcWxfOxHFCDRIthtT+4r3npxgym3eQiMm3dd4E8fsfjnrrW0=
+X-Received: by 2002:a1c:f608:: with SMTP id w8mr4878392wmc.78.1592590618426;
+ Fri, 19 Jun 2020 11:16:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200603153608.30056-1-alex@ghiti.fr> <20200603153608.30056-3-alex@ghiti.fr>
+ <CAOnJCU+JSuOGbOmZW-vqb-A_qR7CJc=qG16FbgOLWSm1vhJH1A@mail.gmail.com> <23529a84-44a0-3c45-f16d-5a7ee528610d@ghiti.fr>
+In-Reply-To: <23529a84-44a0-3c45-f16d-5a7ee528610d@ghiti.fr>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 19 Jun 2020 11:16:47 -0700
+Message-ID: <CAOnJCU+s5JuNdPg_R-Cg2+WnMjR51DD0ekbRr84EFCig6=YyZA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: Use PUD/PGDIR entries for linear mapping when possible
+To:     Alex Ghiti <alex@ghiti.fr>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Anup Patel <anup@brainfault.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 07:35:35PM -0400, Felix Kuehling wrote:
-> Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
-> > On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
-> >>> I still have my doubts about allowing fence waiting from within shrinkers.
-> >>> IMO ideally they should use a trywait approach, in order to allow memory
-> >>> allocation during command submission for drivers that
-> >>> publish fences before command submission. (Since early reservation object
-> >>> release requires that).
-> >> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
-> >> with a mempool to make sure it can handle it's allocations.
+On Thu, Jun 18, 2020 at 9:28 PM Alex Ghiti <alex@ghiti.fr> wrote:
+>
+> Hi Atish,
+>
+> Le 6/18/20 =C3=A0 8:47 PM, Atish Patra a =C3=A9crit :
+> > On Wed, Jun 3, 2020 at 8:38 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
+> >> Improve best_map_size so that PUD or PGDIR entries are used for linear
+> >> mapping when possible as it allows better TLB utilization.
 > >>
-> >>> But since drivers are already waiting from within shrinkers and I take your
-> >>> word for HMM requiring this,
-> >> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
-> >> one, the shrinker one is a lot less established.
-> > I really question if HW that needs something like DMA fence should
-> > even be using mmu notifiers - the best use is HW that can fence the
-> > DMA directly without having to get involved with some command stream
-> > processing.
+> >> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> >> ---
+> >>   arch/riscv/mm/init.c | 45 +++++++++++++++++++++++++++++++++---------=
+--
+> >>   1 file changed, 34 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> >> index 9a5c97e091c1..d275f9f834cf 100644
+> >> --- a/arch/riscv/mm/init.c
+> >> +++ b/arch/riscv/mm/init.c
+> >> @@ -424,13 +424,29 @@ static void __init create_pgd_mapping(pgd_t *pgd=
+p,
+> >>          create_pgd_next_mapping(nextp, va, pa, sz, prot);
+> >>   }
+> >>
+> >> -static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t s=
+ize)
+> >> +static bool is_map_size_ok(uintptr_t map_size, phys_addr_t base,
+> >> +                          uintptr_t base_virt, phys_addr_t size)
+> >>   {
+> >> -       /* Upgrade to PMD_SIZE mappings whenever possible */
+> >> -       if ((base & (PMD_SIZE - 1)) || (size & (PMD_SIZE - 1)))
+> >> -               return PAGE_SIZE;
+> >> +       return !((base & (map_size - 1)) || (base_virt & (map_size - 1=
+)) ||
+> >> +                       (size < map_size));
+> >> +}
+> >> +
+> >> +static uintptr_t __init best_map_size(phys_addr_t base, uintptr_t bas=
+e_virt,
+> >> +                                     phys_addr_t size)
+> >> +{
+> >> +#ifndef __PAGETABLE_PMD_FOLDED
+> >> +       if (is_map_size_ok(PGDIR_SIZE, base, base_virt, size))
+> >> +               return PGDIR_SIZE;
+> >> +
+> >> +       if (pgtable_l4_enabled)
+> >> +               if (is_map_size_ok(PUD_SIZE, base, base_virt, size))
+> >> +                       return PUD_SIZE;
+> >> +#endif
+> >> +
+> >> +       if (is_map_size_ok(PMD_SIZE, base, base_virt, size))
+> >> +               return PMD_SIZE;
+> >>
+> >> -       return PMD_SIZE;
+> >> +       return PAGE_SIZE;
+> >>   }
+> >>
+> >>   /*
+> >> @@ -576,7 +592,7 @@ void create_kernel_page_table(pgd_t *pgdir, uintpt=
+r_t map_size)
+> >>   asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>   {
+> >>          uintptr_t va, end_va;
+> >> -       uintptr_t map_size =3D best_map_size(load_pa, MAX_EARLY_MAPPIN=
+G_SIZE);
+> >> +       uintptr_t map_size;
+> >>
+> >>          load_pa =3D (uintptr_t)(&_start);
+> >>          load_sz =3D (uintptr_t)(&_end) - load_pa;
+> >> @@ -587,6 +603,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>
+> >>          kernel_virt_addr =3D KERNEL_VIRT_ADDR;
+> >>
+> >> +       map_size =3D best_map_size(load_pa, PAGE_OFFSET, MAX_EARLY_MAP=
+PING_SIZE);
+> >>          va_pa_offset =3D PAGE_OFFSET - load_pa;
+> >>          va_kernel_pa_offset =3D kernel_virt_addr - load_pa;
+> >>          pfn_base =3D PFN_DOWN(load_pa);
+> >> @@ -700,6 +717,8 @@ static void __init setup_vm_final(void)
+> >>
+> >>          /* Map all memory banks */
+> >>          for_each_memblock(memory, reg) {
+> >> +               uintptr_t remaining_size;
+> >> +
+> >>                  start =3D reg->base;
+> >>                  end =3D start + reg->size;
+> >>
+> >> @@ -707,15 +726,19 @@ static void __init setup_vm_final(void)
+> >>                          break;
+> >>                  if (memblock_is_nomap(reg))
+> >>                          continue;
+> >> -               if (start <=3D __pa(PAGE_OFFSET) &&
+> >> -                   __pa(PAGE_OFFSET) < end)
+> >> -                       start =3D __pa(PAGE_OFFSET);
+> >>
+> >> -               map_size =3D best_map_size(start, end - start);
+> >> -               for (pa =3D start; pa < end; pa +=3D map_size) {
+> >> +               pa =3D start;
+> >> +               remaining_size =3D reg->size;
+> >> +
+> >> +               while (remaining_size) {
+> >>                          va =3D (uintptr_t)__va(pa);
+> >> +                       map_size =3D best_map_size(pa, va, remaining_s=
+ize);
+> >> +
+> >>                          create_pgd_mapping(swapper_pg_dir, va, pa,
+> >>                                             map_size, PAGE_KERNEL);
+> >> +
+> >> +                       pa +=3D map_size;
+> >> +                       remaining_size -=3D map_size;
+> >>                  }
+> >>          }
+> >>
+> > This may not work in the RV32 with 2G memory  and if the map_size is
+> > determined to be a page size
+> > for the last memblock. Both pa & remaining_size will overflow and the
+> > loop will try to map memory from zero again.
+>
+> I'm not sure I understand: if pa starts at 0x8000_0000 and size is 2G,
+> then pa will overflow in the last iteration, but remaining_size will
+> then be equal to 0 right ?
+>
+Not unless the remaining_size is at least page size aligned. The last
+remaining size would "fff".
+It will overflow as well after subtracting the map_size.
+
+> And by the way, I realize that this loop only handles sizes that are
+> aligned on map_size.
+>
+
+Yeah.
+
+> Thanks,
+>
+> Alex
+>
+>
 > >
-> > Or at the very least it should not be a generic DMA fence but a
-> > narrowed completion tied only into the same GPU driver's command
-> > completion processing which should be able to progress without
-> > blocking.
+> >> --
+> >> 2.20.1
+> >>
+> >>
 > >
-> > The intent of notifiers was never to endlessly block while vast
-> > amounts of SW does work.
-> >
-> > Going around and switching everything in a GPU to GFP_ATOMIC seems
-> > like bad idea.
-> >
-> >> I've pinged a bunch of armsoc gpu driver people and ask them how much this
-> >> hurts, so that we have a clear answer. On x86 I don't think we have much
-> >> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-> >> (but nouveau I think doesn't use dma_fence in there). 
-> 
-> Soon nouveau will get company. We're working on a recoverable page fault
-> implementation for HMM in amdgpu where we'll need to update page tables
-> using the GPUs SDMA engine and wait for corresponding fences in MMU
-> notifiers.
 
-Note that HMM mandate, and i stressed that several time in the past,
-that all GPU page table update are asynchronous and do not have to
-wait on _anything_.
 
-I understand that you use DMA engine for GPU page table update but
-if you want to do so with HMM then you need a GPU page table update
-only DMA context where all GPU page table update goes through and
-where user space can not queue up job.
 
-It can be for HMM only but if you want to mix HMM with non HMM then
-everything need to be on that queue and other command queue will have
-to depends on it.
-
-Cheers,
-Jérôme
-
+--=20
+Regards,
+Atish
