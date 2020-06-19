@@ -2,55 +2,55 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE6C20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2A621548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580098;
-	bh=//CgPAApH+7PV0vYRuS2DZn+6GbntVH6DnvobXj342c=;
+	s=default; t=1592580099;
+	bh=asHvb1M4yJnWpzR6XeynGk7s5pr0sNh85tnSYRIZyVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMxwi0BHHnCTgWRft8rmM3RNMvhKJ+VEZX71GSqB990vzFLlMKR1n6yNz6BPY67vV
-	 +RXVNaVJm4vteJeSX5uSsQrL35kE6qAX3x4V4S36MeBxgU/58XcTUGUFKIDDZYNebU
-	 fLS64sCluXyaFGUS1uOAOHsFj0GeIxZHbzkUADq0=
+	b=jQ6VhLqOoFgZyA9SET/YOeDmgGJXcYHr9+IaQjj+uyKcz1Rb5hKTwEG6AaW05SWJB
+	 YLSLBtyf54t9cZkG7q6mlNde8yVQbVnoIK93qfM3VokqASWBN49+e0FrrXI5SttF6a
+	 XebrNSOcCvqLb3m/qfWfN5UKC9DPDOZJyyWPJV4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392859AbgFSPVf (ORCPT
+        id S2392874AbgFSPVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47162 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404091AbgFSPQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:16:34 -0400
+        id S2392593AbgFSPSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9C72080C;
-        Fri, 19 Jun 2020 15:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F003721582;
+        Fri, 19 Jun 2020 15:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579793;
-        bh=//CgPAApH+7PV0vYRuS2DZn+6GbntVH6DnvobXj342c=;
+        s=default; t=1592579921;
+        bh=asHvb1M4yJnWpzR6XeynGk7s5pr0sNh85tnSYRIZyVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRCoIGq40c9FNVuBKABaCDicAUzXm/G+TIjjyRXmKzjhn242qiac6TjG5uydf20Ys
-         CQ0oaM/dMwTFsKrIUYu2VeVgOoMF/dDwddt/dIA60lmaeLC/+GAlaUVEhsrs4poYOF
-         lpRICclo8uPf08ldo4Qdjq8Bd7KEh1bzoelIevOA=
+        b=l7pQa4Xo4GiZGsEH4sJpQDr3ieY1fMsVy7t813nVOcYg7cFElxDd94d34lrMMOlmy
+         MCq2rMwzJRwU4ZPbZCeqvp/sIHyFGi+UWaXwjE4BHaQfp7+zcsVwvmhHyXSAn7HcN+
+         t2Nt5DrcMSFS4pi0sVWpR4nUWa4PS4eNIUhD+w+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 5.4 261/261] perf symbols: Fix kernel maps for kcore and eBPF
-Date:   Fri, 19 Jun 2020 16:34:32 +0200
-Message-Id: <20200619141702.397991491@linuxfoundation.org>
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 047/376] MIPS: Loongson: Build ATI Radeon GPU driver as module
+Date:   Fri, 19 Jun 2020 16:29:25 +0200
+Message-Id: <20200619141712.585040488@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
-References: <20200619141649.878808811@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,82 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 0affd0e5262b6d40f5f63466d88933e99698e240 upstream.
+[ Upstream commit a44de7497f91834df0b8b6d459e259788ba66794 ]
 
-Adjust 'map->pgoff' also when moving a map's start address.
+When ATI Radeon GPU driver has been compiled directly into the kernel
+instead of as a module, we should make sure the firmware for the model
+(check available ones in /lib/firmware/radeon) is built-in to the kernel
+as well, otherwise there exists the following fatal error during GPU init,
+change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
 
-Example with v5.4.34 based kernel:
+[    1.900997] [drm] Loading RS780 Microcode
+[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
+[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+[    1.931729] [drm] radeon: finishing device.
 
-  Before:
-
-    $ sudo tools/perf/perf record -a --kcore -e intel_pt//k sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 1.958 MB perf.data ]
-    $ sudo tools/perf/perf script --itrace=e >/dev/null
-    Warning:
-    961 instruction trace errors
-
-  After:
-
-    $ sudo tools/perf/perf script --itrace=e >/dev/null
-    $
-
-Committer testing:
-
-  # uname -a
-  Linux seventh 5.6.10-100.fc30.x86_64 #1 SMP Mon May 4 15:36:44 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-  #
-
-Before:
-
-  # perf record -a --kcore -e intel_pt//k sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.923 MB perf.data ]
-  # perf script --itrace=e >/dev/null
-  Warning:
-  295 instruction trace errors
-  #
-
-After:
-
-  # perf record -a --kcore -e intel_pt//k sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.919 MB perf.data ]
-  # perf script --itrace=e >/dev/null
-  #
-
-Fixes: fb5a88d4131a ("perf tools: Preserve eBPF maps when loading kcore")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200602112505.1406-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/configs/loongson3_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1221,6 +1221,7 @@ int map_groups__merge_in(struct map_grou
- 
- 				m->end = old_map->start;
- 				list_add_tail(&m->node, &merged);
-+				new_map->pgoff += old_map->end - new_map->start;
- 				new_map->start = old_map->end;
- 			}
- 		} else {
-@@ -1241,6 +1242,7 @@ int map_groups__merge_in(struct map_grou
- 				 *      |new......| ->         |new...|
- 				 * |old....|        -> |old....|
- 				 */
-+				new_map->pgoff += old_map->end - new_map->start;
- 				new_map->start = old_map->end;
- 			}
- 		}
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 51675f5000d6..b0c24bd292b2 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -229,7 +229,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_DRM=y
+-CONFIG_DRM_RADEON=y
++CONFIG_DRM_RADEON=m
+ CONFIG_FB_RADEON=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_PLATFORM=m
+-- 
+2.25.1
+
 
 
