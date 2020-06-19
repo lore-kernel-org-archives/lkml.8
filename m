@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B8C20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28B4208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577648;
-	bh=J/+l/UZTLwjwA2JlavVjEHcDdD1pl6zF5wuk5/A+ZGY=;
+	s=default; t=1592577651;
+	bh=qcRITa5cTr5CxW+J1ArjWv+i9zaIUplkEmHDACQRFk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qua1U+4qh+IjOXukt9JX2+OcwT7AUlcZRhy+DosYLdJ6WVgxmqByHVuF08t/Y3sh1
-	 eUTICJQiSjmGyZL+1KhN8Vq6GZL8eNF1RyFivTj2r59yevyBuNadgkwaqjdmgRHJKH
-	 lHGmN57YmTB0ompONebzfMS5qKQvgvOQwy2aToEA=
+	b=yDdw7vA4fdHZJftSYTGcOEYZtFNGeMOARTIuApJ82p+dlPcMu5yio7SZDSXOxagNH
+	 X8ZZJsroN5qZhC45E9hp2M4Ia9avzVNqTcT/MNzeFzlFTZAnKzjiXdvlXdBjpu7wc5
+	 1fUPW7issX/sI3mwLjSWHl4UWSh3ITCGpIm8ZNP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388190AbgFSOkp (ORCPT
+        id S2387793AbgFSOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58602 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388167AbgFSOke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:40:34 -0400
+        id S2388182AbgFSOkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:40:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D52E20773;
-        Fri, 19 Jun 2020 14:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A2521527;
+        Fri, 19 Jun 2020 14:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577634;
-        bh=J/+l/UZTLwjwA2JlavVjEHcDdD1pl6zF5wuk5/A+ZGY=;
+        s=default; t=1592577642;
+        bh=qcRITa5cTr5CxW+J1ArjWv+i9zaIUplkEmHDACQRFk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xl7Dr1HPHx5vs79vkjTzCpeaig0CxAeaHFdJ0IsUMVxSTJ8kzvkBCPmim0Su3lvny
-         exqBhxY8nLXSRplJgL3xzNE0UEKhpHeuCdIKcEE4Hdtm0KJv89nr518HCPN1piclrt
-         txkk3u1nu6XFNoJyl4CkySfIWmWKfcKdQHE/30o8=
+        b=NcGZ0eZO8Kkw2njkrqcrZcuCHCyFGfz1HmagWcQKE8o7w36VWFN7vh94EYNL9fLBL
+         mkQo8EDmiBcYq6dWUErErc5G9IiHVLBNl4bJWNWqR5LTJc9wX49PoFQHtCJFBGaeRF
+         I5ZjUa9jHRcBc3NdY3ZvrfAxtDfkrCAbZeYtf0No=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis <pro.denis@protonmail.com>,
-        Masashi Honma <masashi.honma@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 008/128] ath9k_htc: Silence undersized packet warnings
-Date:   Fri, 19 Jun 2020 16:31:42 +0200
-Message-Id: <20200619141620.580743109@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 023/128] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+Date:   Fri, 19 Jun 2020 16:31:57 +0200
+Message-Id: <20200619141621.395705977@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -61,49 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+From: Justin Chen <justinpopo6@gmail.com>
 
-[ Upstream commit 450edd2805982d14ed79733a82927d2857b27cac ]
+commit 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c upstream.
 
-Some devices like TP-Link TL-WN722N produces this kind of messages
-frequently.
+Currently we set the tx/rx buffer to 0xff when NULL. This causes
+problems with some spi slaves where 0xff is a valid command. Looking
+at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
+Following this convention solves the issue.
 
-kernel: ath: phy0: Short RX data len, dropping (dlen: 4)
+Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200420190853.45614-6-kdasu.kdev@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This warning is useful for developers to recognize that the device
-(Wi-Fi dongle or USB hub etc) is noisy but not for general users. So
-this patch make this warning to debug message.
-
-Reported-By: Denis <pro.denis@protonmail.com>
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207539
-Fixes: cd486e627e67 ("ath9k_htc: Discard undersized packets")
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200504214443.4485-1-masashi.honma@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-bcm-qspi.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index 52b42ecee621..2eb169b204f8 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -998,9 +998,9 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	 * which are not PHY_ERROR (short radar pulses have a length of 3)
- 	 */
- 	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
--		ath_warn(common,
--			 "Short RX data len, dropping (dlen: %d)\n",
--			 rs_datalen);
-+		ath_dbg(common, ANY,
-+			"Short RX data len, dropping (dlen: %d)\n",
-+			rs_datalen);
- 		goto rx_next;
- 	}
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -698,7 +698,7 @@ static void read_from_hw(struct bcm_qspi
+ 			if (buf)
+ 				buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
+-				buf ? buf[tp.byte] : 0xff);
++				buf ? buf[tp.byte] : 0x0);
+ 		} else {
+ 			u16 *buf = tp.trans->rx_buf;
  
--- 
-2.25.1
-
+@@ -706,7 +706,7 @@ static void read_from_hw(struct bcm_qspi
+ 				buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
+ 								      slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
+-				buf ? buf[tp.byte] : 0xffff);
++				buf ? buf[tp.byte / 2] : 0x0);
+ 		}
+ 
+ 		update_qspi_trans_byte_count(qspi, &tp,
+@@ -761,13 +761,13 @@ static int write_to_hw(struct bcm_qspi *
+ 	while (!tstatus && slot < MSPI_NUM_CDRAM) {
+ 		if (tp.trans->bits_per_word <= 8) {
+ 			const u8 *buf = tp.trans->tx_buf;
+-			u8 val = buf ? buf[tp.byte] : 0xff;
++			u8 val = buf ? buf[tp.byte] : 0x00;
+ 
+ 			write_txram_slot_u8(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
+ 		} else {
+ 			const u16 *buf = tp.trans->tx_buf;
+-			u16 val = buf ? buf[tp.byte / 2] : 0xffff;
++			u16 val = buf ? buf[tp.byte / 2] : 0x0000;
+ 
+ 			write_txram_slot_u16(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
 
 
