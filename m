@@ -2,74 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C36C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3347B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5864F2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZODc/Z5Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOm7jvz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730983AbgFSHrl (ORCPT
+        id S1730872AbgFSHyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbgFSHrk (ORCPT
+        Fri, 19 Jun 2020 03:54:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39130 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729548AbgFSHyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:47:40 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F3AC06174E;
-        Fri, 19 Jun 2020 00:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eC3lCsQ0HKd4P3Obzi7QMiO3Tn6B/tCYfrG0AFO56UA=; b=ZODc/Z5Q567pQxBOisq5rhVdg/
-        LsOL17piDjqoF8LCxCjyCW4w7+K/FqsWHYMdV8q6qb1KSidkq3Lp6nj1d5DCERQY7FGoFn7X9X/U/
-        9VHoXyNVNkFewuOuUjOjna2fvKjvo+TUSVGVnH8xRgRfz4QkQgAR2dbgtbNlkJ9ae1KpHHx949R0E
-        kYlzmIuNDbt6HD+TA/KtQI5GV09xdT7AuDVS9PrNmfKE3ql6p1HFIkLnwf8Ritfszpxq748h6i39I
-        ViiTiwv/l66eczDvDOYP28sHFuYzJmNf6W7yL0ncKZlGgHtnr+Gm8MhbrDroxnADdEixIqQAwjy3a
-        UaMamYZw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmBkQ-0002bq-U3; Fri, 19 Jun 2020 07:47:38 +0000
-Date:   Fri, 19 Jun 2020 00:47:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "Makefile: install modules.builtin even if
- CONFIG_MODULES=n"
-Message-ID: <20200619074738.GB1427@infradead.org>
-References: <20200619044823.863461-1-masahiroy@kernel.org>
+        Fri, 19 Jun 2020 03:54:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592553270;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bryp9+XYVmgJRh4PMhNskE1wuXqIjMfjYcFoobgkJo4=;
+        b=dOm7jvz0s4gxSWMPdcn6uyRgZEnBIkLKe6uzT6tiHE3QrkrQRRS5xlDRfQ/1FtGHgz4XL/
+        85I9C5WbEGjtw0EsOSxtmsnAqIoNA56xwIyLFOwxBRkQmYxUf6A3Mim1ZpGlb6RldI5kLK
+        /89sKd0DA/DwrmhRiZEOFMklSf+5QF8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-jVicbQ_XMoyMczAOJrkecQ-1; Fri, 19 Jun 2020 03:54:27 -0400
+X-MC-Unique: jVicbQ_XMoyMczAOJrkecQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B191B873074;
+        Fri, 19 Jun 2020 07:54:26 +0000 (UTC)
+Received: from [10.72.13.200] (ovpn-13-200.pek2.redhat.com [10.72.13.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6BD45C1BB;
+        Fri, 19 Jun 2020 07:54:20 +0000 (UTC)
+Subject: Re: [PATCH] virtio-mem: Fix build error due to improper use 'select'
+To:     Weilong Chen <chenweilong@huawei.com>, mst@redhat.com,
+        virtualization@lists.linux-foundation.org, lizefan@huawei.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20200619080333.194753-1-chenweilong@huawei.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <953448d3-9e7c-3a96-b28b-edaf8b775e4d@redhat.com>
+Date:   Fri, 19 Jun 2020 15:54:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619044823.863461-1-masahiroy@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200619080333.194753-1-chenweilong@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 01:48:23PM +0900, Masahiro Yamada wrote:
-> This reverts commit e0b250b57dcf403529081e5898a9de717f96b76b.
-> 
-> Now that "make install" copies modules.builtin to $(INSTALL_MOD_PATH),
-> it breaks systems that do not set INSTALL_MOD_PATH for "make install".
-> 
-> While modules.builtin is useful for CONFIG_MODULES=n, this way gives
-> unexpected impact to existing systems. Maybe "make modules_install"
-> can install modules.builtin irrespective of CONFIG_MODULES as Jonas
-> originally suggested. Anyway, this commit should be reverted ASAP.
 
-What is the "unexpected impact?  This commit log needs to explain
-that.
+On 2020/6/19 下午4:03, Weilong Chen wrote:
+> As noted in:
+> https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+> "select should be used with care. select will force a symbol to a
+> value without visiting the dependencies."
+> Config VIRTIO_MEM should not select CONTIG_ALLOC directly.
+> Otherwise it will cause an error:
+> https://bugzilla.kernel.org/show_bug.cgi?id=208245
+>
+> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+> ---
+>   drivers/virtio/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 5809e5f5b157..5c92e4a50882 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -85,7 +85,7 @@ config VIRTIO_MEM
+>   	depends on VIRTIO
+>   	depends on MEMORY_HOTPLUG_SPARSE
+>   	depends on MEMORY_HOTREMOVE
+> -	select CONTIG_ALLOC
+> +	depends on CONTIG_ALLOC
+>   	help
+>   	 This driver provides access to virtio-mem paravirtualized memory
+>   	 devices, allowing to hotplug and hotunplug memory.
+
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
