@@ -2,75 +2,142 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A049C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80432C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D139208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67431208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbgFSLgi (ORCPT
+        id S1731731AbgFSLgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 07:36:38 -0400
-Received: from elvis.franken.de ([193.175.24.41]:37513 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgFSLfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 07:35:17 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jmFIK-0007F9-00; Fri, 19 Jun 2020 13:34:52 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id E6491C06E7; Fri, 19 Jun 2020 13:05:24 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 13:05:24 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200619110524.GA9391@alpha.franken.de>
-References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
- <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
+        Fri, 19 Jun 2020 07:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730919AbgFSLgQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 07:36:16 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE6DC0613EE;
+        Fri, 19 Jun 2020 04:36:11 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 00A712A05B8
+Received: by earth.universe (Postfix, from userid 1000)
+        id B218D3C08CD; Fri, 19 Jun 2020 13:36:07 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 13:36:07 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: ARM: dts: motorola-mapphone-common: remove unneeded
+ "simple-graph-card"
+Message-ID: <20200619113607.6h5qnq26nhxijjhp@earth.universe>
+References: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wshmrvne2pjx6m4t"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 02:33:54AM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+
+--wshmrvne2pjx6m4t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Jun 19, 2020 at 02:33:36PM +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>=20
+> Audio Graph Card is using "audio-graph-card" prefix instead of
+> "simple-graph-card", and moreover "widgets / routing" doesn't need it.
+> This patch removes unsupported "simple-graph-card" prefix from
+> motorola-mapphone-common.dtsi and vendor-prefixes.yaml.
+>=20
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
-> 
-> Notes:
->     v1->v2:
->     1.Remove unnecessary "items".
->     2.Add "clocks" as suggested by Paul Cercueil.
-> 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 
-applied to mips-next.
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Thomas.
+-- Sebastian
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+>  arch/arm/boot/dts/motorola-mapphone-common.dtsi        | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
+umentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9aeab66be85f..147afcfe81fe 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -20,7 +20,7 @@ patternProperties:
+>    "^(keypad|m25p|max8952|max8997|max8998|mpmc),.*": true
+>    "^(pinctrl-single|#pinctrl-single|PowerPC),.*": true
+>    "^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*": true
+> -  "^(simple-audio-card|simple-graph-card|st-plgpio|st-spics|ts),.*": true
+> +  "^(simple-audio-card|st-plgpio|st-spics|ts),.*": true
+> =20
+>    # Keep list in alphabetical order.
+>    "^abilis,.*":
+> diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/b=
+oot/dts/motorola-mapphone-common.dtsi
+> index 06fbffa81636..1990239cc6af 100644
+> --- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+> +++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+> @@ -140,13 +140,13 @@ soundcard {
+>  		compatible =3D "audio-graph-card";
+>  		label =3D "Droid 4 Audio";
+> =20
+> -		simple-graph-card,widgets =3D
+> +		widgets =3D
+>  			"Speaker", "Earpiece",
+>  			"Speaker", "Loudspeaker",
+>  			"Headphone", "Headphone Jack",
+>  			"Microphone", "Internal Mic";
+> =20
+> -		simple-graph-card,routing =3D
+> +		routing =3D
+>  			"Earpiece", "EP",
+>  			"Loudspeaker", "SPKR",
+>  			"Headphone Jack", "HSL",
+> --=20
+> 2.25.1
+>=20
+
+--wshmrvne2pjx6m4t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7soxUACgkQ2O7X88g7
++poB+w/5AW6f7+XYnn/UX9USobOZ5FfkThmQCtKUg1OcqPJa1Ff8+N/sSm30UP9n
+gPc8xMwxkQ2YYUJprc01xgTzyk8kdyU9bOU5ZjCXTAfXfsCqtge3SmqInM45f+Qv
+PkTx4MdRQTvZkzQQvC4dLaEcJVbk3wGAoEpNev8WDjqXRJkyfDax6NUIhJ5lQsSG
+sfZv0Ly3wwaNwkWLHLjMAGoTlem9VjcwJeaJdjHNeX1xY3CMEHxHAINHLhADnVjc
+TTmmaFVXIMwl47b63nGLeGEnAjPSfJIwbokF3MtstcXACUufBuHq38Tvspk9QM9o
+A4anzJ/v6tQqUaTyGBfpZeJUPA4K4wWcxri4Ugn3uKsnFhJeYWBfk6Yxb+A86Bm0
+9s5hcTVoiPSCe3Pob+HgHo66rf3+Lv+33a+z++n+4Htfrsr4rjvJNv6xS+xJpFa9
+7FVO+2cFJNOb+3DIvAr8WVAirkplkJ0EozhhXorA8MHUglEOeQD562GQPCm87CL0
+MrgwW+HhevbfIHyXyXFOcgXFxpatNeLOvrTbT++v+VwujjAAUAb56l0zS3GrosaB
+GdB6wS+ktMpQ+50JXl/IBqSuBW4C9oU6TCL8Szh9VVoyG36SklGs2MI2vcMCJ5JI
+DUuf9rci+KW5g/DK5nTvcpTiI0W+NJ4noCAvW8yAucKSAXZlBqw=
+=gyZw
+-----END PGP SIGNATURE-----
+
+--wshmrvne2pjx6m4t--
