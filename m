@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A188C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7138721532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C01C20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581616;
-	bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
+	s=default; t=1592581623;
+	bh=P1M0F4EwizQ1m+WCRYB0aMIiqJbtW9nMEnIEncHeqtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ny5CxyjZz+M9RmFpbUwszOVkjX+lTPcln15z2AxTohvU+G1aDhvsIrT7n39a/CUDo
-	 kYXhxcU8bsiOQGkKzb2ErC1t1lMa6Wk53Ui96rwVJKHhX1qlzbKjjuhmBkRol7tPMu
-	 S2JzC5lXExoaRuzm5RY0Go5oUSlnQuo+mawxq+yA=
+	b=fbLcKKi0wqomO+2Dthr+9j9LCeolZ+qwcxHT5sMXV9uFOboJciiUORBlp2WqmRm4D
+	 Ix73iBYrG6w/C8FMkhI76RccPTrSQVix2D7buLu847k40RV9zTVX+bW4VoHfJ0jfkj
+	 sId0T87f47O5oCqh3Tl7j50UwT8cGhAKv6GbbmWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405282AbgFSPqz (ORCPT
+        id S2393474AbgFSPrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58038 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393474AbgFSP0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:19 -0400
+        id S2393076AbgFSP0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABBD21582;
-        Fri, 19 Jun 2020 15:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79CAD21556;
+        Fri, 19 Jun 2020 15:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580378;
-        bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
+        s=default; t=1592580376;
+        bh=P1M0F4EwizQ1m+WCRYB0aMIiqJbtW9nMEnIEncHeqtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTkuR2ZecXRG5LHRT82s/Bhfvt7C8i0FT6G0FycwCrrhW1SF8WV1AdBFkoi9xDRD+
-         Ej31rRAkSibISWkvSMz4vzlz+YOZ457N/DcHICrxsitV2nKLET+IqwdpwOPJwHdKIw
-         vMYOQOVCD16zimKS/YmpodOIw+Jpy6Csvgn+sHZI=
+        b=AK1cg4zj15lEzHUEYvcFrJCBLbpWxTIQ0ODsnFEGYpqJ2kxP9mks1B3B9eGWtJox0
+         B8DOTfxnq+xbaVEMig9p6dwnV7vnEqUXfQZ2oOL1IZdRKwFV8Ta5U6GYixov0raope
+         8asF7aHOSY52aNiHmsldXq3hVK9mWCqdBT52dhuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 227/376] bcache: fix refcount underflow in bcache_device_free()
-Date:   Fri, 19 Jun 2020 16:32:25 +0200
-Message-Id: <20200619141721.065966923@linuxfoundation.org>
+        stable@vger.kernel.org, YuanJunQing <yuanjunqing66@163.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 226/376] MIPS: Fix IRQ tracing when call handle_fpe() and handle_msa_fpe()
+Date:   Fri, 19 Jun 2020 16:32:24 +0200
+Message-Id: <20200619141721.016261672@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,90 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: YuanJunQing <yuanjunqing66@163.com>
 
-[ Upstream commit 86da9f736740eba602389908574dfbb0f517baa5 ]
+[ Upstream commit 31e1b3efa802f97a17628dde280006c4cee4ce5e ]
 
-The problematic code piece in bcache_device_free() is,
+Register "a1" is unsaved in this function,
+ when CONFIG_TRACE_IRQFLAGS is enabled,
+ the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
+ and this may change register "a1".
+ The changed register "a1" as argument will be send
+ to do_fpe() and do_msa_fpe().
 
- 785 static void bcache_device_free(struct bcache_device *d)
- 786 {
- 787     struct gendisk *disk = d->disk;
- [snipped]
- 799     if (disk) {
- 800             if (disk->flags & GENHD_FL_UP)
- 801                     del_gendisk(disk);
- 802
- 803             if (disk->queue)
- 804                     blk_cleanup_queue(disk->queue);
- 805
- 806             ida_simple_remove(&bcache_device_idx,
- 807                               first_minor_to_idx(disk->first_minor));
- 808             put_disk(disk);
- 809         }
- [snipped]
- 816 }
-
-At line 808, put_disk(disk) may encounter kobject refcount of 'disk'
-being underflow.
-
-Here is how to reproduce the issue,
-- Attche the backing device to a cache device and do random write to
-  make the cache being dirty.
-- Stop the bcache device while the cache device has dirty data of the
-  backing device.
-- Only register the backing device back, NOT register cache device.
-- The bcache device node /dev/bcache0 won't show up, because backing
-  device waits for the cache device shows up for the missing dirty
-  data.
-- Now echo 1 into /sys/fs/bcache/pendings_cleanup, to stop the pending
-  backing device.
-- After the pending backing device stopped, use 'dmesg' to check kernel
-  message, a use-after-free warning from KASA reported the refcount of
-  kobject linked to the 'disk' is underflow.
-
-The dropping refcount at line 808 in the above code piece is added by
-add_disk(d->disk) in bch_cached_dev_run(). But in the above condition
-the cache device is not registered, bch_cached_dev_run() has no chance
-to be called and the refcount is not added. The put_disk() for a non-
-added refcount of gendisk kobject triggers a underflow warning.
-
-This patch checks whether GENHD_FL_UP is set in disk->flags, if it is
-not set then the bcache device was not added, don't call put_disk()
-and the the underflow issue can be avoided.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/mips/kernel/genex.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index d98354fa28e3..4d8bf731b118 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -797,7 +797,9 @@ static void bcache_device_free(struct bcache_device *d)
- 		bcache_device_detach(d);
+diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+index 0a43c9125267..5b7c67a3f78f 100644
+--- a/arch/mips/kernel/genex.S
++++ b/arch/mips/kernel/genex.S
+@@ -476,20 +476,20 @@ NESTED(nmi_handler, PT_SIZE, sp)
+ 	.endm
  
- 	if (disk) {
--		if (disk->flags & GENHD_FL_UP)
-+		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
-+
-+		if (disk_added)
- 			del_gendisk(disk);
+ 	.macro	__build_clear_fpe
++	CLI
++	TRACE_IRQS_OFF
+ 	.set	push
+ 	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
+ 	.set	mips1
+ 	SET_HARDFLOAT
+ 	cfc1	a1, fcr31
+ 	.set	pop
+-	CLI
+-	TRACE_IRQS_OFF
+ 	.endm
  
- 		if (disk->queue)
-@@ -805,7 +807,8 @@ static void bcache_device_free(struct bcache_device *d)
+ 	.macro	__build_clear_msa_fpe
+-	_cfcmsa	a1, MSA_CSR
+ 	CLI
+ 	TRACE_IRQS_OFF
++	_cfcmsa	a1, MSA_CSR
+ 	.endm
  
- 		ida_simple_remove(&bcache_device_idx,
- 				  first_minor_to_idx(disk->first_minor));
--		put_disk(disk);
-+		if (disk_added)
-+			put_disk(disk);
- 	}
- 
- 	bioset_exit(&d->bio_split);
+ 	.macro	__build_clear_ade
 -- 
 2.25.1
 
