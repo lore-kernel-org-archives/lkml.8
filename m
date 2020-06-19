@@ -2,115 +2,144 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF102083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34989208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 11:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a+mVvmA5"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GpTji/yh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbgFSLjP (ORCPT
+        id S1731978AbgFSLjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 07:39:15 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38990 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730919AbgFSLjN (ORCPT
+        Fri, 19 Jun 2020 07:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731811AbgFSLjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 07:39:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592566752;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9d0X2yH4PD3KFMTh5p2Qj9w09XEwXAFgHugUlN26sqY=;
-        b=a+mVvmA5IU0w72mt/ZtIF44KoSxWULGTxda2/Qb5jUFTJlZJeiu2TFUGO3n2CfXREiYOO3
-        bYTlx73Hal+qXQjeBGNyiVPk6lEo5HM4QzaeX7yhajZiipgHij8fCYdy2CQpPvGMJmPGjH
-        RFQiE5tn4by2dlYVYUfEQL3VOcXeULM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-AD8_x1PcPRippbNcA5c55A-1; Fri, 19 Jun 2020 07:39:10 -0400
-X-MC-Unique: AD8_x1PcPRippbNcA5c55A-1
-Received: by mail-wr1-f72.google.com with SMTP id o25so2303970wro.16
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 04:39:10 -0700 (PDT)
+        Fri, 19 Jun 2020 07:39:37 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F660C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 04:39:37 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j68so5202905qkb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 04:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5lQCYSoi4FC78xGjLBeogrhLOaSlungd8A2lT6c416A=;
+        b=GpTji/yhJTYfywss1k5am+JyELnNZlvvM8qP/Uyg3OD7x7MqDitwSWfgM3HPj0UhUM
+         CmGRkgXfDHKjJbk/G94ThGo65HoXLKpYTHWId62kC64177gtGxTII+K1ZYz1wipOiAHJ
+         eNgWeTmTaG/jDKlMWG2mJATpUK5rAwHHXT5FR/exkvaSA9MSXlfn3hlOUhTW2ZxS/H4F
+         HEmI2H47vtMrMdfYBePKTzq7Q28TCNQpdwQLKytMyWVDkIDxh7YsNl1xg+jdzcXMR0cI
+         rZrwuwfz+8JvRuJ/hZc0oTCMz+QMnazKQOTVrKsL2AkwHyGJfWycuxP+cVSimTbDO1fJ
+         9CVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9d0X2yH4PD3KFMTh5p2Qj9w09XEwXAFgHugUlN26sqY=;
-        b=BryXpag8P0xXw2ba32JL2s5f7K5uXdKUTIO1aPM+pyUwNbPQWBJbLusFinnreud0q8
-         VQKeHXWNMV2D/PnIaNuFjmnW/nRxm3/gJhXbMSMpauDN3IELWeqNyiW4Breczdg/jkQH
-         KaZe7mCixoBH+EjIfhN2yKDsTBwQR8ruVpmyHUbugxHuGBsMJeWp8E4BLRO4hSRXE7IT
-         K/Qe6minklivNaoFbFQCdrN+fZQlMHZkZy25Uo8yKizuOj75+7gdPSZuq9fY53JkHYvw
-         Q/S7dUHHirqWGEoH3IU95cEh61rd/NKOU7oUNwBgFk71Labs5ylsOYqy7aTl5tvR2tVF
-         HS8Q==
-X-Gm-Message-State: AOAM533EhrmqZYwHVWQSkme79bL4+Pfmt/SnuEakBN5S3INPmUfhEClf
-        1G9Ff98vuXO3zJHZUP/hngixxePnXLAUfc/MJZXtboDI2B23AckuTmS//I8rvFiWn5Trw1WO8EY
-        wJ2ABbP57OO0PfYSWDXAIHzLx
-X-Received: by 2002:a5d:6acf:: with SMTP id u15mr2567538wrw.18.1592566749430;
-        Fri, 19 Jun 2020 04:39:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwcRzn891sh2mmuqWJN1VVmUBNitsV9W5VKxNvKYYNB1FoJVfn8DXQQL1zuCyP5PRvsbUnX8g==
-X-Received: by 2002:a5d:6acf:: with SMTP id u15mr2567517wrw.18.1592566749259;
-        Fri, 19 Jun 2020 04:39:09 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-18-124.red.bezeqint.net. [79.178.18.124])
-        by smtp.gmail.com with ESMTPSA id k206sm6799460wma.39.2020.06.19.04.39.08
+        bh=5lQCYSoi4FC78xGjLBeogrhLOaSlungd8A2lT6c416A=;
+        b=R2oDdq4QeJJ+Bp58yqCg+2IvXfqYn8V3QN2hH5NU8dSr5zv0rWez1d3pr77dPYje+D
+         sEQpFxoi8ux8TzB4tEGaGWY98SL/G+qzqceK7xPw2SKEgQYzQOj8Mu3Ce80dzbpfqp1r
+         MNtX4ZBJDQWexfS0+WPsQU8HPO5tC6/2jhp8aeGvSkyA9y8gdqfgyoZ3yUxYVFfax/kl
+         nQOo6uqod2AgOHTYJIiVe0Y9A1CTw2rF13tqvyBETjlyjRv/60z0l1uIYZOsckoLL8Sf
+         s5hHY8gknIkELCgAMXxxbPjXYWsFKPRfqRASC2JH4zZFPlGhkELRmj4+gvla1WaO/f2s
+         EbRw==
+X-Gm-Message-State: AOAM533mZFjdIK6PQKJtHhL1e36kDmdWfi5owq9ViIAmfHvKESCAjFxm
+        mwMxdGSEILylU4Dmse9zCj9Zkw==
+X-Google-Smtp-Source: ABdhPJyvT5Fp9eB5e8a01kFzBtsDczKSLoT1L7Q5mintxsSice/gNXkvAdcFjnB+DRsdXJvj32xdRg==
+X-Received: by 2002:a37:6191:: with SMTP id v139mr2946071qkb.213.1592566776171;
+        Fri, 19 Jun 2020 04:39:36 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id o6sm6016053qtd.59.2020.06.19.04.39.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 04:39:08 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 07:39:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Weilong Chen <chenweilong@huawei.com>
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        lizefan@huawei.com, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH] virtio-mem: Fix build error due to improper use 'select'
-Message-ID: <20200619073841-mutt-send-email-mst@kernel.org>
-References: <20200619080333.194753-1-chenweilong@huawei.com>
+        Fri, 19 Jun 2020 04:39:35 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jmFMs-00AiVa-OZ; Fri, 19 Jun 2020 08:39:34 -0300
+Date:   Fri, 19 Jun 2020 08:39:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200619113934.GN6578@ziepe.ca>
+References: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca>
+ <20200618150051.GS20149@phenom.ffwll.local>
+ <20200618172338.GM6578@ziepe.ca>
+ <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200619080333.194753-1-chenweilong@huawei.com>
+In-Reply-To: <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:03:33PM +0800, Weilong Chen wrote:
-> As noted in:
-> https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
-> "select should be used with care. select will force a symbol to a
-> value without visiting the dependencies."
-> Config VIRTIO_MEM should not select CONTIG_ALLOC directly.
-> Otherwise it will cause an error:
-> https://bugzilla.kernel.org/show_bug.cgi?id=208245
+On Fri, Jun 19, 2020 at 09:22:09AM +0200, Daniel Vetter wrote:
+> > As I've understood GPU that means you need to show that the commands
+> > associated with the buffer have completed. This is all local stuff
+> > within the driver, right? Why use fence (other than it already exists)
 > 
-> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+> Because that's the end-of-dma thing. And it's cross-driver for the
+> above reasons, e.g.
+> - device A renders some stuff. Userspace gets dma_fence A out of that
+> (well sync_file or one of the other uapi interfaces, but you get the
+> idea)
+> - userspace (across process or just different driver) issues more
+> rendering for device B, which depends upon the rendering done on
+> device A. So dma_fence A is an dependency and will block this dma
+> operation. Userspace (and the kernel) gets dma_fence B out of this
+> - because unfortunate reasons, the same rendering on device B also
+> needs a userptr buffer, which means that dma_fence B is also the one
+> that the mmu_range_notifier needs to wait on before it can tell core
+> mm that it can go ahead and release those pages
 
-Cc virtio mem maintainer:
-M:      David Hildenbrand <david@redhat.com>
+I was afraid you'd say this - this is complete madness for other DMA
+devices to borrow the notifier hook of the first device!
 
+What if the first device is a page faulting device and doesn't call
+dma_fence??
 
-> ---
->  drivers/virtio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index 5809e5f5b157..5c92e4a50882 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -85,7 +85,7 @@ config VIRTIO_MEM
->  	depends on VIRTIO
->  	depends on MEMORY_HOTPLUG_SPARSE
->  	depends on MEMORY_HOTREMOVE
-> -	select CONTIG_ALLOC
-> +	depends on CONTIG_ALLOC
->  	help
->  	 This driver provides access to virtio-mem paravirtualized memory
->  	 devices, allowing to hotplug and hotunplug memory.
-> -- 
-> 2.17.1
+It you are going to treat things this way then the mmu notifier really
+needs to be part of the some core DMA buf, and not randomly sprinkled
+in drivers
 
+But really this is what page pinning is supposed to be used for, the
+MM behavior when it blocks on a pinned page is less invasive than if
+it stalls inside a mmu notifier.
+
+You can mix it, use mmu notififers to keep track if the buffer is
+still live, but when you want to trigger DMA then pin the pages and
+keep them pinned until DMA is done. The pin protects things (well,
+fork is still a problem)
+
+Do not need to wait on dma_fence in notifiers.
+
+Jason
