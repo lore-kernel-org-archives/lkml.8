@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C400C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA31C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5DE21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EC621582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577879;
-	bh=GxwRv2tbHq5ZnBVPYPhzElcHE23j1SRyKV5iDO0mFho=;
+	s=default; t=1592577891;
+	bh=ppEw9MP3tB1zpVIxnK/qTWeCLbgEcPpmvUhinoVj9ZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NY/jnyt27/KteEknYImuFbDmOsZUR2l7cuF1Yj+KETwdhkJNca8NGUfKWQ9knGSND
-	 3bc1Va3dvIGhpyMZYhHD+dxbG4LrXgseugctEOt+f4QST2UVmsq7BOpMEOTfmK36zf
-	 j8RZQbAbAPxtaz4N5l1x6ZQUulmTa/Vn8PuycIgA=
+	b=k8Wzsc0f1ZFdecdKM2B9GsDnip1RQkzkJO+XPvt7uUwHHIZSA0vDXlJyosRR3ny1K
+	 MuP8QE6nRjYG69JRGC87vhryw3+myJjHpV8B1I5+Y4NSYORU/30tmm7mWRO7GHdQNz
+	 t8vH+4njM9SHByg8dC+rwyb0MHVJ+GvtO/nPgBfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388587AbgFSOog (ORCPT
+        id S2388600AbgFSOos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbgFSOoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:44:05 -0400
+        id S2388560AbgFSOoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:44:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D5D21582;
-        Fri, 19 Jun 2020 14:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5C1D20A8B;
+        Fri, 19 Jun 2020 14:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577845;
-        bh=GxwRv2tbHq5ZnBVPYPhzElcHE23j1SRyKV5iDO0mFho=;
+        s=default; t=1592577864;
+        bh=ppEw9MP3tB1zpVIxnK/qTWeCLbgEcPpmvUhinoVj9ZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0V5rjDPKRWkZc0sKqxBDzT+P09503m8PkfIbpg28McxpYcVgKhi6R9FVUSsgPwT7I
-         Y3wv366EQDJXaZeoheEefjSWcs9J2VsTeGwIWy/RUX/133pYmdlfGYGdvcohd1HUoH
-         4ViJkYQ7T6G6Xm2ik1ubGiviAVWAAGJPdvPUIv1A=
+        b=dKLeIfeflpFeElbnI9btwzh08esCdgKRa7vJDXMDsAJ/zH4GULhUR7srt3Oa0TDEt
+         FKumbRlRWe3pz6YCutmV8EZqUpg8zupEDKv8z2k50a3A5I4IWrGowAB58uZXMVeR3T
+         xOb/yXGRa9f73mKnkM9rkP//4uI+eXDTVO+2KVaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 112/128] b43_legacy: Fix connection problem with WPA3
-Date:   Fri, 19 Jun 2020 16:33:26 +0200
-Message-Id: <20200619141626.061902739@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 119/128] ARM: tegra: Correct PL310 Auxiliary Control Register initialization
+Date:   Fri, 19 Jun 2020 16:33:33 +0200
+Message-Id: <20200619141626.414134567@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -59,42 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 6a29d134c04a8acebb7a95251acea7ad7abba106 upstream.
+commit 35509737c8f958944e059d501255a0bf18361ba0 upstream.
 
-Since the driver was first introduced into the kernel, it has only
-handled the ciphers associated with WEP, WPA, and WPA2. It fails with
-WPA3 even though mac80211 can handle those additional ciphers in software,
-b43legacy did not report that it could handle them. By setting MFP_CAPABLE using
-ieee80211_set_hw(), the problem is fixed.
+The PL310 Auxiliary Control Register shouldn't have the "Full line of
+zero" optimization bit being set before L2 cache is enabled. The L2X0
+driver takes care of enabling the optimization by itself.
 
-With this change, b43legacy will handle the ciphers it knows in hardware,
-and let mac80211 handle the others in software. It is not necessary to
-use the module parameter NOHWCRYPT to turn hardware encryption off.
-Although this change essentially eliminates that module parameter,
-I am choosing to keep it for cases where the hardware is broken,
-and software encryption is required for all ciphers.
+This patch fixes a noisy error message on Tegra20 and Tegra30 telling
+that cache optimization is erroneously enabled without enabling it for
+the CPU:
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526155909.5807-3-Larry.Finger@lwfinger.net
+	L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/b43legacy/main.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-tegra/tegra.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/broadcom/b43legacy/main.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-@@ -3835,6 +3835,7 @@ static int b43legacy_wireless_init(struc
- 	/* fill hw info */
- 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(hw, SIGNAL_DBM);
-+	ieee80211_hw_set(hw, MFP_CAPABLE); /* Allow WPA3 in software */
+--- a/arch/arm/mach-tegra/tegra.c
++++ b/arch/arm/mach-tegra/tegra.c
+@@ -137,8 +137,8 @@ static const char * const tegra_dt_board
+ };
  
- 	hw->wiphy->interface_modes =
- 		BIT(NL80211_IFTYPE_AP) |
+ DT_MACHINE_START(TEGRA_DT, "NVIDIA Tegra SoC (Flattened Device Tree)")
+-	.l2c_aux_val	= 0x3c400001,
+-	.l2c_aux_mask	= 0xc20fc3fe,
++	.l2c_aux_val	= 0x3c400000,
++	.l2c_aux_mask	= 0xc20fc3ff,
+ 	.smp		= smp_ops(tegra_smp_ops),
+ 	.map_io		= tegra_map_common_io,
+ 	.init_early	= tegra_init_early,
 
 
