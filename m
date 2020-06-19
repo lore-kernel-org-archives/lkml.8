@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC60C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F12C20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80536206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRBrjBVE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hlBbjmWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393878AbgFSPkF (ORCPT
+        id S2393944AbgFSPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:40:05 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53004 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393654AbgFSPjx (ORCPT
+        Fri, 19 Jun 2020 11:40:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41678 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393882AbgFSPkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:39:53 -0400
+        Fri, 19 Jun 2020 11:40:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592581192;
+        s=mimecast20190719; t=1592581209;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Y+5DkcNUxP1bFMVZ/Wx9pVXm5AvA2/umLhzGlXJcybs=;
-        b=IRBrjBVEZ84OHM9HrV7fcUQNyb9shUbOllWret5JjvdbY8/SxNHm5u+vp3Z48lbY62JE5M
-        tUQwBSj8HRg0dNG/gH3lyo2V+cBxdBomgyuL8sDyXzsEGZatfREImsHc/oTfIxLYmRITE5
-        5rlBBGNsACSVIiR73i+8AhVAq0T8kM8=
+        bh=5fB1uk4/fHg1pONPIZUs3iELz0bFztaTBbXpdlq2I9I=;
+        b=hlBbjmWgOH7qqAOFU+7/4C5XBnbJva7axeWTJFVQUeHVddbDGJaiw43uJRJeZ8l87GoOfS
+        iefPa/9XJZnAiYyBV98hrhbt0z5g5htqkB8v9j+RtK9be+NEzDOvHDma8hDximO2TRtX0l
+        UQYR/VruYn1Za02+sApBKLWAEflJ81k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-4gCsF_yDMyyK1HfAJ6MBIA-1; Fri, 19 Jun 2020 11:39:48 -0400
-X-MC-Unique: 4gCsF_yDMyyK1HfAJ6MBIA-1
+ us-mta-394-6wMsuaVxO6mDlnE-bTNTFQ-1; Fri, 19 Jun 2020 11:40:05 -0400
+X-MC-Unique: 6wMsuaVxO6mDlnE-bTNTFQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 034AA10753F2;
-        Fri, 19 Jun 2020 15:39:42 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5E4F18A822E;
+        Fri, 19 Jun 2020 15:40:03 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-112-254.ams2.redhat.com [10.36.112.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7390760BF4;
-        Fri, 19 Jun 2020 15:39:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CF2660BF4;
+        Fri, 19 Jun 2020 15:39:57 +0000 (UTC)
 From:   Mohammed Gamal <mgamal@redhat.com>
 To:     kvm@vger.kernel.org, pbonzini@redhat.com
 Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
         sean.j.christopherson@intel.com, wanpengli@tencent.com,
         jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
         babu.moger@amd.com, Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH v2 02/11] KVM: x86: mmu: Move translate_gpa() to mmu.c
-Date:   Fri, 19 Jun 2020 17:39:16 +0200
-Message-Id: <20200619153925.79106-3-mgamal@redhat.com>
+Subject: [PATCH v2 07/11] KVM: VMX: Add guest physical address check in EPT violation and misconfig
+Date:   Fri, 19 Jun 2020 17:39:21 +0200
+Message-Id: <20200619153925.79106-8-mgamal@redhat.com>
 In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
 References: <20200619153925.79106-1-mgamal@redhat.com>
 MIME-Version: 1.0
@@ -64,50 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also no point of it being inline since it's always called through
-function pointers. So remove that.
+Check guest physical address against it's maximum physical memory. If
+the guest's physical address exceeds the maximum (i.e. has reserved bits
+set), inject a guest page fault with PFERR_RSVD_MASK set.
 
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+This has to be done both in the EPT violation and page fault paths, as
+there are complications in both cases with respect to the computation
+of the correct error code.
+
+For EPT violations, unfortunately the only possibility is to emulate,
+because the access type in the exit qualification might refer to an
+access to a paging structure, rather than to the access performed by
+the program.
+
+Trapping page faults instead is needed in order to correct the error code,
+but the access type can be obtained from the original error code and
+passed to gva_to_gpa.  The corrections required in the error code are
+subtle. For example, imagine that a PTE for a supervisor page has a reserved
+bit set.  On a supervisor-mode access, the EPT violation path would trigger.
+However, on a user-mode access, the processor will not notice the reserved
+bit and not include PFERR_RSVD_MASK in the error code.
+
+Co-developed-by: Mohammed Gamal <mgamal@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 6 ------
- arch/x86/kvm/mmu/mmu.c          | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 24 +++++++++++++++++++++---
+ arch/x86/kvm/vmx/vmx.h |  3 ++-
+ 2 files changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f8998e97457f..bc0fb116cc5c 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1551,12 +1551,6 @@ void kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd, bool skip_tlb_flush,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 46d522ee5cb1..f38cbadcb3a5 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4793,9 +4793,15 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
  
- void kvm_configure_mmu(bool enable_tdp, int tdp_page_level);
+ 	if (is_page_fault(intr_info)) {
+ 		cr2 = vmx_get_exit_qual(vcpu);
+-		/* EPT won't cause page fault directly */
+-		WARN_ON_ONCE(!vcpu->arch.apf.host_apf_flags && enable_ept);
+-		return kvm_handle_page_fault(vcpu, error_code, cr2, NULL, 0);
++		if (enable_ept && !vcpu->arch.apf.host_apf_flags) {
++			/*
++			 * EPT will cause page fault only if we need to
++			 * detect illegal GPAs.
++			 */
++			kvm_fixup_and_inject_pf_error(vcpu, cr2, error_code);
++			return 1;
++		} else
++			return kvm_handle_page_fault(vcpu, error_code, cr2, NULL, 0);
+ 	}
  
--static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
--				  struct x86_exception *exception)
--{
--	return gpa;
--}
--
- static inline struct kvm_mmu_page *page_header(hpa_t shadow_page)
- {
- 	struct page *page = pfn_to_page(shadow_page >> PAGE_SHIFT);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fdd05c233308..ee113fc1f1bf 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -515,6 +515,12 @@ static bool check_mmio_spte(struct kvm_vcpu *vcpu, u64 spte)
- 	return likely(kvm_gen == spte_gen);
+ 	ex_no = intr_info & INTR_INFO_VECTOR_MASK;
+@@ -5311,6 +5317,18 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	       PFERR_GUEST_FINAL_MASK : PFERR_GUEST_PAGE_MASK;
+ 
+ 	vcpu->arch.exit_qualification = exit_qualification;
++
++	/*
++	 * Check that the GPA doesn't exceed physical memory limits, as that is
++	 * a guest page fault.  We have to emulate the instruction here, because
++	 * if the illegal address is that of a paging structure, then
++	 * EPT_VIOLATION_ACC_WRITE bit is set.  Alternatively, if supported we
++	 * would also use advanced VM-exit information for EPT violations to
++	 * reconstruct the page fault error code.
++	 */
++	if (unlikely(kvm_mmu_is_illegal_gpa(vcpu, gpa)))
++		return kvm_emulate_instruction(vcpu, 0);
++
+ 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
  }
  
-+static gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
-+                                  struct x86_exception *exception)
-+{
-+        return gpa;
-+}
-+
- /*
-  * Sets the shadow PTE masks used by the MMU.
-  *
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 5e2da15fe94f..950ecf237558 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -11,6 +11,7 @@
+ #include "kvm_cache_regs.h"
+ #include "ops.h"
+ #include "vmcs.h"
++#include "cpuid.h"
+ 
+ extern const u32 vmx_msr_index[];
+ 
+@@ -554,7 +555,7 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
+ 
+ static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
+ {
+-	return !enable_ept;
++	return !enable_ept || cpuid_maxphyaddr(vcpu) < boot_cpu_data.x86_phys_bits;
+ }
+ 
+ void dump_vmcs(void);
 -- 
 2.26.2
 
