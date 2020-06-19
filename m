@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD542067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870A12067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584757;
-	bh=HjIIrdyaQ83b1V7S2LAZQuZL99+VB1+436lKSf7nNBU=;
+	s=default; t=1592584762;
+	bh=Jx0jLagCIaHqZMqMMys74nVCrn0cA/OsicxinUIhQiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0i/AMJyjOwIT3Sq88seERujSvwidhYWf+JQcOBtPCZNKJHZilrhhSR9jLGPE4gVWN
-	 ddymxTWBFZBF5WfjIPcZ3lWi79+img9W5cIphf6xcDMa3RybygAcza5plTGlRzDZUI
-	 6KS+SDwyxzdR6JYkiM2oclMdNW9FGAWQjZOtKGzs=
+	b=ycbCgrjjTMAGDk+zVv1rGyowQqPovEJ8rZXTaYNy76QIvQ9BUVfkdExnBGtFZPGuS
+	 6IZiiHkWpiGQMxl2KYh1od4eBmCG5mU3XUhjSNaYq6OvHPTZWB5JDm97u11zBhi8t9
+	 Oq8AZfWg5/WsoVy7KrsC8Ok9gfe8XofWlCRGcSss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbgFSOqj (ORCPT
+        id S2395203AbgFSQjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388836AbgFSOqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:24 -0400
+        id S2388852AbgFSOqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F48420DD4;
-        Fri, 19 Jun 2020 14:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6226F21582;
+        Fri, 19 Jun 2020 14:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577984;
-        bh=HjIIrdyaQ83b1V7S2LAZQuZL99+VB1+436lKSf7nNBU=;
+        s=default; t=1592577997;
+        bh=Jx0jLagCIaHqZMqMMys74nVCrn0cA/OsicxinUIhQiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScxYP0Fngg86ExrNg4OsU2SivT/j80XmT/OwhKhCiqIO2O1kIqz32LPHEMSrr0w/V
-         nD0DP0ZXLc+wMqOrJ8uBJkO3NRhaDkCx3N5KMni17i1KiMC8wont2VXMMrD0fAnURY
-         Xo5kFxc2brhD+UMRre3kbd9I18JCrW/0sr/2ZGac=
+        b=nrOW/dsqxcPvIWpOSH5sMAwXbo8VL4xDn5j47Qime3iJL75zLdPiZjA1yU47ANwhU
+         C0tnMAkNqPs8voB58rqSi8RKR1Fzu9Pc7yrEUPBdsCH/JiJCzRnis1diA3Fj7qWai5
+         Ccf7cl1VT0zDVnYpbFr3IIRYd9VQ7u0/ycGRungQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/190] KVM: x86: only do L1TF workaround on affected processors
-Date:   Fri, 19 Jun 2020 16:31:23 +0200
-Message-Id: <20200619141635.473250358@linuxfoundation.org>
+Subject: [PATCH 4.14 043/190] spi: dw: fix possible race condition
+Date:   Fri, 19 Jun 2020 16:31:28 +0200
+Message-Id: <20200619141635.746314007@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,78 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+[ Upstream commit 66b19d762378785d1568b5650935205edfeb0503 ]
 
-[ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
+It is possible to get an interrupt as soon as it is requested.  dw_spi_irq
+does spi_controller_get_devdata(master) and expects it to be different than
+NULL. However, spi_controller_set_devdata() is called after request_irq(),
+resulting in the following crash:
 
-KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-in an L1TF attack.  This works as long as there are 5 free bits between
-MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-access triggers a reserved-bit-set page fault.
+CPU 0 Unable to handle kernel paging request at virtual address 00000030, epc == 8058e09c, ra == 8018ff90
+[...]
+Call Trace:
+[<8058e09c>] dw_spi_irq+0x8/0x64
+[<8018ff90>] __handle_irq_event_percpu+0x70/0x1d4
+[<80190128>] handle_irq_event_percpu+0x34/0x8c
+[<801901c4>] handle_irq_event+0x44/0x80
+[<801951a8>] handle_level_irq+0xdc/0x194
+[<8018f580>] generic_handle_irq+0x38/0x50
+[<804c6924>] ocelot_irq_handler+0x104/0x1c0
 
-The bit positions however were computed wrongly for AMD processors that have
-encryption support.  In this case, x86_phys_bits is reduced (for example
-from 48 to 43, to account for the C bit at position 47 and four bits used
-internally to store the SEV ASID and other stuff) while x86_cache_bits in
-would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-and bit 51 are set.  Then low_phys_bits would also cover some of the
-bits that are set in the shadow_mmio_value, terribly confusing the gfn
-caching mechanism.
-
-To fix this, avoid splitting gfns as long as the processor does not have
-the L1TF bug (which includes all AMD processors).  When there is no
-splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-the overlap.  This fixes "npt=0" operation on EPYC processors.
-
-Thanks to Maxim Levitsky for bisecting this bug.
-
-Cc: stable@vger.kernel.org
-Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/spi/spi-dw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d8878266553c..7220ab210dcf 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -275,6 +275,8 @@ static bool is_executable_pte(u64 spte);
- void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value)
- {
- 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-+	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-+	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
- 	shadow_mmio_value = mmio_value | SPTE_SPECIAL_MASK;
- 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
- }
-@@ -467,16 +469,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
- 	 * the most significant bits of legal physical address space.
- 	 */
- 	shadow_nonpresent_or_rsvd_mask = 0;
--	low_phys_bits = boot_cpu_data.x86_cache_bits;
--	if (boot_cpu_data.x86_cache_bits <
--	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-+	low_phys_bits = boot_cpu_data.x86_phys_bits;
-+	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-+	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-+			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-+		low_phys_bits = boot_cpu_data.x86_cache_bits
-+			- shadow_nonpresent_or_rsvd_mask_len;
- 		shadow_nonpresent_or_rsvd_mask =
--			rsvd_bits(boot_cpu_data.x86_cache_bits -
--				  shadow_nonpresent_or_rsvd_mask_len,
--				  boot_cpu_data.x86_cache_bits - 1);
--		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
--	} else
--		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-+			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
-+	}
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index cbdad3c4930f..5c16f7b17029 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -499,6 +499,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
+ 	spin_lock_init(&dws->buf_lock);
  
- 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
- 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
++	spi_master_set_devdata(master, dws);
++
+ 	ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
+ 			  master);
+ 	if (ret < 0) {
+@@ -532,7 +534,6 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 		}
+ 	}
+ 
+-	spi_master_set_devdata(master, dws);
+ 	ret = devm_spi_register_master(dev, master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
 -- 
 2.25.1
 
