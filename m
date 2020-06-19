@@ -2,164 +2,104 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58CBC2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710EC2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 17:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592587025;
+	bh=ZXqvXAmVATfcOFfYDgssdi24IIgo7rfGyS4R1yKWIB0=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=0Uph26ONIu5wOK9d5TDsOCZ+c0vJawvysr2rVoWlqnF79KrqTUySK/r1b/FNeujqS
+	 YVbFhBx4bSKjyAQPTS6ExCtcvwknjyEsY5dput9+/9Uqgxeui2j/3+qTmITsXePMAT
+	 boh6HoeqycXeDaJ+LsIaIqzckMzF3L78Kt/CV2q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732104AbgFSRQZ (ORCPT
+        id S1732124AbgFSRRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 13:16:25 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37460 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730935AbgFSRQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 13:16:24 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AFE7480045E4;
-        Fri, 19 Jun 2020 17:16:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hbtS4gjqbfqD; Fri, 19 Jun 2020 20:16:18 +0300 (MSK)
-Date:   Fri, 19 Jun 2020 20:16:17 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND v6 0/3] serial: 8250_dw: Fix ref clock usage
-Message-ID: <20200619171617.vnzmfds5zvw2ajr7@mobilestation>
-References: <20200617224813.23853-1-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VfPEdxN1UeKJ+gCWpgJymK7YzQs1Lznq1aBfoRNBiMHbQ@mail.gmail.com>
+        Fri, 19 Jun 2020 13:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729842AbgFSRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 13:17:02 -0400
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED0120DD4;
+        Fri, 19 Jun 2020 17:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592587022;
+        bh=ZXqvXAmVATfcOFfYDgssdi24IIgo7rfGyS4R1yKWIB0=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=d78wgNJsoEVyI8veX7Z8JHTuu5+qT47of6JK7UQwqdGNtgoorNO6t9sgsZ45aMfcW
+         cLArwSQOeEaOU4+uXfwiliUP97QcEIZ90wvmEEJGAZ9bRSDY1+ixU48ZkayuafuX04
+         5vQyqOmXeLNuNALDkTVsl1UeclqvlEaztkvdql7k=
+Subject: Re: [PATCH] pci: pcie: AER: Fix logging of Correctable errors
+To:     Matt Jolly <Kangie@footclan.ninja>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200618155511.16009-1-Kangie@footclan.ninja>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <d611dabd-b943-8492-a29e-0b7fb1980de8@kernel.org>
+Date:   Fri, 19 Jun 2020 13:17:00 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfPEdxN1UeKJ+gCWpgJymK7YzQs1Lznq1aBfoRNBiMHbQ@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200618155511.16009-1-Kangie@footclan.ninja>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:17:47AM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 18, 2020 at 1:52 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > Greg, Jiri. We've missed the last merge window. It would be pity to miss
-> > the next one. Please review/merge in the series.
-> >
-> > Regarding the patchset. It might be dangerous if an UART port reference
-> > clock rate is suddenly changed. In particular the 8250 port drivers
-> > (and AFAICS most of the tty drivers using common clock framework clocks)
-> > rely either on the exclusive reference clock utilization or on the ref
-> > clock rate being always constant. Needless to say that it turns out not
-> > true and if some other service suddenly changes the clock rate behind an
-> > UART port driver back no good can happen. So the port might not only end
-> > up with an invalid uartclk value saved, but may also experience a
-> > distorted output/input data since such action will effectively update the
-> > programmed baud-clock. We discovered such problem on Baikal-T1 SoC where
-> > two DW 8250 ports have got a shared reference clock. Allwinner SoC is
-> > equipped with an UART, which clock is derived from the CPU PLL clock
-> > source, so the CPU frequency change might be propagated down up to the
-> > serial port reference clock. This patchset provides a way to fix the
-> > problem to the 8250 serial port controllers and mostly fixes it for the
-> > DW 8250-compatible UART. I say mostly because due to not having a facility
-> > to pause/stop and resume/restart on-going transfers we implemented the
-> > UART clock rate update procedure executed post factum of the actual
-> > reference clock rate change.
-> >
-> > In addition the patchset includes a small optimization patch. It
-> > simplifies the DW APB UART ref clock rate setting procedure a bit.
-> >
-> > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> > base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> > tag: v5.7-rc4
-> 
+On 6/18/2020 11:55 AM, Matt Jolly wrote:
 
-> I'm wondering how this will collaborate with runtime PM.
+> +		pci_warn(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> +			dev->vendor, dev->device,
+> +			info->status, info->mask);
+> +	} else {
 
-Thanks for noticing this. You are right. PM should be taken into account.
+<snip>
 
--Sergey
+> +		pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> +			dev->vendor, dev->device,
+> +			info->status, info->mask);
 
-> 
-> > Changelog v3:
-> > - Refactor the original patch to adjust the UART port divisor instead of
-> >   requesting an exclusive ref clock utilization.
-> >
-> > Changelog v4:
-> > - Discard commit b426bf0fb085 ("serial: 8250: Fix max baud limit in generic
-> >   8250 port") since Greg has already merged it into the tty-next branch.
-> > - Use EXPORT_SYMBOL_GPL() for the serial8250_update_uartclk() method.
-> >
-> > Changelog v5:
-> > - Refactor dw8250_clk_work_cb() function cheking the clk_get_rate()
-> >   return value for being erroneous and exit if it is.
-> > - Don't update p->uartclk in the port startup. It will be updated later in
-> >   the same procedure at the set_termios() function being invoked by the
-> >   serial_core anyway.
-> >
-> > Changelog v6:
-> > - Resend
-> >
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> > Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> > Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> > Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-serial@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> >
-> > Serge Semin (3):
-> >   serial: 8250: Add 8250 port clock update method
-> >   serial: 8250_dw: Simplify the ref clock rate setting procedure
-> >   serial: 8250_dw: Fix common clocks usage race condition
-> >
-> >  drivers/tty/serial/8250/8250_dw.c   | 116 +++++++++++++++++++++++++---
-> >  drivers/tty/serial/8250/8250_port.c |  38 +++++++++
-> >  include/linux/serial_8250.h         |   2 +
-> >  3 files changed, 144 insertions(+), 12 deletions(-)
-> >
-> > --
-> > 2.26.2
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+
+Function pointers for pci_warn vs. pci_err ?
+
+This looks like a lot of copy/paste.
