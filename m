@@ -2,162 +2,117 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC491C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4342168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32A4217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FD8m5Tgw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnrHb+bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394436AbgFSQOh (ORCPT
+        id S2394444AbgFSQOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:14:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43237 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394409AbgFSQN6 (ORCPT
+        Fri, 19 Jun 2020 12:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390422AbgFSPDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:13:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592583236;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=djMzqxEX2KOhdS0mA0I6TixiZlYRFWjkTEipCw3bAqk=;
-        b=FD8m5Tgw2ml9LIDH4YDfv1p/uZrt15qPXwJ1WBvhi6KL0HFAHSWPQPwjniHnBZuF2uLsKL
-        vXpNBB8Jm0j4i2xJcORvxgpVY2BxNlc34tpFRjP1QgLB3Ye/74YTuMhKSggcgkdWz8ZwjA
-        qtrEifV/GV0i00aDD9nQSWtUUw+UOpg=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-myY3j4gRMHqX6oVuc-UZAg-1; Fri, 19 Jun 2020 12:13:55 -0400
-X-MC-Unique: myY3j4gRMHqX6oVuc-UZAg-1
-Received: by mail-qt1-f198.google.com with SMTP id x6so7495851qts.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:13:55 -0700 (PDT)
+        Fri, 19 Jun 2020 11:03:54 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BD2C06174E;
+        Fri, 19 Jun 2020 08:03:54 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id o26so7901835edq.0;
+        Fri, 19 Jun 2020 08:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5ADrT7jFFeW309LoBL3RGIrTXmJjwCmJqXAIhYbchGM=;
+        b=MnrHb+bhJPIiNHeaCS8a/fPwOI6wld7b4KlPZ/oOMUF1zVfizNxUckSlCB9snRURSK
+         XzbrQM04uoK4hVMgFJuCq6xAqaGH9he+9+BmJvbRtPy7JD90CBG0/Ut8Kgszpie4M5fT
+         RZJDv+1XgM+fTfk67GkWVuvYpc84l7+E2xupZasgfuHwokTqnMpTmdNGDIMaxaiOhzRq
+         xwhEGmNzE8AMGlUD/gDuw8YkDsoFXC8nBY4G62nHezapFTsIECYROvYVuQW2yXWcNpgt
+         vsDouCqgOkmOLyP21fqBslVrlg9EJyrRAH9gUt9EXeo13gSdim3xku8UW9kfb4qMPyxH
+         8azg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=djMzqxEX2KOhdS0mA0I6TixiZlYRFWjkTEipCw3bAqk=;
-        b=blaAucGqCbf3OBCUIr8dfFiHQ3JuQj9GJlt8Txr0EPlRu1Z5DFXPBeFMH4n5C+cr1b
-         WLhhcAEui1sX5uUOS0I5yeP0H8c68vu+8zKj2Vmv0YqrrCVGMMWye9LXi9RJ/Z+tJRWU
-         5LQsnyCigpQlnyYcucBNq0EE8GZqOmXTOEvf1cqiBWXVT30QTGGVbmtwXpAOSnbidC2K
-         pTk4q9lmy6nRgwwjIA2I7sS/52QVClpylCaKZOjXhpWaL9Bt/XEquiRTSSulBwl3ZaXI
-         4eKdWuUfvgq4z1bPyhiiqxGnyH3qg9o6dR3v4BrvYTGIV8SVB3cakS1AZambKZmvoOr0
-         da+g==
-X-Gm-Message-State: AOAM532bq/61S6ld2RyMUO2mDUafbmYkd2JpV5N9Gl5QEjP78IuxjilS
-        JgQVmmMSnxTzZPOxaHHrdZWXYzsETy2VrwGNk6z1dVO5snWdznejGMSTwRfEE5NpRPLz9gI6QCU
-        E/28gyjvrLwrQ220Rukr5Vjfp
-X-Received: by 2002:a05:620a:538:: with SMTP id h24mr3790627qkh.13.1592583234297;
-        Fri, 19 Jun 2020 09:13:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxoIDne3D6Lyc/+ePjNzlFOb4ZPCNYmFPc0mxtEwDaPmhR5/H3npMIraUQuPAc8rRqyj8GbKA==
-X-Received: by 2002:a05:620a:538:: with SMTP id h24mr3790569qkh.13.1592583233626;
-        Fri, 19 Jun 2020 09:13:53 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id z46sm6066253qtb.57.2020.06.19.09.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:13:52 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guan Xuetao <gxt@pku.edu.cn>
-Subject: [PATCH 22/26] mm/unicore32: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:13:51 -0400
-Message-Id: <20200619161351.9859-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
-References: <20200619160538.8641-1-peterx@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        bh=5ADrT7jFFeW309LoBL3RGIrTXmJjwCmJqXAIhYbchGM=;
+        b=BVJfp3D5J9H/q5IGUPrkbKsWNtN0qV72NjrqHOYjN6BqgSu/dZ+uz+AxPGoc0W64/n
+         DOQtvziWBmopQroSxXa1XnhMZ087tiKtt5qlAIAWs1Y3G5wy/YOErFH2M8NDvli4mxBg
+         8vSWJ+SZKMZ0p5f+7THyDA/MFJrYrRjP0+xWtv0VZfGUiHTzLip+sZZftf7VtZUQz0wb
+         SPfcG1mTVEUVNTAD5VSrlzvDWtqbgOWFhNeoFs3eLmJvIZ4mhYUQIILsVZRkyQJ3Fxzq
+         GlQT2ss9gLPtDcIFVDkbhgJ74GNiX3Y5sJAcWSik+upbeP9Bp87TfQ1l2aTp17ttcy3J
+         Gprg==
+X-Gm-Message-State: AOAM531H25o0KRHyUuvavk2zjtjL4j96F1rHkeRJkrVML2p31gzEfIKL
+        h0Ls5T7ESKtmpYdfAm+sPeg=
+X-Google-Smtp-Source: ABdhPJz9sH1kJUPVEXJrf2QSDqlJenKhQdl0OzUME2Zssy3LTJ1qNCFvxtzlOKQSUuWKycy8K6RLMg==
+X-Received: by 2002:a50:f289:: with SMTP id f9mr3714154edm.188.1592579033304;
+        Fri, 19 Jun 2020 08:03:53 -0700 (PDT)
+Received: from ubuntu-laptop ([2a01:598:9900:aeb5:e489:2676:2097:fdba])
+        by smtp.googlemail.com with ESMTPSA id h9sm4929016ejc.96.2020.06.19.08.03.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jun 2020 08:03:52 -0700 (PDT)
+Message-ID: <dc0c3bcf8b77b838316a0c4a53fdddaa476dd0dc.camel@gmail.com>
+Subject: Re: [RFC PATCH ] scsi: remove scsi_sdb_cache
+From:   Bean Huo <huobean@gmail.com>
+To:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     beanhuo@micron.com
+Date:   Fri, 19 Jun 2020 17:03:47 +0200
+In-Reply-To: <acdceada-b183-e41a-8645-aa3716b55236@acm.org>
+References: <20200619131042.10759-1-huobean@gmail.com>
+         <acdceada-b183-e41a-8645-aa3716b55236@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+Hi Bart
 
-Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
-perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+Thanks.
 
-CC: Guan Xuetao <gxt@pku.edu.cn>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/unicore32/mm/fault.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+On Fri, 2020-06-19 at 07:31 -0700, Bart Van Assche wrote:
+> On 2020-06-19 06:10, Bean Huo wrote:
+> > @@ -2039,7 +2024,6 @@ scsi_mode_select(struct scsi_device *sdev,
+> > int pf, int sp, int modepage,
+> >  		real_buffer[1] = data->medium_type;
+> >  		real_buffer[2] = data->device_specific;
+> >  		real_buffer[3] = data->block_descriptor_length;
+> > -	
+Here delete a blank line since there are multiple blank lines.
+> > 	
+> >  
+> >  		cmd[0] = MODE_SELECT;
+> >  		cmd[4] = len;
+> > @@ -2227,7 +2211,7 @@ scsi_device_set_state(struct scsi_device
+> > *sdev, enum scsi_device_state state)
+> >  			goto illegal;
+> >  		}
+> >  		break;
+> > -			
+> > +
 
-diff --git a/arch/unicore32/mm/fault.c b/arch/unicore32/mm/fault.c
-index 847ff24fcc2a..b272a389d977 100644
---- a/arch/unicore32/mm/fault.c
-+++ b/arch/unicore32/mm/fault.c
-@@ -16,6 +16,7 @@
- #include <linux/page-flags.h>
- #include <linux/sched/signal.h>
- #include <linux/io.h>
-+#include <linux/perf_event.h>
- 
- #include <asm/pgtable.h>
- #include <asm/tlbflush.h>
-@@ -160,7 +161,8 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- }
- 
- static vm_fault_t __do_pf(struct mm_struct *mm, unsigned long addr,
--		unsigned int fsr, unsigned int flags, struct task_struct *tsk)
-+			  unsigned int fsr, unsigned int flags,
-+			  struct task_struct *tsk, struct pt_regs *regs)
- {
- 	struct vm_area_struct *vma;
- 	vm_fault_t fault;
-@@ -186,7 +188,7 @@ static vm_fault_t __do_pf(struct mm_struct *mm, unsigned long addr,
- 	 * If for any reason at all we couldn't handle the fault, make
- 	 * sure we exit gracefully rather than endlessly redo the fault.
- 	 */
--	fault = handle_mm_fault(vma, addr & PAGE_MASK, flags, NULL);
-+	fault = handle_mm_fault(vma, addr & PAGE_MASK, flags, regs);
- 	return fault;
- 
- check_stack:
-@@ -219,6 +221,8 @@ static int do_pf(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	if (!(fsr ^ 0x12))
- 		flags |= FAULT_FLAG_WRITE;
- 
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
-+
- 	/*
- 	 * As per x86, we may deadlock here.  However, since the kernel only
- 	 * validly references user space from well defined areas of the code,
-@@ -244,7 +248,7 @@ static int do_pf(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- #endif
- 	}
- 
--	fault = __do_pf(mm, addr, fsr, flags, tsk);
-+	fault = __do_pf(mm, addr, fsr, flags, tsk, regs);
- 
- 	/* If we need to retry but a fatal signal is pending, handle the
- 	 * signal first. We do not need to release the mmap_sem because
-@@ -254,10 +258,6 @@ static int do_pf(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		return 0;
- 
- 	if (!(fault & VM_FAULT_ERROR) && (flags & FAULT_FLAG_ALLOW_RETRY)) {
--		if (fault & VM_FAULT_MAJOR)
--			tsk->maj_flt++;
--		else
--			tsk->min_flt++;
- 		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
- 			goto retry;
--- 
-2.26.2
+Here has trailing whitespace, delete it.
+
+> >  	case SDEV_RUNNING:
+> >  		switch (oldstate) {
+> >  		case SDEV_CREATED:
+> 
+> If these whitespace changes are left out, feel free to add:
+> 
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
+Bean
 
