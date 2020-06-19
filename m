@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4C320DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA85D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578024;
-	bh=qCQyK2BVS9RjlizeSBVCB4mSRhbHaN1jKu3Z2q3Si0E=;
+	s=default; t=1592578027;
+	bh=1agQLpU96I/Z1eZ2SSbkIm3F4bpuIkrZ67czfsmpJnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmurknpebc1TXOPvm1dGOIhWyb3+x1YGlT24MsN+6eUvDMvH9jRrsn+HrIktb9vbp
-	 7QXVGm+2IfqZTbcBS++fMSBK+B6S5hHgtYdc1I9YFKDjgcPW5HkzuS0ncU5xp6kHcS
-	 ph/AiUWMldmeUhcjJa1BB0yEIcEGbxmmyq83mcDY=
+	b=yJQn2UIqowdnyamp8q1R804xQ29edU2dAQyUJEVdwA7/E0Wk2vd+El1ekz+Hrwq/J
+	 O3bLYd/mxLhufhWFNbrtH06KOBkJL0PAGHDud7H1gyugLynZVptxcF2wkiU1gXtk4L
+	 35c8vlrPOPYonX82zgqRRrmFZUwNGqmQWqRg/CRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388908AbgFSOrB (ORCPT
+        id S2388916AbgFSOrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388897AbgFSOq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:56 -0400
+        id S2388504AbgFSOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C70C2168B;
-        Fri, 19 Jun 2020 14:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E342E20DD4;
+        Fri, 19 Jun 2020 14:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578016;
-        bh=qCQyK2BVS9RjlizeSBVCB4mSRhbHaN1jKu3Z2q3Si0E=;
+        s=default; t=1592578018;
+        bh=1agQLpU96I/Z1eZ2SSbkIm3F4bpuIkrZ67czfsmpJnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJpV5Uo33x/j+6Qt1+H/V5F5ZXaDWrjnk4PIMHHK9kHRhXFfHPDiLe+0BmPuOkDpb
-         rVa36tE8WsJXtxnuYs98LqSMfMfjo08CqkRDoYoZOMimWVPWP91DbV//KqCa8K2KmM
-         46ZpvyIvaBbLWkK4iD31Z6YqPVV6A9WgDZ8FfaZc=
+        b=lIibIbWUsv8Aih67QkVjYAD+fQJsJ7Qh7DC6unBDififBlv7BemhEIKPfeKA26LHH
+         2u41k8xSZ+NdCZRh9PzAup8OzJ4ZZ2oLYyGIyrTVKTJLSq+dQgRFQjaJhw2csPdKze
+         sZoqwc5JJbM30Ne6yUe4dlQ8GG+5b0HmIl7jrh6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Gonglei <arei.gonglei@huawei.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         virtualization@lists.linux-foundation.org,
+        Gonglei <arei.gonglei@huawei.com>,
         "Longpeng(Mike)" <longpeng2@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 049/190] crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
-Date:   Fri, 19 Jun 2020 16:31:34 +0200
-Message-Id: <20200619141636.037245991@linuxfoundation.org>
+Subject: [PATCH 4.14 050/190] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
+Date:   Fri, 19 Jun 2020 16:31:35 +0200
+Message-Id: <20200619141636.082797324@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -68,36 +68,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Longpeng(Mike) <longpeng2@huawei.com>
 
-[ Upstream commit 8c855f0720ff006d75d0a2512c7f6c4f60ff60ee ]
+[ Upstream commit b02989f37fc5e865ceeee9070907e4493b3a21e2 ]
 
-The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
-( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory
-of request structure.
+The system will crash when the users insmod crypto/tcrypt.ko with mode=38
+( testing "cts(cbc(aes))" ).
 
-In crypto_authenc_init_tfm(), the reqsize is set to:
-  [PART 1] sizeof(authenc_request_ctx) +
-  [PART 2] ictx->reqoff +
-  [PART 3] MAX(ahash part, skcipher part)
-and the 'PART 3' is used by both ahash and skcipher in turn.
-
-When the virtio_crypto driver finish skcipher req, it'll call ->complete
-callback(in crypto_finalize_skcipher_request) and then free its
-resources whose pointers are recorded in 'skcipher parts'.
-
-However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
-it will use the 'ahash part' of the request and change its content,
-so virtio_crypto driver will get the wrong pointer after ->complete
-finish and mistakenly free some other's memory. So the system will crash
-when these memory will be used again.
-
-The resources which need to be cleaned up are not used any more. But the
-pointers of these resources may be changed in the function
-"crypto_finalize_skcipher_request". Thus release specific resources before
-calling this function.
+Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+is part of a chained scatterlist, it could jump to the start of a new
+scatterlist array. Fix it by sg_next() on calculation of src/dst
+scatterlist.
 
 Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
 Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
 Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Jason Wang <jasowang@redhat.com>
@@ -106,33 +88,56 @@ Cc: virtualization@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
 Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Acked-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Gonglei <arei.gonglei@huawei.com>
 Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-3-longpeng2@huawei.com
+Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index e2231a1a05a1..772d2b3137c6 100644
+index 772d2b3137c6..fee78ec46bae 100644
 --- a/drivers/crypto/virtio/virtio_crypto_algs.c
 +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -569,10 +569,11 @@ static void virtio_crypto_ablkcipher_finalize_req(
- 	struct ablkcipher_request *req,
- 	int err)
- {
--	crypto_finalize_cipher_request(vc_sym_req->base.dataq->engine,
--					req, err);
- 	kzfree(vc_sym_req->iv);
- 	virtcrypto_clear_request(&vc_sym_req->base);
-+
-+	crypto_finalize_cipher_request(vc_sym_req->base.dataq->engine,
-+					   req, err);
- }
+@@ -354,13 +354,18 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	int err;
+ 	unsigned long flags;
+ 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
+-	int i;
+ 	u64 dst_len;
+ 	unsigned int num_out = 0, num_in = 0;
+ 	int sg_total;
+ 	uint8_t *iv;
++	struct scatterlist *sg;
  
- static struct crypto_alg virtio_crypto_algs[] = { {
+ 	src_nents = sg_nents_for_len(req->src, req->nbytes);
++	if (src_nents < 0) {
++		pr_err("Invalid number of src SG.\n");
++		return src_nents;
++	}
++
+ 	dst_nents = sg_nents(req->dst);
+ 
+ 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+@@ -441,12 +446,12 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	vc_sym_req->iv = iv;
+ 
+ 	/* Source data */
+-	for (i = 0; i < src_nents; i++)
+-		sgs[num_out++] = &req->src[i];
++	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
++		sgs[num_out++] = sg;
+ 
+ 	/* Destination data */
+-	for (i = 0; i < dst_nents; i++)
+-		sgs[num_out + num_in++] = &req->dst[i];
++	for (sg = req->dst; sg; sg = sg_next(sg))
++		sgs[num_out + num_in++] = sg;
+ 
+ 	/* Status */
+ 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
 -- 
 2.25.1
 
