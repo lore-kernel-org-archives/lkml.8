@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D088C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EECC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6A821924
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3809206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581518;
-	bh=zS6gAEk0HKpJiDZ/kTr717G1d4Hq+xCpiqZybYupiOA=;
+	s=default; t=1592581532;
+	bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5rbilCZ/9P7T2e7EnNFfshYc9oOv3X3wuwKJ5e6OdvcUBwrsWGB1VZ4/gB0zpUxq
-	 I8qnnzJEYwQOoXFER5WXOBLeAmi4KL3fqToQAP392WDQWj6LzI5CCj6vv7gRid6G/X
-	 zZnFEOS1eqPseuY6xx4j27HGlV0icm4gWTE8yRuY=
+	b=jmSBd6bHZsmUImns2VwYbS4kVX7f2CViVPayMreiDSLPGXHsbkgU2jyR4RFiCDF5t
+	 NjCpyD5ectakYkZ4aNTEcT4Xt6O45ZAjqvefNrl2+EKlz96EOkPAmR+6IjOyhnmbri
+	 jBToC6ODezkaDJuaw62wyWptV4aXqEcHKg+8lEp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405209AbgFSPpL (ORCPT
+        id S2393532AbgFSP1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59250 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391072AbgFSP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:31 -0400
+        id S2393070AbgFSPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B0421919;
-        Fri, 19 Jun 2020 15:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B0A20B80;
+        Fri, 19 Jun 2020 15:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580450;
-        bh=zS6gAEk0HKpJiDZ/kTr717G1d4Hq+xCpiqZybYupiOA=;
+        s=default; t=1592580351;
+        bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHBUKdMzw8/NXXtnl028yYtoKcdN/tS/mCsol5V/Z2dRyCaCAzvsSBmD1BN1wRjl3
-         nBsUZkas7i2Jos02CzUdVF5TZgS8hiz0rpib5d2CnkjhfCsPTErtY8etpNbnIAZDXU
-         Y8SLIkzA3sLNjQfG51hhoaQjb16aB6cwmQY3WfgQ=
+        b=0AhGZjDVwJ/ii4/Sp7zFTYOf5x5eKv63JnaGj2uHjvP78eCc9MLRqe55mgYwNN1Dk
+         95Ck29+OVb4dzrJCD/iTPNyasFMEd7OQFCRPF+5gwsXah2AjyeclZ73wIwO2LXaXIa
+         2hvYe3A9Mbo+GuE5lD3ETKpUWq0MZfnHLnMAp3HI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gow <davidgow@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 254/376] kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
-Date:   Fri, 19 Jun 2020 16:32:52 +0200
-Message-Id: <20200619141722.348253156@linuxfoundation.org>
+Subject: [PATCH 5.7 186/376] brcmfmac: fix WPA/WPA2-PSK 4-way handshake offload and SAE offload failures
+Date:   Fri, 19 Jun 2020 16:31:44 +0200
+Message-Id: <20200619141719.154196204@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -66,178 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
 
-[ Upstream commit adb72ae1915db28f934e9e02c18bfcea2f3ed3b7 ]
+[ Upstream commit b2fe11f0777311a764e47e2f9437809b4673b7b1 ]
 
-Patch series "Fix some incompatibilites between KASAN and FORTIFY_SOURCE", v4.
+An incorrect value of use_fwsup is set for 4-way handshake offload for
+WPA//WPA2-PSK, caused by commit 3b1e0a7bdfee ("brcmfmac: add support for
+SAE authentication offload"). It results in missing bit
+BRCMF_VIF_STATUS_EAP_SUCCESS set in brcmf_is_linkup() and causes the
+failure. This patch correct the value for the case.
 
-3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE:
-memchr, memcmp and strlen.
+Also setting bit BRCMF_VIF_STATUS_EAP_SUCCESS for SAE offload case in
+brcmf_is_linkup() to fix SAE offload failure.
 
-When FORTIFY_SOURCE is on, a number of functions are replaced with
-fortified versions, which attempt to check the sizes of the operands.
-However, these functions often directly invoke __builtin_foo() once they
-have performed the fortify check.  The compiler can detect that the
-results of these functions are not used, and knows that they have no other
-side effects, and so can eliminate them as dead code.
-
-Why are only memchr, memcmp and strlen affected?
-================================================
-
-Of string and string-like functions, kasan_test tests:
-
- * strchr  ->  not affected, no fortified version
- * strrchr ->  likewise
- * strcmp  ->  likewise
- * strncmp ->  likewise
-
- * strnlen ->  not affected, the fortify source implementation calls the
-               underlying strnlen implementation which is instrumented, not
-               a builtin
-
- * strlen  ->  affected, the fortify souce implementation calls a __builtin
-               version which the compiler can determine is dead.
-
- * memchr  ->  likewise
- * memcmp  ->  likewise
-
- * memset ->   not affected, the compiler knows that memset writes to its
-	       first argument and therefore is not dead.
-
-Why does this not affect the functions normally?
-================================================
-
-In string.h, these functions are not marked as __pure, so the compiler
-cannot know that they do not have side effects.  If relevant functions are
-marked as __pure in string.h, we see the following warnings and the
-functions are elided:
-
-lib/test_kasan.c: In function `kasan_memchr':
-lib/test_kasan.c:606:2: warning: statement with no effect [-Wunused-value]
-  memchr(ptr, '1', size + 1);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_kasan.c: In function `kasan_memcmp':
-lib/test_kasan.c:622:2: warning: statement with no effect [-Wunused-value]
-  memcmp(ptr, arr, size+1);
-  ^~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_kasan.c: In function `kasan_strings':
-lib/test_kasan.c:645:2: warning: statement with no effect [-Wunused-value]
-  strchr(ptr, '1');
-  ^~~~~~~~~~~~~~~~
-...
-
-This annotation would make sense to add and could be added at any point,
-so the behaviour of test_kasan.c should change.
-
-The fix
-=======
-
-Make all the functions that are pure write their results to a global,
-which makes them live.  The strlen and memchr tests now pass.
-
-The memcmp test still fails to trigger, which is addressed in the next
-patch.
-
-[dja@axtens.net: drop patch 3]
-  Link: http://lkml.kernel.org/r/20200424145521.8203-2-dja@axtens.net
-Fixes: 0c96350a2d2f ("lib/test_kasan.c: add tests for several string/memory API functions")
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: David Gow <davidgow@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Daniel Micay <danielmicay@gmail.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Link: http://lkml.kernel.org/r/20200423154503.5103-1-dja@axtens.net
-Link: http://lkml.kernel.org/r/20200423154503.5103-2-dja@axtens.net
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3b1e0a7bdfee ("brcmfmac: add support for SAE authentication offload")
+Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1589277788-119966-1-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kasan.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c  | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index e3087d90e00d..dc2c6a51d11a 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -23,6 +23,14 @@
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index 2ba165330038..bacd762cdf3e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -1819,6 +1819,10 @@ brcmf_set_key_mgmt(struct net_device *ndev, struct cfg80211_connect_params *sme)
+ 		switch (sme->crypto.akm_suites[0]) {
+ 		case WLAN_AKM_SUITE_SAE:
+ 			val = WPA3_AUTH_SAE_PSK;
++			if (sme->crypto.sae_pwd) {
++				brcmf_dbg(INFO, "using SAE offload\n");
++				profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
++			}
+ 			break;
+ 		default:
+ 			bphy_err(drvr, "invalid cipher group (%d)\n",
+@@ -2104,11 +2108,6 @@ brcmf_cfg80211_connect(struct wiphy *wiphy, struct net_device *ndev,
+ 		goto done;
+ 	}
  
- #include <asm/page.h>
+-	if (sme->crypto.sae_pwd) {
+-		brcmf_dbg(INFO, "using SAE offload\n");
+-		profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
+-	}
+-
+ 	if (sme->crypto.psk &&
+ 	    profile->use_fwsup != BRCMF_PROFILE_FWSUP_SAE) {
+ 		if (WARN_ON(profile->use_fwsup != BRCMF_PROFILE_FWSUP_NONE)) {
+@@ -5495,7 +5494,8 @@ static bool brcmf_is_linkup(struct brcmf_cfg80211_vif *vif,
+ 	u32 event = e->event_code;
+ 	u32 status = e->status;
  
-+/*
-+ * We assign some test results to these globals to make sure the tests
-+ * are not eliminated as dead code.
-+ */
-+
-+int kasan_int_result;
-+void *kasan_ptr_result;
-+
- /*
-  * Note: test functions are marked noinline so that their names appear in
-  * reports.
-@@ -622,7 +630,7 @@ static noinline void __init kasan_memchr(void)
- 	if (!ptr)
- 		return;
- 
--	memchr(ptr, '1', size + 1);
-+	kasan_ptr_result = memchr(ptr, '1', size + 1);
- 	kfree(ptr);
- }
- 
-@@ -638,7 +646,7 @@ static noinline void __init kasan_memcmp(void)
- 		return;
- 
- 	memset(arr, 0, sizeof(arr));
--	memcmp(ptr, arr, size+1);
-+	kasan_int_result = memcmp(ptr, arr, size + 1);
- 	kfree(ptr);
- }
- 
-@@ -661,22 +669,22 @@ static noinline void __init kasan_strings(void)
- 	 * will likely point to zeroed byte.
- 	 */
- 	ptr += 16;
--	strchr(ptr, '1');
-+	kasan_ptr_result = strchr(ptr, '1');
- 
- 	pr_info("use-after-free in strrchr\n");
--	strrchr(ptr, '1');
-+	kasan_ptr_result = strrchr(ptr, '1');
- 
- 	pr_info("use-after-free in strcmp\n");
--	strcmp(ptr, "2");
-+	kasan_int_result = strcmp(ptr, "2");
- 
- 	pr_info("use-after-free in strncmp\n");
--	strncmp(ptr, "2", 1);
-+	kasan_int_result = strncmp(ptr, "2", 1);
- 
- 	pr_info("use-after-free in strlen\n");
--	strlen(ptr);
-+	kasan_int_result = strlen(ptr);
- 
- 	pr_info("use-after-free in strnlen\n");
--	strnlen(ptr, 1);
-+	kasan_int_result = strnlen(ptr, 1);
- }
- 
- static noinline void __init kasan_bitops(void)
-@@ -743,11 +751,12 @@ static noinline void __init kasan_bitops(void)
- 	__test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
- 
- 	pr_info("out-of-bounds in test_bit\n");
--	(void)test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	kasan_int_result = test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
- 
- #if defined(clear_bit_unlock_is_negative_byte)
- 	pr_info("out-of-bounds in clear_bit_unlock_is_negative_byte\n");
--	clear_bit_unlock_is_negative_byte(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	kasan_int_result = clear_bit_unlock_is_negative_byte(BITS_PER_LONG +
-+		BITS_PER_BYTE, bits);
- #endif
- 	kfree(bits);
- }
+-	if (vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK &&
++	if ((vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK ||
++	     vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_SAE) &&
+ 	    event == BRCMF_E_PSK_SUP &&
+ 	    status == BRCMF_E_STATUS_FWSUP_COMPLETED)
+ 		set_bit(BRCMF_VIF_STATUS_EAP_SUCCESS, &vif->sme_state);
 -- 
 2.25.1
 
