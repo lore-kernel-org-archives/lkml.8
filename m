@@ -2,153 +2,108 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C46C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD644C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093AB21548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGDZ1mh6"
+	by mail.kernel.org (Postfix) with ESMTP id 8DB5121548
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394556AbgFSSJu (ORCPT
+        id S2394812AbgFSSKG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:09:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33002 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392532AbgFSSJr (ORCPT
+        Fri, 19 Jun 2020 14:10:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33570 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732403AbgFSSKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:09:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592590185;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=khXjE23/qfT8jkgymY8FGHl3y1nZCObamf5x1h4Z6l4=;
-        b=cGDZ1mh6E0dV9NnlDmA90K60bizj4etVppSuTfTXVfWCBgaLwESSUV6/89CODtCTzgIMuM
-        25YyfrhYSvAYYSt96IHtbgcXyIr0FFaZYAJ5Q/d70HBrE/Kegjq4lAPSV2h+gjfSz/R0JX
-        BApBYiad+R9r/xa0RQNz60J9Ewr638E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-NaeDjSMGMDa8QaLfGotVwQ-1; Fri, 19 Jun 2020 14:09:41 -0400
-X-MC-Unique: NaeDjSMGMDa8QaLfGotVwQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46A1D464;
-        Fri, 19 Jun 2020 18:09:39 +0000 (UTC)
-Received: from redhat.com (ovpn-112-200.rdu2.redhat.com [10.10.112.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FD907C1E8;
-        Fri, 19 Jun 2020 18:09:37 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 14:09:35 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200619180935.GA10009@redhat.com>
-References: <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
- <20200617152835.GF6578@ziepe.ca>
- <20200618150051.GS20149@phenom.ffwll.local>
- <20200618172338.GM6578@ziepe.ca>
- <CAKMK7uEbqTu4q-amkLXyd1i8KNtLaoO2ZFoGqYiG6D0m0FKpOg@mail.gmail.com>
- <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
+        Fri, 19 Jun 2020 14:10:04 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JI4ZNo013853
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:10:04 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.66])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rwwu0s1u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:10:04 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <miltonm@us.ibm.com>;
+        Fri, 19 Jun 2020 18:10:03 -0000
+Received: from us1a3-smtp03.a3.dal06.isc4sb.com (10.106.154.98)
+        by smtp.notes.na.collabserv.com (10.106.227.127) with smtp.notes.na.collabserv.com ESMTP;
+        Fri, 19 Jun 2020 18:09:55 -0000
+Received: from us1a3-mail228.a3.dal06.isc4sb.com ([10.146.103.71])
+          by us1a3-smtp03.a3.dal06.isc4sb.com
+          with ESMTP id 2020061918095479-734599 ;
+          Fri, 19 Jun 2020 18:09:54 +0000 
+In-Reply-To: <20200619165154.GA20461@cnn>
+From:   "Milton Miller II" <miltonm@us.ibm.com>
+To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, manikandan.e@hcl.com,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        vijaykhemka@fb.com, saipsdasari@fb.com, patrickw3@fb.com
+Date:   Fri, 19 Jun 2020 18:09:55 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619172308.GQ6578@ziepe.ca>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20200619165154.GA20461@cnn>
+X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
+ SCN1812108_20180501T0841_FP65 April 15, 2020 at 09:48
+X-LLNOutbound: False
+X-Disclaimed: 37575
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 20061918-4409-0000-0000-00000305A032
+X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.424974; ST=0; TS=0; UL=0; ISC=; MB=0.000960
+X-IBM-SpamModules-Versions: BY=3.00013312; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000295; SDB=6.01393884; UDB=6.00746056; IPR=6.01176167;
+ MB=3.00032629; MTD=3.00000008; XFM=3.00000015; UTC=2020-06-19 18:10:01
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2020-06-19 16:54:29 - 6.00011502
+x-cbparentid: 20061918-4410-0000-0000-00006256AC0D
+Message-Id: <OFB20C104E.283BBF6D-ON0025858C.0062CC5B-0025858C.0063C8F2@notes.na.collabserv.com>
+Subject: Re:  [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_20:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Reason: orgsafe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:23:08PM -0300, Jason Gunthorpe wrote:
-> On Fri, Jun 19, 2020 at 06:19:41PM +0200, Daniel Vetter wrote:
-> 
-> > The madness is only that device B's mmu notifier might need to wait
-> > for fence_B so that the dma operation finishes. Which in turn has to
-> > wait for device A to finish first.
-> 
-> So, it sound, fundamentally you've got this graph of operations across
-> an unknown set of drivers and the kernel cannot insert itself in
-> dma_fence hand offs to re-validate any of the buffers involved?
-> Buffers which by definition cannot be touched by the hardware yet.
-> 
-> That really is a pretty horrible place to end up..
-> 
-> Pinning really is right answer for this kind of work flow. I think
-> converting pinning to notifers should not be done unless notifier
-> invalidation is relatively bounded. 
-> 
-> I know people like notifiers because they give a bit nicer performance
-> in some happy cases, but this cripples all the bad cases..
-> 
-> If pinning doesn't work for some reason maybe we should address that?
+On : 06/19/2020 abiout 12:46PM in some timezone,  Manikandan Elumalai  wrote:
 
-Note that the dma fence is only true for user ptr buffer which predate
-any HMM work and thus were using mmu notifier already. You need the
-mmu notifier there because of fork and other corner cases.
+>The adm1278 temp attribute need it for openbmc platform .
+>This feature not enabled by default, so PMON_CONFIG needs to enable
+>it.
+>
+>Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+>---
+>---    v4 -Reported-by: kernel test robot <lkp@intel.com>
 
-For nouveau the notifier do not need to wait for anything it can update
-the GPU page table right away. Modulo needing to write to GPU memory
-using dma engine if the GPU page table is in GPU memory that is not
-accessible from the CPU but that's never the case for nouveau so far
-(but i expect it will be at one point).
+Thie above tag should be Adjacent to the Signed-off-by.
 
+>---    v3 -fix invalid signed-off.
+>---       -removed checkpath warnings.
+>---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single
+>line operation.
+>---    v2 -add Signed-off-by.
+>---       -removed ADM1278_TEMP1_EN check.
+>---
 
-So i see this as 2 different cases, the user ptr case, which does pin
-pages by the way, where things are synchronous. Versus the HMM cases
-where everything is asynchronous.
+The canonical format is to have a line of 3 dashes then the trailing changelog 
 
+Please read the documentation at 
 
-I probably need to warn AMD folks again that using HMM means that you
-must be able to update the GPU page table asynchronously without
-fence wait. The issue for AMD is that they already update their GPU
-page table using DMA engine. I believe this is still doable if they
-use a kernel only DMA engine context, where only kernel can queue up
-jobs so that you do not need to wait for unrelated things and you can
-prioritize GPU page table update which should translate in fast GPU
-page table update without DMA fence.
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-canonical-patch-format
 
-
-> > Full disclosure: We are aware that we've designed ourselves into an
-> > impressive corner here, and there's lots of talks going on about
-> > untangling the dma synchronization from the memory management
-> > completely. But
-> 
-> I think the documenting is really important: only GPU should be using
-> this stuff and driving notifiers this way. Complete NO for any
-> totally-not-a-GPU things in drivers/accel for sure.
-
-Yes for user that expect HMM they need to be asynchronous. But it is
-hard to revert user ptr has it was done a long time ago.
-
-Cheers,
-Jérôme
+milton
 
