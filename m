@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15334C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1707EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9DFF206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA002206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581408;
-	bh=VW46B+ei0NsG89h3+DTKJ1cC++KE1d0wIR0QtbLgOmE=;
+	s=default; t=1592581410;
+	bh=D5B3I4QanqLAhfpP8hGr+kfAiOpGXsdGgNYIrPcUAac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2J4ie3pHArfWbL+369FuTc1aAx83i1Pa5tCF3TT7YcpB8LCOXwucEuJUFqZ+gNwab
-	 Bfrb1N6aqNLMw5rlJhtNgDOXsAa1IRT4VjtrjjCZsfLQMbp3f6xRpMTi8tkI//tmpJ
-	 vBKFCV4KgUiy5pYdpagMiUqV6wcZdvkjSkTwjC9o=
+	b=lHBbMvd7KDT4NnnafopFCDa33iyveah2QGKD7XUWRhHTDgWF0MFwZyvfMfZQ+OUgl
+	 fd+mKzmZVnPQAigeHeqPnsyxJ8u/wb6URD2gFZ4+y+5aX6303Z8KWmm+tYWIojxqib
+	 qcL4g54EIauJ8tmTSCMZVKw0UVj0sDbUD8ueUDSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393629AbgFSP2R (ORCPT
+        id S2393619AbgFSP2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:28:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:28:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393547AbgFSP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:27:26 -0400
+        id S2393536AbgFSP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C002D2186A;
-        Fri, 19 Jun 2020 15:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2132A218AC;
+        Fri, 19 Jun 2020 15:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580445;
-        bh=VW46B+ei0NsG89h3+DTKJ1cC++KE1d0wIR0QtbLgOmE=;
+        s=default; t=1592580439;
+        bh=D5B3I4QanqLAhfpP8hGr+kfAiOpGXsdGgNYIrPcUAac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/Niw0609XEgJWkEBPuEM+MU2qrCA1L+J0jXSgVTt6QwvlqkZcaorspO4si+EYzPy
-         4TaE2MXjNHxoRB9thJXXn4tvE8eclmZW0PPqVS/x5Arp/6tAG8F9A0Iy2sXgxSSVD2
-         37jXGzXNUXwpRxhyZGmT+Ync74u+udgqkN5Le8iI=
+        b=Tvs+aW/psEo0fAVd2c89e7GYBuf2RUgcP6izm05C86GzQTKX5CAoZK8921kl66erE
+         GmkAd9phSKMv/qnhYyvcFwq4zmZA3pUSs11Xdw7UmNUx/GDLdzifzN9J1p7hq//H0U
+         1erhYBuZrdHLxhLcnOvAGeKOmxJ5kv+bSnxXUpiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nickolai Kozachenko <daemongloom@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 244/376] platform/x86: intel-hid: Add a quirk to support HP Spectre X2 (2015)
-Date:   Fri, 19 Jun 2020 16:32:42 +0200
-Message-Id: <20200619141721.878437336@linuxfoundation.org>
+Subject: [PATCH 5.7 219/376] btrfs: qgroup: mark qgroup inconsistent if were inherting snapshot to a new qgroup
+Date:   Fri, 19 Jun 2020 16:32:17 +0200
+Message-Id: <20200619141720.694732569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,39 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nickolai Kozachenko <daemongloom@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 8fe63eb757ac6e661a384cc760792080bdc738dc ]
+[ Upstream commit cbab8ade585a18c4334b085564d9d046e01a3f70 ]
 
-HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
-does not have this control method (the same was for Wacom MobileStudio Pro).
-Expand previous DMI quirk by Alex Hung to also enable 5 button array
-for this system.
+[BUG]
+For the following operation, qgroup is guaranteed to be screwed up due
+to snapshot adding to a new qgroup:
 
-Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  # mkfs.btrfs -f $dev
+  # mount $dev $mnt
+  # btrfs qgroup en $mnt
+  # btrfs subv create $mnt/src
+  # xfs_io -f -c "pwrite 0 1m" $mnt/src/file
+  # sync
+  # btrfs qgroup create 1/0 $mnt/src
+  # btrfs subv snapshot -i 1/0 $mnt/src $mnt/snapshot
+  # btrfs qgroup show -prce $mnt/src
+  qgroupid         rfer         excl     max_rfer     max_excl parent  child
+  --------         ----         ----     --------     -------- ------  -----
+  0/5          16.00KiB     16.00KiB         none         none ---     ---
+  0/257         1.02MiB     16.00KiB         none         none ---     ---
+  0/258         1.02MiB     16.00KiB         none         none 1/0     ---
+  1/0             0.00B        0.00B         none         none ---     0/258
+	        ^^^^^^^^^^^^^^^^^^^^
+
+[CAUSE]
+The problem is in btrfs_qgroup_inherit(), we don't have good enough
+check to determine if the new relation would break the existing
+accounting.
+
+Unlike btrfs_add_qgroup_relation(), which has proper check to determine
+if we can do quick update without a rescan, in btrfs_qgroup_inherit() we
+can even assign a snapshot to multiple qgroups.
+
+[FIX]
+Fix it by manually marking qgroup inconsistent for snapshot inheritance.
+
+For subvolume creation, since all its extents are exclusively owned, we
+don't need to rescan.
+
+In theory, we should call relation check like quick_update_accounting()
+when doing qgroup inheritance and inform user about qgroup accounting
+inconsistency.
+
+But we don't have good mechanism to relay that back to the user in the
+snapshot creation context, thus we can only silently mark the qgroup
+inconsistent.
+
+Anyway, user shouldn't use qgroup inheritance during snapshot creation,
+and should add qgroup relationship after snapshot creation by 'btrfs
+qgroup assign', which has a much better UI to inform user about qgroup
+inconsistent and kick in rescan automatically.
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/qgroup.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index cc7dd4d87cce..9ee79b74311c 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -79,6 +79,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
- 		},
- 	},
-+	{
-+		.ident = "HP Spectre x2 (2015)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index c3888fb367e7..5bd4089ad0e1 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2622,6 +2622,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 	struct btrfs_root *quota_root;
+ 	struct btrfs_qgroup *srcgroup;
+ 	struct btrfs_qgroup *dstgroup;
++	bool need_rescan = false;
+ 	u32 level_size = 0;
+ 	u64 nums;
+ 
+@@ -2765,6 +2766,13 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 				goto unlock;
+ 		}
+ 		++i_qgroups;
++
++		/*
++		 * If we're doing a snapshot, and adding the snapshot to a new
++		 * qgroup, the numbers are guaranteed to be incorrect.
++		 */
++		if (srcid)
++			need_rescan = true;
+ 	}
+ 
+ 	for (i = 0; i <  inherit->num_ref_copies; ++i, i_qgroups += 2) {
+@@ -2784,6 +2792,9 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 
+ 		dst->rfer = src->rfer - level_size;
+ 		dst->rfer_cmpr = src->rfer_cmpr - level_size;
++
++		/* Manually tweaking numbers certainly needs a rescan */
++		need_rescan = true;
+ 	}
+ 	for (i = 0; i <  inherit->num_excl_copies; ++i, i_qgroups += 2) {
+ 		struct btrfs_qgroup *src;
+@@ -2802,6 +2813,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 
+ 		dst->excl = src->excl + level_size;
+ 		dst->excl_cmpr = src->excl_cmpr + level_size;
++		need_rescan = true;
+ 	}
+ 
+ unlock:
+@@ -2809,6 +2821,8 @@ unlock:
+ out:
+ 	if (!committing)
+ 		mutex_unlock(&fs_info->qgroup_ioctl_lock);
++	if (need_rescan)
++		fs_info->qgroup_flags |= BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
+ 	return ret;
+ }
  
 -- 
 2.25.1
