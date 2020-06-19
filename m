@@ -2,109 +2,116 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47920C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E52C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2523F2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822B32078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJvxOSOb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWpfndfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733130AbgFSO0c (ORCPT
+        id S1733165AbgFSO07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgFSO0b (ORCPT
+        Fri, 19 Jun 2020 10:26:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28394 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726321AbgFSO06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:26:31 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC92C06174E;
-        Fri, 19 Jun 2020 07:26:31 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w7so7794626edt.1;
-        Fri, 19 Jun 2020 07:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8bSED8zl4CrcAER1VVpY4315eH4pyEInk1CBmUlC8tM=;
-        b=iJvxOSObVw2uCB3dpRtcU1+kdibcBS4VTzuVUkFDbJVkDGJR2vlGw1hTcAs3wM2Tam
-         XGi4UOs8uNemmHbnWqlm0CCGzeFJ81SiGAP0SwH7Pq2QUFjq0FJY5CzfOnE0Tcvvxa2m
-         zuXPu5ApOTcKe/fumgtPG45HXts8sUHlDVrWYW02ekrxE9PYZ1ywUt16YRcoS/I3jUvL
-         91dteczkbB3+8EXmotE3WGfHl++X8J55oGhOmEYbvRuO5ckaTbuRvRyHKFPfe8f02czo
-         lyY6L3nu3z9lFdHy1m0520iP8gG50EdpjIO7ycRH5byCsniK2u7Gtpwq+FFQI5OhqFqN
-         xmhA==
+        Fri, 19 Jun 2020 10:26:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592576817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QawtTit9ilWBfcWzRJGBgzMme6mDC3U2WVp0QdlTe14=;
+        b=HWpfndflNhEA7Bph0TxIAIikhPncaZpEbZHedE1rnMRR50f8SrPgtHIydbpHFT133Gc88L
+        Md9MtxAkif/DE7OEDwdbUVu43+bkNlD1aV1Kcfd7TrBGkNF0A5Poy5sSv/OsQK8RUu6N2S
+        5qJAKVcMQU0PZ4XkogPpyM0e0U55nFU=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-p15f9i4mNXe6Kfn9-ptMag-1; Fri, 19 Jun 2020 10:26:54 -0400
+X-MC-Unique: p15f9i4mNXe6Kfn9-ptMag-1
+Received: by mail-il1-f198.google.com with SMTP id c11so6532406ilq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:26:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8bSED8zl4CrcAER1VVpY4315eH4pyEInk1CBmUlC8tM=;
-        b=OrdK/FQAzovE2j5cn4l10Qjlj66w63Jq/elSrXE4RpeK8BZtWl7f87/2EpL6acdSsp
-         dTVW3Q40LxrjITZUdcdKHC+gmlmO04hkw/DZs1+CyQUkFrS5H+H3aHoiqHlb8eAZvb2U
-         JH+dhkBgTMYTTjRSvZSDTTS1v/y+a17gBimZSOyrv/KAuCuQEh1ZRgySxCA5KhmCqIKP
-         HkqGtUzGjFZ0YdvDBGMOC5shrg7hjkEPeylqiNmOGygrTIPABdw8dAzAOLLGuS9ISNp2
-         JOu68VrOlBvjB1O5QQmRv3Bos5VuXvytgU9Fbp7wO4a6Xsh2ajJjh4oz24ThH/n1J6eg
-         QruA==
-X-Gm-Message-State: AOAM531sbVsm4xm3cb4qKdXtzrDg2DJIOgMCzzQlwImEh4fg0mtNwe+y
-        f1yRdQopgZW96GTz+1DvA2M=
-X-Google-Smtp-Source: ABdhPJyRnKu5OL+gzHHN41FCxTU48KdilWSjIzi6WQc3xDaIKuUdLn5JhaB8ICPJhCHJj3DTR4VdSA==
-X-Received: by 2002:a05:6402:a42:: with SMTP id bt2mr3539290edb.42.1592576789902;
-        Fri, 19 Jun 2020 07:26:29 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:904f:be8d:1d92:9974])
-        by smtp.gmail.com with ESMTPSA id j16sm4736461edp.35.2020.06.19.07.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 07:26:29 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 16:26:28 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kbuild-all@lists.01.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-Message-ID: <20200619142628.burfxyjoe5uouzuz@ltop.local>
-References: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
- <202006160420.iatdr9ab%lkp@intel.com>
- <CACG_h5oiA8mDpTjtyGFYR4eptbxppN9tq+2wUj8T1hsbZ5h47A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QawtTit9ilWBfcWzRJGBgzMme6mDC3U2WVp0QdlTe14=;
+        b=lCo1/iRHb5hAAfsV/7Fzf6AewhCR/LsOjyb5J8rBgkFzJ0LtJZC8pjR9/Sh3U09Q6q
+         QplrKCD9J6JzroK9m6CnZNP1y0Tmeh0gpYfE3Zw9BSw9QBhn0Pnai9ZTTT1e3BAM5I0C
+         jjQuxzxQwhUGdYFvyNUsIlnyMexmg+gjEtTgpZyzKhF5URldzljD77KrSylD0vGG9Ish
+         +9IUYwMsJ0sRMuAVkhY5m1jsbIcz63UpR5ihVLRMvWiiRMWYoBfQNZ5h9Pxj9gGUrC6e
+         bUnLD2OFmlO3aj0Vk0Qrs/m+1Ctw+ka25XFdIG2hs+vL066AzVRlVirpOo7VgLlBOsfE
+         6CHg==
+X-Gm-Message-State: AOAM533z8y42h/NaC6rlk6DMSX5mEhG5XwbeNzYbgbulmMxa0C36KoAb
+        8ZuoZLyuIQUvguJLGPyn3Gqoat9nOZ3O+EFEWLej84qGc6rPmdXDRijIe+UxKMF+QirAfDhT1lg
+        bb96kxoInoPpYEYPYnBLCkzYUoktuhpe1v/BWhX0C
+X-Received: by 2002:a02:c802:: with SMTP id p2mr4036675jao.111.1592576814338;
+        Fri, 19 Jun 2020 07:26:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxE/w+ErfwfWnr9Fmkf3RuosFy1XAP5JEuenfnPBYSO5RmXN0kjlDcBgmUhw/LWSMNkY9RoyHSyRPMpN29Oi/w=
+X-Received: by 2002:a02:c802:: with SMTP id p2mr4036653jao.111.1592576813953;
+ Fri, 19 Jun 2020 07:26:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACG_h5oiA8mDpTjtyGFYR4eptbxppN9tq+2wUj8T1hsbZ5h47A@mail.gmail.com>
+References: <20200608210058.37352-1-jarod@redhat.com> <20200610185910.48668-1-jarod@redhat.com>
+ <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
+In-Reply-To: <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
+From:   Jarod Wilson <jarod@redhat.com>
+Date:   Fri, 19 Jun 2020 10:26:43 -0400
+Message-ID: <CAKfmpSczw6P=EoxPNmG=475AHiSTzC3vzuHvFBC6=PCfXVRCSQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/4] bonding: initial support for hardware
+ crypto offload
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:27:18AM +0530, Syed Nayyar Waris wrote:
+On Fri, Jun 19, 2020 at 6:26 AM Jeff Kirsher
+<jeffrey.t.kirsher@intel.com> wrote:
+>
+> On Wed, Jun 10, 2020 at 1:18 PM Jarod Wilson <jarod@redhat.com> wrote:
+> >
+> > This is an initial functional implementation for doing pass-through of
+> > hardware encryption from bonding device to capable slaves, in active-backup
+> > bond setups. This was developed and tested using ixgbe-driven Intel x520
+> > interfaces with libreswan and a transport mode connection, primarily using
+> > netperf, with assorted connection failures forced during transmission. The
+> > failover works quite well in my testing, and overall performance is right
+> > on par with offload when running on a bare interface, no bond involved.
+> >
+> > Caveats: this is ONLY enabled for active-backup, because I'm not sure
+> > how one would manage multiple offload handles for different devices all
+> > running at the same time in the same xfrm, and it relies on some minor
+> > changes to both the xfrm code and slave device driver code to get things
+> > to behave, and I don't have immediate access to any other hardware that
+> > could function similarly, but the NIC driver changes are minimal and
+> > straight-forward enough that I've included what I think ought to be
+> > enough for mlx5 devices too.
+> >
+> > v2: reordered patches, switched (back) to using CONFIG_XFRM_OFFLOAD
+> > to wrap the code additions and wrapped overlooked additions.
+> >
+> > Jarod Wilson (4):
+> >   xfrm: bail early on slave pass over skb
+> >   ixgbe_ipsec: become aware of when running as a bonding slave
+> >   mlx5: become aware of when running as a bonding slave
+> >   bonding: support hardware encryption offload to slaves
+...
+> Was this ever sent to netdev (the more appropriate ML)?
 
-Hi, 
+I believe so, but I'd neglected to notice net-next was closed at the
+time, so I was holding on to it to resubmit once net-next is opened
+back up.
 
-> Regarding the compilation warning reported above:
-> 
-> "sparse: shift too big (64) for type unsigned long" at line 639
-> "sparse: invalid access past the end of 'old' (8 8)" at line 638
-> 
-> Kindly refer to the code above, at these line numbers.
-> 
-> I am in the process of fixing this warning. But what would be the fix?
-> ? At the moment can't think of a code-fix to make the compilation
-> warning disappear (specially at line 639). Can anyone please explain
-> to me the meaning of the compilation warning more deeply?
+-- 
+Jarod Wilson
+jarod@redhat.com
 
-This error message is caused by sparse doing the check too early.
-There is thus nothing to be fixed for it in this code.
-
-Best regards,
--- Luc
