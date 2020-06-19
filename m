@@ -2,52 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C95C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB54C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802B821527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F7B2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584297;
-	bh=4N8wtzWv9c/QUTi9qkJFY+daci7BxXq2OJdDmp6Ojjg=;
+	s=default; t=1592584304;
+	bh=lomYkep2VdeiNmTFXg01kC37C66Vs93apprYh2lBNRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTAcFV/Uhu6tlbzJUVn7u6bwr0cwtO4OKUA46kkrY8g7no1W9+eDol+6Erpr6zu84
-	 mm4It/vvx+43FbY0VJC4p+SGC1qyXHe+HdfU+b4YyHczUxq6ZhtndomBvIjQndDbhH
-	 NXWHmAe1YDxWif7+2t/HnohGj1jR2EGkX+QiqEXA=
+	b=eZv84vuEWvBwf5xlb7OvTS88padAXsiKs6pQkXLfKEQhwAWvRUt4WKHtKlme2303D
+	 9+4OaEUg0QjE5LCIUdbE/n/92Bz5/SqVTfH0T0xKJrQbtBY/nKdNr9rc6EfeWASICx
+	 T7M5BBOE36590qFdq8A/81L3MJk34Y7/DjTtUka0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391578AbgFSQbe (ORCPT
+        id S2395045AbgFSQbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389243AbgFSOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:51 -0400
+        id S2389615AbgFSOwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CECD321556;
-        Fri, 19 Jun 2020 14:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982B1217D8;
+        Fri, 19 Jun 2020 14:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578371;
-        bh=4N8wtzWv9c/QUTi9qkJFY+daci7BxXq2OJdDmp6Ojjg=;
+        s=default; t=1592578366;
+        bh=lomYkep2VdeiNmTFXg01kC37C66Vs93apprYh2lBNRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDMYyxNCbj/KncgDhiJAO3W8BTidkL6m9UTwvZ6WKpQgredVQJ4V2UDVsVlFYs1zZ
-         OhlFS2wtgey+In81+2o7wAL14GGL9dRWzvj7kBcXo8FU1aVQ29L8jZyq1NGQt3Fqy/
-         fW3VUglObvve7mq3KhWvcZNtoRJilJbdsQ9WEVDs=
+        b=0XiH5Dv4A7SWDF018qNICiY6r7z/GFoi6+SxOzoJasvYPOxUJpMa7eN24EahlITba
+         HpHEzoYNKiAQHi5mPiKRdPnGSVshEdhV1KU0OfLFvXbT/+2f52Cj2m13fTud1rQd31
+         qgvRvOm+iIn2KkuojWlEquqOd7cgBKmaQ72Z9J+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 160/190] btrfs: fix wrong file range cleanup after an error filling dealloc range
-Date:   Fri, 19 Jun 2020 16:33:25 +0200
-Message-Id: <20200619141641.747839926@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.14 185/190] mtd: rawnand: brcmnand: fix hamming oob layout
+Date:   Fri, 19 Jun 2020 16:33:50 +0200
+Message-Id: <20200619141643.097877783@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-[ Upstream commit e2c8e92d1140754073ad3799eb6620c76bab2078 ]
+commit 130bbde4809b011faf64f99dddc14b4b01f440c3 upstream.
 
-If an error happens while running dellaloc in COW mode for a range, we can
-end up calling extent_clear_unlock_delalloc() for a range that goes beyond
-our range's end offset by 1 byte, which affects 1 extra page. This results
-in clearing bits and doing page operations (such as a page unlock) outside
-our target range.
+First 2 bytes are used in large-page nand.
 
-Fix that by calling extent_clear_unlock_delalloc() with an inclusive end
-offset, instead of an exclusive end offset, at cow_file_range().
+Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
+Cc: stable@vger.kernel.org
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200512075733.745374-2-noltari@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: a315e68f6e8b30 ("Btrfs: fix invalid attempt to free reserved space on failure to cow range")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/brcmnand/brcmnand.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 3e65ac2d4869..ad138f0b0ce1 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -1139,8 +1139,8 @@ static noinline int cow_file_range(struct inode *inode,
- 	 */
- 	if (extent_reserved) {
- 		extent_clear_unlock_delalloc(inode, start,
--					     start + cur_alloc_size,
--					     start + cur_alloc_size,
-+					     start + cur_alloc_size - 1,
-+					     start + cur_alloc_size - 1,
- 					     locked_page,
- 					     clear_bits,
- 					     page_ops);
--- 
-2.25.1
-
+--- a/drivers/mtd/nand/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+@@ -911,11 +911,14 @@ static int brcmnand_hamming_ooblayout_fr
+ 		if (!section) {
+ 			/*
+ 			 * Small-page NAND use byte 6 for BBI while large-page
+-			 * NAND use byte 0.
++			 * NAND use bytes 0 and 1.
+ 			 */
+-			if (cfg->page_size > 512)
+-				oobregion->offset++;
+-			oobregion->length--;
++			if (cfg->page_size > 512) {
++				oobregion->offset += 2;
++				oobregion->length -= 2;
++			} else {
++				oobregion->length--;
++			}
+ 		}
+ 	}
+ 
 
 
