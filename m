@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A17C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C68C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9869320786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2D020786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581019;
-	bh=pl+gPSi2eCibttM7+mX+0j8F6Js2Zgowf5rgnz84zFU=;
+	s=default; t=1592581028;
+	bh=3InnyeHOfX2HAI/p9Sw6CicKSt7MLeeAttZJ9oB0KQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zy1rwvT0YMydUvjgfHHCxVs20XxJCJ8J/xD7ovf/Or75f0aWDopqMVEqgVAuMqlr9
-	 2YjE+hUjLDGpnKo38qNLfd4Tv2achriTKLAZ74A27vGsxzZm1pmw12WGW33466Vrb0
-	 JHY6CsfbszqfumtK6YOr3P8i3zc3dNfE3SP3O9Hg=
+	b=p6rnLBCaSxJNH9Lry4Sywx79gHSv655ZfFw7Wg+MB+FJyomDP8ZaJH1HjfBq28/00
+	 09N+kF8g9UcV5VYSHL+ukx6ebL5BMKHNlxdlMqJK5FoppFxIJrZX9rZr+cpTLdiy3T
+	 xXM7nzSye1AS2dFQVHHRucKIUqH/ITYK2dIqkQDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405112AbgFSPg5 (ORCPT
+        id S2405119AbgFSPhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404463AbgFSPau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:50 -0400
+        id S2393751AbgFSPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20B520757;
-        Fri, 19 Jun 2020 15:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58C752166E;
+        Fri, 19 Jun 2020 15:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580648;
-        bh=pl+gPSi2eCibttM7+mX+0j8F6Js2Zgowf5rgnz84zFU=;
+        s=default; t=1592580645;
+        bh=3InnyeHOfX2HAI/p9Sw6CicKSt7MLeeAttZJ9oB0KQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fdv8isI6ye8BapLXgyTHD29m5J8jLwNgNgxY3JX3KAD51CC/kbNas9Cep0DCJ3Bks
-         ASIicwg3y/f9IAcS10hMNKDZATNjrqeYspLKbmUL7jm8jQRnHokL6Gs+FE8jbfgi0p
-         EyfAXm62ihakVtHRD46JFALKwqKTtEv3LVjAhv5E=
+        b=nSi+w3nfriKAqeUCmGxxhVjCBQvGA4Ya1AbhttyotbzTtecFDKv5u6gp9KxMhIgO+
+         IqcF52eYZgVFAOFRS+iR7sfI8gxeg4fO7oZtQQIFLTjgHROY1+ecJK6adpU3ujvZGH
+         E9hKoVOnF0ae6YjnaLnhAzRhxDp95khbBKwRwWvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 329/376] powerpc/fadump: Account for memory_limit while reserving memory
-Date:   Fri, 19 Jun 2020 16:34:07 +0200
-Message-Id: <20200619141725.906461903@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Borislav Petkov <bp@suse.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.7 311/376] hwmon: (k10temp) Add AMD family 17h model 60h PCI match
+Date:   Fri, 19 Jun 2020 16:33:49 +0200
+Message-Id: <20200619141725.056898543@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-commit 9a2921e5baca1d25eb8d21f21d1e90581a6d0f68 upstream.
+commit 279f0b3a4b80660fba6faadc2ca2fa426bf3f7e9 upstream.
 
-If the memory chunk found for reserving memory overshoots the memory
-limit imposed, do not proceed with reserving memory. Default behavior
-was this until commit 140777a3d8df ("powerpc/fadump: consider reserved
-ranges while reserving memory") changed it unwittingly.
+Add support for retrieving Tdie and Tctl on AMD Renoir (4000-series
+Ryzen CPUs).
 
-Fixes: 140777a3d8df ("powerpc/fadump: consider reserved ranges while reserving memory")
-Cc: stable@vger.kernel.org
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/159057266320.22331.6571453892066907320.stgit@hbathini.in.ibm.com
+It appears SMU offsets for reading current/voltage and CCD temperature
+have changed for this generation (reads from currently used offsets
+yield zeros), so those features cannot be enabled so trivially.
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lkml.kernel.org/r/20200510204842.2603-3-amonakov@ispras.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/fadump.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/k10temp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -603,7 +603,7 @@ int __init fadump_reserve_mem(void)
- 		 */
- 		base = fadump_locate_reserve_mem(base, size);
- 
--		if (!base) {
-+		if (!base || (base + size > mem_boundary)) {
- 			pr_err("Failed to find memory chunk for reservation!\n");
- 			goto error_out;
- 		}
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -632,6 +632,7 @@ static const struct pci_device_id k10tem
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
++	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{}
 
 
