@@ -2,180 +2,203 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF36C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B558207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669D220809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="GHb2tJFI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="akwekapH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732461AbgFSMjP (ORCPT
+        id S1729187AbgFSMmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgFSMjK (ORCPT
+        Fri, 19 Jun 2020 08:42:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48430 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725806AbgFSMmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:39:10 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A300DC0613EF
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:39:09 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id r22so7228519qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=jS9Cx48KxvyLj4sEdC/4ikdQnELSNwkqzFpXAm2s44w=;
-        b=GHb2tJFIzWdBnMTKTlBJYZ/jbvDCcFIL08zyDDiOOLIooFN2jtNK2vQCzX1jR7qxlb
-         LEZLEf4Toqc6AOaT6k80vZvqR2/666M4jmSiKsDW/T3z34uELwUPRqSepX0EIIekUiqj
-         MmWPwQDoLjYgxZuxKhbyibG8QeYFHwHFfFwwo2QsXbkoMmfSW1a5++5ZNBmiKGvfrqiY
-         hW9rtQORDQjFlEjPjMbYF6v7/BC+Dp9Bi0YP0pyiOizh9dNv6tr38+RK3hKVAJQ+gwPe
-         y86icKWuq/4VTDDteTieZje7CSOH6MobjiVlJK9f/mNcp65nziNLDN4fFIgbwHLzcph1
-         pxlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=jS9Cx48KxvyLj4sEdC/4ikdQnELSNwkqzFpXAm2s44w=;
-        b=UAITjSGAFEEhdKVs0LDnVo4K6IvmSjfrIvSqVUrE3iOd8Prkgq8DkaZb+rclcmXvWe
-         L8HbJFQyrHvFpj3EGSy7XvQXhHUkW4c+OzYL3CLdbmLDuZaZgKdlWYEz0iRIn+fJ2vbU
-         T2ZXrO4rZGqqW7quzl7ALSo5JgCExXzjafJs6r1dCDgGqgv0E6Bq9/dGu3U9EbkkTAB7
-         p7ywPVFPJZnNJYWlvMXso8uex7QrAJlrRD7hclct3N1ibMk4cTMT4bPHyrK+uvBTdHHH
-         4xQNaDOauCmPti0ocG/PIdMokTphquoVw2Rpp77yTyWFbcrVWsre3CRffOuVE1P9qnOT
-         rOnw==
-X-Gm-Message-State: AOAM533XPl+fc8s1DECIIpV77kRAM6H4rZrqWNOuuWGOnT+Y3bXLlglT
-        5bQMgAzwPvDCjQGaYRzNRa0AEA==
-X-Google-Smtp-Source: ABdhPJyRBAIWwslNfa6GQwpEXR/EmtXc5kObKKUOQaAOlhKKorBr5wMy2rmwwIGhrJIYOcxD6iMc2w==
-X-Received: by 2002:ae9:e647:: with SMTP id x7mr3262880qkl.70.1592570348755;
-        Fri, 19 Jun 2020 05:39:08 -0700 (PDT)
-Received: from nicolas-tpx395 ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id u205sm6026879qka.81.2020.06.19.05.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 05:39:08 -0700 (PDT)
-Message-ID: <a0ee566a587c28ffce97224abfa901520af5c83f.camel@ndufresne.ca>
-Subject: Re: [PATCH 3/4] v4l2-ctrl: Add control for intra only decode
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Date:   Fri, 19 Jun 2020 08:39:07 -0400
-In-Reply-To: <20200616123001.11321-4-stanimir.varbanov@linaro.org>
-References: <20200616123001.11321-1-stanimir.varbanov@linaro.org>
-         <20200616123001.11321-4-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Fri, 19 Jun 2020 08:42:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592570539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4KXMic533YcPS5VVo5wuvVYlVuDVU7wg7J/EcjLpt0I=;
+        b=akwekapHu9dzStlZ1XDhuNZ6xwsic2nhAotQQ/bPNP4gK7tW63gb0FcezbnNblAjxFYvQn
+        s9mQjLN19+oP8aE4uUa4hwphjMlZlkp4gxPFY4gPW+xQTJ9/rIDDJxStr8lLxRseEPKbMU
+        LKBmyQQXMbJyiHgKUa9ubnurv8bjsGY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-S_vS5Qs9OvKQRZ4NrTyEhg-1; Fri, 19 Jun 2020 08:42:17 -0400
+X-MC-Unique: S_vS5Qs9OvKQRZ4NrTyEhg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 607E9184D148;
+        Fri, 19 Jun 2020 12:42:15 +0000 (UTC)
+Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBB6B5BAC7;
+        Fri, 19 Jun 2020 12:42:13 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 20:42:11 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     vbabka@suse.cz, mgorman@techsingularity.net, minchan@kernel.org,
+        mgorman@suse.de, hannes@cmpxchg.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, ytk.lee@samsung.com,
+        cmlaika.kim@samsung.com
+Subject: Re: [PATCH v4] page_alloc: consider highatomic reserve in watermark
+ fast
+Message-ID: <20200619124211.GE3346@MiWiFi-R3L-srv>
+References: <CGME20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca@epcas1p1.samsung.com>
+ <20200619235958.11283-1-jaewon31.kim@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619235958.11283-1-jaewon31.kim@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mardi 16 juin 2020 à 15:30 +0300, Stanimir Varbanov a écrit :
-> This adds a new decoder control to instruct the decoders to
-> produce on its output intra frames only. Usually in this mode
-> decoders might lower the count of output decoder buffers and
-> hence reduce memory usage.
+On 06/20/20 at 08:59am, Jaewon Kim wrote:
+...
 
-Perhaps I missed some discussion, would be nice if you could remind the
-rationale from going away from a SKIP_MODE menu to adding dedicated boolean
-control for each mode.
-
+> kswapd0-1207  [005] ...1   889.213398: mm_page_alloc: page= (null) pfn=0 order=0 migratetype=1 nr_free=3650 gfp_flags=GFP_NOWAIT|__GFP_HIGHMEM|__GFP_NOWARN|__GFP_MOVABLE
 > 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
+> Suggested-by: Minchan Kim <minchan@kernel.org>
+> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
+
 > ---
->  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 9 +++++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c                     | 2 ++
->  include/uapi/linux/v4l2-controls.h                       | 1 +
->  3 files changed, 12 insertions(+)
+> v4: change description only; typo and log
+> v3: change log in description to one having reserved_highatomic
+>     change comment in code
+> v2: factor out common part
+> v1: consider highatomic reserve
+> ---
+>  mm/page_alloc.c | 66 +++++++++++++++++++++++++++----------------------
+>  1 file changed, 36 insertions(+), 30 deletions(-)
 > 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index b9d3f7ae6486..d7f34596f95b 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -652,6 +652,15 @@ enum v4l2_mpeg_video_bitrate_mode -
->      otherwise the decoder expects a single frame in per buffer.
->      Applicable to the decoder, all codecs.
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 48eb0f1410d4..fe83f88ce188 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3487,6 +3487,29 @@ static noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
+>  }
+>  ALLOW_ERROR_INJECTION(should_fail_alloc_page, TRUE);
 >  
-> +``V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY (boolean)``
-> +    If enabled the decoder should start decoding only intra frames. The
-> +    decoder consume first input buffer for progressive stream (or first
-> +    two buffers for interlace). Decoder might not allocate more output
-> +    buffers than it is required to consume one input frame. Usually the
-> +    decoder input buffers will contain only intra frames but it is not
-> +    mandatory. This control could be used for thumbnails generation.
-> +    Applicable to the decoder, all codecs.
-
-This imply that number of allocated buffers might be smaller (no references
-buffer are needed), but I think it should actually be more explicit that this
-must be set prior to reading MIN_BUFFER* and/or allocating buffers (since it's
-userspace that allocates buffers).
-
-What if a HW support live switching of this mode on key frames ? And if so, how
-do we configure and control that ?
-
+> +static inline long __zone_watermark_unusable_free(struct zone *z,
+> +				unsigned int order, unsigned int alloc_flags)
+> +{
+> +	const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
+> +	long unusable_free = (1 << order) - 1;
 > +
->  ``V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE (boolean)``
->      Enable writing sample aspect ratio in the Video Usability
->      Information. Applicable to the H264 encoder.
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-
-> core/v4l2-ctrls.c
-> index bc00d02e411f..2b1fb8dcd360 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -846,6 +846,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264
-> MB Level Rate Control";
->  	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return
-> "Sequence Header Mode";
->  	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max
-> Number of Reference Pics";
-> +	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:	return "Decode
-> intra frames only";
->  	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame
-> QP Value";
->  	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame
-> QP Value";
->  	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame
-> QP Value";
-> @@ -1197,6 +1198,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum
-> v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
->  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:
-> +	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:
->  	case V4L2_CID_WIDE_DYNAMIC_RANGE:
->  	case V4L2_CID_IMAGE_STABILIZATION:
->  	case V4L2_CID_RDS_RECEPTION:
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-
-> controls.h
-> index 0f7e4388dcce..c64471e64aa7 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -744,6 +744,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
->  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE +
-> 643)
->  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE +
-> 644)
->  #define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE +
-> 645)
-> +#define V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY	(V4L2_CID_MPEG_BASE +
-> 646)
+> +	/*
+> +	 * If the caller does not have rights to ALLOC_HARDER then subtract
+> +	 * the high-atomic reserves. This will over-estimate the size of the
+> +	 * atomic reserve but it avoids a search.
+> +	 */
+> +	if (likely(!alloc_harder))
+> +		unusable_free += z->nr_reserved_highatomic;
+> +
+> +#ifdef CONFIG_CMA
+> +	/* If allocation can't use CMA areas don't use free CMA pages */
+> +	if (!(alloc_flags & ALLOC_CMA))
+> +		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
+> +#endif
+> +
+> +	return unusable_free;
+> +}
+> +
+>  /*
+>   * Return true if free base pages are above 'mark'. For high-order checks it
+>   * will return true of the order-0 watermark is reached and there is at least
+> @@ -3502,19 +3525,12 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+>  	const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
 >  
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2
-> */
->  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS
-> _MPEG | 0x1000)
+>  	/* free_pages may go negative - that's OK */
+> -	free_pages -= (1 << order) - 1;
+> +	free_pages -= __zone_watermark_unusable_free(z, order, alloc_flags);
+>  
+>  	if (alloc_flags & ALLOC_HIGH)
+>  		min -= min / 2;
+>  
+> -	/*
+> -	 * If the caller does not have rights to ALLOC_HARDER then subtract
+> -	 * the high-atomic reserves. This will over-estimate the size of the
+> -	 * atomic reserve but it avoids a search.
+> -	 */
+> -	if (likely(!alloc_harder)) {
+> -		free_pages -= z->nr_reserved_highatomic;
+> -	} else {
+> +	if (unlikely(alloc_harder)) {
+>  		/*
+>  		 * OOM victims can try even harder than normal ALLOC_HARDER
+>  		 * users on the grounds that it's definitely going to be in
+> @@ -3527,13 +3543,6 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+>  			min -= min / 4;
+>  	}
+>  
+> -
+> -#ifdef CONFIG_CMA
+> -	/* If allocation can't use CMA areas don't use free CMA pages */
+> -	if (!(alloc_flags & ALLOC_CMA))
+> -		free_pages -= zone_page_state(z, NR_FREE_CMA_PAGES);
+> -#endif
+> -
+>  	/*
+>  	 * Check watermarks for an order-0 allocation request. If these
+>  	 * are not met, then a high-order request also cannot go ahead
+> @@ -3582,25 +3591,22 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
+>  				unsigned long mark, int highest_zoneidx,
+>  				unsigned int alloc_flags)
+>  {
+> -	long free_pages = zone_page_state(z, NR_FREE_PAGES);
+> -	long cma_pages = 0;
+> +	long free_pages;
+> +	long unusable_free;
+>  
+> -#ifdef CONFIG_CMA
+> -	/* If allocation can't use CMA areas don't use free CMA pages */
+> -	if (!(alloc_flags & ALLOC_CMA))
+> -		cma_pages = zone_page_state(z, NR_FREE_CMA_PAGES);
+> -#endif
+> +	free_pages = zone_page_state(z, NR_FREE_PAGES);
+> +	unusable_free = __zone_watermark_unusable_free(z, order, alloc_flags);
+>  
+>  	/*
+>  	 * Fast check for order-0 only. If this fails then the reserves
+> -	 * need to be calculated. There is a corner case where the check
+> -	 * passes but only the high-order atomic reserve are free. If
+> -	 * the caller is !atomic then it'll uselessly search the free
+> -	 * list. That corner case is then slower but it is harmless.
+> +	 * need to be calculated.
+>  	 */
+> -	if (!order && (free_pages - cma_pages) >
+> -				mark + z->lowmem_reserve[highest_zoneidx])
+> -		return true;
+> +	if (!order) {
+> +		long fast_free = free_pages - unusable_free;
+> +
+> +		if (fast_free > mark + z->lowmem_reserve[highest_zoneidx])
+> +			return true;
+> +	}
+>  
+>  	return __zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
+>  					free_pages);
+> -- 
+> 2.17.1
+> 
+> 
 
