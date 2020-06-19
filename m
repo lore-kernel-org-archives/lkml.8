@@ -2,103 +2,103 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5436BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ACDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314442168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40CD21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbD+cIfd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JubHsdyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405645AbgFSQT0 (ORCPT
+        id S2405653AbgFSQTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390746AbgFSQSY (ORCPT
+        Fri, 19 Jun 2020 12:19:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49442 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390777AbgFSQSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 12:18:24 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80721C0613EE;
-        Fri, 19 Jun 2020 09:18:24 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so8014919edr.12;
-        Fri, 19 Jun 2020 09:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=66DS8cscbOrDDtJFLg4/sv1VZqtWg1mGwXAH3gSwi2w=;
-        b=UbD+cIfdXzYr/rZ1ERd4wfsIKJNa31io9WaMhqcq486ayiJe6jrTzIOa8ZTqLBisSd
-         O71oFljVG3Eay64l/d/sIbanCPTJaFIoCrl1bq8dG5d+itJ+cuOHhYsaMs4o7iVTQes+
-         NoslFybuA1UG8oJHUI53ftDzGHYJfJyDVVuzLXwo08spKLkJEdy+BYNgEURXCUb9B9FU
-         AXzNZPtQcjh7CKn9HzBCqt7i4HZjV/eQ8uRdrZBy8cGCauzoYTrPeRrpGM927qkldbfe
-         gZBduiPXxgKCOY2exRYSsMYn4s4QgtyMmRpDU6jpk2zV7w606zrJbbIUVvwTn6psGmoH
-         +Jsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=66DS8cscbOrDDtJFLg4/sv1VZqtWg1mGwXAH3gSwi2w=;
-        b=bOC8jvOMtpz4hGKEoh80T3jylRBi5Q1OMfqPIme3tqcP5XNIZgrPWk/SSGIlhn0a1c
-         eeHFeFH4n0wSs/+jTMTnYB30yUM/kLnl+wSbKXeZz8Qrsi969WvK5ov1Y8FY0M7yo5GG
-         6c4zxgVpxvNn1AEXeBn0p7ez/omaOmSICpHQ5wqFTURoa4ztqtL1ustY8XB3hzCCtIEf
-         TIHdathNsfDGSbltl8LzW9QGkZD++mmxvMicX5Aj+fV34c1T4At1joGcO1zaBHW9C0e6
-         4lykitI1kHqYTG/rnNK5aRFrxqYG0WuPbY6O3lxyRwK4LBZRPUtHT3425DMPPPtghDZU
-         p14A==
-X-Gm-Message-State: AOAM530LxiVGzrBBNvzzYwaoWFSlSvLYYUrhsMt3N20BUuhgm+eizaqq
-        smACdVpsDiyjvHCAVj9xGm4=
-X-Google-Smtp-Source: ABdhPJw3hCgZvXVzgIXNddGxi5BWYv8GmLBWoEx0wtBhcQNXiKk07b1OLPTwdmsMcQdazl7s0yf5xA==
-X-Received: by 2002:a50:d55c:: with SMTP id f28mr3987366edj.87.1592583502476;
-        Fri, 19 Jun 2020 09:18:22 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id jt16sm5059932ejb.57.2020.06.19.09.18.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:18:22 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 18:18:13 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
- spinlock
-Message-ID: <20200619161813.GA1596681@andrea>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-8-parri.andrea@gmail.com>
- <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIFpK008140;
+        Fri, 19 Jun 2020 11:18:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592583496;
+        bh=qGP6MS6+eG2DFpGVz1IWcoA6j9uBqfJ/c06oHe2JZGk=;
+        h=From:To:CC:Subject:Date;
+        b=JubHsdyNuL+CBY1m5AuqIfsbDEcOLDsJKcXUkqoCF7t29DDyKSK4OCt8nLu8/evaB
+         iHdv5L5fVJWXM3c/NDNWSyK/mgdOhSdcofw1idFBiSQdUJV6KiqawOVTHjglM5XhHN
+         3MaHalTAjHjyCi6KExoKVBFo0N/BeWbn7CLek6ss=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JGIFI1026425
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jun 2020 11:18:15 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
+ Jun 2020 11:18:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 19 Jun 2020 11:18:15 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIF2Y034554;
+        Fri, 19 Jun 2020 11:18:15 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v9 0/5] RGMII Internal delay common property
+Date:   Fri, 19 Jun 2020 11:18:08 -0500
+Message-ID: <20200619161813.2716-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:01:36PM +0000, Wei Liu wrote:
-> Cc SCSI maintainers
-> 
-> This patch should go via the hyperv tree because a later patch is
-> dependent on it. It requires and ack from SCSI maintainers though.
+Hello
 
-Right.  Sorry for the Cc: omission...  ;-/
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have internal delays for the Rx and Tx paths.
 
-SCSI maintainers, please let me know if you prefer me to send you a new
-series with this patch (7/8) and the later/dependent hyperv patch (8/8).
+If the internal delay is tunable then the caller needs to pass the internal
+delay array and the return will be the index in the array that was found in
+the firmware node.
 
-(1-6/8 of this series are hyperv-specific only and have been applied to
-the hyperv tree, so this would only 7-8/8 of this series out.)
+If the internal delay is fixed then the caller only needs to indicate which
+delay to return.  There is no need for a fixed delay to add device properties
+since the value is not configurable. Per the ethernet-controller.yaml the
+interface type indicates that the PHY should provide the delay.
 
-Thanks,
+This series contains examples of both a configurable delay and a fixed delay.
 
-  Andrea
+Dan Murphy (5):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+  net: phy: DP83822: Add setting the fixed internal delay
+
+ .../devicetree/bindings/net/ethernet-phy.yaml |  13 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
+ drivers/net/phy/dp83822.c                     |  79 ++++++++++++--
+ drivers/net/phy/dp83869.c                     |  53 +++++++++-
+ drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
+ include/linux/phy.h                           |   4 +
+ 6 files changed, 251 insertions(+), 14 deletions(-)
+
+-- 
+2.26.2
+
