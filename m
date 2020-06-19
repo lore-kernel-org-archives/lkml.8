@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62232C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594A22193E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9292193E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580598;
-	bh=Ioc4TzxfqbTd4S5EBzQSWT0oJidXxLmnm7TD9CDAcAw=;
+	s=default; t=1592580599;
+	bh=WHgTvjH7AEpgelzZyZAMrgUwBlctbZebQ7G3v7LkfUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uzyb6KaGt0BRsJqON6rGXobYU0op6ZreFIi5hQXPOtR0BGh1kBlwqpJ5kmZxh1yLX
-	 /i374sByfXR0v18wIVKQy9bgXrjIQhZNtEpoE5DhuiDG58x5GH6gd8pGWS/SThOhYG
-	 ORsx+NazosdBtYYHOH75kvDiy3FwS7XRu3riUuGY=
+	b=1Czp1dKflYh0jb9FpZupQPtWafFs7wUHxU1oLkpCkFHlBo+4qQtXpJbgEMCwyJKC3
+	 fQKIgyymWwaUowloFKWpPiie404jXRDdeNQElGG7v1Pvh8Hz+SZKe3wyCD7USVP58s
+	 r9deqwU9Ccqp/6+zngvyy0heYmDgEreYbJoj2qsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404740AbgFSP35 (ORCPT
+        id S2404748AbgFSP36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404715AbgFSP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:29:45 -0400
+        id S2390143AbgFSP3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:29:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C73F20734;
-        Fri, 19 Jun 2020 15:29:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB4CF21919;
+        Fri, 19 Jun 2020 15:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580584;
-        bh=Ioc4TzxfqbTd4S5EBzQSWT0oJidXxLmnm7TD9CDAcAw=;
+        s=default; t=1592580587;
+        bh=WHgTvjH7AEpgelzZyZAMrgUwBlctbZebQ7G3v7LkfUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9uNF6tTZpFJsNtZMdH1lZCQb8FM8wGKNfQRyn49IJWc0twElDSG923V1NxfT3Xcw
-         5Oi+zj0W+XyQSay6m9rwaE3l56mHd+HVifZ0duzSUL+9ufTmSzM0p9oCpBQDTabn/n
-         bVeqI+LKIYfd6GV4O7TqkNMUf+u/WUADQnUpZB1s=
+        b=KI1nYC0zvyQNd/vZTJ9a3uzinLG48KDrFrxCgCJAmWy+XDSM6TMBWnRScox37emkr
+         IEV8KdHoEf5YaEpNKO9W4XrJIRxZq9I1AdRvUCE18R41ZR0ciwcUxviY5MHjWK/ceE
+         MLGLGgiLP0Ren9IR00Xvj9UybHTYL8DcvPXW1W4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Rui Salvaterra <rsalvaterra@gmail.com>
-Subject: [PATCH 5.7 305/376] b43: Fix connection problem with WPA3
-Date:   Fri, 19 Jun 2020 16:33:43 +0200
-Message-Id: <20200619141724.775863676@linuxfoundation.org>
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.7 279/376] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
+Date:   Fri, 19 Jun 2020 16:33:17 +0200
+Message-Id: <20200619141723.542913035@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 75d057bda1fbca6ade21378aa45db712e5f7d962 upstream.
+commit 0c4395fb2aa77341269ea619c5419ea48171883f upstream.
 
-Since the driver was first introduced into the kernel, it has only
-handled the ciphers associated with WEP, WPA, and WPA2. It fails with
-WPA3 even though mac80211 can handle those additional ciphers in software,
-b43 did not report that it could handle them. By setting MFP_CAPABLE using
-ieee80211_set_hw(), the problem is fixed.
+Don't immediately return if the signature is portable and security.ima is
+not present. Just set error so that memory allocated is freed before
+returning from evm_calc_hmac_or_hash().
 
-With this change, b43 will handle the ciphers it knows in hardware,
-and let mac80211 handle the others in software. It is not necessary to
-use the module parameter NOHWCRYPT to turn hardware encryption off.
-Although this change essentially eliminates that module parameter,
-I am choosing to keep it for cases where the hardware is broken,
-and software encryption is required for all ciphers.
-
-Reported-and-tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526155909.5807-2-Larry.Finger@lwfinger.net
+Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/b43/main.c |    2 +-
+ security/integrity/evm/evm_crypto.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -5569,7 +5569,7 @@ static struct b43_wl *b43_wireless_init(
- 	/* fill hw info */
- 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(hw, SIGNAL_DBM);
--
-+	ieee80211_hw_set(hw, MFP_CAPABLE);
- 	hw->wiphy->interface_modes =
- 		BIT(NL80211_IFTYPE_AP) |
- 		BIT(NL80211_IFTYPE_MESH_POINT) |
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -241,7 +241,7 @@ static int evm_calc_hmac_or_hash(struct
+ 
+ 	/* Portable EVM signatures must include an IMA hash */
+ 	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
+-		return -EPERM;
++		error = -EPERM;
+ out:
+ 	kfree(xattr_value);
+ 	kfree(desc);
 
 
