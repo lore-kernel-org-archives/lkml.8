@@ -2,136 +2,153 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0906F207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592570606;
-	bh=yShNM0K+JKgCUomMvzFARdYyLeLf+SbVL45AMI9mrf4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=scKmBZbjxt8tSh3K3bniEf+yh2mp6fvUpsSpYSLCSo5zZVFqt7n1I+hEP4BE5GGNj
-	 gq6mh1kEgknxVsy/8R/OZlqM+h6IZbpyMV/5Z83SyHqbLPnfvl/IE8FtbAwyYj7R7D
-	 +KmX+8mr0jdqYwnxfVJcIbf2WYSQQalHzkjcGhqE=
+	by mail.kernel.org (Postfix) with ESMTP id 58D68207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbgFSMnY (ORCPT
+        id S1731128AbgFSMrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729367AbgFSMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:43:23 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363EC207E8;
-        Fri, 19 Jun 2020 12:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592570603;
-        bh=yShNM0K+JKgCUomMvzFARdYyLeLf+SbVL45AMI9mrf4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YBTWoDZrVnqLmMfBX4qNgSyMX0wTWJ03UHeUMb/y5/pbI8t0by3WtlngCEL8vAxXJ
-         2tOYpLeYMUcywa4Yv/rHG3piCWRTl6iDLPhDAFpTTfOMxy+e1GS/oQpezALGPZnqGu
-         +1DcN4Zog7klZO9Slkh7BaYjt84NPkFKKmeHbUYc=
-Date:   Fri, 19 Jun 2020 13:43:18 +0100
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc2
-Message-ID: <20200619124318.GA6925@willie-the-truck>
+        Fri, 19 Jun 2020 08:47:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46632 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728081AbgFSMrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 08:47:35 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JCXFvO172057;
+        Fri, 19 Jun 2020 08:47:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rkgjrqss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 08:47:30 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JCXNcJ172905;
+        Fri, 19 Jun 2020 08:47:30 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rkgjrqru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 08:47:29 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JCjZm0020168;
+        Fri, 19 Jun 2020 12:47:27 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma01fra.de.ibm.com with ESMTP id 31qyx1h7q9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 12:47:27 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JClOqa58195972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 12:47:24 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4111A406B;
+        Fri, 19 Jun 2020 12:47:24 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 69845A405D;
+        Fri, 19 Jun 2020 12:47:24 +0000 (GMT)
+Received: from laptop2-ibm.local (unknown [9.145.160.229])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Jun 2020 12:47:24 +0000 (GMT)
+Date:   Fri, 19 Jun 2020 14:47:23 +0200
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-s390@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Alexander Egorenkov <egorenar@linux.vnet.ibm.com>
+Subject: Re: [PATCH RFC 1/2] s390/zcore: traverse resources instead of
+ memblocks
+Message-ID: <20200619144723.01fc99e8@laptop2-ibm.local>
+In-Reply-To: <20200610114523.GA5943@osiris>
+References: <20200417150151.17239-1-david@redhat.com>
+        <20200417150151.17239-2-david@redhat.com>
+        <20200610114523.GA5943@osiris>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_11:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 phishscore=0 cotscore=-2147483648 lowpriorityscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006190089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi David,
 
-Please pull these arm64 fixes for -rc2. Unfortunately, we still have a
-number of outstanding issues so there will be more fixes to come, but
-this lot are a good start.
+zcore/memmap is no longer needed and Alexander is preparing a patch to remove
+it. You can drop this patch.
 
-Summary in the tag.
+Thanks
+Philipp
 
-Cheers,
+On Wed, 10 Jun 2020 13:45:23 +0200
+Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
 
-Will
-
---->8
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 24ebec25fb270100e252b19c288e21bd7d8cc7f7:
-
-  arm64: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints (2020-06-18 11:10:00 +0100)
-
-----------------------------------------------------------------
-arm64 fixes for -rc2
-
-- Fix handling of watchpoints triggered by uaccess routines
-
-- Fix initialisation of gigantic pages for CMA buffers
-
-- Raise minimum clang version for BTI to avoid miscompilation
-
-- Fix data race in SVE vector length configuration code
-
-- Ensure address tags are ignored in kern_addr_valid()
-
-- Dump register state on fatal BTI exception
-
-- kexec_file() cleanup to use struct_size() macro
-
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      arm64: remove TEXT_OFFSET randomization
-
-Barry Song (1):
-      arm64: mm: reserve hugetlb CMA after numa_init
-
-Dave Martin (2):
-      docs/arm64: Fix typo'd #define in sve.rst
-      arm64/sve: Eliminate data races on sve_default_vl
-
-Gustavo A. R. Silva (1):
-      arm64: kexec_file: Use struct_size() in kmalloc()
-
-Shyam Thombre (1):
-      arm64: mm: reset address tag set by kasan sw tagging
-
-Will Deacon (5):
-      arm64: traps: Dump registers prior to panic() in bad_mode()
-      arm64: pgtable: Clear the GP bit for non-executable kernel pages
-      arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
-      arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support
-      arm64: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
-
- Documentation/arm64/sve.rst            |  6 ++---
- arch/arm64/Kconfig                     |  2 ++
- arch/arm64/Kconfig.debug               | 15 ------------
- arch/arm64/Makefile                    |  6 -----
- arch/arm64/include/asm/pgtable.h       |  2 +-
- arch/arm64/kernel/fpsimd.c             | 31 ++++++++++++++++--------
- arch/arm64/kernel/hw_breakpoint.c      | 44 ++++++++++++++++++++--------------
- arch/arm64/kernel/machine_kexec_file.c |  3 +--
- arch/arm64/kernel/traps.c              |  1 +
- arch/arm64/mm/init.c                   | 15 ++++++++----
- arch/arm64/mm/mmu.c                    |  1 +
- 11 files changed, 66 insertions(+), 60 deletions(-)
-
+> On Fri, Apr 17, 2020 at 05:01:50PM +0200, David Hildenbrand wrote:
+> > The zcore memmap basically contains the first level of all system RAM from
+> > /proc/iomem. We want to disable CONFIG_ARCH_KEEP_MEMBLOCK (e.g., to not
+> > create memblocks for hotplugged/standby memory and save space), switch to
+> > traversing system ram resources instead. During early boot, we create
+> > resources for all early memblocks (including the crash kernel area). When
+> > adding standby memory, we currently create both, memblocks and resources.
+> > 
+> > Note: As we don't have memory hotplug after boot (standby memory is added
+> > via sclp during boot), we don't have to worry about races.
+> > 
+> > I am only able to test under KVM (where I hacked up zcore to still
+> > create the memmap file)
+> > 
+> > root@vm0:~# cat /proc/iomem
+> > 00000000-2fffffff : System RAM
+> >   10424000-10ec6fff : Kernel code
+> >   10ec7000-1139a0e3 : Kernel data
+> >   1177a000-11850fff : Kernel bss
+> > 30000000-3fffffff : Crash kernel
+> > 
+> > Result without this patch:
+> > root@vm0:~# cat /sys/kernel/debug/zcore/memmap
+> > 0000000000000000 0000000040000000
+> > 
+> > Result with this patch:
+> > root@vm0:~# cat /sys/kernel/debug/zcore/memmap
+> > 0000000000000000 0000000030000000 0000000030000000 0000000010000000
+> > 
+> > The difference is due to memblocks getting merged, resources (currently)
+> > not. So we might have some more entries, but they describe the same
+> > memory map.
+> > 
+> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: Kirill Smelkov <kirr@nexedi.com>
+> > Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  drivers/s390/char/zcore.c | 61 ++++++++++++++++++++++++++++++---------
+> >  1 file changed, 48 insertions(+), 13 deletions(-)  
+> 
+> I'm having a hard time to find any code that ever made use of this
+> file. After all this was only meant for our zfcp dumper, but as far as
+> I can tell there was never code out there that read the memmap file.
+> 
+> So the pragmatic approach would be to just change its contents, or a
+> more progressive variant would be to remove the file completely.
+> But maybe I'm entirely wrong...
+> 
+> I'm leaving this up to Philipp and Alexander :)
