@@ -2,63 +2,64 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33493C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE2120771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B6920DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsojXhgu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsiM4ZEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgFSFHX (ORCPT
+        id S1727814AbgFSFH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
+        Fri, 19 Jun 2020 01:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFSFHW (ORCPT
+        with ESMTP id S1725290AbgFSFH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:07:22 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F2CC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:22 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id c12so6305879qtq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:22 -0700 (PDT)
+        Fri, 19 Jun 2020 01:07:28 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0EF3C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:27 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id j68so4526110qkb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 22:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BnlNPLMsiGUU55/RUK8kstgHNMQENQOoNvRb+RK4i1E=;
-        b=DsojXhguD4QDe9yg811mNfRAJm6KgD8ZcfSeegN8BgVm3PaNl2XWSd9h8uw4C9VUey
-         5k60AqTqfkVahuTj0459YJUV9akus8zXXrjPNofocDgre4EqFCdRzzJcMKhgZmn5hR77
-         IQcmJPgSiARH9MY/a4kGh6O7m03zHYlSokPI4nOvfi0MpWLVoPYLl9w7XHieyC9iFpWV
-         +9zAQS6xdh6tLVBB85NQ5No8zrBkkNTlwcRwQf0evL454uEsAE58c5NL2lxQv8BRa9s3
-         1yiEw5XbLJtKJ42IsqHjnKRltH+5b7E80oxcZdHrdGBUeK10+umhH58BJcmJz9mMeC2W
-         ZCpQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Vn1bV10W3tvJRgYqdiRF0lmWnCMP76unsCJTzVGifFg=;
+        b=QsiM4ZEJtUhQBs9Gx6kygyiM3m/xn7LX5/xJOnd0aIo40xbOLxTp3kkz7sZLVlTRxs
+         Ijtlknaxc3Ni0Zx29CJV3owe/eHwEtYBAZtZ5+ytAeodTJ7djTA0YxZj0GYFM+TAuX+W
+         oy2uKeyRuTu7BwkVok5NX/e9CpWQhciz8/7+YPxEz7yMw17y+wLYHtTX39jYgzpNvSs5
+         5YrusWV2KudcVsaEk72kDZP0wPoDWMNINCOI3+Rl0ucKCY40WrUM0QMztvj+n0Vt/PH4
+         n1DsLnHfzxTg+hH0f0DL4nRNmOqLgiqcI92EgqTFWKrXCRQIFZ0PEH6YHVA1kj4IlR5T
+         lCYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BnlNPLMsiGUU55/RUK8kstgHNMQENQOoNvRb+RK4i1E=;
-        b=MJy6+/XMlXCs0UeArwcBzZ/zEYejms/W7rltLcdkDiXNmHCLjEGeB4nZLczoWlG0GX
-         +ourcsNiqTbWJ00lkUV6h2Y4ojCdOMrxJ3Gw6ebrtQwazi9K11rDV/ZovFD2DjZT0/0g
-         n7gXqC4mnNCB83CiHOhbHPKnmtDdcA2klhWhOnwllcSALbhIEKzVtqf8DABKczFexIUs
-         B8XVdKbd4NTj3DFNEKLkwcLRrrmKYhjqv/AC5krAU/FY6Ef1UwHk/cIrML/TZwF1us4K
-         lNdv3JhVcq3dMGu0FNLHE8WCK3sG1yZfBToSSCl59AfnsazUI62dZL1UjBCJF09rbZFY
-         ZZjQ==
-X-Gm-Message-State: AOAM532zam0heDsF/6GwRF1/sKdGBAsPKZU4vLlimRFn+G/2svSMLIvN
-        z7SpdbY/weDN9mxLhJH1c2M=
-X-Google-Smtp-Source: ABdhPJyygvNI1KlzIsHW7vl+0acimWQx4VjECYGeQrIDl1dQtfL5i1FJCA6P6KKmfMR/aMoUHWCvyg==
-X-Received: by 2002:ac8:378f:: with SMTP id d15mr1744308qtc.136.1592543241612;
-        Thu, 18 Jun 2020 22:07:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Vn1bV10W3tvJRgYqdiRF0lmWnCMP76unsCJTzVGifFg=;
+        b=aV4R91XuGlBVsPitxCi3QvBXaJo7t/ohoSOBvPlj68vh/CsJQMNtJFcIfwGNbNPAxP
+         M5SV1k/TPwK1y1YLLQcuG+bZyeH4ZWrA+4mz0dtRknXXof04WFCHqrk7YhlHBCs31Z/Q
+         jILNe6oC4JkmMOeeCW4QATj4dW7kKZ6y2S7K0/OvxI2RqPjLXuZkpiuFvdcyQiyiYLcG
+         pLbj8+i+Fj+bzHF28BdTK/gJuVLduQQzrypg1axKbdu0nCqUM4v5jjeIVXW54bmxqslH
+         qixAOSHkSudmljkWkDKtyaGgeocesRzcx8ZKKw5vim38CQmiIbEv48BRjuj6ewIK1LVw
+         W80g==
+X-Gm-Message-State: AOAM532mu0lcptC3ERbGxMVzRYviHI/NZShfn0Gx6UDDM6V/cFxR8YSn
+        jeuZRRqomyZbueCUeAl/lu8=
+X-Google-Smtp-Source: ABdhPJwGrG2+nHFRvXxjANzAX712LgL7SmRcp5gvmZCjf8F4P0+WmiVBJ7ItfaAO+UlXJWD3mVSyIA==
+X-Received: by 2002:a37:49d1:: with SMTP id w200mr1766639qka.153.1592543247147;
+        Thu, 18 Jun 2020 22:07:27 -0700 (PDT)
 Received: from LeoBras.ibmuc.com (177-131-65-187.dynamic.desktop.com.br. [177.131.65.187])
-        by smtp.gmail.com with ESMTPSA id o6sm5235503qtd.59.2020.06.18.22.07.16
+        by smtp.gmail.com with ESMTPSA id o6sm5235503qtd.59.2020.06.18.22.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 22:07:20 -0700 (PDT)
+        Thu, 18 Jun 2020 22:07:26 -0700 (PDT)
 From:   Leonardo Bras <leobras.c@gmail.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -68,10 +69,12 @@ To:     Michael Ellerman <mpe@ellerman.id.au>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Ram Pai <linuxram@us.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] Remove default DMA window before creating DDW
-Date:   Fri, 19 Jun 2020 02:06:16 -0300
-Message-Id: <20200619050619.266888-1-leobras.c@gmail.com>
+Subject: [PATCH 1/4] powerpc/pseries/iommu: Update call to ibm,query-pe-dma-windows
+Date:   Fri, 19 Jun 2020 02:06:17 -0300
+Message-Id: <20200619050619.266888-2-leobras.c@gmail.com>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200619050619.266888-1-leobras.c@gmail.com>
+References: <20200619050619.266888-1-leobras.c@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,50 +82,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some devices that only allow 1 DMA window to exist at a time,
-and in those cases, a DDW is never created to them, since the default DMA
-window keeps using this resource.
+From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can make the number of
+outputs from "ibm,query-pe-dma-windows" go from 5 to 6.
 
-LoPAR recommends this procedure:
-1. Remove the default DMA window,
-2. Query for which configs the DDW can be created,
-3. Create a DDW.
+This change of output size is meant to expand the address size of
+largest_available_block PE TCE from 32-bit to 64-bit, which ends up
+shifting page_size and migration_capable.
 
-Patch #1:
-- After LoPAR level 2.8, there is an extension that can make
-  ibm,query-pe-dma-windows to have 6 outputs instead of 5. This changes the
-  order of the outputs, and that can cause some trouble. 
-- query_ddw() was updated to check how many outputs the 
-  ibm,query-pe-dma-windows is supposed to have, update the rtas_call() and
-  deal correctly with the outputs in both cases.
-- This patch looks somehow unrelated to the series, but it can avoid future
-  problems on DDW creation.
+This ends up requiring the update of
+ddw_query_response->largest_available_block from u32 to u64, and manually
+assigning the values from the buffer into this struct, according to
+output size.
 
-Patch #2 implements a new rtas call to recover the default DMA window,
-in case anything fails after it was removed, and a DDW couldn't be created.
+Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+---
+ arch/powerpc/platforms/pseries/iommu.c | 57 +++++++++++++++++++++-----
+ 1 file changed, 46 insertions(+), 11 deletions(-)
 
-Patch #3 moves the window-removing code from remove_ddw() to
-remove_dma_window(), creating a way to delete any DMA window, so it can be
-used to delete the default DMA window.
-
-Patch #4 makes use of the remove_dma_window() from patch #3 to remove the
-default DMA window before query_ddw() and the rtas call from patch #2
-to recover it if something goes wrong.
-
-All patches were tested into an LPAR with an Ethernet VF:
-4005:01:00.0 Ethernet controller: Mellanox Technologies MT27700 Family
-[ConnectX-4 Virtual Function]
-
-Leonardo Bras (4):
-  powerpc/pseries/iommu: Update call to ibm,query-pe-dma-windows
-  powerpc/pseries/iommu: Implement ibm,reset-pe-dma-windows rtas call
-  powerpc/pseries/iommu: Move window-removing part of remove_ddw into
-    remove_dma_window
-  powerpc/pseries/iommu: Remove default DMA window before creating DDW
-
- arch/powerpc/platforms/pseries/iommu.c | 163 +++++++++++++++++++------
- 1 file changed, 127 insertions(+), 36 deletions(-)
-
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 6d47b4a3ce39..e5a617738c8b 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -334,7 +334,7 @@ struct direct_window {
+ /* Dynamic DMA Window support */
+ struct ddw_query_response {
+ 	u32 windows_available;
+-	u32 largest_available_block;
++	u64 largest_available_block;
+ 	u32 page_size;
+ 	u32 migration_capable;
+ };
+@@ -869,14 +869,32 @@ static int find_existing_ddw_windows(void)
+ }
+ machine_arch_initcall(pseries, find_existing_ddw_windows);
+ 
++/*
++ * From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can rule how many output
++ * parameters ibm,query-pe-dma-windows will have, ranging from 5 to 6.
++ */
++
++static int query_ddw_out_sz(struct device_node *par_dn)
++{
++	int ret;
++	u32 ddw_ext[3];
++
++	ret = of_property_read_u32_array(par_dn, "ibm,ddw-extensions",
++					 &ddw_ext[0], 3);
++	if (ret || ddw_ext[0] < 2 || ddw_ext[2] != 1)
++		return 5;
++	return 6;
++}
++
+ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+-			struct ddw_query_response *query)
++		     struct ddw_query_response *query,
++		     struct device_node *par_dn)
+ {
+ 	struct device_node *dn;
+ 	struct pci_dn *pdn;
+-	u32 cfg_addr;
++	u32 cfg_addr, query_out[5];
+ 	u64 buid;
+-	int ret;
++	int ret, out_sz;
+ 
+ 	/*
+ 	 * Get the config address and phb buid of the PE window.
+@@ -888,12 +906,29 @@ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+ 	pdn = PCI_DN(dn);
+ 	buid = pdn->phb->buid;
+ 	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
++	out_sz = query_ddw_out_sz(par_dn);
++
++	ret = rtas_call(ddw_avail[0], 3, out_sz, query_out,
++			cfg_addr, BUID_HI(buid), BUID_LO(buid));
++	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x returned %d\n",
++		 ddw_avail[0], cfg_addr, BUID_HI(buid), BUID_LO(buid), ret);
++
++	switch (out_sz) {
++	case 5:
++		query->windows_available = query_out[0];
++		query->largest_available_block = query_out[1];
++		query->page_size = query_out[2];
++		query->migration_capable = query_out[3];
++		break;
++	case 6:
++		query->windows_available = query_out[0];
++		query->largest_available_block = ((u64)query_out[1] << 32) |
++						 query_out[2];
++		query->page_size = query_out[3];
++		query->migration_capable = query_out[4];
++		break;
++	}
+ 
+-	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
+-		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
+-	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
+-		" returned %d\n", ddw_avail[0], cfg_addr, BUID_HI(buid),
+-		BUID_LO(buid), ret);
+ 	return ret;
+ }
+ 
+@@ -1040,7 +1075,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	 * of page sizes: supported and supported for migrate-dma.
+ 	 */
+ 	dn = pci_device_to_OF_node(dev);
+-	ret = query_ddw(dev, ddw_avail, &query);
++	ret = query_ddw(dev, ddw_avail, &query, pdn);
+ 	if (ret != 0)
+ 		goto out_failed;
+ 
+@@ -1068,7 +1103,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	/* check largest block * page size > max memory hotplug addr */
+ 	max_addr = ddw_memory_hotplug_max();
+ 	if (query.largest_available_block < (max_addr >> page_shift)) {
+-		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %u "
++		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+ 			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+ 			  1ULL << page_shift);
+ 		goto out_failed;
 -- 
 2.25.4
 
