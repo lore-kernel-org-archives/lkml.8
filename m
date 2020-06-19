@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E967BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7943421841
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C237921841
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578972;
-	bh=y/+T3sAqOIXoIccp6M2Le5955EgIiy+8DcPf4Vzw8xg=;
+	s=default; t=1592578976;
+	bh=aeDfgNSdKYjQeKp8W8Kt7VzTAn+DN+6nYPZRvYxhDpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jbHiWWPmyRbC8eItzIJpU5blSS/tdeSzaC+GJv4FimH4VwiHvQqa+tOz2cuhav1Mc
-	 5kQo4vM+t7PeYPTHFYgyfTFLoNEeehlS6bc0TMg5JFAqo4hE3JXkKcv9aKIwLDXl7W
-	 dCgB+LpFil1rYw/MI2IzAXflwPNbLyETKcQH+ZIs=
+	b=yTFqJzkVMB/9ph5aX4Znk27lToskwfpfIIcJ4p7AYwSMp7NA6jNjZeNj1zSzFalt3
+	 xzccRFlEidEzy//WmqmghQHkSlCG6iXj9ALt5mv2SZ20g2Ki9EEYolT6vFNSeH35S7
+	 wcJWtYTyXMEe53DBytqcCOuvHxpyKfg0/6HD0DOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390898AbgFSPCu (ORCPT
+        id S2390908AbgFSPCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:02:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390819AbgFSPCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:19 -0400
+        id S2390824AbgFSPCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:02:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A241620734;
-        Fri, 19 Jun 2020 15:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E04720776;
+        Fri, 19 Jun 2020 15:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578939;
-        bh=y/+T3sAqOIXoIccp6M2Le5955EgIiy+8DcPf4Vzw8xg=;
+        s=default; t=1592578941;
+        bh=aeDfgNSdKYjQeKp8W8Kt7VzTAn+DN+6nYPZRvYxhDpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tpYEaStg8SE0AqmFnYLAxB4RvTaEc6p+nVxa7C0r7el+cBrTGacuyQCpFas54ysQD
-         eLgKz7l7qUS6CWoDp9aD7og/E1O3JXNDx3htYqpQlAerHiYjvVl/mbMIJ79XOoeNho
-         NRH22w5lLTJTwjOv3TDGgcSrkl0bxZj84AsJFpcw=
+        b=uqk9PXXRCitQKpLw4TztSaS5Axu399+hAmadeSahER3hmhemNVUFvNYr5CUidLmcX
+         P7gEt9Mptf7VQ+2eFeoVOc/yC/7gT4DDa2u6kge7zTK7x7AbwN36Hv4AalIZ/d2RAu
+         vYfYRHcs0RJndwydf8Kx6MqgYpIS4LTkkrW/a6h8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        stable@vger.kernel.org, Abhishek Sahu <abhsahu@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 213/267] PCI: Add Synopsys endpoint EDDA Device ID
-Date:   Fri, 19 Jun 2020 16:33:18 +0200
-Message-Id: <20200619141658.949200653@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 214/267] PCI: Add NVIDIA GPU multi-function power dependencies
+Date:   Fri, 19 Jun 2020 16:33:19 +0200
+Message-Id: <20200619141658.994953070@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -64,52 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+From: Abhishek Sahu <abhsahu@nvidia.com>
 
-[ Upstream commit 1f418f46503d72594bbe6407d97fd2ae1ce15ee6 ]
+[ Upstream commit 6d2e369f0d4c3e6125c886847c04106b03d2609e ]
 
-Create and add Synopsys Endpoint EDDA Device ID to PCI ID list, since
-this ID is now being use on two different drivers (pci_endpoint_test.ko
-and dw-edma-pcie.ko).
+The NVIDIA Turing GPU is a multi-function PCI device with the following
+functions:
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  - Function 0: VGA display controller
+  - Function 1: Audio controller
+  - Function 2: USB xHCI Host controller
+  - Function 3: USB Type-C UCSI controller
+
+Function 0 is tightly coupled with other functions in the hardware.  When
+function 0 is in D3, it gates power for hardware blocks used by other
+functions, which means those functions only work when function 0 is in D0.
+If any of these functions (1/2/3) are in D0, then function 0 should also be
+in D0.
+
+Commit 07f4f97d7b4b ("vga_switcheroo: Use device link for HDA controller")
+already creates a device link to show the dependency of function 1 on
+function 0 of this GPU.  Create additional device links to express the
+dependencies of functions 2 and 3 on function 0.  This means function 0
+will be in D0 if any other function is in D0.
+
+[bhelgaas: I think the PCI spec expectation is that functions can be
+power-managed independently, so I don't think this device is technically
+compliant.  For example, the PCIe r5.0 spec, sec 1.4, says "the PCI/PCIe
+hardware/software model includes architectural constructs necessary to
+discover, configure, and use a Function, without needing Function-specific
+knowledge" and sec 5.1 says "D states are associated with a particular
+Function" and "PM provides ... a mechanism to identify power management
+capabilities of a given Function [and] the ability to transition a Function
+into a certain power management state."]
+
+Link: https://lore.kernel.org/lkml/20190606092225.17960-3-abhsahu@nvidia.com
+Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+[bhelgaas: commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 2 +-
- include/linux/pci_ids.h          | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 2c472f9cc135..7d166f57f624 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -810,7 +810,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
-+	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
- 	},
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 5c395f52d681..47833d8f8928 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2366,6 +2366,7 @@
- #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3		0xabcd
- #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3_AXI	0xabce
- #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB31	0xabcf
-+#define PCI_DEVICE_ID_SYNOPSYS_EDDA	0xedda
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d6236bb26950..8ac2d5a4a224 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5094,6 +5094,32 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+ 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
  
- #define PCI_VENDOR_ID_USR		0x16ec
- 
++/*
++ * Create device link for NVIDIA GPU with integrated USB xHCI Host
++ * controller to VGA.
++ */
++static void quirk_gpu_usb(struct pci_dev *usb)
++{
++	pci_create_device_link(usb, 2, 0, PCI_BASE_CLASS_DISPLAY, 16);
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
++
++/*
++ * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
++ * to VGA. Currently there is no class code defined for UCSI device over PCI
++ * so using UNKNOWN class for now and it will be updated when UCSI
++ * over PCI gets a class code.
++ */
++#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
++static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
++{
++	pci_create_device_link(ucsi, 3, 0, PCI_BASE_CLASS_DISPLAY, 16);
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			      PCI_CLASS_SERIAL_UNKNOWN, 8,
++			      quirk_gpu_usb_typec_ucsi);
++
+ /*
+  * Some IDT switches incorrectly flag an ACS Source Validation error on
+  * completions for config read requests even though PCIe r4.0, sec
 -- 
 2.25.1
 
