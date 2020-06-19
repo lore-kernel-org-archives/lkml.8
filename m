@@ -2,350 +2,626 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_FUTURE_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E57C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580E1207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7580207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 05:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lR6VrrL9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z4ZpN6M4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgFSF6X (ORCPT
+        id S1729255AbgFSF7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:58:23 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:10122 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFSF6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:58:22 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200619055818epoutp01accee034e6a23489d3c15054c65a8c61~Z3Guop_AD1830218302epoutp01c
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:58:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200619055818epoutp01accee034e6a23489d3c15054c65a8c61~Z3Guop_AD1830218302epoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592546298;
-        bh=f71h74yDF3J5MqL4uTjEcsga7v/FrHV2M1Yy30XJsA8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=lR6VrrL91QoI2tQ1WputiqPOQ3Gd/5ac5dcB0yk4e23HroFcD4B/OhQkUdPDYjimy
-         dUplePWJPAE0QMTkagd4t9VDjiP0YHaTYzB6uXuQQbELfxqY/A4oX6RZc4dn5Jm1XO
-         RYGCOzm/zo1o3hOAQaFjTHVTBrkIzqdGpcXn5QXk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200619055817epcas1p27f868bcfb768206fd09bf7fc1002275b~Z3GuKJa5N1346013460epcas1p2C;
-        Fri, 19 Jun 2020 05:58:17 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49p7QJ59q5zMqYkc; Fri, 19 Jun
-        2020 05:58:16 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        43.6A.19033.8F35CEE5; Fri, 19 Jun 2020 14:58:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca~Z3Gslvfwy0878408784epcas1p1x;
-        Fri, 19 Jun 2020 05:58:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200619055815epsmtrp120a8326010403e62b6dc2e36cd9a3977~Z3Gskxoqn1421614216epsmtrp1u;
-        Fri, 19 Jun 2020 05:58:15 +0000 (GMT)
-X-AuditID: b6c32a36-159ff70000004a59-36-5eec53f8522f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A9.B9.08382.7F35CEE5; Fri, 19 Jun 2020 14:58:15 +0900 (KST)
-Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.229]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200619055815epsmtip151c4e28f3e3e46d5cb2dac6afa9e9825~Z3GsV5QKK2293722937epsmtip1R;
-        Fri, 19 Jun 2020 05:58:15 +0000 (GMT)
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-To:     vbabka@suse.cz, bhe@redhat.com, mgorman@techsingularity.net,
-        minchan@kernel.org, mgorman@suse.de, hannes@cmpxchg.org,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, ytk.lee@samsung.com,
-        cmlaika.kim@samsung.com, Jaewon Kim <jaewon31.kim@samsung.com>
-Subject: [PATCH v4] page_alloc: consider highatomic reserve in watermark
- fast
-Date:   Sat, 20 Jun 2020 08:59:58 +0900
-Message-Id: <20200619235958.11283-1-jaewon31.kim@samsung.com>
+        Fri, 19 Jun 2020 01:59:54 -0400
+Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:28096
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgFSF7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 01:59:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=maIWKtUN+2qM2bYgZGOLWhc2Pbd1C7ljNSHXAMT4N2SXCdamMxYjazloyEciFzQmz7RgN2zjq9KtmOt/OgLGC7yCOeOEcl/jGK/rN6Iqe4RWr7wvyS5YiZT/w6QMjjE3jnm7Ou0D7auVk5Qa6ur7uOJBnylt4MZ3Wf7GsnzyESwmbzL9oEtsKu10EzneQob6Nja2qR+nJXBMe+ZNxOEJ9qJVwUtg/ISxtdUiuMoaW7O7r9hkHohbBLsA/jPHTUFHKHxtXNnBRfv0aFveHnan+OSHbSzrXRFoA7HtQ4qGnwF9ZRCBuInnjJEGzSNQ/YuGinyA/jy02UcINami98HOug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hp0CqdilllcOye+0I0DAV+BSpR42yDhv3YTOvh7b5EM=;
+ b=mU/LcoS+/kouzsB8KfmRRw+kqqaMGVHNQFH03C3Lf6vLrJ4/V6o3sGe6Y2UxoL3jZpprkG5Y1kKmYIF1bivbTQ5MTCKVGoSzvEOquLITV9qxDreAyKYSqOpZWywuAdMloUSLPKhNZcUlp+PBEUy3B3itYfAXZ+5/0gM7B5Dr1tnmff0Dqyh2GhwUZ5taV32wdMjwpeM3XOROK0rlUC0uwKXmpWN/NZ7AQQ2cPQPrX0QdSM2RW7opFMKp51Vc887KLscaLrpTtNpTq4ojVe0O6ZeKuAUMgDwDnE5T6Y9f7s5oCfuEtSwNOEjB81m+HVD4f7LzBR2GeQ8BCe0fGutLWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hp0CqdilllcOye+0I0DAV+BSpR42yDhv3YTOvh7b5EM=;
+ b=Z4ZpN6M4GI6stLmm+uDkhu2CsJyP5PW50paizSinuu2x95C0Gx22Vvf7m1OaFEgR5t3QVSWgxU8hUOwHycDpw8C/nhkX7ajGDprbxt7R8x8Cc/lrqEVBbmirVDOt6HLZsN63Vp162v+cYPu5AhRfNJSwRh7MLOgdQoPyPOsz+tM=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VE1PR04MB6589.eurprd04.prod.outlook.com (2603:10a6:803:128::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Fri, 19 Jun
+ 2020 05:59:46 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3109.021; Fri, 19 Jun 2020
+ 05:59:46 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, jiri@resnulli.us
+Cc:     vinicius.gomes@intel.com, vlad@buslov.dev, claudiu.manoil@nxp.com,
+        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
+        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
+        leon@kernel.org, jiri@mellanox.com, idosch@mellanox.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        kuba@kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
+        simon.horman@netronome.com, pablo@netfilter.org,
+        moshe@mellanox.com, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com, stephen@networkplumber.org,
+        Po Liu <Po.Liu@nxp.com>
+Subject: [v2,net-next] net: qos offload add flow status with dropped count
+Date:   Fri, 19 Jun 2020 14:01:07 +0800
+Message-Id: <20200619060107.6325-1-po.liu@nxp.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnk+LIzCtJLcpLzFFi42LZdlhTT/dH8Js4g92/VC3mrF/DZnH+wS82
-        i5XzzrFZrN7ka9G9eSajRe/7V0wWl3fNYbO4t+Y/q8Xkd88YLXYs3cdksezre3aL2Y19jBaP
-        13M78HocfvOe2WPnrLvsHptWdbJ5bPo0id3jxIzfLB7v911l8+jbsorR48yCI+wem09Xe2z9
-        ZefxeZNcAHdUjk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4Cu
-        W2YO0PlKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAJDgwK94sTc4tK8dL3k/Fwr
-        QwMDI1OgyoScjIkv1AumxFRsnrSXqYHxlV8XIyeHhICJxMZde9m7GLk4hAR2MEr8/DiLDcL5
-        xCgxb9dyFgjnG6PEksMT2WBanrasgKrayygx+/FkZgjnB6PEzZ2LWUGq2AS0Jd4vmMQKkhAR
-        mM4osefeEkYQh1lgKaPE5Vs3gFZycAgL+Ev8XOEI0sAioCpx7dpNZhCbV8BW4uTb1ewQ6+Ql
-        Vm84wAxhd3JInGtMgrBdJN6smc0KYQtLvDq+BapeSuJlfxuUXS+xZ/9fqN4GRon/HwUgbGOJ
-        +S0LmUFOYBbQlFi/Sx8irCix8/dcRhCbWYBP4t3XHlaQEgkBXomONiGIEjWJlmdfobbKSPz9
-        9wyqxENifYM6SFhIIFbi25rZzBMYZWchzF/AyLiKUSy1oDg3PbXYsMAIOY42MYJTpJbZDsZJ
-        bz/oHWJk4mA8xCjBwawkwuv8+0WcEG9KYmVValF+fFFpTmrxIUZTYGhNZJYSTc4HJum8knhD
-        UyNjY2MLEzNzM1NjJXFeNZkLcUIC6YklqdmpqQWpRTB9TBycUg1MShLH93yrrwzU1FB9dq7/
-        4KMNGdf3qedeahLWvGn8ialj9Ubm93+465pntPpYzf5kNf2Hvae08sXVThIdHWfFcmMXMobe
-        PjRxQUqAxbaHulYb5Q5N3/be2F7xcdxG2YLOgN2vzhrpP4/bx7/D+EBwevXuB6rbxMPmil+u
-        Fz91ZJX6r5WiPFw8b4XX+Vuxmq3NCzHzXr1Eo1GE54BMqO5VzYIGruzJHxZWL18UcdjC2vxt
-        wtls/eNHC5NMP8+ZlT7V5+AjP68HuRM/i973Pbfoze21P5V1Go66+ppMZ/KZa7zjia1s1bkv
-        Uof/6rCwOxXnca/Z7uomP8+yWbH8alj8d/Xwj+rNWXUzHoT3OMxWYinOSDTUYi4qTgQAtSK8
-        uhoEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSnO734DdxBkvOmVjMWb+GzeL8g19s
-        FivnnWOzWL3J16J780xGi973r5gsLu+aw2Zxb81/VovJ754xWuxYuo/JYtnX9+wWsxv7GC0e
-        r+d24PU4/OY9s8fOWXfZPTat6mTz2PRpErvHiRm/WTze77vK5tG3ZRWjx5kFR9g9Np+u9tj6
-        y87j8ya5AO4oLpuU1JzMstQifbsEroyJL9QLpsRUbJ60l6mB8ZVfFyMnh4SAicTTlhVsXYxc
-        HEICuxklDp5eww6RkJF4c/4pSxcjB5AtLHH4cDFEzTdGiWXX9zOB1LAJaEu8XzCJFSQhIjCf
-        UWLPulNgk5gFVjNKPPxwmBmkSljAV+Jmx05WEJtFQFXi2rWbYHFeAVuJk29XQ22Tl1i94QDz
-        BEaeBYwMqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgsNWS3MH4/ZVH/QOMTJxMB5i
-        lOBgVhLhdf79Ik6INyWxsiq1KD++qDQntfgQozQHi5I4743ChXFCAumJJanZqakFqUUwWSYO
-        TqkGpsUmIjEHsvYoddZpTPrwnYWRq9it67PCkZOszW+eOK5+GZ7hZPI1gunBDD6htvmPcsQ1
-        /shaBa/8GmS1xOvP0rwtR38E16/Z+n+NYuwUJq8w49uRzGUbuTyPGclzdelN838dyf/5yPuH
-        SZeUvC9leu1/+8xj2vu1WieV1igz+56ayh8jHxZQn/HqydubdRPWPshgaNX9ufTSwj/PfUxt
-        zeYcX/R33YEKI/GGxQ9Xum0RuNgZdrIvzk1IZPfy5qMyW2bobpurlLAq2+qH1dFDgbdf8L97
-        q+mXaVWt+Kes2E/q1s32fZfVtlx53TLj+k+R+1eyqvUVps8++c741GuTK/6HEic5KhTd0VHl
-        2lg5XVmJpTgj0VCLuag4EQAAGLSCygIAAA==
-X-CMS-MailID: 20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca
-References: <CGME20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca@epcas1p1.samsung.com>
+In-Reply-To: <20200324034745.30979-1-Po.Liu@nxp.com>
+References: <20200324034745.30979-1-Po.Liu@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0115.apcprd03.prod.outlook.com
+ (2603:1096:4:91::19) To VE1PR04MB6496.eurprd04.prod.outlook.com
+ (2603:10a6:803:11c::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR03CA0115.apcprd03.prod.outlook.com (2603:1096:4:91::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.10 via Frontend Transport; Fri, 19 Jun 2020 05:59:38 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 280bf300-eeb4-4ce9-8a36-08d81415f7f1
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6589:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB6589BE46ACA1B97608E68A5A92980@VE1PR04MB6589.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 0439571D1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ab+qIskTU+53IR6HxQ0R/6w2y+RY0+iPMgS7558p0pP6jpdSvF4GxYTk5ryPPmyDnIpfyMZMqV3OdGwsxTMS3kz3UpOeDrho5T+ksfI8VYx6MZX7wQ9kY0vt8GHtOta6T+ODphSEzvxZWxH4QZGaiW0sTC155MlHmMfn8kN97rPZUSzqO9Aphwv1sNDP2pYsKKH4dnO17UqKVtiHAbpKP3HsA/tniu9XFCAEDt4i8L858vsBLdu3rti09sLkQtj2jbjcR++eSPvMQE3w20K/I5MfCuzDNe1O2Ur1c/CFUMF41LKWfnSyiFiKRwi6gUb8E34vpYgIZFFgEGsY6QkxJg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(376002)(396003)(346002)(316002)(26005)(186003)(44832011)(83380400001)(8936002)(16526019)(6486002)(30864003)(6506007)(5660300002)(4326008)(6512007)(2906002)(52116002)(66556008)(66476007)(66946007)(1076003)(956004)(2616005)(478600001)(6666004)(7416002)(36756003)(8676002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: B7yL8Pm3qiink9mRLMtvZXrjz04ZHzzouh4WF+HgjnmRmQCpL4aeXrXNz0xHyO36RPq0D6JAPDiIt4XxzWFodWwsd5Fms22yKamPEju22kNfuIKe+9JkPMgcHPopTzc30yP5Zs+i6rykPRSnrxGciR8v1/TIpudDe4V4c2piWx0goTnxvkCjO1g8HA2GAlrVvFRGa+Ur//LaIryEhZKv3/2vdnSg9TMxWpHbcZZ36mkQU6abOIsnuFbYSe0pz6CgOFMKlPpGvRr5MBt4/k3Rs09EYpCyZjy2T7/DyF80Y1V4yFSMykRrdjXiKnOSaXhmaVRenoR9FokKDq7vG9QyTzccvWrlNzgKTS3UOt6j3P/3oDMo2hyDdHA3V9HZgycPp2xB8/21mv2YBdyLDAJ5yqRSLiDC/CFWAaoc7DP7vShuAgQwz0mi+4FbvtVRpyDGKsW4YCZsbbhFSdIEjLYsjlKXUQBL6CPbY3ieFbpDXfs=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 280bf300-eeb4-4ce9-8a36-08d81415f7f1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2020 05:59:46.4433
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZVy9gADs+DgwvHe+9LWjmrN8sLI43/s8e0WxErUQX2GJr62G/I2zYRFHrgc62auz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6589
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zone_watermark_fast was introduced by commit 48ee5f3696f6 ("mm,
-page_alloc: shortcut watermark checks for order-0 pages"). The commit
-simply checks if free pages is bigger than watermark without additional
-calculation such like reducing watermark.
+From: Po Liu <Po.Liu@nxp.com>
 
-It considered free cma pages but it did not consider highatomic
-reserved. This may incur exhaustion of free pages except high order
-atomic free pages.
+This patch adds a drop frames counter to tc flower offloading.
+Reporting h/w dropped frames is necessary for some actions.
+Some actions like police action and the coming introduced stream gate
+action would produce dropped frames which is necessary for user. Status
+update shows how many filtered packets increasing and how many dropped
+in those packets.
 
-Assume that reserved_highatomic pageblock is bigger than watermark min,
-and there are only few free pages except high order atomic free. Because
-zone_watermark_fast passes the allocation without considering high order
-atomic free, normal reclaimable allocation like GFP_HIGHUSER will
-consume all the free pages. Then finally order-0 atomic allocation may
-fail on allocation.
+v2: Changes
+ - Update commit comments suggest by Jiri Pirko.
 
-This means watermark min is not protected against non-atomic allocation.
-The order-0 atomic allocation with ALLOC_HARDER unwantedly can be
-failed. Additionally the __GFP_MEMALLOC allocation with
-ALLOC_NO_WATERMARKS also can be failed.
-
-To avoid the problem, zone_watermark_fast should consider highatomic
-reserve. If the actual size of high atomic free is counted accurately
-like cma free, we may use it. On this patch just use
-nr_reserved_highatomic. Additionally introduce
-__zone_watermark_unusable_free to factor out common parts between
-zone_watermark_fast and __zone_watermark_ok.
-
-This is an example of ALLOC_HARDER allocation failure using v4.19 based
-kernel.
-
- Binder:9343_3: page allocation failure: order:0, mode:0x480020(GFP_ATOMIC), nodemask=(null)
- Call trace:
- [<ffffff8008f40f8c>] dump_stack+0xb8/0xf0
- [<ffffff8008223320>] warn_alloc+0xd8/0x12c
- [<ffffff80082245e4>] __alloc_pages_nodemask+0x120c/0x1250
- [<ffffff800827f6e8>] new_slab+0x128/0x604
- [<ffffff800827b0cc>] ___slab_alloc+0x508/0x670
- [<ffffff800827ba00>] __kmalloc+0x2f8/0x310
- [<ffffff80084ac3e0>] context_struct_to_string+0x104/0x1cc
- [<ffffff80084ad8fc>] security_sid_to_context_core+0x74/0x144
- [<ffffff80084ad880>] security_sid_to_context+0x10/0x18
- [<ffffff800849bd80>] selinux_secid_to_secctx+0x20/0x28
- [<ffffff800849109c>] security_secid_to_secctx+0x3c/0x70
- [<ffffff8008bfe118>] binder_transaction+0xe68/0x454c
- Mem-Info:
- active_anon:102061 inactive_anon:81551 isolated_anon:0
-  active_file:59102 inactive_file:68924 isolated_file:64
-  unevictable:611 dirty:63 writeback:0 unstable:0
-  slab_reclaimable:13324 slab_unreclaimable:44354
-  mapped:83015 shmem:4858 pagetables:26316 bounce:0
-  free:2727 free_pcp:1035 free_cma:178
- Node 0 active_anon:408244kB inactive_anon:326204kB active_file:236408kB inactive_file:275696kB unevictable:2444kB isolated(anon):0kB isolated(file):256kB mapped:332060kB dirty:252kB writeback:0kB shmem:19432kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
- Normal free:10908kB min:6192kB low:44388kB high:47060kB active_anon:409160kB inactive_anon:325924kB active_file:235820kB inactive_file:276628kB unevictable:2444kB writepending:252kB present:3076096kB managed:2673676kB mlocked:2444kB kernel_stack:62512kB pagetables:105264kB bounce:0kB free_pcp:4140kB local_pcp:40kB free_cma:712kB
- lowmem_reserve[]: 0 0
- Normal: 505*4kB (H) 357*8kB (H) 201*16kB (H) 65*32kB (H) 1*64kB (H) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 10236kB
- 138826 total pagecache pages
- 5460 pages in swap cache
- Swap cache stats: add 8273090, delete 8267506, find 1004381/4060142
-
-This is an example of ALLOC_NO_WATERMARKS allocation failure using v4.14
-based kernel.
-
- kswapd0: page allocation failure: order:0, mode:0x140000a(GFP_NOIO|__GFP_HIGHMEM|__GFP_MOVABLE), nodemask=(null)
- kswapd0 cpuset=/ mems_allowed=0
- CPU: 4 PID: 1221 Comm: kswapd0 Not tainted 4.14.113-18770262-userdebug #1
- Call trace:
- [<0000000000000000>] dump_backtrace+0x0/0x248
- [<0000000000000000>] show_stack+0x18/0x20
- [<0000000000000000>] __dump_stack+0x20/0x28
- [<0000000000000000>] dump_stack+0x68/0x90
- [<0000000000000000>] warn_alloc+0x104/0x198
- [<0000000000000000>] __alloc_pages_nodemask+0xdc0/0xdf0
- [<0000000000000000>] zs_malloc+0x148/0x3d0
- [<0000000000000000>] zram_bvec_rw+0x410/0x798
- [<0000000000000000>] zram_rw_page+0x88/0xdc
- [<0000000000000000>] bdev_write_page+0x70/0xbc
- [<0000000000000000>] __swap_writepage+0x58/0x37c
- [<0000000000000000>] swap_writepage+0x40/0x4c
- [<0000000000000000>] shrink_page_list+0xc30/0xf48
- [<0000000000000000>] shrink_inactive_list+0x2b0/0x61c
- [<0000000000000000>] shrink_node_memcg+0x23c/0x618
- [<0000000000000000>] shrink_node+0x1c8/0x304
- [<0000000000000000>] kswapd+0x680/0x7c4
- [<0000000000000000>] kthread+0x110/0x120
- [<0000000000000000>] ret_from_fork+0x10/0x18
- Mem-Info:
- active_anon:111826 inactive_anon:65557 isolated_anon:0\x0a active_file:44260 inactive_file:83422 isolated_file:0\x0a unevictable:4158 dirty:117 writeback:0 unstable:0\x0a            slab_reclaimable:13943 slab_unreclaimable:43315\x0a mapped:102511 shmem:3299 pagetables:19566 bounce:0\x0a free:3510 free_pcp:553 free_cma:0
- Node 0 active_anon:447304kB inactive_anon:262228kB active_file:177040kB inactive_file:333688kB unevictable:16632kB isolated(anon):0kB isolated(file):0kB mapped:410044kB d irty:468kB writeback:0kB shmem:13196kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
- Normal free:14040kB min:7440kB low:94500kB high:98136kB reserved_highatomic:32768KB active_anon:447336kB inactive_anon:261668kB active_file:177572kB inactive_file:333768k           B unevictable:16632kB writepending:480kB present:4081664kB managed:3637088kB mlocked:16632kB kernel_stack:47072kB pagetables:78264kB bounce:0kB free_pcp:2280kB local_pcp:720kB free_cma:0kB        [ 4738.329607] lowmem_reserve[]: 0 0
- Normal: 860*4kB (H) 453*8kB (H) 180*16kB (H) 26*32kB (H) 34*64kB (H) 6*128kB (H) 2*256kB (H) 0*512kB 0*1024kB 0*2048kB 0*4096kB = 14232kB
-
-This is trace log which shows GFP_HIGHUSER consumes free pages right
-before ALLOC_NO_WATERMARKS.
-
-  <...>-22275 [006] ....   889.213383: mm_page_alloc: page=00000000d2be5665 pfn=970744 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213385: mm_page_alloc: page=000000004b2335c2 pfn=970745 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213387: mm_page_alloc: page=00000000017272e1 pfn=970278 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213389: mm_page_alloc: page=00000000c4be79fb pfn=970279 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213391: mm_page_alloc: page=00000000f8a51d4f pfn=970260 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213393: mm_page_alloc: page=000000006ba8f5ac pfn=970261 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213395: mm_page_alloc: page=00000000819f1cd3 pfn=970196 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-  <...>-22275 [006] ....   889.213396: mm_page_alloc: page=00000000f6b72a64 pfn=970197 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
-kswapd0-1207  [005] ...1   889.213398: mm_page_alloc: page= (null) pfn=0 order=0 migratetype=1 nr_free=3650 gfp_flags=GFP_NOWAIT|__GFP_HIGHMEM|__GFP_NOWARN|__GFP_MOVABLE
-
-Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
-Suggested-by: Minchan Kim <minchan@kernel.org>
-Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Po Liu <Po.Liu@nxp.com>
 ---
-v4: change description only; typo and log
-v3: change log in description to one having reserved_highatomic
-    change comment in code
-v2: factor out common part
-v1: consider highatomic reserve
----
- mm/page_alloc.c | 66 +++++++++++++++++++++++++++----------------------
- 1 file changed, 36 insertions(+), 30 deletions(-)
+This patch is continue the thread 20200324034745.30979-1-Po.Liu@nxp.com
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 48eb0f1410d4..fe83f88ce188 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3487,6 +3487,29 @@ static noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
+ drivers/net/dsa/sja1105/sja1105_vl.c                  |  2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c          |  2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c  |  2 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c    |  2 +-
+ drivers/net/ethernet/freescale/enetc/enetc_qos.c      |  7 +++++--
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c    |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c       |  4 ++--
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |  2 +-
+ drivers/net/ethernet/mscc/ocelot_flower.c             |  2 +-
+ drivers/net/ethernet/netronome/nfp/flower/offload.c   |  2 +-
+ drivers/net/ethernet/netronome/nfp/flower/qos_conf.c  |  2 +-
+ include/net/act_api.h                                 | 11 ++++++-----
+ include/net/flow_offload.h                            |  5 ++++-
+ include/net/pkt_cls.h                                 |  5 +++--
+ net/sched/act_api.c                                   | 10 ++++------
+ net/sched/act_ct.c                                    |  6 +++---
+ net/sched/act_gact.c                                  |  7 ++++---
+ net/sched/act_gate.c                                  |  6 +++---
+ net/sched/act_mirred.c                                |  6 +++---
+ net/sched/act_pedit.c                                 |  6 +++---
+ net/sched/act_police.c                                |  4 ++--
+ net/sched/act_skbedit.c                               |  5 +++--
+ net/sched/act_vlan.c                                  |  6 +++---
+ net/sched/cls_flower.c                                |  1 +
+ net/sched/cls_matchall.c                              |  3 ++-
+ 25 files changed, 60 insertions(+), 50 deletions(-)
+
+diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja1105/sja1105_vl.c
+index bdfd6c4e190d..9ddc49b7eb8f 100644
+--- a/drivers/net/dsa/sja1105/sja1105_vl.c
++++ b/drivers/net/dsa/sja1105/sja1105_vl.c
+@@ -771,7 +771,7 @@ int sja1105_vl_stats(struct sja1105_private *priv, int port,
+ 
+ 	pkts = timingerr + unreleased + lengtherr;
+ 
+-	flow_stats_update(stats, 0, pkts - rule->vl.stats.pkts,
++	flow_stats_update(stats, 0, pkts - rule->vl.stats.pkts, 0,
+ 			  jiffies - rule->vl.stats.lastused,
+ 			  FLOW_ACTION_HW_STATS_IMMEDIATE);
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+index 0eef4f5e4a46..4d482d75a20b 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+@@ -1638,7 +1638,7 @@ static int bnxt_tc_get_flow_stats(struct bnxt *bp,
+ 	lastused = flow->lastused;
+ 	spin_unlock(&flow->stats_lock);
+ 
+-	flow_stats_update(&tc_flow_cmd->stats, stats.bytes, stats.packets,
++	flow_stats_update(&tc_flow_cmd->stats, stats.bytes, stats.packets, 0,
+ 			  lastused, FLOW_ACTION_HW_STATS_DELAYED);
+ 	return 0;
  }
- ALLOW_ERROR_INJECTION(should_fail_alloc_page, TRUE);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+index 4a5fa9eba0b6..030de20a5d27 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+@@ -902,7 +902,7 @@ int cxgb4_tc_flower_stats(struct net_device *dev,
+ 		if (ofld_stats->prev_packet_count != packets)
+ 			ofld_stats->last_used = jiffies;
+ 		flow_stats_update(&cls->stats, bytes - ofld_stats->byte_count,
+-				  packets - ofld_stats->packet_count,
++				  packets - ofld_stats->packet_count, 0,
+ 				  ofld_stats->last_used,
+ 				  FLOW_ACTION_HW_STATS_IMMEDIATE);
  
-+static inline long __zone_watermark_unusable_free(struct zone *z,
-+				unsigned int order, unsigned int alloc_flags)
-+{
-+	const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
-+	long unusable_free = (1 << order) - 1;
-+
-+	/*
-+	 * If the caller does not have rights to ALLOC_HARDER then subtract
-+	 * the high-atomic reserves. This will over-estimate the size of the
-+	 * atomic reserve but it avoids a search.
-+	 */
-+	if (likely(!alloc_harder))
-+		unusable_free += z->nr_reserved_highatomic;
-+
-+#ifdef CONFIG_CMA
-+	/* If allocation can't use CMA areas don't use free CMA pages */
-+	if (!(alloc_flags & ALLOC_CMA))
-+		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
-+#endif
-+
-+	return unusable_free;
-+}
-+
- /*
-  * Return true if free base pages are above 'mark'. For high-order checks it
-  * will return true of the order-0 watermark is reached and there is at least
-@@ -3502,19 +3525,12 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
- 	const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
+index c88c47a14fbb..c439b5bce9c9 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c
+@@ -346,7 +346,7 @@ int cxgb4_tc_matchall_stats(struct net_device *dev,
+ 		flow_stats_update(&cls_matchall->stats,
+ 				  bytes - tc_port_matchall->ingress.bytes,
+ 				  packets - tc_port_matchall->ingress.packets,
+-				  tc_port_matchall->ingress.last_used,
++				  0, tc_port_matchall->ingress.last_used,
+ 				  FLOW_ACTION_HW_STATS_IMMEDIATE);
  
- 	/* free_pages may go negative - that's OK */
--	free_pages -= (1 << order) - 1;
-+	free_pages -= __zone_watermark_unusable_free(z, order, alloc_flags);
+ 		tc_port_matchall->ingress.packets = packets;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index fd3df19eaa32..fb76903eca90 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -1291,12 +1291,15 @@ static int enetc_psfp_get_stats(struct enetc_ndev_priv *priv,
  
- 	if (alloc_flags & ALLOC_HIGH)
- 		min -= min / 2;
+ 	spin_lock(&epsfp.psfp_lock);
+ 	stats.pkts = counters.matching_frames_count - filter->stats.pkts;
++	stats.drops = counters.not_passing_frames_count -
++					filter->stats.drops;
+ 	stats.lastused = filter->stats.lastused;
+ 	filter->stats.pkts += stats.pkts;
++	filter->stats.drops += stats.drops;
+ 	spin_unlock(&epsfp.psfp_lock);
  
--	/*
--	 * If the caller does not have rights to ALLOC_HARDER then subtract
--	 * the high-atomic reserves. This will over-estimate the size of the
--	 * atomic reserve but it avoids a search.
--	 */
--	if (likely(!alloc_harder)) {
--		free_pages -= z->nr_reserved_highatomic;
--	} else {
-+	if (unlikely(alloc_harder)) {
- 		/*
- 		 * OOM victims can try even harder than normal ALLOC_HARDER
- 		 * users on the grounds that it's definitely going to be in
-@@ -3527,13 +3543,6 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
- 			min -= min / 4;
+-	flow_stats_update(&f->stats, 0x0, stats.pkts, stats.lastused,
+-			  FLOW_ACTION_HW_STATS_DELAYED);
++	flow_stats_update(&f->stats, 0x0, stats.pkts, stats.drops,
++			  stats.lastused, FLOW_ACTION_HW_STATS_DELAYED);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+index 430025550fad..c7107da03212 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+@@ -672,7 +672,7 @@ mlx5_tc_ct_block_flow_offload_stats(struct mlx5_ct_ft *ft,
+ 		return -ENOENT;
+ 
+ 	mlx5_fc_query_cached(entry->counter, &bytes, &packets, &lastuse);
+-	flow_stats_update(&f->stats, bytes, packets, lastuse,
++	flow_stats_update(&f->stats, bytes, packets, 0, lastuse,
+ 			  FLOW_ACTION_HW_STATS_DELAYED);
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index 7fc84f58e28a..bc9c0ac15f99 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -4828,7 +4828,7 @@ int mlx5e_stats_flower(struct net_device *dev, struct mlx5e_priv *priv,
+ no_peer_counter:
+ 	mlx5_devcom_release_peer_data(devcom, MLX5_DEVCOM_ESW_OFFLOADS);
+ out:
+-	flow_stats_update(&f->stats, bytes, packets, lastuse,
++	flow_stats_update(&f->stats, bytes, packets, 0, lastuse,
+ 			  FLOW_ACTION_HW_STATS_DELAYED);
+ 	trace_mlx5e_stats_flower(f);
+ errout:
+@@ -4946,7 +4946,7 @@ void mlx5e_tc_stats_matchall(struct mlx5e_priv *priv,
+ 	dpkts = cur_stats.rx_packets - rpriv->prev_vf_vport_stats.rx_packets;
+ 	dbytes = cur_stats.rx_bytes - rpriv->prev_vf_vport_stats.rx_bytes;
+ 	rpriv->prev_vf_vport_stats = cur_stats;
+-	flow_stats_update(&ma->stats, dbytes, dpkts, jiffies,
++	flow_stats_update(&ma->stats, dbytes, dpkts, 0, jiffies,
+ 			  FLOW_ACTION_HW_STATS_DELAYED);
+ }
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
+index 51e1b3930c56..61d21043d83a 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
+@@ -633,7 +633,7 @@ int mlxsw_sp_flower_stats(struct mlxsw_sp *mlxsw_sp,
+ 	if (err)
+ 		goto err_rule_get_stats;
+ 
+-	flow_stats_update(&f->stats, bytes, packets, lastuse, used_hw_stats);
++	flow_stats_update(&f->stats, bytes, packets, 0, lastuse, used_hw_stats);
+ 
+ 	mlxsw_sp_acl_ruleset_put(mlxsw_sp, ruleset);
+ 	return 0;
+diff --git a/drivers/net/ethernet/mscc/ocelot_flower.c b/drivers/net/ethernet/mscc/ocelot_flower.c
+index 5ce172e22b43..c90bafbd651f 100644
+--- a/drivers/net/ethernet/mscc/ocelot_flower.c
++++ b/drivers/net/ethernet/mscc/ocelot_flower.c
+@@ -244,7 +244,7 @@ int ocelot_cls_flower_stats(struct ocelot *ocelot, int port,
+ 	if (ret)
+ 		return ret;
+ 
+-	flow_stats_update(&f->stats, 0x0, ace.stats.pkts, 0x0,
++	flow_stats_update(&f->stats, 0x0, ace.stats.pkts, 0, 0x0,
+ 			  FLOW_ACTION_HW_STATS_IMMEDIATE);
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+index 695d24b9dd92..234c652700e1 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+@@ -1491,7 +1491,7 @@ nfp_flower_get_stats(struct nfp_app *app, struct net_device *netdev,
+ 		nfp_flower_update_merge_stats(app, nfp_flow);
+ 
+ 	flow_stats_update(&flow->stats, priv->stats[ctx_id].bytes,
+-			  priv->stats[ctx_id].pkts, priv->stats[ctx_id].used,
++			  priv->stats[ctx_id].pkts, 0, priv->stats[ctx_id].used,
+ 			  FLOW_ACTION_HW_STATS_DELAYED);
+ 
+ 	priv->stats[ctx_id].pkts = 0;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
+index d18a830e4264..bb327d48d1ab 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
+@@ -319,7 +319,7 @@ nfp_flower_stats_rate_limiter(struct nfp_app *app, struct net_device *netdev,
+ 	prev_stats->bytes = curr_stats->bytes;
+ 	spin_unlock_bh(&fl_priv->qos_stats_lock);
+ 
+-	flow_stats_update(&flow->stats, diff_bytes, diff_pkts,
++	flow_stats_update(&flow->stats, diff_bytes, diff_pkts, 0,
+ 			  repr_priv->qos_table.last_update,
+ 			  FLOW_ACTION_HW_STATS_DELAYED);
+ 	return 0;
+diff --git a/include/net/act_api.h b/include/net/act_api.h
+index 8c3934880670..cb382a89ea58 100644
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -106,7 +106,7 @@ struct tc_action_ops {
+ 			struct netlink_callback *, int,
+ 			const struct tc_action_ops *,
+ 			struct netlink_ext_ack *);
+-	void	(*stats_update)(struct tc_action *, u64, u32, u64, bool);
++	void	(*stats_update)(struct tc_action *, u64, u64, u64, u64, bool);
+ 	size_t  (*get_fill_size)(const struct tc_action *act);
+ 	struct net_device *(*get_dev)(const struct tc_action *a,
+ 				      tc_action_priv_destructor *destructor);
+@@ -232,8 +232,8 @@ static inline void tcf_action_inc_overlimit_qstats(struct tc_action *a)
+ 	spin_unlock(&a->tcfa_lock);
+ }
+ 
+-void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
+-			     bool drop, bool hw);
++void tcf_action_update_stats(struct tc_action *a, u64 bytes, u64 packets,
++			     u64 drops, bool hw);
+ int tcf_action_copy_stats(struct sk_buff *, struct tc_action *, int);
+ 
+ int tcf_action_check_ctrlact(int action, struct tcf_proto *tp,
+@@ -244,13 +244,14 @@ struct tcf_chain *tcf_action_set_ctrlact(struct tc_action *a, int action,
+ #endif /* CONFIG_NET_CLS_ACT */
+ 
+ static inline void tcf_action_stats_update(struct tc_action *a, u64 bytes,
+-					   u64 packets, u64 lastuse, bool hw)
++					   u64 packets, u64 drops,
++					   u64 lastuse, bool hw)
+ {
+ #ifdef CONFIG_NET_CLS_ACT
+ 	if (!a->ops->stats_update)
+ 		return;
+ 
+-	a->ops->stats_update(a, bytes, packets, lastuse, hw);
++	a->ops->stats_update(a, bytes, packets, drops, lastuse, hw);
+ #endif
+ }
+ 
+diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
+index f2c8311a0433..00c15f14c434 100644
+--- a/include/net/flow_offload.h
++++ b/include/net/flow_offload.h
+@@ -389,17 +389,20 @@ static inline bool flow_rule_match_key(const struct flow_rule *rule,
+ struct flow_stats {
+ 	u64	pkts;
+ 	u64	bytes;
++	u64	drops;
+ 	u64	lastused;
+ 	enum flow_action_hw_stats used_hw_stats;
+ 	bool used_hw_stats_valid;
+ };
+ 
+ static inline void flow_stats_update(struct flow_stats *flow_stats,
+-				     u64 bytes, u64 pkts, u64 lastused,
++				     u64 bytes, u64 pkts,
++				     u64 drops, u64 lastused,
+ 				     enum flow_action_hw_stats used_hw_stats)
+ {
+ 	flow_stats->pkts	+= pkts;
+ 	flow_stats->bytes	+= bytes;
++	flow_stats->drops	+= drops;
+ 	flow_stats->lastused	= max_t(u64, flow_stats->lastused, lastused);
+ 
+ 	/* The driver should pass value with a maximum of one bit set.
+diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
+index ed65619cbc47..ff017e5b3ea2 100644
+--- a/include/net/pkt_cls.h
++++ b/include/net/pkt_cls.h
+@@ -262,7 +262,7 @@ static inline void tcf_exts_put_net(struct tcf_exts *exts)
+ 
+ static inline void
+ tcf_exts_stats_update(const struct tcf_exts *exts,
+-		      u64 bytes, u64 packets, u64 lastuse,
++		      u64 bytes, u64 packets, u64 drops, u64 lastuse,
+ 		      u8 used_hw_stats, bool used_hw_stats_valid)
+ {
+ #ifdef CONFIG_NET_CLS_ACT
+@@ -273,7 +273,8 @@ tcf_exts_stats_update(const struct tcf_exts *exts,
+ 	for (i = 0; i < exts->nr_actions; i++) {
+ 		struct tc_action *a = exts->actions[i];
+ 
+-		tcf_action_stats_update(a, bytes, packets, lastuse, true);
++		tcf_action_stats_update(a, bytes, packets, drops,
++					lastuse, true);
+ 		a->used_hw_stats = used_hw_stats;
+ 		a->used_hw_stats_valid = used_hw_stats_valid;
+ 	}
+diff --git a/net/sched/act_api.c b/net/sched/act_api.c
+index 8ac7eb0a8309..4c4466f18801 100644
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -1059,14 +1059,13 @@ int tcf_action_init(struct net *net, struct tcf_proto *tp, struct nlattr *nla,
+ 	return err;
+ }
+ 
+-void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
+-			     bool drop, bool hw)
++void tcf_action_update_stats(struct tc_action *a, u64 bytes, u64 packets,
++			     u64 drops, bool hw)
+ {
+ 	if (a->cpu_bstats) {
+ 		_bstats_cpu_update(this_cpu_ptr(a->cpu_bstats), bytes, packets);
+ 
+-		if (drop)
+-			this_cpu_ptr(a->cpu_qstats)->drops += packets;
++		this_cpu_ptr(a->cpu_qstats)->drops += drops;
+ 
+ 		if (hw)
+ 			_bstats_cpu_update(this_cpu_ptr(a->cpu_bstats_hw),
+@@ -1075,8 +1074,7 @@ void tcf_action_update_stats(struct tc_action *a, u64 bytes, u32 packets,
  	}
  
--
--#ifdef CONFIG_CMA
--	/* If allocation can't use CMA areas don't use free CMA pages */
--	if (!(alloc_flags & ALLOC_CMA))
--		free_pages -= zone_page_state(z, NR_FREE_CMA_PAGES);
--#endif
--
- 	/*
- 	 * Check watermarks for an order-0 allocation request. If these
- 	 * are not met, then a high-order request also cannot go ahead
-@@ -3582,25 +3591,22 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
- 				unsigned long mark, int highest_zoneidx,
- 				unsigned int alloc_flags)
+ 	_bstats_update(&a->tcfa_bstats, bytes, packets);
+-	if (drop)
+-		a->tcfa_qstats.drops += packets;
++	a->tcfa_qstats.drops += drops;
+ 	if (hw)
+ 		_bstats_update(&a->tcfa_bstats_hw, bytes, packets);
+ }
+diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+index e9f3576cbf71..1b9c6d4a1b6b 100644
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -1450,12 +1450,12 @@ static int tcf_ct_search(struct net *net, struct tc_action **a, u32 index)
+ 	return tcf_idr_search(tn, a, index);
+ }
+ 
+-static void tcf_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-			     u64 lastuse, bool hw)
++static void tcf_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++			     u64 drops, u64 lastuse, bool hw)
  {
--	long free_pages = zone_page_state(z, NR_FREE_PAGES);
--	long cma_pages = 0;
-+	long free_pages;
-+	long unusable_free;
+ 	struct tcf_ct *c = to_ct(a);
  
--#ifdef CONFIG_CMA
--	/* If allocation can't use CMA areas don't use free CMA pages */
--	if (!(alloc_flags & ALLOC_CMA))
--		cma_pages = zone_page_state(z, NR_FREE_CMA_PAGES);
--#endif
-+	free_pages = zone_page_state(z, NR_FREE_PAGES);
-+	unusable_free = __zone_watermark_unusable_free(z, order, alloc_flags);
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	c->tcf_tm.lastuse = max_t(u64, c->tcf_tm.lastuse, lastuse);
+ }
  
- 	/*
- 	 * Fast check for order-0 only. If this fails then the reserves
--	 * need to be calculated. There is a corner case where the check
--	 * passes but only the high-order atomic reserve are free. If
--	 * the caller is !atomic then it'll uselessly search the free
--	 * list. That corner case is then slower but it is harmless.
-+	 * need to be calculated.
- 	 */
--	if (!order && (free_pages - cma_pages) >
--				mark + z->lowmem_reserve[highest_zoneidx])
--		return true;
-+	if (!order) {
-+		long fast_free = free_pages - unusable_free;
-+
-+		if (fast_free > mark + z->lowmem_reserve[highest_zoneidx])
-+			return true;
-+	}
+diff --git a/net/sched/act_gact.c b/net/sched/act_gact.c
+index 416065772719..410e3bbfb9ca 100644
+--- a/net/sched/act_gact.c
++++ b/net/sched/act_gact.c
+@@ -171,14 +171,15 @@ static int tcf_gact_act(struct sk_buff *skb, const struct tc_action *a,
+ 	return action;
+ }
  
- 	return __zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
- 					free_pages);
+-static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-				  u64 lastuse, bool hw)
++static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++				  u64 drops, u64 lastuse, bool hw)
+ {
+ 	struct tcf_gact *gact = to_gact(a);
+ 	int action = READ_ONCE(gact->tcf_action);
+ 	struct tcf_t *tm = &gact->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, action == TC_ACT_SHOT, hw);
++	tcf_action_update_stats(a, bytes, packets,
++				action == TC_ACT_SHOT ? packets : drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_gate.c b/net/sched/act_gate.c
+index 9c628591f452..c818844846b1 100644
+--- a/net/sched/act_gate.c
++++ b/net/sched/act_gate.c
+@@ -568,13 +568,13 @@ static int tcf_gate_walker(struct net *net, struct sk_buff *skb,
+ 	return tcf_generic_walker(tn, skb, cb, type, ops, extack);
+ }
+ 
+-static void tcf_gate_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-				  u64 lastuse, bool hw)
++static void tcf_gate_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++				  u64 drops, u64 lastuse, bool hw)
+ {
+ 	struct tcf_gate *gact = to_gate(a);
+ 	struct tcf_t *tm = &gact->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 83dd82fc9f40..b2705318993b 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -312,13 +312,13 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	return retval;
+ }
+ 
+-static void tcf_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-			     u64 lastuse, bool hw)
++static void tcf_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++			     u64 drops, u64 lastuse, bool hw)
+ {
+ 	struct tcf_mirred *m = to_mirred(a);
+ 	struct tcf_t *tm = &m->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index d41d6200d9de..66986db062ed 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -409,13 +409,13 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+ 	return p->tcf_action;
+ }
+ 
+-static void tcf_pedit_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-				   u64 lastuse, bool hw)
++static void tcf_pedit_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++				   u64 drops, u64 lastuse, bool hw)
+ {
+ 	struct tcf_pedit *d = to_pedit(a);
+ 	struct tcf_t *tm = &d->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_police.c b/net/sched/act_police.c
+index 8b7a0ac96c51..0b431d493768 100644
+--- a/net/sched/act_police.c
++++ b/net/sched/act_police.c
+@@ -288,13 +288,13 @@ static void tcf_police_cleanup(struct tc_action *a)
+ }
+ 
+ static void tcf_police_stats_update(struct tc_action *a,
+-				    u64 bytes, u32 packets,
++				    u64 bytes, u64 packets, u64 drops,
+ 				    u64 lastuse, bool hw)
+ {
+ 	struct tcf_police *police = to_police(a);
+ 	struct tcf_t *tm = &police->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_skbedit.c b/net/sched/act_skbedit.c
+index b125b2be4467..361b863e0634 100644
+--- a/net/sched/act_skbedit.c
++++ b/net/sched/act_skbedit.c
+@@ -74,12 +74,13 @@ static int tcf_skbedit_act(struct sk_buff *skb, const struct tc_action *a,
+ }
+ 
+ static void tcf_skbedit_stats_update(struct tc_action *a, u64 bytes,
+-				     u32 packets, u64 lastuse, bool hw)
++				     u64 packets, u64 drops,
++				     u64 lastuse, bool hw)
+ {
+ 	struct tcf_skbedit *d = to_skbedit(a);
+ 	struct tcf_t *tm = &d->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/act_vlan.c b/net/sched/act_vlan.c
+index c91d3958fcbb..a5ff9f68ab02 100644
+--- a/net/sched/act_vlan.c
++++ b/net/sched/act_vlan.c
+@@ -302,13 +302,13 @@ static int tcf_vlan_walker(struct net *net, struct sk_buff *skb,
+ 	return tcf_generic_walker(tn, skb, cb, type, ops, extack);
+ }
+ 
+-static void tcf_vlan_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+-				  u64 lastuse, bool hw)
++static void tcf_vlan_stats_update(struct tc_action *a, u64 bytes, u64 packets,
++				  u64 drops, u64 lastuse, bool hw)
+ {
+ 	struct tcf_vlan *v = to_vlan(a);
+ 	struct tcf_t *tm = &v->tcf_tm;
+ 
+-	tcf_action_update_stats(a, bytes, packets, false, hw);
++	tcf_action_update_stats(a, bytes, packets, drops, hw);
+ 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+ }
+ 
+diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
+index b2da37286082..391971672d54 100644
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -491,6 +491,7 @@ static void fl_hw_update_stats(struct tcf_proto *tp, struct cls_fl_filter *f,
+ 
+ 	tcf_exts_stats_update(&f->exts, cls_flower.stats.bytes,
+ 			      cls_flower.stats.pkts,
++			      cls_flower.stats.drops,
+ 			      cls_flower.stats.lastused,
+ 			      cls_flower.stats.used_hw_stats,
+ 			      cls_flower.stats.used_hw_stats_valid);
+diff --git a/net/sched/cls_matchall.c b/net/sched/cls_matchall.c
+index 8d39dbcf1746..cafb84480bab 100644
+--- a/net/sched/cls_matchall.c
++++ b/net/sched/cls_matchall.c
+@@ -338,7 +338,8 @@ static void mall_stats_hw_filter(struct tcf_proto *tp,
+ 	tc_setup_cb_call(block, TC_SETUP_CLSMATCHALL, &cls_mall, false, true);
+ 
+ 	tcf_exts_stats_update(&head->exts, cls_mall.stats.bytes,
+-			      cls_mall.stats.pkts, cls_mall.stats.lastused,
++			      cls_mall.stats.pkts, cls_mall.stats.drops,
++			      cls_mall.stats.lastused,
+ 			      cls_mall.stats.used_hw_stats,
+ 			      cls_mall.stats.used_hw_stats_valid);
+ }
 -- 
 2.17.1
 
