@@ -2,91 +2,110 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0504AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D358BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC436206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxpJGkQ4"
+	by mail.kernel.org (Postfix) with ESMTP id A3C83206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592581304;
+	bh=RLa+PNg+/FbEpCRdigW/SP+VWgTQLtuF3h726tRJP6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qyl0Krqt4Y3lgVdhworKg3VaXuwEiNaVoeFXTI5YWhbEJJ6b9zxbNgCIvhGopwetR
+	 jjPh1i2vt4D3gllckv3M7OeeOqIn0gMPK9Cgfy0h+71LNZBRnTbzZ46yV1Izd8o+11
+	 y7g2t1Tp4CF15QbsOxSNrtQYOdePavs58O8M9O0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394017AbgFSPlf (ORCPT
+        id S2394026AbgFSPll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392034AbgFSPld (ORCPT
+        Fri, 19 Jun 2020 11:41:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36867 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393819AbgFSPj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:41:33 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC257C06174E;
-        Fri, 19 Jun 2020 08:41:32 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e12so7986269eds.2;
-        Fri, 19 Jun 2020 08:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KpGjicrxstQUYFzwH57Owwl0NACRgRYZg/C23NotbfM=;
-        b=BxpJGkQ4EyWZYKrHVs9D3CbDeJqQRk3exCmnoWFYqLtMrJrOzEmFi7JsMtRtqwOssX
-         B6q14V/pGZcaqo60fUj+FmmYx7HqLvCAZt7vEImL7miykkkNM1DnVcylTXeDNtwD9p77
-         OWl5YeyETIfxzgz98ThTioo4GiVwdSnA1Ih939YXO08Iz8CzSXUUWAkHGnsYU3YT5Leq
-         ms8exHAG2GGpOLgG5F6ofHyHzmwTw7A4Guzz+giBCPAxlfkIe1z4Z5uFgokYnl06HZqf
-         YXrJe3HoucXtNOF68hV74d66kH8hy4eGe5xVac0rvcY7aBXUNc/nvp9nMCO3B1/El8Fm
-         KsKw==
+        Fri, 19 Jun 2020 11:39:58 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y20so9519428wmi.2;
+        Fri, 19 Jun 2020 08:39:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KpGjicrxstQUYFzwH57Owwl0NACRgRYZg/C23NotbfM=;
-        b=le99rDZsmIyD4u1X4qKabwaVJCXlwHx/vrK4eTSsQDTRaLiwABb2/vlQNDYDhozQAF
-         RrZuhDTN4StQJk7ulsYw39/RtFrXVStBFq0lZI1pLgJdbaD8ZnkODt7WPorqMGedhbaB
-         zNPA+2QI5oLG2DHD4eA3Z7MeXkzGmYUsSe5Kh8lGPUkJ/tfLQghj87gALhjh3uKrjTw8
-         7Ue3ijgPbc7a9f5hehwwClG7LIyS2rIxrfwegVRkG+iFteL501ARUF4ipg3VRJV5UbFp
-         iTM8FPW4sm19fXIB9cd0g7nxeJmnNMCkumafEpZjJmmFelm1ejZH8KoMdYwl0xO+bxgl
-         VZnA==
-X-Gm-Message-State: AOAM5335r23v1UFPCZ5zzvQ5DsOJ8vnxi9QuB+uTktOjg1GdZKXcO5JC
-        HbKdwQnpXu8JWdtjk3qWR+A=
-X-Google-Smtp-Source: ABdhPJyYW80P4JxYyH5IZgoMk06IUj/9QxWDqEbg72RU4bolBoWA1gKoeJUJ8FDv5cd+n+mjcx2XrQ==
-X-Received: by 2002:aa7:c541:: with SMTP id s1mr3993960edr.167.1592581291714;
-        Fri, 19 Jun 2020 08:41:31 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.gmail.com with ESMTPSA id ew9sm4986163ejb.121.2020.06.19.08.41.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mPc8eqqJk6T47a2LEja72Bb5lcr8LaOSHOJSN+CJ06A=;
+        b=EvfdYxXzIA7OkqjcInU/LeTjlhD9K6gXId92dmnUEd/LpHBba8bw4W85tJeDuxq6Lq
+         Tbk0P8ZK6xe4oRKbpPaKSoxNH2w8GaDxQd5Gh2ekCNXgn+FqD69wtNtbgxxDyAibngtM
+         zXwroLcCko0FGXl12+10Ab269/sZAeDT9deku/UK/LNMYTFSLVmWofuHh6TkplYIQS6U
+         NetrUo9CHeMWQxt9I8ZXEhX+oOC6ickVWdakHRob9mA6EqYfPzvuvlLvD+Scch67cWR0
+         2YAMXuhg274J64CflUt58AA/fgVqIepRVfQkbEPbiZb5YtxB7ZorpmdlvFiJDxz8J9/n
+         5ABQ==
+X-Gm-Message-State: AOAM531pest9W5e/E7YlJIEOQic9FGX55VWkYTqKp7WCJVUPoabJdhvM
+        D0p/xUMugWDD98S5YNtth80=
+X-Google-Smtp-Source: ABdhPJyCwPM2zQ8awq7YG9LDzyH/UjLZPYAq/n5BML1AWVTBjWi+ynqH2ESR/0voLs0kiEIQxwn1Fg==
+X-Received: by 2002:a1c:9ec4:: with SMTP id h187mr4274874wme.27.1592581196639;
+        Fri, 19 Jun 2020 08:39:56 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 65sm2320270wre.6.2020.06.19.08.39.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 08:41:31 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bvanassche@acm.org
-Cc:     beanhuo@micron.com
-Subject: [PATCH v2 0/2] scsi: remove scsi_sdb_cache
-Date:   Fri, 19 Jun 2020 17:41:15 +0200
-Message-Id: <20200619154117.10262-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 19 Jun 2020 08:39:56 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 15:39:54 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] Drivers: hv: vmbus: Miscellaneous cleanups
+Message-ID: <20200619153954.qlrsgtreboqkn7xg@liuwe-devbox-debian-v2>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617164642.37393-1-parri.andrea@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Wed, Jun 17, 2020 at 06:46:34PM +0200, Andrea Parri (Microsoft) wrote:
+> Hi all,
+> 
+> I went back to my "cleanup list" recently and I wrote these patches:
+> here you can find, among other things,
+> 
+>   1) the removal of the fields 'target_vp' and 'numa_node' from the
+>      channel data structure, as suggested by Michael back in May;
+> 
+>   2) various cleanups for channel->lock, which is actually *removed
+>      by the end of this series!  ;-)
+> 
+> I'm sure there is room for further "cleanups",  ;-) but let me check
+> if these (relatively small) changes make sense first...
+> 
+> Thanks,
+>   Andrea
+> 
+> Andrea Parri (Microsoft) (8):
+>   Drivers: hv: vmbus: Remove the target_vp field from the vmbus_channel
+>     struct
+>   Drivers: hv: vmbus: Remove the numa_node field from the vmbus_channel
+>     struct
+>   Drivers: hv: vmbus: Replace cpumask_test_cpu(, cpu_online_mask) with
+>     cpu_online()
+>   Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+>     (sc_list readers)
+>   Drivers: hv: vmbus: Use channel_mutex in channel_vp_mapping_show()
+>   Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+>     (sc_list updaters)
+>   scsi: storvsc: Introduce the per-storvsc_device spinlock
+>   Drivers: hv: vmbus: Remove the lock field from the vmbus_channel
+>     struct
 
-Changelog:
-v1 -- v2:
-    1. split patch
-    2. fix more coding errors in the scsi_lib.c
+I've queued these up to hyperv-next except for the scsi patch.
 
-Bean Huo (2):
-  scsi: remove scsi_sdb_cache
-  scsi: fix coding style errors in scsi_lib.c
-
- drivers/scsi/scsi.c      |  3 ---
- drivers/scsi/scsi_lib.c  | 58 +++++++++++++++-------------------------
- drivers/scsi/scsi_priv.h |  1 -
- 3 files changed, 21 insertions(+), 41 deletions(-)
-
--- 
-2.17.1
-
+Thanks,
+Wei.
