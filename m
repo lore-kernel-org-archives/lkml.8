@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF89C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE272158C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4F620809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582276;
-	bh=xww3ha3RV/sRMp/8nxc5RDnUU7jjFcQdrVOpE9QJWXg=;
+	s=default; t=1592582280;
+	bh=SqyLi8d8xiFLHBec76SFFQfbGYQNGQ0Jb1+ic5vnbfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3cADFVn+wHCQXww6RL3WwLcUNf8BpLuI78zRrLsq4RLLMj/PddC57WNbmlzxxmT/
-	 UZcQ75ZnYqxem7Vnz96hqV9n3gaJYRIJCJNhNh8Tp4xtQQrQzPbPSQd2Is1GBIyp1E
-	 VZHIzt9QrR8hsqoyEpqv6YdiiqzEhN/qSKSh1y4E=
+	b=e7zpzZ3NTtiplv9HS83f5nEchaqyEeR5shWfb2AZbq0iesXXU8/VGab0fWcc+HurU
+	 pY/Q/Kb/Cq6w8Hp0viP3gPahGZ8oFhcS3Aec6PsOI/LtAUpGj3vo3Q6uM1fxhzxo/s
+	 irKL3OpWKrrk6nPy2XqCQ1i6ossfD2UZ1oDeonbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389766AbgFSPT4 (ORCPT
+        id S2404246AbgFSPTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:19:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392583AbgFSPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:15 -0400
+        id S2392578AbgFSPSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:18:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0901206DB;
-        Fri, 19 Jun 2020 15:18:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2505721835;
+        Fri, 19 Jun 2020 15:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579895;
-        bh=xww3ha3RV/sRMp/8nxc5RDnUU7jjFcQdrVOpE9QJWXg=;
+        s=default; t=1592579881;
+        bh=SqyLi8d8xiFLHBec76SFFQfbGYQNGQ0Jb1+ic5vnbfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5BhCUsx2ZXS3jpbirQy7lukob21IPkRz1wUUo15ut9ddgcZNveiI6yumJ2cnstu7
-         eiOm1EpfgD0+h+OHjB1sxbtbSsi4N+PKKoGcSwwGmMa314+fiI5BA9CJQcsEWqGYWs
-         VjYTVcllYDDq/42QEoqe+q0YsuNKgs8xdQbZR9lo=
+        b=qs9elEb1VUnsTyU1ojXP11+tCjSiQbDzrmVWl6pSpKIgsV/uBn4bRnzgJ2n0k5UHF
+         3rCNNxRmhH8ejKjz9L+vHsLC0CMfsJ15CrZM1SQkiheBvaWm3dJvEQ8jpRoCf1Krnm
+         NXiN15uQN/IeRivGlRBvsmMTXTa7186De/ZUEKk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Frank Ch. Eigler" <fche@redhat.com>,
-        Jeremy Cline <jcline@redhat.com>,
-        James Morris <jmorris@namei.org>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        andriy.shevchenko@linux.intel.com,
+        platform-driver-x86@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 043/376] lockdown: Allow unprivileged users to see lockdown status
-Date:   Fri, 19 Jun 2020 16:29:21 +0200
-Message-Id: <20200619141712.397384086@linuxfoundation.org>
+Subject: [PATCH 5.7 039/376] tools/power/x86/intel-speed-select: Fix CLX-N package information output
+Date:   Fri, 19 Jun 2020 16:29:17 +0200
+Message-Id: <20200619141712.205782477@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,38 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Prarit Bhargava <prarit@redhat.com>
 
-[ Upstream commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c ]
+[ Upstream commit 28c59ae6965ca0626e3150e2f2863e0f0c810ed7 ]
 
-A number of userspace tools, such as systemtap, need a way to see the
-current lockdown state so they can gracefully deal with the kernel being
-locked down. The state is already exposed in
-/sys/kernel/security/lockdown, but is only readable by root. Adjust the
-permissions so unprivileged users can read the state.
+On CLX-N the perf-profile output is missing the package, die, and cpu
+output.  On CLX-N the pkg_dev struct will never be evaluated by the core
+code so pkg_dev.processed is always 0 and the package, die, and cpu
+information is never output.
 
-Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
-Cc: Frank Ch. Eigler <fche@redhat.com>
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: James Morris <jmorris@namei.org>
+Set the pkg_dev.processed flag to 1 for CLX-N processors.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: andriy.shevchenko@linux.intel.com
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/lockdown/lockdown.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 5a952617a0eb..87cbdc64d272 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -150,7 +150,7 @@ static int __init lockdown_secfs_init(void)
- {
- 	struct dentry *dentry;
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index b73763489410..3688f1101ec4 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
  
--	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
-+	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
- 					&lockdown_ops);
- 	return PTR_ERR_OR_ZERO(dentry);
- }
+ 		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
+ 		pbf_info = &ctdp_level->pbf_info;
++		clx_n_pkg_dev.processed = 1;
+ 		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
+ 		free_cpu_set(ctdp_level->core_cpumask);
+ 		free_cpu_set(pbf_info->core_cpumask);
 -- 
 2.25.1
 
