@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D55C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF320706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE69A20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581897;
-	bh=IAdVph0fG5ogOIukRAnscPJyX0P9LSD/fmItIjoQA6w=;
+	s=default; t=1592581904;
+	bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R58ygNSk1KS+NxkLe+rsUmyARMo3LTypNT3JDuBcx3RsR/QPQaa+LECj6FzTH2Mjs
-	 hdv3VeAzqaOsdsQ1Vk2HLd9sTeuvK2A482pcVimBlccPFp8eZw+8WdGzAhh8AakO5E
-	 Ls7p8RyEEbT83wAzqYjdD5QU1duXRZhpjaZMYDSg=
+	b=ztvK3zoWCT71tds6yq9hdNmB7wxhret1p1PIF8VD3to0+iQJjcUjAEEkTCcCNg1aU
+	 /K53kg7EMgc79v08XjOyF3EKrRsMuBHYHm92iTqg59SSXkF93TNE4s4pjOpYwqlMog
+	 7cMYg4NmZMm6qkNXDPVDfp7nUfVYAakr8wyyuFww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404415AbgFSPvf (ORCPT
+        id S2405201AbgFSPvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393235AbgFSPYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:24:00 -0400
+        id S2392683AbgFSPX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:23:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2233F21548;
-        Fri, 19 Jun 2020 15:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80616217A0;
+        Fri, 19 Jun 2020 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580239;
-        bh=IAdVph0fG5ogOIukRAnscPJyX0P9LSD/fmItIjoQA6w=;
+        s=default; t=1592580237;
+        bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VeuiwLpILkPcT6f5mmv2+WC1oaZiYzcoEws7K2Pu6kMMLfC62oRA0p6f1rDgV6d6n
-         2eNlAy18ak731K0rfvbCVraCSbMvChZt16beLnZpmfP+MvmnlXVl6JMVM4mkTraact
-         5ZvCj09znYR3uDsF+vaQ7A7IlgrKrUfUKRWQkARE=
+        b=fiBuOxjwWI78AmHtQDiOy/8ukzkEOVN5BvI9bjCUdYiLkXppQI1A/2DEQaXDBa2GL
+         5KuCSMCFVbxNyjK3nCJap7Ufq58+l/ktusGUotFaZcFG7hC/Upi6W5MBcLE7jHdUB/
+         66Ms6TdnShvfX8oO4uNbyyncxEDAf83oknTOl1uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 147/376] ath10k: fix possible memory leak in ath10k_bmi_lz_data_large()
-Date:   Fri, 19 Jun 2020 16:31:05 +0200
-Message-Id: <20200619141717.288645308@linuxfoundation.org>
+Subject: [PATCH 5.7 173/376] ath10k: Skip handling del_server during driver exit
+Date:   Fri, 19 Jun 2020 16:31:31 +0200
+Message-Id: <20200619141718.519617653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,35 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit 2326aa011967f0afbcba7fe1a005d01f8b12900b ]
+[ Upstream commit 7c6d67b136ceb0aebc7a3153b300e925ed915daf ]
 
-'cmd' is malloced in ath10k_bmi_lz_data_large() and should be freed
-before leaving from the error handling cases, otherwise it will cause
-memory leak.
+The qmi infrastructure sends the client a del_server
+event when the client releases its qmi handle. This
+is not the msg indicating the actual qmi server exiting.
+In such cases the del_server msg should not be processed,
+since the wifi firmware does not reset its qmi state.
 
-Fixes: d58f466a5dee ("ath10k: add large size for BMI download data for SDIO")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Hence skip the processing of del_server event when the
+driver is unloading.
+
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200427104348.13570-1-weiyongjun1@huawei.com
+Link: https://lore.kernel.org/r/1588663061-12138-1-git-send-email-pillair@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/bmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/qmi.c | 13 ++++++++++++-
+ drivers/net/wireless/ath/ath10k/qmi.h |  6 ++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/bmi.c b/drivers/net/wireless/ath/ath10k/bmi.c
-index ea908107581d..5b6db6e66f65 100644
---- a/drivers/net/wireless/ath/ath10k/bmi.c
-+++ b/drivers/net/wireless/ath/ath10k/bmi.c
-@@ -380,6 +380,7 @@ static int ath10k_bmi_lz_data_large(struct ath10k *ar, const void *buffer, u32 l
- 						  NULL, NULL);
- 		if (ret) {
- 			ath10k_warn(ar, "unable to write to the device\n");
-+			kfree(cmd);
- 			return ret;
- 		}
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index 85dce43c5439..7abdef8d6b9b 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -961,7 +961,16 @@ static void ath10k_qmi_del_server(struct qmi_handle *qmi_hdl,
+ 		container_of(qmi_hdl, struct ath10k_qmi, qmi_hdl);
  
+ 	qmi->fw_ready = false;
+-	ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT, NULL);
++
++	/*
++	 * The del_server event is to be processed only if coming from
++	 * the qmi server. The qmi infrastructure sends del_server, when
++	 * any client releases the qmi handle. In this case do not process
++	 * this del_server event.
++	 */
++	if (qmi->state == ATH10K_QMI_STATE_INIT_DONE)
++		ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT,
++					     NULL);
+ }
+ 
+ static struct qmi_ops ath10k_qmi_ops = {
+@@ -1091,6 +1100,7 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size)
+ 	if (ret)
+ 		goto err_qmi_lookup;
+ 
++	qmi->state = ATH10K_QMI_STATE_INIT_DONE;
+ 	return 0;
+ 
+ err_qmi_lookup:
+@@ -1109,6 +1119,7 @@ int ath10k_qmi_deinit(struct ath10k *ar)
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	struct ath10k_qmi *qmi = ar_snoc->qmi;
+ 
++	qmi->state = ATH10K_QMI_STATE_DEINIT;
+ 	qmi_handle_release(&qmi->qmi_hdl);
+ 	cancel_work_sync(&qmi->event_work);
+ 	destroy_workqueue(qmi->event_wq);
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
+index dc257375f161..b59720524224 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.h
++++ b/drivers/net/wireless/ath/ath10k/qmi.h
+@@ -83,6 +83,11 @@ struct ath10k_qmi_driver_event {
+ 	void *data;
+ };
+ 
++enum ath10k_qmi_state {
++	ATH10K_QMI_STATE_INIT_DONE,
++	ATH10K_QMI_STATE_DEINIT,
++};
++
+ struct ath10k_qmi {
+ 	struct ath10k *ar;
+ 	struct qmi_handle qmi_hdl;
+@@ -105,6 +110,7 @@ struct ath10k_qmi {
+ 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
+ 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
+ 	bool msa_fixed_perm;
++	enum ath10k_qmi_state state;
+ };
+ 
+ int ath10k_qmi_wlan_enable(struct ath10k *ar,
 -- 
 2.25.1
 
