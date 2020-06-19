@@ -2,52 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9100C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E146F21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFC921974
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578684;
-	bh=b6KQFxhpqokwjIfbaMiTMCL6QZY5s08BueXsXwADbsQ=;
+	s=default; t=1592578689;
+	bh=hAWr0Dq4DWCd3YCGURfNx79O6opztkOeSirdgo20uJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWtKPXqwEAmHPGMP0JbM4rT4I5O7ioZCDqlobE9d3RnPw+g3vLRJSS2fjUudAycEE
-	 QOyPmbz9+nMtfG7cIj/NEF64WIoioH6WHZkFjZPluEl86uBJDz3IC5EktXsK25UrXO
-	 2d3wB6Y94zXChX3EaoOyN/zHfNQwcWk4Os70BRyI=
+	b=uqd4SggdSxfjn5MMrUNMwLJvK5javOjMKI4c7bK8xEC1xJAnVvWY1FCxDgZ2a2dAX
+	 ZANCmGZ5EvEMxKzpRRafRafLQogU//YUmc8SCOXQtSAbFX79VeYuZf6cjm7f0rdvKw
+	 uJGcd/oNFNPAa79hTyX0R0XCLElZXlv99pL4T+rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390335AbgFSO6A (ORCPT
+        id S2390319AbgFSO6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390290AbgFSO5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:47 -0400
+        id S2390336AbgFSO6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:58:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D879821919;
-        Fri, 19 Jun 2020 14:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D5C217D8;
+        Fri, 19 Jun 2020 14:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578666;
-        bh=b6KQFxhpqokwjIfbaMiTMCL6QZY5s08BueXsXwADbsQ=;
+        s=default; t=1592578681;
+        bh=hAWr0Dq4DWCd3YCGURfNx79O6opztkOeSirdgo20uJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ceqC3NRFxcOTqzf4Ao2uVyGzp+Wpy5o/m3MWkUnciXpHLuhSB9JzA2k+MnbKJ7n1q
-         wn3mElRrP8xTi2xzlovJz/sV3gB0LFjMZODB5kUtuF1tp9T1Bbcx29CCflaieVsJdk
-         kgmPnEeTDXn24xb332VRHbQg+WcLaxd07JF355c0=
+        b=q3ja+I+16wXzqfVrkd+EoPoxgpNcRAzU23rBOCzmtjQK1fhAXhsnJQHhdl3ePB0Ki
+         ViFouc8hZXqquAsl9oBJt2iy4dcShMbbfyRN7RpEsD+BoLYd4ZsX7gqQWPaJx1OeRt
+         ZWgzkLdqx0o3yElxR4mk0jdbbvdl3HUHUNVRjx/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/267] kgdb: Prevent infinite recursive entries to the debugger
-Date:   Fri, 19 Jun 2020 16:31:34 +0200
-Message-Id: <20200619141654.086488923@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 088/267] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
+Date:   Fri, 19 Jun 2020 16:31:13 +0200
+Message-Id: <20200619141653.095322399@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
+commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
 
-If we detect that we recursively entered the debugger we should hack
-our I/O ops to NULL so that the panic() in the next line won't
-actually cause another recursion into the debugger.  The first line of
-kgdb_panic() will check this and return.
+Clear tuning_done flag while executing tuning to ensure vendor
+specific HS400 settings are applied properly when the controller
+is re-initialized in HS400 mode.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Without this, re-initialization of the qcom SDHC in HS400 mode fails
+while resuming the driver from runtime-suspend or system-suspend.
+
+Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/debug/debug_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-msm.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index d2799767aab8..6a1dc2613bb9 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -444,6 +444,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1084,6 +1084,12 @@ static int sdhci_msm_execute_tuning(stru
+ 	msm_host->use_cdr = true;
  
- 	if (exception_level > 1) {
- 		dump_stack();
-+		kgdb_io_module_registered = false;
- 		panic("Recursive entry to debugger");
- 	}
- 
--- 
-2.25.1
-
+ 	/*
++	 * Clear tuning_done flag before tuning to ensure proper
++	 * HS400 settings.
++	 */
++	msm_host->tuning_done = 0;
++
++	/*
+ 	 * For HS400 tuning in HS200 timing requires:
+ 	 * - select MCLK/2 in VENDOR_SPEC
+ 	 * - program MCLK to 400MHz (or nearest supported) in GCC
 
 
