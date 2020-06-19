@@ -2,135 +2,112 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6192C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37FE32080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF502080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 10:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="aVcWrsEr"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FTMyTBMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732367AbgFSK0N (ORCPT
+        id S1732374AbgFSK0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:26:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53477 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732249AbgFSKZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 06:25:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49pFLp73VDz9sSJ;
-        Fri, 19 Jun 2020 20:25:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592562339;
-        bh=v3lZ1zhxm30dbuwgJcVNBDOXwalAnBkaTaUQ7+IoMNs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=aVcWrsEruaaErbDP8NVcrNS+EK8+wxDbELGLevLdX9mcDCpb2pHRbgdeARe5/0EAL
-         HesWHI6KgwsqORqKaT58fELkECtqgo2D4W9poc7mZN1pDn08e6v1zwhsW8Q0bQ4BIQ
-         6GRgbhI4Wh5rwGGp8dFKkH1goaM4iZMptx53G0/eTk9OLEZJ4Kj1ZdvcCQ7vNDxmnm
-         KcVGCIcLF/uOJg6YXgAM+fVIWQ9RuTLN8p/6GvgtoRZX1B2nfBLgz/NZ9MeMofKBaU
-         x6S5cFKqCuS38FqqKoevBr+TYTdwgNwV5GXeBTi6ct72b3/mDTums4QVH+QXSuzlva
-         Rjvb3HigWEwpA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     linuxppc-dev@ozlabs.org
-Cc:     arnd@arndb.de, linux-arch@ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] powerpc/syscalls: Split SPU-ness out of ABI
-In-Reply-To: <20200616135617.2937252-2-mpe@ellerman.id.au>
-References: <20200616135617.2937252-1-mpe@ellerman.id.au> <20200616135617.2937252-2-mpe@ellerman.id.au>
-Date:   Fri, 19 Jun 2020 20:26:05 +1000
-Message-ID: <87h7v7cpxe.fsf@mpe.ellerman.id.au>
+        Fri, 19 Jun 2020 06:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732283AbgFSK0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:26:34 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AC2C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 03:26:33 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g18so6729493qtu.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 03:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g6sl0V6oSF+ayLjJO92Gb6jDxQHsMRD4h3oSfs3nUus=;
+        b=FTMyTBMM0WhdezxS9cKagR+7bmzV4MCbxW+PeNlxLWAYveMypleF5j5yWeEHqCKSnm
+         Pql+E4txHJ/+BYxTlolI+gp6gz+Rr4pcpAJVEJV/OWJX7GknKspi92ixJwxzvo8XSOZm
+         nBiK3GgbVeH6mM994YVAK7LfXOWApaDMGWl9zN1q5WgjCzSVHANhEWkOkaOeZd8VxvIg
+         pVzxKNGTZ15ZjJTWhX6IhxBwRpqwiYLMzhzTCTaqdxsaBh3Xoe0PQez+US73lnbzga4Q
+         1LoxLLp/0JUMPdZp8uPek7N1kQcfPH345HVhNXBs3keIO/eOMrEXvkEkmcwBF113jYTK
+         KjUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g6sl0V6oSF+ayLjJO92Gb6jDxQHsMRD4h3oSfs3nUus=;
+        b=fNVN4xODYLJHgc53HCghfviPwxVk3UXlszCDdsVSD4W25bjgKcjzChfmNULj8mwr2u
+         yDgZ4T+HnQcRmThNgyxzkadYQo2Pxh6YcuQaoEOGma5vd5oy0+fitpNub0kmeF1UYfXF
+         oJuV4xZ0gHakYQtHLR9HFNp831+m8VRHaDi1GyBUOwguasf2rEoY3+Vt5kMMsZhDVv3M
+         ZjK76SYnbmchXGznDQ7s/4OPENQFEco6D1CuasSkePW4jDLEHOUEY9kxf6L7OHZR8kHg
+         YuS4MCm4H0XGL8kltaUkMwrrXTwSfG1mgjXPwDZr1CbkYwbIllMBrFdLOfe8mAItV+Vf
+         iY0w==
+X-Gm-Message-State: AOAM5330Nd/ed1IoAkBEXhHcxi/F/m/YO//bc4UAh/RfZUJnPFo1v4vm
+        QGiRFV7xIbE9qXxp6G9tMUZDd7ivxi2fZCKvqAw=
+X-Google-Smtp-Source: ABdhPJw4L0mljF2l27HpeZcatzsAaqywsSlC0wRli/G07dmQg0qAaoKE064RDeqMRqbuMOQry3QQFMjUP6vC6W4vX34=
+X-Received: by 2002:ac8:6a08:: with SMTP id t8mr2571945qtr.271.1592562392543;
+ Fri, 19 Jun 2020 03:26:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200608210058.37352-1-jarod@redhat.com> <20200610185910.48668-1-jarod@redhat.com>
+In-Reply-To: <20200610185910.48668-1-jarod@redhat.com>
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Date:   Fri, 19 Jun 2020 03:26:21 -0700
+Message-ID: <CAL3LdT5Bo3Cca1eiGykOvPAw18oH3ePQyB0wwEUYKq5ZDHX=3g@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/4] bonding: initial support for hardware
+ crypto offload
+To:     Jarod Wilson <jarod@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
-> Using the ABI field to encode whether a syscall is usable by SPU
-> programs or not is a bit of kludge.
+On Wed, Jun 10, 2020 at 1:18 PM Jarod Wilson <jarod@redhat.com> wrote:
 >
-> The ABI of the syscall doesn't change depending on the SPU-ness, but
-> in order to make the syscall generation work we have to pretend that
-> it does.
+> This is an initial functional implementation for doing pass-through of
+> hardware encryption from bonding device to capable slaves, in active-backup
+> bond setups. This was developed and tested using ixgbe-driven Intel x520
+> interfaces with libreswan and a transport mode connection, primarily using
+> netperf, with assorted connection failures forced during transmission. The
+> failover works quite well in my testing, and overall performance is right
+> on par with offload when running on a bare interface, no bond involved.
 >
-> It also means we have more duplicated syscall lines than we need to,
-> and the SPU logic is not well contained, instead all of the syscall
-> generation targets need to know if they are spu or nospu.
+> Caveats: this is ONLY enabled for active-backup, because I'm not sure
+> how one would manage multiple offload handles for different devices all
+> running at the same time in the same xfrm, and it relies on some minor
+> changes to both the xfrm code and slave device driver code to get things
+> to behave, and I don't have immediate access to any other hardware that
+> could function similarly, but the NIC driver changes are minimal and
+> straight-forward enough that I've included what I think ought to be
+> enough for mlx5 devices too.
 >
-> So instead add a separate file which contains the information on which
-> syscalls are available for SPU programs. It's just a list of syscall
-> numbers with a single "spu" field. If the field has the value "spu"
-> then the syscall is available to SPU programs, any other value or no
-> entry entirely means the syscall is not available to SPU programs.
+> v2: reordered patches, switched (back) to using CONFIG_XFRM_OFFLOAD
+> to wrap the code additions and wrapped overlooked additions.
 >
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  arch/powerpc/kernel/syscalls/Makefile      |  16 +-
->  arch/powerpc/kernel/syscalls/spu.tbl       | 430 +++++++++++++++++++++
->  arch/powerpc/kernel/syscalls/syscall.tbl   | 195 ++++------
->  arch/powerpc/kernel/syscalls/syscalltbl.sh |  10 +-
->  4 files changed, 523 insertions(+), 128 deletions(-)
->  create mode 100644 arch/powerpc/kernel/syscalls/spu.tbl
+> Jarod Wilson (4):
+>   xfrm: bail early on slave pass over skb
+>   ixgbe_ipsec: become aware of when running as a bonding slave
+>   mlx5: become aware of when running as a bonding slave
+>   bonding: support hardware encryption offload to slaves
+>
+>  drivers/net/bonding/bond_main.c               | 127 +++++++++++++++++-
+>  .../net/ethernet/intel/ixgbe/ixgbe_ipsec.c    |  39 ++++--
+>  .../mellanox/mlx5/core/en_accel/ipsec.c       |   6 +
+>  include/net/bonding.h                         |   3 +
+>  include/net/xfrm.h                            |   1 +
+>  net/xfrm/xfrm_device.c                        |  34 ++---
+>  6 files changed, 183 insertions(+), 27 deletions(-)
 
-For the archives, the changes to the syscall table & the generation of
-the spu.tbl can be more-or-less generated with the script below
-(ignoring whitespace & comments).
+Was this ever sent to netdev (the more appropriate ML)?
 
-cheers
-
-
-#!/bin/bash
-
-git checkout v5.8-rc1
-
-table=arch/powerpc/kernel/syscalls/syscall.tbl
-
-for number in {0..439}
-do
-    line=$(grep -E "^$number\s+(common|spu)" $table)
-    if [[ -n "$line" ]]; then
-	read number abi name syscall compat <<< "$line"
-	if [[ "$syscall" != "sys_ni_syscall" ]]; then
-	    if [[ "$name" == "utimesat" ]]; then # fix typo
-		name="futimesat"
-	    fi
-	    echo -e "$number\t$name\tspu"
-	    continue
-	fi
-    fi
-
-    line=$(grep -m 1 -E "^$number\s+" $table)
-    read number abi name syscall compat <<< "$line"
-    if [[ -n "$name" ]]; then
-	echo -e "$number\t$name\t-"
-    fi
-done > spu-generated.tbl
-
-cat $table | while read line
-do
-    read number abi name syscall compat <<< "$line"
-
-    if [[ "$number" == "#" ]]; then
-	echo $line
-	continue
-    fi
-
-    case "$abi" in
-	"nospu")	;&
-	"common")	;&
-	"32")		;&
-	"64") echo "$line" | sed -e "s/nospu/common/" ;;
-    esac
-done > syscall-generated.tbl
-
-git cat-file -p 35e32a6cb5f6:$table | diff -w -u - syscall-generated.tbl
-git cat-file -p 35e32a6cb5f6:arch/powerpc/kernel/syscalls/spu.tbl | diff -w -u - spu-generated.tbl
-
+-- 
+Cheers,
+Jeff
