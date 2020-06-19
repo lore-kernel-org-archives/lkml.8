@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3715E2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B82020757
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580666;
-	bh=D4A67mbrWqK5bcyd2xtaSN2eqdhN9WQjyd9DakMMtOs=;
+	s=default; t=1592580678;
+	bh=efE9qh+gRAoqSgGMofKgX7fsB1wxtB4Sw4lVk2loedU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JW4C8Js/LTY+mjdVRTITHIaRuhrwUf/YSe+RmeGB8XAb9Saa9NoFYPzL+e6cgo5bC
-	 rI0Sdd/Mp8AYunFp3PdS+ltKw2kRlkyqzkFzI3LPhIF2rohBr+TRM3zEpleAAAixNY
-	 24a3SZKRpAkWSvUkZbtrT40IpfxoOClX0F+BZN9Y=
+	b=HIV0BQaIEDmO7i3IPNMBea1hkKnBOuJps6LgjDqBv9kyAAaB088zxU5AQrycu73nr
+	 hNX7B6SOHLGfFB8bSjMbwuIkRd4LIycEMRR9wTYzz3wDgqEkQ1LIfjYzmHSWqYa15t
+	 qC2kkKE6F+nPd66k1zvNwwhCyqg4JK57hLYsus9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393772AbgFSPbE (ORCPT
+        id S2393804AbgFSPbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393758AbgFSPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:57 -0400
+        id S2393769AbgFSPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:31:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7674206B7;
-        Fri, 19 Jun 2020 15:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E156B206B7;
+        Fri, 19 Jun 2020 15:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580656;
-        bh=D4A67mbrWqK5bcyd2xtaSN2eqdhN9WQjyd9DakMMtOs=;
+        s=default; t=1592580661;
+        bh=efE9qh+gRAoqSgGMofKgX7fsB1wxtB4Sw4lVk2loedU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJjPvH3KhiPe6K0gDfT4SHgKtsbSqXcrAZX+c92fOV9ZYdcf0yngGYwO2wxoIJrEf
-         +ZM3tkEQh137DjjyugNs6AnwxF251VeU8r2PQFGm4RlT3aVako3vlFFfp7SUG06UuS
-         hSK14QyG7N2BF7uOoKpEU0ImWHDP8ZoyeoCUxB2M=
+        b=OvTIgpKaU90H6WMuuca8gpoa1UrtTZREIQgXhfDl1rZIjegOJkiCAvSkhvUWMwkrt
+         3NlpbIZ7tdtw6ZpJuS/0ELsL6oqeZR5ANWzDK0I9M04G2WT+n4xEgKngaFhq40B5vk
+         CU/W6H6Up/XVmds1PSWj8oH52UInpQzAPPjhN9oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.7 332/376] soc/tegra: pmc: Select GENERIC_PINCONF
-Date:   Fri, 19 Jun 2020 16:34:10 +0200
-Message-Id: <20200619141726.047887372@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.7 334/376] ARM: dts: exynos: Fix GPIO polarity for thr GalaxyS3 CM36651 sensors bus
+Date:   Fri, 19 Jun 2020 16:34:12 +0200
+Message-Id: <20200619141726.139875972@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,36 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 5098e2b95e8e6f56266c2d5c180c75917090082a upstream.
+commit 8807d356bfea92b0a8f04ce421800ed83400cd22 upstream.
 
-I have hit the following build error:
-armv7a-hardfloat-linux-gnueabi-ld: drivers/soc/tegra/pmc.o: in function `pinconf_generic_dt_node_to_map_pin':
-pmc.c:(.text+0x500): undefined reference to `pinconf_generic_dt_node_to_map'
-armv7a-hardfloat-linux-gnueabi-ld: drivers/soc/tegra/pmc.o:(.rodata+0x1f88): undefined reference to `pinconf_generic_dt_free_map'
+GPIO lines for the CM36651 sensor I2C bus use the normal not the inverted
+polarity. This bug has been there since adding the CM36651 sensor by
+commit 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node
+for exynos4412-trats2"), but went unnoticed because the "i2c-gpio"
+driver ignored the GPIO polarity specified in the device-tree.
 
-So SOC_TEGRA_PMC should select GENERIC_PINCONF.
+The recent conversion of "i2c-gpio" driver to the new, descriptor based
+GPIO API, automatically made it the DT-specified polarity aware, what
+broke the CM36651 sensor operation.
 
-Fixes: 4a37f11c8f57 ("soc/tegra: pmc: Implement pad configuration via pinctrl")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 85cb4e0bd229 ("ARM: dts: add cm36651 light/proximity sensor node for exynos4412-trats2")
+CC: stable@vger.kernel.org # 4.16+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/tegra/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/soc/tegra/Kconfig
-+++ b/drivers/soc/tegra/Kconfig
-@@ -133,6 +133,7 @@ config SOC_TEGRA_FLOWCTRL
+--- a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
++++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+@@ -68,7 +68,7 @@
  
- config SOC_TEGRA_PMC
- 	bool
-+	select GENERIC_PINCONF
- 
- config SOC_TEGRA_POWERGATE_BPMP
- 	def_bool y
+ 	i2c_cm36651: i2c-gpio-2 {
+ 		compatible = "i2c-gpio";
+-		gpios = <&gpf0 0 GPIO_ACTIVE_LOW>, <&gpf0 1 GPIO_ACTIVE_LOW>;
++		gpios = <&gpf0 0 GPIO_ACTIVE_HIGH>, <&gpf0 1 GPIO_ACTIVE_HIGH>;
+ 		i2c-gpio,delay-us = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 
 
