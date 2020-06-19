@@ -2,56 +2,63 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD69CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3AB217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3328C21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584094;
-	bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+	s=default; t=1592584104;
+	bh=drSCwkxaKEuyVsBT1eI8rJ1HWOjQjlxhJwPUrGQNOc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6XuSvGA8HOk9bariLDWWcGJkSYTqAMfHtOYD7mkwNJF5FeWA/IjPL0T77AwS7Nrn
-	 dyjI+0THUQxLmu1KSGNNVAHV417o7cKUBnNvCAubvZoagmzbdbYwWh3dzcafam0ZRp
-	 Mn6KMCy6G9kheesNoHTZp9Csr3CFdkIsgvTAK1To=
+	b=V8fDmzz/WZHTAFwMsOEo1F64Q9zlZcuup2Y/osXnP9tVjfM7LP8y48+tCSVbnK8xh
+	 BFYnUfCqELZwuqg7PIH8Hdv5b+aWu5y3zvGCQN7apwRB3ioEP7iv4yP3M2dJrdPk2c
+	 GMctxc2Qr9iVuX97nQGzhqXQbEnJlfYgzOnCixoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389909AbgFSOy6 (ORCPT
+        id S2394945AbgFSQ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49588 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389891AbgFSOyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:51 -0400
+        id S2389577AbgFSOz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D244621556;
-        Fri, 19 Jun 2020 14:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7352B2158C;
+        Fri, 19 Jun 2020 14:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578491;
-        bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+        s=default; t=1592578526;
+        bh=drSCwkxaKEuyVsBT1eI8rJ1HWOjQjlxhJwPUrGQNOc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvBKAggzVQ3VDGnyAgXhJQLr8qWa70vP2OejG9Bkf23JAPhzIEtPP5iZn8F6MYTXk
-         qQ1z4uLc3fK2CpB7Vkjcj5AhQHQSiwkNg9BfCiqrCnPFA9MuGcjjA7EhklWiFXfT0O
-         W988AJ1KPQZpdK8QOxSrBEpJajNUoh/1cUgRrFoI=
+        b=tSZrP2Mbm9VzINSR2ZmXK0aQKUs7z9IylNRHEo5F8tOJMSahLqC+qwhuO3KHigdmX
+         GI42iS3DixTByCvPuHMPKffUPCrZWfIUagL1bZIeYIyvzTY4iKOoNGhtEuUuDYlNxn
+         PFZMDKMDQ5BRTUw2oOZxrvW6itcjZwNh9dFSVXLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Walton Hoops <me@waltonhoops.com>,
-        Tomas Hlavaty <tom@logand.com>,
-        ARAI Shun-ichi <hermes@ceres.dti.ne.jp>,
-        Hideki EIRAKU <hdk1983@gmail.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 042/267] nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
-Date:   Fri, 19 Jun 2020 16:30:27 +0200
-Message-Id: <20200619141650.874090997@linuxfoundation.org>
+        Eric Biggers <ebiggers@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 025/267] mm: add kvfree_sensitive() for freeing sensitive data objects
+Date:   Fri, 19 Jun 2020 16:30:10 +0200
+Message-Id: <20200619141650.070396970@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -64,67 +71,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+From: Waiman Long <longman@redhat.com>
 
-commit 8301c719a2bd131436438e49130ee381d30933f5 upstream.
+[ Upstream commit d4eaa2837851db2bfed572898bfc17f9a9f9151e ]
 
-After commit c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if
-mapping has no dirty pages"), the following null pointer dereference has
-been reported on nilfs2:
+For kvmalloc'ed data object that contains sensitive information like
+cryptographic keys, we need to make sure that the buffer is always cleared
+before freeing it.  Using memset() alone for buffer clearing may not
+provide certainty as the compiler may compile it away.  To be sure, the
+special memzero_explicit() has to be used.
 
-  BUG: kernel NULL pointer dereference, address: 00000000000000a8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ...
-  RIP: 0010:percpu_counter_add_batch+0xa/0x60
-  ...
-  Call Trace:
-    __test_set_page_writeback+0x2d3/0x330
-    nilfs_segctor_do_construct+0x10d3/0x2110 [nilfs2]
-    nilfs_segctor_construct+0x168/0x260 [nilfs2]
-    nilfs_segctor_thread+0x127/0x3b0 [nilfs2]
-    kthread+0xf8/0x130
-    ...
+This patch introduces a new kvfree_sensitive() for freeing those sensitive
+data objects allocated by kvmalloc().  The relevant places where
+kvfree_sensitive() can be used are modified to use it.
 
-This crash turned out to be caused by set_page_writeback() call for
-segment summary buffers at nilfs_segctor_prepare_write().
-
-set_page_writeback() can call inc_wb_stat(inode_to_wb(inode),
-WB_WRITEBACK) where inode_to_wb(inode) is NULL if the inode of
-underlying block device does not have an associated wb.
-
-This fixes the issue by calling inode_attach_wb() in advance to ensure
-to associate the bdev inode with its wb.
-
-Fixes: c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping has no dirty pages")
-Reported-by: Walton Hoops <me@waltonhoops.com>
-Reported-by: Tomas Hlavaty <tom@logand.com>
-Reported-by: ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
-Reported-by: Hideki EIRAKU <hdk1983@gmail.com>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/20200608.011819.1399059588922299158.konishi.ryusuke@gmail.com
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Acked-by: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Link: http://lkml.kernel.org/r/20200407200318.11711-1-longman@redhat.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nilfs2/segment.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/mm.h       |  1 +
+ mm/util.c                | 18 ++++++++++++++++++
+ security/keys/internal.h | 11 -----------
+ security/keys/keyctl.c   | 16 +++++-----------
+ 4 files changed, 24 insertions(+), 22 deletions(-)
 
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -2780,6 +2780,8 @@ int nilfs_attach_log_writer(struct super
- 	if (!nilfs->ns_writer)
- 		return -ENOMEM;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b1092046ebef..05bc5f25ab85 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -601,6 +601,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+ }
  
-+	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
+ extern void kvfree(const void *addr);
++extern void kvfree_sensitive(const void *addr, size_t len);
+ 
+ /*
+  * Mapcount of compound page as a whole, does not include mapped sub-pages.
+diff --git a/mm/util.c b/mm/util.c
+index 6a24a1025d77..621afcea2bfa 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -453,6 +453,24 @@ void kvfree(const void *addr)
+ }
+ EXPORT_SYMBOL(kvfree);
+ 
++/**
++ * kvfree_sensitive - Free a data object containing sensitive information.
++ * @addr: address of the data object to be freed.
++ * @len: length of the data object.
++ *
++ * Use the special memzero_explicit() function to clear the content of a
++ * kvmalloc'ed object containing sensitive data to make sure that the
++ * compiler won't optimize out the data clearing.
++ */
++void kvfree_sensitive(const void *addr, size_t len)
++{
++	if (likely(!ZERO_OR_NULL_PTR(addr))) {
++		memzero_explicit((void *)addr, len);
++		kvfree(addr);
++	}
++}
++EXPORT_SYMBOL(kvfree_sensitive);
 +
- 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
- 	if (err) {
- 		kfree(nilfs->ns_writer);
+ static inline void *__page_rmapping(struct page *page)
+ {
+ 	unsigned long mapping;
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index eb50212fbbf8..d1b9c5957000 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -306,15 +306,4 @@ static inline void key_check(const struct key *key)
+ #define key_check(key) do {} while(0)
+ 
+ #endif
+-
+-/*
+- * Helper function to clear and free a kvmalloc'ed memory object.
+- */
+-static inline void __kvzfree(const void *addr, size_t len)
+-{
+-	if (addr) {
+-		memset((void *)addr, 0, len);
+-		kvfree(addr);
+-	}
+-}
+ #endif /* _INTERNAL_H */
+diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+index c07c2e2b2478..9394d72a77e8 100644
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -133,10 +133,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
+ 
+ 	key_ref_put(keyring_ref);
+  error3:
+-	if (payload) {
+-		memzero_explicit(payload, plen);
+-		kvfree(payload);
+-	}
++	kvfree_sensitive(payload, plen);
+  error2:
+ 	kfree(description);
+  error:
+@@ -351,7 +348,7 @@ long keyctl_update_key(key_serial_t id,
+ 
+ 	key_ref_put(key_ref);
+ error2:
+-	__kvzfree(payload, plen);
++	kvfree_sensitive(payload, plen);
+ error:
+ 	return ret;
+ }
+@@ -859,7 +856,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 		 */
+ 		if (ret > key_data_len) {
+ 			if (unlikely(key_data))
+-				__kvzfree(key_data, key_data_len);
++				kvfree_sensitive(key_data, key_data_len);
+ 			key_data_len = ret;
+ 			continue;	/* Allocate buffer */
+ 		}
+@@ -868,7 +865,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 			ret = -EFAULT;
+ 		break;
+ 	}
+-	__kvzfree(key_data, key_data_len);
++	kvfree_sensitive(key_data, key_data_len);
+ 
+ key_put_out:
+ 	key_put(key);
+@@ -1170,10 +1167,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
+ 		keyctl_change_reqkey_auth(NULL);
+ 
+ error2:
+-	if (payload) {
+-		memzero_explicit(payload, plen);
+-		kvfree(payload);
+-	}
++	kvfree_sensitive(payload, plen);
+ error:
+ 	return ret;
+ }
+-- 
+2.25.1
+
 
 
