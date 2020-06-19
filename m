@@ -2,51 +2,53 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2688C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCEB72067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC85420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584746;
-	bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
+	s=default; t=1592584752;
+	bh=G9JCdUl7GSSDm+UDRH8Khp6PG1HH7a9Evvm9/yGrlUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdTmEoBcb+dce+CDFHygwYM0l6NYC1mntTOUsvIacqMkLB63iBhrgCslGNkbiDNoE
-	 vIGaVLPWNCAB5Uvizppl9QhxYsqCQpYZAFbFG3gsMvtyukYnJ8n3u3D/kgT09z3hlh
-	 VM7SBEa2Y9HHvs7tgYio/AfxwLUhWmEX2HHnrkCg=
+	b=BtB4jI6x+vgXjooeKtlnubWgHEuAGOMhiNy9vr2sy4clkNR5UAAp+6anICwcUJP7A
+	 kHVxq6vO3zxp6/4qMh5oY3lSb5dm3PuWyE/qtACanT3ENOOGdB7J1kDR/YbAS27x9S
+	 PdyH5UfX5bUu/3Bkfmlhed3Fi6rMDdJrN9DN/1Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388878AbgFSOqt (ORCPT
+        id S2395260AbgFSQjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388863AbgFSOqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:46:45 -0400
+        id S2388867AbgFSOqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:46:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E46120DD4;
-        Fri, 19 Jun 2020 14:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 963B82083B;
+        Fri, 19 Jun 2020 14:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578005;
-        bh=hfapDkEfZmE1hECKHBeJP8PA9TACADmdyv6ViXtOqws=;
+        s=default; t=1592578003;
+        bh=G9JCdUl7GSSDm+UDRH8Khp6PG1HH7a9Evvm9/yGrlUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcZ3/mCH65oUfyNUt3MjJXhfRXnxTTtV1w9r3SJpaPucHiBW2OIrUvBFAS0k6CA1G
-         H5hLxHa+n2KocL6tUxMRmaiIRtdp+Wo9gO4ZXtQgYVvv5kPV7wzSDhxnKmwQvfpJGP
-         ZVSIccNqIymtW17c+YorNMgffyjumxm4nkmMle9I=
+        b=OUuG5EKhhCFUeAACeM+wUXS4i+ZKfu5+2Ao2GNAOT0VF4RGG7QDkmMSWrAwo7MNOT
+         wS9g8k1fIDI9U8Zb+m4KOBqYBn1git1xEk5I1Z4d004yiPt1IaeeTc98S/eANwebCk
+         Dur9HVBcHQJHpyni/+94ztdeV0ZvfIQ74rG6nDd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 028/190] ACPI: GED: add support for _Exx / _Lxx handler methods
-Date:   Fri, 19 Jun 2020 16:31:13 +0200
-Message-Id: <20200619141634.938811682@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 045/190] spi: No need to assign dummy value in spi_unregister_controller()
+Date:   Fri, 19 Jun 2020 16:31:30 +0200
+Message-Id: <20200619141635.843592227@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,68 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit ea6f3af4c5e63f6981c0b0ab8ebec438e2d5ef40 upstream.
+[ Upstream commit ebc37af5e0a134355ea2b62ed4141458bdbd5389 ]
 
-Per the ACPI spec, interrupts in the range [0, 255] may be handled
-in AML using individual methods whose naming is based on the format
-_Exx or _Lxx, where xx is the hex representation of the interrupt
-index.
+The device_for_each_child() doesn't require the returned value to be checked.
+Thus, drop the dummy variable completely and have no warning anymore:
 
-Add support for this missing feature to our ACPI GED driver.
+drivers/spi/spi.c: In function ‘spi_unregister_controller’:
+drivers/spi/spi.c:2480:6: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+  int dummy;
+      ^~~~~
 
-Cc: v4.9+ <stable@vger.kernel.org> # v4.9+
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/evged.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/spi/spi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/acpi/evged.c
-+++ b/drivers/acpi/evged.c
-@@ -82,6 +82,8 @@ static acpi_status acpi_ged_request_inte
- 	struct resource r;
- 	struct acpi_resource_irq *p = &ares->data.irq;
- 	struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
-+	char ev_name[5];
-+	u8 trigger;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 56035637d8f6..8cc1b21d00d3 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2264,7 +2264,6 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ {
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
+-	int dummy;
  
- 	if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
- 		return AE_OK;
-@@ -90,14 +92,28 @@ static acpi_status acpi_ged_request_inte
- 		dev_err(dev, "unable to parse IRQ resource\n");
- 		return AE_ERROR;
- 	}
--	if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
-+	if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
- 		gsi = p->interrupts[0];
--	else
-+		trigger = p->triggering;
-+	} else {
- 		gsi = pext->interrupts[0];
-+		trigger = p->triggering;
-+	}
+ 	/* First make sure that this controller was ever added */
+ 	mutex_lock(&board_lock);
+@@ -2278,7 +2277,7 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	list_del(&ctlr->list);
+ 	mutex_unlock(&board_lock);
  
- 	irq = r.start;
- 
--	if (ACPI_FAILURE(acpi_get_handle(handle, "_EVT", &evt_handle))) {
-+	switch (gsi) {
-+	case 0 ... 255:
-+		sprintf(ev_name, "_%c%02hhX",
-+			trigger == ACPI_EDGE_SENSITIVE ? 'E' : 'L', gsi);
-+
-+		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
-+			break;
-+		/* fall through */
-+	default:
-+		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
-+			break;
-+
- 		dev_err(dev, "cannot locate _EVT method\n");
- 		return AE_ERROR;
- 	}
+-	dummy = device_for_each_child(&ctlr->dev, NULL, __unregister);
++	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 	device_unregister(&ctlr->dev);
+ 	/* free bus id */
+ 	mutex_lock(&board_lock);
+-- 
+2.25.1
+
 
 
