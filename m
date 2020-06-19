@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48906C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E6E207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB5D207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582618;
-	bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+	s=default; t=1592582619;
+	bh=AwDgvlPuxMjSektF2op7uOYUaYC5N3ZYlM32Knp8Xwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXl/ZFoR7N1PdzXrGKwDyd0lVFpZhypWguF5yqCHt6pNTSmI/N1ZMxHzeoTyJSqJk
-	 /hp1P47v9h7Yn9KaAzKmUJjOCs+GM2bjI5sOtKh2/FrxdyKfy371/t/lB3+U5tIrPj
-	 RhEUzpileKwU/G94kb4BqaQDqvu04IVsBEEfuD2s=
+	b=DOOyNqDLmAKhrodZLjQ4YyTpB1ANxGNX1jQzT4q+vPTo7Fcu0qC0RngarH33qfzlw
+	 4Yit7kkkBXliYnCAZWgYw5hhhVcappQ0b81vkD6FfWVLq7rZctevuf0mKr4ScH1loG
+	 rdgyegDF/xwcJmF0sYmq/U4iWM4oY7BPF+4OsWmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392108AbgFSPL3 (ORCPT
+        id S2403828AbgFSPL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41560 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392092AbgFSPLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:16 -0400
+        id S2392087AbgFSPLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3679206FA;
-        Fri, 19 Jun 2020 15:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CA8206FA;
+        Fri, 19 Jun 2020 15:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579476;
-        bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+        s=default; t=1592579473;
+        bh=AwDgvlPuxMjSektF2op7uOYUaYC5N3ZYlM32Knp8Xwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHXDf9zrxlukoRnDxNZjOHmvF4ynvsQTjA5gRcRQV3wmLOI0jS3fZsXAEG6mZQP1J
-         eST6owpPfVe56U3RMNDALtJIbhqQ1nlWSo8uI4urEfrOPOLFGKW6qddd1UOcfcumLi
-         2k9jJ5k72aZjv5vu91ai4uC4NNssr3JzrU9fhrv0=
+        b=AWHozHGiGNuBzj9UcJ5psEh+UmekfawbHrju99NnVwvzK+dAY7scW7kQ+DmxNS6PK
+         iUIKGTTfTURBjYW/7wtcEFF8lI8TEAQNdVT5OiDK+EvOkD75JjGcKQdQCUREyp5yq/
+         XDgeVyw0h3D1yEvNyq0UFjbAYil/ZFTYoBKydZ9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 149/261] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date:   Fri, 19 Jun 2020 16:32:40 +0200
-Message-Id: <20200619141657.010538317@linuxfoundation.org>
+Subject: [PATCH 5.4 148/261] cpuidle: Fix three reference count leaks
+Date:   Fri, 19 Jun 2020 16:32:39 +0200
+Message-Id: <20200619141656.962741005@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,42 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
+[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
 
-First of all, unsigned long can overflow u32 value on 64-bit machine.
-Second, simple_strtoul() doesn't check for overflow in the input.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-Convert simple_strtoul() to kstrtou32() to eliminate above issues.
+Previous commit "b8eb718348b8" fixed a similar problem.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/cpuidle/sysfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index a881b709af25..a44a2ec33287 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -461,8 +461,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
- {
--	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-+	u32 tmp;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 10, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
+diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
+index 2bb2683b493c..f8747322b3c7 100644
+--- a/drivers/cpuidle/sysfs.c
++++ b/drivers/cpuidle/sysfs.c
+@@ -480,7 +480,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
+ 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
+ 					   &kdev->kobj, "state%d", i);
+ 		if (ret) {
+-			kfree(kobj);
++			kobject_put(&kobj->kobj);
+ 			goto error_state;
+ 		}
+ 		cpuidle_add_s2idle_attr_group(kobj);
+@@ -611,7 +611,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
+ 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
+ 				   &kdev->kobj, "driver");
+ 	if (ret) {
+-		kfree(kdrv);
++		kobject_put(&kdrv->kobj);
+ 		return ret;
+ 	}
+ 
+@@ -705,7 +705,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
+ 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
+ 				   "cpuidle");
+ 	if (error) {
+-		kfree(kdev);
++		kobject_put(&kdev->kobj);
+ 		return error;
+ 	}
+ 
 -- 
 2.25.1
 
