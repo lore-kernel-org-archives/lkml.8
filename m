@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8000DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1B021527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619E92158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584413;
-	bh=vzZF4AySYVeY6Way8T8nzCKiW/SGxkr27tSIpR7GqWg=;
+	s=default; t=1592584416;
+	bh=inlU8lQh3M2VyGDzvoEfmJckWzXO3dz9Z7MvHujGYN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSa6j+OL3jFsuGgPiM6DokTVXERmOD8lAyQAhBtlk/xtwA59coKaCcEE8WHG2tvjT
-	 vBvu/2X3HqQKY4XbFXV9jmCmiOk9WRdHGHSvuIezH/Kc7pYuHg5bOaXeaJDFeS7T4k
-	 mGlmLFgmsCH1g/PSbpuPe68K8F3BboQ008RkyWE8=
+	b=cNNbnd8/gXWfdQ76ssiG3H8VercaKVnaFTLkIvm6WHkMo0+yDVDufGDpH69m/Iyjs
+	 uOGyzWnKxZ4HamuGkX+KAe9lY8jaAXdczYSqP1gAYeh+MJyddzk6iiIdOipurTtW0I
+	 lwovo4xUmXrVtEcMBvPzrrJ7O+d8tRSAWm8bQsks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395132AbgFSQdb (ORCPT
+        id S2394703AbgFSQdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45416 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389485AbgFSOvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:40 -0400
+        id S2389464AbgFSOve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475EF21556;
-        Fri, 19 Jun 2020 14:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BCC21556;
+        Fri, 19 Jun 2020 14:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578300;
-        bh=vzZF4AySYVeY6Way8T8nzCKiW/SGxkr27tSIpR7GqWg=;
+        s=default; t=1592578293;
+        bh=inlU8lQh3M2VyGDzvoEfmJckWzXO3dz9Z7MvHujGYN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oya08Cgrxoi/zALXvUMcCGmHKopcQafViWP6TP9eKU0+bo+pBdbb+5ozLuEUsIk2K
-         H1BjbOMEVHQC5TMD6iIeukY+YogSOEoAwnBROmYeBYBJ9isvpHfwBnZ/QO1bLN0exq
-         OKvsvBwAmjy65dTtmloMd6WcDJghpwyTjlWnn3wc=
+        b=XA/jwhHuKlEYGBYGIwYvYQTxKTW/yQLqGsb1FUXV2AHdAo/+73kPEelSOqZRQJyf9
+         xyvx8dHF06vZf1N9fzkOGrG7B+90lAG449yB2zARbL9gQUq31mlXmKPLKbU4OWht9s
+         RIFH4dOdlo+D3TsBzIyOBIBSkmuvw6kCtqHSFbwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YuanJunQing <yuanjunqing66@163.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Abhishek Sahu <abhsahu@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 130/190] MIPS: Fix IRQ tracing when call handle_fpe() and handle_msa_fpe()
-Date:   Fri, 19 Jun 2020 16:32:55 +0200
-Message-Id: <20200619141640.125659657@linuxfoundation.org>
+Subject: [PATCH 4.14 156/190] PCI: Generalize multi-function power dependency device links
+Date:   Fri, 19 Jun 2020 16:33:21 +0200
+Message-Id: <20200619141641.534071455@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,52 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YuanJunQing <yuanjunqing66@163.com>
+From: Abhishek Sahu <abhsahu@nvidia.com>
 
-[ Upstream commit 31e1b3efa802f97a17628dde280006c4cee4ce5e ]
+[ Upstream commit a17beb1a0882a544523dcb5d0da4801272dfd43a ]
 
-Register "a1" is unsaved in this function,
- when CONFIG_TRACE_IRQFLAGS is enabled,
- the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
- and this may change register "a1".
- The changed register "a1" as argument will be send
- to do_fpe() and do_msa_fpe().
+Although not allowed by the PCI specs, some multi-function devices have
+power dependencies between the functions.  For example, function 1 may not
+work unless function 0 is in the D0 power state.
 
-Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+The existing quirk_gpu_hda() adds a device link to express this dependency
+for GPU and HDA devices, but it really is not specific to those device
+types.
+
+Generalize it and rename it to pci_create_device_link() so we can create
+dependencies between any "consumer" and "producer" functions of a
+multi-function device, where the consumer is only functional if the
+producer is in D0.  This reorganization should not affect any
+functionality.
+
+Link: https://lore.kernel.org/lkml/20190606092225.17960-2-abhsahu@nvidia.com
+Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+[bhelgaas: commit log, reword diagnostic]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/genex.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 54 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 20 deletions(-)
 
-diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-index 37b9383eacd3..cf74a963839f 100644
---- a/arch/mips/kernel/genex.S
-+++ b/arch/mips/kernel/genex.S
-@@ -431,20 +431,20 @@ NESTED(nmi_handler, PT_SIZE, sp)
- 	.endm
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 6af7fc0be21d..3e1a0a207734 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4955,35 +4955,49 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
  
- 	.macro	__build_clear_fpe
-+	CLI
-+	TRACE_IRQS_OFF
- 	.set	push
- 	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
- 	.set	mips1
- 	SET_HARDFLOAT
- 	cfc1	a1, fcr31
- 	.set	pop
--	CLI
--	TRACE_IRQS_OFF
- 	.endm
+ /*
+- * GPUs with integrated HDA controller for streaming audio to attached displays
+- * need a device link from the HDA controller (consumer) to the GPU (supplier)
+- * so that the GPU is powered up whenever the HDA controller is accessed.
+- * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
+- * The device link stays in place until shutdown (or removal of the PCI device
+- * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
+- * to prevent it from permanently keeping the GPU awake.
++ * Although not allowed by the spec, some multi-function devices have
++ * dependencies of one function (consumer) on another (supplier).  For the
++ * consumer to work in D0, the supplier must also be in D0.  Create a
++ * device link from the consumer to the supplier to enforce this
++ * dependency.  Runtime PM is allowed by default on the consumer to prevent
++ * it from permanently keeping the supplier awake.
+  */
+-static void quirk_gpu_hda(struct pci_dev *hda)
++static void pci_create_device_link(struct pci_dev *pdev, unsigned int consumer,
++				   unsigned int supplier, unsigned int class,
++				   unsigned int class_shift)
+ {
+-	struct pci_dev *gpu;
++	struct pci_dev *supplier_pdev;
  
- 	.macro	__build_clear_msa_fpe
--	_cfcmsa	a1, MSA_CSR
- 	CLI
- 	TRACE_IRQS_OFF
-+	_cfcmsa	a1, MSA_CSR
- 	.endm
+-	if (PCI_FUNC(hda->devfn) != 1)
++	if (PCI_FUNC(pdev->devfn) != consumer)
+ 		return;
  
- 	.macro	__build_clear_ade
+-	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
+-					  hda->bus->number,
+-					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
+-	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
+-		pci_dev_put(gpu);
++	supplier_pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
++				pdev->bus->number,
++				PCI_DEVFN(PCI_SLOT(pdev->devfn), supplier));
++	if (!supplier_pdev || (supplier_pdev->class >> class_shift) != class) {
++		pci_dev_put(supplier_pdev);
+ 		return;
+ 	}
+ 
+-	if (!device_link_add(&hda->dev, &gpu->dev,
+-			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
+-		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
++	if (device_link_add(&pdev->dev, &supplier_pdev->dev,
++			    DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
++		pci_info(pdev, "D0 power state depends on %s\n",
++			 pci_name(supplier_pdev));
++	else
++		pci_err(pdev, "Cannot enforce power dependency on %s\n",
++			pci_name(supplier_pdev));
++
++	pm_runtime_allow(&pdev->dev);
++	pci_dev_put(supplier_pdev);
++}
+ 
+-	pm_runtime_allow(&hda->dev);
+-	pci_dev_put(gpu);
++/*
++ * Create device link for GPUs with integrated HDA controller for streaming
++ * audio to attached displays.
++ */
++static void quirk_gpu_hda(struct pci_dev *hda)
++{
++	pci_create_device_link(hda, 1, 0, PCI_BASE_CLASS_DISPLAY, 16);
+ }
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+ 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
 -- 
 2.25.1
 
