@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2924421532
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5983C20809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582320;
-	bh=T1TFFnuOR8yP9KXZ3SI9ba8JrUEjNEAKKapF2hBhyM8=;
+	s=default; t=1592582325;
+	bh=nFGjH5tzVEWgseGhypamuZgOJ+XW9VpKERelgD2AHVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ahoy94pOlDbbu6b97KHH1lu0eH/hxCgtSKpd928N96NB0ajZ+QOmznF1u32rMa2AF
-	 QZHbfd9ajg9LWvSfJT0J7X1yB1byt6LBNtBVaxbMEyF2zOqUUhqrwMI0OoDvQGXLzv
-	 +sKrBI/1e7xIxi+jGu9sZ8PCduKepZCO4HFOQ+8M=
+	b=ke/1Ba5qzo5KpwWKnTug7xL2byLtpJCec40xI0XtcQws59HbU3tzN6NUmNhGudjzp
+	 2GbFXbwtU4EAl7tr9jXr+39UojsCeu/9oGubS22G90qLiq4WYGDEM/fw3pg4Po/+fK
+	 8q1UQTsqFeClMRliKJnwRD+DSc2rfLTUxTsYyoSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404043AbgFSPT2 (ORCPT
+        id S2392630AbgFSP6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:58:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392579AbgFSPSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:04 -0400
+        id S2403779AbgFSPT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:19:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3402186A;
-        Fri, 19 Jun 2020 15:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8107B206DB;
+        Fri, 19 Jun 2020 15:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579884;
-        bh=T1TFFnuOR8yP9KXZ3SI9ba8JrUEjNEAKKapF2hBhyM8=;
+        s=default; t=1592579966;
+        bh=nFGjH5tzVEWgseGhypamuZgOJ+XW9VpKERelgD2AHVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5OMZDpJqBz/QCfy+FpqHExHZONVFTZWHcHj+XqffZhcdpoKh8xhZt2mBDX44XeA5
-         2u0v/sbdylUZDEMrh7lM8dk4EMxP9fhiixlmprm8O9Z/D3i3RO5VklDiAXY4eQ3vZx
-         8QItX1/xe/P/0XEauagDW/KYsy46Z+PeawJgVA/U=
+        b=EQyScUctKoLhT+Yqp5ZlIglYpBdQHhKvMzulkAh6pSkTlpPf9arHW/+U3/JBtWmns
+         UipBkDyVAzaZNf3jsFXCvEUwSLRcoUBzMd1oKEk3CCQQUhEp2iQa/spkFRMnb4vflf
+         766lJkboJYHzmo3R+H48ogA99RhMwo2+flZGFlNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 040/376] mt76: mt7615: fix aid configuration in mt7615_mcu_wtbl_generic_tlv
-Date:   Fri, 19 Jun 2020 16:29:18 +0200
-Message-Id: <20200619141712.254706360@linuxfoundation.org>
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 071/376] mmc: mmci_sdmmc: fix power on issue due to pwr_reg initialization
+Date:   Fri, 19 Jun 2020 16:29:49 +0200
+Message-Id: <20200619141713.714680400@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -59,38 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-[ Upstream commit fdf433121f82766ff508a6f06665d2aca3e258d5 ]
+[ Upstream commit 33ba6fec0012e47f4e72bfab922b99327373f210 ]
 
-If the vif is running in station mode the aid will be passed by mac80211
-using bss_conf.aid. Fix aid configuration in mt7615_mcu_wtbl_generic_tlv
+This patch fix a power-on issue, and avoid to retry the power sequence.
 
-Fixes: 04b8e65922f6 ("mt76: add mac80211 driver for MT7615 PCIe-based chipsets")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
+(value 0x2), to prevent the card from being supplied through the signal
+lines (all the lines are driven low).
+
+In power on sequence: when the power is stable, sdmmc must set pwr_reg
+in "power-off" state (value 0x0) to drive all signal to high before to
+set "power-on".
+
+To avoid writing the same value to the power register several times, this
+register is cached by the pwr_reg variable. At probe pwr_reg is initialized
+to 0 by kzalloc of mmc_alloc_host.
+
+Like pwr_reg value is 0 at probing, the power on sequence fail because
+the "power-off" state is not writes (value 0x0) and the lines
+remain drive to low.
+
+This patch initializes "pwr_reg" variable with power register value.
+This it done in sdmmc variant init to not disturb default mmci behavior.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Link: https://lore.kernel.org/r/20200420161831.5043-1-ludovic.barre@st.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index 610cfa918c7b..a19fb0cb7794 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -823,8 +823,11 @@ mt7615_mcu_wtbl_generic_tlv(struct sk_buff *skb, struct ieee80211_vif *vif,
- 	generic = (struct wtbl_generic *)tlv;
+diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+index cca7b3b3f618..2965b1c062e1 100644
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -522,6 +522,7 @@ void sdmmc_variant_init(struct mmci_host *host)
+ 	struct sdmmc_dlyb *dlyb;
  
- 	if (sta) {
-+		if (vif->type == NL80211_IFTYPE_STATION)
-+			generic->partial_aid = cpu_to_le16(vif->bss_conf.aid);
-+		else
-+			generic->partial_aid = cpu_to_le16(sta->aid);
- 		memcpy(generic->peer_addr, sta->addr, ETH_ALEN);
--		generic->partial_aid = cpu_to_le16(sta->aid);
- 		generic->muar_idx = mvif->omac_idx;
- 		generic->qos = sta->wme;
- 	} else {
+ 	host->ops = &sdmmc_variant_ops;
++	host->pwr_reg = readl_relaxed(host->base + MMCIPOWER);
+ 
+ 	base_dlyb = devm_of_iomap(mmc_dev(host->mmc), np, 1, NULL);
+ 	if (IS_ERR(base_dlyb))
 -- 
 2.25.1
 
