@@ -2,118 +2,135 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E721C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A483C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 506F120809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEB82080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:03:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="L7U0ymED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbgFSHCc (ORCPT
+        id S1729861AbgFSHDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:02:32 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:59348 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgFSHCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:02:32 -0400
-Received: from p5b127c2f.dip0.t-ipconnect.de ([91.18.124.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jmB2d-00087c-5B; Fri, 19 Jun 2020 09:02:23 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        andy.yan@rock-chips.com, huangtao@rock-chips.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/rockchip: vop: fix vop full rgb24 r/b color error
-Date:   Fri, 19 Jun 2020 09:02:22 +0200
-Message-ID: <2786595.VspqIdsi2r@phil>
-In-Reply-To: <20200619021251.22991-1-hjc@rock-chips.com>
-References: <20200619021251.22991-1-hjc@rock-chips.com>
+        Fri, 19 Jun 2020 03:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbgFSHDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:03:43 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CABC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 00:03:43 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id e12so6778291eds.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 00:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=29xULxJCIJJBM7FmlrqMmhHTK6tWJ7AFfkAGJqVdsnU=;
+        b=L7U0ymEDMd6Bujw42JqfDFfjnSqwmTmi671C+VTC+1tsnM3fzEmNpzObB5E528wdw3
+         gxHGYIVUTz0zs7LciEdJ4SaXvYbsfPtcvbz2+NqivtMnKi6STRcX1u3Ua62r7d2US6eH
+         AD5Y69xW7hNFdou6RI+icSjFxUUtbNQVVsbKRfbXIGAp4G+x7nE6Dnq9dslmh60UIJyQ
+         QV6PqoVBQ7ahn0I1jMcBcEmXUwg3tU6z9dy146hDNIBiwRAcmGz2ifNEJ8EeWOVgFVGA
+         hzvpB1Ovknt3qJeSbPkckaQ0MKzntUX3NTNn86jrH/Hi4twNnFbjqfvEP+lHvthUI95d
+         8KdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=29xULxJCIJJBM7FmlrqMmhHTK6tWJ7AFfkAGJqVdsnU=;
+        b=uYTiXx7trrf7nwqI7HtVG1o1XD17NcIiQ3FPWUtxHlFn5QsBUTAObVkcseiUG18lDe
+         XLI/3R38BqYdCCl7kdyImVPqRtsHDXtMsi916uipZuU5zCGj811yN7d/zV3gPE5GeC/q
+         lrIMitnRk5DJVMxVe1aySZTyMrnndoLAjVlRZAo17660FKgKkyIOyS3F1frSqEj9fueR
+         7WFD7GtYoojyH4HIEDfMpv6PkhmaxMJZvRAPH8RIQLQ8BFxsepKEPRLKG+LV2UzBzAH+
+         gbRqYvnv2hsJRuLAM2IT66VAJsoWmuySdlA5AquaJUQJKFCCdxB5PitkuIXF1W6jnhgn
+         0XBQ==
+X-Gm-Message-State: AOAM5317zYQl5VpC/Fk2M2bEUC6P7Q929gyykVGR0YmPOsEObO1kZIHp
+        xcHhW5GMBd84vnFMUfsBgjkX+J5HsgnM4Q==
+X-Google-Smtp-Source: ABdhPJyDeExvTCzUgxuPVQ8DjfspddnKSeF/AU4rVBhTYA7NKS7Z7eSzN+Jq6/1RX4eqfi5Lvzh6HA==
+X-Received: by 2002:a50:cd56:: with SMTP id d22mr1800363edj.374.1592550222007;
+        Fri, 19 Jun 2020 00:03:42 -0700 (PDT)
+Received: from netronome.com ([2001:982:7ed1:403:9eeb:e8ff:fe0d:5b6a])
+        by smtp.gmail.com with ESMTPSA id u3sm4208545edx.25.2020.06.19.00.03.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 00:03:41 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 09:03:40 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Po Liu <po.liu@nxp.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, jiri@resnulli.us, vinicius.gomes@intel.com,
+        vlad@buslov.dev, claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, michael.chan@broadcom.com,
+        vishal@chelsio.com, saeedm@mellanox.com, leon@kernel.org,
+        jiri@mellanox.com, idosch@mellanox.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        kuba@kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
+        pablo@netfilter.org, moshe@mellanox.com, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com, stephen@networkplumber.org
+Subject: Re: [v2,net-next] net: qos offload add flow status with dropped count
+Message-ID: <20200619070340.GE9312@netronome.com>
+References: <20200324034745.30979-1-Po.Liu@nxp.com>
+ <20200619060107.6325-1-po.liu@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619060107.6325-1-po.liu@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandy,
-
-Am Freitag, 19. Juni 2020, 04:12:51 CEST schrieb Sandy Huang:
-> RGB888 format msb is red component and the lsb is blue component,
-> at vop full platform this is swapped, and this is different from vop
-> lite and vop next, so add this patch to fix it.
-
-just me struggling with color formats ... and wondering why this never
-came up so far - with Version 3 being all major SoCs of the last years.
-
-So I guess the reason that nobody noticed so far is, that most things
-will use ARGB888 instead of RGB888?
-
-One implementation nit below as well.
-
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+On Fri, Jun 19, 2020 at 02:01:07PM +0800, Po Liu wrote:
+> From: Po Liu <Po.Liu@nxp.com>
+> 
+> This patch adds a drop frames counter to tc flower offloading.
+> Reporting h/w dropped frames is necessary for some actions.
+> Some actions like police action and the coming introduced stream gate
+> action would produce dropped frames which is necessary for user. Status
+> update shows how many filtered packets increasing and how many dropped
+> in those packets.
+> 
+> v2: Changes
+>  - Update commit comments suggest by Jiri Pirko.
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
 > ---
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> This patch is continue the thread 20200324034745.30979-1-Po.Liu@nxp.com
 > 
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index c80f7d9fd13f..1c17048ad737 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -132,6 +132,7 @@ struct vop_win {
->  
->  struct rockchip_rgb;
->  struct vop {
-> +	uint32_t version;
->  	struct drm_crtc crtc;
->  	struct device *dev;
->  	struct drm_device *drm_dev;
-> @@ -989,6 +990,12 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
->  	VOP_WIN_SET(vop, win, dsp_st, dsp_st);
->  
->  	rb_swap = has_rb_swapped(fb->format->format);
-> +	/*
-> +	 * VOP full need to do rb swap to show rgb888/bgr888 format color correctly
-> +	 */
+>  drivers/net/dsa/sja1105/sja1105_vl.c                  |  2 +-
+>  drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c          |  2 +-
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c  |  2 +-
+>  .../net/ethernet/chelsio/cxgb4/cxgb4_tc_matchall.c    |  2 +-
+>  drivers/net/ethernet/freescale/enetc/enetc_qos.c      |  7 +++++--
+>  drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c    |  2 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/en_tc.c       |  4 ++--
+>  drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |  2 +-
+>  drivers/net/ethernet/mscc/ocelot_flower.c             |  2 +-
+>  drivers/net/ethernet/netronome/nfp/flower/offload.c   |  2 +-
+>  drivers/net/ethernet/netronome/nfp/flower/qos_conf.c  |  2 +-
+>  include/net/act_api.h                                 | 11 ++++++-----
+>  include/net/flow_offload.h                            |  5 ++++-
+>  include/net/pkt_cls.h                                 |  5 +++--
+>  net/sched/act_api.c                                   | 10 ++++------
+>  net/sched/act_ct.c                                    |  6 +++---
+>  net/sched/act_gact.c                                  |  7 ++++---
+>  net/sched/act_gate.c                                  |  6 +++---
+>  net/sched/act_mirred.c                                |  6 +++---
+>  net/sched/act_pedit.c                                 |  6 +++---
+>  net/sched/act_police.c                                |  4 ++--
+>  net/sched/act_skbedit.c                               |  5 +++--
+>  net/sched/act_vlan.c                                  |  6 +++---
+>  net/sched/cls_flower.c                                |  1 +
+>  net/sched/cls_matchall.c                              |  3 ++-
+>  25 files changed, 60 insertions(+), 50 deletions(-)
 
-one-line-comment?
-	/* VOP-full needs rb_swap for correctly showing rgb888/bgr888 */
+Netronome portion:
 
-> +	if ((fb->format->format == DRM_FORMAT_RGB888 || fb->format->format == DRM_FORMAT_BGR888) &&
-> +	    VOP_MAJOR(vop->version) == 3)
-> +		rb_swap = !rb_swap;
-
-can we move this into the existing has_rb_swapped() function?
-Like doing
-	rb_swap = has_rb_swapped(vop, fb->format->format)
-and adding your conditional to the end there?
-
-
-Thanks
-Heiko
-
-
->  	VOP_WIN_SET(vop, win, rb_swap, rb_swap);
->  
->  	/*
-> @@ -2091,6 +2098,7 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->  	vop->dev = dev;
->  	vop->data = vop_data;
->  	vop->drm_dev = drm_dev;
-> +	vop->version = vop_data->version;
->  	dev_set_drvdata(dev, vop);
->  
->  	vop_win_init(vop);
-> 
-
-
-
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 
