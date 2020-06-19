@@ -2,108 +2,100 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD644C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB5121548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4DD21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zp7wbghX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394812AbgFSSKG convert rfc822-to-8bit (ORCPT
+        id S1731995AbgFSSLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:10:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732403AbgFSSKE (ORCPT
+        Fri, 19 Jun 2020 14:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbgFSSLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:10:04 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JI4ZNo013853
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:10:04 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.66])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31rwwu0s1u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:10:04 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <miltonm@us.ibm.com>;
-        Fri, 19 Jun 2020 18:10:03 -0000
-Received: from us1a3-smtp03.a3.dal06.isc4sb.com (10.106.154.98)
-        by smtp.notes.na.collabserv.com (10.106.227.127) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 19 Jun 2020 18:09:55 -0000
-Received: from us1a3-mail228.a3.dal06.isc4sb.com ([10.146.103.71])
-          by us1a3-smtp03.a3.dal06.isc4sb.com
-          with ESMTP id 2020061918095479-734599 ;
-          Fri, 19 Jun 2020 18:09:54 +0000 
-In-Reply-To: <20200619165154.GA20461@cnn>
-From:   "Milton Miller II" <miltonm@us.ibm.com>
-To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, manikandan.e@hcl.com,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        vijaykhemka@fb.com, saipsdasari@fb.com, patrickw3@fb.com
-Date:   Fri, 19 Jun 2020 18:09:55 +0000
+        Fri, 19 Jun 2020 14:11:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D44C6C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RlTbO/ySGCld/EqXTk8DFn5MI7q+hzjQi9/I5bKcuZo=; b=Zp7wbghX5O/7gHboFZepzQFW5O
+        91zOt7qScEz0lnbQrUMZRgUF/4V0Iebpu+CjpNpygCYADLRXY2z0NRZziA9wiaUKB+OtOUSnwd1b2
+        xwG3CMQwzu5jqzldOm6oWmbYU5yV2/hiloF7ekth82/Gf0b6WlmpvsUZTZT2E4BQF3BWI2Jj3QXu2
+        lkYhaBW3oj4zYKBpve/ftsbXj5kcGhQZx1gluH3kfD0sBhxrSJxbnF+69hgRsMCKN6/Fn+WUCM+dz
+        9PTFgmRP14MnF+ghf0J9tQTFPyOzeUITxGRwUng3AjPoxNfotDq1nxzMkHE54YgsgZG6uvd0uoRd0
+        JGYlmxvA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmLUB-0005wd-5N; Fri, 19 Jun 2020 18:11:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F62030018A;
+        Fri, 19 Jun 2020 20:11:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CE80B2C36DD93; Fri, 19 Jun 2020 20:11:28 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 20:11:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, frederic@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        npiggin@gmail.com
+Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
+Message-ID: <20200619181128.GC576888@hirez.programming.kicks-ass.net>
+References: <20200615125654.678940605@infradead.org>
+ <20200615162330.GF2723@paulmck-ThinkPad-P72>
+ <20200615164048.GC2531@hirez.programming.kicks-ass.net>
+ <20200615172149.GJ2723@paulmck-ThinkPad-P72>
+ <20200615191158.GK2531@hirez.programming.kicks-ass.net>
+ <20200616170410.GL2554@hirez.programming.kicks-ass.net>
+ <20200616171721.GM2554@hirez.programming.kicks-ass.net>
+ <20200619134423.GB577403@hirez.programming.kicks-ass.net>
+ <20200619172047.GK2723@paulmck-ThinkPad-P72>
+ <20200619174802.GA10403@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20200619165154.GA20461@cnn>
-X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
- SCN1812108_20180501T0841_FP65 April 15, 2020 at 09:48
-X-LLNOutbound: False
-X-Disclaimed: 37575
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 20061918-4409-0000-0000-00000305A032
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.424974; ST=0; TS=0; UL=0; ISC=; MB=0.000960
-X-IBM-SpamModules-Versions: BY=3.00013312; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000295; SDB=6.01393884; UDB=6.00746056; IPR=6.01176167;
- MB=3.00032629; MTD=3.00000008; XFM=3.00000015; UTC=2020-06-19 18:10:01
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2020-06-19 16:54:29 - 6.00011502
-x-cbparentid: 20061918-4410-0000-0000-00006256AC0D
-Message-Id: <OFB20C104E.283BBF6D-ON0025858C.0062CC5B-0025858C.0063C8F2@notes.na.collabserv.com>
-Subject: Re:  [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_20:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Reason: orgsafe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619174802.GA10403@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On : 06/19/2020 abiout 12:46PM in some timezone,  Manikandan Elumalai  wrote:
+On Fri, Jun 19, 2020 at 10:48:02AM -0700, Paul E. McKenney wrote:
+> On Fri, Jun 19, 2020 at 10:20:47AM -0700, Paul E. McKenney wrote:
 
->The adm1278 temp attribute need it for openbmc platform .
->This feature not enabled by default, so PMON_CONFIG needs to enable
->it.
->
->Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
->---
->---    v4 -Reported-by: kernel test robot <lkp@intel.com>
+> > > @@ -2615,7 +2617,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+> > >  	 * let the waker make forward progress. This is safe because IRQs are
+> > >  	 * disabled and the IPI will deliver after on_cpu is cleared.
+> > >  	 */
+> > > -	if (READ_ONCE(p->on_cpu) && ttwu_queue_wakelist(p, cpu, wake_flags | WF_ON_RQ))
+> > > +	if (smp_load_acquire(&p->on_cpu) &&
+> 
+> Given the x86 memory model, this only protects against the compiler
+> reordering accesses in ttwu_queue_wakelist() against the fetch of
+> p->on_cpu, correct?
 
-Thie above tag should be Adjacent to the Signed-off-by.
+Yes.
 
->---    v3 -fix invalid signed-off.
->---       -removed checkpath warnings.
->---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single
->line operation.
->---    v2 -add Signed-off-by.
->---       -removed ADM1278_TEMP1_EN check.
->---
+> Don't get me wrong, I do see some potential compiler misorderings,
+> including with cpu_rq(cpu)->nr_running.  Just curious.
 
-The canonical format is to have a line of 3 dashes then the trailing changelog 
-
-Please read the documentation at 
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-canonical-patch-format
-
-milton
+Given this is arch independent code, I'd better write generic code, and
+there I really think this wants to be acquire. I'll also try and write a
+comment for next time.
 
