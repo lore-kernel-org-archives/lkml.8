@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10225C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7899206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20441206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 08:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgFSIgL (ORCPT
+        id S1731946AbgFSIgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:36:11 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:52485 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731605AbgFSIe2 (ORCPT
+        Fri, 19 Jun 2020 04:36:14 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:33774 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731568AbgFSIe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:34:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U01BjYN_1592555661;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U01BjYN_1592555661)
+        Fri, 19 Jun 2020 04:34:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0U01FUtr_1592555660;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U01FUtr_1592555660)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 19 Jun 2020 16:34:21 +0800
+          Fri, 19 Jun 2020 16:34:20 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -33,9 +33,13 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Subject: [PATCH v13 06/18] mm/thp: clean up lru_add_page_tail
-Date:   Fri, 19 Jun 2020 16:33:44 +0800
-Message-Id: <1592555636-115095-7-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v13 04/18] mm/compaction: rename compact_deferred as compact_should_defer
+Date:   Fri, 19 Jun 2020 16:33:42 +0800
+Message-Id: <1592555636-115095-5-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -44,50 +48,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the first parameter is only used by head page, it's better to make
-it explicit.
+The compact_deferred is a defer suggestion check, deferring action does in
+defer_compaction not here. so, better rename it to avoid confusing.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- mm/huge_memory.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/linux/compaction.h        | 4 ++--
+ include/trace/events/compaction.h | 2 +-
+ mm/compaction.c                   | 8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9e050b13f597..b18f21da4dac 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2340,19 +2340,19 @@ static void remap_page(struct page *page)
- 	}
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index 6fa0eea3f530..be9ed7437a38 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -100,7 +100,7 @@ extern enum compact_result compaction_suitable(struct zone *zone, int order,
+ 		unsigned int alloc_flags, int highest_zoneidx);
+ 
+ extern void defer_compaction(struct zone *zone, int order);
+-extern bool compaction_deferred(struct zone *zone, int order);
++extern bool compaction_should_defer(struct zone *zone, int order);
+ extern void compaction_defer_reset(struct zone *zone, int order,
+ 				bool alloc_success);
+ extern bool compaction_restarting(struct zone *zone, int order);
+@@ -199,7 +199,7 @@ static inline void defer_compaction(struct zone *zone, int order)
+ {
  }
  
--static void lru_add_page_tail(struct page *page, struct page *page_tail,
-+static void lru_add_page_tail(struct page *head, struct page *page_tail,
- 				struct lruvec *lruvec, struct list_head *list)
+-static inline bool compaction_deferred(struct zone *zone, int order)
++static inline bool compaction_should_defer(struct zone *zone, int order)
  {
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
--	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-+	VM_BUG_ON_PAGE(!PageHead(head), head);
-+	VM_BUG_ON_PAGE(PageCompound(page_tail), head);
-+	VM_BUG_ON_PAGE(PageLRU(page_tail), head);
- 	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
+ 	return true;
+ }
+diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
+index 54e5bf081171..33633c71df04 100644
+--- a/include/trace/events/compaction.h
++++ b/include/trace/events/compaction.h
+@@ -274,7 +274,7 @@
+ 		1UL << __entry->defer_shift)
+ );
  
- 	if (!list)
- 		SetPageLRU(page_tail);
+-DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_deferred,
++DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_should_defer,
  
--	if (likely(PageLRU(page)))
--		list_add_tail(&page_tail->lru, &page->lru);
-+	if (likely(PageLRU(head)))
-+		list_add_tail(&page_tail->lru, &head->lru);
- 	else if (list) {
- 		/* page reclaim is reclaiming a huge page */
- 		get_page(page_tail);
+ 	TP_PROTO(struct zone *zone, int order),
+ 
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 48114f98e362..5d59e77cd424 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -154,7 +154,7 @@ void defer_compaction(struct zone *zone, int order)
+ }
+ 
+ /* Returns true if compaction should be skipped this time */
+-bool compaction_deferred(struct zone *zone, int order)
++bool compaction_should_defer(struct zone *zone, int order)
+ {
+ 	unsigned long defer_limit = 1UL << zone->compact_defer_shift;
+ 
+@@ -168,7 +168,7 @@ bool compaction_deferred(struct zone *zone, int order)
+ 	if (zone->compact_considered >= defer_limit)
+ 		return false;
+ 
+-	trace_mm_compaction_deferred(zone, order);
++	trace_mm_compaction_should_defer(zone, order);
+ 
+ 	return true;
+ }
+@@ -2366,7 +2366,7 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
+ 		enum compact_result status;
+ 
+ 		if (prio > MIN_COMPACT_PRIORITY
+-					&& compaction_deferred(zone, order)) {
++				&& compaction_should_defer(zone, order)) {
+ 			rc = max_t(enum compact_result, COMPACT_DEFERRED, rc);
+ 			continue;
+ 		}
+@@ -2550,7 +2550,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 		if (!populated_zone(zone))
+ 			continue;
+ 
+-		if (compaction_deferred(zone, cc.order))
++		if (compaction_should_defer(zone, cc.order))
+ 			continue;
+ 
+ 		if (compaction_suitable(zone, cc.order, 0, zoneid) !=
 -- 
 1.8.3.1
 
