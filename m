@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B28C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169C721919
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E7A218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580466;
-	bh=H41nqotO2pzomHP53p6h5JZJ/pOdapmKqlagWJkG6tY=;
+	s=default; t=1592580472;
+	bh=p8Gls/ngFCUygskBhXNN6w/ZchaZ+PQkKrIpXKkCKEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KSQJcgRgVTIl2i5VOIiHskPWR63xL/Dab1z9AzyA1Wy204dvwIRYQzUZByn7xlyLU
-	 WZYTK+hwmPODNGl2MgEmM3NKGrE64+ceyi3iL/8fXZC1eOTPvuGx+NUJRsGaXwfd81
-	 YAiF1ukuVaUEzN/xRlPTlC3vwLke230ehlG+px/M=
+	b=FYiyn2P2ensiHq6BQqcOuVPELJi3w0AI5NCU/L+gVImeoB4B27/EqalEm5J8BLun6
+	 jR0DIN5rIb5gb92EolRsi3LoW3ew7c+oZyhQ3p7YQTzdX4av3jaJiqznjC2y5s/QUM
+	 OgQPf/Csxl8uso4WsiiVRm/uz/Kpbjs1io9mHlmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393598AbgFSP1o (ORCPT
+        id S2404430AbgFSP1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404311AbgFSP01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:26:27 -0400
+        id S2393501AbgFSP0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:26:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1493221556;
-        Fri, 19 Jun 2020 15:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6152921582;
+        Fri, 19 Jun 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580386;
-        bh=H41nqotO2pzomHP53p6h5JZJ/pOdapmKqlagWJkG6tY=;
+        s=default; t=1592580400;
+        bh=p8Gls/ngFCUygskBhXNN6w/ZchaZ+PQkKrIpXKkCKEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQDzG0mp1Cwlkv+jWTO7MUWUu4O9UMYAio3qT2FGPtxpYkCpcAsRRF4IxliPnMY9c
-         G4UVP0avLB8HLZ24pm+WvTvFfudZJ+9pXq4nx/buNw7jVM/6zc9b+N44J8H48ktrHY
-         of0xwPF2XiQ8Ope1kuOGMPmNPvCeuiLYRLyT/JPU=
+        b=uEw/WpkMSSAH3iaR2VMItRG2kKV6SMi/78ktxbYfORs9OGPouDdZ7EkC58E/qph8B
+         kCRiW3XuQtDNMa8ZUvb7fk3mc68noMIKjfCBriDGi0YF3J/aXUR9Q8yrW9jZtgjeHJ
+         tH4rCB9X7tcBo9ZonUZMx8+fNd8D8e4MqPvfINu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 212/376] selftests/bpf: CONFIG_LIRC required for test_lirc_mode2.sh
-Date:   Fri, 19 Jun 2020 16:32:10 +0200
-Message-Id: <20200619141720.369800256@linuxfoundation.org>
+Subject: [PATCH 5.7 234/376] ice: fix potential double free in probe unrolling
+Date:   Fri, 19 Jun 2020 16:32:32 +0200
+Message-Id: <20200619141721.400066073@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,31 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit a5dfaa2ab94057dd75c7911143482a0a85593c14 ]
+[ Upstream commit bc3a024101ca497bea4c69be4054c32a5c349f1d ]
 
-test_lirc_mode2.sh assumes presence of /sys/class/rc/rc0/lirc*/uevent
-which will not be present unless CONFIG_LIRC=y
+If ice_init_interrupt_scheme fails, ice_probe will jump to clearing up
+the interrupts. This can lead to some static analysis tools such as the
+compiler sanitizers complaining about double free problems.
 
-Fixes: 6bdd533cee9a ("bpf: add selftest for lirc_mode2 type program")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/1590147389-26482-3-git-send-email-alan.maguire@oracle.com
+Since ice_init_interrupt_scheme already unrolls internally on failure,
+there is no need to call ice_clear_interrupt_scheme when it fails. Add
+a new unroll label and use that instead.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/config | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/ice/ice_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 48e058552eb7..2118e23ac07a 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -38,3 +38,4 @@ CONFIG_IPV6_SIT=m
- CONFIG_BPF_JIT=y
- CONFIG_BPF_LSM=y
- CONFIG_SECURITY=y
-+CONFIG_LIRC=y
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 545817dbff67..69e50331e08e 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -3298,7 +3298,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 	if (err) {
+ 		dev_err(dev, "ice_init_interrupt_scheme failed: %d\n", err);
+ 		err = -EIO;
+-		goto err_init_interrupt_unroll;
++		goto err_init_vsi_unroll;
+ 	}
+ 
+ 	/* Driver is mostly up */
+@@ -3387,6 +3387,7 @@ err_msix_misc_unroll:
+ 	ice_free_irq_msix_misc(pf);
+ err_init_interrupt_unroll:
+ 	ice_clear_interrupt_scheme(pf);
++err_init_vsi_unroll:
+ 	devm_kfree(dev, pf->vsi);
+ err_init_pf_unroll:
+ 	ice_deinit_pf(pf);
 -- 
 2.25.1
 
