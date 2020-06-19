@@ -2,145 +2,58 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD497C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD3E206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvwgYKtb"
+	by mail.kernel.org (Postfix) with ESMTP id 97DA320771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 19:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390253AbgFSTqR (ORCPT
+        id S2390322AbgFSTqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389005AbgFSTqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:46:16 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86ED8C06174E;
-        Fri, 19 Jun 2020 12:46:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j1so4864107pfe.4;
-        Fri, 19 Jun 2020 12:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uycxWZsh8kXOgvUY6V8WFigSegpe6Uug5YxuPV8BuXw=;
-        b=dvwgYKtbAHl6Wc3/JNJoE3RFqqWkwatSlAw/rZFBzbnISjQeYP3Co/8xtuY+5ahqmS
-         2H1IADoCCxh9rg7MYrFMQyz1A9Q5NmUFgQDY8a6ihSfXJ3sT3z3/h5XRuCMIEnQG6l+f
-         fHlkHNq4/pauNltTFnfQdA/GPKQ9jxAVzDsXfmH45M/XdiGP8DpmSZzoZJkOyhI5APSp
-         MIqeyuMsuCps7d/uIJffsQE3Yzp/VYuF4R6Kr2DGeVj25qMamp94LcorliCDXNeuJXkA
-         ENjDud1Iw8HDBj7pvRtfGSjwFJcuQRTX4TeBO+vA9Y74zteAaw+prREFYP9sLTPKh5Qy
-         G/4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uycxWZsh8kXOgvUY6V8WFigSegpe6Uug5YxuPV8BuXw=;
-        b=EE5DP9r7a2nyPdH9S8QA9sEZ7evFRkfrdhWHTHEtjxtEdSUvWFaFENItha9mqjyPY7
-         5FT3P+nXGkG+tkK2+gFOm5oLU+mhzee4KAXfmw4IDmArQXcLffxWuItG92IFeayHGa8T
-         bUPZ9h2iOA0cL5E1CZxoE3d4bBtvePxeyJgaYrh2RbaXQv/uyb6KvAxHjie2794Uq7hd
-         UVJGvzbCekemrroTM127DEh4eAQDP3OPchiEvepUeNzgzRsQBAeBAS5rlyDlBpRzaamw
-         etDfmJtuUP3q6/z2H5kI/vfJGH6a91ADYvvLRRHCTylS1lh1+ar1CYiJ4bi7Cnb+1zVG
-         QdDg==
-X-Gm-Message-State: AOAM532sjmM50OaZFOGx6KlYRVhjxvMGTYjcH0KIHelwRkDl7VNb/YBZ
-        jopN75spZWum/CK3I6pZEis=
-X-Google-Smtp-Source: ABdhPJzGkWDxM2It2kwRNz1bHPQlJQm0CGjM9y0/T9u/T3f48GJqwbp8RSzphbVHaQrw5MFbYyh3MQ==
-X-Received: by 2002:a62:ed02:: with SMTP id u2mr9259644pfh.283.1592595974783;
-        Fri, 19 Jun 2020 12:46:14 -0700 (PDT)
-Received: from ?IPv6:2601:647:4700:9b2:f471:e6bc:7ad4:bb29? ([2601:647:4700:9b2:f471:e6bc:7ad4:bb29])
-        by smtp.gmail.com with ESMTPSA id y10sm6933627pfq.34.2020.06.19.12.46.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 12:46:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [kvm-unit-tests PATCH] x86: pmu: Test full-width counter writes
- support
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <1272fbd7-3ff1-5eac-e9e2-78b824fbc4e0@redhat.com>
-Date:   Fri, 19 Jun 2020 12:46:12 -0700
-Cc:     Thomas Huth <thuth@redhat.com>, Like Xu <like.xu@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <A2E707BF-BF31-4B96-9181-881B5E496938@gmail.com>
-References: <20200529074347.124619-1-like.xu@linux.intel.com>
- <20200529074347.124619-4-like.xu@linux.intel.com>
- <b1a5472b-f7d0-82b0-e753-dabf81254488@redhat.com>
- <1272fbd7-3ff1-5eac-e9e2-78b824fbc4e0@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 19 Jun 2020 15:46:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:55450 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389005AbgFSTqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:46:34 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 8E79023B;
+        Fri, 19 Jun 2020 19:46:34 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 13:46:33 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Joe Perches <joe@perches.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: Fix most typos
+Message-ID: <20200619134633.51e1b2ec@lwn.net>
+In-Reply-To: <369b8060416ad9507ba1cd1160e20bc2f0ea7e5d.camel@perches.com>
+References: <9587fe318ac88299131e751a07bdd1f4b69ae0de.camel@perches.com>
+        <20200619132045.6120f4eb@lwn.net>
+        <369b8060416ad9507ba1cd1160e20bc2f0ea7e5d.camel@perches.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 16, 2020, at 5:28 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> 
-> On 16/06/20 12:49, Thomas Huth wrote:
->> On 29/05/2020 09.43, Like Xu wrote:
->>> When the full-width writes capability is set, use the alternative MSR
->>> range to write larger sign counter values (up to GP counter width).
->>> 
->>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->>> ---
->>> lib/x86/msr.h |   1 +
->>> x86/pmu.c     | 125 ++++++++++++++++++++++++++++++++++++++++----------
->>> 2 files changed, 102 insertions(+), 24 deletions(-)
->> [...]
->>> @@ -452,6 +468,66 @@ static void check_running_counter_wrmsr(void)
->>> 	report_prefix_pop();
->>> }
->>> 
->>> +static void check_counters(void)
->>> +{
->>> +	check_gp_counters();
->>> +	check_fixed_counters();
->>> +	check_rdpmc();
->>> +	check_counters_many();
->>> +	check_counter_overflow();
->>> +	check_gp_counter_cmask();
->>> +	check_running_counter_wrmsr();
->>> +}
->>> +
->>> +static void do_unsupported_width_counter_write(void *index)
->>> +{
->>> +	wrmsr(MSR_IA32_PMC0 + *((int *) index), 0xffffff0123456789ull);
->>> +}
->>> +
->>> +static void  check_gp_counters_write_width(void)
->>> +{
->>> +	u64 val_64 = 0xffffff0123456789ull;
->>> +	u64 val_32 = val_64 & ((1ul << 32) - 1);
->> Hi,
->> 
->> this broke compilation on 32-bit hosts:
->> 
->> https://travis-ci.com/github/huth/kvm-unit-tests/jobs/349654654#L710
->> 
->> Fix should be easy, I guess - either use 1ull or specify the mask
->> 0xffffffff directly.
-> 
-> Or
-> 
-> u64 val_32 = (u64)(u32) val_64;
-> 
-> I'll send a patch.
+On Fri, 19 Jun 2020 12:37:13 -0700
+Joe Perches <joe@perches.com> wrote:
 
-I missed this correspondence, but while running the tests on 32-bit I
-encountered two additional cases of wrong masks that caused failures.
+> Maybe your tree should be added to -next so
+> people don't have to search out specific trees.
+> 
+> git git://git.lwn.net/linux.git docs-next
 
-I have sent a separate patch for your consideration.
+What makes you think it's not there...?  That doesn't help much when
+patches from other trees dig around in Documentation/ too.
 
+jon
