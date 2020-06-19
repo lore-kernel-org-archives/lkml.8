@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5098FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9B0E21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2579821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580271;
-	bh=5UofqsgxoEMN1zBe4Q2/qq579pJeQq8hoQxiRbnfagU=;
+	s=default; t=1592580273;
+	bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dto3CU4fbUtUAaUiBiUs+GyOqHDz2AtDq5bbENTUn1y+kHPvvzELDxvTN2x8qeQ9P
-	 P9rJk1leBLKUO8dhWuI5LA2S3kg/OxndTGtkVpp5zPg/AjpJsxKoIJnf0FtTJywtJy
-	 NU4yFSMH+5A/Lutbv5P4V/45YnO1mmNI4s1GW9ac=
+	b=HGG7fYImEhBrKL8Oy2wMmCiZ/y0NSZKcpXyoLlcyvoVFZVJ2l2nIA8vrp9ud41Bwm
+	 CILXhI9Rjnl31jSSy+/PA+gKc6+o0I5DkCSIwubWX5El+JtJ/4hixtztcqTga8eFnH
+	 cw7mjzjRjvS6VU9+KmcHh3gREbA42NqOzfWi8RxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393274AbgFSPYb (ORCPT
+        id S2393282AbgFSPYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392146AbgFSPVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:13 -0400
+        id S2392824AbgFSPVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:21:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F3B20B80;
-        Fri, 19 Jun 2020 15:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3D520706;
+        Fri, 19 Jun 2020 15:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580072;
-        bh=5UofqsgxoEMN1zBe4Q2/qq579pJeQq8hoQxiRbnfagU=;
+        s=default; t=1592580074;
+        bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVSlubyFlso0oEcdOE61LIAO1Av/nPsgOnCOl62ytJS0JZsi3ccjc+e7dyfYFRuwm
-         zMov9FMrau/YHCcgtQMO00aDvV5D72GyjsI0RYuf7NjXqwq8ToOt0mgSMYsis5KuCk
-         Isk8vr8aXx9cZ568Et1ZZIU8bukks3/8qEVmkjnk=
+        b=VDu1eD76p4eOLVHwhhqR4Hn9407ceJKCVigrdcQzadJc5erVfQ7lTmCpbBhHTX96l
+         CINRZ1WnEuRmS+wbOnZB0rUdjKVd4M06AaSIDvBN72MBWp4Fr/jk4Ohqo1WcEaPcL2
+         /RrEPIScMchzrXBDelcKhkgM3WfRjYzX3ZsMZbEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 110/376] Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
-Date:   Fri, 19 Jun 2020 16:30:28 +0200
-Message-Id: <20200619141715.555923610@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 082/376] ubsan: entirely disable alignment checks under UBSAN_TRAP
+Date:   Fri, 19 Jun 2020 16:30:00 +0200
+Message-Id: <20200619141714.225619751@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,164 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 8a857c55420f29da4fc131adc22b12d474c48f4c ]
+[ Upstream commit 9380ce246a052a1e00121cd480028b6907aeae38 ]
 
-A Linux guest have to pick a "connect CPU" to communicate with the
-Hyper-V host.  This CPU can not be taken offline because Hyper-V does
-not provide a way to change that CPU assignment.
+Commit 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under
+COMPILE_TEST") tried to fix the pathological results of UBSAN_ALIGNMENT
+with UBSAN_TRAP (which objtool would rightly scream about), but it made
+an assumption about how COMPILE_TEST gets set (it is not set for
+randconfig).  As a result, we need a bigger hammer here: just don't
+allow the alignment checks with the trap mode.
 
-Current code sets the connect CPU to whatever CPU ends up running the
-function vmbus_negotiate_version(), and this will generate problems if
-that CPU is taken offine.
-
-Establish CPU0 as the connect CPU, and add logics to prevents the
-connect CPU from being taken offline.   We could pick some other CPU,
-and we could pick that "other CPU" dynamically if there was a reason to
-do so at some point in the future.  But for now, #defining the connect
-CPU to 0 is the most straightforward and least complex solution.
-
-While on this, add inline comments explaining "why" offer and rescind
-messages should not be handled by a same serialized work queue.
-
-Suggested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/r/20200406001514.19876-2-parri.andrea@gmail.com
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Fixes: 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under COMPILE_TEST")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Elena Petrova <lenaptr@google.com>
+Link: http://lkml.kernel.org/r/202005291236.000FCB6@keescook
+Link: https://lore.kernel.org/lkml/742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org/
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/connection.c   | 20 +-------------------
- drivers/hv/hv.c           |  7 +++++++
- drivers/hv/hyperv_vmbus.h | 11 ++++++-----
- drivers/hv/vmbus_drv.c    | 20 +++++++++++++++++---
- 4 files changed, 31 insertions(+), 27 deletions(-)
+ lib/Kconfig.ubsan | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index 74e77de89b4f..f4bd306d2cef 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -69,7 +69,6 @@ MODULE_PARM_DESC(max_version,
- int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
- {
- 	int ret = 0;
--	unsigned int cur_cpu;
- 	struct vmbus_channel_initiate_contact *msg;
- 	unsigned long flags;
- 
-@@ -102,24 +101,7 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
- 
- 	msg->monitor_page1 = virt_to_phys(vmbus_connection.monitor_pages[0]);
- 	msg->monitor_page2 = virt_to_phys(vmbus_connection.monitor_pages[1]);
--	/*
--	 * We want all channel messages to be delivered on CPU 0.
--	 * This has been the behavior pre-win8. This is not
--	 * perf issue and having all channel messages delivered on CPU 0
--	 * would be ok.
--	 * For post win8 hosts, we support receiving channel messagges on
--	 * all the CPUs. This is needed for kexec to work correctly where
--	 * the CPU attempting to connect may not be CPU 0.
--	 */
--	if (version >= VERSION_WIN8_1) {
--		cur_cpu = get_cpu();
--		msg->target_vcpu = hv_cpu_number_to_vp_number(cur_cpu);
--		vmbus_connection.connect_cpu = cur_cpu;
--		put_cpu();
--	} else {
--		msg->target_vcpu = 0;
--		vmbus_connection.connect_cpu = 0;
--	}
-+	msg->target_vcpu = hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
- 
- 	/*
- 	 * Add to list before we send the request since we may
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 533c8b82b344..3a5648aa5599 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -245,6 +245,13 @@ int hv_synic_cleanup(unsigned int cpu)
- 	bool channel_found = false;
- 	unsigned long flags;
- 
-+	/*
-+	 * Hyper-V does not provide a way to change the connect CPU once
-+	 * it is set; we must prevent the connect CPU from going offline.
-+	 */
-+	if (cpu == VMBUS_CONNECT_CPU)
-+		return -EBUSY;
-+
- 	/*
- 	 * Search for channels which are bound to the CPU we're about to
- 	 * cleanup. In case we find one and vmbus is still connected we need to
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 70b30e223a57..67fb1edcbf52 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -212,12 +212,13 @@ enum vmbus_connect_state {
- 
- #define MAX_SIZE_CHANNEL_MESSAGE	HV_MESSAGE_PAYLOAD_BYTE_COUNT
- 
--struct vmbus_connection {
--	/*
--	 * CPU on which the initial host contact was made.
--	 */
--	int connect_cpu;
-+/*
-+ * The CPU that Hyper-V will interrupt for VMBUS messages, such as
-+ * CHANNELMSG_OFFERCHANNEL and CHANNELMSG_RESCIND_CHANNELOFFER.
-+ */
-+#define VMBUS_CONNECT_CPU	0
- 
-+struct vmbus_connection {
- 	u32 msg_conn_id;
- 
- 	atomic_t offer_in_progress;
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index e06c6b9555cf..ec173da45b42 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1098,14 +1098,28 @@ void vmbus_on_msg_dpc(unsigned long data)
- 			/*
- 			 * If we are handling the rescind message;
- 			 * schedule the work on the global work queue.
-+			 *
-+			 * The OFFER message and the RESCIND message should
-+			 * not be handled by the same serialized work queue,
-+			 * because the OFFER handler may call vmbus_open(),
-+			 * which tries to open the channel by sending an
-+			 * OPEN_CHANNEL message to the host and waits for
-+			 * the host's response; however, if the host has
-+			 * rescinded the channel before it receives the
-+			 * OPEN_CHANNEL message, the host just silently
-+			 * ignores the OPEN_CHANNEL message; as a result,
-+			 * the guest's OFFER handler hangs for ever, if we
-+			 * handle the RESCIND message in the same serialized
-+			 * work queue: the RESCIND handler can not start to
-+			 * run before the OFFER handler finishes.
- 			 */
--			schedule_work_on(vmbus_connection.connect_cpu,
-+			schedule_work_on(VMBUS_CONNECT_CPU,
- 					 &ctx->work);
- 			break;
- 
- 		case CHANNELMSG_OFFERCHANNEL:
- 			atomic_inc(&vmbus_connection.offer_in_progress);
--			queue_work_on(vmbus_connection.connect_cpu,
-+			queue_work_on(VMBUS_CONNECT_CPU,
- 				      vmbus_connection.work_queue,
- 				      &ctx->work);
- 			break;
-@@ -1152,7 +1166,7 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
- 
- 	INIT_WORK(&ctx->work, vmbus_onmessage_work);
- 
--	queue_work_on(vmbus_connection.connect_cpu,
-+	queue_work_on(VMBUS_CONNECT_CPU,
- 		      vmbus_connection.work_queue,
- 		      &ctx->work);
- }
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 929211039bac..27bcc2568c95 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
+ config UBSAN_ALIGNMENT
+ 	bool "Enable checks for pointers alignment"
+ 	default !HAVE_EFFICIENT_UNALIGNED_ACCESS
+-	depends on !X86 || !COMPILE_TEST
++	depends on !UBSAN_TRAP
+ 	help
+ 	  This option enables the check of unaligned memory accesses.
+ 	  Enabling this option on architectures that support unaligned
 -- 
 2.25.1
 
