@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8554C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF01C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B84EF21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC1F20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592580645;
-	bh=qb7f3W7ksEM5G51wSix1O2GVlf8dyfkMJi+JkWqJbPg=;
+	s=default; t=1592580650;
+	bh=SlHVVRjrKY0IRisxcg8TI3EQX4bhyghbvpofCUguvT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mE9+UNNE2QssZqkEQxVERxGWm3M+V4yDn7OQZS6VL2WPHtYT42C809vMyLT+8bCde
-	 Rug3xGJr9LlFi050iGZgEFWlmz2pMv4jmEkBToGUagvM9DZggw0EYQx7jNsd0I5gdp
-	 lwEDHDvtyHdIeyrpk/RpmqZTTf5sSRLz/Qby0H7w=
+	b=jUHcscESBiwQ1/o20LH4fx10LRH4CS+MIi4r5AKTRZl7HXUWDGsYJNMAimLZN5yko
+	 VxPsLe5LSavKSdleYmbCQGPTlAiYWigo2Ts7uDUOU/ZHizpygFXMu81/2T56jfmuVd
+	 mnEHj5XRM5Pl0JnjWxd4eOBDZkouAwUjR2I7NYgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404802AbgFSPap (ORCPT
+        id S2404811AbgFSPau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391297AbgFSPai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:30:38 -0400
+        id S2393479AbgFSPae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:30:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A29B20757;
-        Fri, 19 Jun 2020 15:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF40A21973;
+        Fri, 19 Jun 2020 15:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580637;
-        bh=qb7f3W7ksEM5G51wSix1O2GVlf8dyfkMJi+JkWqJbPg=;
+        s=default; t=1592580632;
+        bh=SlHVVRjrKY0IRisxcg8TI3EQX4bhyghbvpofCUguvT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S61UN0VsmHDeSd+QiKl6aaGRimfvBInIaFsPFrBeFqqcdz3ryUlN+oauI/f6kxm0j
-         6Rn6PGL2kLJT4jk6C2yjFaEEp5zJfCOPMz73MpTsSgGGqlG+itPrY1C+c5GeUwWUn+
-         HRLb71RmS8714trJkH8ibS133aICGJp8h1HzdEtk=
+        b=kw5LRQl5a+pLOHq2/MPg2uk19FX2MAX9Fc2JAyJIwwt/fQ2WiuLoZY+ZFaPv/TW7k
+         vC65ETWlfFvEo5iQdBAsghAuum1+zDecMfF/StH8X7wUG72wE/0Tb7b8mDL1gajkKF
+         siAgP6iduOdpc2msv7v3363L3GqSDWdF6L1I23Bg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bernard Zhao <bernard@vivo.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.7 326/376] memory: samsung: exynos5422-dmc: Fix tFAW timings alignment
-Date:   Fri, 19 Jun 2020 16:34:04 +0200
-Message-Id: <20200619141725.764504538@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.7 324/376] dm crypt: avoid truncating the logical block size
+Date:   Fri, 19 Jun 2020 16:34:02 +0200
+Message-Id: <20200619141725.666803778@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Zhao <bernard@vivo.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 4bff7214d263b5235263136cb53147a759b3f3ab upstream.
+commit 64611a15ca9da91ff532982429c44686f4593b5f upstream.
 
-Aligning of tFAW timing with standard was using wrong argument as
-minimum acceptable value.  This could lead to wrong timing if provided
-timings and clock period do not match the standard.
+queue_limits::logical_block_size got changed from unsigned short to
+unsigned int, but it was forgotten to update crypt_io_hints() to use the
+new type.  Fix it.
 
-Fixes: 6e7674c3c6df ("memory: Add DMC driver for Exynos5422")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: ad6bf88a6c19 ("block: fix an integer overflow in logical block size")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/memory/samsung/exynos5422-dmc.c |    2 +-
+ drivers/md/dm-crypt.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -1091,7 +1091,7 @@ static int create_timings_aligned(struct
- 	/* power related timings */
- 	val = dmc->timings->tFAW / clk_period_ps;
- 	val += dmc->timings->tFAW % clk_period_ps ? 1 : 0;
--	val = max(val, dmc->min_tck->tXP);
-+	val = max(val, dmc->min_tck->tFAW);
- 	reg = &timing_power[0];
- 	*reg_timing_power |= TIMING_VAL2REG(reg, val);
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -3274,7 +3274,7 @@ static void crypt_io_hints(struct dm_tar
+ 	limits->max_segment_size = PAGE_SIZE;
  
+ 	limits->logical_block_size =
+-		max_t(unsigned short, limits->logical_block_size, cc->sector_size);
++		max_t(unsigned, limits->logical_block_size, cc->sector_size);
+ 	limits->physical_block_size =
+ 		max_t(unsigned, limits->physical_block_size, cc->sector_size);
+ 	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
 
 
