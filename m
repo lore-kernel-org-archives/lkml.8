@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824F6217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B46921707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583948;
-	bh=MdW3KQHJFjrbPO/7LWBN3FFilQj3utVGrULWCGVyXAU=;
+	s=default; t=1592583954;
+	bh=d9xj5dr0nAfh++8H+d0Yf1p2MrGb9TGXnHRFeMCwHf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0AHMMuFwHNeI6+t5LyQmm3A2y5DMIT4TDf+svx9FD9VmsuieG+96eDCfzlU7N5vy
-	 6frv7Vk3nLZtEQNcWkQFhnsMPBEcUg4BwyMVhsZT+fZ/1hT50VqFRZxguGNJZWXf+1
-	 GBI6IcsL3mHDUlbttDONR1Ke4xMdYjrXBx7AE6kk=
+	b=wuIxMEFwAchDP0PyJphL5uD+ckquwr8LPxxDV+201a8c2HftPlG9OsyaF255RYFnr
+	 /jr6Ki8uHyMLNH3LF1uFm66bUFG9XYwjMeUyav/sbhWzIIKb8pCudt6nQ29hC65DfI
+	 JiJWUYRHOPoguWPP79u0QNJwOIpyasEmws7GTe1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394841AbgFSQZq (ORCPT
+        id S2390229AbgFSO5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52776 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389565AbgFSO5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:23 -0400
+        id S2390172AbgFSO5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9599217D8;
-        Fri, 19 Jun 2020 14:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B134D21852;
+        Fri, 19 Jun 2020 14:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578643;
-        bh=MdW3KQHJFjrbPO/7LWBN3FFilQj3utVGrULWCGVyXAU=;
+        s=default; t=1592578622;
+        bh=d9xj5dr0nAfh++8H+d0Yf1p2MrGb9TGXnHRFeMCwHf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KO3bFyGbfQq7kUn5/kMJZogxMzH26iRlIuTf5lbqeVVjAGszF+L3xUw/LK3CVMrQs
-         ryWsuLIzMjqS9Yvs+I61hEGRjqLHIqhvXFUm6Afs1PWbrI1wCvH77PEa7vM3vCuvIc
-         RcBk9pu+JWwNBbiX58AOJWujmCawidYZxwlqy6qs=
+        b=c011GiJGSsjcvaEwNN9HKO4SsDVjgvmS8Q3j37sQsB2999JGdeDgLHjZY2zVd7bvJ
+         1iwhirOpFnfDJOw3rw8Ugco55eE/pUMDw9NgtNQxG3OTATWv5wwW3OYMKtX4wQczaO
+         bQE29FI8X9GBVdBcvozXm+X8FrxuvuMCuJJ0FWAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fangrui Song <maskray@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/267] efi/libstub/x86: Work around LLVM ELF quirk build regression
-Date:   Fri, 19 Jun 2020 16:31:26 +0200
-Message-Id: <20200619141653.718551571@linuxfoundation.org>
+Subject: [PATCH 4.19 052/267] KVM: x86/mmu: Consolidate "is MMIO SPTE" code
+Date:   Fri, 19 Jun 2020 16:30:37 +0200
+Message-Id: <20200619141651.381887149@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -64,49 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
+[ Upstream commit 26c44a63a291893e0a00f01e96b6e1d0310a79a9 ]
 
-When building the x86 EFI stub with Clang, the libstub Makefile rules
-that manipulate the ELF object files may throw an error like:
+Replace the open-coded "is MMIO SPTE" checks in the MMU warnings
+related to software-based access/dirty tracking to make the code
+slightly more self-documenting.
 
-    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
-  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
-  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+No functional change intended.
 
-This is the result of a LLVM feature [0] where symbol references are
-stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
-causing generic ELF tools such as strip or objcopy to choke on them.
-
-So force the compiler not to emit these sections, by passing the
-appropriate command line option.
-
-[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
-
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmu.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index d9845099635e..d3777d754984 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -28,6 +28,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
- 				   $(call cc-option,-fno-stack-protector) \
-+				   $(call cc-option,-fno-addrsig) \
- 				   -D__DISABLE_EXPORTS
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 440ffe810e5d..ac0a794267d4 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -299,6 +299,11 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value)
+ }
+ EXPORT_SYMBOL_GPL(kvm_mmu_set_mmio_spte_mask);
  
- GCOV_PROFILE			:= n
++static bool is_mmio_spte(u64 spte)
++{
++	return (spte & shadow_mmio_mask) == shadow_mmio_value;
++}
++
+ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
+ {
+ 	return sp->role.ad_disabled;
+@@ -306,7 +311,7 @@ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
+ 
+ static inline bool spte_ad_enabled(u64 spte)
+ {
+-	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
++	MMU_WARN_ON(is_mmio_spte(spte));
+ 	return !(spte & shadow_acc_track_value);
+ }
+ 
+@@ -317,13 +322,13 @@ static bool is_nx_huge_page_enabled(void)
+ 
+ static inline u64 spte_shadow_accessed_mask(u64 spte)
+ {
+-	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
++	MMU_WARN_ON(is_mmio_spte(spte));
+ 	return spte_ad_enabled(spte) ? shadow_accessed_mask : 0;
+ }
+ 
+ static inline u64 spte_shadow_dirty_mask(u64 spte)
+ {
+-	MMU_WARN_ON((spte & shadow_mmio_mask) == shadow_mmio_value);
++	MMU_WARN_ON(is_mmio_spte(spte));
+ 	return spte_ad_enabled(spte) ? shadow_dirty_mask : 0;
+ }
+ 
+@@ -393,11 +398,6 @@ static void mark_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, u64 gfn,
+ 	mmu_spte_set(sptep, mask);
+ }
+ 
+-static bool is_mmio_spte(u64 spte)
+-{
+-	return (spte & shadow_mmio_mask) == shadow_mmio_value;
+-}
+-
+ static gfn_t get_mmio_spte_gfn(u64 spte)
+ {
+ 	u64 gpa = spte & shadow_nonpresent_or_rsvd_lower_gfn_mask;
 -- 
 2.25.1
 
