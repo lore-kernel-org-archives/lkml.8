@@ -2,128 +2,149 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2473BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D6921527
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584313;
-	bh=bBcmiQKw5gyq64+scVj1X9IAimDWGQZI6cKI+wHMt/M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2UbzO5FltjHJn1J+2jmL//G3VrxGA/pHjU/e+M5LqTy2ielms6LT/tui48kJ8ot5
-	 16ZZKS4GgkaDMz8+zySA6PNCvE5kCzrb146i5+TAB1DDCgHZFltrDdx26qLhYWiXdW
-	 nO7FE1YE8778EZYa0THnmBKO/NjW5AvA7G07bAfo=
+	by mail.kernel.org (Postfix) with ESMTP id 3803C2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbgFSOwk (ORCPT
+        id S2395069AbgFSQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389572AbgFSOwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D97CA21556;
-        Fri, 19 Jun 2020 14:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578343;
-        bh=bBcmiQKw5gyq64+scVj1X9IAimDWGQZI6cKI+wHMt/M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNu7ITRDVFvy2YYHI3JZZjeeAhPdALo2eFoOqSVRsregcOMTFPUow5LPDzREo9YZP
-         JXFWw8AzX8FLryuzAJQyL7abGUPuRg2S+G22CP5q6uLX98FzIT4OindVOkSyr+xMQq
-         iwFV6gedLMp+A8dV0v1GZPw3TVS+a3YQa86+bHiM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 159/190] btrfs: fix error handling when submitting direct I/O bio
-Date:   Fri, 19 Jun 2020 16:33:24 +0200
-Message-Id: <20200619141641.687665192@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:31:54 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2346 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2395042AbgFSQbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:31:51 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 8C2554A4460EE215B62C;
+        Fri, 19 Jun 2020 17:31:50 +0100 (IST)
+Received: from localhost (10.52.127.178) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 19 Jun
+ 2020 17:31:50 +0100
+Date:   Fri, 19 Jun 2020 17:31:01 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.4 03/60] iio: light: isl29125: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20200619173101.000045a2@Huawei.com>
+In-Reply-To: <20200618013004.610532-3-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
+        <20200618013004.610532-3-sashal@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.178]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+On Wed, 17 Jun 2020 21:29:07 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-[ Upstream commit 6d3113a193e3385c72240096fe397618ecab6e43 ]
+> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> 
+> [ Upstream commit 9b7a12c3e090cf3fba6f66f1f23abbc6e0e86021 ]
+> 
+> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> the poll functions.
+> 
+> For the predisable hook, the disable code should occur before detaching
+> the poll func, and for the postenable hook, the poll func should be
+> attached before the enable code.
+> 
+> This change reworks the predisable/postenable hooks so that the pollfunc is
+> attached/detached in the correct position.
+> It also balances the calls a bit, by grouping the preenable and the
+> iio_triggered_buffer_postenable() into a single
+> isl29125_buffer_postenable() function.
+> 
 
-In btrfs_submit_direct_hook(), if a direct I/O write doesn't span a RAID
-stripe or chunk, we submit orig_bio without cloning it. In this case, we
-don't increment pending_bios. Then, if btrfs_submit_dio_bio() fails, we
-decrement pending_bios to -1, and we never complete orig_bio. Fix it by
-initializing pending_bios to 1 instead of incrementing later.
+This is really part of some rework.  It doesn't 'fix' a bug
+as such (I think), but rather a bit of logical inconsistency.
 
-Fixing this exposes another bug: we put orig_bio prematurely and then
-put it again from end_io. Fix it by not putting orig_bio.
+Shouldn't do any harm though beyond adding noise to stable.
+I added notes to some of these to mark them as not stable material,
+but clearly missed this one. Sorry about that.
 
-After this change, pending_bios is really more of a reference count, but
-I'll leave that cleanup separate to keep the fix small.
+Jonathan
 
-Fixes: e65e15355429 ("btrfs: fix panic caused by direct IO")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/inode.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 2a196bb134d9..3e65ac2d4869 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8707,7 +8707,6 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
- 
- 	/* bio split */
- 	ASSERT(map_length <= INT_MAX);
--	atomic_inc(&dip->pending_bios);
- 	do {
- 		clone_len = min_t(int, submit_len, map_length);
- 
-@@ -8758,7 +8757,8 @@ static int btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
- 	if (!status)
- 		return 0;
- 
--	bio_put(bio);
-+	if (bio != orig_bio)
-+		bio_put(bio);
- out_err:
- 	dip->errors = 1;
- 	/*
-@@ -8798,7 +8798,7 @@ static void btrfs_submit_direct(struct bio *dio_bio, struct inode *inode,
- 	bio->bi_private = dip;
- 	dip->orig_bio = bio;
- 	dip->dio_bio = dio_bio;
--	atomic_set(&dip->pending_bios, 0);
-+	atomic_set(&dip->pending_bios, 1);
- 	io_bio = btrfs_io_bio(bio);
- 	io_bio->logical = file_offset;
- 
--- 
-2.25.1
-
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/iio/light/isl29125.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/light/isl29125.c b/drivers/iio/light/isl29125.c
+> index e2945a20e5f6..60388a41ec8c 100644
+> --- a/drivers/iio/light/isl29125.c
+> +++ b/drivers/iio/light/isl29125.c
+> @@ -215,13 +215,24 @@ static const struct iio_info isl29125_info = {
+>  	.driver_module = THIS_MODULE,
+>  };
+>  
+> -static int isl29125_buffer_preenable(struct iio_dev *indio_dev)
+> +static int isl29125_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct isl29125_data *data = iio_priv(indio_dev);
+> +	int err;
+> +
+> +	err = iio_triggered_buffer_postenable(indio_dev);
+> +	if (err)
+> +		return err;
+>  
+>  	data->conf1 |= ISL29125_MODE_RGB;
+> -	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+> +	err = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+>  		data->conf1);
+> +	if (err) {
+> +		iio_triggered_buffer_predisable(indio_dev);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+> @@ -229,19 +240,18 @@ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+>  	struct isl29125_data *data = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	ret = iio_triggered_buffer_predisable(indio_dev);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	data->conf1 &= ~ISL29125_MODE_MASK;
+>  	data->conf1 |= ISL29125_MODE_PD;
+> -	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+> +	ret = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+>  		data->conf1);
+> +
+> +	iio_triggered_buffer_predisable(indio_dev);
+> +
+> +	return ret;
+>  }
+>  
+>  static const struct iio_buffer_setup_ops isl29125_buffer_setup_ops = {
+> -	.preenable = isl29125_buffer_preenable,
+> -	.postenable = &iio_triggered_buffer_postenable,
+> +	.postenable = isl29125_buffer_postenable,
+>  	.predisable = isl29125_buffer_predisable,
+>  };
+>  
 
 
