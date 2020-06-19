@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6AB21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FCD21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579164;
-	bh=1ZqBWfgeh7FOkLqgoKPI+U9m04VMyCuq7dbiqJMlu9I=;
+	s=default; t=1592579168;
+	bh=V+vcCCtE8fOBO6vP1/kpuBe7xlqLjt8XpmsrNP0SSZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hku3CcZHlKO+dLI4VjL9Pl24O+xLyZCyJZeh0CIkMo/CGWPh96MHNlNz6z6EbiReH
-	 +OhPNwE/n2JWZgGh0f2GhSaPhR7sb8qRw+4YM3mzO6eXd/2lRAMUeufsOLrCng3zaW
-	 zE575rASal0KgD57HZsp2KdP1d6xd59erbp9BT34=
+	b=e1WTKFiYzH9lLNwCCNV5hD4S7uSWi6Lwq5mfynJlR/YMgszAQ5Rm+SIHYjTUoP4CX
+	 Aisr+l53yYmgFFPaHKy/7ej27N0pgm/ACqFsLr5ehr3GricvnPMkMk0cBfxtOgfb+A
+	 ociFMKGqTWrdFp1BjCHH9SExJHz1f17DTo89w3cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391377AbgFSPGD (ORCPT
+        id S2391388AbgFSPGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391356AbgFSPFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:54 -0400
+        id S2391369AbgFSPF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA1E21841;
-        Fri, 19 Jun 2020 15:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 921702158C;
+        Fri, 19 Jun 2020 15:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579153;
-        bh=1ZqBWfgeh7FOkLqgoKPI+U9m04VMyCuq7dbiqJMlu9I=;
+        s=default; t=1592579156;
+        bh=V+vcCCtE8fOBO6vP1/kpuBe7xlqLjt8XpmsrNP0SSZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bjs+Ux9oTaJdgr7YmjoWcPfFHUuVHLy0PNI1vZYAuTENLUVX0FYRrL6BstiYNFhzm
-         DuSpJZfb/x1YP8Yba1EjEk3WSS5J9CKgt/XcxoS/jyfAUqrkkP0gCeUGywP29lAMiv
-         1tq/cDUDWzZMIcWGj1NeV1478rVuIViCYClA1Skw=
+        b=2sI+hfNbdlEI94jl766ojOruX1tywlbQHv6mSg3kCvi+UufTU87XSMb8z7P7JSIhn
+         cgtS2Yu1D9/74RVhsz4qKdkLqq7L/zYTtXN0iTAbCZCaGu4+K+8/io7fox2egeBH3R
+         ekHkD5U5EFFi93t4igb85Ek7pCwUM3xBjMVl7UPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/261] crypto: ccp -- dont "select" CONFIG_DMADEVICES
-Date:   Fri, 19 Jun 2020 16:30:18 +0200
-Message-Id: <20200619141650.244907382@linuxfoundation.org>
+Subject: [PATCH 5.4 008/261] media: vicodec: Fix error codes in probe function
+Date:   Fri, 19 Jun 2020 16:30:19 +0200
+Message-Id: <20200619141650.285727430@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,57 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit eebac678556d6927f09a992872f4464cf3aecc76 ]
+[ Upstream commit f36592e7b343d853edf44d3545bb68961c0949a4 ]
 
-DMADEVICES is the top-level option for the slave DMA
-subsystem, and should not be selected by device drivers,
-as this can cause circular dependencies such as:
+If these functions fail then we return success, but we should instead
+preserve negative error code and return that.
 
-drivers/net/ethernet/freescale/Kconfig:6:error: recursive dependency detected!
-drivers/net/ethernet/freescale/Kconfig:6:	symbol NET_VENDOR_FREESCALE depends on PPC_BESTCOMM
-drivers/dma/bestcomm/Kconfig:6:	symbol PPC_BESTCOMM depends on DMADEVICES
-drivers/dma/Kconfig:6:	symbol DMADEVICES is selected by CRYPTO_DEV_SP_CCP
-drivers/crypto/ccp/Kconfig:10:	symbol CRYPTO_DEV_SP_CCP depends on CRYPTO
-crypto/Kconfig:16:	symbol CRYPTO is selected by LIBCRC32C
-lib/Kconfig:222:	symbol LIBCRC32C is selected by LIQUIDIO
-drivers/net/ethernet/cavium/Kconfig:65:	symbol LIQUIDIO depends on PTP_1588_CLOCK
-drivers/ptp/Kconfig:8:	symbol PTP_1588_CLOCK is implied by FEC
-drivers/net/ethernet/freescale/Kconfig:23:	symbol FEC depends on NET_VENDOR_FREESCALE
-
-The LIQUIDIO driver causing this problem is addressed in a
-separate patch, but this change is needed to prevent it from
-happening again.
-
-Using "depends on DMADEVICES" is what we do for all other
-implementations of slave DMA controllers as well.
-
-Fixes: b3c2fee5d66b ("crypto: ccp - Ensure all dependencies are specified")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: fde649b418d1 ("media: vicodec: Register another node for stateless decoder")
+Fixes: c022a4a95722 ("media: vicodec: add struct for encoder/decoder instance")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/platform/vicodec/vicodec-core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/ccp/Kconfig b/drivers/crypto/ccp/Kconfig
-index 8fec733f567f..63e227adbb13 100644
---- a/drivers/crypto/ccp/Kconfig
-+++ b/drivers/crypto/ccp/Kconfig
-@@ -10,10 +10,9 @@ config CRYPTO_DEV_CCP_DD
- config CRYPTO_DEV_SP_CCP
- 	bool "Cryptographic Coprocessor device"
- 	default y
--	depends on CRYPTO_DEV_CCP_DD
-+	depends on CRYPTO_DEV_CCP_DD && DMADEVICES
- 	select HW_RANDOM
- 	select DMA_ENGINE
--	select DMADEVICES
- 	select CRYPTO_SHA1
- 	select CRYPTO_SHA256
- 	help
+diff --git a/drivers/media/platform/vicodec/vicodec-core.c b/drivers/media/platform/vicodec/vicodec-core.c
+index 82350097503e..84ec36156f73 100644
+--- a/drivers/media/platform/vicodec/vicodec-core.c
++++ b/drivers/media/platform/vicodec/vicodec-core.c
+@@ -2172,16 +2172,19 @@ static int vicodec_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, dev);
+ 
+-	if (register_instance(dev, &dev->stateful_enc,
+-			      "stateful-encoder", true))
++	ret = register_instance(dev, &dev->stateful_enc, "stateful-encoder",
++				true);
++	if (ret)
+ 		goto unreg_dev;
+ 
+-	if (register_instance(dev, &dev->stateful_dec,
+-			      "stateful-decoder", false))
++	ret = register_instance(dev, &dev->stateful_dec, "stateful-decoder",
++				false);
++	if (ret)
+ 		goto unreg_sf_enc;
+ 
+-	if (register_instance(dev, &dev->stateless_dec,
+-			      "stateless-decoder", false))
++	ret = register_instance(dev, &dev->stateless_dec, "stateless-decoder",
++				false);
++	if (ret)
+ 		goto unreg_sf_dec;
+ 
+ #ifdef CONFIG_MEDIA_CONTROLLER
 -- 
 2.25.1
 
