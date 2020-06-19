@@ -2,149 +2,178 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51513C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A44B21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNjgDyse"
+	by mail.kernel.org (Postfix) with ESMTP id 2D39F21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583183;
+	bh=rzKaMy4Yfk8V9lopnriwFQl3pjILtoYV/ZHODAvrUpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VbQYO/PlJ3ZhCNQtCvGYrtmhEeQ/Ce72oW/hbZLKdcjbubh8NnWTCZ5bbnJE4FXiW
+	 YG/XgL92xBAdNhnZbiD3vRVhBKDUQIOc2bD/Z1R347rI1qIq1kBmPIkbnQuXo54woj
+	 UMTFFgeUaiE/iUSK/qrL6+/22be88l4i8nkC+8zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394292AbgFSQM5 (ORCPT
+        id S2404315AbgFSQNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:12:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32462 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390563AbgFSQMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:12:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592583171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ewTqBfexdBAI6q+mW9BG6/0EyFw+GuUSZgL1KkcFzfA=;
-        b=PNjgDyseMDvEH8nAck4m8n/qVzfh5awsGzxzCbtyIZ3WQaTH/+3z1rEuBaZvfU6XBEJ+3U
-        hKfKfWBPs9+lKKAvJweaZWxqHNejJmqE81MaE1I1F+jazmRDaCb6TjepmEQ7HfEXUdcP3j
-        t7kzMP/Ym5WE66EVp+7fCQU0nl/Wb+I=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-fOv8sG-RMpaGiKmFUc0ECw-1; Fri, 19 Jun 2020 12:12:50 -0400
-X-MC-Unique: fOv8sG-RMpaGiKmFUc0ECw-1
-Received: by mail-qt1-f197.google.com with SMTP id y5so7445984qto.10
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:12:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ewTqBfexdBAI6q+mW9BG6/0EyFw+GuUSZgL1KkcFzfA=;
-        b=fy2kcd56JVKqk6SCOkPvjHWqYvPRJfvFK9SLYvZ1GAUeWibIxehoHKbmxe+E5iecLK
-         li4z3tO3by2M4XKIa87GfNI/E+1xo+JfDvLxuALHeAYoRNBKiHXI256HWfT6WHM5wfF0
-         h/Rngq12X+levycc4YnRg//5qt8rAqc6g+wDW0F/hKIr68U8cQWhKVDGP4YQ7QdMSUWe
-         UsSPAMa0er2BLwkZteFtq8mpPJR2F1AdSzK2cYVXXYRJPwwisIllkKKvfquIgiCEdXdm
-         9xE4g9bv4R2C5+KVP5dY/lCW3kStmS2Q8TaE4wkyC+IXfoPef/KUWL8Fl0ulDXM2z24i
-         5cSA==
-X-Gm-Message-State: AOAM531UuSHdToC+9lFP6mFfCA6NjhKDsc9sk99cdky/8geH1Ro0fdiF
-        9wpKDerLLPfFrKD+1bvJ7rKi+iJLzirNGas/i+ssChfyKDa9tx8ls8A6LqsRxAT/xr/0nQpjI0q
-        9cLCn+xbVfMAlbNIs6Lvg2rE5
-X-Received: by 2002:a37:e87:: with SMTP id 129mr4114916qko.499.1592583169257;
-        Fri, 19 Jun 2020 09:12:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwvSVp3DvCUxxCHnzJ36+YGsZtjQWrVVS6joe8rh/iaYG3kK43rnoX9nmcA1Z4z7yyGo8LoFg==
-X-Received: by 2002:a37:e87:: with SMTP id 129mr4114895qko.499.1592583169012;
-        Fri, 19 Jun 2020 09:12:49 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w204sm6713249qka.41.2020.06.19.09.12.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:12:48 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH 13/26] mm/nios2: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:12:46 -0400
-Message-Id: <20200619161246.9347-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
-References: <20200619160538.8641-1-peterx@redhat.com>
+        Fri, 19 Jun 2020 12:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391114AbgFSPES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C6F521941;
+        Fri, 19 Jun 2020 15:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592579058;
+        bh=rzKaMy4Yfk8V9lopnriwFQl3pjILtoYV/ZHODAvrUpQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IFqx1scuijq8uxZewYVpqb5wGBqmKn5M57QxEU/QZA3vMU4G8pdg9YSPgaSL94oOR
+         YGqqOfVxDAhGMa10BAaLpWJfWth90wmS7MZl3o6WXn8pjNp5FmNZcchUSZIs5xzRtk
+         UQ3Sb2FPm6Ioee2Dp0bK9Gju6eSWKro3J4M15aqk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 260/267] sunrpc: clean up properly in gss_mech_unregister()
+Date:   Fri, 19 Jun 2020 16:34:05 +0200
+Message-Id: <20200619141701.136598654@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+From: NeilBrown <neilb@suse.de>
 
-Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
-perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+commit 24c5efe41c29ee3e55bcf5a1c9f61ca8709622e8 upstream.
 
-CC: Ley Foon Tan <ley.foon.tan@intel.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
+gss_mech_register() calls svcauth_gss_register_pseudoflavor() for each
+flavour, but gss_mech_unregister() does not call auth_domain_put().
+This is unbalanced and makes it impossible to reload the module.
+
+Change svcauth_gss_register_pseudoflavor() to return the registered
+auth_domain, and save it for later release.
+
+Cc: stable@vger.kernel.org (v2.6.12+)
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/nios2/mm/fault.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ include/linux/sunrpc/gss_api.h        |    1 +
+ include/linux/sunrpc/svcauth_gss.h    |    3 ++-
+ net/sunrpc/auth_gss/gss_mech_switch.c |   12 +++++++++---
+ net/sunrpc/auth_gss/svcauth_gss.c     |   12 ++++++------
+ 4 files changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/arch/nios2/mm/fault.c b/arch/nios2/mm/fault.c
-index 88abf297c759..823e7d0a9e97 100644
---- a/arch/nios2/mm/fault.c
-+++ b/arch/nios2/mm/fault.c
-@@ -24,6 +24,7 @@
- #include <linux/mm.h>
- #include <linux/extable.h>
- #include <linux/uaccess.h>
-+#include <linux/perf_event.h>
+--- a/include/linux/sunrpc/gss_api.h
++++ b/include/linux/sunrpc/gss_api.h
+@@ -83,6 +83,7 @@ struct pf_desc {
+ 	u32	service;
+ 	char	*name;
+ 	char	*auth_domain_name;
++	struct auth_domain *domain;
+ 	bool	datatouch;
+ };
  
- #include <asm/mmu_context.h>
- #include <asm/traps.h>
-@@ -83,6 +84,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
- 	if (user_mode(regs))
- 		flags |= FAULT_FLAG_USER;
+--- a/include/linux/sunrpc/svcauth_gss.h
++++ b/include/linux/sunrpc/svcauth_gss.h
+@@ -21,7 +21,8 @@ int gss_svc_init(void);
+ void gss_svc_shutdown(void);
+ int gss_svc_init_net(struct net *net);
+ void gss_svc_shutdown_net(struct net *net);
+-int svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name);
++struct auth_domain *svcauth_gss_register_pseudoflavor(u32 pseudoflavor,
++						      char *name);
+ u32 svcauth_gss_flavor(struct auth_domain *dom);
  
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
- 	if (!down_read_trylock(&mm->mmap_sem)) {
- 		if (!user_mode(regs) && !search_exception_tables(regs->ea))
- 			goto bad_area_nosemaphore;
-@@ -131,7 +134,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
+ #endif /* __KERNEL__ */
+--- a/net/sunrpc/auth_gss/gss_mech_switch.c
++++ b/net/sunrpc/auth_gss/gss_mech_switch.c
+@@ -61,6 +61,8 @@ gss_mech_free(struct gss_api_mech *gm)
  
- 	if (fault_signal_pending(fault, regs))
- 		return;
-@@ -146,16 +149,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
- 		BUG();
+ 	for (i = 0; i < gm->gm_pf_num; i++) {
+ 		pf = &gm->gm_pfs[i];
++		if (pf->domain)
++			auth_domain_put(pf->domain);
+ 		kfree(pf->auth_domain_name);
+ 		pf->auth_domain_name = NULL;
  	}
+@@ -83,6 +85,7 @@ make_auth_domain_name(char *name)
+ static int
+ gss_mech_svc_setup(struct gss_api_mech *gm)
+ {
++	struct auth_domain *dom;
+ 	struct pf_desc *pf;
+ 	int i, status;
  
--	/*
--	 * Major/minor page fault accounting is only done on the
--	 * initial attempt. If we go through a retry, it is extremely
--	 * likely that the page will be found in page cache at that point.
--	 */
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR)
--			current->maj_flt++;
--		else
--			current->min_flt++;
- 		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
+@@ -92,10 +95,13 @@ gss_mech_svc_setup(struct gss_api_mech *
+ 		status = -ENOMEM;
+ 		if (pf->auth_domain_name == NULL)
+ 			goto out;
+-		status = svcauth_gss_register_pseudoflavor(pf->pseudoflavor,
+-							pf->auth_domain_name);
+-		if (status)
++		dom = svcauth_gss_register_pseudoflavor(
++			pf->pseudoflavor, pf->auth_domain_name);
++		if (IS_ERR(dom)) {
++			status = PTR_ERR(dom);
+ 			goto out;
++		}
++		pf->domain = dom;
+ 	}
+ 	return 0;
+ out:
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -779,7 +779,7 @@ u32 svcauth_gss_flavor(struct auth_domai
  
--- 
-2.26.2
+ EXPORT_SYMBOL_GPL(svcauth_gss_flavor);
+ 
+-int
++struct auth_domain *
+ svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name)
+ {
+ 	struct gss_domain	*new;
+@@ -802,17 +802,17 @@ svcauth_gss_register_pseudoflavor(u32 ps
+ 			name);
+ 		stat = -EADDRINUSE;
+ 		auth_domain_put(test);
+-		kfree(new->h.name);
+-		goto out_free_dom;
++		goto out_free_name;
+ 	}
+-	return 0;
++	return test;
+ 
++out_free_name:
++	kfree(new->h.name);
+ out_free_dom:
+ 	kfree(new);
+ out:
+-	return stat;
++	return ERR_PTR(stat);
+ }
+-
+ EXPORT_SYMBOL_GPL(svcauth_gss_register_pseudoflavor);
+ 
+ static inline int
+
 
