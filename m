@@ -2,220 +2,123 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA97C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A077C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4F120786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444A120734
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585587;
-	bh=pS9Fd7vykxh5K62di4CLBSseN309Fi1+FBfhE0TPyCo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MJYcfZNEo2abJLl22nwk5YSQLSVfAHt3pSJNfOvzCn2xSxU5fmdSwqeQCL/9f1Kks
-	 LT19F6Ux33Woe5DKIiWf7A3sBag2Ohq7rDWgelxqrR8761P2yj8u2K7RWhxMF+LYyV
-	 is6cJ4B0zXPIhoB/Gmdk1wyVtLVuGfh6ZxAJLz3c=
+	s=default; t=1592585597;
+	bh=mzuK37tzlKYYvOKx1l1TylVbig963irabrL266gf2hU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YmTSdydMNfWDXh3ZuSx5lQ5i4hY42/hjw8VPiWui2MNZG+Z94bXBEFPn0FR+tLVJ5
+	 Z/R2luJMrN7nZaFQx1Oxuio4zzDKXhDS4KUgyCISI9DBJ9JxbQVmyJIi48CWutLS3g
+	 9/qP/hN9AVfRXvQ02BL/DbmJrHhgA9Bfi064O4F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436493AbgFSQxF (ORCPT
+        id S2436494AbgFSQxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387992AbgFSQww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:52:52 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6C3C0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:52:51 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i25so12062849iog.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=95l1MVTCi/7S8KtvFFky6uuPDaXVAxHS1QVJv025vvc=;
-        b=DN3+VWJt4kegNaGt6irZzdSQA1JID8n9/YfMrzHpEaYJtlCV4Fp6D96MdHmBNtKqgT
-         yrheJIYkbfaurKdxWS1DGN0cwpdrsRjnS11SiurTVITnjXhAZT6m9w7gbeiU54a4N8dW
-         T7bl2+G7y4MrfC7ufB4SAoj+BoO4ypwK5TdSY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=95l1MVTCi/7S8KtvFFky6uuPDaXVAxHS1QVJv025vvc=;
-        b=dShM1X30sbeBxO2YlkrERGpP744ZRZ6AZNB/mWoe5viLJfDabbZX5TClWJ0gdisHmZ
-         1JqzExJXlEj7z1mXmeBTwFT59WaoYwtWVZIVOwzMWz85VyW4/Y7qihiziwtMDfsxULkk
-         QwS3mty8zmuCZbYSJW3Jdqk3yWLE4L9mst5UzSnAl9n9TdxF1/d+HDV4B+FffGhozBif
-         VL2Wcy69wZbvDy7vwJlaG3ZEZP8BfSfbMi3yKryjRKP4jyAegf9N2/O/XtssgK9ANar6
-         Dd5BoRL4M2lQk1vl6TVgxdk+kEOFbw8hk/jt31qpAfmn610thbDzvOQamsZAejNXZzhY
-         7qjQ==
-X-Gm-Message-State: AOAM530eNnJFIVozs2E69/IGt6I9IFxTTAUoWgP/2lH9COjVAMiaqGtf
-        5LMehWfmEIbAaGZ2zekxXxCIPw==
-X-Google-Smtp-Source: ABdhPJyppIllEsBxsT7BdLd87VJkDihdM58Pmb4lctzrvdR269bY5SB7ojGkVMVP1NDpbF3l60KVrw==
-X-Received: by 2002:a02:6641:: with SMTP id l1mr4701773jaf.23.1592585570511;
-        Fri, 19 Jun 2020 09:52:50 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id y19sm3685121iod.41.2020.06.19.09.52.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 09:52:50 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        skhan@linuxfoundation.org
-Subject: [GIT PULL] Kselftest update for Linux 5.8-rc2
-Message-ID: <3d0e22cc-af15-c142-1ee9-6f3c18a10557@linuxfoundation.org>
-Date:   Fri, 19 Jun 2020 10:52:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 19 Jun 2020 12:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387742AbgFSOhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:37:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40CE120CC7;
+        Fri, 19 Jun 2020 14:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577450;
+        bh=mzuK37tzlKYYvOKx1l1TylVbig963irabrL266gf2hU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SEPTZK5Cp95SCCWLqAwDKlOGCN13LhAroKOZhFD+UeNyaeXFCDDLpo4d0yT79bO6u
+         WBr0VcnvnFwIBV5hQyE1BROMkvVAe/gwLZ3ppzJV14OXppRrvO4rFGK/LKlOIUYRLn
+         0IIuXLazG1wN56aM5OrqXl0KETMVDqqv5kWoF+ZE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 055/101] e1000: Distribute switch variables for initialization
+Date:   Fri, 19 Jun 2020 16:32:44 +0200
+Message-Id: <20200619141616.934934676@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
+References: <20200619141614.001544111@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Kees Cook <keescook@chromium.org>
 
-Please pull the following Kselftest update for Linux 5.8-rc2.
+[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
 
-This Kselftest update for Linux 5.8-rc2 consists of:
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-- ftrace "requires:" list for simplifying and unifying requirement
-   checks for each test case, adding "requires:" line instead of
-   checking required ftrace interfaces in each test case.
-- a minor spelling correction patch
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-thanks,
--- Shuah
+drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
+drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
+ 3143 |     unsigned int pull_size;
+      |                  ^~~~~~~~~
 
-----------------------------------------------------------------
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
-   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-are available in the Git repository at:
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 1f84f2fa459f..f958188207fd 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -3162,8 +3162,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+ 		if (skb->data_len && hdr_len == len) {
+ 			switch (hw->mac_type) {
++			case e1000_82544: {
+ 				unsigned int pull_size;
+-			case e1000_82544:
++
+ 				/* Make sure we have room to chop off 4 bytes,
+ 				 * and that the end alignment will work out to
+ 				 * this hardware's requirements
+@@ -3184,6 +3185,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
+ 				}
+ 				len = skb_headlen(skb);
+ 				break;
++			}
+ 			default:
+ 				/* do nothing */
+ 				break;
+-- 
+2.25.1
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-5.8-rc2
 
-for you to fetch changes up to 1b8eec510ba641418573eacc98a7e9c07726af30:
 
-   selftests/ftrace: Support ":README" suffix for requires (2020-06-16 
-10:42:47 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-5.8-rc2
-
-This Kselftest update for Linux 5.8-rc2 consists of:
-
-- ftrace "requires:" list for simplifying and unifying requirement
-   checks for each test case, adding "requires:" line instead of
-   checking required ftrace interfaces in each test case.
-- a minor spelling correction patch
-
-----------------------------------------------------------------
-Flavio Suligoi (1):
-       tools: testing: ftrace: trigger: fix spelling mistake
-
-Masami Hiramatsu (7):
-       selftests/ftrace: Allow ":" in description
-       selftests/ftrace: Return unsupported for the unconfigured features
-       selftests/ftrace: Add "requires:" list support
-       selftests/ftrace: Convert required interface checks into requires 
-list
-       selftests/ftrace: Convert check_filter_file() with requires list
-       selftests/ftrace: Support ":tracer" suffix for requires
-       selftests/ftrace: Support ":README" suffix for requires
-
-  tools/testing/selftests/ftrace/ftracetest          | 11 ++++++--
-  .../selftests/ftrace/test.d/00basic/snapshot.tc    |  3 +--
-  .../selftests/ftrace/test.d/00basic/trace_pipe.tc  |  3 +--
-  .../ftrace/test.d/direct/kprobe-direct.tc          |  6 +----
-  .../ftrace/test.d/dynevent/add_remove_kprobe.tc    |  6 +----
-  .../ftrace/test.d/dynevent/add_remove_synth.tc     |  5 +---
-  .../ftrace/test.d/dynevent/clear_select_events.tc  | 11 +-------
-  .../ftrace/test.d/dynevent/generic_clear_event.tc  |  8 +-----
-  .../selftests/ftrace/test.d/event/event-enable.tc  |  6 +----
-  .../selftests/ftrace/test.d/event/event-no-pid.tc  | 11 +-------
-  .../selftests/ftrace/test.d/event/event-pid.tc     | 11 +-------
-  .../ftrace/test.d/event/subsystem-enable.tc        |  6 +----
-  .../ftrace/test.d/event/toplevel-enable.tc         |  6 +----
-  .../ftrace/test.d/ftrace/fgraph-filter-stack.tc    | 14 +---------
-  .../ftrace/test.d/ftrace/fgraph-filter.tc          |  8 +-----
-  .../ftrace/test.d/ftrace/func-filter-glob.tc       |  8 +-----
-  .../test.d/ftrace/func-filter-notrace-pid.tc       | 13 +--------
-  .../ftrace/test.d/ftrace/func-filter-pid.tc        | 13 +--------
-  .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |  3 +--
-  .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |  6 +----
-  .../ftrace/test.d/ftrace/func_event_triggers.tc    |  7 +++--
-  .../ftrace/test.d/ftrace/func_mod_trace.tc         |  3 +--
-  .../ftrace/test.d/ftrace/func_profile_stat.tc      |  3 +--
-  .../ftrace/test.d/ftrace/func_profiler.tc          | 12 +--------
-  .../ftrace/test.d/ftrace/func_set_ftrace_file.tc   |  6 ++---
-  .../ftrace/test.d/ftrace/func_stack_tracer.tc      |  8 +-----
-  .../test.d/ftrace/func_traceonoff_triggers.tc      |  6 ++---
-  .../ftrace/test.d/ftrace/tracing-error-log.tc      | 12 +++------
-  tools/testing/selftests/ftrace/test.d/functions    | 28 
-++++++++++++++-----
-  .../ftrace/test.d/instances/instance-event.tc      |  6 +----
-  .../selftests/ftrace/test.d/instances/instance.tc  |  6 +----
-  .../ftrace/test.d/kprobe/add_and_remove.tc         |  3 +--
-  .../selftests/ftrace/test.d/kprobe/busy_check.tc   |  3 +--
-  .../selftests/ftrace/test.d/kprobe/kprobe_args.tc  |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_args_comm.tc       |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_args_string.tc     |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_args_symbol.tc     |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |  5 +---
-  .../ftrace/test.d/kprobe/kprobe_args_type.tc       |  5 +---
-  .../ftrace/test.d/kprobe/kprobe_args_user.tc       |  4 +--
-  .../ftrace/test.d/kprobe/kprobe_eventname.tc       |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |  6 +----
-  .../ftrace/test.d/kprobe/kprobe_module.tc          |  3 +--
-  .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |  5 +---
-  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |  5 +---
-  .../ftrace/test.d/kprobe/kretprobe_args.tc         |  3 +--
-  .../ftrace/test.d/kprobe/kretprobe_maxactive.tc    |  4 +--
-  .../ftrace/test.d/kprobe/multiple_kprobes.tc       |  3 +--
-  .../selftests/ftrace/test.d/kprobe/probepoint.tc   |  3 +--
-  .../selftests/ftrace/test.d/kprobe/profile.tc      |  3 +--
-  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |  5 +---
-  .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |  4 +--
-  tools/testing/selftests/ftrace/test.d/template     |  4 +++
-  .../selftests/ftrace/test.d/tracer/wakeup.tc       |  6 +----
-  .../selftests/ftrace/test.d/tracer/wakeup_rt.tc    |  6 +----
-  .../inter-event/trigger-action-hist-xfail.tc       | 13 +--------
-  .../inter-event/trigger-field-variable-support.tc  | 16 +----------
-  .../trigger-inter-event-combined-hist.tc           | 16 +----------
-  .../inter-event/trigger-multi-actions-accept.tc    | 16 +----------
-  .../inter-event/trigger-onchange-action-hist.tc    |  8 +-----
-  .../inter-event/trigger-onmatch-action-hist.tc     | 16 +----------
-  .../trigger-onmatch-onmax-action-hist.tc           | 16 +----------
-  .../inter-event/trigger-onmax-action-hist.tc       | 16 +----------
-  .../inter-event/trigger-snapshot-action-hist.tc    | 20 +-------------
-  .../trigger-synthetic-event-createremove.tc        | 11 +-------
-  .../inter-event/trigger-synthetic-event-syntax.tc  | 11 +-------
-  .../inter-event/trigger-trace-action-hist.tc       | 18 +------------
-  .../ftrace/test.d/trigger/trigger-eventonoff.tc    | 11 +-------
-  .../ftrace/test.d/trigger/trigger-filter.tc        | 11 +-------
-  .../ftrace/test.d/trigger/trigger-hist-mod.tc      | 16 +----------
-  .../test.d/trigger/trigger-hist-syntax-errors.tc   | 18 +------------
-  .../ftrace/test.d/trigger/trigger-hist.tc          | 18 ++-----------
-  .../ftrace/test.d/trigger/trigger-multihist.tc     | 16 +----------
-  .../ftrace/test.d/trigger/trigger-snapshot.tc      | 16 +----------
-  .../ftrace/test.d/trigger/trigger-stacktrace.tc    | 13 ++-------
-  .../test.d/trigger/trigger-trace-marker-hist.tc    | 23 ++--------------
-  .../trigger/trigger-trace-marker-snapshot.tc       | 23 ++--------------
-  .../trigger-trace-marker-synthetic-kernel.tc       | 31 
-+---------------------
-  .../trigger/trigger-trace-marker-synthetic.tc      | 26 +-----------------
-  .../ftrace/test.d/trigger/trigger-traceonoff.tc    | 11 +-------
-
--- 80 files changed, 123 insertions(+), 637 deletions(-)
---------------------------------------------------------------
