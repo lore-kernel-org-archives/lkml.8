@@ -2,231 +2,105 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE23EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9758E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578309;
-	bh=qSU5bk/zdU503FulCoQ5cGikvBLDwT/dO8p24RY/tnY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYLXhIrQ01zXPPUZ14cIKqrCMW6Nf2fOqFaQ8Z4W726NblisultxVPP7sAa3oqORH
-	 rtdKWNlkDJDytUU8yJxmZl3vH8sSAN4rYvDs13z6A7rp20d18n0qDi1kRU7NonPPcu
-	 HBGwFRUZoGKGDOTWzNERCQxO4tSgYOvwDYnekhmA=
+	by mail.kernel.org (Postfix) with ESMTP id 7D4D521556
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbgFSOvr (ORCPT
+        id S2389480AbgFSOvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45006 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:51:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:36082 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389441AbgFSOv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:51:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2566A2166E;
-        Fri, 19 Jun 2020 14:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578285;
-        bh=qSU5bk/zdU503FulCoQ5cGikvBLDwT/dO8p24RY/tnY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=acWVY12nNW95VnxvwFXH5+9SdH2ew6bJ1Ck+EUeG7AGuNsRscqEtEflRZ+eDY59s0
-         bJvMr4bNtRgODcJmtUuDHEl4fDdncTDPv/pnp8cXg1TgFc8Pem7vCireKzdx+rZWZq
-         TJevdog8vNmxs1x+K3uT45xHfV6Jm3SVL14jixF0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Stan Johnson <userm57@yahoo.com>
-Subject: [PATCH 4.14 127/190] m68k: mac: Dont call via_flush_cache() on Mac IIfx
-Date:   Fri, 19 Jun 2020 16:32:52 +0200
-Message-Id: <20200619141639.971829716@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2389446AbgFSOv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:51:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EE28101E;
+        Fri, 19 Jun 2020 07:51:27 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F9373F71F;
+        Fri, 19 Jun 2020 07:51:25 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 15:51:23 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chrid.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200619145113.tgaxvzejmpstsnx7@e107158-lin.cambridge.arm.com>
+References: <20200618195525.7889-1-qais.yousef@arm.com>
+ <20200618195525.7889-3-qais.yousef@arm.com>
+ <jhjwo43cpfl.mognet@arm.com>
+ <20200619115723.GF3129@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200619115723.GF3129@suse.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+On 06/19/20 12:57, Mel Gorman wrote:
+> On Fri, Jun 19, 2020 at 11:36:46AM +0100, Valentin Schneider wrote:
+> > >                                    nouclamp                 uclamp      uclamp-static-key
+> > > Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
+> > > Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
+> > > Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
+> > > Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
+> > > Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
+> > > Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
+> > > Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
+> > > Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
+> > > Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
+> > >
+> > 
+> > Am I reading this correctly in that compiling in uclamp but having the
+> > static key enabled gives a slight improvement compared to not compiling in
+> > uclamp? I suppose the important bit is that we're not seeing regressions
+> > anymore, but still.
+> > 
+> 
+> I haven't reviewed the series in depth because from your review, another
+> version is likely in the works. However, it is not that unusual to
+> see small fluctuations like this that are counter-intuitive. The report
+> indicates the difference is likely outside of the noise with * around the
+> percentage difference instead of () but it could be small boot-to-boot
+> variance, differences in code layout, slight differences in slab usage
+> patterns etc. The definitive evidence that uclamp overhead is no there
+> is whether the uclamp functions show up in annotated profiles or not.
 
-[ Upstream commit bcc44f6b74106b31f0b0408b70305a40360d63b7 ]
+The diff between nouclamp and uclamp-static-key (disabling uclamp in fast path)
 
-There is no VIA2 chip on the Mac IIfx, so don't call via_flush_cache().
-This avoids a boot crash which appeared in v5.4.
+     8.73%     -1.55%  [kernel.kallsyms]        [k] try_to_wake_up
+     0.07%     +0.04%  [kernel.kallsyms]        [k] deactivate_task
+     0.13%     -0.02%  [kernel.kallsyms]        [k] activate_task
 
-printk: console [ttyS0] enabled
-printk: bootconsole [debug0] disabled
-printk: bootconsole [debug0] disabled
-Calibrating delay loop... 9.61 BogoMIPS (lpj=48064)
-pid_max: default: 32768 minimum: 301
-Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-devtmpfs: initialized
-random: get_random_u32 called from bucket_table_alloc.isra.27+0x68/0x194 with crng_init=0
-clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
-futex hash table entries: 256 (order: -1, 3072 bytes, linear)
-NET: Registered protocol family 16
-Data read fault at 0x00000000 in Super Data (pc=0x8a6a)
-BAD KERNEL BUSERR
-Oops: 00000000
-Modules linked in:
-PC: [<00008a6a>] via_flush_cache+0x12/0x2c
-SR: 2700  SP: 01c1fe3c  a2: 01c24000
-d0: 00001119    d1: 0000000c    d2: 00012000    d3: 0000000f
-d4: 01c06840    d5: 00033b92    a0: 00000000    a1: 00000000
-Process swapper (pid: 1, task=01c24000)
-Frame format=B ssw=0755 isc=0200 isb=fff7 daddr=00000000 dobuf=01c1fed0
-baddr=00008a6e dibuf=0000004e ver=f
-Stack from 01c1fec4:
-        01c1fed0 00007d7e 00010080 01c1fedc 0000792e 00000001 01c1fef4 00006b40
-        01c80000 00040000 00000006 00000003 01c1ff1c 004a545e 004ff200 00040000
-        00000000 00000003 01c06840 00033b92 004a5410 004b6c88 01c1ff84 000021e2
-        00000073 00000003 01c06840 00033b92 0038507a 004bb094 004b6ca8 004b6c88
-        004b6ca4 004b6c88 000021ae 00020002 00000000 01c0685d 00000000 01c1ffb4
-        0049f938 00409c85 01c06840 0045bd40 00000073 00000002 00000002 00000000
-Call Trace: [<00007d7e>] mac_cache_card_flush+0x12/0x1c
- [<00010080>] fix_dnrm+0x2/0x18
- [<0000792e>] cache_push+0x46/0x5a
- [<00006b40>] arch_dma_prep_coherent+0x60/0x6e
- [<00040000>] switched_to_dl+0x76/0xd0
- [<004a545e>] dma_atomic_pool_init+0x4e/0x188
- [<00040000>] switched_to_dl+0x76/0xd0
- [<00033b92>] parse_args+0x0/0x370
- [<004a5410>] dma_atomic_pool_init+0x0/0x188
- [<000021e2>] do_one_initcall+0x34/0x1be
- [<00033b92>] parse_args+0x0/0x370
- [<0038507a>] strcpy+0x0/0x1e
- [<000021ae>] do_one_initcall+0x0/0x1be
- [<00020002>] do_proc_dointvec_conv+0x54/0x74
- [<0049f938>] kernel_init_freeable+0x126/0x190
- [<0049f94c>] kernel_init_freeable+0x13a/0x190
- [<004a5410>] dma_atomic_pool_init+0x0/0x188
- [<00041798>] complete+0x0/0x3c
- [<000b9b0c>] kfree+0x0/0x20a
- [<0038df98>] schedule+0x0/0xd0
- [<0038d604>] kernel_init+0x0/0xda
- [<0038d610>] kernel_init+0xc/0xda
- [<0038d604>] kernel_init+0x0/0xda
- [<00002d38>] ret_from_kernel_thread+0xc/0x14
-Code: 0000 2079 0048 10da 2279 0048 10c8 d3c8 <1011> 0200 fff7 1280 d1f9 0048 10c8 1010 0000 0008 1080 4e5e 4e75 4e56 0000 2039
-Disabling lock debugging due to kernel taint
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+The diff between nouclamp and uclamp-static-key (uclamp actively used in the
+fast path)
 
-Thanks to Stan Johnson for capturing the console log and running git
-bisect.
+     8.73%     -0.72%  [kernel.kallsyms]        [k] try_to_wake_up
+     0.13%     +0.39%  [kernel.kallsyms]        [k] activate_task
+     0.07%     +0.38%  [kernel.kallsyms]        [k] deactivate_task
 
-Git bisect said commit 8e3a68fb55e0 ("dma-mapping: make
-dma_atomic_pool_init self-contained") is the first "bad" commit. I don't
-know why. Perhaps mach_l2_flush first became reachable with that commit.
+I will include these numbers in the commit message in v2.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/b8bbeef197d6b3898e82ed0d231ad08f575a4b34.1589949122.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/m68k/include/asm/mac_via.h |  1 +
- arch/m68k/mac/config.c          | 21 ++-------------------
- arch/m68k/mac/via.c             |  6 +++++-
- 3 files changed, 8 insertions(+), 20 deletions(-)
+Thanks
 
-diff --git a/arch/m68k/include/asm/mac_via.h b/arch/m68k/include/asm/mac_via.h
-index de1470c4d829..1149251ea58d 100644
---- a/arch/m68k/include/asm/mac_via.h
-+++ b/arch/m68k/include/asm/mac_via.h
-@@ -257,6 +257,7 @@ extern int rbv_present,via_alt_mapping;
- 
- struct irq_desc;
- 
-+extern void via_l2_flush(int writeback);
- extern void via_register_interrupts(void);
- extern void via_irq_enable(int);
- extern void via_irq_disable(int);
-diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
-index 2004b3f72d80..3ea7450c51f2 100644
---- a/arch/m68k/mac/config.c
-+++ b/arch/m68k/mac/config.c
-@@ -61,7 +61,6 @@ extern void iop_preinit(void);
- extern void iop_init(void);
- extern void via_init(void);
- extern void via_init_clock(irq_handler_t func);
--extern void via_flush_cache(void);
- extern void oss_init(void);
- extern void psc_init(void);
- extern void baboon_init(void);
-@@ -132,21 +131,6 @@ int __init mac_parse_bootinfo(const struct bi_record *record)
- 	return unknown;
- }
- 
--/*
-- * Flip into 24bit mode for an instant - flushes the L2 cache card. We
-- * have to disable interrupts for this. Our IRQ handlers will crap
-- * themselves if they take an IRQ in 24bit mode!
-- */
--
--static void mac_cache_card_flush(int writeback)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	via_flush_cache();
--	local_irq_restore(flags);
--}
--
- void __init config_mac(void)
- {
- 	if (!MACH_IS_MAC)
-@@ -179,9 +163,8 @@ void __init config_mac(void)
- 	 * not.
- 	 */
- 
--	if (macintosh_config->ident == MAC_MODEL_IICI
--	    || macintosh_config->ident == MAC_MODEL_IIFX)
--		mach_l2_flush = mac_cache_card_flush;
-+	if (macintosh_config->ident == MAC_MODEL_IICI)
-+		mach_l2_flush = via_l2_flush;
- }
- 
- 
-diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
-index 863806e6775a..6ab6a1d54b37 100644
---- a/arch/m68k/mac/via.c
-+++ b/arch/m68k/mac/via.c
-@@ -300,10 +300,14 @@ void via_debug_dump(void)
-  * the system into 24-bit mode for an instant.
-  */
- 
--void via_flush_cache(void)
-+void via_l2_flush(int writeback)
- {
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
- 	via2[gBufB] &= ~VIA2B_vMode32;
- 	via2[gBufB] |= VIA2B_vMode32;
-+	local_irq_restore(flags);
- }
- 
- /*
--- 
-2.25.1
-
-
-
+--
+Qais Yousef
