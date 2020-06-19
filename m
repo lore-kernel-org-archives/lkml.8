@@ -2,142 +2,98 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19180C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF908207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582485;
-	bh=WvSxL5EX9clpOEr6XG24evakEOUYheiRfsF3RR6UIx8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwsGbsc0wZhPFEmqfVKr+Pp3fE84gf0UEIupJUo/kPFbOQi1UvVkLp21k8NllY50w
-	 Lfn5Y0X1wD5N16lPShOc4+vlwaG+nOXheIfg6b3LGpvT0CnjH37P183H3jeOnKwF+f
-	 3tt7ofOUwgYaSGINF93KZTJURwm/krvqG/4Hf5Vg=
+	by mail.kernel.org (Postfix) with ESMTP id 97D3F21532
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fftsKWXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394174AbgFSQBX (ORCPT
+        id S2392245AbgFSQB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392245AbgFSPN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ABD320776;
-        Fri, 19 Jun 2020 15:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579606;
-        bh=WvSxL5EX9clpOEr6XG24evakEOUYheiRfsF3RR6UIx8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5480VYwJy9+FJh0Q/6x50kew+F2GWYT1QaAO0QmbhvO1+eOTEJTln3g306PZFdTD
-         Zz4DG+yjOMaX+2FwaoYprhm/83MLV5SGgOUiv/yOmOuhRuK6DNOs65fdrQfb6w1yu0
-         ciwBsfzMCdYhTcJWnoTJt0n7IZAqJ9Pd9LJs+Wpk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 5.4 199/261] media: go7007: fix a miss of snd_card_free
-Date:   Fri, 19 Jun 2020 16:33:30 +0200
-Message-Id: <20200619141659.433719874@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+        Fri, 19 Jun 2020 12:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392782AbgFSQBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:01:20 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E85EC06174E;
+        Fri, 19 Jun 2020 09:01:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k1so4091787pls.2;
+        Fri, 19 Jun 2020 09:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Al8lo1vohaR538nK8K73F1PSw58YXyOEBF1pYFlniR4=;
+        b=fftsKWXLIqPq+IZfmJ93m4f0LUAQDvvJhlKujnhkDr71z51FLg5MA4vyH6aR2nkajs
+         OCpQxv8QDtvbFFJ69EDvy/UCT02TiSPrV7QYfCyPkWP8wdtJ/QznPUiBNdJDB5CHk3GO
+         JwlMFYzjYYCN09eYFHJ6DNnnNv8sDQ/Dzwlmwwdd6VG+TTJjq8+655E8udUvXwu7vyF2
+         JV9V+0qhvIVw6w1qr1Msb9pzGBScyBEohHpGQw8lL2iWvReCKlodZJfHi57P33Y5uOou
+         FYYgHJAOjd2waOkh+owR396bXsWGI+I5Nw2MLXreSNgXG5ZdvB2pGmIiUSw3LenMkXP3
+         DC8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Al8lo1vohaR538nK8K73F1PSw58YXyOEBF1pYFlniR4=;
+        b=q7TR9sEnRI/hPSO2BYy2zacyN3pQJFxR0/YQ5v8cP/fTj2TsIUlbEj7QCSnSpoX6rB
+         7zxol7JwLxKj09J/y5efFky6kpAjS12WcBuveIb55VHOLAiTTN/eQLJUaPVfHLCEJht7
+         mq/t+KeZr90MQpkBPS5Y5aXwQcKh/J6fs5uAuo1ymOL9yd0t/vsa0+EReCqJ9F6CgJdm
+         JyBYSuAIsFnzJLWNyn7g3qqnUhofPC6yJpBOt3oY9yzgxkCSNvMqBwkJnKlcYmxpTje0
+         GfYkpe5OCDXpMGfvU0RBkfJ1/jv/NNIcbcRreaBdkeAY5i2elSydj6j1VoBCTXn0Utlu
+         2UMw==
+X-Gm-Message-State: AOAM531Zs1KsVPWL7q0deJYQt4unX4rMmhc6hXEl+n2JPOJAC+lgEsEo
+        IkJN4wPfvqYB7POPTUjCKQQ=
+X-Google-Smtp-Source: ABdhPJz9UVcZvtW383mrRKD0cV4j8Kv0RZmN5hMHiAJxZiNhHfbQ1q+ptp4COAn+YGx5pjx3ina7IQ==
+X-Received: by 2002:a17:90a:1ae6:: with SMTP id p93mr4065056pjp.182.1592582479643;
+        Fri, 19 Jun 2020 09:01:19 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g21sm6204847pfh.134.2020.06.19.09.01.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jun 2020 09:01:19 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 09:01:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/261] 5.4.48-rc1 review
+Message-ID: <20200619160118.GA105163@roeck-us.net>
 References: <20200619141649.878808811@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+On Fri, Jun 19, 2020 at 04:30:11PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.48 release.
+> There are 261 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
+> Anything received after that time might be too late.
+> 
 
-commit 9453264ef58638ce8976121ac44c07a3ef375983 upstream.
+Building mips:defconfig ... failed
+--------------
+Error log:
+arch/mips/mm/dma-noncoherent.c: In function 'cpu_needs_post_dma_flush':
+arch/mips/mm/dma-noncoherent.c:36:7: error: 'CPU_LOONGSON2EF' undeclared
 
-go7007_snd_init() misses a snd_card_free() in an error path.
-Add the missed call to fix it.
+Also affects v4.19.y.queue, and causes almost all mips builds to fail.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/media/usb/go7007/snd-go7007.c |   35 ++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
-
---- a/drivers/media/usb/go7007/snd-go7007.c
-+++ b/drivers/media/usb/go7007/snd-go7007.c
-@@ -236,22 +236,18 @@ int go7007_snd_init(struct go7007 *go)
- 	gosnd->capturing = 0;
- 	ret = snd_card_new(go->dev, index[dev], id[dev], THIS_MODULE, 0,
- 			   &gosnd->card);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_snd;
-+
- 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
- 			&go7007_snd_device_ops);
--	if (ret < 0) {
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	ret = snd_pcm_new(gosnd->card, "go7007", 0, 0, 1, &gosnd->pcm);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
-+
- 	strscpy(gosnd->card->driver, "go7007", sizeof(gosnd->card->driver));
- 	strscpy(gosnd->card->shortname, go->name, sizeof(gosnd->card->shortname));
- 	strscpy(gosnd->card->longname, gosnd->card->shortname,
-@@ -262,11 +258,8 @@ int go7007_snd_init(struct go7007 *go)
- 			&go7007_snd_capture_ops);
- 
- 	ret = snd_card_register(gosnd->card);
--	if (ret < 0) {
--		snd_card_free(gosnd->card);
--		kfree(gosnd);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_card;
- 
- 	gosnd->substream = NULL;
- 	go->snd_context = gosnd;
-@@ -274,6 +267,12 @@ int go7007_snd_init(struct go7007 *go)
- 	++dev;
- 
- 	return 0;
-+
-+free_card:
-+	snd_card_free(gosnd->card);
-+free_snd:
-+	kfree(gosnd);
-+	return ret;
- }
- EXPORT_SYMBOL(go7007_snd_init);
- 
-
-
+Guenter
