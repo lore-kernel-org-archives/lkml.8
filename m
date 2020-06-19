@@ -2,303 +2,180 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC94CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF36C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93989207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B558207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 12:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ESdxoavD"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="GHb2tJFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbgFSMgl (ORCPT
+        id S1732461AbgFSMjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 08:36:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44071 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732429AbgFSMgj (ORCPT
+        Fri, 19 Jun 2020 08:39:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgFSMjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 08:36:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592570197;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=y1qI9Lu8O6AKxVi/xPQ/l5dr2VXql2gGRHF+/HFBzMk=;
-        b=ESdxoavDri13R5CT9r0jylMpbM4Few76SKunPdjyl3XjphaRcjOYqTiXRVzXgzykFX3vvG
-        epcYPEeUfdfNeZT/Z4qg+q+SbLHgvqkWDjTGP+DkG77nlknVrNjXxmLpd5cN3NM9AjIBL0
-        o7avTNIsp0KxrVT8eRVm7FOS06KtlTk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-2mUE2hZrPLOWkuOcTPZgpg-1; Fri, 19 Jun 2020 08:36:35 -0400
-X-MC-Unique: 2mUE2hZrPLOWkuOcTPZgpg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 229BB464;
-        Fri, 19 Jun 2020 12:36:34 +0000 (UTC)
-Received: from localhost (unknown [10.40.208.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FB2A60BF4;
-        Fri, 19 Jun 2020 12:36:29 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 14:36:26 +0200
-From:   Igor Mammedov <imammedo@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
-Message-ID: <20200619143626.1b326566@redhat.com>
-In-Reply-To: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
-References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
+        Fri, 19 Jun 2020 08:39:10 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A300DC0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:39:09 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id r22so7228519qke.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 05:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=jS9Cx48KxvyLj4sEdC/4ikdQnELSNwkqzFpXAm2s44w=;
+        b=GHb2tJFIzWdBnMTKTlBJYZ/jbvDCcFIL08zyDDiOOLIooFN2jtNK2vQCzX1jR7qxlb
+         LEZLEf4Toqc6AOaT6k80vZvqR2/666M4jmSiKsDW/T3z34uELwUPRqSepX0EIIekUiqj
+         MmWPwQDoLjYgxZuxKhbyibG8QeYFHwHFfFwwo2QsXbkoMmfSW1a5++5ZNBmiKGvfrqiY
+         hW9rtQORDQjFlEjPjMbYF6v7/BC+Dp9Bi0YP0pyiOizh9dNv6tr38+RK3hKVAJQ+gwPe
+         y86icKWuq/4VTDDteTieZje7CSOH6MobjiVlJK9f/mNcp65nziNLDN4fFIgbwHLzcph1
+         pxlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=jS9Cx48KxvyLj4sEdC/4ikdQnELSNwkqzFpXAm2s44w=;
+        b=UAITjSGAFEEhdKVs0LDnVo4K6IvmSjfrIvSqVUrE3iOd8Prkgq8DkaZb+rclcmXvWe
+         L8HbJFQyrHvFpj3EGSy7XvQXhHUkW4c+OzYL3CLdbmLDuZaZgKdlWYEz0iRIn+fJ2vbU
+         T2ZXrO4rZGqqW7quzl7ALSo5JgCExXzjafJs6r1dCDgGqgv0E6Bq9/dGu3U9EbkkTAB7
+         p7ywPVFPJZnNJYWlvMXso8uex7QrAJlrRD7hclct3N1ibMk4cTMT4bPHyrK+uvBTdHHH
+         4xQNaDOauCmPti0ocG/PIdMokTphquoVw2Rpp77yTyWFbcrVWsre3CRffOuVE1P9qnOT
+         rOnw==
+X-Gm-Message-State: AOAM533XPl+fc8s1DECIIpV77kRAM6H4rZrqWNOuuWGOnT+Y3bXLlglT
+        5bQMgAzwPvDCjQGaYRzNRa0AEA==
+X-Google-Smtp-Source: ABdhPJyRBAIWwslNfa6GQwpEXR/EmtXc5kObKKUOQaAOlhKKorBr5wMy2rmwwIGhrJIYOcxD6iMc2w==
+X-Received: by 2002:ae9:e647:: with SMTP id x7mr3262880qkl.70.1592570348755;
+        Fri, 19 Jun 2020 05:39:08 -0700 (PDT)
+Received: from nicolas-tpx395 ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id u205sm6026879qka.81.2020.06.19.05.39.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 05:39:08 -0700 (PDT)
+Message-ID: <a0ee566a587c28ffce97224abfa901520af5c83f.camel@ndufresne.ca>
+Subject: Re: [PATCH 3/4] v4l2-ctrl: Add control for intra only decode
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Date:   Fri, 19 Jun 2020 08:39:07 -0400
+In-Reply-To: <20200616123001.11321-4-stanimir.varbanov@linaro.org>
+References: <20200616123001.11321-1-stanimir.varbanov@linaro.org>
+         <20200616123001.11321-4-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 10:41:02 +0800
-Wanpeng Li <kernellwp@gmail.com> wrote:
+Le mardi 16 juin 2020 à 15:30 +0300, Stanimir Varbanov a écrit :
+> This adds a new decoder control to instruct the decoders to
+> produce on its output intra frames only. Usually in this mode
+> decoders might lower the count of output decoder buffers and
+> hence reduce memory usage.
 
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated 
-> several times, each time it will consume 10+ us observed by ftrace in my 
-> non-overcommit environment since the expensive memory allocate/mutex/rcu etc 
-> operations. This patch optimizes it by recaluating apic map in batch, I hope 
-> this can benefit the serverless scenario which can frequently create/destroy 
-> VMs. 
-> 
-> Before patch:
-> 
-> kvm_lapic_reset  ~27us
-> 
-> After patch:
-> 
-> kvm_lapic_reset  ~14us 
-> 
-> Observed by ftrace, improve ~48%.
-> 
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-this broke CPU hotplug,
+Perhaps I missed some discussion, would be nice if you could remind the
+rationale from going away from a SKIP_MODE menu to adding dedicated boolean
+control for each mode.
 
-qemu-kvm -m 2G -smp 4,maxcpus=8  -monitor stdio
-(qemu) device_add qemu64-x86_64-cpu,socket-id=4,core-id=0,thread-id=0
-
-in guest fails with:
-
- smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
-
-which makes me suspect that  INIT/SIPI wasn't delivered
-
-Is it a know issue?
-
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
-> v2 -> v3:
->  * move apic_map_dirty to kvm_arch
->  * add the suggestions from Paolo
+>  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 9 +++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c                     | 2 ++
+>  include/uapi/linux/v4l2-controls.h                       | 1 +
+>  3 files changed, 12 insertions(+)
 > 
-> v1 -> v2:
->  * add apic_map_dirty to kvm_lapic
->  * error condition in kvm_apic_set_state, do recalcuate  unconditionally
-> 
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/lapic.c            | 46 ++++++++++++++++++++++++++++++++---------
->  arch/x86/kvm/lapic.h            |  1 +
->  arch/x86/kvm/x86.c              |  1 +
->  4 files changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 40a0c0f..4380ed1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -920,6 +920,7 @@ struct kvm_arch {
->  	atomic_t vapics_in_nmi_mode;
->  	struct mutex apic_map_lock;
->  	struct kvm_apic_map *apic_map;
-> +	bool apic_map_dirty;
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index b9d3f7ae6486..d7f34596f95b 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -652,6 +652,15 @@ enum v4l2_mpeg_video_bitrate_mode -
+>      otherwise the decoder expects a single frame in per buffer.
+>      Applicable to the decoder, all codecs.
 >  
->  	bool apic_access_page_done;
->  	unsigned long apicv_inhibit_reasons;
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index afcd30d..de832aa 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -164,14 +164,28 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
->  	kvfree(map);
->  }
->  
-> -static void recalculate_apic_map(struct kvm *kvm)
-> +void kvm_recalculate_apic_map(struct kvm *kvm)
->  {
->  	struct kvm_apic_map *new, *old = NULL;
->  	struct kvm_vcpu *vcpu;
->  	int i;
->  	u32 max_id = 255; /* enough space for any xAPIC ID */
->  
-> +	if (!kvm->arch.apic_map_dirty) {
-> +		/*
-> +		 * Read kvm->arch.apic_map_dirty before
-> +		 * kvm->arch.apic_map
-> +		 */
-> +		smp_rmb();
-> +		return;
-> +	}
+> +``V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY (boolean)``
+> +    If enabled the decoder should start decoding only intra frames. The
+> +    decoder consume first input buffer for progressive stream (or first
+> +    two buffers for interlace). Decoder might not allocate more output
+> +    buffers than it is required to consume one input frame. Usually the
+> +    decoder input buffers will contain only intra frames but it is not
+> +    mandatory. This control could be used for thumbnails generation.
+> +    Applicable to the decoder, all codecs.
+
+This imply that number of allocated buffers might be smaller (no references
+buffer are needed), but I think it should actually be more explicit that this
+must be set prior to reading MIN_BUFFER* and/or allocating buffers (since it's
+userspace that allocates buffers).
+
+What if a HW support live switching of this mode on key frames ? And if so, how
+do we configure and control that ?
+
 > +
->  	mutex_lock(&kvm->arch.apic_map_lock);
-> +	if (!kvm->arch.apic_map_dirty) {
-> +		/* Someone else has updated the map. */
-> +		mutex_unlock(&kvm->arch.apic_map_lock);
-> +		return;
-> +	}
+>  ``V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE (boolean)``
+>      Enable writing sample aspect ratio in the Video Usability
+>      Information. Applicable to the H264 encoder.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-
+> core/v4l2-ctrls.c
+> index bc00d02e411f..2b1fb8dcd360 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -846,6 +846,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264
+> MB Level Rate Control";
+>  	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return
+> "Sequence Header Mode";
+>  	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max
+> Number of Reference Pics";
+> +	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:	return "Decode
+> intra frames only";
+>  	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame
+> QP Value";
+>  	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame
+> QP Value";
+>  	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame
+> QP Value";
+> @@ -1197,6 +1198,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum
+> v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
+>  	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
+>  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:
+> +	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:
+>  	case V4L2_CID_WIDE_DYNAMIC_RANGE:
+>  	case V4L2_CID_IMAGE_STABILIZATION:
+>  	case V4L2_CID_RDS_RECEPTION:
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-
+> controls.h
+> index 0f7e4388dcce..c64471e64aa7 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -744,6 +744,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+>  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE +
+> 643)
+>  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE +
+> 644)
+>  #define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE +
+> 645)
+> +#define V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY	(V4L2_CID_MPEG_BASE +
+> 646)
 >  
->  	kvm_for_each_vcpu(i, vcpu, kvm)
->  		if (kvm_apic_present(vcpu))
-> @@ -236,6 +250,12 @@ static void recalculate_apic_map(struct kvm *kvm)
->  	old = rcu_dereference_protected(kvm->arch.apic_map,
->  			lockdep_is_held(&kvm->arch.apic_map_lock));
->  	rcu_assign_pointer(kvm->arch.apic_map, new);
-> +	/*
-> +	 * Write kvm->arch.apic_map before
-> +	 * clearing apic->apic_map_dirty
-> +	 */
-> +	smp_wmb();
-> +	kvm->arch.apic_map_dirty = false;
->  	mutex_unlock(&kvm->arch.apic_map_lock);
->  
->  	if (old)
-> @@ -257,20 +277,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
->  		else
->  			static_key_slow_inc(&apic_sw_disabled.key);
->  
-> -		recalculate_apic_map(apic->vcpu->kvm);
-> +		apic->vcpu->kvm->arch.apic_map_dirty = true;
->  	}
->  }
->  
->  static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
->  {
->  	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
->  {
->  	kvm_lapic_set_reg(apic, APIC_LDR, id);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
-> @@ -286,7 +306,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
->  
->  	kvm_lapic_set_reg(apic, APIC_ID, id);
->  	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-> @@ -1912,7 +1932,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  	case APIC_DFR:
->  		if (!apic_x2apic_mode(apic)) {
->  			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
-> -			recalculate_apic_map(apic->vcpu->kvm);
-> +			apic->vcpu->kvm->arch.apic_map_dirty = true;
->  		} else
->  			ret = 1;
->  		break;
-> @@ -2018,6 +2038,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  		break;
->  	}
->  
-> +	kvm_recalculate_apic_map(apic->vcpu->kvm);
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
-> @@ -2166,7 +2188,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->  			static_key_slow_dec_deferred(&apic_hw_disabled);
->  		} else {
->  			static_key_slow_inc(&apic_hw_disabled.key);
-> -			recalculate_apic_map(vcpu->kvm);
-> +			vcpu->kvm->arch.apic_map_dirty = true;
->  		}
->  	}
->  
-> @@ -2207,6 +2229,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	if (!apic)
->  		return;
->  
-> +	vcpu->kvm->arch.apic_map_dirty = false;
->  	/* Stop the timer in case it's a reset to an active apic */
->  	hrtimer_cancel(&apic->lapic_timer.timer);
->  
-> @@ -2258,6 +2281,8 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->  
->  	vcpu->arch.apic_arb_prio = 0;
->  	vcpu->arch.apic_attention = 0;
-> +
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  }
->  
->  /*
-> @@ -2479,17 +2504,18 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  	int r;
->  
-> -
->  	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
->  	/* set SPIV separately to get count of SW disabled APICs right */
->  	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
->  
->  	r = kvm_apic_state_fixup(vcpu, s, true);
-> -	if (r)
-> +	if (r) {
-> +		kvm_recalculate_apic_map(vcpu->kvm);
->  		return r;
-> +	}
->  	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
->  
-> -	recalculate_apic_map(vcpu->kvm);
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  	kvm_apic_set_version(vcpu);
->  
->  	apic_update_ppr(apic);
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index ec6fbfe..7581bc2 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -78,6 +78,7 @@ void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
->  void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
->  void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
->  u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
-> +void kvm_recalculate_apic_map(struct kvm *kvm);
->  void kvm_apic_set_version(struct kvm_vcpu *vcpu);
->  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
->  int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 79bc995..d3802a2 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -350,6 +350,7 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	}
->  
->  	kvm_lapic_set_base(vcpu, msr_info->data);
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_apic_base);
+>  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2
+> */
+>  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS
+> _MPEG | 0x1000)
 
