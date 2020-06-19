@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3947BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFFB21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AAA21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583101;
-	bh=bS5W2ONyw/SXIa/fkGa6ec0BYeEBMqk33GK3nELN/DA=;
+	s=default; t=1592583105;
+	bh=elBE11fQiN4qbvXIOtPynWlN6qJBOFWfp7dr4xXo6MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dczFiHg8Q/XAPoe3zC7d4E5XAW2fhkCXTEy7SoAWm9+esWQeNXeFDqhHb/mL/TR8r
-	 zcPVKsSmry2By9pAdfUkyhXSK+ZarGKOtxteCZGtuCwJwxC9zY2zIicl48JJvVn0pe
-	 oaKqiU5V1q5tDt4P/6lCLqUzw0sKnhja5oy1LJ/8=
+	b=XWZSi5evPUIqe4KJUbr5dhHZpKvxLMIePtQpTi/2E00LNObAAvWG7ZTM1VJobcQmq
+	 oxTwjtBaD4UMssa4FsVynag7cVHBkXS8RcE/q3wDcRtQdTPgZ/npygzonu5LSoorcR
+	 QPOGPhPHpg1ntv1gXcD3S/sMky9/koANKFOQlW8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394352AbgFSQLk (ORCPT
+        id S2405543AbgFSQLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391338AbgFSPFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:05:43 -0400
+        id S2391320AbgFSPFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:05:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFBA2158C;
-        Fri, 19 Jun 2020 15:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDCBA21974;
+        Fri, 19 Jun 2020 15:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579142;
-        bh=bS5W2ONyw/SXIa/fkGa6ec0BYeEBMqk33GK3nELN/DA=;
+        s=default; t=1592579137;
+        bh=elBE11fQiN4qbvXIOtPynWlN6qJBOFWfp7dr4xXo6MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpIclVkIupoHiyI6hGCOk/cFozCQa1MyShTqUXG/HaTVovWlsqUkA+FVmlQMMSFlo
-         Mm+upuCftuMGA5yxh+0Uxnp4OcbyuGF8+sKbbc3FW5d3YUJHL61yGRsek6Bzsg9d7O
-         iVzXxqODSgin4ypP39JBJ2IL78KTAhQJLjWfyz8Y=
+        b=yjZke6St1W7usN/70YVwlKCiC4UL34zNTn7YGUuKpQclZVYQCDAKRXdOapb4wleH1
+         tpvjYypItPtElbcWB9KG9shU6xgJweh8LfbtlhFZQdYw5PEoDvJ3mKGEhMUoHiFBnY
+         KpLaZowONI7Hn6SaOxWRxfSHC62GeA3lxhdZdpRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Govindaraj Saminathan <gsamin@codeaurora.org>,
-        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
+        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 003/261] ath10k: Fix the race condition in firmware dump work queue
-Date:   Fri, 19 Jun 2020 16:30:14 +0200
-Message-Id: <20200619141650.049101796@linuxfoundation.org>
+Subject: [PATCH 5.4 021/261] ath10k: remove the max_sched_scan_reqs value
+Date:   Fri, 19 Jun 2020 16:30:32 +0200
+Message-Id: <20200619141650.917065757@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,41 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maharaja Kennadyrajan <mkenna@codeaurora.org>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit 3d1c60460fb2823a19ead9e6ec8f184dd7271aa7 ]
+[ Upstream commit d431f8939c1419854dfe89dd345387f5397c6edd ]
 
-There is a race condition, when the user writes 'hw-restart' and
-'hard' in the simulate_fw_crash debugfs file without any delay.
-In the above scenario, the firmware dump work queue(scheduled by
-'hard') should be handled gracefully, while the target is in the
-'hw-restart'.
+The struct cfg80211_wowlan of NET_DETECT WoWLAN feature share the same
+struct cfg80211_sched_scan_request together with scheduled scan request
+feature, and max_sched_scan_reqs of wiphy is only used for sched scan,
+and ath10k does not support scheduled scan request feature, so ath10k
+does not set flag NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR, but ath10k
+set max_sched_scan_reqs of wiphy to a non zero value 1, then function
+nl80211_add_commands_unsplit of cfg80211 will set it support command
+NL80211_CMD_START_SCHED_SCAN because max_sched_scan_reqs is a non zero
+value, but actually ath10k not support it, then it leads a mismatch result
+for sched scan of cfg80211, then application shill found the mismatch and
+stop running case of MAC random address scan and then the case fail.
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00044
+After remove max_sched_scan_reqs value, it keeps match for sched scan and
+case of MAC random address scan pass.
 
-Co-developed-by: Govindaraj Saminathan <gsamin@codeaurora.org>
-Signed-off-by: Govindaraj Saminathan <gsamin@codeaurora.org>
-Signed-off-by: Maharaja Kennadyrajan <mkenna@codeaurora.org>
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
+Tested with QCA6174 PCIe with firmware WLAN.RM.4.4.1-00110-QCARMSWP-1.
+
+Fixes: ce834e280f2f875 ("ath10k: support NET_DETECT WoWLAN feature")
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585213077-28439-1-git-send-email-mkenna@codeaurora.org
+Link: https://lore.kernel.org/r/20191114050001.4658-1-wgong@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/mac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 0a727502d14c..fd49d3419e79 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2074,6 +2074,7 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 	ath10k_pci_irq_sync(ar);
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+	cancel_work_sync(&ar_pci->dump_work);
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 36d24ea126a2..b0f6f2727053 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -8811,7 +8811,6 @@ int ath10k_mac_register(struct ath10k *ar)
+ 	ar->hw->wiphy->max_scan_ie_len = WLAN_SCAN_PARAMS_MAX_IE_LEN;
  
- 	/* Most likely the device has HTT Rx ring configured. The only way to
- 	 * prevent the device from accessing (and possible corrupting) host
+ 	if (test_bit(WMI_SERVICE_NLO, ar->wmi.svc_map)) {
+-		ar->hw->wiphy->max_sched_scan_reqs = 1;
+ 		ar->hw->wiphy->max_sched_scan_ssids = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_match_sets = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_sched_scan_ie_len = WMI_PNO_MAX_IE_LENGTH;
 -- 
 2.25.1
 
