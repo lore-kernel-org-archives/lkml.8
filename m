@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8783FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022B920809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A24420809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582497;
-	bh=xRG44M/nxXxzNVpGV9y7/mUYH/wmbZs1DNIosD6B1Q8=;
+	s=default; t=1592582499;
+	bh=8FPgag9J9+4OfyBfUdpPAoFnxdEGZSeY+hr69ytXUSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gF0ZPlnjWP+3rpaOk0y4sjVQ5r3+r5yy+PJtXh60kiN85iLdyRrDEzwSahrWzUJuA
-	 YmWJd5Zg4SrgzwaqI8DZZrqH4coshP7GB3bhW8N1WfdvWW3LOFzFcmSVVzih/2D7Em
-	 VIp/EHCKERxPX3Y/TMZEtmD+J6FT+9ep/AChp04Q=
+	b=C1kNHgZl2HLEvfN9KIBBe4J2yvtuRwGF/8zGwjSHsjzPMlRzTjdMtbAxTY2tNEWTT
+	 U9uQPAbSPBgS9VnNukNry720ojh90PaoZ2AsoKsDsJiTf2mPj8/Ev3mFXjtTEvyCYS
+	 EJOwx/QFs9cfqhXqLSCoJEepEtLMds3yoTGgavCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392206AbgFSPNO (ORCPT
+        id S2394179AbgFSQBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391971AbgFSPNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:08 -0400
+        id S2392228AbgFSPNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C44E0218AC;
-        Fri, 19 Jun 2020 15:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A70FB2158C;
+        Fri, 19 Jun 2020 15:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579587;
-        bh=xRG44M/nxXxzNVpGV9y7/mUYH/wmbZs1DNIosD6B1Q8=;
+        s=default; t=1592579601;
+        bh=8FPgag9J9+4OfyBfUdpPAoFnxdEGZSeY+hr69ytXUSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mI9zigY7BdjOMPPNcBCovac3/JFQbbtkrE6/pu/rotIw1MGVmSeXI9nH9UKbNaAfi
-         Ok305d6oZbhlooZa1v+DRl6OV/uzkBChuBxLn1a8ZiNaUstNFVSokeu4nD84QMs/Sy
-         I9RO7du/f1z1oAmcHIWjiLsr6ROoA2XBzYrocH0k=
+        b=RJugn4xYbS9/0s2C6dc+7oAr5ekfciBzTKSTv1969ns4csdyoXy61jPK0Z1Zf5I67
+         ZVqy8o7mlOEFyrChcvEsWHmxmOvHsE+tbCgo80yg8yJt3tZhGZjjB8m3frqTh+0Bjm
+         NALwUPRxs647BfXRI5tbE3fvLKTbRreRAa8zb1O4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 161/261] btrfs: include non-missing as a qualifier for the latest_bdev
-Date:   Fri, 19 Jun 2020 16:32:52 +0200
-Message-Id: <20200619141657.605608876@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.4 197/261] e1000e: Relax condition to trigger reset for ME workaround
+Date:   Fri, 19 Jun 2020 16:33:28 +0200
+Message-Id: <20200619141659.339071484@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -60,77 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
 
-commit 998a0671961f66e9fad4990ed75f80ba3088c2f1 upstream.
+commit d601afcae2febc49665008e9a79e701248d56c50 upstream.
 
-btrfs_free_extra_devids() updates fs_devices::latest_bdev to point to
-the bdev with greatest device::generation number.  For a typical-missing
-device the generation number is zero so fs_devices::latest_bdev will
-never point to it.
+It's an error if the value of the RX/TX tail descriptor does not match
+what was written. The error condition is true regardless the duration
+of the interference from ME. But the driver only performs the reset if
+E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
+transpired. The extra condition can lead to inconsistency between the
+state of hardware as expected by the driver.
 
-But if the missing device is due to alienation [1], then
-device::generation is not zero and if it is greater or equal to the rest
-of device  generations in the list, then fs_devices::latest_bdev ends up
-pointing to the missing device and reports the error like [2].
+Fix this by dropping the check for number of delay iterations.
 
-[1] We maintain devices of a fsid (as in fs_device::fsid) in the
-fs_devices::devices list, a device is considered as an alien device
-if its fsid does not match with the fs_device::fsid
+While at it, also make __ew32_prepare() static as it's not used
+anywhere else.
 
-Consider a working filesystem with raid1:
-
-  $ mkfs.btrfs -f -d raid1 -m raid1 /dev/sda /dev/sdb
-  $ mount /dev/sda /mnt-raid1
-  $ umount /mnt-raid1
-
-While mnt-raid1 was unmounted the user force-adds one of its devices to
-another btrfs filesystem:
-
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt-single
-  $ btrfs dev add -f /dev/sda /mnt-single
-
-Now the original mnt-raid1 fails to mount in degraded mode, because
-fs_devices::latest_bdev is pointing to the alien device.
-
-  $ mount -o degraded /dev/sdb /mnt-raid1
-
-[2]
-mount: wrong fs type, bad option, bad superblock on /dev/sdb,
-       missing codepage or helper program, or other error
-
-       In some cases useful info is found in syslog - try
-       dmesg | tail or so.
-
-  kernel: BTRFS warning (device sdb): devid 1 uuid 072a0192-675b-4d5a-8640-a5cf2b2c704d is missing
-  kernel: BTRFS error (device sdb): failed to read devices
-  kernel: BTRFS error (device sdb): open_ctree failed
-
-Fix the root cause by checking if the device is not missing before it
-can be considered for the fs_devices::latest_bdev.
-
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+CC: stable <stable@vger.kernel.org>
+Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/intel/e1000e/e1000.h  |    1 -
+ drivers/net/ethernet/intel/e1000e/netdev.c |   12 +++++-------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -1223,6 +1223,8 @@ again:
- 							&device->dev_state)) {
- 			if (!test_bit(BTRFS_DEV_STATE_REPLACE_TGT,
- 			     &device->dev_state) &&
-+			    !test_bit(BTRFS_DEV_STATE_MISSING,
-+				      &device->dev_state) &&
- 			     (!latest_dev ||
- 			      device->generation > latest_dev->generation)) {
- 				latest_dev = device;
+--- a/drivers/net/ethernet/intel/e1000e/e1000.h
++++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+@@ -576,7 +576,6 @@ static inline u32 __er32(struct e1000_hw
+ 
+ #define er32(reg)	__er32(hw, E1000_##reg)
+ 
+-s32 __ew32_prepare(struct e1000_hw *hw);
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
+ 
+ #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -119,14 +119,12 @@ static const struct e1000_reg_info e1000
+  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
+  * and try again a number of times.
+  **/
+-s32 __ew32_prepare(struct e1000_hw *hw)
++static void __ew32_prepare(struct e1000_hw *hw)
+ {
+ 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
+ 
+ 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
+ 		udelay(50);
+-
+-	return i;
+ }
+ 
+ void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
+@@ -607,11 +605,11 @@ static void e1000e_update_rdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = rx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, rx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
++	if (unlikely(i != readl(rx_ring->tail))) {
+ 		u32 rctl = er32(RCTL);
+ 
+ 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
+@@ -624,11 +622,11 @@ static void e1000e_update_tdt_wa(struct
+ {
+ 	struct e1000_adapter *adapter = tx_ring->adapter;
+ 	struct e1000_hw *hw = &adapter->hw;
+-	s32 ret_val = __ew32_prepare(hw);
+ 
++	__ew32_prepare(hw);
+ 	writel(i, tx_ring->tail);
+ 
+-	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
++	if (unlikely(i != readl(tx_ring->tail))) {
+ 		u32 tctl = er32(TCTL);
+ 
+ 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
 
 
