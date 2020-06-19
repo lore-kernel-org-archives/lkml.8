@@ -2,274 +2,370 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2945C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C3220786
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i/Q5ongT"
+	by mail.kernel.org (Postfix) with ESMTP id 9893B20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 07:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbgFSH0r (ORCPT
+        id S1730512AbgFSH25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:26:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:43498 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729548AbgFSH0p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:26:45 -0400
-X-UUID: cb4e97cc38a6451881bb3c3d3bf66cf3-20200619
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=eQoJ9KXWB/1E7lE5XEnrCQlWfnxepw1IVr/KHwvdxvg=;
-        b=i/Q5ongTL/UYfpEV17QRNVPf4radt65Bs/SCOjsjzfxELnXGIgP+8hXqyfwnFSzeym0Wu/nWjwNVKKcurnEj4+0admKpC2FEqfLbIpCpvv/kRocpp8i8xXi3269434AfFAnc/BUPvHUSMMQI1encrYm3OYHM+SfV4+ExieKxYHQ=;
-X-UUID: cb4e97cc38a6451881bb3c3d3bf66cf3-20200619
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1164342137; Fri, 19 Jun 2020 15:26:36 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 19 Jun 2020 15:26:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 19 Jun 2020 15:26:34 +0800
-Message-ID: <1592551593.32358.1.camel@mtksdaap41>
-Subject: Re: [PATCH 06/10] media: mtk-vcodec: venc: specify supported
- formats per-chip
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        "Pi-Hsun Shih" <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
+        Fri, 19 Jun 2020 03:28:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58564 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729548AbgFSH25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:28:57 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C6557FF27759ABF67639;
+        Fri, 19 Jun 2020 15:28:54 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 19 Jun
+ 2020 15:28:51 +0800
+Subject: Re: [PATCH v2] f2fs-tools: introduce set_node_footer to initialize
+ node footer
+To:     <zhaowuyun@wingtech.com>, <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>
-Date:   Fri, 19 Jun 2020 15:26:33 +0800
-In-Reply-To: <20200520082723.96136-7-acourbot@chromium.org>
-References: <20200520082723.96136-1-acourbot@chromium.org>
-         <20200520082723.96136-7-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+References: <1592548634-1065-1-git-send-email-zhaowuyun@wingtech.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <2b44ed71-deba-2c48-bd8a-6b6099fe5a8f@huawei.com>
+Date:   Fri, 19 Jun 2020 15:28:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1592548634-1065-1-git-send-email-zhaowuyun@wingtech.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTIwIGF0IDE3OjI3ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gRGlmZmVyZW50IGNoaXBzIGhhdmUgZGlmZmVyZW50IHN1cHBvcnRlZCBiaXRyYXRlIHJh
-bmdlcy4gTW92ZSB0aGUgbGlzdA0KPiBvZiBzdXBwb3J0ZWQgZm9ybWF0cyB0byB0aGUgcGxhdGZv
-cm0gZGF0YSwgYW5kIHNwbGl0IHRoZSBvdXRwdXQgYW5kDQo+IGNhcHR1cmUgZm9ybWF0cyBpbnRv
-IHR3byBsaXN0cyB0byBtYWtlIGl0IGVhc2llciB0byBmaW5kIHRoZSBkZWZhdWx0DQo+IGZvcm1h
-dCBmb3IgZWFjaCBxdWV1ZS4NCj4gDQoNCkRvZXMgdGhpcyBwYXRjaCBwYXNzIHY0bDIgY29tcGxp
-YW5jZSB0ZXN0Pw0KDQoNCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIENvdXJib3QgPGFjb3Vy
-Ym90QGNocm9taXVtLm9yZz4NCj4gLS0tDQo+ICAuLi4vcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtf
-dmNvZGVjX2Rydi5oICAgICAgfCAgIDggKysNCj4gIC4uLi9wbGF0Zm9ybS9tdGstdmNvZGVjL210
-a192Y29kZWNfZW5jLmMgICAgICB8IDEyMiArKysrKysrLS0tLS0tLS0tLS0NCj4gIC4uLi9wbGF0
-Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jX2Rydi5jICB8ICA0MCArKysrKysNCj4gIDMg
-ZmlsZXMgY2hhbmdlZCwgOTUgaW5zZXJ0aW9ucygrKSwgNzUgZGVsZXRpb25zKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNf
-ZHJ2LmggYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19kcnYu
-aA0KPiBpbmRleCBiOGY5MTNkZThkODAuLjU5YjRiNzUwNjY2YiAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZHJ2LmgNCj4gKysrIGIv
-ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZHJ2LmgNCj4gQEAg
-LTMxMyw2ICszMTMsMTAgQEAgZW51bSBtdGtfY2hpcCB7DQo+ICAgKiBAaGFzX2x0X2lycTogd2hl
-dGhlciB0aGUgZW5jb2RlciB1c2VzIHRoZSBMVCBpcnENCj4gICAqIEBtaW5fYmlyYXRlOiBtaW5p
-bXVtIHN1cHBvcnRlZCBlbmNvZGluZyBiaXRyYXRlDQo+ICAgKiBAbWF4X2JpdHJhdGU6IG1heGlt
-dW0gc3VwcG9ydGVkIGVuY29kaW5nIGJpdHJhdGUNCj4gKyAqIEBjYXB0dXJlX2Zvcm1hdHM6IGFy
-cmF5IG9mIHN1cHBvcnRlZCBjYXB0dXJlIGZvcm1hdHMNCj4gKyAqIEBudW1fY2FwdHVyZV9mb3Jt
-YXRzOiBudW1iZXIgb2YgZW50cmllcyBpbiBjYXB0dXJlX2Zvcm1hdHMNCj4gKyAqIEBvdXRwdXRf
-Zm9ybWF0czogYXJyYXkgb2Ygc3VwcG9ydGVkIG91dHB1dCBmb3JtYXRzDQo+ICsgKiBAbnVtX291
-dHB1dF9mb3JtYXRzOiBudW1iZXIgb2YgZW50cmllcyBpbiBvdXRwdXRfZm9ybWF0cw0KPiAgICov
-DQo+ICBzdHJ1Y3QgbXRrX3Zjb2RlY19lbmNfcGRhdGEgew0KPiAgCWVudW0gbXRrX2NoaXAgY2hp
-cDsNCj4gQEAgLTMyMSw2ICszMjUsMTAgQEAgc3RydWN0IG10a192Y29kZWNfZW5jX3BkYXRhIHsN
-Cj4gIAlib29sIGhhc19sdF9pcnE7DQo+ICAJdW5zaWduZWQgbG9uZyBtaW5fYml0cmF0ZTsNCj4g
-IAl1bnNpZ25lZCBsb25nIG1heF9iaXRyYXRlOw0KPiArCWNvbnN0IHN0cnVjdCBtdGtfdmlkZW9f
-Zm10ICpjYXB0dXJlX2Zvcm1hdHM7DQo+ICsJc2l6ZV90IG51bV9jYXB0dXJlX2Zvcm1hdHM7DQo+
-ICsJY29uc3Qgc3RydWN0IG10a192aWRlb19mbXQgKm91dHB1dF9mb3JtYXRzOw0KPiArCXNpemVf
-dCBudW1fb3V0cHV0X2Zvcm1hdHM7DQo+ICB9Ow0KPiAgDQo+ICAvKioNCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jIGIvZHJp
-dmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gaW5kZXgg
-NTBiYTlkYTU5MTUzLi4wNTc0M2E3NDVhMTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+ICsrKyBiL2RyaXZlcnMvbWVk
-aWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+IEBAIC0yMyw0NyArMjMs
-OSBAQA0KPiAgI2RlZmluZSBERlRfQ0ZHX1dJRFRICU1US19WRU5DX01JTl9XDQo+ICAjZGVmaW5l
-IERGVF9DRkdfSEVJR0hUCU1US19WRU5DX01JTl9IDQo+ICAjZGVmaW5lIE1US19NQVhfQ1RSTFNf
-SElOVAkyMA0KPiAtI2RlZmluZSBPVVRfRk1UX0lEWAkJMA0KPiAtI2RlZmluZSBDQVBfRk1UX0lE
-WAkJNA0KPiAtDQo+ICANCj4gIHN0YXRpYyB2b2lkIG10a192ZW5jX3dvcmtlcihzdHJ1Y3Qgd29y
-a19zdHJ1Y3QgKndvcmspOw0KPiAgDQo+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG10a192aWRlb19m
-bXQgbXRrX3ZpZGVvX2Zvcm1hdHNbXSA9IHsNCj4gLQl7DQo+IC0JCS5mb3VyY2MgPSBWNEwyX1BJ
-WF9GTVRfTlYxMk0sDQo+IC0JCS50eXBlID0gTVRLX0ZNVF9GUkFNRSwNCj4gLQkJLm51bV9wbGFu
-ZXMgPSAyLA0KPiAtCX0sDQo+IC0Jew0KPiAtCQkuZm91cmNjID0gVjRMMl9QSVhfRk1UX05WMjFN
-LA0KPiAtCQkudHlwZSA9IE1US19GTVRfRlJBTUUsDQo+IC0JCS5udW1fcGxhbmVzID0gMiwNCj4g
-LQl9LA0KPiAtCXsNCj4gLQkJLmZvdXJjYyA9IFY0TDJfUElYX0ZNVF9ZVVY0MjBNLA0KPiAtCQku
-dHlwZSA9IE1US19GTVRfRlJBTUUsDQo+IC0JCS5udW1fcGxhbmVzID0gMywNCj4gLQl9LA0KPiAt
-CXsNCj4gLQkJLmZvdXJjYyA9IFY0TDJfUElYX0ZNVF9ZVlU0MjBNLA0KPiAtCQkudHlwZSA9IE1U
-S19GTVRfRlJBTUUsDQo+IC0JCS5udW1fcGxhbmVzID0gMywNCj4gLQl9LA0KPiAtCXsNCj4gLQkJ
-LmZvdXJjYyA9IFY0TDJfUElYX0ZNVF9IMjY0LA0KPiAtCQkudHlwZSA9IE1US19GTVRfRU5DLA0K
-PiAtCQkubnVtX3BsYW5lcyA9IDEsDQo+IC0JfSwNCj4gLQl7DQo+IC0JCS5mb3VyY2MgPSBWNEwy
-X1BJWF9GTVRfVlA4LA0KPiAtCQkudHlwZSA9IE1US19GTVRfRU5DLA0KPiAtCQkubnVtX3BsYW5l
-cyA9IDEsDQo+IC0JfSwNCj4gLX07DQo+IC0NCj4gLSNkZWZpbmUgTlVNX0ZPUk1BVFMgQVJSQVlf
-U0laRShtdGtfdmlkZW9fZm9ybWF0cykNCj4gLQ0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
-Y29kZWNfZnJhbWVzaXplcyBtdGtfdmVuY19mcmFtZXNpemVzW10gPSB7DQo+ICAJew0KPiAgCQku
-Zm91cmNjCT0gVjRMMl9QSVhfRk1UX0gyNjQsDQo+IEBAIC0xNTYsMjcgKzExOCwxNyBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IHY0bDJfY3RybF9vcHMgbXRrX3Zjb2RlY19lbmNfY3RybF9vcHMgPSB7
-DQo+ICAJLnNfY3RybCA9IHZpZGlvY192ZW5jX3NfY3RybCwNCj4gIH07DQo+ICANCj4gLXN0YXRp
-YyBpbnQgdmlkaW9jX2VudW1fZm10KHN0cnVjdCB2NGwyX2ZtdGRlc2MgKmYsIGJvb2wgb3V0cHV0
-X3F1ZXVlKQ0KPiArc3RhdGljIGludCB2aWRpb2NfZW51bV9mbXQoc3RydWN0IHY0bDJfZm10ZGVz
-YyAqZiwNCj4gKwkJCSAgIGNvbnN0IHN0cnVjdCBtdGtfdmlkZW9fZm10ICpmb3JtYXRzLA0KPiAr
-CQkJICAgc2l6ZV90IG51bV9mb3JtYXRzKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBtdGtfdmlk
-ZW9fZm10ICpmbXQ7DQo+IC0JaW50IGksIGogPSAwOw0KPiArCWlmIChmLT5pbmRleCA+PSBudW1f
-Zm9ybWF0cykNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICANCj4gLQlmb3IgKGkgPSAwOyBpIDwg
-TlVNX0ZPUk1BVFM7ICsraSkgew0KPiAtCQlpZiAob3V0cHV0X3F1ZXVlICYmIG10a192aWRlb19m
-b3JtYXRzW2ldLnR5cGUgIT0gTVRLX0ZNVF9GUkFNRSkNCj4gLQkJCWNvbnRpbnVlOw0KPiAtCQlp
-ZiAoIW91dHB1dF9xdWV1ZSAmJiBtdGtfdmlkZW9fZm9ybWF0c1tpXS50eXBlICE9IE1US19GTVRf
-RU5DKQ0KPiAtCQkJY29udGludWU7DQo+ICsJZi0+cGl4ZWxmb3JtYXQgPSBmb3JtYXRzW2YtPmlu
-ZGV4XS5mb3VyY2M7DQo+ICsJbWVtc2V0KGYtPnJlc2VydmVkLCAwLCBzaXplb2YoZi0+cmVzZXJ2
-ZWQpKTsNCj4gIA0KPiAtCQlpZiAoaiA9PSBmLT5pbmRleCkgew0KPiAtCQkJZm10ID0gJm10a192
-aWRlb19mb3JtYXRzW2ldOw0KPiAtCQkJZi0+cGl4ZWxmb3JtYXQgPSBmbXQtPmZvdXJjYzsNCj4g
-LQkJCW1lbXNldChmLT5yZXNlcnZlZCwgMCwgc2l6ZW9mKGYtPnJlc2VydmVkKSk7DQo+IC0JCQly
-ZXR1cm4gMDsNCj4gLQkJfQ0KPiAtCQkrK2o7DQo+IC0JfQ0KPiAtDQo+IC0JcmV0dXJuIC1FSU5W
-QUw7DQo+ICsJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgdmlkaW9jX2VudW1f
-ZnJhbWVzaXplcyhzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqZmgsDQo+IEBAIC0yMDIsMTMgKzE1
-NCwyMSBAQCBzdGF0aWMgaW50IHZpZGlvY19lbnVtX2ZyYW1lc2l6ZXMoc3RydWN0IGZpbGUgKmZp
-bGUsIHZvaWQgKmZoLA0KPiAgc3RhdGljIGludCB2aWRpb2NfZW51bV9mbXRfdmlkX2NhcChzdHJ1
-Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCj4gIAkJCQkgICBzdHJ1Y3QgdjRsMl9mbXRkZXNj
-ICpmKQ0KPiAgew0KPiAtCXJldHVybiB2aWRpb2NfZW51bV9mbXQoZiwgZmFsc2UpOw0KPiArCWNv
-bnN0IHN0cnVjdCBtdGtfdmNvZGVjX2VuY19wZGF0YSAqcGRhdGEgPQ0KPiArCQlmaF90b19jdHgo
-cHJpdiktPmRldi0+dmVuY19wZGF0YTsNCj4gKw0KPiArCXJldHVybiB2aWRpb2NfZW51bV9mbXQo
-ZiwgcGRhdGEtPmNhcHR1cmVfZm9ybWF0cywNCj4gKwkJCSAgICAgICBwZGF0YS0+bnVtX2NhcHR1
-cmVfZm9ybWF0cyk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgdmlkaW9jX2VudW1fZm10X3Zp
-ZF9vdXQoc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKnByaXYsDQo+ICAJCQkJICAgc3RydWN0IHY0
-bDJfZm10ZGVzYyAqZikNCj4gIHsNCj4gLQlyZXR1cm4gdmlkaW9jX2VudW1fZm10KGYsIHRydWUp
-Ow0KPiArCWNvbnN0IHN0cnVjdCBtdGtfdmNvZGVjX2VuY19wZGF0YSAqcGRhdGEgPQ0KPiArCQlm
-aF90b19jdHgocHJpdiktPmRldi0+dmVuY19wZGF0YTsNCj4gKw0KPiArCXJldHVybiB2aWRpb2Nf
-ZW51bV9mbXQoZiwgcGRhdGEtPm91dHB1dF9mb3JtYXRzLA0KPiArCQkJICAgICAgIHBkYXRhLT5u
-dW1fb3V0cHV0X2Zvcm1hdHMpOw0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMgaW50IHZpZGlvY192ZW5j
-X3F1ZXJ5Y2FwKHN0cnVjdCBmaWxlICpmaWxlLCB2b2lkICpwcml2LA0KPiBAQCAtMjY2LDEzICsy
-MjYsMjAgQEAgc3RhdGljIHN0cnVjdCBtdGtfcV9kYXRhICptdGtfdmVuY19nZXRfcV9kYXRhKHN0
-cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4LA0KPiAgCXJldHVybiAmY3R4LT5xX2RhdGFbTVRLX1Ff
-REFUQV9EU1RdOw0KPiAgfQ0KPiAgDQo+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG10a192aWRlb19m
-bXQgKm10a192ZW5jX2ZpbmRfZm9ybWF0KHN0cnVjdCB2NGwyX2Zvcm1hdCAqZikNCj4gK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgbXRrX3ZpZGVvX2ZtdCAqbXRrX3ZlbmNfZmluZF9mb3JtYXQoc3RydWN0
-IHY0bDJfZm9ybWF0ICpmLA0KPiArCWNvbnN0IHN0cnVjdCBtdGtfdmNvZGVjX2VuY19wZGF0YSAq
-cGRhdGEpDQo+ICB7DQo+ICAJY29uc3Qgc3RydWN0IG10a192aWRlb19mbXQgKmZtdDsNCj4gIAl1
-bnNpZ25lZCBpbnQgazsNCj4gIA0KPiAtCWZvciAoayA9IDA7IGsgPCBOVU1fRk9STUFUUzsgaysr
-KSB7DQo+IC0JCWZtdCA9ICZtdGtfdmlkZW9fZm9ybWF0c1trXTsNCj4gKwlmb3IgKGsgPSAwOyBr
-IDwgcGRhdGEtPm51bV9jYXB0dXJlX2Zvcm1hdHM7IGsrKykgew0KPiArCQlmbXQgPSAmcGRhdGEt
-PmNhcHR1cmVfZm9ybWF0c1trXTsNCj4gKwkJaWYgKGZtdC0+Zm91cmNjID09IGYtPmZtdC5waXgu
-cGl4ZWxmb3JtYXQpDQo+ICsJCQlyZXR1cm4gZm10Ow0KPiArCX0NCj4gKw0KPiArCWZvciAoayA9
-IDA7IGsgPCBwZGF0YS0+bnVtX291dHB1dF9mb3JtYXRzOyBrKyspIHsNCj4gKwkJZm10ID0gJnBk
-YXRhLT5vdXRwdXRfZm9ybWF0c1trXTsNCj4gIAkJaWYgKGZtdC0+Zm91cmNjID09IGYtPmZtdC5w
-aXgucGl4ZWxmb3JtYXQpDQo+ICAJCQlyZXR1cm4gZm10Ow0KPiAgCX0NCj4gQEAgLTQxNCw2ICsz
-ODEsNyBAQCBzdGF0aWMgaW50IHZpZGlvY192ZW5jX3NfZm10X2NhcChzdHJ1Y3QgZmlsZSAqZmls
-ZSwgdm9pZCAqcHJpdiwNCj4gIAkJCSAgICAgc3RydWN0IHY0bDJfZm9ybWF0ICpmKQ0KPiAgew0K
-PiAgCXN0cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4ID0gZmhfdG9fY3R4KHByaXYpOw0KPiArCWNv
-bnN0IHN0cnVjdCBtdGtfdmNvZGVjX2VuY19wZGF0YSAqcGRhdGEgPSBjdHgtPmRldi0+dmVuY19w
-ZGF0YTsNCj4gIAlzdHJ1Y3QgdmIyX3F1ZXVlICp2cTsNCj4gIAlzdHJ1Y3QgbXRrX3FfZGF0YSAq
-cV9kYXRhOw0KPiAgCWludCBpLCByZXQ7DQo+IEBAIC00MzYsMTAgKzQwNCwxMCBAQCBzdGF0aWMg
-aW50IHZpZGlvY192ZW5jX3NfZm10X2NhcChzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwN
-Cj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICAJfQ0KPiAgDQo+IC0JZm10ID0gbXRrX3ZlbmNfZmlu
-ZF9mb3JtYXQoZik7DQo+ICsJZm10ID0gbXRrX3ZlbmNfZmluZF9mb3JtYXQoZiwgcGRhdGEpOw0K
-PiAgCWlmICghZm10KSB7DQo+IC0JCWYtPmZtdC5waXgucGl4ZWxmb3JtYXQgPSBtdGtfdmlkZW9f
-Zm9ybWF0c1tDQVBfRk1UX0lEWF0uZm91cmNjOw0KPiAtCQlmbXQgPSBtdGtfdmVuY19maW5kX2Zv
-cm1hdChmKTsNCj4gKwkJZm10ID0gJmN0eC0+ZGV2LT52ZW5jX3BkYXRhLT5jYXB0dXJlX2Zvcm1h
-dHNbMF07DQo+ICsJCWYtPmZtdC5waXgucGl4ZWxmb3JtYXQgPSBmbXQtPmZvdXJjYzsNCj4gIAl9
-DQo+ICANCj4gIAlxX2RhdGEtPmZtdCA9IGZtdDsNCj4gQEAgLTQ3Niw2ICs0NDQsNyBAQCBzdGF0
-aWMgaW50IHZpZGlvY192ZW5jX3NfZm10X291dChzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJp
-diwNCj4gIAkJCSAgICAgc3RydWN0IHY0bDJfZm9ybWF0ICpmKQ0KPiAgew0KPiAgCXN0cnVjdCBt
-dGtfdmNvZGVjX2N0eCAqY3R4ID0gZmhfdG9fY3R4KHByaXYpOw0KPiArCWNvbnN0IHN0cnVjdCBt
-dGtfdmNvZGVjX2VuY19wZGF0YSAqcGRhdGEgPSBjdHgtPmRldi0+dmVuY19wZGF0YTsNCj4gIAlz
-dHJ1Y3QgdmIyX3F1ZXVlICp2cTsNCj4gIAlzdHJ1Y3QgbXRrX3FfZGF0YSAqcV9kYXRhOw0KPiAg
-CWludCByZXQsIGk7DQo+IEBAIC00OTksMTAgKzQ2OCwxMCBAQCBzdGF0aWMgaW50IHZpZGlvY192
-ZW5jX3NfZm10X291dChzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCj4gIAkJcmV0dXJu
-IC1FSU5WQUw7DQo+ICAJfQ0KPiAgDQo+IC0JZm10ID0gbXRrX3ZlbmNfZmluZF9mb3JtYXQoZik7
-DQo+ICsJZm10ID0gbXRrX3ZlbmNfZmluZF9mb3JtYXQoZiwgcGRhdGEpOw0KPiAgCWlmICghZm10
-KSB7DQo+IC0JCWYtPmZtdC5waXgucGl4ZWxmb3JtYXQgPSBtdGtfdmlkZW9fZm9ybWF0c1tPVVRf
-Rk1UX0lEWF0uZm91cmNjOw0KPiAtCQlmbXQgPSBtdGtfdmVuY19maW5kX2Zvcm1hdChmKTsNCj4g
-KwkJZm10ID0gJmN0eC0+ZGV2LT52ZW5jX3BkYXRhLT5vdXRwdXRfZm9ybWF0c1swXTsNCj4gKwkJ
-Zi0+Zm10LnBpeC5waXhlbGZvcm1hdCA9IGZtdC0+Zm91cmNjOw0KPiAgCX0NCj4gIA0KPiAgCXBp
-eF9mbXRfbXAtPmhlaWdodCA9IGNsYW1wKHBpeF9mbXRfbXAtPmhlaWdodCwNCj4gQEAgLTU4MCwx
-MSArNTQ5LDEyIEBAIHN0YXRpYyBpbnQgdmlkaW9jX3RyeV9mbXRfdmlkX2NhcF9tcGxhbmUoc3Ry
-dWN0IGZpbGUgKmZpbGUsIHZvaWQgKnByaXYsDQo+ICB7DQo+ICAJY29uc3Qgc3RydWN0IG10a192
-aWRlb19mbXQgKmZtdDsNCj4gIAlzdHJ1Y3QgbXRrX3Zjb2RlY19jdHggKmN0eCA9IGZoX3RvX2N0
-eChwcml2KTsNCj4gKwljb25zdCBzdHJ1Y3QgbXRrX3Zjb2RlY19lbmNfcGRhdGEgKnBkYXRhID0g
-Y3R4LT5kZXYtPnZlbmNfcGRhdGE7DQo+ICANCj4gLQlmbXQgPSBtdGtfdmVuY19maW5kX2Zvcm1h
-dChmKTsNCj4gKwlmbXQgPSBtdGtfdmVuY19maW5kX2Zvcm1hdChmLCBwZGF0YSk7DQo+ICAJaWYg
-KCFmbXQpIHsNCj4gLQkJZi0+Zm10LnBpeC5waXhlbGZvcm1hdCA9IG10a192aWRlb19mb3JtYXRz
-W0NBUF9GTVRfSURYXS5mb3VyY2M7DQo+IC0JCWZtdCA9IG10a192ZW5jX2ZpbmRfZm9ybWF0KGYp
-Ow0KPiArCQlmbXQgPSAmY3R4LT5kZXYtPnZlbmNfcGRhdGEtPmNhcHR1cmVfZm9ybWF0c1swXTsN
-Cj4gKwkJZi0+Zm10LnBpeC5waXhlbGZvcm1hdCA9IGZtdC0+Zm91cmNjOw0KPiAgCX0NCj4gIAlm
-LT5mbXQucGl4X21wLmNvbG9yc3BhY2UgPSBjdHgtPmNvbG9yc3BhY2U7DQo+ICAJZi0+Zm10LnBp
-eF9tcC55Y2Jjcl9lbmMgPSBjdHgtPnljYmNyX2VuYzsNCj4gQEAgLTU5OCwxMSArNTY4LDEzIEBA
-IHN0YXRpYyBpbnQgdmlkaW9jX3RyeV9mbXRfdmlkX291dF9tcGxhbmUoc3RydWN0IGZpbGUgKmZp
-bGUsIHZvaWQgKnByaXYsDQo+ICAJCQkJCSBzdHJ1Y3QgdjRsMl9mb3JtYXQgKmYpDQo+ICB7DQo+
-ICAJY29uc3Qgc3RydWN0IG10a192aWRlb19mbXQgKmZtdDsNCj4gKwlzdHJ1Y3QgbXRrX3Zjb2Rl
-Y19jdHggKmN0eCA9IGZoX3RvX2N0eChwcml2KTsNCj4gKwljb25zdCBzdHJ1Y3QgbXRrX3Zjb2Rl
-Y19lbmNfcGRhdGEgKnBkYXRhID0gY3R4LT5kZXYtPnZlbmNfcGRhdGE7DQo+ICANCj4gLQlmbXQg
-PSBtdGtfdmVuY19maW5kX2Zvcm1hdChmKTsNCj4gKwlmbXQgPSBtdGtfdmVuY19maW5kX2Zvcm1h
-dChmLCBwZGF0YSk7DQo+ICAJaWYgKCFmbXQpIHsNCj4gLQkJZi0+Zm10LnBpeC5waXhlbGZvcm1h
-dCA9IG10a192aWRlb19mb3JtYXRzW09VVF9GTVRfSURYXS5mb3VyY2M7DQo+IC0JCWZtdCA9IG10
-a192ZW5jX2ZpbmRfZm9ybWF0KGYpOw0KPiArCQlmbXQgPSAmY3R4LT5kZXYtPnZlbmNfcGRhdGEt
-Pm91dHB1dF9mb3JtYXRzWzBdOw0KPiArCQlmLT5mbXQucGl4LnBpeGVsZm9ybWF0ID0gZm10LT5m
-b3VyY2M7DQo+ICAJfQ0KPiAgCWlmICghZi0+Zm10LnBpeF9tcC5jb2xvcnNwYWNlKSB7DQo+ICAJ
-CWYtPmZtdC5waXhfbXAuY29sb3JzcGFjZSA9IFY0TDJfQ09MT1JTUEFDRV9SRUM3MDk7DQo+IEBA
-IC0xMTg3LDcgKzExNTksNyBAQCB2b2lkIG10a192Y29kZWNfZW5jX3NldF9kZWZhdWx0X3BhcmFt
-cyhzdHJ1Y3QgbXRrX3Zjb2RlY19jdHggKmN0eCkNCj4gIAlxX2RhdGEtPmNvZGVkX2hlaWdodCA9
-IERGVF9DRkdfSEVJR0hUOw0KPiAgCXFfZGF0YS0+ZmllbGQgPSBWNEwyX0ZJRUxEX05PTkU7DQo+
-ICANCj4gLQlxX2RhdGEtPmZtdCA9ICZtdGtfdmlkZW9fZm9ybWF0c1tPVVRfRk1UX0lEWF07DQo+
-ICsJcV9kYXRhLT5mbXQgPSAmY3R4LT5kZXYtPnZlbmNfcGRhdGEtPm91dHB1dF9mb3JtYXRzWzBd
-Ow0KPiAgDQo+ICAJdjRsX2JvdW5kX2FsaWduX2ltYWdlKCZxX2RhdGEtPmNvZGVkX3dpZHRoLA0K
-PiAgCQkJCU1US19WRU5DX01JTl9XLA0KPiBAQCAtMTIxNiw3ICsxMTg4LDcgQEAgdm9pZCBtdGtf
-dmNvZGVjX2VuY19zZXRfZGVmYXVsdF9wYXJhbXMoc3RydWN0IG10a192Y29kZWNfY3R4ICpjdHgp
-DQo+ICAJbWVtc2V0KHFfZGF0YSwgMCwgc2l6ZW9mKHN0cnVjdCBtdGtfcV9kYXRhKSk7DQo+ICAJ
-cV9kYXRhLT5jb2RlZF93aWR0aCA9IERGVF9DRkdfV0lEVEg7DQo+ICAJcV9kYXRhLT5jb2RlZF9o
-ZWlnaHQgPSBERlRfQ0ZHX0hFSUdIVDsNCj4gLQlxX2RhdGEtPmZtdCA9ICZtdGtfdmlkZW9fZm9y
-bWF0c1tDQVBfRk1UX0lEWF07DQo+ICsJcV9kYXRhLT5mbXQgPSAmY3R4LT5kZXYtPnZlbmNfcGRh
-dGEtPmNhcHR1cmVfZm9ybWF0c1swXTsNCj4gIAlxX2RhdGEtPmZpZWxkID0gVjRMMl9GSUVMRF9O
-T05FOw0KPiAgCWN0eC0+cV9kYXRhW01US19RX0RBVEFfRFNUXS5zaXplaW1hZ2VbMF0gPQ0KPiAg
-CQlERlRfQ0ZHX1dJRFRIICogREZUX0NGR19IRUlHSFQ7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmNfZHJ2LmMgYi9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmNfZHJ2LmMNCj4gaW5kZXgg
-MjIxZmEwMzAzMDc1Li5jOGE0Yjg1YTgxYzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuY19kcnYuYw0KPiArKysgYi9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmNfZHJ2LmMNCj4gQEAgLTI2
-LDYgKzI2LDQyIEBADQo+ICBtb2R1bGVfcGFyYW0obXRrX3Y0bDJfZGJnX2xldmVsLCBpbnQsIFNf
-SVJVR08gfCBTX0lXVVNSKTsNCj4gIG1vZHVsZV9wYXJhbShtdGtfdmNvZGVjX2RiZywgYm9vbCwg
-U19JUlVHTyB8IFNfSVdVU1IpOw0KPiAgDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a192aWRl
-b19mbXQgbXRrX3ZpZGVvX2Zvcm1hdHNfb3V0cHV0X210ODE3M1tdID0gew0KPiArCXsNCj4gKwkJ
-LmZvdXJjYyA9IFY0TDJfUElYX0ZNVF9OVjEyTSwNCj4gKwkJLnR5cGUgPSBNVEtfRk1UX0ZSQU1F
-LA0KPiArCQkubnVtX3BsYW5lcyA9IDIsDQo+ICsJfSwNCj4gKwl7DQo+ICsJCS5mb3VyY2MgPSBW
-NEwyX1BJWF9GTVRfTlYyMU0sDQo+ICsJCS50eXBlID0gTVRLX0ZNVF9GUkFNRSwNCj4gKwkJLm51
-bV9wbGFuZXMgPSAyLA0KPiArCX0sDQo+ICsJew0KPiArCQkuZm91cmNjID0gVjRMMl9QSVhfRk1U
-X1lVVjQyME0sDQo+ICsJCS50eXBlID0gTVRLX0ZNVF9GUkFNRSwNCj4gKwkJLm51bV9wbGFuZXMg
-PSAzLA0KPiArCX0sDQo+ICsJew0KPiArCQkuZm91cmNjID0gVjRMMl9QSVhfRk1UX1lWVTQyME0s
-DQo+ICsJCS50eXBlID0gTVRLX0ZNVF9GUkFNRSwNCj4gKwkJLm51bV9wbGFuZXMgPSAzLA0KPiAr
-CX0sDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a192aWRlb19mbXQgbXRr
-X3ZpZGVvX2Zvcm1hdHNfY2FwdHVyZV9tdDgxNzNbXSA9ICB7DQo+ICsJew0KPiArCQkuZm91cmNj
-ID0gVjRMMl9QSVhfRk1UX0gyNjQsDQo+ICsJCS50eXBlID0gTVRLX0ZNVF9FTkMsDQo+ICsJCS5u
-dW1fcGxhbmVzID0gMSwNCj4gKwl9LA0KPiArCXsNCj4gKwkJLmZvdXJjYyA9IFY0TDJfUElYX0ZN
-VF9WUDgsDQo+ICsJCS50eXBlID0gTVRLX0ZNVF9FTkMsDQo+ICsJCS5udW1fcGxhbmVzID0gMSwN
-Cj4gKwl9LA0KPiArfTsNCj4gKw0KPiAgLyogV2FrZSB1cCBjb250ZXh0IHdhaXRfcXVldWUgKi8N
-Cj4gIHN0YXRpYyB2b2lkIHdha2VfdXBfY3R4KHN0cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4LCB1
-bnNpZ25lZCBpbnQgcmVhc29uKQ0KPiAgew0KPiBAQCAtMzgwLDYgKzQxNiwxMCBAQCBzdGF0aWMg
-aW50IG10a192Y29kZWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3Zjb2RlY19lbmNfcGRhdGEgbXQ4MTczX3BkYXRhID0gew0K
-PiAgCS5jaGlwID0gTVRLX01UODE3MywNCj4gIAkuaGFzX2x0X2lycSA9IHRydWUsDQo+ICsJLmNh
-cHR1cmVfZm9ybWF0cyA9IG10a192aWRlb19mb3JtYXRzX2NhcHR1cmVfbXQ4MTczLA0KPiArCS5u
-dW1fY2FwdHVyZV9mb3JtYXRzID0gQVJSQVlfU0laRShtdGtfdmlkZW9fZm9ybWF0c19jYXB0dXJl
-X210ODE3MyksDQo+ICsJLm91dHB1dF9mb3JtYXRzID0gbXRrX3ZpZGVvX2Zvcm1hdHNfb3V0cHV0
-X210ODE3MywNCj4gKwkubnVtX291dHB1dF9mb3JtYXRzID0gQVJSQVlfU0laRShtdGtfdmlkZW9f
-Zm9ybWF0c19vdXRwdXRfbXQ4MTczKSwNCj4gIAkubWluX2JpdHJhdGUgPSAxLA0KPiAgCS5tYXhf
-Yml0cmF0ZSA9IDQwMDAwMDAsDQo+ICB9Ow0KDQo=
+On 2020/6/19 14:37, zhaowuyun@wingtech.com wrote:
+> From: Wuyun Zhao <zhaowuyun@wingtech.com>
+> 
+> the filesystem will use the cold flag, so deal with it to avoid
+> potential issue of inconsistency
+> 
+> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+> ---
+>  fsck/dir.c         |  6 +-----
+>  fsck/node.c        |  9 +++++----
+>  include/f2fs_fs.h  | 20 ++++++++++++++++++++
+>  mkfs/f2fs_format.c | 14 +++++---------
+>  4 files changed, 31 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fsck/dir.c b/fsck/dir.c
+> index 5f4f75e..64aa539 100644
+> --- a/fsck/dir.c
+> +++ b/fsck/dir.c
+> @@ -517,11 +517,7 @@ static void init_inode_block(struct f2fs_sb_info *sbi,
+>  	}
+>  
+>  	set_file_temperature(sbi, node_blk, de->name);
+> -
+> -	node_blk->footer.ino = cpu_to_le32(de->ino);
+> -	node_blk->footer.nid = cpu_to_le32(de->ino);
+> -	node_blk->footer.flag = 0;
+> -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
+> +	set_node_footer(node_blk, de->ino, de->ino, 0, le64_to_cpu(ckpt->checkpoint_ver), S_ISDIR(mode));
+>  
+>  	if (S_ISDIR(mode)) {
+>  		make_empty_dir(sbi, node_blk);
+> diff --git a/fsck/node.c b/fsck/node.c
+> index 229a99c..66e8a81 100644
+> --- a/fsck/node.c
+> +++ b/fsck/node.c
+> @@ -69,16 +69,17 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
+>  	block_t blkaddr = NULL_ADDR;
+>  	int type;
+>  	int ret;
+> +	u32 ino;
 
+nid_t ino;
+
+> +	u64 cp_ver;
+>  
+>  	f2fs_inode = dn->inode_blk;
+>  
+>  	node_blk = calloc(BLOCK_SZ, 1);
+>  	ASSERT(node_blk);
+>  
+> -	node_blk->footer.nid = cpu_to_le32(dn->nid);
+> -	node_blk->footer.ino = f2fs_inode->footer.ino;
+> -	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+> -	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
+> +	ino = le32_to_cpu(f2fs_inode->footer.ino);
+> +	cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
+> +	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver, S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+>  
+>  	type = CURSEG_COLD_NODE;
+>  	if (IS_DNODE(node_blk)) {
+> diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
+> index 709bfd8..3583df4 100644
+> --- a/include/f2fs_fs.h
+> +++ b/include/f2fs_fs.h
+> @@ -923,6 +923,26 @@ struct f2fs_node {
+>  	struct node_footer footer;
+>  } __attribute__((packed));
+>  
+> +static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
+> +{
+> +	unsigned int flag = le32_to_cpu(rn->footer.flag);
+> +
+> +	if (is_dir)
+> +		flag &= ~(0x1 << COLD_BIT_SHIFT);
+> +	else
+> +		flag |= (0x1 << COLD_BIT_SHIFT);
+> +	rn->footer.flag = cpu_to_le32(flag);
+> +}
+> +
+> +static inline void set_node_footer(struct f2fs_node *rn, u32 nid, u32 ino, u32 ofs, u64 ver, bool is_dir)
+
+Sorry, I forgot to add parameter for next_blkaddr...
+
+Could you check this?
+
+From: Wuyun Zhao <zhaowuyun@wingtech.com>
+Subject: [PATCH] f2fs-tools: introduce set_node_footer to initialize node
+ footer
+
+the filesystem will use the cold flag, so deal with it to avoid
+potential issue of inconsistency
+
+Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+---
+ fsck/dir.c         |  7 ++-----
+ fsck/node.c        |  8 ++++----
+ include/f2fs_fs.h  | 23 +++++++++++++++++++++++
+ mkfs/f2fs_format.c | 34 +++++++++++++---------------------
+ 4 files changed, 42 insertions(+), 30 deletions(-)
+
+diff --git a/fsck/dir.c b/fsck/dir.c
+index 5f4f75ebed77..b067aec9cffd 100644
+--- a/fsck/dir.c
++++ b/fsck/dir.c
+@@ -517,11 +517,8 @@ static void init_inode_block(struct f2fs_sb_info *sbi,
+ 	}
+
+ 	set_file_temperature(sbi, node_blk, de->name);
+-
+-	node_blk->footer.ino = cpu_to_le32(de->ino);
+-	node_blk->footer.nid = cpu_to_le32(de->ino);
+-	node_blk->footer.flag = 0;
+-	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
++	set_node_footer(node_blk, de->ino, de->ino, 0,
++			le64_to_cpu(ckpt->checkpoint_ver), 0, S_ISDIR(mode));
+
+ 	if (S_ISDIR(mode)) {
+ 		make_empty_dir(sbi, node_blk);
+diff --git a/fsck/node.c b/fsck/node.c
+index 229a99cab481..da010ff669cc 100644
+--- a/fsck/node.c
++++ b/fsck/node.c
+@@ -69,16 +69,16 @@ block_t new_node_block(struct f2fs_sb_info *sbi,
+ 	block_t blkaddr = NULL_ADDR;
+ 	int type;
+ 	int ret;
++	nid_t ino = le32_to_cpu(f2fs_inode->footer.ino);
++	u64 cp_ver = le64_to_cpu(ckpt->checkpoint_ver);
+
+ 	f2fs_inode = dn->inode_blk;
+
+ 	node_blk = calloc(BLOCK_SZ, 1);
+ 	ASSERT(node_blk);
+
+-	node_blk->footer.nid = cpu_to_le32(dn->nid);
+-	node_blk->footer.ino = f2fs_inode->footer.ino;
+-	node_blk->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+-	node_blk->footer.cp_ver = ckpt->checkpoint_ver;
++	set_node_footer(node_blk, dn->nid, ino, ofs, cp_ver, 0,
++			S_ISDIR(le16_to_cpu(f2fs_inode->i.i_mode)));
+
+ 	type = CURSEG_COLD_NODE;
+ 	if (IS_DNODE(node_blk)) {
+diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
+index 265f50c69fd1..0fe478ed820c 100644
+--- a/include/f2fs_fs.h
++++ b/include/f2fs_fs.h
+@@ -923,6 +923,29 @@ struct f2fs_node {
+ 	struct node_footer footer;
+ } __attribute__((packed));
+
++static inline void set_cold_node(struct f2fs_node *rn, bool is_dir)
++{
++	unsigned int flag = le32_to_cpu(rn->footer.flag);
++
++	if (is_dir)
++		flag &= ~(0x1 << COLD_BIT_SHIFT);
++	else
++		flag |= (0x1 << COLD_BIT_SHIFT);
++	rn->footer.flag = cpu_to_le32(flag);
++}
++
++static inline void set_node_footer(struct f2fs_node *rn, u32 nid, u32 ino,
++					u32 ofs, u64 ver, block_t blkaddr,
++					bool is_dir)
++{
++	rn->footer.nid = cpu_to_le32(nid);
++	rn->footer.ino = cpu_to_le32(ino);
++	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
++	rn->footer.cp_ver = cpu_to_le64(ver);
++	rn->footer.next_blkaddr = cpu_to_le32(blkaddr);
++	set_cold_node(rn, is_dir);
++}
++
+ /*
+  * For NAT entries
+  */
+diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
+index 44575e0049fa..cb40e5a76332 100644
+--- a/mkfs/f2fs_format.c
++++ b/mkfs/f2fs_format.c
+@@ -1094,6 +1094,9 @@ static int f2fs_write_root_inode(void)
+ 	struct f2fs_node *raw_node = NULL;
+ 	u_int64_t blk_size_bytes, data_blk_nor;
+ 	u_int64_t main_area_node_seg_blk_offset = 0;
++	nid_t nid = le32_to_cpu(sb->root_ino);
++	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
++				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg + 1);
+
+ 	raw_node = calloc(F2FS_BLKSIZE, 1);
+ 	if (raw_node == NULL) {
+@@ -1101,13 +1104,7 @@ static int f2fs_write_root_inode(void)
+ 		return -1;
+ 	}
+
+-	raw_node->footer.nid = sb->root_ino;
+-	raw_node->footer.ino = sb->root_ino;
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] *
+-			c.blks_per_seg + 1);
++	set_node_footer(raw_node, nid, nid, 0, 1, blkaddr, 1);
+
+ 	raw_node->i.i_mode = cpu_to_le16(0x41ed);
+ 	if (c.lpf_ino)
+@@ -1256,6 +1253,10 @@ static int f2fs_write_qf_inode(int qtype)
+ 	u_int64_t main_area_node_seg_blk_offset = 0;
+ 	__le32 raw_id;
+ 	int i;
++	nid_t qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
++	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
++					c.cur_seg[CURSEG_HOT_NODE] *
++					c.blks_per_seg + 1 + qtype + 1);
+
+ 	raw_node = calloc(F2FS_BLKSIZE, 1);
+ 	if (raw_node == NULL) {
+@@ -1263,13 +1264,7 @@ static int f2fs_write_qf_inode(int qtype)
+ 		return -1;
+ 	}
+
+-	raw_node->footer.nid = sb->qf_ino[qtype];
+-	raw_node->footer.ino = sb->qf_ino[qtype];
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] *
+-			c.blks_per_seg + 1 + qtype + 1);
++	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, blkaddr, 0);
+
+ 	raw_node->i.i_mode = cpu_to_le16(0x8180);
+ 	raw_node->i.i_links = cpu_to_le32(1);
+@@ -1447,6 +1442,9 @@ static int f2fs_write_lpf_inode(void)
+ 	struct f2fs_node *raw_node;
+ 	u_int64_t blk_size_bytes, main_area_node_seg_blk_offset;
+ 	block_t data_blk_nor;
++	block_t blkaddr = cpu_to_le32(get_sb(main_blkaddr) +
++				c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
++				1 + c.quota_inum + 1);
+ 	int err = 0;
+
+ 	ASSERT(c.lpf_ino);
+@@ -1457,13 +1455,7 @@ static int f2fs_write_lpf_inode(void)
+ 		return -1;
+ 	}
+
+-	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
+-	raw_node->footer.ino = raw_node->footer.nid;
+-	raw_node->footer.cp_ver = cpu_to_le64(1);
+-	raw_node->footer.next_blkaddr = cpu_to_le32(
+-			get_sb(main_blkaddr) +
+-			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
+-			1 + c.quota_inum + 1);
++	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, blkaddr, 1);
+
+ 	raw_node->i.i_mode = cpu_to_le16(0x41c0); /* 0700 */
+ 	raw_node->i.i_links = cpu_to_le32(2);
+-- 
+2.26.2
+
+
+
+
+> +{
+> +	rn->footer.nid = cpu_to_le32(nid);
+> +	rn->footer.ino = cpu_to_le32(ino);
+> +	rn->footer.flag = cpu_to_le32(ofs << OFFSET_BIT_SHIFT);
+> +	rn->footer.cp_ver = cpu_to_le64(ver);
+> +	set_cold_node(rn, is_dir);
+> +}
+> +
+>  /*
+>   * For NAT entries
+>   */
+> diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
+> index 44575e0..b371adf 100644
+> --- a/mkfs/f2fs_format.c
+> +++ b/mkfs/f2fs_format.c
+> @@ -1101,9 +1101,7 @@ static int f2fs_write_root_inode(void)
+>  		return -1;
+>  	}
+>  
+> -	raw_node->footer.nid = sb->root_ino;
+> -	raw_node->footer.ino = sb->root_ino;
+> -	raw_node->footer.cp_ver = cpu_to_le64(1);
+> +	set_node_footer(raw_node, le32_to_cpu(sb->root_ino), le32_to_cpu(sb->root_ino), 0, 1, 1);
+>  	raw_node->footer.next_blkaddr = cpu_to_le32(
+>  			get_sb(main_blkaddr) +
+>  			c.cur_seg[CURSEG_HOT_NODE] *
+> @@ -1256,6 +1254,7 @@ static int f2fs_write_qf_inode(int qtype)
+>  	u_int64_t main_area_node_seg_blk_offset = 0;
+>  	__le32 raw_id;
+>  	int i;
+> +	u32 qf_ino;
+>  
+>  	raw_node = calloc(F2FS_BLKSIZE, 1);
+>  	if (raw_node == NULL) {
+> @@ -1263,9 +1262,8 @@ static int f2fs_write_qf_inode(int qtype)
+>  		return -1;
+>  	}
+>  
+> -	raw_node->footer.nid = sb->qf_ino[qtype];
+> -	raw_node->footer.ino = sb->qf_ino[qtype];
+> -	raw_node->footer.cp_ver = cpu_to_le64(1);
+> +	qf_ino = le32_to_cpu(sb->qf_ino[qtype]);
+> +	set_node_footer(raw_node, qf_ino, qf_ino, 0, 1, 0);
+>  	raw_node->footer.next_blkaddr = cpu_to_le32(
+>  			get_sb(main_blkaddr) +
+>  			c.cur_seg[CURSEG_HOT_NODE] *
+> @@ -1457,9 +1455,7 @@ static int f2fs_write_lpf_inode(void)
+>  		return -1;
+>  	}
+>  
+> -	raw_node->footer.nid = cpu_to_le32(c.lpf_ino);
+> -	raw_node->footer.ino = raw_node->footer.nid;
+> -	raw_node->footer.cp_ver = cpu_to_le64(1);
+> +	set_node_footer(raw_node, c.lpf_ino, c.lpf_ino, 0, 1, 1);
+>  	raw_node->footer.next_blkaddr = cpu_to_le32(
+>  			get_sb(main_blkaddr) +
+>  			c.cur_seg[CURSEG_HOT_NODE] * c.blks_per_seg +
+> 
