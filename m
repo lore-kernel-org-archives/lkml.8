@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F38C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D33BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8079D217D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A414217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578383;
-	bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
+	s=default; t=1592578389;
+	bh=2HALglx0FG3o8HOaRDw3kpLZKN5CEh0HYtvhNQ4yCBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=owuAFhEGfxwxeGYlyJohxyzFaFJRvfoPvChh3RdhRJtBZ7+PO+M5SWhXtgY8bluQt
-	 wZgzpnbGRFHaXoshUHMTWf672882X9unfhmaEbi7FsunkL/5kqMQex6+LGzCkWK67a
-	 M3smtaGtD/cRFnUux32JoSpcZ8mMMtmNSfQqwqHc=
+	b=LMGy2OVSUegcmzSBmq+/8ZGI6ANhigovFDdqYp7SJAyr9uaMCd8JBEFUY/eiY68Me
+	 q3+0/J5Tr14Z20jj0hw1uRl3OGKekPIk0LdgU7qFIgND195cSh6HS5czM2xG4w5mLH
+	 mN2YMC5Rz0oNcbub8h8gWjIVSpcmnflIofJg2wY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389104AbgFSOxB (ORCPT
+        id S2389680AbgFSOxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbgFSOwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:41 -0400
+        id S2389632AbgFSOwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEC921924;
-        Fri, 19 Jun 2020 14:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B659217D8;
+        Fri, 19 Jun 2020 14:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578361;
-        bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
+        s=default; t=1592578374;
+        bh=2HALglx0FG3o8HOaRDw3kpLZKN5CEh0HYtvhNQ4yCBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J2qRmHaB5pjXnPYk3xn0ILuGmdICjd/sH+RLlH7ZPG7U4bdNzzk0PAxnkIBetdeCy
-         rD8OScOZhUQs4Xr2b9aJv0USUCeRowJJqwwEa2IcDKi1o3nIBG3Rdckxrd1MWZV2/A
-         jVRK7CdaeUaO8CsmvCM8tFlWMb2iJbuBl585Jh/o=
+        b=k5jPfHaSTR3sII61vuXq2/AWA9z9OrGav5Zg6aMiKqU4io7B7g4tpfjb9IIJyytdU
+         oXLPvAQrT/0CVKpvpJfim0+ZtxGE6GhZwEYOvJoAC1b62xDTNlugN44X1UcfFgeYUm
+         gf+R01MYujs6W5cmR2whM7fbNQj6tX13k5Ru0Dro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 183/190] sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
-Date:   Fri, 19 Jun 2020 16:33:48 +0200
-Message-Id: <20200619141643.000864215@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 4.14 187/190] w1: omap-hdq: cleanup to add missing newline for some dev_dbg
+Date:   Fri, 19 Jun 2020 16:33:52 +0200
+Message-Id: <20200619141643.202024661@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -59,46 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit d47a5dc2888fd1b94adf1553068b8dad76cec96c upstream.
+commit 5e02f3b31704e24537697bce54f8156bdb72b7a6 upstream.
 
-There is no valid case for supporting duplicate pseudoflavor
-registrations.
-Currently the silent acceptance of such registrations is hiding a bug.
-The rpcsec_gss_krb5 module registers 2 flavours but does not unregister
-them, so if you load, unload, reload the module, it will happily
-continue to use the old registration which now has pointers to the
-memory were the module was originally loaded.  This could lead to
-unexpected results.
+Otherwise it will corrupt the console log during debugging.
 
-So disallow duplicate registrations.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Cc: stable@vger.kernel.org (v2.6.12+)
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 7b5362a603a1 ("w1: omap_hdq: Fix some error/debug handling.")
+Cc: stable@vger.kernel.org
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Link: https://lore.kernel.org/r/cd0d55749a091214106575f6e1d363c6db56622f.1590255176.git.hns@goldelico.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/auth_gss/svcauth_gss.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/w1/masters/omap_hdq.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -796,9 +796,11 @@ svcauth_gss_register_pseudoflavor(u32 ps
- 	new->h.flavour = &svcauthops_gss;
- 	new->pseudoflavor = pseudoflavor;
+--- a/drivers/w1/masters/omap_hdq.c
++++ b/drivers/w1/masters/omap_hdq.c
+@@ -176,7 +176,7 @@ static int hdq_write_byte(struct hdq_dat
+ 	/* check irqstatus */
+ 	if (!(*status & OMAP_HDQ_INT_STATUS_TXCOMPLETE)) {
+ 		dev_dbg(hdq_data->dev, "timeout waiting for"
+-			" TXCOMPLETE/RXCOMPLETE, %x", *status);
++			" TXCOMPLETE/RXCOMPLETE, %x\n", *status);
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+ 	}
+@@ -187,7 +187,7 @@ static int hdq_write_byte(struct hdq_dat
+ 			OMAP_HDQ_FLAG_CLEAR, &tmp_status);
+ 	if (ret) {
+ 		dev_dbg(hdq_data->dev, "timeout waiting GO bit"
+-			" return to zero, %x", tmp_status);
++			" return to zero, %x\n", tmp_status);
+ 	}
  
--	stat = 0;
- 	test = auth_domain_lookup(name, &new->h);
--	if (test != &new->h) { /* Duplicate registration */
-+	if (test != &new->h) {
-+		pr_warn("svc: duplicate registration of gss pseudo flavour %s.\n",
-+			name);
-+		stat = -EADDRINUSE;
- 		auth_domain_put(test);
- 		kfree(new->h.name);
- 		goto out_free_dom;
+ out:
+@@ -203,7 +203,7 @@ static irqreturn_t hdq_isr(int irq, void
+ 	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
+ 	hdq_data->hdq_irqstatus = hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
+ 	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
+-	dev_dbg(hdq_data->dev, "hdq_isr: %x", hdq_data->hdq_irqstatus);
++	dev_dbg(hdq_data->dev, "hdq_isr: %x\n", hdq_data->hdq_irqstatus);
+ 
+ 	if (hdq_data->hdq_irqstatus &
+ 		(OMAP_HDQ_INT_STATUS_TXCOMPLETE | OMAP_HDQ_INT_STATUS_RXCOMPLETE
+@@ -311,7 +311,7 @@ static int omap_hdq_break(struct hdq_dat
+ 	tmp_status = hdq_data->hdq_irqstatus;
+ 	/* check irqstatus */
+ 	if (!(tmp_status & OMAP_HDQ_INT_STATUS_TIMEOUT)) {
+-		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x",
++		dev_dbg(hdq_data->dev, "timeout waiting for TIMEOUT, %x\n",
+ 				tmp_status);
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+@@ -338,7 +338,7 @@ static int omap_hdq_break(struct hdq_dat
+ 			&tmp_status);
+ 	if (ret)
+ 		dev_dbg(hdq_data->dev, "timeout waiting INIT&GO bits"
+-			" return to zero, %x", tmp_status);
++			" return to zero, %x\n", tmp_status);
+ 
+ out:
+ 	mutex_unlock(&hdq_data->hdq_mutex);
 
 
