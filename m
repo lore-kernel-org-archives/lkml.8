@@ -2,91 +2,86 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB611C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46CC20DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8D820771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732864AbgFSOCb (ORCPT
+        id S1732663AbgFSOHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:02:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37119 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgFSOC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:02:27 -0400
-Received: from ip-109-41-0-196.web.vodafone.de ([109.41.0.196] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jmHau-0002Hs-LG; Fri, 19 Jun 2020 14:02:15 +0000
-Date:   Fri, 19 Jun 2020 16:01:48 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christian Brauner <christian@brauner.io>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the pidfd tree with the
- powerpc-fixes tree
-Message-ID: <20200619140148.4ytme4wsvtw2oyrg@wittgenstein>
-References: <20200618121131.4ad29150@canb.auug.org.au>
- <878sgjcnjp.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <878sgjcnjp.fsf@mpe.ellerman.id.au>
+        Fri, 19 Jun 2020 10:07:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54728 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbgFSOHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:07:45 -0400
+IronPort-SDR: P6RU4Qy56UC2awCxMkYfbhI/KLjRMgvWsIPi070fTlIpzk0sp0jongEzPkk113Qa5PPd1LJWmw
+ CcTcl1js69bw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204452800"
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="204452800"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:07:43 -0700
+IronPort-SDR: onBP/0tCNn2MiIW7lkpHKns32oNfuxFKnbnBqYbTCuPcWXVofIHFtc5AuQJL5/E2DvwyDT+EzF
+ y8hHuFOmqNDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="383837396"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2020 07:07:42 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 01/21] x86/cpufeatures: Add Architectural LBRs feature bit
+Date:   Fri, 19 Jun 2020 07:03:49 -0700
+Message-Id: <1592575449-64278-2-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
+References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 09:17:30PM +1000, Michael Ellerman wrote:
-> Stephen Rothwell <sfr@canb.auug.org.au> writes:
-> > Hi all,
-> >
-> > Today's linux-next merge of the pidfd tree got a conflict in:
-> >
-> >   arch/powerpc/kernel/syscalls/syscall.tbl
-> >
-> > between commit:
-> >
-> >   35e32a6cb5f6 ("powerpc/syscalls: Split SPU-ness out of ABI")
-> >
-> > from the powerpc-fixes tree and commit:
-> >
-> >   9b4feb630e8e ("arch: wire-up close_range()")
-> >
-> > from the pidfd tree.
-> >
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> 
-> Thanks.
-> 
-> I thought the week between rc1 and rc2 would be a safe time to do that
-> conversion of the syscall table, but I guess I was wrong :)
+From: Kan Liang <kan.liang@linux.intel.com>
 
-:)
+CPUID.(EAX=07H, ECX=0):EDX[19] indicates whether Intel CPU support
+Architectural LBRs.
 
-> 
-> I'm planning to send those changes to Linus for rc2, so the conflict
-> will then be vs mainline. But I guess it's pretty trivial so it doesn't
-> really matter.
+The Architectural Last Branch Records (LBR) feature enables recording
+of software path history by logging taken branches and other control
+flows. The feature will be supported in the perf_events subsystem.
 
-close_range() is targeted for the v5.9 merge window. I always do
-test-merges with mainline at the time I'm creating a pr and I'll just
-mention to Linus that there's conflict with ppc. :)
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
-Christian
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index db18994..d5ce18a 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -365,6 +365,7 @@
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
++#define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+-- 
+2.7.4
+
