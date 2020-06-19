@@ -2,223 +2,183 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C026C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E7F217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584157;
-	bh=ZtQhASeQp5iIgLtY6Y187VZOIqUND/RMMdRa8MqBJZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VmVTYlHE5SEyvHr3TK7gOZIgUJikdveVcF9JZoQbPDt8uWLbi/DciVnEHVpqFpK3F
-	 hRI55RYjBXKurDEvtDGNCzP4ew+Jw6cOW56JXTJU+oqZTbyrnLart27qEIBnUR0w3z
-	 hSivTp4VLbYbLZmDWzV3gVOZX/PU4qsgTPnPbNtM=
+	by mail.kernel.org (Postfix) with ESMTP id 672DF218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B/w9WI6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391238AbgFSQ3P (ORCPT
+        id S2394972AbgFSQ3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388632AbgFSQ3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:29:08 -0400
-Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C12A21707;
-        Fri, 19 Jun 2020 16:29:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592584147;
-        bh=ZtQhASeQp5iIgLtY6Y187VZOIqUND/RMMdRa8MqBJZ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e1Nmqq2Q1PSlS/XgDVPaBzBHdE8AauJhEW6lmqQA4eVEMFvbNqCURptugUHju4lI7
-         ndPEtNUUjdw8o5K6o8Ml7ccr4UBCc534yFeBVNcVsiWXaNki2YF/roULzwJvYayvv7
-         RTn81dP33oKFk2D+TSKHR87YPJSUW9BE6M8KrvZI=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 9FE0C3C08CD; Fri, 19 Jun 2020 18:29:05 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 18:29:05 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 1/6] dt-bindings: power: supply: gpio-charger: convert
- to yaml
-Message-ID: <20200619162905.7yoxccylfz55daie@earth.universe>
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
- <20200605224403.181015-2-sebastian.reichel@collabora.com>
+        Fri, 19 Jun 2020 12:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394853AbgFSQ3F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:29:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA011C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:29:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a9so12180500ljn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/V/EEJuGfM3cwX7ubb4ViNyVH2RhhYxz5LHLfNXzhkM=;
+        b=B/w9WI6cwkaKNiVZI/74T8mkbfDvQKda2PFwcG461AJl+Gf6uYMVSHq4gpulO8Ry+L
+         8qGuQp5or3fxXwqYPSXsF7PbTNUas9uFLKTpxcFSJDk2fzA7L4QjvyQtCJGcqQCf1NGb
+         r7M5175o1wb2hP868cNxoHI7udC1F3ZvHPxoHlWzfHnNjeWVeJ1LphNBc9gN3ms4J7FK
+         RewOaHYWx3Z3gWld8GO3oojFfFMg4Mf3MoB9qvV10x9svpEHRwh/lGM+Wc5FBQjcMyK1
+         u/uXYEmCvfoXlzhQXBTW8ZgKtQt16FRjDptA3n3UBSB8fTta2S2z1Z1e2o1zw6elE8Ny
+         9qmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/V/EEJuGfM3cwX7ubb4ViNyVH2RhhYxz5LHLfNXzhkM=;
+        b=IRYHxXIQPyEtuZwAXD+bbb1cSaxZI2Adarzt0+f/ppvjO8jLCnpV11qT8jEsOepWlw
+         A+DMQn138zTNpz8Z2pQySdxSc4+md6f369pWa2lfHlTS8rO3TB+zigtm1EmZ4u9UEV5c
+         TV9dhx6CgbF8ZxDiSrOfvVJpmHReJmAx6cB5qBFOf9FbtfZBzAsfQqvZcLc2LcbDEQqi
+         wy7YPC5ARq0ygGVshEH/7y2uV0b14IiZbz73E43poVNc16J8AFVedZqLMWReOLUxmbiF
+         JCSjKk3feap5UDzN6ayG6ueqJ5dt2VvgycnWvfbnBfJwkmx8IsfKyTALQ/YgiwwTVLRy
+         48/Q==
+X-Gm-Message-State: AOAM533Gh4tN0fzHwET6bOQBHzK7ZFn1BsJl4C6wg2GV3quGHEJEytFF
+        guY/V8BacLbsSmrTAI2fF2aKALTqwWxE/DJkGMYRSg==
+X-Google-Smtp-Source: ABdhPJyn3yaIiMt6831syIMHyWp/J+Qai964ORpX8fPeiKbLuy9BlJOQCTa0wVXzGV0An0hM3kXnQYBOBF/tgtfFMcI=
+X-Received: by 2002:a2e:8e94:: with SMTP id z20mr2052818ljk.21.1592584141654;
+ Fri, 19 Jun 2020 09:29:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lln7em7yay23qb4r"
-Content-Disposition: inline
-In-Reply-To: <20200605224403.181015-2-sebastian.reichel@collabora.com>
+References: <20200618222225.102337-1-axelrasmussen@google.com>
+ <20200618222225.102337-2-axelrasmussen@google.com> <20200619083023.GS576905@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200619083023.GS576905@hirez.programming.kicks-ass.net>
+From:   Axel Rasmussen <axelrasmussen@google.com>
+Date:   Fri, 19 Jun 2020 09:28:24 -0700
+Message-ID: <CAJHvVciGnK9Ve7NeZ=LUbWT3PGhG7hRWh+J80ncR6Mgwk316fw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 1/1] mmap_lock: add tracepoints around mmap_lock acquisition
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Michel Lespinasse <walken@google.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Jonathan Adams <jwadams@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Ying Han <yinghan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 1:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Jun 18, 2020 at 03:22:25PM -0700, Axel Rasmussen wrote:
+> > diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> > index f11b9bd3431d..6aabea1cbc5d 100644
+> > --- a/kernel/locking/rwsem.c
+> > +++ b/kernel/locking/rwsem.c
+> > @@ -1495,6 +1495,20 @@ void __sched down_read(struct rw_semaphore *sem)
+> >  }
+> >  EXPORT_SYMBOL(down_read);
+> >
+> > +/*
+> > + * lock for reading
+> > + */
+> > +void __sched down_read_contended_hook(struct rw_semaphore *sem,
+> > +                                   void (*pre)(void *),
+> > +                                   void (*post)(void *), void *arg)
+> > +{
+> > +     might_sleep();
+> > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> > +     LOCK_CONTENDED_HOOK(sem, __down_read_trylock, __down_read, pre, post,
+> > +                         arg);
+> > +}
+> > +EXPORT_SYMBOL(down_read_contended_hook);
+> > +
+> >  int __sched down_read_killable(struct rw_semaphore *sem)
+> >  {
+> >       might_sleep();
+> > @@ -1509,6 +1523,24 @@ int __sched down_read_killable(struct rw_semaphore *sem)
+> >  }
+> >  EXPORT_SYMBOL(down_read_killable);
+> >
+> > +int __sched down_read_killable_contended_hook(struct rw_semaphore *sem,
+> > +                                           void (*pre)(void *),
+> > +                                           void (*post)(void *, int),
+> > +                                           void *arg)
+> > +{
+> > +     might_sleep();
+> > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> > +
+> > +     if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_read_trylock,
+> > +                                    __down_read_killable, pre, post, arg)) {
+> > +             rwsem_release(&sem->dep_map, _RET_IP_);
+> > +             return -EINTR;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(down_read_killable_contended_hook);
+> > +
+> >  /*
+> >   * trylock for reading -- returns 1 if successful, 0 if contention
+> >   */
+> > @@ -1533,6 +1565,20 @@ void __sched down_write(struct rw_semaphore *sem)
+> >  }
+> >  EXPORT_SYMBOL(down_write);
+> >
+> > +/*
+> > + * lock for writing
+> > + */
+> > +void __sched down_write_contended_hook(struct rw_semaphore *sem,
+> > +                                    void (*pre)(void *),
+> > +                                    void (*post)(void *), void *arg)
+> > +{
+> > +     might_sleep();
+> > +     rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
+> > +     LOCK_CONTENDED_HOOK(sem, __down_write_trylock, __down_write, pre, post,
+> > +                         arg);
+> > +}
+> > +EXPORT_SYMBOL(down_write_contended_hook);
+> > +
+> >  /*
+> >   * lock for writing
+> >   */
+> > @@ -1551,6 +1597,24 @@ int __sched down_write_killable(struct rw_semaphore *sem)
+> >  }
+> >  EXPORT_SYMBOL(down_write_killable);
+> >
+> > +int __sched down_write_killable_contended_hook(struct rw_semaphore *sem,
+> > +                                            void (*pre)(void *),
+> > +                                            void (*post)(void *, int),
+> > +                                            void *arg)
+> > +{
+> > +     might_sleep();
+> > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> > +
+> > +     if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_write_trylock,
+> > +                                    __down_write_killable, pre, post, arg)) {
+> > +             rwsem_release(&sem->dep_map, _RET_IP_);
+> > +             return -EINTR;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(down_write_killable_contended_hook);
+> > +
+> >  /*
+> >   * trylock for writing -- returns 1 if successful, 0 if contention
+> >   */
+>
+> NAK, absolutely not going to happen. This is an atrocious API to expose,
+> worse you're exporting.
 
---lln7em7yay23qb4r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ack about splitting this up.
 
-Hi,
-
-On Sat, Jun 06, 2020 at 12:43:58AM +0200, Sebastian Reichel wrote:
-> Convert the gpio-charger bindings from text format to
-> new YAML based representation.
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
-
-Thanks, queued.
-
--- Sebastian
-
->  .../bindings/power/supply/gpio-charger.txt    | 31 ----------
->  .../bindings/power/supply/gpio-charger.yaml   | 58 +++++++++++++++++++
->  2 files changed, 58 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-c=
-harger.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-c=
-harger.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
-txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> deleted file mode 100644
-> index 0fb33b2c62a6..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -gpio-charger
-> -
-> -Required properties :
-> - - compatible : "gpio-charger"
-> - - gpios : GPIO indicating the charger presence.
-> -   See GPIO binding in bindings/gpio/gpio.txt .
-> - - charger-type : power supply type, one of
-> -     unknown
-> -     battery
-> -     ups
-> -     mains
-> -     usb-sdp (USB standard downstream port)
-> -     usb-dcp (USB dedicated charging port)
-> -     usb-cdp (USB charging downstream port)
-> -     usb-aca (USB accessory charger adapter)
-> -
-> -Optional properties:
-> - - charge-status-gpios: GPIO indicating whether a battery is charging.
-> -
-> -Example:
-> -
-> -	usb_charger: charger {
-> -		compatible =3D "gpio-charger";
-> -		charger-type =3D "usb-sdp";
-> -		gpios =3D <&gpd 28 GPIO_ACTIVE_LOW>;
-> -		charge-status-gpios =3D <&gpc 27 GPIO_ACTIVE_LOW>;
-> -	};
-> -
-> -	battery {
-> -		power-supplies =3D <&usb_charger>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
-yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> new file mode 100644
-> index 000000000000..78b167c62ab1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/supply/gpio-charger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: simple battery chargers only communicating through GPIOs
-> +
-> +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description:
-> +  This binding is for all chargers, which are working more or less
-> +  autonomously, only providing some status GPIOs and possibly some
-> +  GPIOs for limited control over the charging process.
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-charger
-> +
-> +  charger-type:
-> +    enum:
-> +      - unknown
-> +      - battery
-> +      - ups
-> +      - mains
-> +      - usb-sdp                   # USB standard downstream port
-> +      - usb-dcp                   # USB dedicated charging port
-> +      - usb-cdp                   # USB charging downstream port
-> +      - usb-aca                   # USB accessory charger adapter
-> +    description:
-> +      Type of the charger, e.g. "mains" for a wall charger.
-> +
-> +  gpios:
-> +    maxItems: 1
-> +    description: GPIO indicating the charger presence
-> +
-> +  charge-status-gpios:
-> +    maxItems: 1
-> +    description: GPIO indicating the charging status
-> +
-> +required:
-> +  - compatible
-> +  - gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    charger {
-> +      compatible =3D "gpio-charger";
-> +      charger-type =3D "usb-sdp";
-> +
-> +      gpios =3D <&gpd 28 GPIO_ACTIVE_LOW>;
-> +      charge-status-gpios =3D <&gpc 27 GPIO_ACTIVE_LOW>;
-> +    };
-> --=20
-> 2.26.2
->=20
-
---lln7em7yay23qb4r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s59EACgkQ2O7X88g7
-+poTgg/+Jy47Umtm1TDYfreX2IK/zJzPDWvLpmdpAtPJjctCCrMjTdPVMJUfSRSB
-v8y6bhzGd05Uwy4/xNA/s6mfiCkEpvAxy9j4hNW60+9mKG4WXRBVzWCaAHJ2d22r
-Yroxoq+7pitZ20P/6t5pTYIS5/UqE2695lH/XuuNzzV2E2LYe3LIHTC+xXQQiuL+
-MBVwp8sheham904HsnVPslT1nBY0Oy36BszGrXHAGA+RJVHgqrqWBAHalaOZk1qH
-Ab6Z3Zi3QP3kjp2jMaYiXkuuEgRm2UvnHzqSvYGg5XmnnRjEmKhFHJVz5aApXmqs
-QWFjVVm6iAoCnqnChBenWEBQl0QGq5p3+aCvVUTp++4VTXnMaP1ZdHyHS0T7SbIK
-pVXFPpXQ4q8mNhRF7yc8KS/pmOPPhoeoc7RPlEVrw/7qphhCPu3zpQ0UYg22Qk9P
-kuhvNHN2w1ekCHpY4FEMElT920IXy/O4nzBwnXJMRkhCOtrJEIMDXwNUq34y3cGd
-tQnqfu41F7SGZ+eaN/62BOmAt1tFUuBHItULPxKUTKl1Hyz+OwbmtTaPwQzcxjl9
-3hJdQT+xh09EmsdcZ6CzViB1DJHANr+KHF9DEgy5UsYQZR6aAvWBTKL2SgJNFJPz
-AM1V7tst08DvxLa1jRg8hSvVwELeOD4c1431wri5tNP6G9tsQXw=
-=gdx0
------END PGP SIGNATURE-----
-
---lln7em7yay23qb4r--
+Thanks for taking a look. :)
