@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A513EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B5B20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5280B20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581688;
-	bh=wwX3oMSrctskPbGkvudSONYgRfHBUkGW7Urvxsugfos=;
+	s=default; t=1592581697;
+	bh=7McYIa9P3Rh28JO6FRRv8eTfuuEGvhSv6QQoypGjkZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DebqmmWVXWEvsKs/CwZHVPwXBBdM3wrz8omYHoPlXyVDIrHhBAoeeQRUhVUFYLAHB
-	 JCAOAt6lL+oILjz1y9Ynrw4Xo11FFo9/v1VgT8Qp1aYoatmGdS/X0hIsK5ksdR2FVI
-	 zbntgUHxSWb4IvL6JiBc06lC3jKK0CbeRqPCaHH0=
+	b=v+nbuC5hMzjV094YzZLvZgb4dxIUwidA0eqoyTMiIaZ7bxh/OJvOY+fPJ5ZB6I6V/
+	 vPnEsO9LcJNGmfk/FH6OL26i+KFL7urd1s2nFq1gYROCh+emeteMClVxeoVBVhRW+F
+	 tyjInYpon0uuRNqNTjw7cIlRAsMch2QPjdu/pvRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405325AbgFSPsH (ORCPT
+        id S2405334AbgFSPsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393021AbgFSPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:39 -0400
+        id S2393434AbgFSPZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:25:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4BD421556;
-        Fri, 19 Jun 2020 15:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A1D217A0;
+        Fri, 19 Jun 2020 15:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580338;
-        bh=wwX3oMSrctskPbGkvudSONYgRfHBUkGW7Urvxsugfos=;
+        s=default; t=1592580333;
+        bh=7McYIa9P3Rh28JO6FRRv8eTfuuEGvhSv6QQoypGjkZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aoG9yocvOvvo7CPu3XhYvXCmfFZO4v5fCxo9OkPL7n2Rx1wHr/74w6Zz9/jrzLDMx
-         ZeT/DY6sUuwthHWBn2O+MhOFRTgCGUdbfhZS5HzAPIZ7+vXYsisco8dgPokMX38+j2
-         AzLri3GkbA0rohM/kix4gc2fGXpnTBYdVyj58WbE=
+        b=smi4g954Rgayf18pqQgbEDALgq7+eQbGslJjkaRxorLaHxaY9rvJ4pld4CqqekACj
+         m2rlEQQIJZlVJqqf3VRwUJuvaQgdr5u4g38L3jTFBVR58lRalMYfHR6gLOLwt5jpA+
+         SDX+lL7Ru2J4endizjBeJeMU3ghxjdbq6y6napOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Soul Huang <soul.huang@mediatek.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
+        stable@vger.kernel.org,
+        Nicolas Toromanoff <nicolas.toromanoff@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 181/376] mt76: mt7663: fix DMA unmap length
-Date:   Fri, 19 Jun 2020 16:31:39 +0200
-Message-Id: <20200619141718.919294293@linuxfoundation.org>
+Subject: [PATCH 5.7 208/376] crypto: stm32/crc32 - fix multi-instance
+Date:   Fri, 19 Jun 2020 16:32:06 +0200
+Message-Id: <20200619141720.181167428@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,101 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
 
-[ Upstream commit 89829c9e65ab680f7e5a1658cb74bc6316ab036e ]
+[ Upstream commit 10b89c43a64eb0d236903b79a3bc9d8f6cbfd9c7 ]
 
-Fix DMA unmap length for mt7663e devices in mt7615_txp_skb_unmap_hw
+Ensure CRC algorithm is registered only once in crypto framework when
+there are several instances of CRC devices.
 
-Fixes: f40ac0f3d3c0 ("mt76: mt7615: introduce mt7663e support")
-Co-developed-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Co-developed-by: Soul Huang <soul.huang@mediatek.com>
-Signed-off-by: Soul Huang <soul.huang@mediatek.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Update the CRC device list management to avoid that only the first CRC
+instance is used.
+
+Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+
+Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7615/mac.c   | 20 +++++++++++++------
- .../net/wireless/mediatek/mt76/mt7615/mac.h   |  2 ++
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/crypto/stm32/stm32-crc32.c | 48 ++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index b5249d08564c..f66b76ff2978 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -666,15 +666,18 @@ mt7615_txp_skb_unmap_fw(struct mt76_dev *dev, struct mt7615_fw_txp *txp)
- static void
- mt7615_txp_skb_unmap_hw(struct mt76_dev *dev, struct mt7615_hw_txp *txp)
+diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
+index 1c3e411b7acb..10304511f9b4 100644
+--- a/drivers/crypto/stm32/stm32-crc32.c
++++ b/drivers/crypto/stm32/stm32-crc32.c
+@@ -91,16 +91,29 @@ static int stm32_crc_setkey(struct crypto_shash *tfm, const u8 *key,
+ 	return 0;
+ }
+ 
+-static int stm32_crc_init(struct shash_desc *desc)
++static struct stm32_crc *stm32_crc_get_next_crc(void)
  {
-+	u32 last_mask;
- 	int i;
+-	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+-	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
  
-+	last_mask = is_mt7663(dev) ? MT_TXD_LEN_LAST : MT_TXD_LEN_MSDU_LAST;
+ 	spin_lock_bh(&crc_list.lock);
+ 	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
++	if (crc)
++		list_move_tail(&crc->list, &crc_list.dev_list);
+ 	spin_unlock_bh(&crc_list.lock);
+ 
++	return crc;
++}
 +
- 	for (i = 0; i < ARRAY_SIZE(txp->ptr); i++) {
- 		struct mt7615_txp_ptr *ptr = &txp->ptr[i];
- 		bool last;
- 		u16 len;
- 
- 		len = le16_to_cpu(ptr->len0);
--		last = len & MT_TXD_LEN_MSDU_LAST;
-+		last = len & last_mask;
- 		len &= MT_TXD_LEN_MASK;
- 		dma_unmap_single(dev->dev, le32_to_cpu(ptr->buf0), len,
- 				 DMA_TO_DEVICE);
-@@ -682,7 +685,7 @@ mt7615_txp_skb_unmap_hw(struct mt76_dev *dev, struct mt7615_hw_txp *txp)
- 			break;
- 
- 		len = le16_to_cpu(ptr->len1);
--		last = len & MT_TXD_LEN_MSDU_LAST;
-+		last = len & last_mask;
- 		len &= MT_TXD_LEN_MASK;
- 		dma_unmap_single(dev->dev, le32_to_cpu(ptr->buf1), len,
- 				 DMA_TO_DEVICE);
-@@ -1098,21 +1101,26 @@ mt7615_write_hw_txp(struct mt7615_dev *dev, struct mt76_tx_info *tx_info,
- {
- 	struct mt7615_hw_txp *txp = txp_ptr;
- 	struct mt7615_txp_ptr *ptr = &txp->ptr[0];
--	int nbuf = tx_info->nbuf - 1;
--	int i;
-+	int i, nbuf = tx_info->nbuf - 1;
-+	u32 last_mask;
- 
- 	tx_info->buf[0].len = MT_TXD_SIZE + sizeof(*txp);
- 	tx_info->nbuf = 1;
- 
- 	txp->msdu_id[0] = cpu_to_le16(id | MT_MSDU_ID_VALID);
- 
-+	if (is_mt7663(&dev->mt76))
-+		last_mask = MT_TXD_LEN_LAST;
-+	else
-+		last_mask = MT_TXD_LEN_AMSDU_LAST |
-+			    MT_TXD_LEN_MSDU_LAST;
++static int stm32_crc_init(struct shash_desc *desc)
++{
++	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
++	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
++	struct stm32_crc *crc;
 +
- 	for (i = 0; i < nbuf; i++) {
- 		u16 len = tx_info->buf[i + 1].len & MT_TXD_LEN_MASK;
- 		u32 addr = tx_info->buf[i + 1].addr;
++	crc = stm32_crc_get_next_crc();
++	if (!crc)
++		return -ENODEV;
++
+ 	pm_runtime_get_sync(crc->dev);
  
- 		if (i == nbuf - 1)
--			len |= MT_TXD_LEN_MSDU_LAST |
--			       MT_TXD_LEN_AMSDU_LAST;
-+			len |= last_mask;
+ 	/* Reset, set key, poly and configure in bit reverse mode */
+@@ -125,9 +138,9 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
  
- 		if (i & 1) {
- 			ptr->buf1 = cpu_to_le32(addr);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-index 53ac184ab2d6..d3da40df7f32 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-@@ -255,6 +255,8 @@ enum tx_phy_bandwidth {
- #define MT_TXD_LEN_MASK			GENMASK(11, 0)
- #define MT_TXD_LEN_MSDU_LAST		BIT(14)
- #define MT_TXD_LEN_AMSDU_LAST		BIT(15)
-+/* mt7663 */
-+#define MT_TXD_LEN_LAST			BIT(15)
+-	spin_lock_bh(&crc_list.lock);
+-	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
+-	spin_unlock_bh(&crc_list.lock);
++	crc = stm32_crc_get_next_crc();
++	if (!crc)
++		return -ENODEV;
  
- struct mt7615_txp_ptr {
- 	__le32 buf0;
+ 	pm_runtime_get_sync(crc->dev);
+ 
+@@ -200,6 +213,8 @@ static int stm32_crc_digest(struct shash_desc *desc, const u8 *data,
+ 	return stm32_crc_init(desc) ?: stm32_crc_finup(desc, data, length, out);
+ }
+ 
++static unsigned int refcnt;
++static DEFINE_MUTEX(refcnt_lock);
+ static struct shash_alg algs[] = {
+ 	/* CRC-32 */
+ 	{
+@@ -290,12 +305,18 @@ static int stm32_crc_probe(struct platform_device *pdev)
+ 	list_add(&crc->list, &crc_list.dev_list);
+ 	spin_unlock(&crc_list.lock);
+ 
+-	ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
+-	if (ret) {
+-		dev_err(dev, "Failed to register\n");
+-		clk_disable_unprepare(crc->clk);
+-		return ret;
++	mutex_lock(&refcnt_lock);
++	if (!refcnt) {
++		ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
++		if (ret) {
++			mutex_unlock(&refcnt_lock);
++			dev_err(dev, "Failed to register\n");
++			clk_disable_unprepare(crc->clk);
++			return ret;
++		}
+ 	}
++	refcnt++;
++	mutex_unlock(&refcnt_lock);
+ 
+ 	dev_info(dev, "Initialized\n");
+ 
+@@ -316,7 +337,10 @@ static int stm32_crc_remove(struct platform_device *pdev)
+ 	list_del(&crc->list);
+ 	spin_unlock(&crc_list.lock);
+ 
+-	crypto_unregister_shashes(algs, ARRAY_SIZE(algs));
++	mutex_lock(&refcnt_lock);
++	if (!--refcnt)
++		crypto_unregister_shashes(algs, ARRAY_SIZE(algs));
++	mutex_unlock(&refcnt_lock);
+ 
+ 	pm_runtime_disable(crc->dev);
+ 	pm_runtime_put_noidle(crc->dev);
 -- 
 2.25.1
 
