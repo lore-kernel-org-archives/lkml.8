@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFBFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF2B021852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A5421919
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584199;
-	bh=xE1FbHT2U1jiB8tncTe6OdJ5hY7F51zVSxoS6ThAvyA=;
+	s=default; t=1592584207;
+	bh=Epx5OhVRQEM0lV36SumRqZ0QqJ3GHqHRsZcJpEyUFLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+Ya87pH4L3TkSi//JwXS75EXYcpLHk4OejeWPj6BIYiEpNcbC4gjmUohP64XzW2u
-	 h7lcpzQE8oeI2zKg7SjoJORCEy3dKR/d8c3N/m8W8/fZLT57Kesx18LLe86RewKzn9
-	 2nfsMFObQdKeZvlWBsQM6v08JBTqHc6+D9Zaqlf4=
+	b=uWt4LNDmP295Ub72fvf9o6EXCwQKoIUHB6pZDFcEAZBQFeggYEVdKFebER21ZNR6Z
+	 UeoH32dSPG2gvk8ujkPIjmN9+GhoPmK/PKNJJoW2Hgm1ohYPhHPzjqFC7/QLSLVAY1
+	 w4VmuMQ8D5xqJDKCcb1tVOw3YC11181H7Ozo5wMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393860AbgFSQ36 (ORCPT
+        id S2395006AbgFSQaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48852 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388842AbgFSOyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:13 -0400
+        id S2389812AbgFSOyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4450521852;
-        Fri, 19 Jun 2020 14:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36F4F21556;
+        Fri, 19 Jun 2020 14:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578453;
-        bh=xE1FbHT2U1jiB8tncTe6OdJ5hY7F51zVSxoS6ThAvyA=;
+        s=default; t=1592578442;
+        bh=Epx5OhVRQEM0lV36SumRqZ0QqJ3GHqHRsZcJpEyUFLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBfgQ+ffdzt21f0t/U5DwhFSgsXfhRdEMXg1z66cXy/NZWUazf3RnHZcXALnwekp2
-         a8rfahZBxfJjKjDiyKXcm5MYF/558mtTfK0bCscJ8h7hrqZBaQwTVh6Dhdim4+M7Oy
-         uVtj4rDR/b+22Z4X6sC/f/1HnrplLiGU/CzxQ5p0=
+        b=tBVgyRyq8HJUcNNqMmCMVpN70euxAi8Os9HDu09AHr6YXXsi/nqhDVMItBLjF7BXq
+         MAcW8Y1e2PiapV/Wddn4DNeB4YzXzNik3+p7aTbVsPSB8cfKE0kbny/m9Ggb2k2711
+         0MuqJs2fpb05hpTYEsiU83T9lQ2tz3CfY5EMl27A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/267] powerpc/xive: Clear the page tables for the ESB IO mapping
-Date:   Fri, 19 Jun 2020 16:30:05 +0200
-Message-Id: <20200619141649.848315690@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH 4.19 007/267] make user_access_begin() do access_ok()
+Date:   Fri, 19 Jun 2020 16:29:52 +0200
+Message-Id: <20200619141649.210759168@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,71 +60,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit a101950fcb78b0ba20cd487be6627dea58d55c2b ]
+commit 594cc251fdd0d231d342d88b2fdff4bc42fb0690 upstream.
 
-Commit 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the
-machine crash handler") fixed an issue in the FW assisted dump of
-machines using hash MMU and the XIVE interrupt mode under the POWER
-hypervisor. It forced the mapping of the ESB page of interrupts being
-mapped in the Linux IRQ number space to make sure the 'crash kexec'
-sequence worked during such an event. But it didn't handle the
-un-mapping.
+Originally, the rule used to be that you'd have to do access_ok()
+separately, and then user_access_begin() before actually doing the
+direct (optimized) user access.
 
-This mapping is now blocking the removal of a passthrough IO adapter
-under the POWER hypervisor because it expects the guest OS to have
-cleared all page table entries related to the adapter. If some are
-still present, the RTAS call which isolates the PCI slot returns error
-9001 "valid outstanding translations".
+But experience has shown that people then decide not to do access_ok()
+at all, and instead rely on it being implied by other operations or
+similar.  Which makes it very hard to verify that the access has
+actually been range-checked.
 
-Remove these mapping in the IRQ data cleanup routine.
+If you use the unsafe direct user accesses, hardware features (either
+SMAP - Supervisor Mode Access Protection - on x86, or PAN - Privileged
+Access Never - on ARM) do force you to use user_access_begin().  But
+nothing really forces the range check.
 
-Under KVM, this cleanup is not required because the ESB pages for the
-adapter interrupts are un-mapped from the guest by the hypervisor in
-the KVM XIVE native device. This is now redundant but it's harmless.
+By putting the range check into user_access_begin(), we actually force
+people to do the right thing (tm), and the range check vill be visible
+near the actual accesses.  We have way too long a history of people
+trying to avoid them.
 
-Fixes: 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the machine crash handler")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200429075122.1216388-2-clg@kaod.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/sysdev/xive/common.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/include/asm/uaccess.h             |   12 +++++++++++-
+ drivers/gpu/drm/i915/i915_gem_execbuffer.c |   16 ++++++++++++++--
+ include/linux/uaccess.h                    |    2 +-
+ kernel/compat.c                            |    6 ++----
+ kernel/exit.c                              |    6 ++----
+ lib/strncpy_from_user.c                    |    9 +++++----
+ lib/strnlen_user.c                         |    9 +++++----
+ 7 files changed, 40 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
-index 1c31a08cdd54..2aa9f3de223c 100644
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -23,6 +23,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/msi.h>
-+#include <linux/vmalloc.h>
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -711,7 +711,17 @@ extern struct movsl_mask {
+  * checking before using them, but you have to surround them with the
+  * user_access_begin/end() pair.
+  */
+-#define user_access_begin()	__uaccess_begin()
++static __must_check inline bool user_access_begin(int type,
++						  const void __user *ptr,
++						  size_t len)
++{
++	if (unlikely(!access_ok(type, ptr, len)))
++		return 0;
++	__uaccess_begin();
++	return 1;
++}
++
++#define user_access_begin(a, b, c)	user_access_begin(a, b, c)
+ #define user_access_end()	__uaccess_end()
  
- #include <asm/prom.h>
- #include <asm/io.h>
-@@ -933,12 +934,16 @@ EXPORT_SYMBOL_GPL(is_xive_irq);
- void xive_cleanup_irq_data(struct xive_irq_data *xd)
- {
- 	if (xd->eoi_mmio) {
-+		unmap_kernel_range((unsigned long)xd->eoi_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->eoi_mmio);
- 		if (xd->eoi_mmio == xd->trig_mmio)
- 			xd->trig_mmio = NULL;
- 		xd->eoi_mmio = NULL;
+ #define unsafe_put_user(x, ptr, err_label)					\
+--- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+@@ -1604,7 +1604,9 @@ static int eb_copy_relocations(const str
+ 		 * happened we would make the mistake of assuming that the
+ 		 * relocations were valid.
+ 		 */
+-		user_access_begin();
++		if (!user_access_begin(VERIFY_WRITE, urelocs, size))
++			goto end_user;
++
+ 		for (copied = 0; copied < nreloc; copied++)
+ 			unsafe_put_user(-1,
+ 					&urelocs[copied].presumed_offset,
+@@ -2649,7 +2651,17 @@ i915_gem_execbuffer2_ioctl(struct drm_de
+ 		unsigned int i;
+ 
+ 		/* Copy the new buffer offsets back to the user's exec list. */
+-		user_access_begin();
++		/*
++		 * Note: count * sizeof(*user_exec_list) does not overflow,
++		 * because we checked 'count' in check_buffer_count().
++		 *
++		 * And this range already got effectively checked earlier
++		 * when we did the "copy_from_user()" above.
++		 */
++		if (!user_access_begin(VERIFY_WRITE, user_exec_list,
++				       count * sizeof(*user_exec_list)))
++			goto end_user;
++
+ 		for (i = 0; i < args->buffer_count; i++) {
+ 			if (!(exec2_list[i].offset & UPDATE))
+ 				continue;
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -267,7 +267,7 @@ extern long strncpy_from_unsafe(char *ds
+ 	probe_kernel_read(&retval, addr, sizeof(retval))
+ 
+ #ifndef user_access_begin
+-#define user_access_begin() do { } while (0)
++#define user_access_begin(type, ptr, len) access_ok(type, ptr, len)
+ #define user_access_end() do { } while (0)
+ #define unsafe_get_user(x, ptr, err) do { if (unlikely(__get_user(x, ptr))) goto err; } while (0)
+ #define unsafe_put_user(x, ptr, err) do { if (unlikely(__put_user(x, ptr))) goto err; } while (0)
+--- a/kernel/compat.c
++++ b/kernel/compat.c
+@@ -354,10 +354,9 @@ long compat_get_bitmap(unsigned long *ma
+ 	bitmap_size = ALIGN(bitmap_size, BITS_PER_COMPAT_LONG);
+ 	nr_compat_longs = BITS_TO_COMPAT_LONGS(bitmap_size);
+ 
+-	if (!access_ok(VERIFY_READ, umask, bitmap_size / 8))
++	if (!user_access_begin(VERIFY_READ, umask, bitmap_size / 8))
+ 		return -EFAULT;
+ 
+-	user_access_begin();
+ 	while (nr_compat_longs > 1) {
+ 		compat_ulong_t l1, l2;
+ 		unsafe_get_user(l1, umask++, Efault);
+@@ -384,10 +383,9 @@ long compat_put_bitmap(compat_ulong_t __
+ 	bitmap_size = ALIGN(bitmap_size, BITS_PER_COMPAT_LONG);
+ 	nr_compat_longs = BITS_TO_COMPAT_LONGS(bitmap_size);
+ 
+-	if (!access_ok(VERIFY_WRITE, umask, bitmap_size / 8))
++	if (!user_access_begin(VERIFY_WRITE, umask, bitmap_size / 8))
+ 		return -EFAULT;
+ 
+-	user_access_begin();
+ 	while (nr_compat_longs > 1) {
+ 		unsigned long m = *mask++;
+ 		unsafe_put_user((compat_ulong_t)m, umask++, Efault);
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -1617,10 +1617,9 @@ SYSCALL_DEFINE5(waitid, int, which, pid_
+ 	if (!infop)
+ 		return err;
+ 
+-	if (!access_ok(VERIFY_WRITE, infop, sizeof(*infop)))
++	if (!user_access_begin(VERIFY_WRITE, infop, sizeof(*infop)))
+ 		return -EFAULT;
+ 
+-	user_access_begin();
+ 	unsafe_put_user(signo, &infop->si_signo, Efault);
+ 	unsafe_put_user(0, &infop->si_errno, Efault);
+ 	unsafe_put_user(info.cause, &infop->si_code, Efault);
+@@ -1745,10 +1744,9 @@ COMPAT_SYSCALL_DEFINE5(waitid,
+ 	if (!infop)
+ 		return err;
+ 
+-	if (!access_ok(VERIFY_WRITE, infop, sizeof(*infop)))
++	if (!user_access_begin(VERIFY_WRITE, infop, sizeof(*infop)))
+ 		return -EFAULT;
+ 
+-	user_access_begin();
+ 	unsafe_put_user(signo, &infop->si_signo, Efault);
+ 	unsafe_put_user(0, &infop->si_errno, Efault);
+ 	unsafe_put_user(info.cause, &infop->si_code, Efault);
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -115,10 +115,11 @@ long strncpy_from_user(char *dst, const
+ 
+ 		kasan_check_write(dst, count);
+ 		check_object_size(dst, count, false);
+-		user_access_begin();
+-		retval = do_strncpy_from_user(dst, src, count, max);
+-		user_access_end();
+-		return retval;
++		if (user_access_begin(VERIFY_READ, src, max)) {
++			retval = do_strncpy_from_user(dst, src, count, max);
++			user_access_end();
++			return retval;
++		}
  	}
- 	if (xd->trig_mmio) {
-+		unmap_kernel_range((unsigned long)xd->trig_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->trig_mmio);
- 		xd->trig_mmio = NULL;
+ 	return -EFAULT;
+ }
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -114,10 +114,11 @@ long strnlen_user(const char __user *str
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
+ 
+-		user_access_begin();
+-		retval = do_strnlen_user(str, count, max);
+-		user_access_end();
+-		return retval;
++		if (user_access_begin(VERIFY_READ, str, max)) {
++			retval = do_strnlen_user(str, count, max);
++			user_access_end();
++			return retval;
++		}
  	}
--- 
-2.25.1
-
+ 	return 0;
+ }
 
 
