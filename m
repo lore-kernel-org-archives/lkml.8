@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3329F2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F922184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578541;
-	bh=BS4vnzAaUT4xzsYKuDAQsvC3CguCsCQrniL6bIM7OmA=;
+	s=default; t=1592578545;
+	bh=7FX1kSx3Di0ie66Eq5gx0bF64mtqjKigiZqeFitMEhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWLLT/Gpmx4+uCl7zfQjMSZhau0n7ONFuGFvc1hcm5J9wvT226sLxQhVV14+yLKV3
-	 R0i/OUb1YtggwaNfqIJ4D2XnfwAzJkq9f/XKttfj8onKYgoa4O6gVeG1TdnBq7uLG/
-	 uVkVBX1jW9rvwF7zaZH7n5oxvldST0ILEcp81My4=
+	b=z0xSoEAFvKIgW6tGzgF7orbNkXyLyMCbSOraDhK+Wi4ZJgL5nzi/HgpQgmeQO+1TN
+	 iWc36/25FIxu+cyNRAFza97AvrNEVReuFp4oKSiBp7CzjxwVlVQkAOKwKseii/RkI8
+	 sFWUZT+d+ZywTVpjdkTAQFrJjDSdOXTLh6yqNvJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389991AbgFSOzj (ORCPT
+        id S2389996AbgFSOzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50180 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388909AbgFSOzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:55:21 -0400
+        id S2389986AbgFSOzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:55:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708262168B;
-        Fri, 19 Jun 2020 14:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD03B206F7;
+        Fri, 19 Jun 2020 14:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578521;
-        bh=BS4vnzAaUT4xzsYKuDAQsvC3CguCsCQrniL6bIM7OmA=;
+        s=default; t=1592578536;
+        bh=7FX1kSx3Di0ie66Eq5gx0bF64mtqjKigiZqeFitMEhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YtQrh2UPzvZYZAjEFlWMjMtDVZvy0ZC3krOitVd8uTBW7VTUvB+VKRnT8JZJImmq1
-         p/Jb+Dfqiezm1GnNYRdCC8SDqtK17d3sP/OrM5nhJXtgsCHnUekoKLadCtWT0nmSiq
-         xTCoHsy42OFeJWy9/8cpBeAQbA4++49O9I12OX7I=
+        b=2TxGePkBnFULYnoQOsVnHifwhfOa8Wf84yVxcFJN4QfOi5St31j5rmO2dP/vRTP/v
+         CuuBXHj81daGCF4BC/g8qT/+5QhgMR1SjXkljtADZ19ZlDxFseNEJ7k4kWOJIFM6Ay
+         nPFBA2mSGrGVuo1sRmDXq65VEX+RrqHGTMBTnVmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/267] x86/cpu/amd: Make erratum #1054 a legacy erratum
-Date:   Fri, 19 Jun 2020 16:30:08 +0200
-Message-Id: <20200619141649.984307863@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 019/267] drivers/net/ibmvnic: Update VNIC protocol version reporting
+Date:   Fri, 19 Jun 2020 16:30:04 +0200
+Message-Id: <20200619141649.801295177@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -60,53 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit e2abfc0448a46d8a137505aa180caf14070ec535 ]
+[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
 
-Commit
+VNIC protocol version is reported in big-endian format, but it
+is not byteswapped before logging. Fix that, and remove version
+comparison as only one protocol version exists at this time.
 
-  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
-		 counter IRPERF")
-
-mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
-Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
-
-There would never have been a false positive on older hardware that
-has OSVW bit 0 set, since the IRPERF feature was not available.
-
-However, save a couple of RDMSR executions per thread, on modern
-system configurations that correctly set non-zero values in their
-OSVW_ID_Length MSRs.
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
-revision guide is available from the bugzilla link below.
-
-Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 120769955687..de69090ca142 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1122,8 +1122,7 @@ static const int amd_erratum_383[] =
- 
- /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
- static const int amd_erratum_1054[] =
--	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
--
-+	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index abfd990ba4d8..645298628b6f 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -4295,12 +4295,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
+ 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
+ 			break;
+ 		}
+-		dev_info(dev, "Partner protocol version is %d\n",
+-			 crq->version_exchange_rsp.version);
+-		if (be16_to_cpu(crq->version_exchange_rsp.version) <
+-		    ibmvnic_version)
+-			ibmvnic_version =
++		ibmvnic_version =
+ 			    be16_to_cpu(crq->version_exchange_rsp.version);
++		dev_info(dev, "Partner protocol version is %d\n",
++			 ibmvnic_version);
+ 		send_cap_queries(adapter);
+ 		break;
+ 	case QUERY_CAPABILITY_RSP:
 -- 
 2.25.1
 
