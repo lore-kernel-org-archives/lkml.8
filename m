@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44715C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B30920706
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2E20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581826;
-	bh=t8EX+OcVvPjkVogK7HTxyL6ukX9m/HBgPkG41B/CT7o=;
+	s=default; t=1592581831;
+	bh=9EqlyXrb0fCdUy1tdVyJjkzG9fI7Ep6+jbw1tv+gUtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tswXoB45V+ogwpM7b97tDCgHvgQBhCgY0vy41gRExNM3DcS1fszGwwmQW8RsFfFpY
-	 tj3gEiXgybeRwO3OxgbkuJJMP/+rJ+Qs/Pat34jvp5DsGpbPMRKabJoMzCKY6II0cQ
-	 W7Ah20QjqbWPbOoIcKdhCf9xW4KVGY6jEIbKRpts=
+	b=Q5dlfuV/3/Gru0xUrxP2D/5ff7DYqSJhuMGjdejFIQnEChgmOaTu0BKvfknaCNw8z
+	 XAHFNZNF0Q8/UHqnDWiTAD/jd15fo+uZ6CjXUQ1buCka0ikaJkogrIISzBRoi0FzAZ
+	 BRb+2B1N3pX9+zJx6K+I60TZxYCbXOnYd7ej4Tps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393296AbgFSPYl (ORCPT
+        id S2394114AbgFSPu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52894 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392872AbgFSPVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:21:39 -0400
+        id S2390835AbgFSPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:24:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2221C21582;
-        Fri, 19 Jun 2020 15:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5A721548;
+        Fri, 19 Jun 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580098;
-        bh=t8EX+OcVvPjkVogK7HTxyL6ukX9m/HBgPkG41B/CT7o=;
+        s=default; t=1592580277;
+        bh=9EqlyXrb0fCdUy1tdVyJjkzG9fI7Ep6+jbw1tv+gUtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R17mCMi7mECBnmd9ZFD20i605zfkNvzzCvrLeKK9togTXwkNv9RGuzECxxCWlU4ZI
-         qYES9g1/Hgkxq422XALl6PhPQ/yJLBaBLHtBgReTFs+rzd5nmJ0TnSROYviaJLf1bH
-         IZcTZEPWhul2Y5H+n+MGH2rsmd0UY3H2GGGoxuek=
+        b=qqTwiw5Gm/fNdbfuweIpvAbbYUQs3dHKxXdBBhaiVwvj3KUSvjnGa4FlxcpDjpS0P
+         eEDgY9aCOjarwVKIZxcDzVdn+vpbL71ra2gG//I7Q/yTNE6QauN778YFE3Rlb0LLZN
+         5qf0ntzmKNCnbUrVLrGgpQv33Y6N6NpIseI7p3p4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Andy Newell <newella@fb.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 122/376] selftests/bpf: Fix memory leak in test selector
-Date:   Fri, 19 Jun 2020 16:30:40 +0200
-Message-Id: <20200619141716.120864269@linuxfoundation.org>
+Subject: [PATCH 5.7 189/376] iocost: dont let vrate run wild while theres no saturation signal
+Date:   Fri, 19 Jun 2020 16:31:47 +0200
+Message-Id: <20200619141719.296173569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -60,60 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit f25d5416d64c796aa639136eb0b076c8bd579b54 ]
+[ Upstream commit 81ca627a933063fa63a6d4c66425de822a2ab7f5 ]
 
-Free test selector substrings, which were strdup()'ed.
+When the QoS targets are met and nothing is being throttled, there's
+no way to tell how saturated the underlying device is - it could be
+almost entirely idle, at the cusp of saturation or anywhere inbetween.
+Given that there's no information, it's best to keep vrate as-is in
+this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
+handling"), this was the case - if the device isn't missing QoS
+targets and nothing is being throttled, busy_level was reset to zero.
 
-Fixes: b65053cd94f4 ("selftests/bpf: Add whitelist/blacklist of test names to test_progs")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-6-andriin@fb.com
+While fixing nr_lagging handling, 7cd806a9a953 ("iocost: improve
+nr_lagging handling") broke this.  Now, while the device is hitting
+QoS targets and nothing is being throttled, vrate keeps getting
+adjusted according to the existing busy_level.
+
+This led to vrate keeping climing till it hits max when there's an IO
+issuer with limited request concurrency if the vrate started low.
+vrate starts getting adjusted upwards until the issuer can issue IOs
+w/o being throttled.  From then on, QoS targets keeps getting met and
+nothing on the system needs throttling and vrate keeps getting
+increased due to the existing busy_level.
+
+This patch makes the following changes to the busy_level logic.
+
+* Reset busy_level if nr_shortages is zero to avoid the above
+  scenario.
+
+* Make non-zero nr_lagging block lowering nr_level but still clear
+  positive busy_level if there's clear non-saturation signal - QoS
+  targets are met and nr_shortages is non-zero.  nr_lagging's role is
+  preventing adjusting vrate upwards while there are long-running
+  commands and it shouldn't keep busy_level positive while there's
+  clear non-saturation signal.
+
+* Restructure code for clarity and add comments.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Andy Newell <newella@fb.com>
+Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ block/blk-iocost.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index b521e0a512b6..86d0020c9eec 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -420,6 +420,18 @@ static int libbpf_print_fn(enum libbpf_print_level level,
- 	return 0;
- }
- 
-+static void free_str_set(const struct str_set *set)
-+{
-+	int i;
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 7c1fe605d0d6..ef193389fffe 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1543,19 +1543,39 @@ skip_surplus_transfers:
+ 	if (rq_wait_pct > RQ_WAIT_BUSY_PCT ||
+ 	    missed_ppm[READ] > ppm_rthr ||
+ 	    missed_ppm[WRITE] > ppm_wthr) {
++		/* clearly missing QoS targets, slow down vrate */
+ 		ioc->busy_level = max(ioc->busy_level, 0);
+ 		ioc->busy_level++;
+ 	} else if (rq_wait_pct <= RQ_WAIT_BUSY_PCT * UNBUSY_THR_PCT / 100 &&
+ 		   missed_ppm[READ] <= ppm_rthr * UNBUSY_THR_PCT / 100 &&
+ 		   missed_ppm[WRITE] <= ppm_wthr * UNBUSY_THR_PCT / 100) {
+-		/* take action iff there is contention */
+-		if (nr_shortages && !nr_lagging) {
++		/* QoS targets are being met with >25% margin */
++		if (nr_shortages) {
++			/*
++			 * We're throttling while the device has spare
++			 * capacity.  If vrate was being slowed down, stop.
++			 */
+ 			ioc->busy_level = min(ioc->busy_level, 0);
+-			/* redistribute surpluses first */
+-			if (!nr_surpluses)
 +
-+	if (!set)
-+		return;
-+
-+	for (i = 0; i < set->cnt; i++)
-+		free((void *)set->strs[i]);
-+	free(set->strs);
-+}
-+
- static int parse_str_list(const char *s, struct str_set *set)
- {
- 	char *input, *state = NULL, *next, **tmp, **strs = NULL;
-@@ -756,11 +768,11 @@ int main(int argc, char **argv)
- 	fprintf(stdout, "Summary: %d/%d PASSED, %d SKIPPED, %d FAILED\n",
- 		env.succ_cnt, env.sub_succ_cnt, env.skip_cnt, env.fail_cnt);
++			/*
++			 * If there are IOs spanning multiple periods, wait
++			 * them out before pushing the device harder.  If
++			 * there are surpluses, let redistribution work it
++			 * out first.
++			 */
++			if (!nr_lagging && !nr_surpluses)
+ 				ioc->busy_level--;
++		} else {
++			/*
++			 * Nobody is being throttled and the users aren't
++			 * issuing enough IOs to saturate the device.  We
++			 * simply don't know how close the device is to
++			 * saturation.  Coast.
++			 */
++			ioc->busy_level = 0;
+ 		}
+ 	} else {
++		/* inside the hysterisis margin, we're good */
+ 		ioc->busy_level = 0;
+ 	}
  
--	free(env.test_selector.blacklist.strs);
--	free(env.test_selector.whitelist.strs);
-+	free_str_set(&env.test_selector.blacklist);
-+	free_str_set(&env.test_selector.whitelist);
- 	free(env.test_selector.num_set);
--	free(env.subtest_selector.blacklist.strs);
--	free(env.subtest_selector.whitelist.strs);
-+	free_str_set(&env.subtest_selector.blacklist);
-+	free_str_set(&env.subtest_selector.whitelist);
- 	free(env.subtest_selector.num_set);
- 
- 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
 -- 
 2.25.1
 
