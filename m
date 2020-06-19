@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70749C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F38C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EB821941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8079D217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578377;
-	bh=7JtHJ0E/i7JKdT8A4ooJDTBHYUeVrUdH4UtPO+zE0/g=;
+	s=default; t=1592578383;
+	bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUBU30UmlRHswgJsrxiW78fPrrpf4UkpyZKnSW7TXl81zgKkfAz1Fp0gLuFXmz2NL
-	 0jOygJUM2cZIMI8N4ozuYoyKCvDQPUpGBUKRoA4YIpHEyzdFpg1uGw5fV8Bd95Kcv0
-	 ziTPUpitovBoLOUZzrPMObFoMnnzF6I5jOb9V1MI=
+	b=owuAFhEGfxwxeGYlyJohxyzFaFJRvfoPvChh3RdhRJtBZ7+PO+M5SWhXtgY8bluQt
+	 wZgzpnbGRFHaXoshUHMTWf672882X9unfhmaEbi7FsunkL/5kqMQex6+LGzCkWK67a
+	 M3smtaGtD/cRFnUux32JoSpcZ8mMMtmNSfQqwqHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389270AbgFSOwz (ORCPT
+        id S2389104AbgFSOxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46660 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389594AbgFSOwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:34 -0400
+        id S2389612AbgFSOwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20971217D8;
-        Fri, 19 Jun 2020 14:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEC921924;
+        Fri, 19 Jun 2020 14:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578353;
-        bh=7JtHJ0E/i7JKdT8A4ooJDTBHYUeVrUdH4UtPO+zE0/g=;
+        s=default; t=1592578361;
+        bh=hvxXd98s1xuuB7y/wMyWIq6EcmcDp8SLLGhH+YGV4hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UM05FerQupYvdgoAKCNd3I8haeyjXjo7GjFGLm7kql7I7Hy9XVIj0+Pn8+qXre7bi
-         oFmTTuO2rHA7EstRBTsKFJv7OQiQfIenUHEc02Ua+Ym+TW4oTn+F2MDhLmzypdxpHT
-         1pq3ykChNjmYfxorxmbQvVRnzfLYqh0sF7G9KvnQ=
+        b=J2qRmHaB5pjXnPYk3xn0ILuGmdICjd/sH+RLlH7ZPG7U4bdNzzk0PAxnkIBetdeCy
+         rD8OScOZhUQs4Xr2b9aJv0USUCeRowJJqwwEa2IcDKi1o3nIBG3Rdckxrd1MWZV2/A
+         jVRK7CdaeUaO8CsmvCM8tFlWMb2iJbuBl585Jh/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 180/190] powerpc/64s: Dont let DT CPU features set FSCR_DSCR
-Date:   Fri, 19 Jun 2020 16:33:45 +0200
-Message-Id: <20200619141642.797975745@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 183/190] sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
+Date:   Fri, 19 Jun 2020 16:33:48 +0200
+Message-Id: <20200619141643.000864215@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -58,54 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: NeilBrown <neilb@suse.de>
 
-commit 993e3d96fd08c3ebf7566e43be9b8cd622063e6d upstream.
+commit d47a5dc2888fd1b94adf1553068b8dad76cec96c upstream.
 
-The device tree CPU features binding includes FSCR bit numbers which
-Linux is instructed to set by firmware.
+There is no valid case for supporting duplicate pseudoflavor
+registrations.
+Currently the silent acceptance of such registrations is hiding a bug.
+The rpcsec_gss_krb5 module registers 2 flavours but does not unregister
+them, so if you load, unload, reload the module, it will happily
+continue to use the old registration which now has pointers to the
+memory were the module was originally loaded.  This could lead to
+unexpected results.
 
-Whether that's a good idea or not, in the case of the DSCR the Linux
-implementation has a hard requirement that the FSCR_DSCR bit not be
-set by default. We use it to track when a process reads/writes to
-DSCR, so it must be clear to begin with.
+So disallow duplicate registrations.
 
-So if firmware tells us to set FSCR_DSCR we must ignore it.
-
-Currently this does not cause a bug in our DSCR handling because the
-value of FSCR that the device tree CPU features code establishes is
-only used by swapper. All other tasks use the value hard coded in
-init_task.thread.fscr.
-
-However we'd like to fix that in a future commit, at which point this
-will become necessary.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200527145843.2761782-2-mpe@ellerman.id.au
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
+Cc: stable@vger.kernel.org (v2.6.12+)
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/sunrpc/auth_gss/svcauth_gss.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -385,6 +385,14 @@ static int __init feat_enable_dscr(struc
- {
- 	u64 lpcr;
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -796,9 +796,11 @@ svcauth_gss_register_pseudoflavor(u32 ps
+ 	new->h.flavour = &svcauthops_gss;
+ 	new->pseudoflavor = pseudoflavor;
  
-+	/*
-+	 * Linux relies on FSCR[DSCR] being clear, so that we can take the
-+	 * facility unavailable interrupt and track the task's usage of DSCR.
-+	 * See facility_unavailable_exception().
-+	 * Clear the bit here so that feat_enable() doesn't set it.
-+	 */
-+	f->fscr_bit_nr = -1;
-+
- 	feat_enable(f);
- 
- 	lpcr = mfspr(SPRN_LPCR);
+-	stat = 0;
+ 	test = auth_domain_lookup(name, &new->h);
+-	if (test != &new->h) { /* Duplicate registration */
++	if (test != &new->h) {
++		pr_warn("svc: duplicate registration of gss pseudo flavour %s.\n",
++			name);
++		stat = -EADDRINUSE;
+ 		auth_domain_put(test);
+ 		kfree(new->h.name);
+ 		goto out_free_dom;
 
 
