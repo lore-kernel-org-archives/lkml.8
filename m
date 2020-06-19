@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A03C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C0321D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D862158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579614;
-	bh=4foPV+8cPuT6YTbH/rVC26dtPTN6m24T14Feff016z0=;
+	s=default; t=1592579619;
+	bh=z6rKd0CO6HmS92fnceC04UuK8Oj5dVZDmCIrmHaMjkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odL1niVuhDcAaDekIy8ySf5w0z03rDj1IpfXxZPyea7lQ8Bp+ZuX4jcpKGOOJDlPf
-	 T8Mac/kja3hlKAjf7y4dEDkhWtPMa2YsbaVegkGbSx4/KQbmU6dxg3VtmRT916P05p
-	 P7cRfTLPCWRUikA9E9UCqxPYD5R2MY8A8pRmc2Rs=
+	b=ohlIZ5gYy215NMTERG9yvtBARIPARxe5t69snwezP+CjXFcNWoCCsSTbgFyyQKoeC
+	 pH+DN2YflVLGzEhjIri6iVNhjQvQBEw5eM1FbuxqqlNfbuKTPJYi6/WgwKYwQpE64B
+	 ESWLV6KZ4I+DDXnIWemH5mOCjMyT/6wSfJvysHkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403933AbgFSPNc (ORCPT
+        id S2392200AbgFSPNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392240AbgFSPNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:13:24 -0400
+        id S2392253AbgFSPNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:13:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9427520776;
-        Fri, 19 Jun 2020 15:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF08421941;
+        Fri, 19 Jun 2020 15:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579604;
-        bh=4foPV+8cPuT6YTbH/rVC26dtPTN6m24T14Feff016z0=;
+        s=default; t=1592579609;
+        bh=z6rKd0CO6HmS92fnceC04UuK8Oj5dVZDmCIrmHaMjkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoeQ2W3vd8bhQnvt969CR64djw/Hfu+HUM3PNT+JvZx/zRGdmwszjA3HODZV7rKfi
-         D3YUMDnrR0f8v+OFrLhscDmL43y+w21cRORHmv7oI+Xf3rH+EswsdhT00V8mG3zfvX
-         qOLdRFjr8urGOARi0XKpHscbmIBB92k7YB6o5MAY=
+        b=fWNyiVZIGoUy3qI9zAvS/RPt/7UPeHaz0Ro+uS/VjBJXB5RZ7xxJ30SCKB5TjM7lu
+         Op75Tgwc55RZR+PvoZN+4uKPM/2EoHbOCwi8rAV3WSfWaJGLxzCuoMIbo6a4sZMijc
+         iC/hWnC4NdEfn+ikLUBKlDfatVRkTs+wOP2Q/ZSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Frank=20Sch=C3=A4fer?= <fschaefer.oss@googlemail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 198/261] carl9170: remove P2P_GO support
-Date:   Fri, 19 Jun 2020 16:33:29 +0200
-Message-Id: <20200619141659.386274793@linuxfoundation.org>
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 200/261] media: cedrus: Program output format during each run
+Date:   Fri, 19 Jun 2020 16:33:31 +0200
+Message-Id: <20200619141659.484135426@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,77 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit b14fba7ebd04082f7767a11daea7f12f3593de22 upstream.
+commit a8876c22eab9a871834f85de83e98bbf7e6e264d upstream.
 
-This patch follows up on a bug-report by Frank Schäfer that
-discovered P2P GO wasn't working with wpa_supplicant.
-This patch removes part of the broken P2P GO support but
-keeps the vif switchover code in place.
+Previously, the output format was programmed as part of the ioctl()
+handler. However, this has two problems:
+
+  1) If there are multiple active streams with different output
+     formats, the hardware will use whichever format was set last
+     for both streams. Similarly, an ioctl() done in an inactive
+     context will wrongly affect other active contexts.
+  2) The registers are written while the device is not actively
+     streaming. To enable runtime PM tied to the streaming state,
+     all hardware access needs to be moved inside cedrus_device_run().
+
+The call to cedrus_dst_format_set() is now placed just before the
+codec-specific callback that programs the hardware.
 
 Cc: <stable@vger.kernel.org>
-Link: <https://lkml.kernel.org/r/3a9d86b6-744f-e670-8792-9167257edef8@googlemail.com>
-Reported-by: Frank Schäfer <fschaefer.oss@googlemail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200425092811.9494-1-chunkeey@gmail.com
+Fixes: 50e761516f2b ("media: platform: Add Cedrus VPU decoder driver")
+Suggested-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Suggested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/carl9170/fw.c   |    4 +---
- drivers/net/wireless/ath/carl9170/main.c |   21 ++++-----------------
- 2 files changed, 5 insertions(+), 20 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus_dec.c   |    2 ++
+ drivers/staging/media/sunxi/cedrus/cedrus_video.c |    3 ---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -338,9 +338,7 @@ static int carl9170_fw(struct ar9170 *ar
- 		ar->hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+@@ -65,6 +65,8 @@ void cedrus_device_run(void *priv)
  
- 		if (SUPP(CARL9170FW_WLANTX_CAB)) {
--			if_comb_types |=
--				BIT(NL80211_IFTYPE_AP) |
--				BIT(NL80211_IFTYPE_P2P_GO);
-+			if_comb_types |= BIT(NL80211_IFTYPE_AP);
+ 	v4l2_m2m_buf_copy_metadata(run.src, run.dst, true);
  
- #ifdef CONFIG_MAC80211_MESH
- 			if_comb_types |=
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -582,11 +582,10 @@ static int carl9170_init_interface(struc
- 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
- 	    (vif->type != NL80211_IFTYPE_AP));
++	cedrus_dst_format_set(dev, &ctx->dst_fmt);
++
+ 	dev->dec_ops[ctx->current_codec]->setup(ctx, &run);
  
--	/* While the driver supports HW offload in a single
--	 * P2P client configuration, it doesn't support HW
--	 * offload in the favourit, concurrent P2P GO+CLIENT
--	 * configuration. Hence, HW offload will always be
--	 * disabled for P2P.
-+	/* The driver used to have P2P GO+CLIENT support,
-+	 * but since this was dropped and we don't know if
-+	 * there are any gremlins lurking in the shadows,
-+	 * so best we keep HW offload disabled for P2P.
- 	 */
- 	ar->disable_offload |= vif->p2p;
+ 	/* Complete request(s) controls if needed. */
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+@@ -286,7 +286,6 @@ static int cedrus_s_fmt_vid_cap(struct f
+ 				struct v4l2_format *f)
+ {
+ 	struct cedrus_ctx *ctx = cedrus_file2ctx(file);
+-	struct cedrus_dev *dev = ctx->dev;
+ 	struct vb2_queue *vq;
+ 	int ret;
  
-@@ -639,18 +638,6 @@ static int carl9170_op_add_interface(str
- 			if (vif->type == NL80211_IFTYPE_STATION)
- 				break;
+@@ -300,8 +299,6 @@ static int cedrus_s_fmt_vid_cap(struct f
  
--			/* P2P GO [master] use-case
--			 * Because the P2P GO station is selected dynamically
--			 * by all participating peers of a WIFI Direct network,
--			 * the driver has be able to change the main interface
--			 * operating mode on the fly.
--			 */
--			if (main_vif->p2p && vif->p2p &&
--			    vif->type == NL80211_IFTYPE_AP) {
--				old_main = main_vif;
--				break;
--			}
+ 	ctx->dst_fmt = f->fmt.pix;
+ 
+-	cedrus_dst_format_set(dev, &ctx->dst_fmt);
 -
- 			err = -EBUSY;
- 			rcu_read_unlock();
+ 	return 0;
+ }
  
 
 
