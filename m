@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9151C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759482067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9A820809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584726;
-	bh=f9IqoZYz1ciQfOagfwTGYcDo8bK24CSu/A4kgC8ilqI=;
+	s=default; t=1592584729;
+	bh=VKCm5b39uj//IkGFhLqHby24TJz9sv73pICBDYT9Vhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmVM8iFVI+Bw81o0hwlkcpi9VihQu4uBKYUWMiOFSxRk6PEWEhpNbL0veWxAYKetH
-	 OEnQMphEZaeiuh8Arpzxh1lEVdMV0HXWZ8VfacTndY54A1PvDkA9RosTZKlyXENkii
-	 tNVly6yrYjNJyVeAzIYRSm1grf0DOSU4NRGVOZc4=
+	b=X1M7TB5bxnzRzNnYOKFEFs0xq8V4r5qOeIbPRTQwK05g6kFfBSirxTajPByx/i/ax
+	 FZ3VpcBnXvlKcd70wH+JXeI3tHoekcd1rvtnEFofNN2LRC5RVGxKA7ZVgccrGB4sSD
+	 wFy2lisZHaxROPVzkER9+ZdWiTRJBka1g6J8ynx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395186AbgFSQip (ORCPT
+        id S2395357AbgFSQir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39450 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388950AbgFSOrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:22 -0400
+        id S2388931AbgFSOrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 477A720DD4;
-        Fri, 19 Jun 2020 14:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9672083B;
+        Fri, 19 Jun 2020 14:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578042;
-        bh=f9IqoZYz1ciQfOagfwTGYcDo8bK24CSu/A4kgC8ilqI=;
+        s=default; t=1592578035;
+        bh=VKCm5b39uj//IkGFhLqHby24TJz9sv73pICBDYT9Vhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxr1AKO1Kcb525KAbXpcCAaPG2Q9ZpCSmbnfTZdXOxptfYc0hST4S9LcgBpbTU4nL
-         5vuuE5EPQGaiDaJg06CtiQq2j2G9BsIT9qJlSqYAI26okP5J+8fQXJygOueo5UE4ja
-         3ARyk21gXCJpvQ4gj3y+S12esWwKMHVj++Wa71wE=
+        b=ky4cNRliyZ2/3l9O7iASGlStrAUKy7jyWXr7XTKc2KSPgXrU+YK6y9TOT3sDtuChW
+         KdTdGlgBmXfTonTdjpkYVUuXOoZvfmrLnlQ9/WjmMlbSawr1EiDPrY5kxQ5FZOZZm0
+         4U5hp6caDKhPnOq0oAB9LW6oVS48oyCyMtHtMowc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 058/190] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-Date:   Fri, 19 Jun 2020 16:31:43 +0200
-Message-Id: <20200619141636.474352819@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        youling257@gmail.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 029/190] ACPI: PM: Avoid using power resources if there are none for D0
+Date:   Fri, 19 Jun 2020 16:31:14 +0200
+Message-Id: <20200619141634.987322265@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,51 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 2ebac8bb3c2d35f5135466490fc8eeaf3f3e2d37 upstream.
+commit 956ad9d98b73f59e442cc119c98ba1e04e94fe6d upstream.
 
-Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-when determining whether a nested VM-Exit should be reflected into L1 or
-handled by KVM in L0.
+As recently reported, some platforms provide a list of power
+resources for device power state D3hot, through the _PR3 object,
+but they do not provide a list of power resources for device power
+state D0.
 
-For better or worse, the switch statement in nested_vmx_exit_reflected()
-currently defaults to "true", i.e. reflects any nested VM-Exit without
-dedicated logic.  Because the case statements only contain the basic
-exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-even if KVM intended to handle it in L0.
+Among other things, this causes acpi_device_get_power() to return
+D3hot as the current state of the device in question if all of the
+D3hot power resources are "on", because it sees the power_resources
+flag set and calls acpi_power_get_inferred_state() which finds that
+D3hot is the shallowest power state with all of the associated power
+resources turned "on", so that's what it returns.  Moreover, that
+value takes precedence over the acpi_dev_pm_explicit_get() return
+value, because it means a deeper power state.  The device may very
+well be in D0 physically at that point, however.
 
-Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-L1, as "failed VM-Entry" is the only modifier that KVM can currently
-encounter.  The SMM modifiers will never be generated as KVM doesn't
-support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-enter an enclave in a KVM guest (L1 or L2).
+Moreover, the presence of _PR3 without _PR0 for a given device
+means that only one D3-level power state can be supported by it.
+Namely, because there are no power resources to turn "off" when
+transitioning the device from D0 into D3cold (which should be
+supported since _PR3 is present), the evaluation of _PS3 should
+be sufficient to put it straight into D3cold, but this means that
+the effect of turning "on" the _PR3 power resources is unclear,
+so it is better to avoid doing that altogether.  Consequently,
+there is no practical way do distinguish D3cold from D3hot for
+the device in question and the power states of it can be labeled
+so that D3hot is the deepest supported one (and Linux assumes
+that putting a device into D3hot via ACPI may cause power to be
+removed from it anyway, for legacy reasons).
 
-Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+To work around the problem described above modify the ACPI
+enumeration of devices so that power resources are only used
+for device power management if the list of D0 power resources
+is not empty and make it mart D3cold as supported only if that
+is the case and the D3hot list of power resources is not empty
+too.
+
+Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
+Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: youling257@gmail.com
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/device_pm.c |    2 +-
+ drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -8711,7 +8711,7 @@ static bool nested_vmx_exit_reflected(st
- 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
- 				KVM_ISA_VMX);
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -172,7 +172,7 @@ int acpi_device_set_power(struct acpi_de
+ 		 * possibly drop references to the power resources in use.
+ 		 */
+ 		state = ACPI_STATE_D3_HOT;
+-		/* If _PR3 is not available, use D3hot as the target state. */
++		/* If D3cold is not supported, use D3hot as the target state. */
+ 		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
+ 			target_state = state;
+ 	} else if (!device->power.states[state].flags.valid) {
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -920,12 +920,9 @@ static void acpi_bus_init_power_state(st
  
--	switch (exit_reason) {
-+	switch ((u16)exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		if (is_nmi(intr_info))
- 			return false;
+ 		if (buffer.length && package
+ 		    && package->type == ACPI_TYPE_PACKAGE
+-		    && package->package.count) {
+-			int err = acpi_extract_power_resources(package, 0,
+-							       &ps->resources);
+-			if (!err)
+-				device->power.flags.power_resources = 1;
+-		}
++		    && package->package.count)
++			acpi_extract_power_resources(package, 0, &ps->resources);
++
+ 		ACPI_FREE(buffer.pointer);
+ 	}
+ 
+@@ -972,14 +969,27 @@ static void acpi_bus_get_power_flags(str
+ 		acpi_bus_init_power_state(device, i);
+ 
+ 	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
+-	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
+-		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
+ 
+-	/* Set defaults for D0 and D3hot states (always valid) */
++	/* Set the defaults for D0 and D3hot (always supported). */
+ 	device->power.states[ACPI_STATE_D0].flags.valid = 1;
+ 	device->power.states[ACPI_STATE_D0].power = 100;
+ 	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
+ 
++	/*
++	 * Use power resources only if the D0 list of them is populated, because
++	 * some platforms may provide _PR3 only to indicate D3cold support and
++	 * in those cases the power resources list returned by it may be bogus.
++	 */
++	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
++		device->power.flags.power_resources = 1;
++		/*
++		 * D3cold is supported if the D3hot list of power resources is
++		 * not empty.
++		 */
++		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
++			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
++	}
++
+ 	if (acpi_bus_init_power(device))
+ 		device->flags.power_manageable = 0;
+ }
 
 
