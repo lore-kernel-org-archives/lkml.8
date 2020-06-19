@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF54C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 207B0217A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EBB217A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583302;
-	bh=+OZj2jAXCncu9wYrjju7ertIwwrHjJKhK6GfzfHwLvk=;
+	s=default; t=1592583303;
+	bh=G/fWTg7WHrl/CDZ6nOfG1nn1s44r3LN8WBZ60RNAM8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irV3VFCnO2257DVIJhz3wTtOT3rJO3Y4uRjex/SMTAXFutVTrAtnrWn0VBQqG3y7m
-	 BqAihQasds7VdCw0Qw9e5CEbwK5yGKGeKfoyOxCZYNmg1it3uAL8UB27m0y0E8ml5a
-	 iZuQtFHtjHHH/poM8EkQ7pea5hWbLoPbjmJnEYrM=
+	b=0ED5DWp8aeB/2V4kNJjYS/2FB4zpBKvTdKv93AuSTcAmVuJvpvtvfmHoTVgR6DzOt
+	 RR4ivINkC2QTz7LttiaQbTh8Ch1HZzMEpJK/Jfzd6OayTSFUwAQwc+9hAnSB/8jq2S
+	 vvfu3qA2FWocAVWBjFzZj7ArPI9/f4VCQUficVaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394460AbgFSQO7 (ORCPT
+        id S2391381AbgFSQO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390626AbgFSPDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:48 -0400
+        id S2391062AbgFSPDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:03:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B8D206DB;
-        Fri, 19 Jun 2020 15:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972B021974;
+        Fri, 19 Jun 2020 15:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579028;
-        bh=+OZj2jAXCncu9wYrjju7ertIwwrHjJKhK6GfzfHwLvk=;
+        s=default; t=1592579031;
+        bh=G/fWTg7WHrl/CDZ6nOfG1nn1s44r3LN8WBZ60RNAM8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RiILUdiBhmXk1ZIRh3zsri77LztcDkBpEKlug4G8TFxtF941BvzQHLYhnnnqV/VEu
-         uL3A8DtygclUQpsjUvgdiUVdWEFmgj1raBHvjwAUhBrbV3hJnQOiNAY0up/ygSwfWH
-         oLB57uTOKZiVUinP/Bnjfg1opOYwCQLio7f0HFNM=
+        b=0yVaROszHHKxidVLYKYTi2Axy+9oJ/3YpMbtF50u1JIUAmFs0D1FVplkZdr3ii/Ob
+         F3SA+LisMuPduVkzk7rv/uyg2OnkzyCO3LLSqahvCtlpVbvMwXSVhOUMW7WdhCV8G/
+         BB4ADzHpA8g1sLhwDUyXuLexNFPEbqImBe6OE6jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.19 247/267] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
-Date:   Fri, 19 Jun 2020 16:33:52 +0200
-Message-Id: <20200619141700.550399559@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 248/267] dm crypt: avoid truncating the logical block size
+Date:   Fri, 19 Jun 2020 16:33:53 +0200
+Message-Id: <20200619141700.590948854@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,61 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 upstream.
+commit 64611a15ca9da91ff532982429c44686f4593b5f upstream.
 
-We do need access_process_vm() to access the target's reg_window.
-However, access to caller's memory (storing the result in
-genregs32_get(), fetching the new values in case of genregs32_set())
-should be done by normal uaccess primitives.
+queue_limits::logical_block_size got changed from unsigned short to
+unsigned int, but it was forgotten to update crypt_io_hints() to use the
+new type.  Fix it.
 
-Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
-Cc: stable@kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: ad6bf88a6c19 ("block: fix an integer overflow in logical block size")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sparc/kernel/ptrace_64.c |   17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ drivers/md/dm-crypt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/sparc/kernel/ptrace_64.c
-+++ b/arch/sparc/kernel/ptrace_64.c
-@@ -571,19 +571,13 @@ static int genregs32_get(struct task_str
- 			for (; count > 0 && pos < 32; count--) {
- 				if (access_process_vm(target,
- 						      (unsigned long)
--						      &reg_window[pos],
-+						      &reg_window[pos++],
- 						      &reg, sizeof(reg),
- 						      FOLL_FORCE)
- 				    != sizeof(reg))
- 					return -EFAULT;
--				if (access_process_vm(target,
--						      (unsigned long) u,
--						      &reg, sizeof(reg),
--						      FOLL_FORCE | FOLL_WRITE)
--				    != sizeof(reg))
-+				if (put_user(reg, u++))
- 					return -EFAULT;
--				pos++;
--				u++;
- 			}
- 		}
- 	}
-@@ -683,12 +677,7 @@ static int genregs32_set(struct task_str
- 			}
- 		} else {
- 			for (; count > 0 && pos < 32; count--) {
--				if (access_process_vm(target,
--						      (unsigned long)
--						      u,
--						      &reg, sizeof(reg),
--						      FOLL_FORCE)
--				    != sizeof(reg))
-+				if (get_user(reg, u++))
- 					return -EFAULT;
- 				if (access_process_vm(target,
- 						      (unsigned long)
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -3078,7 +3078,7 @@ static void crypt_io_hints(struct dm_tar
+ 	limits->max_segment_size = PAGE_SIZE;
+ 
+ 	limits->logical_block_size =
+-		max_t(unsigned short, limits->logical_block_size, cc->sector_size);
++		max_t(unsigned, limits->logical_block_size, cc->sector_size);
+ 	limits->physical_block_size =
+ 		max_t(unsigned, limits->physical_block_size, cc->sector_size);
+ 	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
 
 
