@@ -2,161 +2,83 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1084BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1EFE20DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A834204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 18:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="AcBrdfPZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i5VvDskD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389116AbgFSSkL (ORCPT
+        id S2395273AbgFSSlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:40:11 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:20262 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731358AbgFSSkJ (ORCPT
+        Fri, 19 Jun 2020 14:41:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389284AbgFSSlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 14:40:09 -0400
-Date:   Fri, 19 Jun 2020 18:39:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1592592006; bh=g0HP1Oqtt2tWvdPrfD8uRVaU3hxTt+LfGRRANNn2PNI=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=AcBrdfPZ9GQwVEnKR58YVZ4hFuZ8vjuZFKRZ/+ZkdANyi82kClVnFfTpWvS2ianMZ
-         wCVfzJ8+m5FNwFhd9mlwpZ8x05UO1zqbrJQ1KuTb6IyIE5CfiFpDJxJbH3yIHs/w7f
-         unJFKkjv4XPMRxk7aFXNsbtLSbiAd36TKB+hS7JFvLidvSdRTrxhltIF59PnPrvBCF
-         fqmkDu/AExjpvH+AxGN2Q3acyRQuQO3hLoZFWcb85yBCStBJ3sm7pshWYzuvuCC+20
-         G2gJNImIIJMZR53lP2PasWaho63TNassymIA3pexwDoRrPGBTYjHQAOifcZnUSknTa
-         ywWk9h56Ew5sQ==
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>,
-        Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: [PATCH net 3/3] net: ethtool: sync netdev_features_strings order with enum netdev_features
-Message-ID: <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
-In-Reply-To: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
-References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
+        Fri, 19 Jun 2020 14:41:07 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08666C0613EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 11:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QtDEQGCaPDLFJZLzFz4vFTkMLLqDzPlomTvJhmg/yeA=; b=i5VvDskDpupxJDvbClZN2Kf/U2
+        zE7SekBoNTpB6H2nMDAnVNO3iFvfPpNdmnaiSUVv9w3GcYG/SON7HOyqmRt6OAihky3J5nlELQx39
+        AebESG33iascKWlkQZ2LYVXs90D9AsL6JkoFkeKWIjwjsM9EaD2jTFIM2f6MbTpfF4CGK6cbP5hoK
+        BJD4Yek5+fDA9NKR+IRaXjWPGCZ5DtywYKza11lXgdMLkKfabceePq9zkXExMsxZt/BmShBGJXuOz
+        YcyyL+TOwWv85KrJfbk846sT5rhhx6qFkmsgkR7mno5dsC3prZYeu40wEBWn/NpqHikY2VWe+cpY8
+        OgfX/+og==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmLwB-0004mX-Q7; Fri, 19 Jun 2020 18:40:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7BACF301A32;
+        Fri, 19 Jun 2020 20:40:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 67D212C28E840; Fri, 19 Jun 2020 20:40:25 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 20:40:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com
+Subject: Re: [PATCH 11/21] perf/x86/intel/lbr: Support LBR_CTL
+Message-ID: <20200619184025.GF576888@hirez.programming.kicks-ass.net>
+References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
+ <1592575449-64278-12-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592575449-64278-12-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ordering of netdev_features_strings[] makes no sense when it comes
-to user interaction, as list of features in `ethtool -k` input is sorted
-according to the corresponding bit's position.
-Instead, it *does* make sense when it comes to adding new netdev_features
-or modifying existing ones. We have at least 2 occasions of forgetting to
-add the strings for newly introduced features, and one of them existed
-since 3.1x times till now.
+On Fri, Jun 19, 2020 at 07:03:59AM -0700, kan.liang@linux.intel.com wrote:
+> -	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
+> +	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map || x86_pmu.lbr_ctl_map) {
 
-Let's keep this stringtable sorted according to bit's position in enum
-netdev_features, as this simplifies both reading and modification of the
-source code and can help not to miss or forget anything.
+> +	union {
+> +		u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
+> +		u64		lbr_ctl_mask;		   /* LBR_CTL valid bits */
+> +	};
 
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
----
- net/ethtool/common.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+This makes absolutely no sense. There is hoping the compiler realizes
+how stupid that is and fixes it for you, but shees.
 
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index c8e3fce6e48d..24f35d47832d 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -8,25 +8,25 @@
- const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] =
-=3D {
- =09[NETIF_F_SG_BIT]=09=09=09=3D "tx-scatter-gather",
- =09[NETIF_F_IP_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv4",
-+
-+=09/* __UNUSED_NETIF_F_1 - deprecated */
-+
- =09[NETIF_F_HW_CSUM_BIT]=09=09=09=3D "tx-checksum-ip-generic",
- =09[NETIF_F_IPV6_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv6",
- =09[NETIF_F_HIGHDMA_BIT]=09=09=09=3D "highdma",
- =09[NETIF_F_FRAGLIST_BIT]=09=09=09=3D "tx-scatter-gather-fraglist",
- =09[NETIF_F_HW_VLAN_CTAG_TX_BIT]=09=09=3D "tx-vlan-hw-insert",
--
- =09[NETIF_F_HW_VLAN_CTAG_RX_BIT]=09=09=3D "rx-vlan-hw-parse",
- =09[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]=09=3D "rx-vlan-filter",
--=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
--=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
--=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
- =09[NETIF_F_VLAN_CHALLENGED_BIT]=09=09=3D "vlan-challenged",
- =09[NETIF_F_GSO_BIT]=09=09=09=3D "tx-generic-segmentation",
- =09[NETIF_F_LLTX_BIT]=09=09=09=3D "tx-lockless",
- =09[NETIF_F_NETNS_LOCAL_BIT]=09=09=3D "netns-local",
- =09[NETIF_F_GRO_BIT]=09=09=09=3D "rx-gro",
--=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
- =09[NETIF_F_LRO_BIT]=09=09=09=3D "rx-lro",
-=20
-+=09/* NETIF_F_GSO_SHIFT =3D NETIF_F_TSO_BIT */
-+
- =09[NETIF_F_TSO_BIT]=09=09=09=3D "tx-tcp-segmentation",
- =09[NETIF_F_GSO_ROBUST_BIT]=09=09=3D "tx-gso-robust",
- =09[NETIF_F_TSO_ECN_BIT]=09=09=09=3D "tx-tcp-ecn-segmentation",
-@@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT]=
-[ETH_GSTRING_LEN] =3D {
- =09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]=09=3D "tx-tunnel-remcsum-segmentation"=
-,
- =09[NETIF_F_GSO_SCTP_BIT]=09=09=09=3D "tx-sctp-segmentation",
- =09[NETIF_F_GSO_ESP_BIT]=09=09=09=3D "tx-esp-segmentation",
-+
-+=09/* NETIF_F_GSO_UDP_BIT - deprecated */
-+
- =09[NETIF_F_GSO_UDP_L4_BIT]=09=09=3D "tx-udp-segmentation",
- =09[NETIF_F_GSO_FRAGLIST_BIT]=09=09=3D "tx-gso-list",
-=20
-+=09/* NETIF_F_GSO_LAST =3D NETIF_F_GSO_FRAGLIST_BIT */
-+
- =09[NETIF_F_FCOE_CRC_BIT]=09=09=09=3D "tx-checksum-fcoe-crc",
- =09[NETIF_F_SCTP_CRC_BIT]=09=09=09=3D "tx-checksum-sctp",
- =09[NETIF_F_FCOE_MTU_BIT]=09=09=09=3D "fcoe-mtu",
-@@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
-][ETH_GSTRING_LEN] =3D {
- =09[NETIF_F_LOOPBACK_BIT]=09=09=09=3D "loopback",
- =09[NETIF_F_RXFCS_BIT]=09=09=09=3D "rx-fcs",
- =09[NETIF_F_RXALL_BIT]=09=09=09=3D "rx-all",
-+=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
-+=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
-+=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
- =09[NETIF_F_HW_L2FW_DOFFLOAD_BIT]=09=09=3D "l2-fwd-offload",
-+
- =09[NETIF_F_HW_TC_BIT]=09=09=09=3D "hw-tc-offload",
- =09[NETIF_F_HW_ESP_BIT]=09=09=09=3D "esp-hw-offload",
- =09[NETIF_F_HW_ESP_TX_CSUM_BIT]=09=09=3D "esp-tx-csum-hw-offload",
- =09[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]=09=3D "rx-udp_tunnel-port-offload",
--=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
- =09[NETIF_F_HW_TLS_TX_BIT]=09=09=09=3D "tls-hw-tx-offload",
- =09[NETIF_F_HW_TLS_RX_BIT]=09=09=09=3D "tls-hw-rx-offload",
-+
-+=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
-+=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
- =09[NETIF_F_GRO_FRAGLIST_BIT]=09=09=3D "rx-gro-list",
-+
- =09[NETIF_F_HW_MACSEC_BIT]=09=09=09=3D "macsec-hw-offload",
-+
-+=09/* NETDEV_FEATURE_COUNT */
- };
-=20
- const char
---=20
-2.27.0
-
-
+Please, just keep the old name.
