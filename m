@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ABCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F840C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC078206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF7C206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581363;
-	bh=U+JU3pulcrPnDSUFMUHuppeZgdml6VTYsuEf4BfNm28=;
+	s=default; t=1592581374;
+	bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IENlLn1CxOX2qxMHWPUx5UZcnAxhto/o/co0WuHJDEP/Tis35ZH//f0KbDvguth8+
-	 R3M85D6EcBf13XzojrRJ+ljGQUB1jScOF6yrjP/wDnjD26PlIYucOc6Zw1CX8S+MmX
-	 akRzJ6QI0OwCczaq46akzMQdaH0nhrreijkM6M3c=
+	b=FIK9YuGFu9sBJe4SU786ZDNlbAF6AOvEDzG+lgwBbv8I5PpfeYe2qMJN6Vs5k5NJw
+	 upz+l0jSoLOP9k6S+0hTLHlrQNNdS+P9Y/fOzB4shVSLVBGThBvn2dvou9mLMatO56
+	 3j6/zwjEpX0zOsWyDKMMP39L1wbGS/0EA2qPbuV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392093AbgFSPml (ORCPT
+        id S2394044AbgFSPmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393633AbgFSP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:28:34 -0400
+        id S2393579AbgFSP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4112821919;
-        Fri, 19 Jun 2020 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783442186A;
+        Fri, 19 Jun 2020 15:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580513;
-        bh=U+JU3pulcrPnDSUFMUHuppeZgdml6VTYsuEf4BfNm28=;
+        s=default; t=1592580511;
+        bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5h4+87wGtENue0bBu6lzsTZl9CiW1yewL0XLTvTNFPF1q9xIxMbWift8Sm5qduYa
-         uKBRiJEZD0DqDuZSJ563RCCeorAdQA0vMQfkN/xMf/jcixGHrxgGOahdgDVOpQuKr7
-         2H7cLvtITBv26JmOsFOIOxoMdfQkejBfVNCZTM9w=
+        b=odg/lCIhUe5L5CLumN7w/4ZsN4mSBc0wHUbTJ+ozrb95D2j904b5PDQW1zNcHpApB
+         O4UVMx5W/AADhNIhAfxjlBQyO6quocDI1jXcO7O04MoSr5pE9ZMwe6tIt+ZT7ttD6W
+         MdaEFQpmiduYxqduufRpFgoox6gdtZxfkFRig/KY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
+        stable@vger.kernel.org, Eelco Chaudron <echaudro@redhat.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 248/376] bpf: Fix map permissions check
-Date:   Fri, 19 Jun 2020 16:32:46 +0200
-Message-Id: <20200619141722.065296471@linuxfoundation.org>
+Subject: [PATCH 5.7 247/376] libbpf: Fix perf_buffer__free() API for sparse allocs
+Date:   Fri, 19 Jun 2020 16:32:45 +0200
+Message-Id: <20200619141722.017192577@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -62,37 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Protopopov <a.s.protopopov@gmail.com>
+From: Eelco Chaudron <echaudro@redhat.com>
 
-[ Upstream commit 1ea0f9120c8ce105ca181b070561df5cbd6bc049 ]
+[ Upstream commit 601b05ca6edb0422bf6ce313fbfd55ec7bbbc0fd ]
 
-The map_lookup_and_delete_elem() function should check for both FMODE_CAN_WRITE
-and FMODE_CAN_READ permissions because it returns a map element to user space.
+In case the cpu_bufs are sparsely allocated they are not all
+free'ed. These changes will fix this.
 
-Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
-Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200527185700.14658-5-a.s.protopopov@gmail.com
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/159056888305.330763.9684536967379110349.stgit@ebuild
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 4e6dee19a668..5e52765161f9 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1468,7 +1468,8 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
- 	map = __bpf_map_get(f);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	if (!(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
-+	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ) ||
-+	    !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
- 		err = -EPERM;
- 		goto err_put;
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index cd53204d33f0..0c5b4fb553fb 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -7809,9 +7809,12 @@ void perf_buffer__free(struct perf_buffer *pb)
+ 	if (!pb)
+ 		return;
+ 	if (pb->cpu_bufs) {
+-		for (i = 0; i < pb->cpu_cnt && pb->cpu_bufs[i]; i++) {
++		for (i = 0; i < pb->cpu_cnt; i++) {
+ 			struct perf_cpu_buf *cpu_buf = pb->cpu_bufs[i];
+ 
++			if (!cpu_buf)
++				continue;
++
+ 			bpf_map_delete_elem(pb->map_fd, &cpu_buf->map_key);
+ 			perf_buffer__free_cpu_buf(pb, cpu_buf);
+ 		}
 -- 
 2.25.1
 
