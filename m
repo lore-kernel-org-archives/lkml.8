@@ -4,49 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7459C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF30E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C0721582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579533;
-	bh=AB/m0SfOCiWyKEove6ycVAjabbVWhS2iSCf5oadL31w=;
+	s=default; t=1592579535;
+	bh=mvP8PbU7TdCifdkIMd1Es8azRYI9/CbpylWsdkoFvAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTJwLKIey4rlfHr/ct+aerqJ/+DAZiLt+k465+XWOq5mEEYTSwcflhNSWtCrpa4Lv
-	 a7g2kkLXulJ8tdag4+ki2kFQpZAXwksdV/vJufCZZwUFmHBln7SaqFJEtjgv2T3y97
-	 hP+41Vn8URwvRMpzDxppoWgNeIc5VZ4X0wkcA+ic=
+	b=vlmY2H/nYVPugOH0fUAhFQx8wwiuTrj7RpMxcLtT5f/CBEgmX0IopR05PNqoC56/L
+	 2CQYr5rNdCvKb/D3FbrhhL984nL5Tx+7EeQDbvhDKOWeCDF5VzKghkUc4qFU/4/LfG
+	 p7ax80LGYcWNCV8tgWgw8rC0gn/z45KIG6MiMbBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403874AbgFSPMJ (ORCPT
+        id S2391863AbgFSPMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392144AbgFSPL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:11:59 -0400
+        id S2403871AbgFSPMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:12:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A422421582;
-        Fri, 19 Jun 2020 15:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42E02186A;
+        Fri, 19 Jun 2020 15:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579518;
-        bh=AB/m0SfOCiWyKEove6ycVAjabbVWhS2iSCf5oadL31w=;
+        s=default; t=1592579528;
+        bh=mvP8PbU7TdCifdkIMd1Es8azRYI9/CbpylWsdkoFvAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A07E/sz1ylREmqBUDUrxlGPtJ5TkSXSxFiN/Bb5UpVLjGPglRbOsFugqWo6vn9VIE
-         zhDbSnrxdeVH79+uz4z1rWTFlAPp50I7ZKBEalTuuAB511se8036EwLpj5iwulCkcF
-         v3MwQHSq6YCDPFCJPat7nTyuyPs220E+IYO6gO4I=
+        b=bxiP2Ye6hbhAYNG6tzF54PBvCvjnemTRVkLeI4LaTLxYqWMdpZyNzoFSaNCiWgny0
+         Ah+7rhcbQSk18rG97mTYOM3MGEM5sdx3X+QlSLAjV768NvD2Psywao+dLEfP4Sxaxu
+         9gjkMTdAu4aN8CSGlSfThWklKOJf6Em75GrfkVU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 166/261] btrfs: fix space_info bytes_may_use underflow after nocow buffered write
-Date:   Fri, 19 Jun 2020 16:32:57 +0200
-Message-Id: <20200619141657.849187546@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        James Morris <jmorris@namei.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>, Yiqian Wei <yiwei@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 170/261] mm: initialize deferred pages with interrupts enabled
+Date:   Fri, 19 Jun 2020 16:33:01 +0200
+Message-Id: <20200619141658.052756597@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -59,197 +70,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-commit 467dc47ea99c56e966e99d09dae54869850abeeb upstream.
+commit 3d060856adfc59afb9d029c233141334cfaba418 upstream.
 
-When doing a buffered write we always try to reserve data space for it,
-even when the file has the NOCOW bit set or the write falls into a file
-range covered by a prealloc extent. This is done both because it is
-expensive to check if we can do a nocow write (checking if an extent is
-shared through reflinks or if there's a hole in the range for example),
-and because when writeback starts we might actually need to fallback to
-COW mode (for example the block group containing the target extents was
-turned into RO mode due to a scrub or balance).
+Initializing struct pages is a long task and keeping interrupts disabled
+for the duration of this operation introduces a number of problems.
 
-When we are unable to reserve data space we check if we can do a nocow
-write, and if we can, we proceed with dirtying the pages and setting up
-the range for delalloc. In this case the bytes_may_use counter of the
-data space_info object is not incremented, unlike in the case where we
-are able to reserve data space (done through btrfs_check_data_free_space()
-which calls btrfs_alloc_data_chunk_ondemand()).
+1. jiffies are not updated for long period of time, and thus incorrect time
+   is reported. See proposed solution and discussion here:
+   lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+2. It prevents farther improving deferred page initialization by allowing
+   intra-node multi-threading.
 
-Later when running delalloc we attempt to start writeback in nocow mode
-but we might revert back to cow mode, for example because in the meanwhile
-a block group was turned into RO mode by a scrub or relocation. The cow
-path after successfully allocating an extent ends up calling
-btrfs_add_reserved_bytes(), which expects the bytes_may_use counter of
-the data space_info object to have been incremented before - but we did
-not do it when the buffered write started, since there was not enough
-available data space. So btrfs_add_reserved_bytes() ends up decrementing
-the bytes_may_use counter anyway, and when the counter's current value
-is smaller then the size of the allocated extent we get a stack trace
-like the following:
+We are keeping interrupts disabled to solve a rather theoretical problem
+that was never observed in real world (See 3a2d7fa8a3d5).
 
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 20138 at fs/btrfs/space-info.h:115 btrfs_add_reserved_bytes+0x3d6/0x4e0 [btrfs]
- Modules linked in: btrfs blake2b_generic xor raid6_pq libcrc32c (...)
- CPU: 0 PID: 20138 Comm: kworker/u8:15 Not tainted 5.6.0-rc7-btrfs-next-58 #5
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
- Workqueue: writeback wb_workfn (flush-btrfs-1754)
- RIP: 0010:btrfs_add_reserved_bytes+0x3d6/0x4e0 [btrfs]
- Code: ff ff 48 (...)
- RSP: 0018:ffffbda18a4b3568 EFLAGS: 00010287
- RAX: 0000000000000000 RBX: ffff9ca076f5d800 RCX: 0000000000000000
- RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffff9ca068470410
- RBP: fffffffffffff000 R08: 0000000000000001 R09: 0000000000000000
- R10: ffff9ca079d58040 R11: 0000000000000000 R12: ffff9ca068470400
- R13: ffff9ca0408b2000 R14: 0000000000001000 R15: ffff9ca076f5d800
- FS:  0000000000000000(0000) GS:ffff9ca07a600000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00005605dbfe7048 CR3: 0000000138570006 CR4: 00000000003606f0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  find_free_extent+0x4a0/0x16c0 [btrfs]
-  btrfs_reserve_extent+0x91/0x180 [btrfs]
-  cow_file_range+0x12d/0x490 [btrfs]
-  run_delalloc_nocow+0x341/0xa40 [btrfs]
-  btrfs_run_delalloc_range+0x1ea/0x6d0 [btrfs]
-  ? find_lock_delalloc_range+0x221/0x250 [btrfs]
-  writepage_delalloc+0xe8/0x150 [btrfs]
-  __extent_writepage+0xe8/0x4c0 [btrfs]
-  extent_write_cache_pages+0x237/0x530 [btrfs]
-  ? btrfs_wq_submit_bio+0x9f/0xc0 [btrfs]
-  extent_writepages+0x44/0xa0 [btrfs]
-  do_writepages+0x23/0x80
-  __writeback_single_inode+0x59/0x700
-  writeback_sb_inodes+0x267/0x5f0
-  __writeback_inodes_wb+0x87/0xe0
-  wb_writeback+0x382/0x590
-  ? wb_workfn+0x4a2/0x6c0
-  wb_workfn+0x4a2/0x6c0
-  process_one_work+0x26d/0x6a0
-  worker_thread+0x4f/0x3e0
-  ? process_one_work+0x6a0/0x6a0
-  kthread+0x103/0x140
-  ? kthread_create_worker_on_cpu+0x70/0x70
-  ret_from_fork+0x3a/0x50
- irq event stamp: 0
- hardirqs last  enabled at (0): [<0000000000000000>] 0x0
- hardirqs last disabled at (0): [<ffffffff94ebdedf>] copy_process+0x74f/0x2020
- softirqs last  enabled at (0): [<ffffffff94ebdedf>] copy_process+0x74f/0x2020
- softirqs last disabled at (0): [<0000000000000000>] 0x0
- ---[ end trace f9f6ef8ec4cd8ec9 ]---
+Let's keep interrupts enabled. In case we ever encounter a scenario where
+an interrupt thread wants to allocate large amount of memory this early in
+boot we can deal with that by growing zone (see deferred_grow_zone()) by
+the needed amount before starting deferred_init_memmap() threads.
 
-So to fix this, when falling back into cow mode check if space was not
-reserved, by testing for the bit EXTENT_NORESERVE in the respective file
-range, and if not, increment the bytes_may_use counter for the data
-space_info object. Also clear the EXTENT_NORESERVE bit from the range, so
-that if the cow path fails it decrements the bytes_may_use counter when
-clearing the delalloc range (through the btrfs_clear_delalloc_extent()
-callback).
+Before:
+[    1.232459] node 0 initialised, 12058412 pages in 1ms
 
-Fixes: 7ee9e4405f264e ("Btrfs: check if we can nocow if we don't have data space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+After:
+[    1.632580] node 0 initialised, 12051227 pages in 436ms
+
+Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Yiqian Wei <yiwei@redhat.com>
+Cc: <stable@vger.kernel.org>	[4.17+]
+Link: http://lkml.kernel.org/r/20200403140952.17177-3-pasha.tatashin@soleen.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 56 insertions(+), 5 deletions(-)
+ include/linux/mmzone.h |    2 ++
+ mm/page_alloc.c        |   20 +++++++-------------
+ 2 files changed, 9 insertions(+), 13 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -49,6 +49,7 @@
- #include "qgroup.h"
- #include "delalloc-space.h"
- #include "block-group.h"
-+#include "space-info.h"
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -709,6 +709,8 @@ typedef struct pglist_data {
+ 	/*
+ 	 * Must be held any time you expect node_start_pfn,
+ 	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
++	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
++	 * init.
+ 	 *
+ 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
+ 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1793,6 +1793,13 @@ static int __init deferred_init_memmap(v
+ 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+ 	pgdat->first_deferred_pfn = ULONG_MAX;
  
- struct btrfs_iget_args {
- 	struct btrfs_key *location;
-@@ -1322,6 +1323,56 @@ static noinline int csum_exist_in_range(
- 	return 1;
- }
- 
-+static int fallback_to_cow(struct inode *inode, struct page *locked_page,
-+			   const u64 start, const u64 end,
-+			   int *page_started, unsigned long *nr_written)
-+{
-+	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
-+	u64 range_start = start;
-+	u64 count;
-+
 +	/*
-+	 * If EXTENT_NORESERVE is set it means that when the buffered write was
-+	 * made we had not enough available data space and therefore we did not
-+	 * reserve data space for it, since we though we could do NOCOW for the
-+	 * respective file range (either there is prealloc extent or the inode
-+	 * has the NOCOW bit set).
-+	 *
-+	 * However when we need to fallback to COW mode (because for example the
-+	 * block group for the corresponding extent was turned to RO mode by a
-+	 * scrub or relocation) we need to do the following:
-+	 *
-+	 * 1) We increment the bytes_may_use counter of the data space info.
-+	 *    If COW succeeds, it allocates a new data extent and after doing
-+	 *    that it decrements the space info's bytes_may_use counter and
-+	 *    increments its bytes_reserved counter by the same amount (we do
-+	 *    this at btrfs_add_reserved_bytes()). So we need to increment the
-+	 *    bytes_may_use counter to compensate (when space is reserved at
-+	 *    buffered write time, the bytes_may_use counter is incremented);
-+	 *
-+	 * 2) We clear the EXTENT_NORESERVE bit from the range. We do this so
-+	 *    that if the COW path fails for any reason, it decrements (through
-+	 *    extent_clear_unlock_delalloc()) the bytes_may_use counter of the
-+	 *    data space info, which we incremented in the step above.
++	 * Once we unlock here, the zone cannot be grown anymore, thus if an
++	 * interrupt thread must allocate this early in boot, zone must be
++	 * pre-grown prior to start of deferred page initialization.
 +	 */
-+	count = count_range_bits(io_tree, &range_start, end, end + 1 - start,
-+				 EXTENT_NORESERVE, 0);
-+	if (count > 0) {
-+		struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-+		struct btrfs_space_info *sinfo = fs_info->data_sinfo;
++	pgdat_resize_unlock(pgdat, &flags);
 +
-+		spin_lock(&sinfo->lock);
-+		btrfs_space_info_update_bytes_may_use(fs_info, sinfo, count);
-+		spin_unlock(&sinfo->lock);
-+
-+		clear_extent_bit(io_tree, start, end, EXTENT_NORESERVE, 0, 0,
-+				 NULL);
-+	}
-+
-+	return cow_file_range(inode, locked_page, start, end, page_started,
-+			      nr_written, 1);
-+}
-+
- /*
-  * when nowcow writeback call back.  This checks for snapshots or COW copies
-  * of the extents that exist in the file, and COWs the file as required.
-@@ -1569,9 +1620,9 @@ out_check:
- 		 * NOCOW, following one which needs to be COW'ed
- 		 */
- 		if (cow_start != (u64)-1) {
--			ret = cow_file_range(inode, locked_page,
--					     cow_start, found_key.offset - 1,
--					     page_started, nr_written, 1);
-+			ret = fallback_to_cow(inode, locked_page, cow_start,
-+					      found_key.offset - 1,
-+					      page_started, nr_written);
- 			if (ret) {
- 				if (nocow)
- 					btrfs_dec_nocow_writers(fs_info,
-@@ -1660,8 +1711,8 @@ out_check:
+ 	/* Only the highest zone is deferred so find it */
+ 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+ 		zone = pgdat->node_zones + zid;
+@@ -1813,8 +1820,6 @@ static int __init deferred_init_memmap(v
+ 	while (spfn < epfn)
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+ zone_empty:
+-	pgdat_resize_unlock(pgdat, &flags);
+-
+ 	/* Sanity check that the next zone really is unpopulated */
+ 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
  
- 	if (cow_start != (u64)-1) {
- 		cur_offset = end;
--		ret = cow_file_range(inode, locked_page, cow_start, end,
--				     page_started, nr_written, 1);
-+		ret = fallback_to_cow(inode, locked_page, cow_start, end,
-+				      page_started, nr_written);
- 		if (ret)
- 			goto error;
- 	}
+@@ -1857,17 +1862,6 @@ deferred_grow_zone(struct zone *zone, un
+ 	pgdat_resize_lock(pgdat, &flags);
+ 
+ 	/*
+-	 * If deferred pages have been initialized while we were waiting for
+-	 * the lock, return true, as the zone was grown.  The caller will retry
+-	 * this zone.  We won't return to this function since the caller also
+-	 * has this static branch.
+-	 */
+-	if (!static_branch_unlikely(&deferred_pages)) {
+-		pgdat_resize_unlock(pgdat, &flags);
+-		return true;
+-	}
+-
+-	/*
+ 	 * If someone grew this zone while we were waiting for spinlock, return
+ 	 * true, as there might be enough pages already.
+ 	 */
 
 
