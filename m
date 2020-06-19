@@ -2,70 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336BB2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420BD2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzTuwN7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgFSDUp (ORCPT
+        id S1730750AbgFSDVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:20:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6286 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbgFSDUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 23:20:45 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 967527602E7B5BB0B482;
-        Fri, 19 Jun 2020 11:20:42 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 19 Jun 2020 11:20:36 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to document reserved special compression extension
-Date:   Fri, 19 Jun 2020 11:20:28 +0800
-Message-ID: <20200619032028.128668-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 18 Jun 2020 23:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgFSDU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 23:20:56 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9032C06174E;
+        Thu, 18 Jun 2020 20:20:54 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id q2so7779917qkb.2;
+        Thu, 18 Jun 2020 20:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7rG31ouebqs0ESzgr7K1aKbxssJ2xYwHTH5m2zIqKSI=;
+        b=TzTuwN7Q2o7D9DWdQpLpg0PlboYfx9ppS5c9v0XE8kYlBjkjlpDB5DbXqaIKNiqXZB
+         lGUz7ypDVYzi12uoBq3Rb6CUn3aZBsDqlTv032AX9YkHhv1V/mIlpywcnwLUN25n6gcB
+         Ktv6U9cj+2bGVoxI1yMhVk2OWGhoTcEulIdj7kfvghATYfI+LU1MHgDD8BKBtod2PVfq
+         i0216Dw3FLIE1RFnxYgALbpnJLtN2jfNrpCH/R2O2mbBmHULImtXb5IliGWms7TLnR/Z
+         tCbdhzpnhMImPUrYoXufEQZUjbOItqmL1RXhmnGkI0FKRqNG290O+u7YFNnQEZssQ9+L
+         W4dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7rG31ouebqs0ESzgr7K1aKbxssJ2xYwHTH5m2zIqKSI=;
+        b=UcIdmQytqDg8H3TctwbJ8W1kybKI0CHpPG5vMpklLNcZ6+rfht00WeyzUlM7ME2cK4
+         BGh5Jvx7DbivTpcks0xvZGMmHdAaTbSEeBvv9qe01LiNliW6uhr5489xLU/6ZSXkjoX6
+         0Qf2+OHraO9ojyZvmL8m4Mgxa1tjlpkATYAriXasT7QXnvVFMpCJfGYsZ8WtWjlRgS94
+         j7acCEfTBbYy+P1kloSn5e6vG+2rNvFilvl9u8WXeP3rCsGdS154EnvWX+YMZ3Cf3Z6q
+         s4yijw6bkDroMjSr9YBgeOS+QfLWYQzZ6+p+8J1VTU/RTLSFgXxbRbkXUi+QjYvWa0gc
+         8SxQ==
+X-Gm-Message-State: AOAM533aiC/xCyR45RlX2JLbygFMNR9vC7oQVBuScbSdQikerm1c7oum
+        n7hOA1k4FPiuX8OOfdfL8nP4jwM=
+X-Google-Smtp-Source: ABdhPJyqvyLUXH7m3fpzBAxZC1XFTeR+vHXmO/KJJFrjVnFPdzR8OhVpMgaC1/5wiwmWldS5Vwj3vA==
+X-Received: by 2002:a37:8dc2:: with SMTP id p185mr1471199qkd.117.1592536854003;
+        Thu, 18 Jun 2020 20:20:54 -0700 (PDT)
+Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
+        by smtp.gmail.com with ESMTPSA id b185sm5081564qkg.86.2020.06.18.20.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 20:20:53 -0700 (PDT)
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 0/2] generic_file_buffered_read() refactoring & optimization
+Date:   Thu, 18 Jun 2020 23:20:47 -0400
+Message-Id: <20200619032049.2687598-1-kent.overstreet@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200617180558.9722e7337cbe3b88c4767126@linux-foundation.org>
+References: <20200617180558.9722e7337cbe3b88c4767126@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one reserved special compression extension: '*', which
-could be set via 'compress_extension="*"' mount option to enable
-compression for all files.
+Ok - here's a new version, I fixed the checkpatch stuff and the thing with ret
+should be more readable now:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- Documentation/filesystems/f2fs.rst | 2 ++
- 1 file changed, 2 insertions(+)
+Kent Overstreet (2):
+  fs: Break generic_file_buffered_read up into multiple functions
+  fs: generic_file_buffered_read() now uses find_get_pages_contig
 
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 099d45ac8d8f..535021c46260 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -258,6 +258,8 @@ compress_extension=%s  Support adding specified extension, so that f2fs can enab
-                        on compression extension list and enable compression on
-                        these file by default rather than to enable it via ioctl.
-                        For other files, we can still enable compression via ioctl.
-+                       Note that, there is one reserved special extension '*', it
-+                       can be set to enable compression for all files.
- ====================== ============================================================
- 
- Debugfs Entries
+ mm/filemap.c | 497 +++++++++++++++++++++++++++++----------------------
+ 1 file changed, 287 insertions(+), 210 deletions(-)
+
 -- 
 2.26.2
 
