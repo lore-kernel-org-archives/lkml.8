@@ -2,130 +2,124 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEBF92067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584853;
-	bh=/Wg8oUx8NKYXft/ZBX+n83+W+uXdbNFLAgFid1Z/GQE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCviMuw65jVJApkPsbElYWncw1OexDb6LWI1cxb4JuySYguFhcTVWxf0Z3Jido3zl
-	 M+iFQ5tCnEGOnXufwn7rAM8OZdJ4wKmiuJNmuXDcJUp7ui2VazBSZtMnHNr8VYnDFk
-	 gm4owCfd747ptYhh7ap488AeY5P0wCM/aYGMXxzc=
+	by mail.kernel.org (Postfix) with ESMTP id 696242067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395469AbgFSQkw (ORCPT
+        id S2394022AbgFSQkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388694AbgFSOpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:45:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC7E621582;
-        Fri, 19 Jun 2020 14:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577920;
-        bh=/Wg8oUx8NKYXft/ZBX+n83+W+uXdbNFLAgFid1Z/GQE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCCwZjISmpmXqejI1ptNQjbog1dJSyltZS/hB5NnqbzYfZiVtPdZr4c4LVJZDWASd
-         VJ7CYCIXivoIqVePac9PpZVQZLlnYDpPUkYkYtFIwIsb5IRSaNrQlaoBRH3w5u3V3k
-         S2Le1WLSknxMRs8jHkyTs1Q0fDu7yqq0+I0ysAFo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/190] powerpc/xive: Clear the page tables for the ESB IO mapping
-Date:   Fri, 19 Jun 2020 16:30:59 +0200
-Message-Id: <20200619141634.175927404@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 19 Jun 2020 12:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395444AbgFSQkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:40:40 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A1EC06174E;
+        Fri, 19 Jun 2020 09:40:40 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jmK4C-0003r7-LU; Fri, 19 Jun 2020 18:40:36 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0CC871C0085;
+        Fri, 19 Jun 2020 18:40:36 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 16:40:35 -0000
+From:   "tip-bot2 for Matt Fleming" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/asm/64: Align start of __clear_user() loop to 16-bytes
+Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@suse.de>, <stable@vger.kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200618102002.30034-1-matt@codeblueprint.co.uk>
+References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <159258483578.16989.3987549539950250015.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+The following commit has been merged into the x86/urgent branch of tip:
 
-[ Upstream commit a101950fcb78b0ba20cd487be6627dea58d55c2b ]
+Commit-ID:     bb5570ad3b54e7930997aec76ab68256d5236d94
+Gitweb:        https://git.kernel.org/tip/bb5570ad3b54e7930997aec76ab68256d5236d94
+Author:        Matt Fleming <matt@codeblueprint.co.uk>
+AuthorDate:    Thu, 18 Jun 2020 11:20:02 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 19 Jun 2020 18:32:11 +02:00
 
-Commit 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the
-machine crash handler") fixed an issue in the FW assisted dump of
-machines using hash MMU and the XIVE interrupt mode under the POWER
-hypervisor. It forced the mapping of the ESB page of interrupts being
-mapped in the Linux IRQ number space to make sure the 'crash kexec'
-sequence worked during such an event. But it didn't handle the
-un-mapping.
+x86/asm/64: Align start of __clear_user() loop to 16-bytes
 
-This mapping is now blocking the removal of a passthrough IO adapter
-under the POWER hypervisor because it expects the guest OS to have
-cleared all page table entries related to the adapter. If some are
-still present, the RTAS call which isolates the PCI slot returns error
-9001 "valid outstanding translations".
+x86 CPUs can suffer severe performance drops if a tight loop, such as
+the ones in __clear_user(), straddles a 16-byte instruction fetch
+window, or worse, a 64-byte cacheline. This issues was discovered in the
+SUSE kernel with the following commit,
 
-Remove these mapping in the IRQ data cleanup routine.
+  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
 
-Under KVM, this cleanup is not required because the ESB pages for the
-adapter interrupts are un-mapped from the guest by the hypervisor in
-the KVM XIVE native device. This is now redundant but it's harmless.
+which increased the code object size from 10 bytes to 15 bytes and
+caused the 8-byte copy loop in __clear_user() to be split across a
+64-byte cacheline.
 
-Fixes: 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the machine crash handler")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200429075122.1216388-2-clg@kaod.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Aligning the start of the loop to 16-bytes makes this fit neatly inside
+a single instruction fetch window again and restores the performance of
+__clear_user() which is used heavily when reading from /dev/zero.
+
+Here are some numbers from running libmicro's read_z* and pread_z*
+microbenchmarks which read from /dev/zero:
+
+  Zen 1 (Naples)
+
+  libmicro-file
+                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
+                                                    revert-1153933703d9+               align16+
+  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
+  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
+  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
+  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
+  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
+  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
+
+Note that this doesn't affect Haswell or Broadwell microarchitectures
+which seem to avoid the alignment issue by executing the loop straight
+out of the Loop Stream Detector (verified using perf events).
+
+Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org> # v4.19+
+Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
 ---
- arch/powerpc/sysdev/xive/common.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/lib/usercopy_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
-index b7ae5a027714..f8181c8af32d 100644
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -23,6 +23,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/msi.h>
-+#include <linux/vmalloc.h>
- 
- #include <asm/prom.h>
- #include <asm/io.h>
-@@ -932,12 +933,16 @@ EXPORT_SYMBOL_GPL(is_xive_irq);
- void xive_cleanup_irq_data(struct xive_irq_data *xd)
- {
- 	if (xd->eoi_mmio) {
-+		unmap_kernel_range((unsigned long)xd->eoi_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->eoi_mmio);
- 		if (xd->eoi_mmio == xd->trig_mmio)
- 			xd->trig_mmio = NULL;
- 		xd->eoi_mmio = NULL;
- 	}
- 	if (xd->trig_mmio) {
-+		unmap_kernel_range((unsigned long)xd->trig_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->trig_mmio);
- 		xd->trig_mmio = NULL;
- 	}
--- 
-2.25.1
-
-
-
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index fff28c6..b0dfac3 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
+ 	asm volatile(
+ 		"	testq  %[size8],%[size8]\n"
+ 		"	jz     4f\n"
++		"	.align 16\n"
+ 		"0:	movq $0,(%[dst])\n"
+ 		"	addq   $8,%[dst]\n"
+ 		"	decl %%ecx ; jnz   0b\n"
