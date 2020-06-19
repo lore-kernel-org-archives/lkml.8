@@ -2,53 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5563C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C95C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6F72100A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802B821527
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584286;
-	bh=VWd75qwe8Tw9/e6o2TotNGK1ySb4QoeLd+Hl9mcG2XU=;
+	s=default; t=1592584297;
+	bh=4N8wtzWv9c/QUTi9qkJFY+daci7BxXq2OJdDmp6Ojjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CkBLZ1qgN38NiUcV+vL9Iyc5S2WFNk7rjsZkAJQEz6i2ovNMpZY6Y3FCiwQPO/Yhf
-	 3VU3mu/K7UqofHCtO7q6XoXwArLe7cgrkSQLlgflSp4dQ75nZJ/I8ZAs7aulnuoE+e
-	 dvmfq4fgNCHnvumDBYJhVif0aUtVZEo5pGkuFsfs=
+	b=aTAcFV/Uhu6tlbzJUVn7u6bwr0cwtO4OKUA46kkrY8g7no1W9+eDol+6Erpr6zu84
+	 mm4It/vvx+43FbY0VJC4p+SGC1qyXHe+HdfU+b4YyHczUxq6ZhtndomBvIjQndDbhH
+	 NXWHmAe1YDxWif7+2t/HnohGj1jR2EGkX+QiqEXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395039AbgFSQbZ (ORCPT
+        id S2391578AbgFSQbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389644AbgFSOw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:52:57 -0400
+        id S2389243AbgFSOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:52:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4308D21852;
-        Fri, 19 Jun 2020 14:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CECD321556;
+        Fri, 19 Jun 2020 14:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578376;
-        bh=VWd75qwe8Tw9/e6o2TotNGK1ySb4QoeLd+Hl9mcG2XU=;
+        s=default; t=1592578371;
+        bh=4N8wtzWv9c/QUTi9qkJFY+daci7BxXq2OJdDmp6Ojjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttUXntdEou9tAShuWaVZBILzqfJV2gg0clGASBFtx0jTrJmeCoXEv5mwsooOgA+lI
-         3cDXblgnKnahLLpStyAQS6NnWv9KUxcjxYhr1U3RYhjWNakq0xpwjJf8Z8kPKZ3/Yo
-         XBRg36+fJquToiGJ63kIPiLjeO5YnXwoMlubAJK4=
+        b=PDMYyxNCbj/KncgDhiJAO3W8BTidkL6m9UTwvZ6WKpQgredVQJ4V2UDVsVlFYs1zZ
+         OhlFS2wtgey+In81+2o7wAL14GGL9dRWzvj7kBcXo8FU1aVQ29L8jZyq1NGQt3Fqy/
+         fW3VUglObvve7mq3KhWvcZNtoRJilJbdsQ9WEVDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.14 188/190] perf probe: Do not show the skipped events
-Date:   Fri, 19 Jun 2020 16:33:53 +0200
-Message-Id: <20200619141643.253762879@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 160/190] btrfs: fix wrong file range cleanup after an error filling dealloc range
+Date:   Fri, 19 Jun 2020 16:33:25 +0200
+Message-Id: <20200619141641.747839926@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,67 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit f41ebe9defacddeae96a872a33f0f22ced0bfcef upstream.
+[ Upstream commit e2c8e92d1140754073ad3799eb6620c76bab2078 ]
 
-When a probe point is expanded to several places (like inlined) and if
-some of them are skipped because of blacklisted or __init function,
-those trace_events has no event name. It must be skipped while showing
-results.
+If an error happens while running dellaloc in COW mode for a range, we can
+end up calling extent_clear_unlock_delalloc() for a range that goes beyond
+our range's end offset by 1 byte, which affects 1 extra page. This results
+in clearing bits and doing page operations (such as a page unlock) outside
+our target range.
 
-Without this fix, you can see "(null):(null)" on the list,
+Fix that by calling extent_clear_unlock_delalloc() with an inclusive end
+offset, instead of an exclusive end offset, at cow_file_range().
 
-  # ./perf probe request_resource
-  reserve_setup is out of .text, skip it.
-  Added new events:
-    (null):(null)        (on request_resource)
-    probe:request_resource (on request_resource)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:request_resource -aR sleep 1
-
-  #
-
-With this fix, it is ignored:
-
-  # ./perf probe request_resource
-  reserve_setup is out of .text, skip it.
-  Added new events:
-    probe:request_resource (on request_resource)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:request_resource -aR sleep 1
-
-  #
-
-Fixes: 5a51fcd1f30c ("perf probe: Skip kernel symbols which is out of .text")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158763968263.30755.12800484151476026340.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a315e68f6e8b30 ("Btrfs: fix invalid attempt to free reserved space on failure to cow range")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-probe.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -377,6 +377,9 @@ static int perf_add_probe_events(struct
- 
- 		for (k = 0; k < pev->ntevs; k++) {
- 			struct probe_trace_event *tev = &pev->tevs[k];
-+			/* Skipped events have no event name */
-+			if (!tev->event)
-+				continue;
- 
- 			/* We use tev's name for showing new events */
- 			show_perf_probe_event(tev->group, tev->event, pev,
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 3e65ac2d4869..ad138f0b0ce1 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1139,8 +1139,8 @@ static noinline int cow_file_range(struct inode *inode,
+ 	 */
+ 	if (extent_reserved) {
+ 		extent_clear_unlock_delalloc(inode, start,
+-					     start + cur_alloc_size,
+-					     start + cur_alloc_size,
++					     start + cur_alloc_size - 1,
++					     start + cur_alloc_size - 1,
+ 					     locked_page,
+ 					     clear_bits,
+ 					     page_ops);
+-- 
+2.25.1
+
 
 
