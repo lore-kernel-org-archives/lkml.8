@@ -2,156 +2,150 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E92C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EFB20809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBB720809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2sFIt0E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XOl8h9lp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394028AbgFSPmE (ORCPT
+        id S2393800AbgFSPjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405074AbgFSPl4 (ORCPT
+        Fri, 19 Jun 2020 11:39:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26197 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393565AbgFSPjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:41:56 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2311DC06174E;
-        Fri, 19 Jun 2020 08:41:56 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b5so4575870pfp.9;
-        Fri, 19 Jun 2020 08:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=i9+OLyp7V6sirl27V8Yotw04ozvFZItgstHfpcz6w7Y=;
-        b=H2sFIt0Eh4rCDqusFPy/L+SNl8YoznhQF4dnlWb+3YW11nC6kC/yPqeENNsyyLdgvo
-         ayPhr754O2L2ijskzp/+2V7DJbXYm7Yg7+B+TO59LWcFD0/Jrh8EV0k1sOsTXDbmGsCi
-         NEktBcOTiy752oElA8nOVyQykfdq1KhT3OriSQarW+hPMOXcsv6l97RsvLO38pOJXjRC
-         CbrSRgCpY+3X+9RiSiuSQa5f8XTccZMUGqWM5hDn9M/VUmFmd3S/nbIPX+jyfLeVE/mf
-         p95D+lz1YngCmHyWfRalBa5vwpbs9oCs7wHiq+Y/YCpo9qPpjDiL0pgbFibUcu+Gy5ON
-         8VCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding
-         :user-agent;
-        bh=i9+OLyp7V6sirl27V8Yotw04ozvFZItgstHfpcz6w7Y=;
-        b=U+dHKwJxonI0tmd3ogDdiza6R3ccN43KQ9+PcfhosRAX/TFP+R1JhS/KgIYFW+YTyX
-         SfuGC/VeuwYUzaJP+9B9ttKKH6RY5WVCgZyMtAs8Xukcz24lOINqovKOHAct2W12r7lM
-         0MYH0Ky5Vr7lxTT+ykIjECKRvbmVU1Zs9xWJULf1rnCzH1xKXEEzwOMsTyP7rFOfcdd/
-         5MR5YcpZ1JdoePmNwWyA7Qz6j3c6+A9OKXsHFn/pdFZZ0mliQCAOmsGWWpv7oZPiogi3
-         4q15Q65mjXW8425LJGbAcCYr00liZrSrMjO+vx08iEF1oE63y61f4VYtlokB29YVS2Jt
-         uGlQ==
-X-Gm-Message-State: AOAM532THX5bjVGBDVsjf4D2DlRvEtUElu+/IbbBtP+Hg2zspI+gWtcC
-        4oQkyGC/X8eiaHAh6+2i3hI=
-X-Google-Smtp-Source: ABdhPJxLbHeV5yzEpvfP5mcS+4V81PlDu+BLk/SMYtqVENyR2U+MzuUqN3H2C2UnQLu696JQ/HMozA==
-X-Received: by 2002:a62:3183:: with SMTP id x125mr8776575pfx.3.1592581315702;
-        Fri, 19 Jun 2020 08:41:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j8sm5566631pjw.11.2020.06.19.08.41.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Jun 2020 08:41:55 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 08:41:54 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Revert "Makefile: install modules.builtin even if
- CONFIG_MODULES=n"
-Message-ID: <20200619154154.GA210604@roeck-us.net>
+        Fri, 19 Jun 2020 11:39:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592581190;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b5JoAyE8A6/raa81T7z4O+0wQ9DFK5kTLDmKpjBV3xE=;
+        b=XOl8h9lpiWRrHgT16qsUPBUoF2DKUEERxYdCuPlZCf40vAd4CvKXMypxHamj+UXp4mY1/i
+        29keKr5nfIHQKOTViVIPR3Xi6EgTfGO010yCiQ2M4A+9cGssbGxSJ9O+I0Xyt3oUXtQLlv
+        Iu/X/0ZoFjgUVRpJ8Tx+3Qoijctw21w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-486lxakvOICJrW_7MYVevQ-1; Fri, 19 Jun 2020 11:39:46 -0400
+X-MC-Unique: 486lxakvOICJrW_7MYVevQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 274F31054FB3;
+        Fri, 19 Jun 2020 15:39:37 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-112-254.ams2.redhat.com [10.36.112.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6E5B60BF4;
+        Fri, 19 Jun 2020 15:39:34 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
+        babu.moger@amd.com, Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH v2 01/11] KVM: x86: Add helper functions for illegal GPA checking and page fault injection
+Date:   Fri, 19 Jun 2020 17:39:15 +0200
+Message-Id: <20200619153925.79106-2-mgamal@redhat.com>
+In-Reply-To: <20200619153925.79106-1-mgamal@redhat.com>
+References: <20200619153925.79106-1-mgamal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 12:09:55AM +0900, Masahiro Yamada wrote:
-> This reverts commit e0b250b57dcf403529081e5898a9de717f96b76b,
-> which broke build systems that need to install files to a certain
-> path, but do not set INSTALL_MOD_PATH when invoking 'make install'.
-> 
->   $ make INSTALL_PATH=/tmp/destdir install
->   mkdir: cannot create directory ‘/lib/modules/5.8.0-rc1+/’: Permission denied
->   Makefile:1342: recipe for target '_builtin_inst_' failed
->   make: *** [_builtin_inst_] Error 1
-> 
-> While modules.builtin is useful also for CONFIG_MODULES=n, this change
-> in the behavior is quite unexpected. Maybe "make modules_install"
-> can install modules.builtin irrespective of CONFIG_MODULES as Jonas
-> originally suggested.
-> 
-> Anyway, that commit should be reverted ASAP.
-> 
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jonas Karlman <jonas@kwiboo.se>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+This patch adds two helper functions that will be used to support virtualizing
+MAXPHYADDR in both kvm-intel.ko and kvm.ko.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+kvm_fixup_and_inject_pf_error() injects a page fault for a user-specified GVA,
+while kvm_mmu_is_illegal_gpa() checks whether a GPA exceeds vCPU address limits.
 
-> ---
-> 
-> Changes in v2:
->   - add more commit description
-> 
->  Makefile | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 29abe44ada91..9880e911afe3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1336,16 +1336,6 @@ dt_binding_check: scripts_dtc
->  # ---------------------------------------------------------------------------
->  # Modules
->  
-> -# install modules.builtin regardless of CONFIG_MODULES
-> -PHONY += _builtin_inst_
-> -_builtin_inst_:
-> -	@mkdir -p $(MODLIB)/
-> -	@cp -f modules.builtin $(MODLIB)/
-> -	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
-> -
-> -PHONY += install
-> -install: _builtin_inst_
-> -
->  ifdef CONFIG_MODULES
->  
->  # By default, build modules as well
-> @@ -1389,7 +1379,7 @@ PHONY += modules_install
->  modules_install: _modinst_ _modinst_post
->  
->  PHONY += _modinst_
-> -_modinst_: _builtin_inst_
-> +_modinst_:
->  	@rm -rf $(MODLIB)/kernel
->  	@rm -f $(MODLIB)/source
->  	@mkdir -p $(MODLIB)/kernel
-> @@ -1399,6 +1389,8 @@ _modinst_: _builtin_inst_
->  		ln -s $(CURDIR) $(MODLIB)/build ; \
->  	fi
->  	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
-> +	@cp -f modules.builtin $(MODLIB)/
-> +	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
->  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
->  
->  # This depmod is only for convenience to give the initial
-> -- 
-> 2.25.1
-> 
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu.h |  6 ++++++
+ arch/x86/kvm/x86.c | 21 +++++++++++++++++++++
+ arch/x86/kvm/x86.h |  1 +
+ 3 files changed, 28 insertions(+)
+
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 0ad06bfe2c2c..555237dfb91c 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/kvm_host.h>
+ #include "kvm_cache_regs.h"
++#include "cpuid.h"
+ 
+ #define PT64_PT_BITS 9
+ #define PT64_ENT_PER_PAGE (1 << PT64_PT_BITS)
+@@ -158,6 +159,11 @@ static inline bool is_write_protection(struct kvm_vcpu *vcpu)
+ 	return kvm_read_cr0_bits(vcpu, X86_CR0_WP);
+ }
+ 
++static inline bool kvm_mmu_is_illegal_gpa(struct kvm_vcpu *vcpu, gpa_t gpa)
++{
++        return (gpa >= BIT_ULL(cpuid_maxphyaddr(vcpu)));
++}
++
+ /*
+  * Check if a given access (described through the I/D, W/R and U/S bits of a
+  * page fault error code pfec) causes a permission fault with the given PTE
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 00c88c2f34e4..ac8642e890b1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10693,6 +10693,27 @@ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
+ 
++void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t gva, u16 error_code)
++{
++	struct x86_exception fault;
++
++	if (!(error_code & PFERR_PRESENT_MASK) ||
++	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, error_code, &fault) != UNMAPPED_GVA) {
++		/*
++		 * If vcpu->arch.walk_mmu->gva_to_gpa succeeded, the page
++		 * tables probably do not match the TLB.  Just proceed
++		 * with the error code that the processor gave.
++		 */
++		fault.vector = PF_VECTOR;
++		fault.error_code_valid = true;
++		fault.error_code = error_code;
++		fault.nested_page_fault = false;
++		fault.address = gva;
++	}
++	vcpu->arch.walk_mmu->inject_page_fault(vcpu, &fault);
++}
++EXPORT_SYMBOL_GPL(kvm_fixup_and_inject_pf_error);
++
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_inj_virq);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 6eb62e97e59f..239ae0f3e40b 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -272,6 +272,7 @@ int kvm_mtrr_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata);
+ bool kvm_mtrr_check_gfn_range_consistency(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 					  int page_num);
+ bool kvm_vector_hashing_enabled(void);
++void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t gva, u16 error_code);
+ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 			    int emulation_type, void *insn, int insn_len);
+ fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
+-- 
+2.26.2
+
