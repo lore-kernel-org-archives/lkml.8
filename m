@@ -2,378 +2,410 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74674C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD9F2223D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D2122211
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 21:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bG2exhFL"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="mRiPlpOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgFSV5g (ORCPT
+        id S1728489AbgFSV5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:57:36 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8536 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbgFSV5O (ORCPT
+        Fri, 19 Jun 2020 17:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgFSV5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:57:14 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eed344e0005>; Fri, 19 Jun 2020 14:55:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 19 Jun 2020 14:57:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 19 Jun 2020 14:57:07 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jun
- 2020 21:56:59 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 19 Jun 2020 21:56:59 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5eed34ab0008>; Fri, 19 Jun 2020 14:56:59 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 08/16] nouveau/hmm: fault one page at a time
-Date:   Fri, 19 Jun 2020 14:56:41 -0700
-Message-ID: <20200619215649.32297-9-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
+        Fri, 19 Jun 2020 17:57:24 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9075AC0613F0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:57:24 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so8392973qtg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 14:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=rdhxkZX4GmXKSSpsPwGF4bgioI4q0DW5JlXRU/AUlkk=;
+        b=mRiPlpOuXbePKoXKYhDFTZ4Jtt6zf1Okl1KJwxQLCsOk74sMT88rOgCfDBrGrWz6F7
+         +DE0O4fOnwgtlG3IN91gYWFphtijC32KzwEXJhu5w29ejvAp+98RKifWyXchiMYMCX92
+         mZH9Id5OWqXgM6ymZE+c7sazt/Mhu8ki3ndIAKoousXZuQiGULxgVSwjKiStbU6TpPul
+         4ZvjVI1CdsQeLJ698wirI9deBBVy6eXjlqeVxlcyHvXwVMgG+fY46jatAGSNLBElK0A8
+         JAdrCGSKtCeblFPMe/mEHvTiHEh/fLjYm32V0ZaiAJ6G84FkXrGHfv1xwNLoYb6cggDe
+         hacA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=rdhxkZX4GmXKSSpsPwGF4bgioI4q0DW5JlXRU/AUlkk=;
+        b=D8AH6uVEZA03XoOh6ai9Jl6Z28z+MHJU1i7WPqqqT0bIkkHKMEpgKmZw1mfSqrGmM1
+         THzSDFP7MTi+kNwuZYjQ6yLGtj31DXD53cK4ZZHgoIdNv5pFpEmaOA7IajXAsFfJ/KjB
+         k2g/Hs1h/oMnwZkkkIHHZU1dzpgv1XFZExlJMlRc7fCMbL60Y40BJ8SuH4lgsMmNYR4Y
+         KRbCuMfU+LP0F5T8lJuG5KON2igoJzTSb5xu+F8mv3QJNlCXBhKcEENocrhsz8fQfI2p
+         MjucqCwFQEi/E2VZAF4af9nXFExrFspROH5W4oT6rMWN7Zech5B7cdLoj1EAopDz1lDY
+         EKOQ==
+X-Gm-Message-State: AOAM530J33L6mMTlgX9B/Uw78q3OaAlo03kHTUcLfbvcphcr7iiy/gAP
+        0kf3gZk3+FY0NEmzKzpyOfBq/Q==
+X-Google-Smtp-Source: ABdhPJzDEbhH9/2WoXmmZH2RrRnKaQv0db5TBB7Xaag8scxB9vAIb4QCZdoLN4qlc8YWSIKcq0cqcA==
+X-Received: by 2002:ac8:688a:: with SMTP id m10mr2810282qtq.254.1592603843298;
+        Fri, 19 Jun 2020 14:57:23 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id g140sm7437850qke.98.2020.06.19.14.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 14:57:22 -0700 (PDT)
+Message-ID: <2251a43aa773dbd4a417dca20ba12ee0559f9031.camel@massaru.org>
+Subject: Re: [RESEND, PATCH v2] lib: overflow-test: add KUnit test of
+ check_*_overflow functions
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux@rasmusvillemoes.dk, davidgow@google.com
+Date:   Fri, 19 Jun 2020 18:57:19 -0300
+In-Reply-To: <202006181949.6402C456@keescook>
+References: <20200618140814.135948-1-vitor@massaru.org>
+         <202006181949.6402C456@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592603726; bh=2WyHYZcAAd5j4j8YMKEb9Xnebvu/ReeLnPA7IJpaPHY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=bG2exhFLi/dhXnVxKtb+vVw4hJm4sYRUISOowNkQuaGJWCJ82ZMVo3X3X1S3I7CdF
-         Ds6XPFozTL4ERi92mIco97nEN83xqmi3Ou9oz3AzwbZa+TRQEinefMqFqZmfWeqbd7
-         htretrj9PAc0QqV8mWmF8TuY1w/lnSVhTS9OEZOkBJN0tvrm1lbz0NbrpS3T+BbgpD
-         zqMM2gEGnSi92uDArOQ/lOTJoRnwLl+uCy3MSWAoXledxm6rnKNWKRUdfw9nSzORi9
-         5fPaVBl//wJYVNhsDgNIsSFyyDtQEP/RUKC4TJYAKcrTjpItK9qkP04981cHD4nQeR
-         6Fws/WMRVkaog==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SVM page fault handler groups faults into a range of contiguous
-virtual addresses and requests hmm_range_fault() to populate and
-return the page frame number of system memory mapped by the CPU.
-In preparation for supporting large pages to be mapped by the GPU,
-process faults one page at a time. In addition, use the hmm_range
-default_flags to fix a corner case where the input hmm_pfns array
-is not reinitialized after hmm_range_fault() returns -EBUSY and must
-be called again.
+On Thu, 2020-06-18 at 20:05 -0700, Kees Cook wrote:
+> On Thu, Jun 18, 2020 at 11:08:14AM -0300, Vitor Massaru Iha wrote:
+> > This adds the conversion of the runtime tests of check_*_overflow
+> > functions,
+> > from `lib/test_overflow.c`to KUnit tests.
+> > 
+> > The log similar to the one seen in dmesg running test_overflow.c
+> > can be
+> > seen in `test.log`.
+> > 
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > Tested-by: David Gow <davidgow@google.com>
+> > ---
+> > v2:
+> >   * moved lib/test_overflow.c to lib/overflow-test.c; 
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c | 199 +++++++++-----------------
- 1 file changed, 66 insertions(+), 133 deletions(-)
+Sure.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index ba9f9359c30e..665dede69bd1 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -516,7 +516,7 @@ static const struct mmu_interval_notifier_ops nouveau_s=
-vm_mni_ops =3D {
- static void nouveau_hmm_convert_pfn(struct nouveau_drm *drm,
- 				    struct hmm_range *range, u64 *ioctl_addr)
- {
--	unsigned long i, npages;
-+	struct page *page;
-=20
- 	/*
- 	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
-@@ -525,42 +525,38 @@ static void nouveau_hmm_convert_pfn(struct nouveau_dr=
-m *drm,
- 	 * This is all just encoding the internal hmm representation into a
- 	 * different nouveau internal representation.
- 	 */
--	npages =3D (range->end - range->start) >> PAGE_SHIFT;
--	for (i =3D 0; i < npages; ++i) {
--		struct page *page;
--
--		if (!(range->hmm_pfns[i] & HMM_PFN_VALID)) {
--			ioctl_addr[i] =3D 0;
--			continue;
--		}
--
--		page =3D hmm_pfn_to_page(range->hmm_pfns[i]);
--		if (is_device_private_page(page))
--			ioctl_addr[i] =3D nouveau_dmem_page_addr(page) |
--					NVIF_VMM_PFNMAP_V0_V |
--					NVIF_VMM_PFNMAP_V0_VRAM;
--		else
--			ioctl_addr[i] =3D page_to_phys(page) |
--					NVIF_VMM_PFNMAP_V0_V |
--					NVIF_VMM_PFNMAP_V0_HOST;
--		if (range->hmm_pfns[i] & HMM_PFN_WRITE)
--			ioctl_addr[i] |=3D NVIF_VMM_PFNMAP_V0_W;
-+	if (!(range->hmm_pfns[0] & HMM_PFN_VALID)) {
-+		ioctl_addr[0] =3D 0;
-+		return;
- 	}
-+
-+	page =3D hmm_pfn_to_page(range->hmm_pfns[0]);
-+	if (is_device_private_page(page))
-+		ioctl_addr[0] =3D nouveau_dmem_page_addr(page) |
-+				NVIF_VMM_PFNMAP_V0_V |
-+				NVIF_VMM_PFNMAP_V0_VRAM;
-+	else
-+		ioctl_addr[0] =3D page_to_phys(page) |
-+				NVIF_VMM_PFNMAP_V0_V |
-+				NVIF_VMM_PFNMAP_V0_HOST;
-+	if (range->hmm_pfns[0] & HMM_PFN_WRITE)
-+		ioctl_addr[0] |=3D NVIF_VMM_PFNMAP_V0_W;
- }
-=20
- static int nouveau_range_fault(struct nouveau_svmm *svmm,
- 			       struct nouveau_drm *drm, void *data, u32 size,
--			       unsigned long hmm_pfns[], u64 *ioctl_addr,
-+			       u64 *ioctl_addr, unsigned long hmm_flags,
- 			       struct svm_notifier *notifier)
- {
- 	unsigned long timeout =3D
- 		jiffies + msecs_to_jiffies(HMM_RANGE_DEFAULT_TIMEOUT);
- 	/* Have HMM fault pages within the fault window to the GPU. */
-+	unsigned long hmm_pfns[1];
- 	struct hmm_range range =3D {
- 		.notifier =3D &notifier->notifier,
- 		.start =3D notifier->notifier.interval_tree.start,
- 		.end =3D notifier->notifier.interval_tree.last + 1,
--		.pfn_flags_mask =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
-+		.default_flags =3D hmm_flags,
- 		.hmm_pfns =3D hmm_pfns,
- 	};
- 	struct mm_struct *mm =3D notifier->notifier.mm;
-@@ -575,11 +571,6 @@ static int nouveau_range_fault(struct nouveau_svmm *sv=
-mm,
- 		ret =3D hmm_range_fault(&range);
- 		mmap_read_unlock(mm);
- 		if (ret) {
--			/*
--			 * FIXME: the input PFN_REQ flags are destroyed on
--			 * -EBUSY, we need to regenerate them, also for the
--			 * other continue below
--			 */
- 			if (ret =3D=3D -EBUSY)
- 				continue;
- 			return ret;
-@@ -614,17 +605,12 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 	struct nvif_object *device =3D &svm->drm->client.device.object;
- 	struct nouveau_svmm *svmm;
- 	struct {
--		struct {
--			struct nvif_ioctl_v0 i;
--			struct nvif_ioctl_mthd_v0 m;
--			struct nvif_vmm_pfnmap_v0 p;
--		} i;
--		u64 phys[16];
-+		struct nouveau_pfnmap_args i;
-+		u64 phys[1];
- 	} args;
--	unsigned long hmm_pfns[ARRAY_SIZE(args.phys)];
--	struct vm_area_struct *vma;
-+	unsigned long hmm_flags;
- 	u64 inst, start, limit;
--	int fi, fn, pi, fill;
-+	int fi, fn;
- 	int replay =3D 0, ret;
-=20
- 	/* Parse available fault buffer entries into a cache, and update
-@@ -691,66 +677,53 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 		 * window into a single update.
- 		 */
- 		start =3D buffer->fault[fi]->addr;
--		limit =3D start + (ARRAY_SIZE(args.phys) << PAGE_SHIFT);
-+		limit =3D start + PAGE_SIZE;
- 		if (start < svmm->unmanaged.limit)
- 			limit =3D min_t(u64, limit, svmm->unmanaged.start);
--		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
-=20
--		mm =3D svmm->notifier.mm;
--		if (!mmget_not_zero(mm)) {
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
--		}
--
--		/* Intersect fault window with the CPU VMA, cancelling
--		 * the fault if the address is invalid.
-+		/*
-+		 * Prepare the GPU-side update of all pages within the
-+		 * fault window, determining required pages and access
-+		 * permissions based on pending faults.
- 		 */
--		mmap_read_lock(mm);
--		vma =3D find_vma_intersection(mm, start, limit);
--		if (!vma) {
--			SVMM_ERR(svmm, "wndw %016llx-%016llx", start, limit);
--			mmap_read_unlock(mm);
--			mmput(mm);
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
-+		args.i.p.addr =3D start;
-+		args.i.p.page =3D PAGE_SHIFT;
-+		args.i.p.size =3D PAGE_SIZE;
-+		/*
-+		 * Determine required permissions based on GPU fault
-+		 * access flags.
-+		 * XXX: atomic?
-+		 */
-+		switch (buffer->fault[fi]->access) {
-+		case 0: /* READ. */
-+			hmm_flags =3D HMM_PFN_REQ_FAULT;
-+			break;
-+		case 3: /* PREFETCH. */
-+			hmm_flags =3D 0;
-+			break;
-+		default:
-+			hmm_flags =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE;
-+			break;
- 		}
--		start =3D max_t(u64, start, vma->vm_start);
--		limit =3D min_t(u64, limit, vma->vm_end);
--		mmap_read_unlock(mm);
--		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
-=20
--		if (buffer->fault[fi]->addr !=3D start) {
--			SVMM_ERR(svmm, "addr %016llx", buffer->fault[fi]->addr);
--			mmput(mm);
-+		mm =3D svmm->notifier.mm;
-+		if (!mmget_not_zero(mm)) {
- 			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
- 			continue;
- 		}
-=20
--		/* Prepare the GPU-side update of all pages within the
--		 * fault window, determining required pages and access
--		 * permissions based on pending faults.
--		 */
--		args.i.p.page =3D PAGE_SHIFT;
--		args.i.p.addr =3D start;
--		for (fn =3D fi, pi =3D 0;;) {
--			/* Determine required permissions based on GPU fault
--			 * access flags.
--			 *XXX: atomic?
--			 */
--			switch (buffer->fault[fn]->access) {
--			case 0: /* READ. */
--				hmm_pfns[pi++] =3D HMM_PFN_REQ_FAULT;
--				break;
--			case 3: /* PREFETCH. */
--				hmm_pfns[pi++] =3D 0;
--				break;
--			default:
--				hmm_pfns[pi++] =3D HMM_PFN_REQ_FAULT |
--						 HMM_PFN_REQ_WRITE;
--				break;
--			}
--			args.i.p.size =3D pi << PAGE_SHIFT;
-+		notifier.svmm =3D svmm;
-+		ret =3D mmu_interval_notifier_insert(&notifier.notifier, mm,
-+						   args.i.p.addr, args.i.p.size,
-+						   &nouveau_svm_mni_ops);
-+		if (!ret) {
-+			ret =3D nouveau_range_fault(svmm, svm->drm, &args,
-+				sizeof(args), args.phys, hmm_flags, &notifier);
-+			mmu_interval_notifier_remove(&notifier.notifier);
-+		}
-+		mmput(mm);
-=20
-+		for (fn =3D fi; ++fn < buffer->fault_nr; ) {
- 			/* It's okay to skip over duplicate addresses from the
- 			 * same SVMM as faults are ordered by access type such
- 			 * that only the first one needs to be handled.
-@@ -758,61 +731,21 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			 * ie. WRITE faults appear first, thus any handling of
- 			 * pending READ faults will already be satisfied.
- 			 */
--			while (++fn < buffer->fault_nr &&
--			       buffer->fault[fn]->svmm =3D=3D svmm &&
--			       buffer->fault[fn    ]->addr =3D=3D
--			       buffer->fault[fn - 1]->addr);
--
--			/* If the next fault is outside the window, or all GPU
--			 * faults have been dealt with, we're done here.
--			 */
--			if (fn >=3D buffer->fault_nr ||
--			    buffer->fault[fn]->svmm !=3D svmm ||
-+			if (buffer->fault[fn]->svmm !=3D svmm ||
- 			    buffer->fault[fn]->addr >=3D limit)
- 				break;
--
--			/* Fill in the gap between this fault and the next. */
--			fill =3D (buffer->fault[fn    ]->addr -
--				buffer->fault[fn - 1]->addr) >> PAGE_SHIFT;
--			while (--fill)
--				hmm_pfns[pi++] =3D 0;
- 		}
-=20
--		SVMM_DBG(svmm, "wndw %016llx-%016llx covering %d fault(s)",
--			 args.i.p.addr,
--			 args.i.p.addr + args.i.p.size, fn - fi);
--
--		notifier.svmm =3D svmm;
--		ret =3D mmu_interval_notifier_insert(&notifier.notifier,
--						   svmm->notifier.mm,
--						   args.i.p.addr, args.i.p.size,
--						   &nouveau_svm_mni_ops);
--		if (!ret) {
--			ret =3D nouveau_range_fault(
--				svmm, svm->drm, &args,
--				sizeof(args.i) + pi * sizeof(args.phys[0]),
--				hmm_pfns, args.phys, &notifier);
--			mmu_interval_notifier_remove(&notifier.notifier);
--		}
--		mmput(mm);
-+		/* If handling failed completely, cancel all faults. */
-+		if (ret) {
-+			while (fi < fn) {
-+				struct nouveau_svm_fault *fault =3D
-+					buffer->fault[fi++];
-=20
--		/* Cancel any faults in the window whose pages didn't manage
--		 * to keep their valid bit, or stay writeable when required.
--		 *
--		 * If handling failed completely, cancel all faults.
--		 */
--		while (fi < fn) {
--			struct nouveau_svm_fault *fault =3D buffer->fault[fi++];
--			pi =3D (fault->addr - args.i.p.addr) >> PAGE_SHIFT;
--			if (ret ||
--			     !(args.phys[pi] & NVIF_VMM_PFNMAP_V0_V) ||
--			    (!(args.phys[pi] & NVIF_VMM_PFNMAP_V0_W) &&
--			     fault->access !=3D 0 && fault->access !=3D 3)) {
- 				nouveau_svm_fault_cancel_fault(svm, fault);
--				continue;
- 			}
-+		} else
- 			replay++;
--		}
- 	}
-=20
- 	/* Issue fault replay to the GPU. */
---=20
-2.20.1
+> I still don't want a dash in the filename, as this creates a
+> difference
+> between the source name and the module name. While I still prefer
+> overflow_kunit.c, I can get over it and accept overflow_test.c :)
+> 
+> >     * back to original license;
+> >     * fixed style code;
+> >     * keeps __initconst and added _refdata on overflow_test_cases
+> > variable;
+> >     * keeps macros intact making asserts with the variable err;
+> >     * removed duplicate test_s8_overflow();
+> >   * fixed typos on commit message;
+> > ---
+> >  lib/Kconfig.debug                        | 20 +++++++--
+> >  lib/Makefile                             |  2 +-
+> >  lib/{test_overflow.c => overflow-test.c} | 54 +++++++++-----------
+> > ----
+> >  3 files changed, 38 insertions(+), 38 deletions(-)
+> >  rename lib/{test_overflow.c => overflow-test.c} (96%)
+> > 
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index d74ac0fd6b2d..fb8a3955e969 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2000,9 +2000,6 @@ config TEST_UUID
+> >  config TEST_XARRAY
+> >  	tristate "Test the XArray code at runtime"
+> >  
+> > -config TEST_OVERFLOW
+> > -	tristate "Test check_*_overflow() functions at runtime"
+> > -
+> >  config TEST_RHASHTABLE
+> >  	tristate "Perform selftest on resizable hash table"
+> >  	help
+> > @@ -2155,6 +2152,23 @@ config SYSCTL_KUNIT_TEST
+> >  
+> >  	  If unsure, say N.
+> >  
+> > +config OVERFLOW_KUNIT_TEST
+> > +	tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
+> > +	depends on KUNIT
+> > +	default KUNIT_ALL_TESTS
+> > +	help
+> > +	  This builds the overflow KUnit tests.
+> > +
+> > +	  KUnit tests run during boot and output the results to the
+> > debug log
+> > +	  in TAP format (http://testanything.org/). Only useful for
+> > kernel devs
+> > +	  running KUnit test harness and are not for inclusion into a
+> > production
+> > +	  build.
+> > +
+> > +	  For more information on KUnit and unit tests in general
+> > please refer
+> > +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+> > +
+> > +	  If unsure, say N.
+> > +
+> >  config LIST_KUNIT_TEST
+> >  	tristate "KUnit Test for Kernel Linked-list structures" if
+> > !KUNIT_ALL_TESTS
+> >  	depends on KUNIT
+> > diff --git a/lib/Makefile b/lib/Makefile
+> > index b1c42c10073b..3b725c9f92d4 100644
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -75,7 +75,6 @@ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+> >  obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
+> >  obj-$(CONFIG_TEST_LKM) += test_module.o
+> >  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+> > -obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+> >  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+> >  obj-$(CONFIG_TEST_SORT) += test_sort.o
+> >  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+> > @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+> >  # KUnit tests
+> >  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> >  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> > +obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow-test.o
+> > diff --git a/lib/test_overflow.c b/lib/overflow-test.c
+> > similarity index 96%
+> > rename from lib/test_overflow.c
+> > rename to lib/overflow-test.c
+> > index 7a4b6f6c5473..d40ef06b1ade 100644
+> > --- a/lib/test_overflow.c
+> > +++ b/lib/overflow-test.c
+> > @@ -4,14 +4,11 @@
+> >   */
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >  
+> > +#include <kunit/test.h>
+> >  #include <linux/device.h>
+> >  #include <linux/init.h>
+> > -#include <linux/kernel.h>
+> >  #include <linux/mm.h>
+> > -#include <linux/module.h>
+> >  #include <linux/overflow.h>
+> > -#include <linux/slab.h>
+> > -#include <linux/types.h>
+> >  #include <linux/vmalloc.h>
+> >  
+> >  #define DEFINE_TEST_ARRAY(t)			\
+> > @@ -270,7 +267,7 @@ DEFINE_TEST_FUNC(u64, "%llu");
+> >  DEFINE_TEST_FUNC(s64, "%lld");
+> >  #endif
+> >  
+> > -static int __init test_overflow_calculation(void)
+> > +static void __init overflow_calculation_test(struct kunit *test)
+> >  {
+> >  	int err = 0;
+> >  
+> > @@ -285,10 +282,10 @@ static int __init
+> > test_overflow_calculation(void)
+> >  	err |= test_s64_overflow();
+> >  #endif
+> >  
+> > -	return err;
+> > +	KUNIT_EXPECT_FALSE(test, err);
+> >  }
+> 
+> Ah! Well, yes, I guess that is one way to do it. :) I'm just curious:
+> why the change away from doing EXPECTs on individual tests?
+
+When returning the err variables, I was not sure if it was to make the
+asserts individually, I can do that.
+
+> >  
+> > -static int __init test_overflow_shift(void)
+> > +static void __init overflow_shift_test(struct kunit *test)
+> >  {
+> >  	int err = 0;
+> >  
+> > @@ -479,7 +476,7 @@ static int __init test_overflow_shift(void)
+> >  	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
+> >  	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
+> >  
+> > -	return err;
+> > +	KUNIT_EXPECT_FALSE(test, err);
+> >  }
+> >  
+> >  /*
+> > @@ -555,7 +552,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0,
+> > 1, 1);
+> >  DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
+> >  DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
+> >  
+> > -static int __init test_overflow_allocation(void)
+> > +static void __init overflow_allocation_test(struct kunit *test)
+> >  {
+> >  	const char device_name[] = "overflow-test";
+> >  	struct device *dev;
+> > @@ -563,10 +560,8 @@ static int __init
+> > test_overflow_allocation(void)
+> >  
+> >  	/* Create dummy device for devm_kmalloc()-family tests. */
+> >  	dev = root_device_register(device_name);
+> > -	if (IS_ERR(dev)) {
+> > -		pr_warn("Cannot register test device\n");
+> > -		return 1;
+> > -	}
+> > +	if (IS_ERR(dev))
+> > +		kunit_warn(test, "Cannot register test device\n");
+> >  
+> >  	err |= test_kmalloc(NULL);
+> >  	err |= test_kmalloc_node(NULL);
+> > @@ -585,30 +580,21 @@ static int __init
+> > test_overflow_allocation(void)
+> >  
+> >  	device_unregister(dev);
+> >  
+> > -	return err;
+> > +	KUNIT_EXPECT_FALSE(test, err);
+> >  }
+> >  
+> > -static int __init test_module_init(void)
+> > -{
+> > -	int err = 0;
+> > -
+> > -	err |= test_overflow_calculation();
+> > -	err |= test_overflow_shift();
+> > -	err |= test_overflow_allocation();
+> > -
+> > -	if (err) {
+> > -		pr_warn("FAIL!\n");
+> > -		err = -EINVAL;
+> > -	} else {
+> > -		pr_info("all tests passed\n");
+> > -	}
+> > +static struct kunit_case __refdata overflow_test_cases[] = {
+> 
+> Erm, __refdata? This seems like it should be __initdata.
+
+I tried to use __initdata, but the build still gave warnings.
+
+> 
+> > +	KUNIT_CASE(overflow_calculation_test),
+> > +	KUNIT_CASE(overflow_shift_test),
+> > +	KUNIT_CASE(overflow_allocation_test),
+> > +	{}
+> > +};
+> >  
+> > -	return err;
+> > -}
+> > +static struct kunit_suite overflow_test_suite = {
+> 
+> And this.
+> 
+> > +	.name = "overflow",
+> > +	.test_cases = overflow_test_cases,
+> > +};
+> >  
+> > -static void __exit test_module_exit(void)
+> > -{ }
+> > +kunit_test_suites(&overflow_test_suite);
+> 
+> I suspect the problem causing the need for __refdata there is the
+> lack
+> of __init markings on the functions in kunit_test_suites()?
+
+From the kunit_test_suites() documentation I saw that I need to write
+the test as a module to solve this problem. I'll fix this.
+
+> 
+> (Or maybe this is explained somewhere else I've missed it.)
+> 
+> For example, would this work? (I haven't tested it all.)
+
+Oops. It doesn't work, I'm sorry.
+
+
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 59f3144f009a..aad746d59d2f 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -233,9 +233,9 @@ size_t kunit_suite_num_test_cases(struct
+> kunit_suite *suite);
+>  unsigned int kunit_test_case_num(struct kunit_suite *suite,
+>  				 struct kunit_case *test_case);
+>  
+> -int __kunit_test_suites_init(struct kunit_suite **suites);
+> +int __init __kunit_test_suites_init(struct kunit_suite **suites);
+>  
+> -void __kunit_test_suites_exit(struct kunit_suite **suites);
+> +void __exit __kunit_test_suites_exit(struct kunit_suite **suites);
+>  
+>  /**
+>   * kunit_test_suites() - used to register one or more &struct
+> kunit_suite
+> @@ -263,8 +263,9 @@ void __kunit_test_suites_exit(struct kunit_suite
+> **suites);
+>   * everything else is definitely initialized.
+>   */
+>  #define kunit_test_suites(suites_list...)				
+> \
+> -	static struct kunit_suite *suites[] = {suites_list, NULL};	
+> \
+> -	static int kunit_test_suites_init(void)				
+> \
+> +	static struct kunit_suite *suites[] __initdata =		\
+> +		{suites_list, NULL};					
+> \
+> +	static int __init kunit_test_suites_init(void)			
+> \
+>  	{								\
+>  		return __kunit_test_suites_init(suites);		\
+>  	}								\
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index c36037200310..bfb0f563721b 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -381,7 +381,7 @@ static void kunit_init_suite(struct kunit_suite
+> *suite)
+>  	kunit_debugfs_create_suite(suite);
+>  }
+>  
+> -int __kunit_test_suites_init(struct kunit_suite **suites)
+> +int __init __kunit_test_suites_init(struct kunit_suite **suites)
+>  {
+>  	unsigned int i;
+>  
+> @@ -393,7 +393,7 @@ int __kunit_test_suites_init(struct kunit_suite
+> **suites)
+>  }
+>  EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
+>  
+> -static void kunit_exit_suite(struct kunit_suite *suite)
+> +static void __exit kunit_exit_suite(struct kunit_suite *suite)
+>  {
+>  	kunit_debugfs_destroy_suite(suite);
+>  }
+> 
+> >  
+> > -module_init(test_module_init);
+> > -module_exit(test_module_exit);
+> >  MODULE_LICENSE("Dual MIT/GPL");
+> > 
+> > base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
+> > prerequisite-patch-id: e827b6b22f950b9f69620805a04e4a264cf4cc6a
+> > -- 
+> > 2.26.2
+> > 
+> 
+> Thanks again for the conversion!
+
+
+Thanks for the review.
 
