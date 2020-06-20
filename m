@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF08C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6744DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE72A24727
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF8C24732
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jXPADqgs"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CFnOTQM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgFTWnt (ORCPT
+        id S1729128AbgFTWoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:43:49 -0400
-Received: from mout.gmx.net ([212.227.17.20]:40865 "EHLO mout.gmx.net"
+        Sat, 20 Jun 2020 18:44:05 -0400
+Received: from mout.gmx.net ([212.227.17.20]:60347 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgFTWne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:43:34 -0400
+        id S1728547AbgFTWoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 18:44:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592692960;
-        bh=quWpSURYzI37HAY+ZRXyoXMx0x6xymIR9XadTNWbOm0=;
+        s=badeba3b8450; t=1592693004;
+        bh=VyVCIBxPFyt78YSnxS+0Id2tmE8pzSJjUVG0PtP0FGo=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=jXPADqgsQRfGRq3jn39dE8CWtm9UG80OHy4kt1PrelCzVkXkybJYMQphTkqHVBJPP
-         YLLnHZSdABYy1qBb26AMLiEERbuGCVV7DGKhldESZJ8O/um3jRfTMWYVgUr0dpqXBl
-         H2aQzH9d7skrZZ34gaihGa/eIu/8MAeG72wXESfI=
+        b=CFnOTQM3hDO8qn9SOfaIxccrUDsONIICDvI+jIsmU+SlgaKoyLBeI2FNpplaFvAWy
+         6vY1mnLluuZd7IZt/swaQFqEX18Q7jG2KaUvebExAJHnaAawbBx2eqD9VRW6+OUS7b
+         rt5yw5PsHF5ZMIRapjiBMysuRzC8UMFUS1FKtUgw=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MybGX-1ixHWs3fLx-00yvXe; Sun, 21
- Jun 2020 00:42:40 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MkYbu-1j0qH413NO-00m7VT; Sun, 21
+ Jun 2020 00:43:24 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -61,121 +61,106 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>
-Subject: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix embedded controller RTC
-Date:   Sun, 21 Jun 2020 00:42:18 +0200
-Message-Id: <20200620224222.1312520-6-j.neuschaefer@gmx.net>
+Subject: [RFC PATCH 10/10] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
+Date:   Sun, 21 Jun 2020 00:42:21 +0200
+Message-Id: <20200620224222.1312520-9-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kINr04vGH8PFK0WI4mNxqdxrk/BTSB+q42S51+k3h8qzZN+MKBg
- 39ozPRxm1iOnsGPo7aKAazPj9u1koqGdtnXsm0yBV2EzCMz/snPFdqb96BNKl5DiZ3SZSWJ
- 3jTi+1yoxznDEVo2nCsnqKjZJ5DlIrdVICxcD6GJxhXyxEKFNkXUFUVbcUNMK2GZCU0rg3t
- 5RQbWuraPRT5G7Q6GQWaA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l5Qjo2w9OhQ=:WCuhRPDe5N3Khy2z5xz9L/
- rb0zLra1fWmgwAE5b/+YqxhmK/yGKgtg3IY3h5PLyFF7zFqLgdNUnnx9pLBByPyyoIlQ8gC8r
- Z4zw3VuQ0ogI07MvbGLQZKYcxvwsXoUqUQ9FBQsuRgv3zURDWxpDnlNBCDgMq7jdyM4wEuBEH
- NqJsSx/0rNq1lpV1LGrkaOrukiDghyQeDWJnXQxfaPbEglxcvj1EYTt7hVDH1R159ON7C0UZV
- ZBfs8HE/KhSFrY1hJZRfjhJpLigZBGWslMko5jP/3lmVwjP5clf5t3mZ2gT7nY0M0A+tzuSiJ
- RBajDzAVfUhP6ccgLptPSeM1KZImK/4X74SSSqSzyOI7r6y9lsvgP8AOa2KQoH6oB2fgwFdVW
- foL+K1a9DZ9lP+pRQ/rWH5kfMa2J8fC4cVNiC9BmWP8K1sOXTAn/ge2mmubaCHwfmDf/vsy46
- JEyOsAPT/vttnayLGhMGPptu9LqbzTae6H4cnDcCtv/Y4SMYyZLcOeCynP/B4I0Iduysl0DK6
- du7lISZkqDGKtViqJOJgJRUHgLCHhT8P5PHhn2tn7e1eS9UTxVwR3LdkduObqwt78objrvyK4
- K+qTMfG3AAebRFORWVrRaOkaF1WEfYlxHNk40k68P58qX7pPweH5Ih3IYrYzSTkeaE5JpblLO
- VRdtn83Kx/eRKIXcYV216AEQLh7kfGzDlvHj4JTbqcg0Db+RNBJLTW3s7BehJF5VVBQc37TIp
- m7SSMZnLXXnVAa+0rGwRd7+8OqpeUg2PKViDWJpo22mt0fIXjgNwpu8oH8cwPWJg2t8iii9jv
- WVMw0tgfK00/RwA42SUEZGmay+gZw4/CgkSjttfjvgzZyT2T35bQAFFScpjE7n5FWn6Jr8aNP
- e5CUOCuH9ccb2VF3wuRXDA+9ifLavvO1I95VLxybYSxaVQRwaxykN1Q7m+BdQMYDMR5J3Rn+r
- g6b2pQA4ozXIa7tGrJXzcIdLFApeYA5h0SpHETeMHznHyf3lBug26ikiIK9SK8UINPXY9/WdD
- WEt/jx1rTFj0Dldgk1uWPcevCtU3UelskVKKc0pzRDK9Q39xZd5CjZzFDNqBtKDYUC6w8PwlZ
- qkIrrp4Jc/NstteeqCcs4awLU2EZ672W7G1LV8+9vJYa2s2JM/kpCX0DAD71Lxpp96gIEPpfD
- pU/2wcDHBPnAISBOBHp6Ufn9BUzpo3Q9Hxp2YrvQ/KK+f2VauYs9yfaxcpTFj3rbhZytMLMS3
- 4kXQD+CJkowm3JN8x
+X-Provags-ID: V03:K1:4FNCq66znOgeVyoZjrNrgMQNLnnTq7LrgHosR3ZKBWDuWQR51Y9
+ hYPhfmsJMKVLhNUIXKWpXJ8DaN+Mi7bhYl3wdJNS0UubbVPRgXNfjSkkZ5Sakhi9Sdwyrqb
+ n/bhq7zcYZO6wnOqrkTvllNX/Rorn0iDQKN/y2kqkLi3twA6ydDRZZjvdVGpX8tOPT+hgXi
+ qyEaws9q/M2HxQVCbgODg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UY/7ZGF2UsM=:2TV1b5ihDM1IbSjjYU1cq1
+ RurzmoY+h7ogNf0pk+B8diNEMciUuUtbF+eEBnMAlAYZQAeyf7ODTcGaAYuxubkKzrw6pRrKJ
+ u7YKup/L3RbNQoPDjcWXk4fy6YId5jZy64LSPR1WidU++P1QdFUMTRGMWdhQZRHO2wIaO1BZn
+ pHCfee3VGUHyqGqVCsLTVs+nflPhgABgpwXuXsfcI7/8A6YfGAsPsMbNIyWSZ9tHEGmFYIrXV
+ 9sw+s9jn3cymB1+YgQBkvFyB3pz5SCd4jYb11PbjEXKNeBh8PslQ240dM4MRaMPBzmpsfqKzd
+ KqKZ9BV56kgqBZ0rqvOt+lJiaiIHTK5vvbTwOq4x5h0CL1x2Y7X2N8h2G0eGp8UFoJKBezwZ/
+ bptNe9he5o2CR60qp6N7yD0sKvcY0Zven21jgG1dd8+DHfVHZ1rN2XY2vM5U/W0niVLm/JVfB
+ gZ33qS2Thm0GwLuVsIxhLIKT0ZlBEUFS4VhQNhi98hXbiiZYHHR53hFQzWiP1sKO3z4Our42E
+ 0IVOARxJspuAOEqe+aXN1hCpwcfpDg+BWJ7dgKhX4N+Fnp9gHg+7KNHXbkzcIqP3V92O0rPba
+ M9ftV0TJkC6NfKOo/SJasHwCVxlJFzkbHcbK57O4PNMZ3cxmyVNamvu46vkMKdKRcqk/EJAQq
+ 5gia4k5YBdK+aeFaDR09cV714TJyM6Dd7A/B79plDwQs/lzQiRlQLF0dmiJwtLG7fo6xX5evk
+ 7RPAZWCIjix7UrczoIc39V/7i7ymswXVcynXVEd0ujyQOmWG1o3RzWj450uvLgZToixsKuuUq
+ KGZmeDaq8Or82WumlQWOQrcyRQs8dI/KM0xj/TwIUJXahH4mAfR10uTlxIFg0sLxYZognpgVP
+ qDruGDJNBKefU/b+VzCyuE+Mda+XtDSapia4GD9fseEy/7U2DRmZ36JKDE63uKdgfZtlFXuv4
+ A1cEFebGf3D/i8AJaFUFevkThCFTLPmDye9CabeWM486RdZriVTukJ920ITC2cAWzpAvJV93p
+ XAsaI1gazr2r4BfRSecIP0hsrjuO7zsDsCAWskQTzEQ4rXEshJ1HGGFJuiIEeT9lcxPRspQmB
+ O5GzmmA+VzRqk1K63LwvFdcz0X6nWMfZjvFiFUlHSpceygtOdqA11RG8sx5tyYrT4n1tlI7Xc
+ ijf+a/KpCxLlVe1eTikWgm3UKYCPw6bjRo7MVI9Euzi3A+UP97FKrDiq8RN+x9J1Z4DzjO667
+ BmUzrKMJbsAVFhh5M
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Netronix EC implements an RTC with the following functionality:
+Enable the Netronix EC on the Kobo Aura ebook reader.
 
-- Calendar-based time keeping with single-second resolution
-- Automatic power-on with single-minute resolution
-- Alarm at single-second resolution
-
-This binding only supports timekeeping for now.
+Several features are still missing:
+ - Frontlight/backlight. The vendor kernel drives the frontlight LED
+   using the PWM output of the EC and an additional boost pin that
+   increases the brightness.
+ - Battery monitoring
+ - Interrupts for RTC alarm and low-battery events
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
- .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-r=
-tc.yaml
+ arch/arm/boot/dts/imx50-kobo-aura.dts | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/D=
-ocumentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-index 6562c41c5a9a9..f6a32f46f47bb 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-@@ -34,6 +34,9 @@ properties:
-   pwm:
-     $ref: ../pwm/netronix,ntxec-pwm.yaml
+diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
+50-kobo-aura.dts
+index a0eaf869b9135..003a7d894902c 100644
+=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
++++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ #include "imx50.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 
-+  rtc:
-+    $ref: ../rtc/netronix,ntxec-rtc.yaml
-+
- required:
-   - compatible
-   - reg
-@@ -61,6 +64,10 @@ examples:
-                             compatible =3D "netronix,ntxec-pwm";
-                             #pwm-cells =3D <1>;
-                     };
-+
-+                    rtc {
-+                            compatible =3D "netronix,ntxec-rtc";
-+                    };
-             };
-     };
+ / {
+ 	model =3D "Kobo Aura (N514)";
+@@ -135,10 +136,34 @@ &i2c3 {
+ 	pinctrl-0 =3D <&pinctrl_i2c3>;
+ 	status =3D "okay";
 
-diff --git a/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml=
- b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
-new file mode 100644
-index 0000000000000..4b301ef7319c8
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/netronix,ntxec-rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+-	/* TODO: embedded controller at 0x43 */
++	embedded-controller@43 {
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_ec>;
++		compatible =3D "netronix,ntxec";
++		reg =3D <0x43>;
++		system-power-controller;
++		interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells =3D <1>;
 +
-+title: RTC functionality in Netronix embedded controller
++		ec_pwm: pwm {
++			compatible =3D "netronix,ntxec-pwm";
++			#pwm-cells =3D <2>;
++		};
 +
-+maintainers:
-+  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
++		rtc {
++			compatible =3D "netronix,ntxec-rtc";
++		};
++	};
+ };
+
+ &iomuxc {
++	pinctrl_ec: ec {
++		fsl,pins =3D <
++			MX50_PAD_CSPI_SS0__GPIO4_11		0x0	/* INT */
++		>;
++	};
 +
-+description: |
-+  See also Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+
-+  The Netronix EC contains an RTC, which can be used for time-keeping, al=
-arm,
-+  and automatic power-on. Note that not all of this functionality is curr=
-ently
-+  supported in this binding.
-+
-+allOf:
-+  - $ref: "rtc.yaml#"
-+
-+properties:
-+  compatible:
-+    const: netronix,ntxec-rtc
-+
-+required:
-+  - compatible
+ 	pinctrl_gpiokeys: gpiokeys {
+ 		fsl,pins =3D <
+ 			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
 =2D-
 2.27.0
 
