@@ -2,157 +2,134 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6731DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D987623DC4
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474CB23D6A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F0v1zkAY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRVCcChd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgFTQBq (ORCPT
+        id S1726999AbgFTQIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgFTQBp (ORCPT
+        Sat, 20 Jun 2020 12:08:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53254 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725957AbgFTQIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:01:45 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A90AC06174E
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:01:45 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g1so10154803edv.6
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FaacUivmwkyk1cQqE2hDul+alcpzdjWqLMV4Yng5czA=;
-        b=F0v1zkAYWFxD7fO/Z3yiOsm9bgbIfvJscZvGRcsG2T99d0vBJ7bN6KBQfWddETeLbq
-         gN+YjHd4Lkrt4onWB7gva+uxV8jBAqhhlft0hyMCiO5qhq2avIU2RUjwV1jiYtuCdu6o
-         +L3DM8c2PSwzDOFJWZfn1pwGS5U65F4S/lJ4zaM2Ab9OqGgaS8m40RmQGUgA/KZK1qhw
-         AhmHNdG1nqO6ji4fEkfbXtgT/9Axl2tvxJs2fmtlJeoZviqJF6MHkFE7uOgqAi80rj85
-         aBJSEF2C35YGwvEA3nER/f/5xzDxEr7slR2UbA0Wnzayv0ShJF0390icPmd2bsJcfKgR
-         zJYg==
+        Sat, 20 Jun 2020 12:08:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592669311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uAGWGHZX+NRKxPhaQCrHlyIVKqgbsc6xDoomuBD05Hw=;
+        b=HRVCcChduwqCMPn//fe8n8VzggZ0W8IgYjdkVScXl3X1/W5nqiDc2IYGPRsJzUt0dN0GAw
+        mE/AGExA5yWkg2xaJ/YH/1ghph1VlWZ8c5qLrUaj9rDAtugTa4BCyaeURbKFpjLnxuE4bj
+        x0HgIQiNrfcA7KYozxCtUwkHWpBNK9A=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-3S_bh-Q4OqiklVFXqBv1wA-1; Sat, 20 Jun 2020 12:08:29 -0400
+X-MC-Unique: 3S_bh-Q4OqiklVFXqBv1wA-1
+Received: by mail-qt1-f200.google.com with SMTP id y5so9557684qto.10
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:08:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FaacUivmwkyk1cQqE2hDul+alcpzdjWqLMV4Yng5czA=;
-        b=mqVRd8cKodO4DqqwxEmBCNSOlyvksiWcpLNWlutqnjUbylz16LJgeLVQ3yb89NquBc
-         svzW2rwi6e5CgK2HyC7WyJelntXMyfx4noFlh5ejvDCq8eUeWCcKJy6eChW4gHJeSadb
-         IOP2j+nFFxfTN4OKAIgsuffaCjVarAIrxh3zzv1zfkZH2h9f3yCobOGzevgymDG/x5kn
-         XjhGq9fdCGJc14aUuZS28vO7zgczkRzzbn1LwusKXabDRXmhJ5Prf0diuB3h/SStnYvx
-         ZguFwfES2etguWQdS+3hk34nJbRQE4AUoZNae7Ji1K657VVD6or9g4iwpRC32RUSakCR
-         Q4+w==
-X-Gm-Message-State: AOAM533CxGFrnSFprHW34g4iYgvNLPpyJbBk6HXCLKjhbvjvLhBrP9sw
-        nd5Vs13i171gteZd6+4fYFw+DSME
-X-Google-Smtp-Source: ABdhPJy7Nb/QqHmM2mHXqpKgXM/nYSBMHOREpkTWhmthhkI7ncEyLySQ7ZApmLmYTEIH+wupc0n/qA==
-X-Received: by 2002:aa7:d693:: with SMTP id d19mr4278829edr.297.1592668903789;
-        Sat, 20 Jun 2020 09:01:43 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id sd15sm238163ejb.66.2020.06.20.09.01.43
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uAGWGHZX+NRKxPhaQCrHlyIVKqgbsc6xDoomuBD05Hw=;
+        b=soVRsWrV+Lm7KgRZcEjpiLeAEnkHx2xf7Ep/0OiQ+5FBoREvuHbnLJb0WZNCqn1Iut
+         MDfPxM+GTaB6Kqkut1l0tFok8kBPiB8hQtCeCOeH4FL1sWjdiTbhpCMDNd4NbnNGhDEA
+         YsAgiPvIPJPC/hULwonAGhm0ilArlEG0Sy7owDT6mQ7gWte8oms1G0KeIMQpbqSTzFzQ
+         eIgdpSRFcQpMRalU4imYzHJ2MEOoVQsNoHkleM0z8WYzuwTBhC7zRzU7Z4/QhLVZ31wB
+         3r6rmG/3BzNTEjo40p1AzL90TFheJtCalwg7wf/H1eS1khOrV3T5FF4r5BGD+o2ijTyI
+         9I8g==
+X-Gm-Message-State: AOAM530ymePso4Q2FhHlnIK3Rvsnw47yG1Xd8LEVaRM3uBjmxLBg5SVk
+        UfVbE+O+RsLFrTH67UjloahKSYAu7Blg6RrsBq4FqpyyIlpiP/zfIwKdJim0uuO/Xo/B0mVv/sK
+        ui62S0Ng1rCrXJOkaAhHvBkGW
+X-Received: by 2002:ac8:2af4:: with SMTP id c49mr7855097qta.42.1592669308735;
+        Sat, 20 Jun 2020 09:08:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzhW6m+v5NAydxoWwY4YCydn/fcpsNSqMLAgkBrIBmXw9vSkjNqmzWLGoF9/VukK2HQYENUBg==
+X-Received: by 2002:ac8:2af4:: with SMTP id c49mr7855067qta.42.1592669308443;
+        Sat, 20 Jun 2020 09:08:28 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id 195sm9432761qkg.74.2020.06.20.09.08.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 09:01:43 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] arm64: dts: amlogic: Add the Ethernet "timing-adjustment" clock
-Date:   Sat, 20 Jun 2020 18:01:36 +0200
-Message-Id: <20200620160136.21584-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
+        Sat, 20 Jun 2020 09:08:27 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 12:08:25 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-csky@vger.kernel.org
+Subject: Re: [PATCH 06/26] mm/csky: Use general page fault accounting
+Message-ID: <20200620160825.GC6414@xz-x1>
+References: <20200619160538.8641-1-peterx@redhat.com>
+ <20200619160538.8641-7-peterx@redhat.com>
+ <CAJF2gTS+6UwSAbHk9236g2FOhyYniKZ-W3DcKJuSYMF13qHZxQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJF2gTS+6UwSAbHk9236g2FOhyYniKZ-W3DcKJuSYMF13qHZxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the "timing-adjusment" clock now that we now that this is connected
-to the PRG_ETHERNET registers. It is used internally to generate the
-RGMII RX delay no the MAC side (if needed).
+On Sat, Jun 20, 2020 at 09:44:31AM +0800, Guo Ren wrote:
+> On Sat, Jun 20, 2020 at 12:05 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > Use the general page fault accounting by passing regs into handle_mm_fault().
+> > It naturally solve the issue of multiple page fault accounting when page fault
+> > retry happened.
+> >
+> > CC: Guo Ren <guoren@kernel.org>
+> > CC: linux-csky@vger.kernel.org
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/csky/mm/fault.c | 12 +-----------
+> >  1 file changed, 1 insertion(+), 11 deletions(-)
+> >
+> > diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
+> > index b14f97d3cb15..a3e0aa3ebb79 100644
+> > --- a/arch/csky/mm/fault.c
+> > +++ b/arch/csky/mm/fault.c
+> > @@ -151,7 +151,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+> >          * the fault.
+> >          */
+> >         fault = handle_mm_fault(vma, address, write ? FAULT_FLAG_WRITE : 0,
+> > -                               NULL);
+> > +                               regs);
+> what's your kernel version ? （4th arg exsist ?）
+>         /*
+>          * If for any reason at all we couldn't handle the fault,
+>          * make sure we exit gracefully rather than endlessly redo
+>          * the fault.
+>          */
+>         fault = handle_mm_fault(vma, address, write ? FAULT_FLAG_WRITE : 0);
+>         if (unlikely(fault & VM_FAULT_ERROR)) {
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 6 ++++--
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 6 ++++--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 5 +++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 5 +++--
- 4 files changed, 14 insertions(+), 8 deletions(-)
+Hi, Guo,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 8e6281c685fa..b9efc8469265 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -181,8 +181,10 @@ ethmac: ethernet@ff3f0000 {
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
-+				 <&clkc CLKID_MPLL2>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1",
-+				      "timing-adjustment";
- 			rx-fifo-depth = <4096>;
- 			tx-fifo-depth = <2048>;
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 593a006f4b7b..41805f2ed8fc 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -185,8 +185,10 @@ ethmac: ethernet@ff3f0000 {
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
-+				 <&clkc CLKID_MPLL2>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1",
-+				      "timing-adjustment";
- 			rx-fifo-depth = <4096>;
- 			tx-fifo-depth = <2048>;
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 234490d3ee68..03c25b9facff 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -333,8 +333,9 @@ &efuse {
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
--		 <&clkc CLKID_MPLL2>;
--	clock-names = "stmmaceth", "clkin0", "clkin1";
-+		 <&clkc CLKID_MPLL2>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+	clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
- };
- 
- &gpio_intc {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index fc59c8534c0f..60484bbc7272 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -131,8 +131,9 @@ &efuse {
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
--		 <&clkc CLKID_MPLL2>;
--	clock-names = "stmmaceth", "clkin0", "clkin1";
-+		 <&clkc CLKID_MPLL2>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+	clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
- 
- 	mdio0: mdio {
- 		#address-cells = <1>;
+Sorry to be unclear.  This patch is based on patch 1 in the same series:
+
+https://lore.kernel.org/lkml/20200619160538.8641-2-peterx@redhat.com/
+
+Thanks,
+
 -- 
-2.27.0
+Peter Xu
 
