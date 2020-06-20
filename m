@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B678CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AADC23BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9547023C30
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHflshu8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaL3LNNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgFTOth (ORCPT
+        id S1728608AbgFTOto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48596 "EHLO
+        Sat, 20 Jun 2020 10:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgFTOsd (ORCPT
+        with ESMTP id S1728305AbgFTOs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 10:48:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297ACC06174E;
-        Sat, 20 Jun 2020 07:48:33 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g18so3286549wrm.2;
-        Sat, 20 Jun 2020 07:48:33 -0700 (PDT)
+        Sat, 20 Jun 2020 10:48:26 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBA7C0613EF;
+        Sat, 20 Jun 2020 07:48:26 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so10393801wrm.4;
+        Sat, 20 Jun 2020 07:48:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v6vJgKaplvVYu5CK3tSSKZqp8AdKD52jPGys9WAg2ik=;
-        b=jHflshu8MRE0tbnm3v4T8SNN7diDQz/65jfJwoRnXg9SXiyswmRiTudYNu5y2EhTd8
-         9LCUerKNPQnaudvq0y6cL0QTInaecz0xsTE9+MUTr5NkgN7G8FaSOdgkJkjcShOpsJap
-         hmcxl4nYNv5M6pVmc/baYFnx4Fv3QbOukg39FtzP0RbYSgf6YLozeyZ6IKPgMYSxOfOF
-         8DDJltnpYLnCfW+fmqDZlDlhzGKMyf52dLjpmx65XRL4bMthb1cCIdDikIpql7zs7CN7
-         szoQpR05oCjZigJhMedZX51o28754Nnwy7nlp8erOwDRf5hslsAWwfNHtF338mezZatQ
-         S4HA==
+        bh=NDbZgnSpbzmFJhwG16PsfsPK9AUHPobxxZQXjVJN29U=;
+        b=iaL3LNNdHL41hKDdpsxLURMBf5Xnsa+lvpKlLhDUyxgwRIV4XNCDHxU5WMbngvLNI6
+         gmN4RUHKZ8jMrZZuM+SO+/N79sFKjpQ8XBTxaGCBmnYSHnEau58NIfhPjvADfsqZ5h3Z
+         wFnZ2J02KiF+kSUXD6UijoWqaNxLHAAhpYZidtC3JTb/PtS3iEucEIx2CoEGgVr74lHT
+         byBxAGtaYAKyUi8w3LqCgENoDwAs7kmhLasOsOIxJdS4KO++/61gUwTthr8CHe6cRh6z
+         XMQL8MdqCfEhTJ+SalkxRfRE9USYE0uO2DHyMVDND/WjYYQ7JsJHUv4zFsrYYpTSr1wP
+         4A0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v6vJgKaplvVYu5CK3tSSKZqp8AdKD52jPGys9WAg2ik=;
-        b=EQmQy9EJPyfSb57QGiP4Ndvo9Au82ynaI6kAfG/1V/nb8ClmtR6CfgoSiqT3LAfdQw
-         Box3nQmKNP71mA/sSnJ5EyNjlijPAFrFcKdz5aXlNu6NdyMgnf+pASO/Bp8Y19cDvGBc
-         rrL2VT2mksPiGnR4MwsEZmsJTqid5Mdmtkth4CitJ9qehf7rx8VfOQza+tK/a9DXutoC
-         UMYyFNJ/excsF7WWScPHTYavTemEqx9n3GO1MJ3UzuxJ2LuZJxWj6AzZjUv9PcSToB+o
-         n1314ATC+hE1ZQoIL1JxWh2kkQ4g1NfxgkJFp0N5jZlPI0q57LiXvZoCJlfsacm1R8TH
-         8cnw==
-X-Gm-Message-State: AOAM532rTAjYilaDTuBf2IY01Pa6NgR2qlgoHgdVQXZdab1J5LL8cdkI
-        p5706piUWHLc6w7NfEUioCM=
-X-Google-Smtp-Source: ABdhPJzu4Y9C4y0Qd65ugxbI0YADYBBvj5/MB+c7KXfREiadsPdCL4sXLQALh/+8JVVDHClvdKd65w==
-X-Received: by 2002:adf:c404:: with SMTP id v4mr9061373wrf.85.1592664511955;
-        Sat, 20 Jun 2020 07:48:31 -0700 (PDT)
+        bh=NDbZgnSpbzmFJhwG16PsfsPK9AUHPobxxZQXjVJN29U=;
+        b=a0kY7AxYtqUNRTcgzrV9HoSBavkEV1pg3seF48Qxe6G0E8xe/vpPxtZQatWG3X3EnO
+         5jUI2vyN3aknymX2aGsOqPeqfE70jTohUP5rLyGwXjo+oqLfU0RL44jdNUv8wQGg5edN
+         jNgUnJjf8WI3e9YXx+8edXAuME9RhEp3LM4pG1qTbO47TyN2t04r2dYrjahIss0xoQZR
+         cvuWdg9HUDC9EOJDefcJeeZXQiDYjBmrDfvF4NH5xVs89tDjkUt6mdSTmhDiw/pNwPYS
+         Gh3IM06sUtBWtiQNYjUyTWKgIV6KyoqFEiRuwfsmAOyphw+623Y/YVl+mpn6uc6JyeE9
+         xHSw==
+X-Gm-Message-State: AOAM533mOfADpRNPEuBdo3TH3NleYHmVy8OYR7WMIlQPpE2ukNSdEMSD
+        Iru14bL7IKpDfqWLRO0u1QE=
+X-Google-Smtp-Source: ABdhPJxBvZ+semH55mfvKCNOcVb+Fqw1ld1fdNag1bM73sxOXrgytMVS0gg5e0wvOa8zXBHydObz5Q==
+X-Received: by 2002:adf:8444:: with SMTP id 62mr9145192wrf.278.1592664505142;
+        Sat, 20 Jun 2020 07:48:25 -0700 (PDT)
 Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.30
+        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:48:31 -0700 (PDT)
+        Sat, 20 Jun 2020 07:48:24 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -76,9 +76,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/21] arm64: dts: qcom: msm8994: Remove qcom,msm-id and qcom-pmic-id properties
-Date:   Sat, 20 Jun 2020 16:46:28 +0200
-Message-Id: <20200620144639.335093-13-konradybcio@gmail.com>
+Subject: [PATCH 10/21] arm64: dts: qcom: msm8994: Add support for SMD RPM
+Date:   Sat, 20 Jun 2020 16:46:26 +0200
+Message-Id: <20200620144639.335093-11-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
 References: <20200620144639.335093-1-konradybcio@gmail.com>
@@ -89,30 +89,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These should be set on a per-device basis, as they also include
-hardware revision bits that can vary between boards using the same SoC.
+Add support for SMD RPM, including pm8994 and pmi8994
+regulators.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 108 ++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index f363b678c3b3..b1a3f1732d84 100644
+index 076da1fc52a1..f623f7e08994 100644
 --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -8,10 +8,7 @@
- / {
- 	model = "Qualcomm Technologies, Inc. MSM 8994";
- 	compatible = "qcom,msm8994";
--	// msm-id and pmic-id are required by bootloader for
--	// proper selection of dt blob
--	qcom,msm-id = <207 0x20000>;
--	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
-+
- 	interrupt-parent = <&intc>;
+@@ -262,6 +262,11 @@ tcsr_mutex_regs: syscon@fd484000 {
+ 			reg = <0xfd484000 0x2000>;
+ 		};
  
- 	#address-cells = <2>;
++		rpm_msg_ram: memory@fc428000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0xfc428000 0x4000>;
++		};
++
+ 		gcc: clock-controller@fc400000 {
+ 			compatible = "qcom,gcc-msm8994";
+ 			#clock-cells = <1>;
+@@ -292,6 +297,97 @@ psci {
+ 		method = "hvc";
+ 	};
+ 
++	smd_rpm: smd {
++		compatible = "qcom,smd";
++		rpm {
++			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++			qcom,ipc = <&apcs 8 0>;
++			qcom,smd-edge = <15>;
++			qcom,local-pid = <0>;
++			qcom,remote-pid = <6>;
++
++			rpm_requests: rpm-requests {
++				compatible = "qcom,rpm-msm8994";
++				qcom,smd-channels = "rpm_requests";
++
++				rpmcc: qcom,rpmcc {
++					compatible = "qcom,rpmcc-msm8994";
++					#clock-cells = <1>;
++				};
++
++				pm8994-regulators {
++					compatible = "qcom,rpm-pm8994-regulators";
++
++					vdd_l1-supply = <&pm8994_s1>;
++					vdd_l2_26_28-supply = <&pm8994_s3>;
++					vdd_l3_11-supply = <&pm8994_s3>;
++					vdd_l4_27_31-supply = <&pm8994_s3>;
++					vdd_l5_7-supply = <&pm8994_s3>;
++					vdd_l6_12_32-supply = <&pm8994_s5>;
++					vdd_l8_16_30-supply = <&vreg_vph_pwr>;
++					vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
++					vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
++					vdd_l14_15-supply = <&pm8994_s5>;
++					vdd_l17_29-supply = <&vreg_vph_pwr>;
++					vdd_l20_21-supply = <&vreg_vph_pwr>;
++					vdd_l25-supply = <&pm8994_s5>;
++					vdd_lvs1_2 = <&pm8994_s4>;
++
++					pm8994_s1: s1 {};
++					pm8994_s2: s2 {};
++					pm8994_s3: s3 {};
++					pm8994_s4: s4 {};
++					pm8994_s5: s5 {};
++					pm8994_s6: s6 {};
++					pm8994_s7: s7 {};
++
++					pm8994_l1: l1 {};
++					pm8994_l2: l2 {};
++					pm8994_l3: l3 {};
++					pm8994_l4: l4 {};
++					pm8994_l6: l6 {};
++					pm8994_l8: l8 {};
++					pm8994_l9: l9 {};
++					pm8994_l10: l10 {};
++					pm8994_l11: l11 {};
++					pm8994_l12: l12 {};
++					pm8994_l13: l13 {};
++					pm8994_l14: l14 {};
++					pm8994_l15: l15 {};
++					pm8994_l16: l16 {};
++					pm8994_l17: l17 {};
++					pm8994_l18: l18 {};
++					pm8994_l19: l19 {};
++					pm8994_l20: l20 {};
++					pm8994_l21: l21 {};
++					pm8994_l22: l22 {};
++					pm8994_l23: l23 {};
++					pm8994_l24: l24 {};
++					pm8994_l25: l25 {};
++					pm8994_l26: l26 {};
++					pm8994_l27: l27 {};
++					pm8994_l28: l28 {};
++					pm8994_l29: l29 {};
++					pm8994_l30: l30 {};
++					pm8994_l31: l31 {};
++					pm8994_l32: l32 {};
++
++					pm8994_lvs1: lvs1 {};
++					pm8994_lvs2: lvs2 {};
++				};
++
++				pmi8994-regulators {
++					compatible = "qcom,rpm-pmi8994-regulators";
++
++					pmi8994_s1: s1 {};
++					pmi8994_s2: s2 {};
++					pmi8994_s3: s3 {};
++					pmi8994_bby: boost-bypass {};
++				};
++			};
++		};
++	};
++
+ 	clocks {
+ 		xo_board: xo_board {
+ 			compatible = "fixed-clock";
+@@ -306,6 +402,17 @@ sleep_clk: sleep_clk {
+ 		};
+ 	};
+ 
++	vreg_vph_pwr: vreg-vph-pwr {
++		compatible = "regulator-fixed";
++		status = "okay";
++		regulator-name = "vph-pwr";
++
++		regulator-min-microvolt = <3600000>;
++		regulator-max-microvolt = <3600000>;
++
++		regulator-always-on;
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -326,6 +433,7 @@ tcsr_mutex: hwlock {
+ 	smem {
+ 		compatible = "qcom,smem";
+ 		memory-region = <&smem_mem>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
+ };
 -- 
 2.27.0
 
