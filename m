@@ -2,196 +2,133 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35419C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E0122571
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1145C22571
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="amJf92Zx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbgFTAQk (ORCPT
+        id S1730747AbgFTARw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:16:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35786 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730616AbgFTAQj (ORCPT
+        Fri, 19 Jun 2020 20:17:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730616AbgFTARv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:16:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 2554B2A52D2
-Subject: Re: [PATCH v3] docs: block: Create blk-mq documentation
-To:     Jens Axboe <axboe@kernel.dk>, corbet@lwn.net,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, rdunlap@infradead.org,
-        dongli.zhang@oracle.com
-References: <20200619200114.6896-1-andrealmeid@collabora.com>
- <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <36fcdfc6-4ba2-fdfc-411c-e337d2d86ea5@collabora.com>
-Date:   Fri, 19 Jun 2020 21:16:29 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 19 Jun 2020 20:17:51 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59514C06174E;
+        Fri, 19 Jun 2020 17:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fFSEXflWreKo1G1cvrL7drqCbz0HejuYmmv7qSFZe1Q=; b=amJf92ZxjtaHFV4K+AAc7E7qmY
+        a8VrQUsa/3eN2z89ypqXo7Tx4arU1THWVR2OvHnA1dpOoquREie4Ya5OCL2QlAlTLbmfqV3jtB86o
+        egkpFP6J2o6Pl4MFzk8UmoiFIHE4QfRQOtGYUpkjkzrmZL4cZqiJ5D88+01j3y58fObgRfYL4JosR
+        7pyIvc7URFW+5TU5VKNR2TK34rKUJR5pvcRzSVqEYK+ZQZ8EoghVKWDatQVk4uiNStKthzdQDQgON
+        siPVZDq3dT4Oq68R8IuihmxsCstJjJ25xpjBqJnctP8Fqhcr2xpQNimX8R5wxyF20JiByAWO19iLT
+        UWad3Ogg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmRCd-0002PY-D0; Sat, 20 Jun 2020 00:17:47 +0000
+Date:   Fri, 19 Jun 2020 17:17:47 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     darrick.wong@oracle.com, hch@infradead.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: WARN_ON_ONCE(1) in iomap_dio_actor()
+Message-ID: <20200620001747.GC8681@bombadil.infradead.org>
+References: <20200619211750.GA1027@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619211750.GA1027@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 5:56 PM, Jens Axboe wrote:
-> On 6/19/20 2:01 PM, André Almeida wrote:
->> Create a documentation providing a background and explanation around the
->> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
->>
->> The reference for writing this documentation was the source code and
->> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
->> Systems", by Axboe et al.
->>
->> Signed-off-by: André Almeida <andrealmeid@collabora.com>
->> ---
->> Changes from v2:
->> - More fixed typos
->> - Once again, reworked the definition of `blk_mq_hw_ctx` in "Hardware
->>   dispatch queues" section
->>
->> Changes from v1:
->> - Fixed typos
->> - Reworked blk_mq_hw_ctx
->>
->> Hello,
->>
->> This commit was tested using "make htmldocs" and the HTML output has
->> been verified.
->>
->> Thanks,
->> 	André
->> ---
->>  Documentation/block/blk-mq.rst | 155 +++++++++++++++++++++++++++++++++
->>  Documentation/block/index.rst  |   1 +
->>  2 files changed, 156 insertions(+)
->>  create mode 100644 Documentation/block/blk-mq.rst
->>
->> diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
->> new file mode 100644
->> index 000000000000..d1b8f04a822d
->> --- /dev/null
->> +++ b/Documentation/block/blk-mq.rst
->> @@ -0,0 +1,155 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +================================================
->> +Multi-Queue Block IO Queueing Mechanism (blk-mq)
->> +================================================
->> +
->> +The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
->> +devices to achieve a huge number of input/output operations per second (IOPS)
->> +through queueing and submitting IO requests to block devices simultaneously,
->> +benefiting from the parallelism offered by modern storage devices.
->> +
->> +Introduction
->> +============
->> +
->> +Background
->> +----------
->> +
->> +Magnetic hard disks have been the de facto standard from the beginning of the
->> +development of the kernel. The Block IO subsystem aimed to achieve the best
->> +performance possible for those devices with a high penalty when doing random
->> +access, and the bottleneck was the mechanical moving parts, a lot slower than
->> +any layer on the storage stack. One example of such optimization technique
->> +involves ordering read/write requests according to the current position of the
->> +hard disk head.
->> +
->> +However, with the development of Solid State Drives and Non-Volatile Memories
->> +without mechanical parts nor random access penalty and capable of performing
->> +high parallel access, the bottleneck of the stack had moved from the storage
->> +device to the operating system. In order to take advantage of the parallelism
->> +in those devices' design, the multi-queue mechanism was introduced.
->> +
->> +The former design had a single queue to store block IO requests with a single
->> +lock. That did not scale well in SMP systems due to dirty data in cache and the
->> +bottleneck of having a single lock for multiple processors. This setup also
->> +suffered with congestion when different processes (or the same process, moving
->> +to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
->> +spawns multiple queues with individual entry points local to the CPU, removing
->> +the need for a lock. A deeper explanation on how this works is covered in the
->> +following section (`Operation`_).
->> +
->> +Operation
->> +---------
->> +
->> +When the userspace performs IO to a block device (reading or writing a file,
->> +for instance), blk-mq takes action: it will store and manage IO requests to
->> +the block device, acting as middleware between the userspace (and a file
->> +system, if present) and the block device driver.
->> +
->> +blk-mq has two group of queues: software staging queues and hardware dispatch
->> +queues. When the request arrives at the block layer, it will try the shortest
->> +path possible: send it directly to the hardware queue. However, there are two
->> +cases that it might not do that: if there's an IO scheduler attached at the
->> +layer or if we want to try to merge requests. In both cases, requests will be
->> +sent to the software queue.
->> +
->> +Then, after the requests are processed by software queues, they will be placed
->> +at the hardware queue, a second stage queue were the hardware has direct access
->> +to process those requests. However, if the hardware does not have enough
->> +resources to accept more requests, blk-mq will places requests on a temporary
->> +queue, to be sent in the future, when the hardware is able.
->> +
->> +Software staging queues
->> +~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +The block IO subsystem adds requests (represented by struct
->> +:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
+On Fri, Jun 19, 2020 at 05:17:50PM -0400, Qian Cai wrote:
+> Running a syscall fuzzer by a normal user could trigger this,
 > 
-> This reads a bit funny, did you want to put the blk_mq_ctx thing after
-> the "software staging queues"? Right now it looks like the requests are
-> of that type, which of course isn't true.
+> [55649.329999][T515839] WARNING: CPU: 6 PID: 515839 at fs/iomap/direct-io.c:391 iomap_dio_actor+0x29c/0x420
+...
+> 371 static loff_t
+> 372 iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+> 373                 void *data, struct iomap *iomap, struct iomap *srcmap)
+> 374 {
+> 375         struct iomap_dio *dio = data;
+> 376
+> 377         switch (iomap->type) {
+> 378         case IOMAP_HOLE:
+> 379                 if (WARN_ON_ONCE(dio->flags & IOMAP_DIO_WRITE))
+> 380                         return -EIO;
+> 381                 return iomap_dio_hole_actor(length, dio);
+> 382         case IOMAP_UNWRITTEN:
+> 383                 if (!(dio->flags & IOMAP_DIO_WRITE))
+> 384                         return iomap_dio_hole_actor(length, dio);
+> 385                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> 386         case IOMAP_MAPPED:
+> 387                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> 388         case IOMAP_INLINE:
+> 389                 return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> 390         default:
+> 391                 WARN_ON_ONCE(1);
+> 392                 return -EIO;
+> 393         }
+> 394 }
 > 
+> Could that be iomap->type == IOMAP_DELALLOC ? Looking throught the logs,
+> it contains a few pread64() calls until this happens,
 
-Oops, good catch.
+It _shouldn't_ be able to happen.  XFS writes back ranges which exist
+in the page cache upon seeing an O_DIRECT I/O.  So it's not supposed to
+be possible for there to be an extent which is waiting for the contents
+of the page cache to be written back.
 
->> +sent directly to the driver. A request is a collection of BIOs. They arrived at
-> 
-> I'd say "one or more BIOs", as there can be just one.
-> 
-
-Done.
-
->> +IO Schedulers
->> +^^^^^^^^^^^^^
->> +
->> +There are several schedulers implemented by the block layer, each one following
->> +a heuristic to improve the IO performance. They are "pluggable" (as in plug
->> +and play), in the sense of they can be selected at run time using sysfs. You
->> +can read more about Linux's IO schedulers `here
->> +<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
->> +happens only between requests in the same queue, so it is not possible to merge
->> +requests from different queues, otherwise there would be cache trashing and a
->> +need to have a lock for each queue. After the scheduling, the requests are
->> +eligible to be sent to the hardware. One of the possible schedulers to be
->> +selected is the NOOP scheduler, the most straightforward one, that implements a
->> +simple FIFO, without performing any reordering. This is useful in the following
-> 
-> NOOP is a relic from the single queue days, the basic "doesn't do much"
-> scheduler is NONE these days. And it doesn't provide FIFO ordering,
-> requests will basically just end up in whatever software queue the
-> process is running on. When someone runs the hardware queue, the
-> software queues mapped to that hardware queue will be drained in
-> sequence according to their mapping (generally from 0..N, if 0..N are
-> mapped to that hardware queue).
-> 
-
-Thanks for the feedback. I replaced this part of the text with a basic
-explanation about NONE scheduler based on your words.
-
-v4 on the way.
+> [child21:124180] [17] pread64(fd=353, buf=0x0, count=0x59b5, pos=0xe0e0e0e) = -1 (Illegal seek)
+> [child21:124180] [339] pread64(fd=339, buf=0xffffbcc40000, count=0xbd71, pos=0xff26) = -1 (Illegal seek)
+> [child21:124627] [136] pread64(fd=69, buf=0xffffbd290000, count=0xee42, pos=2) = -1 (Illegal seek)
+> [child21:124627] [196] pread64(fd=83, buf=0x1, count=0x62f8, pos=0x15390000) = -1 (Illegal seek)
+> [child21:125127] [154] pread64(fd=345, buf=0xffffbcc40000, count=9332, pos=0xffbd) = 9332
+> [child21:125169] [188] pread64(fd=69, buf=0xffffbce90000, count=0x4d47, pos=0) = -1 (Illegal seek)
+> [child21:125169] [227] pread64(fd=345, buf=0x1, count=0xe469, pos=1046) = -1 (Bad address)
+> [child21:125569] [354] pread64(fd=87, buf=0xffffbcc50000, count=0x4294, pos=0x16161616) = -1 (Illegal seek)
+> [child21:125569] [655] pread64(fd=341, buf=0xffffbcc70000, count=2210, pos=0xffff) = -1 (Illegal seek)
+> [child21:125569] [826] pread64(fd=343, buf=0x8, count=0xeb22, pos=0xc090c202e598b) = 0
+> [child21:126233] [261] pread64(fd=338, buf=0xffffbcc40000, count=0xe8fe, pos=105) = -1 (Illegal seek)
+> [child21:126233] [275] pread64(fd=190, buf=0x8, count=0x9c24, pos=116) = -1 (Is a directory)
+> [child21:126882] [32] pread64(fd=86, buf=0xffffbcc40000, count=0x7fc2, pos=2) = -1 (Illegal seek)
+> [child21:127448] [14] pread64(fd=214, buf=0x4, count=11371, pos=0x9b26) = 0
+> [child21:127489] [70] pread64(fd=339, buf=0xffffbcc70000, count=0xb07a, pos=8192) = -1 (Illegal seek)
+> [child21:127489] [80] pread64(fd=339, buf=0x0, count=6527, pos=205) = -1 (Illegal seek)
+> [child21:127489] [245] pread64(fd=69, buf=0x8, count=0xbba2, pos=47) = -1 (Illegal seek)
+> [child21:128098] [334] pread64(fd=353, buf=0xffffbcc90000, count=0x4540, pos=168) = -1 (Illegal seek)
+> [child21:129079] [157] pread64(fd=422, buf=0x0, count=0x80df, pos=0xdfef6378b650aa) = 0
+> [child21:134700] [275] pread64(fd=397, buf=0xffffbcc50000, count=0xdee6, pos=0x887b1e74a2) = -1 (Illegal seek)
+> [child21:135042] [7] pread64(fd=80, buf=0x8, count=0xc494, pos=216) = -1 (Illegal seek)
+> [child21:135056] [188] pread64(fd=430, buf=0xffffbd090000, count=0xbe66, pos=0x3a3a3a3a) = -1 (Illegal seek)
+> [child21:135442] [143] pread64(fd=226, buf=0xffffbd390000, count=11558, pos=0x1000002d) = 0
+> [child21:135513] [275] pread64(fd=69, buf=0x4, count=4659, pos=0x486005206c2986) = -1 (Illegal seek)
+> [child21:135513] [335] pread64(fd=339, buf=0xffffbd090000, count=0x90fd, pos=253) = -1 (Illegal seek)
+> [child21:135513] [392] pread64(fd=76, buf=0xffffbcc40000, count=0xf324, pos=0x5d5d5d5d) = -1 (Illegal seek)
+> [child21:135665] [5] pread64(fd=431, buf=0xffffbcc70000, count=10545, pos=16384) = -1 (Illegal seek)
+> [child21:135665] [293] pread64(fd=349, buf=0x4, count=0xd2ad, pos=0x2000000) = -1 (Illegal seek)
+> [child21:135790] [99] pread64(fd=76, buf=0x8, count=0x70d7, pos=0x21000440) = -1 (Illegal seek)
+> [child21:135790] [149] pread64(fd=70, buf=0xffffbd5b0000, count=0x53f3, pos=255) = -1 (Illegal seek)
+> [child21:135790] [301] pread64(fd=348, buf=0x4, count=5713, pos=0x6c00401a) = -1 (Illegal seek)
+> [child21:136162] [570] pread64(fd=435, buf=0x1, count=11182, pos=248) = -1 (Illegal seek)
+> [child21:136162] [584] pread64(fd=78, buf=0xffffbcc40000, count=0xa401, pos=8192) = -1 (Illegal seek)
+> [child21:138090] [167] pread64(fd=339, buf=0x4, count=0x6aba, pos=256) = -1 (Illegal seek)
+> [child21:138090] [203] pread64(fd=348, buf=0xffffbcc90000, count=0x8625, pos=128) = -1 (Illegal seek)
+> [child21:138551] [174] pread64(fd=426, buf=0x0, count=0xd582, pos=0xd7e8674d0a86) = 0
+> [child21:138551] [179] pread64(fd=426, buf=0xffffbce90000, count=0x415a, pos=0x536e873600750b2d) = 0
+> [child21:138988] [306] pread64(fd=436, buf=0x8, count=0x62e6, pos=0x445c403204924c1) = -1 (Illegal seek)
+> [child21:138988] [353] pread64(fd=427, buf=0x4, count=0x993b, pos=176) = 0
