@@ -2,371 +2,93 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51385C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35559C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27E0520675
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8E120732
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592612429;
+	bh=p2V3pz6MGRWn+0XE8T3Abgd/qOk9UrSIMqV3HJOzcHE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=KYZnfAtpW7zSsg9Mvm197vH1XMvcKqq28MN5MWn+kBYpB7K2KGLDF1Fi2+NMqkExR
+	 Ttpel0+sOTDUFvIEcbknqGv6YthK/087if+BBNtY+ZixITQzi+J9w9fbdLDykdIpeI
+	 U8dq19Y7BoJ1hLvUaX2V5PCW/2ofBUiiPVerv/n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgFTAUO (ORCPT
+        id S1730827AbgFTAU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:20:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730500AbgFTAUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:20:13 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05K01mlt030498;
-        Fri, 19 Jun 2020 20:19:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31s7et0f4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:19:17 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05K02P9F031972;
-        Fri, 19 Jun 2020 20:19:16 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31s7et0f4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:19:16 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05K05xH6024571;
-        Sat, 20 Jun 2020 00:19:15 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 31q8km6tqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 20 Jun 2020 00:19:15 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05K0JEFi52363692
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 20 Jun 2020 00:19:14 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB268C6055;
-        Sat, 20 Jun 2020 00:19:14 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B47AC6057;
-        Sat, 20 Jun 2020 00:19:07 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.93.234])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Sat, 20 Jun 2020 00:19:06 +0000 (GMT)
-References: <20200618071045.471131-1-prsriva@linux.microsoft.com> <20200618071045.471131-2-prsriva@linux.microsoft.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [V2 PATCH 1/3] Refactoring powerpc code for carrying over IMA measurement logs, to move non architecture specific code to security/ima.
-In-reply-to: <20200618071045.471131-2-prsriva@linux.microsoft.com>
-Date:   Fri, 19 Jun 2020 21:19:03 -0300
-Message-ID: <87o8per3m0.fsf@morokweng.localdomain>
+        Fri, 19 Jun 2020 20:20:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730804AbgFTAU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 20:20:26 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656C620675;
+        Sat, 20 Jun 2020 00:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592612425;
+        bh=p2V3pz6MGRWn+0XE8T3Abgd/qOk9UrSIMqV3HJOzcHE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=tb4hQvTQgnv1PwqTflBrGghh7DlllJmBiKvHdtPCgRrzVnn5XUHb+W0L8MHGbHGhy
+         QHicwJlitGJXjpYYv5vjGeziH+cfrH7F5zwg8fHinHIlMopQWOgP4QhDePZNTPpIoY
+         c0efbkpD5BOJEwEK038fzTJZ7JpoPbQ2kyQXPrgk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_22:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- clxscore=1011 adultscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- suspectscore=2 mlxlogscore=999 cotscore=-2147483648 impostorscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006190166
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <159261103077.62212.7410836804489183937@swboyd.mtv.corp.google.com>
+References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech> <159255945796.62212.5838238989498858379@swboyd.mtv.corp.google.com> <bdc91c1b015d2f02bd0ea90ae81a122123c62b38.camel@suse.de> <159261103077.62212.7410836804489183937@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v5 00/27] clk: bcm: rpi: Add support for BCM2711 firmware clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Fri, 19 Jun 2020 17:20:24 -0700
+Message-ID: <159261242477.62212.2251732478648139482@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Stephen Boyd (2020-06-19 16:57:10)
+> Quoting Nicolas Saenz Julienne (2020-06-19 02:44:54)
+> > On Fri, 2020-06-19 at 02:37 -0700, Stephen Boyd wrote:
+> > > Quoting Maxime Ripard (2020-06-15 01:40:40)
+> > > > Hi,
+> > > >=20
+> > > > Since the whole DRM/HDMI support began to grow fairly big, I've cho=
+sen
+> > > > to split away the two discussions between the firmware clocks and t=
+he
+> > > > HDMI support.
+> > > >=20
+> > > > Let me know what you think,
+> > > > Maxime
+> > >=20
+> > > Do you want this to go through clk tree? Or looking for acks/review
+> > > tags?
+> > >=20
+> >=20
+> > FWIW I don't mind taking the device tree changes trough the RPi soc tre=
+e.
+> >=20
+>=20
+> Sounds good.
+>=20
 
-Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
-
-> Powerpc has support to carry over the IMA measurement logs. Refatoring the
-> non-architecture specific code out of arch/powerpc and into security/ima.
->
-> The code adds support for reserving and freeing up of memory for IMA measurement
-> logs.
-
-Last week, Mimi provided this feedback:
-
-"From your patch description, this patch should be broken up.  Moving
-the non-architecture specific code out of powerpc should be one patch.
- Additional support should be in another patch.  After each patch, the
-code should work properly."
-
-That's not what you do here. You move the code, but you also make other
-changes at the same time. This has two problems:
-
-1. It makes the patch harder to review, because it's very easy to miss a
-   change.
-
-2. If in the future a git bisect later points to this patch, it's not
-   clear whether the problem is because of the code movement, or because
-   of the other changes.
-
-When you move code, ideally the patch should only make the changes
-necessary to make the code work at its new location. The patch which
-does code movement should not cause any change in behavior.
-
-Other changes should go in separate patches, either before or after the
-one moving the code.
-
-More comments below.
-
->
-> ---
->  arch/powerpc/include/asm/ima.h     |  10 ---
->  arch/powerpc/kexec/ima.c           | 126 ++---------------------------
->  security/integrity/ima/ima_kexec.c | 116 ++++++++++++++++++++++++++
->  3 files changed, 124 insertions(+), 128 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
-> index ead488cf3981..c29ec86498f8 100644
-> --- a/arch/powerpc/include/asm/ima.h
-> +++ b/arch/powerpc/include/asm/ima.h
-> @@ -4,15 +4,6 @@
->
->  struct kimage;
->
-> -int ima_get_kexec_buffer(void **addr, size_t *size);
-> -int ima_free_kexec_buffer(void);
-> -
-> -#ifdef CONFIG_IMA
-> -void remove_ima_buffer(void *fdt, int chosen_node);
-> -#else
-> -static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
-> -#endif
-> -
->  #ifdef CONFIG_IMA_KEXEC
->  int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
->  			      size_t size);
-> @@ -22,7 +13,6 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
->  static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
->  				   int chosen_node)
->  {
-> -	remove_ima_buffer(fdt, chosen_node);
->  	return 0;
->  }
-
-This is wrong. Even if the currently running kernel doesn't have
-CONFIG_IMA_KEXEC, it should remove the IMA buffer property and memory
-reservation from the FDT that is being prepared for the next kernel.
-
-This is because the IMA kexec buffer is useless for the next kernel,
-regardless of whether the current kernel supports CONFIG_IMA_KEXEC or
-not. Keeping it around would be a waste of memory.
-
-> @@ -179,13 +64,18 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
->  	int ret, addr_cells, size_cells, entry_size;
->  	u8 value[16];
->
-> -	remove_ima_buffer(fdt, chosen_node);
-
-This is wrong, for the same reason stated above.
-
->  	if (!image->arch.ima_buffer_size)
->  		return 0;
->
-> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
-> -	if (ret)
-> +	ret = fdt_address_cells(fdt, chosen_node);
-> +	if (ret < 0)
-> +		return ret;
-> +	addr_cells = ret;
-> +
-> +	ret = fdt_size_cells(fdt, chosen_node);
-> +	if (ret < 0)
->  		return ret;
-> +	size_cells = ret;
->
->  	entry_size = 4 * (addr_cells + size_cells);
->
-
-I liked this change. Thanks! I agree it's better to use
-fdt_address_cells() and fdt_size_cells() here.
-
-But it should be in a separate patch. Either before or after the one
-moving the code.
-
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 121de3e04af2..e1e6d6154015 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -10,8 +10,124 @@
->  #include <linux/seq_file.h>
->  #include <linux/vmalloc.h>
->  #include <linux/kexec.h>
-> +#include <linux/of.h>
-> +#include <linux/memblock.h>
-> +#include <linux/libfdt.h>
->  #include "ima.h"
->
-> +static int get_addr_size_cells(int *addr_cells, int *size_cells)
-> +{
-> +	struct device_node *root;
-> +
-> +	root = of_find_node_by_path("/");
-> +	if (!root)
-> +		return -EINVAL;
-> +
-> +	*addr_cells = of_n_addr_cells(root);
-> +	*size_cells = of_n_size_cells(root);
-> +
-> +	of_node_put(root);
-> +
-> +	return 0;
-> +}
-> +
-> +static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
-> +			       size_t *size)
-> +{
-> +	int ret, addr_cells, size_cells;
-> +
-> +	ret = get_addr_size_cells(&addr_cells, &size_cells);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (len < 4 * (addr_cells + size_cells))
-> +		return -ENOENT;
-> +
-> +	*addr = of_read_number(prop, addr_cells);
-> +	*size = of_read_number(prop + 4 * addr_cells, size_cells);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_get_kexec_buffer(void **addr, size_t *size)
-> +{
-> +	int ret, len;
-> +	unsigned long tmp_addr;
-> +	size_t tmp_size;
-> +	const void *prop;
-> +
-> +	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*addr = __va(tmp_addr);
-> +	*size = tmp_size;
-> +
-> +	return 0;
-> +}
-
-The functions above were moved without being changed. Good.
-
-> +/**
-> + * ima_free_kexec_buffer - free memory used by the IMA buffer
-> + */
-> +int ima_free_kexec_buffer(void)
-> +{
-> +	int ret;
-> +	unsigned long addr;
-> +	size_t size;
-> +	struct property *prop;
-> +
-> +	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_remove_property(of_chosen, prop);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return memblock_free(__pa(addr), size);
-
-Here you added a __pa() call. Do you store a virtual address in
-linux,ima-kexec-buffer property? Doesn't it make more sense to store a
-physical address?
-
-Even if making this change is the correct thing to do, it should be a
-separate patch, unless it can't be avoided. And if that is the case,
-then it should be explained in the commit message.
-
-> +
-> +}
-> +
-> +/**
-> + * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-> + *
-> + * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-> + * remove it from the device tree.
-> + */
-> +void remove_ima_buffer(void *fdt, int chosen_node)
-> +{
-> +	int ret, len;
-> +	unsigned long addr;
-> +	size_t size;
-> +	const void *prop;
-> +
-> +	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-> +	if (!prop)
-> +		return;
-> +
-> +	do_get_kexec_buffer(prop, len, &addr, &size);
-> +	ret = fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +	if (ret < 0)
-> +		return;
-> +
-> +	memblock_free(addr, size);
-> +}
-
-Here is another function that changed when moved. This one I know to be
-wrong. You're confusing the purposes of remove_ima_buffer() and
-ima_free_kexec_buffer().
-
-You did send me a question about them nearly three weeks ago which I
-only answered today, so I apologize. Also, their names could more
-clearly reflect their differences, so it's bad naming on my part.
-
-With IMA kexec buffers, there are two kernels (and thus their two
-respective, separate device trees) to be concerned about:
-
-1. the currently running kernel, which uses the live device tree
-(accessed with the of_* functions) and the memblock subsystem;
-
-2. the kernel which is being loaded by kexec, which will use the FDT
-blob being passed around as argument to these functions, and the memory
-reservations in the memory reservation table of the FDT blob.
-
-ima_free_kexec_buffer() is used by IMA in the currently running kernel.
-Therefore the device tree it is concerned about is the live one, and
-thus uses the of_* functions to access it. And uses memblock to change
-the memory reservation.
-
-remove_ima_buffer() on the other hand is used by the kexec code to
-prepare an FDT blob for the kernel that is being loaded. It should not
-make any changes to live device tree, nor to memblock allocations. It
-should only make changes to the FDT blob.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Just to clarify, that is just the dts patch? Or the binding patches too?
