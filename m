@@ -2,118 +2,92 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85423C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B72C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67EB920720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BAA2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgFVO0S (ORCPT
+        id S1729330AbgFVO0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:26:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44630 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:26:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44836 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbgFVO0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:14 -0400
+        id S1729296AbgFVO0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 77FD1C1A1;
-        Mon, 22 Jun 2020 14:26:11 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v4 0/9] Raspberry Pi 4 USB firmware initialization rework
-Date:   Mon, 22 Jun 2020 12:38:09 +0200
-Message-Id: <20200622103817.476-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
+        by mx2.suse.de (Postfix) with ESMTP id 7EEB9C1C6;
+        Mon, 22 Jun 2020 14:26:13 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH v4 0/3] arm64: dts: realtek: Initial RTD1319 and Pym Particles support
+Date:   Sun, 21 Jun 2020 01:32:24 +0200
+Message-Id: <20200620233227.31585-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-co-processor, VideoCore. This series reworks how we handle this.
+Hello,
 
-The previous solution makes use of PCI quirks and exporting platform
-specific functions. Albeit functional it feels pretty shoehorned. This
-proposes an alternative way of handling the triggering of the xHCI chip
-initialization trough means of a reset controller.
+This patch series adds initial Device Trees for Realtek RTD1319 SoC and
+Realtek Pym Particles EVB.
 
-The benefits are pretty evident: less platform churn in core xHCI code,
-and no explicit device dependency management in pcie-brcmstb.
+This v4 is an update of James' v3, incorporating pending review comments.
 
-Note that patch #1 depends on another series[1].
+Upstreaming progress being tracked at:
+https://en.opensuse.org/HCL:Realtek_DHC
 
-The series is based on v5.8-rc2
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
 
-v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
-v2: https://lkml.org/lkml/2020/6/9/875
-v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
+Have a lot of fun!
 
-[1] https://lwn.net/ml/linux-kernel/cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech/
+Cheers,
+Andreas
 
----
+v3 -> v4:
+* Updated Realtek copyright for files changed in v3
+* Updated PMU compatible (Robin)
+* Changed compatible, renamed .dts
+* Updated bindings schema and prepended refactoring
 
-Changes since v3:
- - Rework dt patch to include root bridge as a separate node
- - Update xhci-pci patch now that the xhci dev has a dt node (it was
-   getting it in the past from its bus)
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
 
-Changes since v2:
- - Add reset to resume routine in xhci-pci
- - Correct of refcount in pci-quirks
- - Correct typos
- - Use include file to define firmware reset IDs
+Andreas Färber (1):
+  dt-bindings: arm: realtek: Convert comments to descriptions
 
-Changes since v1:
- - Rework reset controller so it's less USB centric
- - Use correct reset controller API in xhci-pci
- - Correct typos
+James Tai (2):
+  dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles
+    EVB
+  arm64: dts: realtek: Add RTD1319 SoC and Realtek Pym Particles EVB
 
-Nicolas Saenz Julienne (9):
-  dt-bindings: reset: Add a binding for the RPi Firmware reset
-    controller
-  reset: Add Raspberry Pi 4 firmware reset controller
-  ARM: dts: bcm2711: Add firmware usb reset node
-  ARM: dts: bcm2711: Add reset controller to xHCI node
-  usb: xhci-pci: Add support for reset controllers
-  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
-  Revert "firmware: raspberrypi: Introduce vl805 init routine"
-  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
-
- .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  22 ++++
- drivers/firmware/Kconfig                      |   3 +-
- drivers/firmware/raspberrypi.c                |  61 ---------
- drivers/pci/controller/pcie-brcmstb.c         |  17 ---
- drivers/reset/Kconfig                         |  11 ++
- drivers/reset/Makefile                        |   1 +
- drivers/reset/reset-raspberrypi.c             | 122 ++++++++++++++++++
- drivers/usb/host/pci-quirks.c                 |  22 ++--
- drivers/usb/host/xhci-pci.c                   |  10 ++
- drivers/usb/host/xhci.h                       |   2 +
- .../reset/raspberrypi,firmware-reset.h        |  13 ++
- include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
- 13 files changed, 215 insertions(+), 97 deletions(-)
- create mode 100644 drivers/reset/reset-raspberrypi.c
- create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+ .../devicetree/bindings/arm/realtek.yaml      |  30 ++-
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1319-pymparticles.dts |  43 ++++
+ arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
+ arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 213 ++++++++++++++++++
+ 5 files changed, 288 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
 
 -- 
-2.27.0
+2.26.2
 
