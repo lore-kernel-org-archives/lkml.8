@@ -2,472 +2,122 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 04:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E185C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20812339D
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 04:53:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltRuvf85"
+	by mail.kernel.org (Postfix) with ESMTP id 1995823600
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592630024;
+	bh=XpxrOoscw7UDPYdpWYDnzCBo6kTqYNwo983zEEwpytI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TXclvT3APIHbxJjEbRqOqIeX6klSjv437zPG9llneLcRaZbGF89mMvoCAhp8awNRP
+	 PZ6tlerVsHPXLkvQWyZ6Vf/2/a0tDhh4QmGGIKcxSDFK/XSNkGamcLqmw+NQEfBTOn
+	 1LqFNune+a1fZP6bTjkRSQatblv4alZA7jHBsJoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgFTEx0 (ORCPT
+        id S1725841AbgFTFNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 00:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgFTExZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 00:53:25 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226A0C06174E;
-        Fri, 19 Jun 2020 21:53:24 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ne5so5054916pjb.5;
-        Fri, 19 Jun 2020 21:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B7PIoTTOQyQgldJxXHjqhoJs7L5DCLB/7zFJYw2RHwI=;
-        b=ltRuvf85ePzLXPA9VJ7V52Hj80K5bpNurQVyNrzWkeVO0bo0OhMMEhaBrHqpvdb/LV
-         JdzzJiTuoQX104tXyFlUSq+AwHMXl49PRs4M9LTkbfu1mzYsVEstZwp4KBPl9YRc+nVv
-         /Kcett2NEDZx1XZmPGE3BdH46Ft+ZfBSaj+3jC7sUlIzFaamOi/k50WtHsYiqJ9KAuHc
-         fupBha5xjahlcHwNMsVb9hnrSwovy/n5JiiUoAbkwrOfo8+jeLWlntSPzsxQNrc5FxW/
-         ZVUBwn6sPFEnkFFyi0d1vKZFTmwxv6fJdajBOk09lV47uw7S7+I1FB3IM6OfrrW/b4bv
-         hKOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B7PIoTTOQyQgldJxXHjqhoJs7L5DCLB/7zFJYw2RHwI=;
-        b=Qv8OTVmuzy28PqzpYNRqPMmBnY9B1pXy7AGhQCE/9YB1G2EoA9AUGVFwhMlow+GiLg
-         0Q4U1NMVVK0GQb6f6Mbs5UnCTKA504pZUVenUYUiZrPdhPTof7Bn9hHGX7yJty7LFLL3
-         byra6SUD6nlg1mAlCt2Ha3Ab8NJB8Y2uKR02T8mDm01R2sx15sZyUClIz4w1wz6uquHj
-         brfI7ypThaVSf0l9c+Y6smDHp/9ymvdVs+fDl6lnoo4FBvURXQBpNRDluugWx4bAkCGM
-         Wu4nX9ZWahGyCI+SCxiRb5wqsW2YAhFsXgz4EseddwLhRgLrkWpGvOmymPPa52MDLM+Z
-         7mKw==
-X-Gm-Message-State: AOAM530j02W5UUjUOq9aWNBXuFHgoPYC21FdyJYvrmpLZBicjCMQW4cu
-        tpi3rqPC6IC/Xw+TRezGoTc=
-X-Google-Smtp-Source: ABdhPJx60JlTio6X5TeMTvbcHmjWmItMTHId0bmJ1mg3mZWmcXZueo/W2SKBXPD8HoWn6WQSgHKJFQ==
-X-Received: by 2002:a17:90a:260e:: with SMTP id l14mr6952700pje.76.1592628803420;
-        Fri, 19 Jun 2020 21:53:23 -0700 (PDT)
-Received: from cnn ([112.133.236.114])
-        by smtp.gmail.com with ESMTPSA id y81sm7445212pfb.33.2020.06.19.21.53.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 21:53:22 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 10:23:15 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     miltonm@us.ibm.com
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saipsdasari@fb.com, patrickw3@fb.com,
-        vijaykhemka@fb.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: Re: Linux-aspeed Digest, Vol 37, Issue 25
-Message-ID: <20200620045315.GA27844@cnn>
-References: <mailman.1431.1592592073.26230.linux-aspeed@lists.ozlabs.org>
+        Sat, 20 Jun 2020 01:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbgFTFNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 01:13:40 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549AE238D6
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 05:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592630019;
+        bh=XpxrOoscw7UDPYdpWYDnzCBo6kTqYNwo983zEEwpytI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QG36rmZwdhMS15Lbtj/5W7HPCSKgefaPRcAYLZbZb1cXj1AvMAoy4pOa3Nd25xTh/
+         RcA2aMWDXBPrF+6zK26TiQTpqZrfX7bDmIB0tzItrot8/jzFaYkWawIsEJ8UUCnkXB
+         q/CKKh7Xem92WEMLQfs+piYxG/GgNmwOmb3tWDlc=
+Received: by mail-wm1-f51.google.com with SMTP id l17so10237978wmj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 22:13:39 -0700 (PDT)
+X-Gm-Message-State: AOAM533J7YomxkNnlY9wnDeR4Rn2484IVueFOrv1TJPK1VBuYKrhSRGY
+        KHiS1eSe8YKzHzn5O1XvJUnq+WGux1kiQ9fFikgpTQ==
+X-Google-Smtp-Source: ABdhPJyyB4QO+g3WOSHr/Wl98Qb7Rq+mvtzWS1L0jQTdsL9FSCsqPMc9nvEFUcIBqPizV6qaSeEtRlBtgFYD15XCOs4=
+X-Received: by 2002:a1c:4804:: with SMTP id v4mr7078010wma.21.1592630017493;
+ Fri, 19 Jun 2020 22:13:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mailman.1431.1592592073.26230.linux-aspeed@lists.ozlabs.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200617190757.27081-1-john.s.andersen@intel.com> <20200617190757.27081-5-john.s.andersen@intel.com>
+In-Reply-To: <20200617190757.27081-5-john.s.andersen@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 19 Jun 2020 22:13:25 -0700
+X-Gmail-Original-Message-ID: <CALCETrXwzQDDd1rfBW+ptmijEjc2cMqfWGvJu-qqrqia5Ls=Uw@mail.gmail.com>
+Message-ID: <CALCETrXwzQDDd1rfBW+ptmijEjc2cMqfWGvJu-qqrqia5Ls=Uw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] X86: Use KVM CR pin MSRs
+To:     John Andersen <john.s.andersen@intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, mchehab+huawei@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        pawan.kumar.gupta@linux.intel.com, Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
+        vineela.tummalapalli@intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
+        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
+        makarandsonare@google.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 04:41:13AM +1000, linux-aspeed-request@lists.ozlabs.org wrote:
-> Send Linux-aspeed mailing list submissions to
-> 	linux-aspeed@lists.ozlabs.org
-> 
-> To subscribe or unsubscribe via the World Wide Web, visit
-> 	https://lists.ozlabs.org/listinfo/linux-aspeed
-> or, via email, send a message with subject or body 'help' to
-> 	linux-aspeed-request@lists.ozlabs.org
-> 
-> You can reach the person managing the list at
-> 	linux-aspeed-owner@lists.ozlabs.org
-> 
-> When replying, please edit your Subject line so it is more specific
-> than "Re: Contents of Linux-aspeed digest..."
-> 
-> 
-> Today's Topics:
-> 
->    1. [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
->       (Manikandan Elumalai)
->    2. Re: [PATCH v4] hwmon:(adm1275) Enable adm1278
->       ADM1278_TEMP1_EN (Guenter Roeck)
->    3. [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
->       (Manikandan Elumalai)
->    4. Re:  [PATCH v4] hwmon:(adm1275) Enable adm1278
->       ADM1278_TEMP1_EN (Milton Miller II)
->    5. Re: [PATCH v4] hwmon:(adm1275) Enable adm1278
->       ADM1278_TEMP1_EN (Guenter Roeck)
-> 
-> 
-> ----------------------------------------------------------------------
-> 
-> Message: 1
-> Date: Fri, 19 Jun 2020 20:18:53 +0530
-> From: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare
-> 	<jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-> 	linux-kernel@vger.kernel.org
-> Cc: saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
-> 	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-> 	manikandan.e@hcl.com
-> Subject: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-> Message-ID: <20200619144853.GA18271@cnn>
-> Content-Type: text/plain; charset=us-ascii
-> 
-> The adm1278 temp attribute need it for openbmc platform .
-> This feature not enabled by default, so PMON_CONFIG needs to enable it.
-> 
-> v4:
-> ---
-> Reported-by: kernel test robot <lkp@intel.com>
-> v3:
-> ----
-> fix invalid signed-off.
-> removed checkpath warnings.
-> write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> v2:
-> ----
-> add Signed-off-by.
-> removed ADM1278_TEMP1_EN check.
-> 
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> ---
->  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> index 5caa37fb..d4e1925 100644
-> --- a/drivers/hwmon/pmbus/adm1275.c
-> +++ b/drivers/hwmon/pmbus/adm1275.c
-> @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
->  		tindex = 3;
->  
->  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  
-> -		/* Enable VOUT if not enabled (it is disabled by default) */
-> -		if (!(config & ADM1278_VOUT_EN)) {
-> -			config |= ADM1278_VOUT_EN;
-> +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
-> +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
->  			ret = i2c_smbus_write_byte_data(client,
->  							ADM1275_PMON_CONFIG,
->  							config);
-> @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
->  			}
->  		}
->  
-> -		if (config & ADM1278_TEMP1_EN)
-> -			info->func[0] |=
-> -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  		if (config & ADM1278_VIN_EN)
->  			info->func[0] |= PMBUS_HAVE_VIN;
->  		break;
-> -- 
-> 2.7.4
-> 
-> 
-> 
-> ------------------------------
-> 
-> Message: 2
-> Date: Fri, 19 Jun 2020 08:38:32 -0700
-> From: Guenter Roeck <linux@roeck-us.net>
-> To: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-> 	linux-kernel@vger.kernel.org, saipsdasari@fb.com, patrickw3@fb.com,
-> 	vijaykhemka@fb.com, linux-aspeed@lists.ozlabs.org,
-> 	openbmc@lists.ozlabs.org, manikandan.e@hcl.com
-> Subject: Re: [PATCH v4] hwmon:(adm1275) Enable adm1278
-> 	ADM1278_TEMP1_EN
-> Message-ID: <20200619153832.GA57109@roeck-us.net>
-> Content-Type: text/plain; charset=us-ascii
-> 
-> On Fri, Jun 19, 2020 at 08:18:53PM +0530, Manikandan Elumalai wrote:
-> > The adm1278 temp attribute need it for openbmc platform .
-> > This feature not enabled by default, so PMON_CONFIG needs to enable it.
-> > 
-> > v4:
-> > ---
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > v3:
-> > ----
-> > fix invalid signed-off.
-> > removed checkpath warnings.
-> > write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> > v2:
-> > ----
-> > add Signed-off-by.
-> > removed ADM1278_TEMP1_EN check.
-> > 
-> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> 
-> The problem is that this is after '---', meaning it is considered a comment.
-> The Signed-off-by: tag needs to be located before the first '---'.
-> The change log should not be part of the commit log and follow '---'.
-> 
-> Guenter
-> 
-> > ---
-> >  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
-> >  1 file changed, 5 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> > index 5caa37fb..d4e1925 100644
-> > --- a/drivers/hwmon/pmbus/adm1275.c
-> > +++ b/drivers/hwmon/pmbus/adm1275.c
-> > @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
-> >  		tindex = 3;
-> >  
-> >  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> > -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> > +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> > +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  
-> > -		/* Enable VOUT if not enabled (it is disabled by default) */
-> > -		if (!(config & ADM1278_VOUT_EN)) {
-> > -			config |= ADM1278_VOUT_EN;
-> > +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> > +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
-> > +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
-> >  			ret = i2c_smbus_write_byte_data(client,
-> >  							ADM1275_PMON_CONFIG,
-> >  							config);
-> > @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
-> >  			}
-> >  		}
-> >  
-> > -		if (config & ADM1278_TEMP1_EN)
-> > -			info->func[0] |=
-> > -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  		if (config & ADM1278_VIN_EN)
-> >  			info->func[0] |= PMBUS_HAVE_VIN;
-> >  		break;
-> > -- 
-> > 2.7.4
-> > 
-> 
-> 
-> ------------------------------
-> 
-> Message: 3
-> Date: Fri, 19 Jun 2020 22:21:54 +0530
-> From: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare
-> 	<jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-> 	linux-kernel@vger.kernel.org
-> Cc: saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
-> 	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-> 	manikandan.e@hcl.com
-> Subject: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-> Message-ID: <20200619165154.GA20461@cnn>
-> Content-Type: text/plain; charset=us-ascii
-> 
-> The adm1278 temp attribute need it for openbmc platform .
-> This feature not enabled by default, so PMON_CONFIG needs to enable it.
-> 
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> ---
-> ---    v4 -Reported-by: kernel test robot <lkp@intel.com>
-> ---    v3 -fix invalid signed-off.
-> ---       -removed checkpath warnings.
-> ---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> ---    v2 -add Signed-off-by.
-> ---       -removed ADM1278_TEMP1_EN check.
-> ---
-> ---
->  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> index 5caa37fb..d4e1925 100644
-> --- a/drivers/hwmon/pmbus/adm1275.c
-> +++ b/drivers/hwmon/pmbus/adm1275.c
-> @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
->  		tindex = 3;
->  
->  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  
-> -		/* Enable VOUT if not enabled (it is disabled by default) */
-> -		if (!(config & ADM1278_VOUT_EN)) {
-> -			config |= ADM1278_VOUT_EN;
-> +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
-> +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
->  			ret = i2c_smbus_write_byte_data(client,
->  							ADM1275_PMON_CONFIG,
->  							config);
-> @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
->  			}
->  		}
->  
-> -		if (config & ADM1278_TEMP1_EN)
-> -			info->func[0] |=
-> -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  		if (config & ADM1278_VIN_EN)
->  			info->func[0] |= PMBUS_HAVE_VIN;
->  		break;
-> -- 
-> 2.7.4
-> 
-> 
-> 
-> ------------------------------
-> 
-> Message: 4
-> Date: Fri, 19 Jun 2020 18:09:55 +0000
-> From: "Milton Miller II" <miltonm@us.ibm.com>
-> To: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare
-> 	<jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-> 	linux-kernel@vger.kernel.org, manikandan.e@hcl.com,
-> 	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-> 	vijaykhemka@fb.com, saipsdasari@fb.com, patrickw3@fb.com
-> Subject: Re:  [PATCH v4] hwmon:(adm1275) Enable adm1278
-> 	ADM1278_TEMP1_EN
-> Message-ID:
-> 	<OFB20C104E.283BBF6D-ON0025858C.0062CC5B-0025858C.0063C8F2@notes.na.collabserv.com>
-> 	
-> Content-Type: text/plain; charset=UTF-8
-> 
-> On : 06/19/2020 abiout 12:46PM in some timezone,  Manikandan Elumalai  wrote:
-> 
-> >The adm1278 temp attribute need it for openbmc platform .
-> >This feature not enabled by default, so PMON_CONFIG needs to enable
-> >it.
-> >
-> >Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> >---
-> >---    v4 -Reported-by: kernel test robot <lkp@intel.com>
-> 
-> Thie above tag should be Adjacent to the Signed-off-by.
+On Wed, Jun 17, 2020 at 12:05 PM John Andersen
+<john.s.andersen@intel.com> wrote:
+> Guests using the kexec system call currently do not support
+> paravirtualized control register pinning. This is due to early boot
+> code writing known good values to control registers, these values do
+> not contain the protected bits. This is due to CPU feature
+> identification being done at a later time, when the kernel properly
+> checks if it can enable protections. As such, the pv_cr_pin command line
+> option has been added which instructs the kernel to disable kexec in
+> favor of enabling paravirtualized control register pinning. crashkernel
+> is also disabled when the pv_cr_pin parameter is specified due to its
+> reliance on kexec.
 
-     Thanks for review Milton.I will update new patch v6.
-> 
-> >---    v3 -fix invalid signed-off.
-> >---       -removed checkpath warnings.
-> >---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single
-> >line operation.
-> >---    v2 -add Signed-off-by.
-> >---       -removed ADM1278_TEMP1_EN check.
-> >---
-> 
-> The canonical format is to have a line of 3 dashes then the trailing changelog 
-> 
-  will do.
-> Please read the documentation at 
-> 
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-canonical-patch-format
-> 
-> milton
-> 
-> 
-> 
-> ------------------------------
-> 
-> Message: 5
-> Date: Fri, 19 Jun 2020 11:41:03 -0700
-> From: Guenter Roeck <linux@roeck-us.net>
-> To: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>, Jean
-> 	Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-> 	linux-kernel@vger.kernel.org
-> Cc: saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
-> 	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-> 	manikandan.e@hcl.com
-> Subject: Re: [PATCH v4] hwmon:(adm1275) Enable adm1278
-> 	ADM1278_TEMP1_EN
-> Message-ID: <fa65b6de-b7ea-894b-7fd1-47676cc3c705@roeck-us.net>
-> Content-Type: text/plain; charset=utf-8
-> 
-> On 6/19/20 9:51 AM, Manikandan Elumalai wrote:
-> > The adm1278 temp attribute need it for openbmc platform .
-> > This feature not enabled by default, so PMON_CONFIG needs to enable it.
-> > 
-> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> 
-> In addition to the other comment - please never send a new version of a patch
-> with the same sequence number. There are now two different versions of this patch,
-> both tagged "v4".
-> 
-> Guenter
-> 
-> > ---
-> > ---    v4 -Reported-by: kernel test robot <lkp@intel.com>
-> > ---    v3 -fix invalid signed-off.
-> > ---       -removed checkpath warnings.
-> > ---       -write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> > ---    v2 -add Signed-off-by.
-> > ---       -removed ADM1278_TEMP1_EN check.
-> > ---
-> > ---
-> >  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
-> >  1 file changed, 5 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> > index 5caa37fb..d4e1925 100644
-> > --- a/drivers/hwmon/pmbus/adm1275.c
-> > +++ b/drivers/hwmon/pmbus/adm1275.c
-> > @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
-> >  		tindex = 3;
-> >  
-> >  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> > -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> > +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> > +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  
-> > -		/* Enable VOUT if not enabled (it is disabled by default) */
-> > -		if (!(config & ADM1278_VOUT_EN)) {
-> > -			config |= ADM1278_VOUT_EN;
-> > +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> > +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
-> > +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
-> >  			ret = i2c_smbus_write_byte_data(client,
-> >  							ADM1275_PMON_CONFIG,
-> >  							config);
-> > @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
-> >  			}
-> >  		}
-> >  
-> > -		if (config & ADM1278_TEMP1_EN)
-> > -			info->func[0] |=
-> > -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  		if (config & ADM1278_VIN_EN)
-> >  			info->func[0] |= PMBUS_HAVE_VIN;
-> >  		break;
-> > 
-> 
-> 
-> 
-> ------------------------------
-> 
-> Subject: Digest Footer
-> 
-> _______________________________________________
-> Linux-aspeed mailing list
-> Linux-aspeed@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linux-aspeed
-> 
-> 
-> ------------------------------
-> 
-> End of Linux-aspeed Digest, Vol 37, Issue 25
-> ********************************************
+Is there a plan for fixing this for real?  I'm wondering if there is a
+sane weakening of this feature that still allows things like kexec.
+
+What happens if a guest tries to reset?  For that matter, what happens
+when a guest vCPU sends SIPI to another guest vCPU?  The target CPU
+starts up in real mode, right?  There's no SMEP or SMAP in real mode,
+and real mode has basically no security mitigations at all.
+
+PCID is an odd case.  I see no good reason to pin it, and pinning PCID
+on prevents use of 32-bit mode.
