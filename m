@@ -2,147 +2,108 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B109C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB89FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F16423380
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592670769;
-	bh=PiTqpExOkJ4jtmo/igH0XjJUDL8XyWqQnsFO1jatvyc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0eNa3UM0CBizz8gkT04Ar3jyhZKkKQiHuJcSJNZUjdaqCQtSvLdoamqjOEGK5wQ/d
-	 cThI0JEF2KmrjGWBJ18W57cgHajPuy3vxYjDvSAjUMPhfKhZ6bQMHWjNsLKC7Fj8ca
-	 PViwOX191PIL3bqMdcHTCjFa4eAdNNxBmdVFLPrw=
+	by mail.kernel.org (Postfix) with ESMTP id AAF5323ECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:37:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="L782xA9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgFTQcs (ORCPT
+        id S1728103AbgFTQhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        Sat, 20 Jun 2020 12:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgFTQcr (ORCPT
+        with ESMTP id S1726043AbgFTQhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:32:47 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200F0C06174E
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:32:47 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q19so14882859lji.2
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:32:46 -0700 (PDT)
+        Sat, 20 Jun 2020 12:37:04 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74C7C06174E
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:37:03 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id mb16so13608090ejb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dcRSJRK8urDyldn/ETgWnP509gz8x9p5kdeaHsZfzGs=;
-        b=X7ptCrRAii6sPtj0fatuBjGITTaDL1PU9dnjPRqfI4+AHTgGqNE7wmR6SaW4AQEIUN
-         ryhWAR5G2+dwxs4IGvQClbkR79s5DN6S7RkDgR8L0YrKCedkIURWL1gvBFgY/XO5PtdI
-         LxQIIwT0YpBCKsuVyjsGcB0TyvnF/W2wGl8c4=
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j8AX8R3imm5kx+XT7/W2Ts6hqcoJrB3CcjQBEmxPQ64=;
+        b=L782xA9SU2KpF1LK1w+gYtX+Znhse4rPvuuUsFUWseG/ssPmDzHViftMSSWAng6WMH
+         i/uElNUm27fnXfL3hbJ3lkVADEYHKMtL5H0C4CmjKju1TI9cTAUjih9BmAfOePTZdC1Y
+         stoPUS3Vxw3RVZNYM6quNTVAck3MuwCI/6V1LC2Sq2uQ2ZWGXSCo4k+xVQrkRWo8QZR5
+         RF3502jufoSzJ5L+jMCJgxyIlbqPabIbFAbZslW0BZa9UJDP2J19EXh+6d1cKLa5hm8e
+         XF1gn1YeJk+iBUM7Vpfn6oqpp47WaQdymYr0248D3Vd++0ET5JEBMcPm0Yfy6HuHyPpn
+         0Qew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dcRSJRK8urDyldn/ETgWnP509gz8x9p5kdeaHsZfzGs=;
-        b=fL/fieQKU8bU29jjZEcY4xd/jbIiPrXrteBPrWFX9GVuHwz8tgv3LYKMNZWpsW7yTV
-         rJ5tDU54YDCawHcIB1KmJTGFdUPBA9NwFfuEAvmyIOa8SnCwq/cTBB8mginHgoLbyX7D
-         hGAoecKNFvRF0DeFPs9kVF+cql77sx29O01Ios2sxJOlvN3mz1aPWWvKOlsfdojiFpXW
-         UPPCHQ2LAi73EIeNaYN8URSjBK7yENJNk8J290sZb+3cREKjrY3f5r6qL7nF9bjAeDll
-         jvA8R5Nu4wPkcaTR9TlxHmYmcgb/OAqti29YIL9wue/5xlk8cHQcDf2NJ2gtPIkdl68M
-         QG6w==
-X-Gm-Message-State: AOAM530BKMfdlvoXl29/4+tGkaDEGtHy8ymJ0ZwK1omvgnAo+85YuH38
-        SI+6rqvf25wbcpiL8/MhyO7nThMGcjk=
-X-Google-Smtp-Source: ABdhPJzuQIAVC5C0c8rwYcOapZvl3EqZVXJ4dQVZ7sz3gI0afCfanOitwSLCDuAQPLvYBxTmOIRjUg==
-X-Received: by 2002:a2e:b176:: with SMTP id a22mr4144413ljm.291.1592670764397;
-        Sat, 20 Jun 2020 09:32:44 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id a15sm1761646ljn.105.2020.06.20.09.32.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 09:32:43 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id d7so7265675lfi.12
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:32:42 -0700 (PDT)
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr4982811lfd.31.1592670762430;
- Sat, 20 Jun 2020 09:32:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j8AX8R3imm5kx+XT7/W2Ts6hqcoJrB3CcjQBEmxPQ64=;
+        b=Fel5RFzPVWP5X2QkptJFwV0lf2MxlLE9pzsvtJVAsX9nZlq9Ela1FY7lDHtecDTG+C
+         ypEI+Ni+/xzeQ1AHq0V+08Kmq7DLEdxDTWTWG2Sv4AuF0fDkZa/ZHedSNs75v1aXgaX8
+         rvTT6cA5BAfZK/8SOEqDIcYF8BCnZVMiiPSqH4KQXIK5+CqcrvcyQUzuGJke0WSVFpsY
+         /haYz78HGCNEq67Qz/AS4aqR8i5aPlXflc3quFfenLrJFulrJ5dwvUZoOPWcyEa7Gzhz
+         ItyQuYYn7YfPHnjkR89CrGYPFdHxjXSw2zfbdJmbcXaDPy8jt/W0tBePLAlb7WHAfVrW
+         Cfhg==
+X-Gm-Message-State: AOAM530Iw45E0IjQiw8L+pjtxoaGiTRexO/E0vz7qtUFxkBqFLND2gtZ
+        c2YDooWYj3EBksGnmMQsWJKqrIp7
+X-Google-Smtp-Source: ABdhPJytB0RQ7vP5S1NwhmU5+oyqtM1RLkmVXh+LR/PgeZMXEThswjoXXPc5XI92SlLqVC3pS4MTYw==
+X-Received: by 2002:a17:906:3590:: with SMTP id o16mr8358243ejb.506.1592671022449;
+        Sat, 20 Jun 2020 09:37:02 -0700 (PDT)
+Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id o90sm7839442edb.60.2020.06.20.09.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 09:37:01 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/3] ARM: dts: use the SDHC MMC controller for eMMC
+Date:   Sat, 20 Jun 2020 18:36:51 +0200
+Message-Id: <20200620163654.37207-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2> <202006192008.337CB5212E@keescook>
-In-Reply-To: <202006192008.337CB5212E@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 20 Jun 2020 09:32:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
-Message-ID: <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
-Subject: Re: [tip: sched/urgent] sched: Fix RANDSTRUCT build fail
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Eric Biggers <ebiggers@kernel.org>, x86 <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 8:14 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Jun 10, 2020 at 10:34:16AM -0000, tip-bot2 for Peter Zijlstra wrote:
-> > The following commit has been merged into the sched/urgent branch of tip:
-> >
-> > Commit-ID:     bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
-> > Gitweb:        https://git.kernel.org/tip/bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
-> > Author:        Peter Zijlstra <peterz@infradead.org>
-> > AuthorDate:    Wed, 10 Jun 2020 12:14:09 +02:00
-> > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > CommitterDate: Wed, 10 Jun 2020 12:30:19 +02:00
-> >
-> > sched: Fix RANDSTRUCT build fail
-> >
-> > As a temporary build fix, the proper cleanup needs more work.
-> >
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Reported-by: Eric Biggers <ebiggers@kernel.org>
-> > Suggested-by: Eric Biggers <ebiggers@kernel.org>
-> > Suggested-by: Kees Cook <keescook@chromium.org>
-> > Fixes: a148866489fb ("sched: Replace rq::wake_list")
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->
-> Hi, can this please get sent to Linus before -rc2? With a148866489fb in
-> -rc1, all the CI with the GCC plugins installed have been failing their
-> all*config builds. This entered -next 9 days ago (and fixed the -next
-> builds), but Linus's tree is still failing:
+Amlogic Meson6/8/8b/8m2 SoCs have two built-in MMC controllers:
+- SDIO (which is supported on mainline for a long time now but is
+  limited to ~40MHz bus frequency)
+- SDHC (which supports up to HS-200 modes at ~100MHz bus frequency but
+  for which we didn't have a driver)
 
-Ugh.
+Boards with NAND flash will now be able to use the SDIO controller for
+SDIO based wifi cards and the SDHC controller for the SD card slot.
+Boards with eMMC, SD card and SDIO wifi can only use two out of three
+MMC based devices for now until the MMC core and Meson SDIO driver gain
+support for multiple "mmc-slots" per controller.
 
-I actually think the problem goes deeper than that.
+Now that we have a driver for it, add the SDHC controller to meson.dtsi
+and wire up the eMMC connection on the Endless Mini EC-100 and the
+Odroid-C1.
 
-The code expects the list entries to be of type 'call_single_data_t'
 
-Then they damn well should be that type.
+Martin Blumenstingl (3):
+  ARM: dts: meson: add the SDHC MMC controller
+  ARM: dts: meson8b: ec100: enable the SDHC controller
+  ARM: dts: meson8b: odroidc1: enable the SDHC controller
 
-Note how "call_single_data_t" also implies certain alignment rules
-that the hack in 'struct task_struct' does *not* have, and while that
-doesn't matter on x86, it could matter on other architectures.
+ arch/arm/boot/dts/meson.dtsi           |  7 +++++++
+ arch/arm/boot/dts/meson8.dtsi          | 19 +++++++++++++++++++
+ arch/arm/boot/dts/meson8b-ec100.dts    | 25 +++++++++++++++++++++++++
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/meson8b.dtsi         | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/meson8m2.dtsi        |  4 ++++
+ 6 files changed, 101 insertions(+)
 
-So no, I don't think Peter's patch is correct. It may make the build
-pass, but that "check the offsets between two fields" is not
-sufficient.
+-- 
+2.27.0
 
-Now, if we could create a new
-
-   struct __call_single_list_entry {
-        struct llist_node llist;
-        unsigned int flags;
-   } call_single_list_entry_t;
-
-and use that as part of thecall_single_data_t and only use that for
-tyhe traversal of the list, then that would avoid the alignment issue
-and the waste of space in struct task_struct.
-
-Hmm?
-
-Peter/Ingo?
-
-                 Linus
