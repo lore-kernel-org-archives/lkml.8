@@ -2,167 +2,147 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F90AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E144523EB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UPbBsYsK"
+	by mail.kernel.org (Postfix) with ESMTP id 7FA6023EB3
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592670308;
+	bh=qUtSjUjPvNBnBbSWkg0Yoe4X48Rh2Xe4XKAQk/9Yb20=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AZnBmCRxokLGAgwmChRTqYVgqqmp3f8LDmo5am4ECvrv11aN08F1jel8oQ4m1hYS7
+	 SJ2z+Kf35AAQ8aj4uzvTg6HeOa1RjYCcIz70GiLR7bO5PHcadxni2qWi4rQZaSlKCV
+	 /6qhEUcGVNl1Lag1ml6IQAqouc3abbVhDqiXlWjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgFTQYH (ORCPT
+        id S1728000AbgFTQZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgFTQYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:24:06 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A47C06174E
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:24:05 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id cy7so3670082edb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RBB5+d9DExrRxU/V6V7qCMTYL5+l1zibZSgTJX3TLv4=;
-        b=UPbBsYsKM2Y0CgcJM/oLWhxOlV7NPTH2Up5Sx9q8Aee3aY1fgQV2IK7bueXo4i/aFO
-         anHS/QRTijSw6Nx+agm4d5Nw7S7wAyUES5PwxKphM6U33a2ULHcQJaJaa7hRavjQUo9U
-         y4/CYeDa8WJZx7x//OhJZdoT8BKF+TmzzRa/wy7ACojHKQZOj2YU72oWyOV5K6HO50i9
-         rLuc8D2lk0bifWwSOAGeo+aa7ERyOwxepJ2bHRfJ4hwaqOgbAewYd6LrglnyfMYEuKST
-         XI+k/HyqB44kYl0HsKsxgp1apDRJgLNUp83DAfRF1B+RB2puHoRn3uaWoQmQjFcwrrpI
-         1NVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RBB5+d9DExrRxU/V6V7qCMTYL5+l1zibZSgTJX3TLv4=;
-        b=CPxbtZcc7tyliw85Bl0infkjGixpQ3NvVWAlvHfg4+gG2nZY2a7RCdQOMLwK5Sk/Nw
-         8Rxqxva7wqAD3hgAc+tN3YihXWY9fphuN5JVYZ1re4GebvWEObt/7EuzF6Weu2e04ser
-         29JI3gb5cQp/piao8bAx2lUCIM8Gz3CXK6l9wNiH6EQGFCBLEeUwsilB8zZFqakvh2pe
-         yo7eQ8Hn8o2CCi6NCzn5oY4vO5uq1TaiDao+DYeW27/bjAqiuUZZ+fEH2Xc2WB+FtOFl
-         fC2000Q8w511Zki5aT5x5LFvKF913UtfNxqrr9+if8pSu/gWPlsgS88GBVBohVLVRT/T
-         5MDg==
-X-Gm-Message-State: AOAM531lhz1cBFt+ISnySgE9i2m/qij1/eHUDfjYhB0VABlBdTfBfk9t
-        XkPuae2ZneXogcUmIobweBGgPOu6
-X-Google-Smtp-Source: ABdhPJwLrOeWiRJI8vetnweyhKH5HKvsM+j56XPeJtK7Kup+7ho72bkQIjiCLZGezx2eQjwhQ+xKzQ==
-X-Received: by 2002:aa7:c148:: with SMTP id r8mr8929513edp.108.1592670243932;
-        Sat, 20 Jun 2020 09:24:03 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id l24sm7515582ejb.5.2020.06.20.09.24.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 09:24:03 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2] arm64: dts: amlogic: Add the Ethernet "timing-adjustment" clock
-Date:   Sat, 20 Jun 2020 18:23:47 +0200
-Message-Id: <20200620162347.26159-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
+        Sat, 20 Jun 2020 12:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgFTQZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 12:25:07 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B3E123EB1;
+        Sat, 20 Jun 2020 16:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592670306;
+        bh=qUtSjUjPvNBnBbSWkg0Yoe4X48Rh2Xe4XKAQk/9Yb20=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t1wOnCfX4boWny47NBKBLzKJEcTciUV5bhq7YJ4ubdq8i+MMXSdIDfm7ggILXc+3Q
+         bSUlvDwG0YXSOAfuXErlpt/WavbGDcQcwlR1Hjrx7NYocBP8ofxtPvnxcBgAb9DR2L
+         yOeTvxNF4kenkhFZGmOUWvuUE3v10dcFG5yCs/6s=
+Date:   Sat, 20 Jun 2020 17:25:02 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200620172502.0d532081@archlinux>
+In-Reply-To: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the "timing-adjustment" clock now that we know how it is connected
-to the PRG_ETHERNET registers. It is used internally to generate the
-RGMII RX delay on the MAC side (if needed).
+On Sun, 7 Jun 2020 19:58:09 +0200
+Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-Changes since v1 at [0]:
-- fixed all typos in the commit message (hopefully...). Thanks to Andrew
-  for spotting the first ("no" -> "on") one and shame on me for having
-  to find two more ("adjusment" -> "adjustment", "now" -> "know")
+> Add Sensirion SCD30 carbon dioxide core driver.
+> 
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 
+A few things I'd missed showed up in warnings when I applied this and
+ran a sparse check.  Please fix up and send a v6.
+Also sanity check the rest with sparse. Note if I'd missed this 0-day
+would have sent use these warnings.
 
-[0] https://patchwork.kernel.org/patch/11616101/
+Thanks,
 
+Jonathan
 
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 6 ++++--
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 6 ++++--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 5 +++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 5 +++--
- 4 files changed, 14 insertions(+), 8 deletions(-)
+> +
+> +static int scd30_read_meas(struct scd30_state *state)
+> +{
+> +	int i, ret;
+> +
+> +	ret = state->command(state, CMD_READ_MEAS, 0, state->meas, sizeof(state->meas));
+> +	if (ret)
+> +		return ret;
+> +
+> +	be32_to_cpu_array(state->meas, state->meas, ARRAY_SIZE(state->meas));
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 8e6281c685fa..b9efc8469265 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -181,8 +181,10 @@ ethmac: ethernet@ff3f0000 {
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
-+				 <&clkc CLKID_MPLL2>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1",
-+				      "timing-adjustment";
- 			rx-fifo-depth = <4096>;
- 			tx-fifo-depth = <2048>;
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 593a006f4b7b..41805f2ed8fc 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -185,8 +185,10 @@ ethmac: ethernet@ff3f0000 {
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
-+				 <&clkc CLKID_MPLL2>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1",
-+				      "timing-adjustment";
- 			rx-fifo-depth = <4096>;
- 			tx-fifo-depth = <2048>;
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 234490d3ee68..03c25b9facff 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -333,8 +333,9 @@ &efuse {
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
--		 <&clkc CLKID_MPLL2>;
--	clock-names = "stmmaceth", "clkin0", "clkin1";
-+		 <&clkc CLKID_MPLL2>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+	clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
- };
+The type of the input to the above has the wrong endian markings.
+
+CHECK   drivers/iio/chemical/scd30_core.c
+drivers/iio/chemical/scd30_core.c:123:40: warning: incorrect type in argument 2 (different base types)
+drivers/iio/chemical/scd30_core.c:123:40:    expected restricted __be32 const [usertype] *src
+drivers/iio/chemical/scd30_core.c:123:40:    got int *
+
+Whilst you could use a cast, it would be tidier to use an array of __be32.
  
- &gpio_intc {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index fc59c8534c0f..60484bbc7272 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -131,8 +131,9 @@ &efuse {
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
--		 <&clkc CLKID_MPLL2>;
--	clock-names = "stmmaceth", "clkin0", "clkin1";
-+		 <&clkc CLKID_MPLL2>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+	clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
- 
- 	mdio0: mdio {
- 		#address-cells = <1>;
--- 
-2.27.0
+> +
+> +	for (i = 0; i < ARRAY_SIZE(state->meas); i++)
+> +		state->meas[i] = scd30_float_to_fp(state->meas[i]);
+> +
+> +	/*
+> +	 * co2 is left unprocessed while temperature and humidity are scaled
+> +	 * to milli deg C and milli percent respectively.
+> +	 */
+> +	state->meas[SCD30_TEMP] *= 10;
+> +	state->meas[SCD30_HR] *= 10;
+> +
+> +	return 0;
+> +}
+> +
 
+...
+
+> +
+> +static irqreturn_t scd30_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct scd30_state *state = iio_priv(indio_dev);
+> +	struct {
+> +		int data[SCD30_MEAS_COUNT];
+> +		s64 ts __aligned(8);
+> +	} scan = { 0, };
+should be scan = { {0, }, }; or something like that
+as first element happens to be an array.
+
+Actually there is padding in here you need to zero I think.
+So memset is a better bet.
+
+> +	int ret;
+> +
+> +	mutex_lock(&state->lock);
+> +	if (!iio_trigger_using_own(indio_dev))
+> +		ret = scd30_read_poll(state);
+> +	else
+> +		ret = scd30_read_meas(state);
+> +	memcpy(scan.data, state->meas, sizeof(state->meas));
+> +	mutex_unlock(&state->lock);
+> +	if (ret)
+> +		goto out;
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &scan, iio_get_time_ns(indio_dev));
+> +out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+...
