@@ -2,133 +2,104 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27495C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D2F23EB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CCC23ECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVIIupKx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qoUHSzwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgFTQ13 (ORCPT
+        id S1728109AbgFTQ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        Sat, 20 Jun 2020 12:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgFTQ13 (ORCPT
+        with ESMTP id S1728051AbgFTQ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:27:29 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A731C06174E;
-        Sat, 20 Jun 2020 09:27:29 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m21so10150700eds.13;
-        Sat, 20 Jun 2020 09:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/BMMpD7qtU5pkOn7Z4pc22pm3d3A2SjW9M7WNCHeAiY=;
-        b=QVIIupKxa71Or8M1ClPfavFaWT0DeX7jreTr2LyxDbUbYAeTT4y0fkSdjacNshjutr
-         BeMoZok/aRl/E36YP4z8utRYnCpQeJ5Aosyto1cXGGEwZB9Gra6J+qWzl386BId7q3Kb
-         8zIuaryYutyw+jQVByn0gym1OPyOV3sBKxcJyokF47KHEjiSyBh68bw3mluJMNUxiviE
-         l2IIgYY1n6WTEeHI9b0DBJl/ZMaQPepwgGW+9b4jLj3L9tvm3gZwBORH5uWTbppWk5Vy
-         fg8a4rck24+F1awR4f3zwPG04llDWfBqgeOfpU4yIasIHqci9y8XaLPxj/eXRtObYhOw
-         GO5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/BMMpD7qtU5pkOn7Z4pc22pm3d3A2SjW9M7WNCHeAiY=;
-        b=byhBf2i3HQB11iFD1Ehd64JruTwni738Y8id1NWsU6SfoumLnQFZdOhoe3Ovs8vrCA
-         saHfJrXHFR/rIuDHfsbqvPVEnuva4v0HJ97lysKfACPHSus7IvlfoWNcIAmX3+5xH53/
-         nVp9jsLakGdQfgjBnm4gkf6P/G5nIP8nk9TWGVW9KFjr979bITpKw57jQKBHbFKybGTQ
-         LQfpQII14Wkj4/hDH/m3NbSQJXm8oGdUSo29WY1WCfISf8eHJIr65PiRwp9gbNMB6EbL
-         dBeBEaxdCDy4ji4y+eu9YItw1lUcYNqQ7Y4qehAKYJnpsYP6PgPoyzdwzW3l2lZbvACc
-         29IA==
-X-Gm-Message-State: AOAM530hgI0tXsUSXQSX8aHvz3ZX4ILf72kpjHz5WM6vrGKGbuoI2zvp
-        espR7NuaNKo1Hux8kLYc6VYGGvOxkKtL0CZKD6U=
-X-Google-Smtp-Source: ABdhPJypOsgdt+fPQZQTGg7oTELjjmivaxGQ2UlMWlYWToihFkcE5WrbmvWFN/dybafH1Uk8WYjOZIkXCWzA5J5yOUI=
-X-Received: by 2002:aa7:d952:: with SMTP id l18mr8585130eds.151.1592670447699;
- Sat, 20 Jun 2020 09:27:27 -0700 (PDT)
+        Sat, 20 Jun 2020 12:27:56 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DD1C06174E;
+        Sat, 20 Jun 2020 09:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ama9No7LcT5b/qPuEpA7ghtbIZZe7ttjP4oS5TfpNFI=; b=qoUHSzwTi0k/IMsmObNSMt+L/Y
+        VDpGir+hw/HrjnqygnqAN+wb4HE0ci1oH8HJXb0TP8mz0AESEvWj0A0vOIaEPeDB7CaDQcee7H7N4
+        1pgj35IJlKhYhtfDvusBDq5mTZmNRKqjjybiGmyPAwmSKUdwvu4mSqa4jrFfuRhsVPC0448Ysiz2T
+        waTnm6QB6GZxFTFQ56FczUaCVxZd+U8yVA9hEsTwExj5blhtFEbl5T47iS823EMO+TkwGL2uOLwI4
+        Bnug6L13QpyKv0GhCCDaW3IYxaCPd0uJNErR166tdxiX+cYUGFkMO0p+luXF+Pmodkwo1NcmvooW+
+        K3OhISdg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmgLQ-0002AA-QI; Sat, 20 Jun 2020 16:27:52 +0000
+Date:   Sat, 20 Jun 2020 09:27:52 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>,
+        Wengang Wang <wen.gang.wang@oracle.com>
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
+ dentries
+Message-ID: <20200620162752.GF8681@bombadil.infradead.org>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+ <20200618233958.GV8681@bombadil.infradead.org>
+ <877dw3apn8.fsf@x220.int.ebiederm.org>
+ <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+ <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+ <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
+ <87k1036k9y.fsf@x220.int.ebiederm.org>
+ <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
+ <87blle4qze.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20200528130816.1670-1-yuzenghui@huawei.com> <f1357380-9e98-4c1e-c1bf-a0a95bb5910d@huawei.com>
-In-Reply-To: <f1357380-9e98-4c1e-c1bf-a0a95bb5910d@huawei.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 20 Jun 2020 09:27:56 -0700
-Message-ID: <CAF6AEGun5DgsTzLRswxt2NRG9P+HVake0hQUKPR6czcNvc5LxQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: Fix usage of ERR_PTR()
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        wanghaibin.wang@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87blle4qze.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 3:26 AM Zenghui Yu <yuzenghui@huawei.com> wrote:
->
-> ping for this obvious fix...
+On Fri, Jun 19, 2020 at 05:42:45PM -0500, Eric W. Biederman wrote:
+> Junxiao Bi <junxiao.bi@oracle.com> writes:
+> > Still high lock contention. Collect the following hot path.
+> 
+> A different location this time.
+> 
+> I know of at least exit_signal and exit_notify that take thread wide
+> locks, and it looks like exit_mm is another.  Those don't use the same
+> locks as flushing proc.
+> 
+> 
+> So I think you are simply seeing a result of the thundering herd of
+> threads shutting down at once.  Given that thread shutdown is fundamentally
+> a slow path there is only so much that can be done.
+> 
+> If you are up for a project to working through this thundering herd I
+> expect I can help some.  It will be a long process of cleaning up
+> the entire thread exit process with an eye to performance.
 
-Hi, thanks, but there is already a similar fix in msm-next:
+Wengang had some tests which produced wall-clock values for this problem,
+which I agree is more informative.
 
-commit aa472721c8dbe1713cf510f56ffbc56ae9e14247
-Refs: v5.7-rc5-33-gaa472721c8db
-Author:     Chen Tao <chentao107@huawei.com>
-AuthorDate: Mon Jun 8 09:48:59 2020 +0800
-Commit:     Rob Clark <robdclark@chromium.org>
-CommitDate: Thu Jun 11 20:07:21 2020 -0700
+I'm not entirely sure what the customer workload is that requires a
+highly threaded workload to also shut down quickly.  To my mind, an
+overall workload is normally composed of highly-threaded tasks that run
+for a long time and only shut down rarely (thus performance of shutdown
+is not important) and single-threaded tasks that run for a short time.
 
-    drm/msm/dpu: fix error return code in dpu_encoder_init
-
-    Fix to return negative error code -ENOMEM with the use of
-    ERR_PTR from dpu_encoder_init.
-
-    Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-    Signed-off-by: Chen Tao <chentao107@huawei.com>
-    Signed-off-by: Rob Clark <robdclark@chromium.org>
-
-
-BR,
--R
-
->
-> On 2020/5/28 21:08, Zenghui Yu wrote:
-> > ERR_PTR() is used in the kernel to encode an usual *negative* errno code
-> > into a pointer.  Passing a positive value (ENOMEM) to it will break the
-> > following IS_ERR() check.
-> >
-> > Though memory allocation is unlikely to fail, it's still worth fixing.
-> > And grepping shows that this is the only misuse of ERR_PTR() in kernel.
-> >
-> > Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-> > Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> > ---
-> >   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > index a1b79ee2bd9d..a2f6b688a976 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > @@ -2173,7 +2173,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
-> >
-> >       dpu_enc = devm_kzalloc(dev->dev, sizeof(*dpu_enc), GFP_KERNEL);
-> >       if (!dpu_enc)
-> > -             return ERR_PTR(ENOMEM);
-> > +             return ERR_PTR(-ENOMEM);
-> >
-> >       rc = drm_encoder_init(dev, &dpu_enc->base, &dpu_encoder_funcs,
-> >                       drm_enc_mode, NULL);
-> >
+Understanding this workload is important to my next suggestion, which
+is that rather than searching for all the places in the exit path which
+contend on a single spinlock, we simply set the allowed CPUs for an
+exiting task to include only the CPU that this thread is running on.
+It will probably run faster to take the threads down in series on one
+CPU rather than take them down in parallel across many CPUs (or am I
+mistaken?  Is there inherently a lot of parallelism in the thread
+exiting process?)
