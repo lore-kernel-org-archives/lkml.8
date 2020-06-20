@@ -2,156 +2,193 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ADCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BBD208DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621792070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTQRxry4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Wl7MVMYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgFTOEh (ORCPT
+        id S1728198AbgFTOY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgFTOEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 10:04:36 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDF5C06174E;
-        Sat, 20 Jun 2020 07:04:35 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p3so3174108pgh.3;
-        Sat, 20 Jun 2020 07:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MxMHQHMOYPPlIAfsBVLQqRv56O/eY7lR+CWOurxPYqE=;
-        b=DTQRxry4suejqNioNtJ4Xt+9sqsYuo4lsa8YIpeKShdD6eg3S0a9scQZHKckK8uTEx
-         VbH0u0lFKH9CVjx3tPnzLoOZRdQiNSnuiqnqogOGBHRiRLQcjE5IVcUwladS+obvWROH
-         N/X2KVq3xNVA9xLixHqoVbk+e8lLGsnrDXKMuu0PVCHLUSykvkwpLCDWx4rAr6mUExlc
-         pz78AI7rWyJYNV7FG0R5AHOzDz8xXABQEKs+IIVYSox/52U2LmPxIoV7SUFLqVmYBrmX
-         J+rUlYfB1qoovO5fGfqqCYorIy7Fe6HkO9U02DjSvx2hgEsJLokqJVu3HpMfzc8ilmnt
-         H+cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MxMHQHMOYPPlIAfsBVLQqRv56O/eY7lR+CWOurxPYqE=;
-        b=Evht2A0o/nI/+xgzW5gO7oF4mz0KR0/a7hWJZcwjy+fsgXoPZpjXwz5OQnBc9iTdvx
-         cKr/Ew4OL2909NgVPKhXja3QCd/MP3MQ+BMvR+eTyTIpHI87O+nq8MP03gGYxhLWT+nB
-         YtVmaVln5yHqtJFVjLHRBtHvnosrie43vh2bDw6YVgtirj8mmsugmw/05Fkb5WWDCr9N
-         zHtx2fua6Rcv0oq4s2XZBSWa3kImKrB2Zs12CK3o+P3JGnxO6RdXuMKuLxYPYEo00dQh
-         2m3lBdxTwMjrpHdFgIXRtHD698iAUMn6pzDKq+J8Yvisx61suAdVXbu8ao7HCx3t4Z+0
-         95vw==
-X-Gm-Message-State: AOAM530Rnl0i++LetjVEtsSImhKbjQwkN0m1Cr0Hq1bF+lgm1SJ0zrIt
-        XF9bBxOVMCfHaS6JhuCTCw4XClyL
-X-Google-Smtp-Source: ABdhPJzn0uyQ26c5GoLOihRKoIAXoskXPg/Ct+btHhEtUfb1916DKS7yJsv2S6QM5SmqlVWt/RquDw==
-X-Received: by 2002:aa7:9537:: with SMTP id c23mr12302171pfp.149.1592661874672;
-        Sat, 20 Jun 2020 07:04:34 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i10sm7536650pgq.36.2020.06.20.07.04.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 07:04:34 -0700 (PDT)
-Subject: Re: [PATCH 4.4 000/101] 4.4.228-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200619141614.001544111@linuxfoundation.org>
- <20200619164055.GA258515@roeck-us.net> <20200620074621.GB2298609@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6ca7eeb4-e092-bfc8-e3c3-1d33423a64b3@roeck-us.net>
-Date:   Sat, 20 Jun 2020 07:04:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 20 Jun 2020 10:24:58 -0400
+Received: from mout.gmx.net ([212.227.17.22]:42063 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728181AbgFTOY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 10:24:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592663054;
+        bh=JuvY6E9cI7JcStIjYECxAe3yf3AL8r2MmuHmABemuRk=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Wl7MVMYtzLAaF3mXHah5MBWUajWsCIyJc3PdZMhTaQ+7bg/Re7VjkaQr6L2xRB8nh
+         4H63sAsWf35UNNgg7mOUsj/BE8HngpPbfZoVjy9NtVKwgk/YFB5tZkluN8XZMBwyY/
+         8sLh0CFbTcR7DqipOk/eZb5F2iXrNb/hEQf9e4mE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1McpJq-1jD2kO0026-00a0tf; Sat, 20
+ Jun 2020 16:24:14 +0200
+Date:   Sat, 20 Jun 2020 16:23:40 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Remove function callback casts
+Message-ID: <20200620142340.GA4330@ubuntu>
+References: <20200614070154.6039-1-oscar.carter@gmx.com>
+ <20200615161738.18d07ce6@oasis.local.home>
+ <20200615162245.13d3feff@oasis.local.home>
+ <20200617162800.05a12502@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200620074621.GB2298609@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617162800.05a12502@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:XcZK8ql4Us3Vf6wLPkia735yxuYpLydI0oVASt5iEcVQKSJyH3N
+ 6KMQN5zSfXGZ+DYVch+XELmF4CZdjJ7UshiZUtQwOpBf6l5AKKFrxFZlaUN2+R03l0FFkIn
+ XM1/PFePcM0gOe9UVa9VU+Lti2fRaj0Pwusf4DtBMVO+lPm0cj4YXL4JvqNoV7LPj/I+UOr
+ MqM/ada2N8QFt0HP7u2Aw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8Nh3S9aszRs=:RhNgaCX2F/qtj0Tay5aVGJ
+ OVFp+whK+iPB5KB3Sm6dz4eILf6skw44DbExwxbEEBGDPlvT/buIdprooCdHhk9kBOfv+k7ua
+ lHz5tT/nnBx/0rZKczdGF5Uabx/uTf4pBiga0tLZ/DWAfN0Uj8iafR2yGBXqu447Rl24sfwh5
+ LvYqJTDAlSBJgV6p5UlO5q+xB5RnTkTHtRxphM15qNHuhmOH+TbXQ1OrRAO22sn0bVcjHySqJ
+ oXv+cTHqxqCAaUUWJT6QDXMqaRN6kapFyxIHIMNdm5i9bE7Ugwk9+dsEIPkZ43RsOea+GRqfD
+ B/eRd3gZTvW+c2Kbm5j8DSxJTd+ZKnP9s4i9WUJs4nfP3UCD4TfhorvfsFYBGHjqOpOal2pW3
+ zHaK+AukPcauXkuW2RCRyZVUEph7eZ20dK9Xa2pYsAYkqjxQautkC3DNkPKVq6sR/nDRgFlTE
+ my87bDZGuSd/mFMHXTtMAqrJqRlwR7PZXdbyOgZ1FziHut7AoDXacVLCDB0g5GGjWo5lh9sS4
+ hih87z5UlH7/M1So62VjpBO0mWyIMEqIbZDuCUUcnc4zqdrdn882oiJJ9jD+0hlqtHwDYBF87
+ MYyjzD9qsSzUxztxSLpRyzAKp3v3uIrFh85wJkH+0D/NZ6tcqY3eA84scBJv0MYo74eaPYjWa
+ CAJmw1IHOvn7yzfQmLjoT8o2DMxJUEg7Hu6pcSg4X5atMaNvorjH25kPKoSKP8Dxh9nE8cXES
+ 1yLkw2POeRBqcaAIV8d3+NsTEh4Pj5xWYE1vDQySvyHsc1oEsuQVvgLe31VJSYDXVqkAgwnfk
+ ugom5EYLfu+Zmdnu8t8rFVJVc6YCtm1golshchWqSh4I2/sohwLkfWSDN9lNBhDERjW1ujB4l
+ kOy2HJjgFF7TZvo7wrmXGrDJedramdooRB5lU5C/p/8CE2VoEKiK53+o0uA510uR8h5Uvg5eb
+ fEWmJjKhyZ+XfOlqrrdqfD53+UjKElvHyRuiTvEVqr4UjIBdlhPZn+O6bqhqvcG4R7JrBEkBx
+ 4XsTvaPoCH9TW974NmIFaGpIGD1qY9hSxn1i3Vc9pWg9cOqPm2j+oIa5xbu6UNSe3wqVi+vAS
+ xudRx5fSn4WktaHpC+FmFmfrsqUA+xdhUPwWFGaE2BYF5p5xfo8jnMpewJ1/yGgwcon2nj6QI
+ tkcAw7GBGsa5JL0stdaR6QaW2QuiFbDSEaqac26lmaNOBRRH8csKpVgu/ayfk2DCVoSVal6MA
+ dwn0gN8o3tGBLpMur
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/20 12:46 AM, Greg Kroah-Hartman wrote:
-> On Fri, Jun 19, 2020 at 09:40:55AM -0700, Guenter Roeck wrote:
->> On Fri, Jun 19, 2020 at 04:31:49PM +0200, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.4.228 release.
->>> There are 101 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
->>> Anything received after that time might be too late.
->>>
->>
->> Building powerpc:defconfig ... failed
->> --------------
->> Error log:
->>
->> drivers/macintosh/windfarm_pm112.c: In function ‘create_cpu_loop’:
->> drivers/macintosh/windfarm_pm112.c:148:2: error: implicit declaration of function ‘kfree’
->>
->> Affects v4.4.y.queue and v4.9.y.queue.
-> 
-> Thanks, I've fixed this up by adding an #include <linux/slab.h> to the
-> top of that driver for those trees.
-> 
+On Wed, Jun 17, 2020 at 04:28:00PM -0400, Steven Rostedt wrote:
+> On Mon, 15 Jun 2020 16:22:45 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > As I was saying. This typecast is being paranoid, as archs will call
+> > the ftrace_ops_list_func directly, and only pass in two parameters.
+> >
+> > Now one way around this is to instead of having the typecast, I could
+> > use linker magic to create another function that I can define without
+> > the typecast to get the same effect. Similar to what I did in commit:
+> >
+> > 46f9469247c6f ("ftrace: Rename ftrace_graph_stub to ftrace_stub_graph"=
+)
+>
+> Would something like this work for you?
+>
+> -- Steve
+>
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vml=
+inux.lds.h
+> index db600ef218d7..120babd9ba44 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -145,13 +145,18 @@
+>   * Need to also make ftrace_stub_graph point to ftrace_stub
+>   * so that the same stub location may have different protocols
+>   * and not mess up with C verifiers.
+> + *
+> + * ftrace_ops_list_func will be defined as arch_ftrace_ops_list_func
+> + * as some archs will have a different prototype for that function
+> + * but ftrace_ops_list_func() will have a single prototype.
+>   */
+>  #define MCOUNT_REC()	. =3D ALIGN(8);				\
+>  			__start_mcount_loc =3D .;			\
+>  			KEEP(*(__mcount_loc))			\
+>  			KEEP(*(__patchable_function_entries))	\
+>  			__stop_mcount_loc =3D .;			\
+> -			ftrace_stub_graph =3D ftrace_stub;
+> +			ftrace_stub_graph =3D ftrace_stub;	\
+> +			ftrace_ops_list_func =3D arch_ftrace_ops_list_func;
+>  #else
+>  # ifdef CONFIG_FUNCTION_TRACER
+>  #  define MCOUNT_REC()	ftrace_stub_graph =3D ftrace_stub;
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index f060838e9cbb..b775d399026e 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -119,14 +119,9 @@ struct ftrace_ops __rcu *ftrace_ops_list __read_mos=
+tly =3D &ftrace_list_end;
+>  ftrace_func_t ftrace_trace_function __read_mostly =3D ftrace_stub;
+>  struct ftrace_ops global_ops;
+>
+> -#if ARCH_SUPPORTS_FTRACE_OPS
+> -static void ftrace_ops_list_func(unsigned long ip, unsigned long parent=
+_ip,
+> -				 struct ftrace_ops *op, struct pt_regs *regs);
+> -#else
+> -/* See comment below, where ftrace_ops_list_func is defined */
+> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip=
+);
+> -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)
+> -#endif
+> +/* Defined by vmlinux.lds.h see the commment above arch_ftrace_ops_list=
+_func for details */
+> +void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+> +			  struct ftrace_ops *op, struct pt_regs *regs);
+>
+>  static inline void ftrace_ops_init(struct ftrace_ops *ops)
+>  {
+> @@ -6859,21 +6854,23 @@ __ftrace_ops_list_func(unsigned long ip, unsigne=
+d long parent_ip,
+>   * Note, CONFIG_DYNAMIC_FTRACE_WITH_REGS expects a full regs to be save=
+d.
+>   * An architecture can pass partial regs with ftrace_ops and still
+>   * set the ARCH_SUPPORTS_FTRACE_OPS.
+> + *
+> + * In vmlinux.lds.h, ftrace_ops_list_func() is defined to be
+> + * arch_ftrace_ops_list_func.
+>   */
+>  #if ARCH_SUPPORTS_FTRACE_OPS
+> -static void ftrace_ops_list_func(unsigned long ip, unsigned long parent=
+_ip,
+> -				 struct ftrace_ops *op, struct pt_regs *regs)
+> +void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_i=
+p,
+> +			       struct ftrace_ops *op, struct pt_regs *regs)
+>  {
+>  	__ftrace_ops_list_func(ip, parent_ip, NULL, regs);
+>  }
+> -NOKPROBE_SYMBOL(ftrace_ops_list_func);
+>  #else
+> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip=
+)
+> +void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_i=
+p)
+>  {
+>  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
+>  }
+> -NOKPROBE_SYMBOL(ftrace_ops_no_ops);
+>  #endif
+> +NOKPROBE_SYMBOL(arch_ftrace_ops_list_func);
+>
+>  /*
+>   * If there's only one function registered but it does not support
 
-Guess you didn't update linux-stable-rc/linux-4.{4,9}.y, but v4.4.228 and
-v4.9.228 build ok, so looks like that fixed the problem.
+Thanks for your work and the proper patch sent [1].
+I will follow the thread to see if I can help.
 
-Guenter
+[1] https://lore.kernel.org/lkml/20200617165616.52241bde@oasis.local.home/
+
+Regards,
+Oscar Carter
