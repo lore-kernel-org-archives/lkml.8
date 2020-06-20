@@ -2,68 +2,112 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11818C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53609221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B892245F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592667663;
+	bh=wJqRmUEjXy05CpW9EdYLIq8LxOWnaokFve9D0jGhooY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0CuGBjlMY1Jj2H2fbWAX6FEvnXSoFymAFxpzaVYBtQjmCLYKJnRzsNOzsQCYGlJmw
+	 etDDSc8XPtp+Lwke4pv8rpKJ72HXMVkSKQK2v3a/SgESyG2oC0GFwSOLGc89AhJTQN
+	 Vhqcbg9nFsCxsQuU7iQzmP3uoT7+4AAggIPoZBBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgFTPkL (ORCPT
+        id S1727074AbgFTPk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 11:40:11 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50150 "EHLO vps0.lunn.ch"
+        Sat, 20 Jun 2020 11:40:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbgFTPkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 11:40:11 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jmfbE-001PRD-2h; Sat, 20 Jun 2020 17:40:08 +0200
-Date:   Sat, 20 Jun 2020 17:40:08 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        richardcochran@gmail.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        allan.nielsen@microchip.com, foss@0leil.net
-Subject: Re: [PATCH net-next v3 6/8] net: phy: mscc: timestamping and PHC
- support
-Message-ID: <20200620154008.GO304147@lunn.ch>
-References: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
- <20200619122300.2510533-7-antoine.tenart@bootlin.com>
+        id S1725826AbgFTPky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 11:40:54 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBC82223D;
+        Sat, 20 Jun 2020 15:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592667654;
+        bh=wJqRmUEjXy05CpW9EdYLIq8LxOWnaokFve9D0jGhooY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rM0t7by234zMl0km87iFyQSHmjWD3+N8vovzb0cF2DBi7rN0IG+FxR5eMMB/ezpiF
+         8gUoMJ5PiAaKE/VBXviZrWcpvoqgvp+BGWthIUgCBaF4P2GmrAZzf9+Sj4PxkYtMxb
+         3Gg0JVeGvLl5yyE4+rwH9XFUhXPi4I4Po0q7NegM=
+Date:   Sat, 20 Jun 2020 16:40:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: bmc150_magn: Document missing
+ compatibles
+Message-ID: <20200620164049.5aa91365@archlinux>
+In-Reply-To: <20200617101259.12525-1-krzk@kernel.org>
+References: <20200617101259.12525-1-krzk@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619122300.2510533-7-antoine.tenart@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:22:58PM +0200, Antoine Tenart wrote:
-> To get and set the PHC time, a GPIO has to be used and changes are only
-> retrieved or committed when on a rising edge. The same GPIO is shared by
-> all PHYs, so the granularity of the lock protecting it has to be
-> different from the ones protecting the 1588 registers (the VSC8584 PHY
-> has 2 1588 blocks, and a single load/save pin).
+On Wed, 17 Jun 2020 12:12:59 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-I guess you thought about this GPIO quite a bit.
+> The driver supports also BMC156B and BMM150B so document the compatibles
+> for these devices.
+> 
+> Fixes: 9d75db36df14 ("iio: magn: Add support for BMM150 magnetometer")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> The fixes tag is not accurate but at least offer some backporting.
 
-It appears you have the mutex in the shared structure, but each PHY
-has its own gpio_desc, even though it should be for the same GPIO? The
-binding requires each PHY has the GPIO, even though it is the same
-GPIO. And there does not appear to be any checking that each PHY
-really does have the same GPIO.
+I'm not sure we generally bother backporting a missing section of binding
+documentation. Particularly as this doc isn't in yaml yet so it's not
+as though any automated checking is likely to be occurring.
 
-Ideally there would be a section in DT for the package, and this GPIO
-would be there. But i don't see an good way to do this.
+Rob, any views on backporting this sort of missing id addition?
 
-This does not feel right to me, but i've no good idea how it can be
-made better :-(
+One side comment here is that the devices that are magnetometers only
+should never have had the _magn prefix in their compatibles. We only
+do that for devices in incorporating several sensors in one package
+(like the bmc150) where we have multiple drivers for the different
+sensors incorporated. We are too late to fix that now though.  It
+may make sense to mark the _magn variants deprecated though and
+add the ones without the _magn postfix.
 
-     Andrew
- 
+> ---
+>  .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt     | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> index fd5fca90fb39..7469073022db 100644
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> @@ -4,7 +4,10 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS00
+>  
+>  Required properties:
+>  
+> -  - compatible : should be "bosch,bmc150_magn"
+> +  - compatible : should be one of:
+> +                 "bosch,bmc150_magn"
+> +                 "bosch,bmc156_magn"
+> +                 "bosch,bmm150_magn"
+>    - reg : the I2C address of the magnetometer
+>  
+>  Optional properties:
+
