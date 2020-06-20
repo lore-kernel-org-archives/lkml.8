@@ -2,138 +2,156 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D076C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B7424051
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7557223A5F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592673397;
+	bh=zbplmaCf3az+f6f2Jeh+YVePiNjF3AjtIdUa5LQ1o9Q=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=SvlXngNihSBckzrzX5CqlEjpTQml5uIa+yj56ftcRYap01F6q3Vx0AhDEe3pX4CPg
+	 8iRIkqvOYe9i9DSoZvAbURmWuMonY56gooIQwwE1J/qjgMAZyMJG1LXC8hx7w4YE2m
+	 TUemH8Mssrz78Q3X9Q93H+3Ru20WzAQXdjPzu+LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgFTRLw (ORCPT
+        id S1728214AbgFTRQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 13:11:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47051 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFTRLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 13:11:51 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u128so6013153pgu.13;
-        Sat, 20 Jun 2020 10:11:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=51wJr1PqOu83VYK7gxbc2LDTmylRFibUjG3LddkuvYg=;
-        b=uODcVYWh1RNYXpnAk/s01Hur/lZAHc4cMOY1TBHpAB6RDZaJ32xusd4cmFn6HZPFgv
-         YpZSZ/f7jw7walKZrBQFTr9yihO4OGIh8ve3CdaXjGv/fGza7ws+2ZCrcJyk09nLAHsl
-         tOcAFSWhKydDxHmwMzFXr9JKSrK3PSEwvZmm82vK54UaBf3MIeZSAYQ/4QxYxKizl9pK
-         I3I0dBBvclztsDEssju6VwlbtATplVb4Dh48mH6lxXrniFtbYK7988Bv6DVuLaHCavIO
-         5OvT8U1EYBfrvtT3QEcNT0sBHvnfWq0UylEVFu4zS/YAvYL43b8Qg3t7zgSuz+nb4MAk
-         DMIQ==
-X-Gm-Message-State: AOAM532XeceN/faI8ZODBG6PzNZt9BVIJX9GdEYBBEggBtiFg8irZ/nX
-        sTBsrAHYt1yqsWXkw+4j5eQ=
-X-Google-Smtp-Source: ABdhPJxaDf9FepE6EM0QhaljOL11cCKrZwhA42hmUbceUqr3hjsRc1lUgz7jYaEsP2tsVmnvUWsHaA==
-X-Received: by 2002:a62:196:: with SMTP id 144mr13044800pfb.316.1592673109068;
-        Sat, 20 Jun 2020 10:11:49 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id x126sm9348519pfc.36.2020.06.20.10.11.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 10:11:48 -0700 (PDT)
-Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
- additions / removals
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-References: <20200619204730.26124-1-mcgrof@kernel.org>
- <20200619204730.26124-6-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
-Date:   Sat, 20 Jun 2020 10:11:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 20 Jun 2020 13:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726838AbgFTRQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:16:30 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF04222B2B;
+        Sat, 20 Jun 2020 17:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592673389;
+        bh=zbplmaCf3az+f6f2Jeh+YVePiNjF3AjtIdUa5LQ1o9Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BSkLiv8IKNwx4NWopyCN0hYF0VFJhyRHUMaOP5TpJRquYNvPyUVpzUMfyv4fIlUgj
+         7ROjWQzY9edJujwXbkl7hH6KRf5uqqxqoYLVYxM7e22XZHqgT5tkF5aHKH0g7tkmLW
+         FH8+ijHHtzwplN/agdOSjUGQC369GROP70HZNsaI=
+Date:   Sat, 20 Jun 2020 19:16:24 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.8
+Message-ID: <20200620171624.GA9805@kunai>
 MIME-Version: 1.0
-In-Reply-To: <20200619204730.26124-6-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-19 13:47, Luis Chamberlain wrote:
-> Be pedantic on removal as well and hold the mutex.
-> This should prevent uses of addition while we exit.
-> 
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  drivers/block/loop.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index c33bbbfd1bd9..d55e1b52f076 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -2402,6 +2402,8 @@ static void __exit loop_exit(void)
->  
->  	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
->  
-> +	mutex_lock(&loop_ctl_mutex);
-> +
->  	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
->  	idr_destroy(&loop_index_idr);
->  
-> @@ -2409,6 +2411,8 @@ static void __exit loop_exit(void)
->  	unregister_blkdev(LOOP_MAJOR, "loop");
->  
->  	misc_deregister(&loop_misc);
-> +
-> +	mutex_unlock(&loop_ctl_mutex);
->  }
->  
->  module_init(loop_init);
 
-Is try_module_get(fops->owner) called before a loop device is opened and
-is module_put(fops->owner) called after a loop device is closed? Does
-that mean that it is impossible to unload the loop driver while a loop
-device is open? Does that mean that the above patch is not necessary or
-did I perhaps miss something?
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Linus,
+
+I2C has for rc2:
+
+- a small collection of remaining API conversion patches (all acked)
+  which allow to finally remove the deprecated API
+- some documentation fixes and a MAINTAINERS addition
+
+Please pull.
 
 Thanks,
 
-Bart.
+   Wolfram
 
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 28f9f8fb4f405ade488058f817b6cbd108e45e4e:
+
+  MAINTAINERS: Add robert and myself as qcom i2c cci maintainers (2020-06-19 15:07:00 +0200)
+
+----------------------------------------------------------------
+Daniel Schaefer (1):
+      Documentation/i2c: SMBus start signal is S not A
+
+Keyur Patel (1):
+      i2c: smbus: Fix spelling mistake in the comments
+
+Loic Poulain (1):
+      MAINTAINERS: Add robert and myself as qcom i2c cci maintainers
+
+Wolfram Sang (6):
+      drm: encoder_slave: fix refcouting error for modules
+      drm: encoder_slave: use new I2C API
+      x86/platform/intel-mid: convert to use i2c_new_client_device()
+      video: backlight: tosa_lcd: convert to use i2c_new_client_device()
+      Documentation: media: convert to use i2c_new_client_device()
+      i2c: remove deprecated i2c_new_device API
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      (Rev.) x86/platform/intel-mid: convert to use i2c_new_client_device()
+
+Daniel Thompson (1):
+      (Rev.) video: backlight: tosa_lcd: convert to use i2c_new_client_device()
+
+Emil Velikov (2):
+      (Rev.) drm: encoder_slave: use new I2C API
+      (Rev.) drm: encoder_slave: fix refcouting error for modules
+
+Mauro Carvalho Chehab (1):
+      (Rev.) Documentation: media: convert to use i2c_new_client_device()
+
+ Documentation/driver-api/media/v4l2-subdev.rst    |  2 +-
+ Documentation/i2c/smbus-protocol.rst              |  2 +-
+ Documentation/userspace-api/media/conf_nitpick.py |  2 +-
+ MAINTAINERS                                       |  9 ++++++++
+ arch/x86/platform/intel-mid/sfi.c                 |  4 ++--
+ drivers/gpu/drm/drm_encoder_slave.c               | 15 +++++---------
+ drivers/i2c/i2c-core-base.c                       | 25 -----------------------
+ drivers/i2c/i2c-core-smbus.c                      |  2 +-
+ drivers/video/backlight/tosa_lcd.c                |  4 ++--
+ include/linux/i2c.h                               |  8 +++-----
+ 10 files changed, 25 insertions(+), 48 deletions(-)
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7uRGQACgkQFA3kzBSg
+Kba/sw/+KICcKVcOKJauUJqE1f8yccdPhyTOyEeVWDqq+bhOMrNcn51B45flcDNm
+jBkGe+SHGYxIExBAZq4kT5EEfkAaxEoUCxdyHLhu1F6oOudfP2o3c01q115rCqWy
+TiienA6mO4f/MdP4i+RPNZKLUpQJieoJ6hxfZtxT5RiiqVJcdGp0QAfbVhw97RFJ
+6UlVHrQzEMm+W4UXIaUpiiC0TBf7ih0mH7UeGvCMAG0mwHB8XV+W9SeJ3k6ke+kh
+yD5BALbTSsi0st3kHzrrhvk/Wr2uAlHQsyetWz32EUUNNqu8nxpAnPHyvHbisj7G
+QaI3v/rGSwKqw24XUDwVg0GEHyqIoMEZInDZSMOI16jZndFRS9n2Po6dpbNPSPey
+VoJ7olh2jMMx5B+4benEzN2YHd7vcHz3utaeIJgcOkDE2qSVVQjGwr0vZotdkf1x
+81qM4LubmOu/2O/QezpS9lviH5r2g+K4Fl9pZV7PHv3eleiYdNnrkCH6RSz9jjk6
+ooB4aji7CldwGFJ9cfsKgapCGjMu5loWg7n8OjnXLXuHnsIPu1ZsAe97ZSeB6V4A
+hF/eq/CWESVTgrWg5veySZMYUW//ZzLXiCJpwowGAGzK0H4aK1rwZhjMLz5gXpAM
+ESnI0KStQpKfdU60YwVHoBBz1ozdDKfj9OzwHyoGhuoR2xR6ebQ=
+=pbA3
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
