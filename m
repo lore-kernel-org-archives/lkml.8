@@ -2,89 +2,110 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4529DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222E4246BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246BA246BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="w2xwOc2A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BEK7VN2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgFTVW4 (ORCPT
+        id S1729029AbgFTVW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 17:22:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34202 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728891AbgFTVWz (ORCPT
+        Sat, 20 Jun 2020 17:22:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43205 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728999AbgFTVW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 17:22:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z63so6308691pfb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 14:22:53 -0700 (PDT)
+        Sat, 20 Jun 2020 17:22:56 -0400
+Received: by mail-lf1-f66.google.com with SMTP id g139so6711570lfd.10
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 14:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aNmYYThIQrwKb/CnYFR3qPzspsMeW9XF/8FmP59B/pA=;
-        b=w2xwOc2AnM6BiXKYV8JoFnLRvFbrjOAYOTkIDHcfZAeGuhn7z8U1ubraIOTXuYYCQo
-         STExqObm7UQKdamVnkf9bqs5IjG7eDSuPKYhFtH49/nFmVeKqQAIq4hW7+0eXS+/6L+m
-         hiXyDzXfhgj2Th6+mZD81o1sqcpKbtbKkfg/FixGzeJAUcExUXphOe6ERIwkXtISfhJT
-         tWL6RatMMMeWDspEjDzXJVGohrjuJRLexyu4ATa/LRwxsAmdYLuh1dJkHxzo6iyW5Jtj
-         rFOAJKm5sx9K6R0sl5v+zFgKT1uG+g/tLkCTjkEf0xrP8yMJS3F0MFpZwE7meC+3xzZz
-         tjtQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bu69mp6xYWLDQSTwZZePNMWDQ59FaV2SiSFYy8pjBQY=;
+        b=BEK7VN2OmrlKRSG/e9OsYVGM9t0SGut4yO1XoCDqBns+EyWe9Og4n1eX2t4nRltuL+
+         x5wfhHR7jj3CWrLxOCc/LnjcDRGn+rRWym+xRsNFal5F7BVlIaNboF1Ff5lY7mkcVhWE
+         /JEM0Eo8ek/fwjZ64aZFUCx4MEpNUiR4uNUdjQTfPproxhWLhl/CMnd6vRMJ/Vh+olps
+         ESgLuxAtySplCfoo6fYq9gGdfDhkF3xosvL8nhrcKABMAJduOdka/pQcUaJgAO8l26Vm
+         kbfRxelGF5uRFZcgvdniVOyCHhz8FcHM95iT57XAuctop0mBCkRlA/zLwFo1hkKAXzsg
+         Ss8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aNmYYThIQrwKb/CnYFR3qPzspsMeW9XF/8FmP59B/pA=;
-        b=pSpXTwetGk/ULprhCHxcJ7gI6lBpR2/+Mbv0g0ZMqz4QZmUQtDIiayrTBWHRanpecz
-         lGN3yqLyyZRRX479KFUjFm3y94YOkQ8lpNBpgmsOCue73xgUfK7ySqhuqIq/d0VoWSeQ
-         ji1ZXum5Xmsg6TxHhdwgzkLaNZpgVX5EyJFEo5g5Mlm7AudtuIOAw5rV/uS1plUNrZ9g
-         LZGLS2kEaVoJcIMjLgeQGILhQAUi9OOIqIlPDEDs543SlnXmWg+p+WlwNbuRGUsMO70r
-         FVUHoExO5QVHgQ7hSIOU3E6fTXSU/EvHFcK9gO9Vu7chtvXWOxrvEiZXQs2KN9ThfWsW
-         +0gA==
-X-Gm-Message-State: AOAM530+qFr1WshV1N5vOUDt7T1knWApQTrYAtNezPIHgBbqJEttc8Uj
-        UMJVdON7e/C9PRwLQ8wRDe/Gqg9Gd94=
-X-Google-Smtp-Source: ABdhPJwIOpcEUxLA+Tx2u4Sym8EmChXJqY90sCTB5kAjBGyWszcpwUeEvhpKhj3+IN7vie2zB9rm8g==
-X-Received: by 2002:a62:5e85:: with SMTP id s127mr253010pfb.236.1592688113516;
-        Sat, 20 Jun 2020 14:21:53 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id q6sm9305202pff.79.2020.06.20.14.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 14:21:52 -0700 (PDT)
-Subject: Re: [PATCH][next] block: bio: Use struct_size() in kmalloc()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200620004949.GA30923@embeddedor>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4ecbc8a9-42ec-c117-42f7-32572b750036@kernel.dk>
-Date:   Sat, 20 Jun 2020 15:21:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bu69mp6xYWLDQSTwZZePNMWDQ59FaV2SiSFYy8pjBQY=;
+        b=s7vjfbicg7HxOWW+z6tLhFzJiN4AJZnBQBUEPtQyzcBib1cdNb+GpcxFcgDwKqMnFP
+         iD4QvUDqIpt0qly3p+te6xJqX20RqxfNy32HeVOO2VkB5nWdDCzN1aZBIqkDO3z/a44n
+         NBJFvA1Mth2JT3DP0CSZl7s2txv9jp5zau3x4Q+ddZD0iOzUSojqs/tv1QQFpn6up65L
+         pHx8/YGBLTmL4lMjD117oUXA5cHxu0NyJudKO+isY/Iw4ciOdLD4XAZs0WlSnPbhIagm
+         9rxf7VzOUAoOFNoawKGo/PtyOHScRGOUr7SIvNyan7lM66meYODQ3xFFIOPyO7YM4YSF
+         dXMw==
+X-Gm-Message-State: AOAM530CEZa3thm0olOM1z2QBpb3GYlV4pV+yjdNJBiRDKt1tZO1g3ZE
+        IcadUyY+BSDxA/IBCmVb0d6pjeRhb9Ws/0D9zF+dJw==
+X-Google-Smtp-Source: ABdhPJy/RkTLIDBZFRMNpiPSsRVm5Ak3I4Hbs3gJhBT50nyx7v4sALg7fToWgIJskHBwAdm4KDklfhLMkVmhKWNt8Ak=
+X-Received: by 2002:a19:ccd0:: with SMTP id c199mr2956592lfg.194.1592688113991;
+ Sat, 20 Jun 2020 14:21:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200620004949.GA30923@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200616061338.109499-1-john.stultz@linaro.org> <20200616061338.109499-5-john.stultz@linaro.org>
+In-Reply-To: <20200616061338.109499-5-john.stultz@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 20 Jun 2020 23:21:42 +0200
+Message-ID: <CACRpkda35FZC=uXr-ipxZQ2SWU2tUincOztJmDt+Sa52FKQs=w@mail.gmail.com>
+Subject: Re: [RFC][PATCH 4/5] pinctrl: qcom: Allow pinctrl-msm code to be
+ loadable as a module
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 6:49 PM, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> This code was detected with the help of Coccinelle and, audited and
-> fixed manually.
+On Tue, Jun 16, 2020 at 8:13 AM John Stultz <john.stultz@linaro.org> wrote:
 
-Applied, thanks.
+> Tweaks to allow pinctrl-msm code to be loadable as a module.
+> This is needed in order to support having the qcom-scm driver,
+> which pinctrl-msm calls into, configured as a module.
+>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
--- 
-Jens Axboe
+Unless there are dependencies on the irqchip patches I can apply
+this if Bjorn is OK with it.
 
+Yours,
+Linus Walleij
