@@ -2,82 +2,96 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840F623A68
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF1223A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592644509;
+	bh=2hiWP38ZwTIY5gRKs9c1fvldjq6hsPEFCrUawvHzklg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LwY/gor6/rc5frbfDoz8so400QQ1SC7cohw2Om5aPgOyRj6NEQwHv0dC8qKa4ZU9e
+	 E7e/tRE6jbl77tEESBGKQoB6cCymgwEZYqdNR/ZY9PmySV67jpqcBJeljVgfZY00bc
+	 oLQpF7UwhCXc8tc6PKabo7Sl06SCBw/5D9B12BlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgFTJMN (ORCPT
+        id S1727853AbgFTJPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 05:12:13 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:33920 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgFTJMM (ORCPT
+        Sat, 20 Jun 2020 05:15:06 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45724 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgFTJPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 05:12:12 -0400
-Received: from njvxl5505.vivo.xyz (unknown [157.0.31.125])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 03FEF4815C6;
-        Sat, 20 Jun 2020 17:11:59 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH v3] drm/amd: fix potential memleak in err branch
-Date:   Sat, 20 Jun 2020 17:11:52 +0800
-Message-Id: <20200620091152.11206-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZTB8dQ0pISUxOSk5IVkpOQklNT09ISkJJSE5VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTI6Sww5MDgxPwIySCg0MRUX
-        ITwKCUxVSlVKTkJJTU9PSEpCTU9JVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSU5ZV1kIAVlBSUhJQzcG
-X-HM-Tid: 0a72d0ffb7d393bakuws03fef4815c6
+        Sat, 20 Jun 2020 05:15:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c3so11824126wru.12;
+        Sat, 20 Jun 2020 02:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NzFjEN5WQeTFn6eDfk2ZtH3jOKbrR8YK6PgAEtpx2DE=;
+        b=U7bvDkFcKojUGdJKkFgCovMt1f9IGbKl8OTwn3Ectbi7nJYfWgDRjSBJVl5k805rOB
+         ACJ8gl7Zwz1CFyiHmTVvmW/r4DYU8vHXHJvOgdISHOKyrCTP9OEq6mC20dGYNq/WoCsa
+         PMXgOk0l7QVXVzG/57BjELEb3Vwpxkl+sxsdIFS/+QyypxELcRBZc8U8rKjO4sNCk/tq
+         rdS7OWiAKq+0xvG+FKVUUnElwjczf6E2tQ7jSLhZD+t06XCZmNrs0z2eTq/bpQRvWVUl
+         UDovg6+PlC8bSIEWrnQxxYfEJAjZGUpPpoHUiCzs7Trh3ajS2AToNRAe/+1+HQq9us2o
+         kxHA==
+X-Gm-Message-State: AOAM531Fd/Yk4Op8qfC/5/HKbzZ/I7eGc0Jw3nFLwbRnlmtc5Xp1j6gT
+        Dl0Cxe6aPPOB/TgLTLo9GyZgT+it
+X-Google-Smtp-Source: ABdhPJyhT/YmYd5AhBBhnAMG5Umm83gtLvjtftDHNMobFRuzWdbeWcTgQugc8AaPJj2TZGe6hUm4gQ==
+X-Received: by 2002:adf:aad8:: with SMTP id i24mr7608213wrc.102.1592644504185;
+        Sat, 20 Jun 2020 02:15:04 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i17sm2625697wrc.34.2020.06.20.02.15.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 02:15:03 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 09:15:02 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
+ spinlock
+Message-ID: <20200620091502.jhocdd34oewgim7p@liuwe-devbox-debian-v2>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
+ <20200617164642.37393-8-parri.andrea@gmail.com>
+ <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+ <20200619161813.GA1596681@andrea>
+ <yq1tuz6h29e.fsf@ca-mkp.ca.oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1tuz6h29e.fsf@ca-mkp.ca.oracle.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function kobject_init_and_add alloc memory like:
-kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-->kmalloc_slab, in err branch this memory not free. If use
-kmemleak, this path maybe catched.
-These changes are to add kobject_put in kobject_init_and_add
-failed branch, fix potential memleak.
+On Fri, Jun 19, 2020 at 10:58:40PM -0400, Martin K. Petersen wrote:
+> 
+> Andrea,
+> 
+> >> This patch should go via the hyperv tree because a later patch is
+> >> dependent on it. It requires and ack from SCSI maintainers though.
+> 
+> Looks OK to me.
+> 
+> Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
-Changes since V2:
-*remove duplicate kobject_put in kfd_procfs_init.
+Thanks Martin.
 
-Link for V1:
-*https://lore.kernel.org/patchwork/patch/1258608/
----
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index d27221ddcdeb..0e0c42e9f6a3 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -428,6 +428,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
- 					   (int)process->lead_thread->pid);
- 		if (ret) {
- 			pr_warn("Creating procfs pid directory failed");
-+			kobject_put(process->kobj);
- 			goto out;
- 		}
- 
--- 
-2.17.1
-
+> 
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
