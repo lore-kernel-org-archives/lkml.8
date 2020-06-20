@@ -2,86 +2,243 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C784CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03C722B2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592613866;
-	bh=x87LbaFrFJto/yHBB5B97Vdy4r803vIa4c0OJE/HMm8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=pguSZpN50KC5V/15oIawDLT8HT3Jsvw9/unER/aWtd+tZul4OCkllPGhc5rpkPyZk
-	 Nn3mAF9cR99oBkB9+GdZsWcDd6guZK656tRmEc30uFRlxxt9o3Blvg+lhxPQPttFlk
-	 uojFgZge4Ss0cNWD4Rdwej8b8RIFkxGqefwQbLo0=
+	by mail.kernel.org (Postfix) with ESMTP id 9FEAB22AB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbgFTAoZ (ORCPT
+        id S1731069AbgFTAwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731020AbgFTAoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:44:24 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE97522B2A;
-        Sat, 20 Jun 2020 00:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592613864;
-        bh=x87LbaFrFJto/yHBB5B97Vdy4r803vIa4c0OJE/HMm8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ICBb9ezuh9lX4fp9XXSnl88KHCEgk1bxNLtCRVm/bpB5iM5g/ZKxuE9c/mMPpr1V3
-         3Jp0/t+REPJeYQRm18ihpRMrsPNIk+pPAWDz9hDl2/Ms0jrOvNZdfe4kU6wnk6vAJA
-         y2RhBjdTY9NeduvQO7Yb9TSJ8siAJHNgBZhNuqrY=
-Date:   Fri, 19 Jun 2020 19:49:49 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] block: bio: Use struct_size() in kmalloc()
-Message-ID: <20200620004949.GA30923@embeddedor>
+        Fri, 19 Jun 2020 20:52:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6291 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730293AbgFTAwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 20:52:18 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CAA08E38597AAB6356D1;
+        Sat, 20 Jun 2020 08:52:15 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sat, 20 Jun
+ 2020 08:52:10 +0800
+Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
+ <20200618235932.GA227771@google.com>
+ <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
+ <20200619054922.GC227771@google.com>
+ <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
+ <20200619224755.GA60059@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3f49539a-7be1-be90-d13a-2f66a8483458@huawei.com>
+Date:   Sat, 20 Jun 2020 08:52:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200619224755.GA60059@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+On 2020/6/20 6:47, Jaegeuk Kim wrote:
+> On 06/19, Chao Yu wrote:
+>> On 2020/6/19 13:49, Jaegeuk Kim wrote:
+>>> On 06/19, Chao Yu wrote:
+>>>> Hi Jaegeuk,
+>>>>
+>>>> On 2020/6/19 7:59, Jaegeuk Kim wrote:
+>>>>> Hi Chao,
+>>>>>
+>>>>> On 06/18, Chao Yu wrote:
+>>>>>> to make page content stable for special device like raid.
+>>>>>
+>>>>> Could you elaborate the problem a bit?
+>>>>
+>>>> Some devices like raid5 wants page content to be stable, because
+>>>> it will calculate parity info based page content, if page is not
+>>>> stable, parity info could be corrupted, result in data inconsistency
+>>>> in stripe.
+>>>
+>>> I don't get the point, since those pages are brand new pages which were not
+>>> modified before. If it's on writeback, we should not modify them regardless
+>>> of whatever raid configuration. For example, f2fs_new_node_page() waits for
+>>> writeback. Am I missing something?
+>>
+>> I think we should use f2fs_bug_on(, PageWriteback()) rather than
+>> f2fs_wait_on_page_writeback() for brand new page which is allocated just now.
+>> For other paths, we can keep rule that waiting for writeback before updating.
+>>
+>> How do you think?
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>> ---
+>>>>>>  fs/f2fs/dir.c          |  2 ++
+>>>>>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
+>>>>>>  fs/f2fs/f2fs.h         |  2 +-
+>>>>>>  fs/f2fs/file.c         |  1 +
+>>>>>>  fs/f2fs/inline.c       |  2 ++
+>>>>>>  fs/f2fs/inode.c        |  3 +--
+>>>>>>  6 files changed, 16 insertions(+), 12 deletions(-)
+>>>>>>
+>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+>>>>>> index d35976785e8c..91e86747a604 100644
+>>>>>> --- a/fs/f2fs/dir.c
+>>>>>> +++ b/fs/f2fs/dir.c
+>>>>>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
+>>>>>>  	if (IS_ERR(dentry_page))
+>>>>>>  		return PTR_ERR(dentry_page);
+>>>>>>  
+>>>>>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
+>>>>>> +
+>>>>>>  	dentry_blk = page_address(dentry_page);
+>>>>>>  
+>>>>>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
+>>>>>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+>>>>>> index e60078460ad1..686c68b98610 100644
+>>>>>> --- a/fs/f2fs/extent_cache.c
+>>>>>> +++ b/fs/f2fs/extent_cache.c
+>>>>>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
+>>>>>>  }
+>>>>>>  
+>>>>>>  /* return true, if inode page is changed */
+>>>>>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>>>>>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>>>>>  {
+>>>>>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>>>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
+>>>>>>  	struct extent_tree *et;
+>>>>>>  	struct extent_node *en;
+>>>>>>  	struct extent_info ei;
+>>>>>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>>>>>  	if (!f2fs_may_extent_tree(inode)) {
+>>>>>>  		/* drop largest extent */
+>>>>>>  		if (i_ext && i_ext->len) {
+>>>>>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+>>>>>>  			i_ext->len = 0;
+>>>>>> -			return true;
+>>>>>> +			set_page_dirty(ipage);
+>>>>>> +			return;
+>>>>>>  		}
+>>>>>> -		return false;
+>>>>>> +		return;
+>>>>>>  	}
+>>>>>>  
+>>>>>>  	et = __grab_extent_tree(inode);
+>>>>>>  
+>>>>>>  	if (!i_ext || !i_ext->len)
+>>>>>> -		return false;
+>>>>>> +		return;
+>>>>>>  
+>>>>>>  	get_extent_info(&ei, i_ext);
+>>>>>>  
+>>>>>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>>>>>  	}
+>>>>>>  out:
+>>>>>>  	write_unlock(&et->lock);
+>>>>>> -	return false;
+>>>>>>  }
+>>>>>>  
+>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>>>>>  {
+>>>>>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
+>>>>>> +	__f2fs_init_extent_tree(inode, ipage);
+>>>>>>  
+>>>>>>  	if (!F2FS_I(inode)->extent_tree)
+>>>>>>  		set_inode_flag(inode, FI_NO_EXTENT);
+>>>>>> -
+>>>>>> -	return ret;
+>>>>>>  }
+>>>>>>  
+>>>>>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
+>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>> index b35a50f4953c..326c12fa0da5 100644
+>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
+>>>>>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
+>>>>>>  						struct rb_root_cached *root);
+>>>>>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
+>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
+>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
+>>>>>>  void f2fs_drop_extent_tree(struct inode *inode);
+>>>>>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
+>>>>>>  void f2fs_destroy_extent_tree(struct inode *inode);
+>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>> index 3268f8dd59bb..1862073b96d2 100644
+>>>>>> --- a/fs/f2fs/file.c
+>>>>>> +++ b/fs/f2fs/file.c
+>>>>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+>>>>>>  				f2fs_put_page(psrc, 1);
+>>>>>>  				return PTR_ERR(pdst);
+>>>>>>  			}
+>>>>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+> 
+> Do you mean pdst can be under writeback?
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+Use f2fs_bug_on(, dirty || writeback) here?
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- block/bio.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+>>>>>>  			f2fs_copy_page(psrc, pdst);
+>>>>>>  			set_page_dirty(pdst);
+>>>>>>  			f2fs_put_page(pdst, 1);
+>>>>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+>>>>>> index dbade310dc79..4bcbc486c9e2 100644
+>>>>>> --- a/fs/f2fs/inline.c
+>>>>>> +++ b/fs/f2fs/inline.c
+>>>>>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+>>>>>>  	struct f2fs_dentry_ptr d;
+>>>>>>  	void *inline_dentry;
+>>>>>>  
+>>>>>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
 
-diff --git a/block/bio.c b/block/bio.c
-index a7366c02c9b5..fb5533416fa6 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -444,9 +444,7 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned int nr_iovecs,
- 		if (nr_iovecs > UIO_MAXIOV)
- 			return NULL;
- 
--		p = kmalloc(sizeof(struct bio) +
--			    nr_iovecs * sizeof(struct bio_vec),
--			    gfp_mask);
-+		p = kmalloc(struct_size(bio, bi_inline_vecs, nr_iovecs), gfp_mask);
- 		front_pad = 0;
- 		inline_vecs = nr_iovecs;
- 	} else {
--- 
-2.27.0
+f2fs_bug_on(, writeback)?
 
+Thanks,
+
+>>>>>> +
+>>>>>>  	inline_dentry = inline_data_addr(inode, ipage);
+>>>>>>  
+>>>>>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
+>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>>>>>> index 44582a4db513..7c156eb26dd7 100644
+>>>>>> --- a/fs/f2fs/inode.c
+>>>>>> +++ b/fs/f2fs/inode.c
+>>>>>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
+>>>>>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
+>>>>>>  	fi->i_dir_level = ri->i_dir_level;
+>>>>>>  
+>>>>>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
+>>>>>> -		set_page_dirty(node_page);
+>>>>>> +	f2fs_init_extent_tree(inode, node_page);
+>>>>>>  
+>>>>>>  	get_inline_info(inode, ri);
+>>>>>>  
+>>>>>> -- 
+>>>>>> 2.18.0.rc1
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
