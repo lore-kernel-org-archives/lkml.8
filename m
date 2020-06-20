@@ -2,210 +2,318 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A536C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B44EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0101521D7A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E580C206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 05:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RPeBtp0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgFTFsY (ORCPT
+        id S1725980AbgFTFuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 01:48:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20806 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFTFsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 01:48:24 -0400
-IronPort-SDR: j7T4VYqnTYhxiwWyWUWovylsoMjBCKJSYuihpA6ESiJjzSBcyntZi4HczxgtrQBQ37Q1krGPEj
- u0EjpVYIAC5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="123490410"
-X-IronPort-AV: E=Sophos;i="5.75,258,1589266800"; 
-   d="scan'208";a="123490410"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 22:48:23 -0700
-IronPort-SDR: B10AkWxWL/N1VZVG4hqLIs9LO3xf6Cab6J5D0JriY9CoWsJ4+GnYKPSKDF0ID6LJFRJyDn3Xty
- j2XVcH5OjGkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,258,1589266800"; 
-   d="scan'208";a="278219531"
-Received: from lkp-server02.sh.intel.com (HELO 3aa54c81372e) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 22:48:21 -0700
-Received: from kbuild by 3aa54c81372e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jmWMX-00012r-0m; Sat, 20 Jun 2020 05:48:21 +0000
-Date:   Sat, 20 Jun 2020 13:47:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cleanups] BUILD SUCCESS
- eacb0c101a0bdf14de77cc9d107493e2d8d6389c
-Message-ID: <5eeda301.dF/kXm21bsWWp+p5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sat, 20 Jun 2020 01:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgFTFuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 01:50:13 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9AD8C0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 22:50:13 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s9so4346576ybj.18
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 22:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=w+bw/iadzMNcs/GQEQe/9mn2EUSTk7D5RqaFJzB0X78=;
+        b=RPeBtp0uZB7ijB2DxjeIl8lCsyAwavxKk6RzC1k30vLro9n3mEQGKqK3w/BGZ4a91E
+         WSBOCAWJ42OVrWsARdMMEcDpWfmCeqNhxyrAUg3S6xzS8BiudGS/EjfiRiYOwanFNJpl
+         zKKjJl3jf1SmqZtl1VpB78j1+rgJy2hThWLHubq+zYgy7IPIhU8MmNEn4OrMMn2yZgHs
+         pZBxsiPfwoC80GPRRazLLFQvryZsr65aBGY4FTKnWw8z1J3XxK0lW21hplx+WM3SyhMz
+         zep5NAsBAxTymIcO4UgR2L+wWeaig3yzlj2qFRG2xVUtrDtEfQQ4Fz4/bUp7bmI5tIOw
+         4HGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=w+bw/iadzMNcs/GQEQe/9mn2EUSTk7D5RqaFJzB0X78=;
+        b=PIq4GoBRd6BpmNtV2g6mcFEb82x6egX1unyKeIAz5UrAavbtN0yvKkvfwdKTVTWe5p
+         /JvQ3U8zz0z3apwDDewzbU2knaFUjP356i94YgkXqBvKP74+CY6yBsYzk7cAPoHsugUo
+         7MfKvkhrT5O1B+8+advbqJuTtwHPmUB7FBJHjpGT30tDsuEFmYM4igEfUd4qEG6A2JsY
+         H6W4pftOWEI41cRf7JSnOjKq2F53yjyh7dQKq37BFfxt3hFBcizjwdtRTyhVDVrOYKAi
+         OsSXUL5EGe49bImjYsR2dtTt8y3vAQdz7uOxjiAlaES4sGcAd3P73+EF/m3C9ICiijVx
+         EpIQ==
+X-Gm-Message-State: AOAM530d+BQ8o5IN2DtVrGjIdO+4pbpWDAb2JUiULdG9lZehJ0heIFT1
+        0rVAsAtm5ElQ/xaon7Q32NTVjeeCo3BPUw==
+X-Google-Smtp-Source: ABdhPJyFj79DgaInQbFMsGvJXfS/+duq+1CJaf/Mdz5KDbTwQgIQpMQPen2lREAJDEwidLg6lwxeocLGbVd/8w==
+X-Received: by 2002:a25:7903:: with SMTP id u3mr11230122ybc.416.1592632212416;
+ Fri, 19 Jun 2020 22:50:12 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 22:49:44 -0700
+Message-Id: <20200620054944.167330-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH] Documentation: kunit: Add naming guidelines
+From:   David Gow <davidgow@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
-branch HEAD: eacb0c101a0bdf14de77cc9d107493e2d8d6389c  initrd: Remove erroneous comment
+As discussed in [1], KUnit tests have hitherto not had a particularly
+consistent naming scheme. This adds documentation outlining how tests
+and test suites should be named, including how those names should be
+used in Kconfig entries and filenames.
 
-elapsed time: 722m
+[1]:
+https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
 
-configs tested: 140
-configs skipped: 13
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                         s3c6400_defconfig
-m68k                       bvme6000_defconfig
-arm                         mv78xx0_defconfig
-i386                             alldefconfig
-powerpc64                           defconfig
-arm                  colibri_pxa270_defconfig
-arc                        vdk_hs38_defconfig
-arm                        spear6xx_defconfig
-csky                             allyesconfig
-mips                         tb0226_defconfig
-sh                          r7780mp_defconfig
-s390                             allyesconfig
-csky                                defconfig
-powerpc                     mpc5200_defconfig
-mips                         rt305x_defconfig
-riscv                    nommu_virt_defconfig
-arm                         s5pv210_defconfig
-arm                        mini2440_defconfig
-sh                                  defconfig
-arm                       mainstone_defconfig
-m68k                       m5475evb_defconfig
-powerpc                          g5_defconfig
-mips                      pistachio_defconfig
-arm                        trizeps4_defconfig
-arm                     davinci_all_defconfig
-nios2                         3c120_defconfig
-mips                           ip27_defconfig
-powerpc                      ep88xc_defconfig
-s390                             allmodconfig
-microblaze                        allnoconfig
-m68k                        mvme16x_defconfig
-mips                        qi_lb60_defconfig
-x86_64                              defconfig
-arc                              alldefconfig
-arc                        nsimosci_defconfig
-s390                              allnoconfig
-mips                     cu1000-neo_defconfig
-sh                   secureedge5410_defconfig
-arm                           u8500_defconfig
-sh                        edosk7705_defconfig
-arm                        spear3xx_defconfig
-h8300                            allmodconfig
-sh                               j2_defconfig
-arm                           h5000_defconfig
-powerpc                      chrp32_defconfig
-arm                        clps711x_defconfig
-powerpc                  storcenter_defconfig
-xtensa                           alldefconfig
-powerpc                      pmac32_defconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a002-20200619
-i386                 randconfig-a006-20200619
-i386                 randconfig-a001-20200619
-i386                 randconfig-a005-20200619
-i386                 randconfig-a003-20200619
-i386                 randconfig-a004-20200619
-x86_64               randconfig-a015-20200619
-x86_64               randconfig-a016-20200619
-x86_64               randconfig-a011-20200619
-x86_64               randconfig-a012-20200619
-x86_64               randconfig-a014-20200619
-x86_64               randconfig-a013-20200619
-i386                 randconfig-a011-20200619
-i386                 randconfig-a015-20200619
-i386                 randconfig-a014-20200619
-i386                 randconfig-a013-20200619
-i386                 randconfig-a016-20200619
-i386                 randconfig-a012-20200619
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-
+Signed-off-by: David Gow <davidgow@google.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+This is a first draft of some naming guidelines for KUnit tests. Note
+that I haven't edited it for spelling/grammar/style yet: I wanted to get
+some feedback on the actual naming conventions first.
+
+The issues which came most to the forefront while writing it were:
+- Do we want to make subsystems a more explicit thing (make the KUnit
+  framework recognise them, make suites KTAP subtests of them, etc)
+  - I'm leaning towards no, mainly because it doesn't seem necessary,
+    and it makes the subsystem-with-only-one-suite case ugly.
+
+- Do we want to support (or encourage) Kconfig options and/or modules at
+  the subsystem level rather than the suite level?
+  - This could be nice: it'd avoid the proliferation of a large number
+    of tiny config options and modules, and would encourage the test for
+    <module> to be <module>_kunit, without other stuff in-between.
+
+- As test names are also function names, it may actually make sense to
+  decorate them with "test" or "kunit" or the like.
+  - If we're testing a function "foo", "test_foo" seems like as good a
+    name for the function as any. Sure, many cases may could have better
+    names like "foo_invalid_context" or something, but that won't make
+    sense for everything.
+  - Alternatively, do we split up the test name and the name of the
+    function implementing the test?
+
+Thoughts?
+
+ Documentation/dev-tools/kunit/index.rst |   1 +
+ Documentation/dev-tools/kunit/style.rst | 139 ++++++++++++++++++++++++
+ 2 files changed, 140 insertions(+)
+ create mode 100644 Documentation/dev-tools/kunit/style.rst
+
+diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-to=
+ols/kunit/index.rst
+index e93606ecfb01..117c88856fb3 100644
+--- a/Documentation/dev-tools/kunit/index.rst
++++ b/Documentation/dev-tools/kunit/index.rst
+@@ -11,6 +11,7 @@ KUnit - Unit Testing for the Linux Kernel
+ 	usage
+ 	kunit-tool
+ 	api/index
++        style
+ 	faq
+=20
+ What is KUnit?
+diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-to=
+ols/kunit/style.rst
+new file mode 100644
+index 000000000000..9363b5607262
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/style.rst
+@@ -0,0 +1,139 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++Test Style and Nomenclature
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++
++Subsystems, Suites, and Tests
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
++
++In order to make tests as easy to find as possible, they're grouped into s=
+uites
++and subsystems. A test suite is a group of tests which test a related area=
+ of
++the kernel, and a subsystem is a set of test suites which test different p=
+arts
++of the same kernel subsystem or driver.
++
++Subsystems
++----------
++
++Every test suite must belong to a subsystem. A subsystem is a collection o=
+f one
++or more KUnit test suites which test the same driver or part of the kernel=
+. A
++rule of thumb is that a test subsystem should match a single kernel module=
+. If
++the code being tested can't be compiled as a module, in many cases the sub=
+system
++should correspond to a directory in the source tree or an entry in the
++MAINTAINERS file. If unsure, follow the conventions set by tests in simila=
+r
++areas.
++
++Test subsystems should be named after the code being tested, either after =
+the
++module (wherever possible), or after the directory or files being tested. =
+Test
++subsystems should be named to avoid ambiguity where necessary.
++
++If a test subsystem name has multiple components, they should be separated=
+ by
++underscores. Do not include "test" or "kunit" directly in the subsystem na=
+me
++unless you are actually testing other tests or the kunit framework itself.
++
++Example subsystems could be:
++
++* ``ext4``
++* ``apparmor``
++* ``kasan``
++
++.. note::
++        The KUnit API and tools do not explicitly know about subsystems. T=
+hey're
++        simply a way of categorising test suites and naming modules which
++        provides a simple, consistent way for humans to find and run tests=
+. This
++        may change in the future, though.
++
++Suites
++------
++
++KUnit tests are grouped into test suites, which cover a specific area of
++functionality being tested. Test suites can have shared initialisation and
++shutdown code which is run for all tests in the suite.
++Not all subsystems will need to be split into multiple test suites (e.g. s=
+imple drivers).
++
++Test suites are named after the subsystem they are part of. If a subsystem
++contains several suites, the specific area under test should be appended t=
+o the
++subsystem name, separated by an underscore.
++
++The full test suite name (including the subsystem name) should be specifie=
+d as
++the ``.name`` member of the ``kunit_suite`` struct, and forms the base for=
+ the
++module name (see below).
++
++Example test suites could include:
++
++* ``ext4_inode``
++* ``kunit_try_catch``
++* ``apparmor_property_entry``
++* ``kasan``
++
++Tests
++-----
++
++Individual tests consist of a single function which tests a constrained
++codepath, property, or function. In the test output, individual tests' res=
+ults
++will show up as subtests of the suite's results.
++
++Tests should be named after what they're testing. This is often the name o=
+f the
++function being tested, with a description of the input or codepath being t=
+ested.
++As tests are C functions, they should be named and written in accordance w=
+ith
++the kernel coding style.
++
++.. note::
++        As tests are themselves functions, their names cannot conflict wit=
+h
++        other C identifiers in the kernel. This may require some creative
++        naming. It's a good idea to make your test functions `static` to a=
+void
++        polluting the global namespace.
++
++Should it be necessary to refer to a test outside the context of its test =
+suite,
++the *fully-qualified* name of a test should be the suite name followed by =
+the
++test name, separated by a colon (i.e. ``suite:test``).
++
++Test Kconfig Entries
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Every test suite should be tied to a Kconfig entry.
++
++This Kconfig entry must:
++
++* be named ``CONFIG_<name>_KUNIT_TEST``: where <name> is the name of the t=
+est
++  suite.
++* be listed either alongside the config entries for the driver/subsystem b=
+eing
++  tested, or be under [Kernel Hacking]=E2=86=92[Kernel Testing and Coverag=
+e]
++* depend on ``CONFIG_KUNIT``
++* be visible only if ``CONFIG_KUNIT_ALL_TESTS`` is not enabled.
++* have a default value of ``CONFIG_KUNIT_ALL_TESTS``.
++* have a brief description of KUnit in the help text
++* include "If unsure, say N" in the help text
++
++Unless there's a specific reason not to (e.g. the test is unable to be bui=
+lt as
++a module), Kconfig entries for tests should be tristate.
++
++An example Kconfig entry:
++
++.. code-block:: none
++
++        config FOO_KUNIT_TEST
++                tristate "KUnit test for foo" if !KUNIT_ALL_TESTS
++                depends on KUNIT
++                default KUNIT_ALL_TESTS
++                help
++                    This builds unit tests for foo.
++
++                    For more information on KUnit and unit tests in genera=
+l, please refer
++                    to the KUnit documentation in Documentation/dev-tools/=
+kunit
++
++                    If unsure, say N
++
++
++Test Filenames
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Where possible, test suites should be placed in a separate source file in =
+the
++same directory as the code being tested.
++
++This file should be named ``<suite>_kunit.c``. It may make sense to strip
++excessive namespacing from the source filename (e.g., ``firmware_kunit.c``=
+ instead of
++``<drivername>_firmware.c``), but please ensure the module name does conta=
+in the
++full suite name.
++
++
+--=20
+2.27.0.111.gc72c7da667-goog
+
