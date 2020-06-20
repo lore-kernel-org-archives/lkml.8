@@ -2,96 +2,223 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC97F23AFC
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A40204EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgFTJ4w (ORCPT
+        id S1727969AbgFTKFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 05:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60696 "EHLO
+        Sat, 20 Jun 2020 06:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgFTJ4v (ORCPT
+        with ESMTP id S1727861AbgFTKFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 05:56:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F13C06174E;
-        Sat, 20 Jun 2020 02:56:51 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jmaEx-0001eb-My; Sat, 20 Jun 2020 11:56:47 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A620D1C0093;
-        Sat, 20 Jun 2020 11:56:44 +0200 (CEST)
-Date:   Sat, 20 Jun 2020 09:56:44 -0000
-From:   "tip-bot2 for Jason Andryuk" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/idt: Make idt_descr static
-Cc:     Jason Andryuk <jandryuk@gmail.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200619205103.30873-1-jandryuk@gmail.com>
-References: <20200619205103.30873-1-jandryuk@gmail.com>
+        Sat, 20 Jun 2020 06:05:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136BFC06174E;
+        Sat, 20 Jun 2020 03:05:36 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id D576A2A00EE
+Subject: Re: [PATCH v3 2/2] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
+ <20200618190506.11892-3-kgupta@es.iitr.ac.in>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <d62583ab-7dd3-9a37-c94d-99fae0f29357@collabora.com>
+Date:   Sat, 20 Jun 2020 12:05:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Message-ID: <159264700439.16989.3787803162777068826.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200618190506.11892-3-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+Hi, thanks for the patch
 
-Commit-ID:     286d966b21587b6303081b902f5c5e30b691baf5
-Gitweb:        https://git.kernel.org/tip/286d966b21587b6303081b902f5c5e30b691baf5
-Author:        Jason Andryuk <jandryuk@gmail.com>
-AuthorDate:    Fri, 19 Jun 2020 16:51:02 -04:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 20 Jun 2020 11:47:35 +02:00
+On 18.06.20 21:05, Kaaira Gupta wrote:
+> Add a control in VIMC to display information such as the correct oder of
+> colors for a given test pattern, brightness, hue, saturation, contrast
+> and, width and height at sensor over test image; and display that
+> information.
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>   drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>   drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>   drivers/media/test-drivers/vimc/vimc-sensor.c | 47 ++++++++++++++++++-
+>   3 files changed, 49 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> index 4068a67585f9..da4b2ad6e40c 100644
+> --- a/drivers/media/test-drivers/vimc/Kconfig
+> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> @@ -2,6 +2,8 @@
+>   config VIDEO_VIMC
+>   	tristate "Virtual Media Controller Driver (VIMC)"
+>   	depends on VIDEO_DEV && VIDEO_V4L2
+> +	select FONT_SUPPORT
+> +	select FONT_8x16
+>   	select MEDIA_CONTROLLER
+>   	select VIDEO_V4L2_SUBDEV_API
+>   	select VIDEOBUF2_VMALLOC
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> index ae163dec2459..afda52253402 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> @@ -20,6 +20,7 @@
+>   #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>   #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>   #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+> +#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
+>   
+>   #define VIMC_FRAME_MAX_WIDTH 4096
+>   #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> index a2f09ac9a360..f5352b115aac 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> @@ -5,6 +5,7 @@
+>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>    */
+>   
+> +#include <linux/font.h>
+>   #include <linux/v4l2-mediabus.h>
+>   #include <linux/vmalloc.h>
+>   #include <media/v4l2-ctrls.h>
+> @@ -19,6 +20,7 @@ struct vimc_sen_device {
+>   	struct v4l2_subdev sd;
+>   	struct tpg_data tpg;
+>   	u8 *frame;
+> +	bool show_info;
 
-x86/idt: Make idt_descr static
+I see that vivid saves the 'v4l2_ctrl*' of the controls,
+maybe you should also do that instead of saving a boolean,
 
-Commit
+>   	/* The active format */
+>   	struct v4l2_mbus_framefmt mbus_format;
+>   	struct v4l2_ctrl_handler hdl;
+> @@ -185,10 +187,29 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+>   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>   				    const void *sink_frame)
+>   {
+> +	u8 *basep[TPG_MAX_PLANES][2];
+> +	char *order;
+> +	char str[100];
+> +	int line = 1;
 
-  3e77abda65b1 ("x86/idt: Consolidate idt functionality")
+Those vars declarations can be inside the 'if (vsen->show_info)'
 
-states that idt_descr could be made static, but it did not actually make
-the change. Make it static now.
+>   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>   						    ved);
+> -
+>   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> +	if (vsen->show_info) {
+> +		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> +		order = tpg_g_color_order(&vsen->tpg);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
+> +		snprintf(str, sizeof(str), " brightness %3d, contrast %3d, saturation %3d, hue %d ",
+> +			 vsen->tpg.brightness,
+> +			 vsen->tpg.contrast,
+> +			 vsen->tpg.saturation,
+> +			 vsen->tpg.hue);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> +
+> +		snprintf(str, sizeof(str), " sensor size: %dx%d",
+> +			 vsen->mbus_format.width, vsen->mbus_format.height);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> +	}
+> +
+>   	return vsen->frame;
+>   }
+>   
+> @@ -200,6 +221,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>   	if (enable) {
+>   		const struct vimc_pix_map *vpix;
+>   		unsigned int frame_size;
+> +		const struct font_desc *font = find_font("VGA8x16");
+> +
+> +		if (font == NULL) {
+Using 'if (!font)' is the way to check null pointer, instead of compering to null. Running checkpatch.pl with '--strict'
+will catch that.
+> +			pr_err("vimc: could not find font\n");
+'dev_err' should be used instead of 'pr_err'.
 
-Fixes: 3e77abda65b1 ("x86/idt: Consolidate idt functionality")
-Signed-off-by: Jason Andryuk <jandryuk@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200619205103.30873-1-jandryuk@gmail.com
----
- arch/x86/kernel/idt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also, maybe checking the font here is a bit late, since the user already
+wants to stream and expect the info to be shown.
+Maybe it is better to check the font on 'vimc_sen_s_ctrl'.
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 0db2120..7ecf9ba 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -160,7 +160,7 @@ static const __initconst struct idt_data apic_idts[] = {
- /* Must be page-aligned because the real IDT is used in the cpu entry area */
- static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
- 
--struct desc_ptr idt_descr __ro_after_init = {
-+static struct desc_ptr idt_descr __ro_after_init = {
- 	.size		= IDT_TABLE_SIZE - 1,
- 	.address	= (unsigned long) idt_table,
- };
+Thanks,
+Dafna
+
+> +			vsen->show_info = 0;
+> +		} else {
+> +			tpg_set_font(font->data);
+> +		}
+>   
+>   		/* Calculate the frame size */
+>   		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+> @@ -269,6 +298,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>   	case V4L2_CID_SATURATION:
+>   		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>   		break;
+> +	case VIMC_CID_SHOW_INFO:
+> +		vsen->show_info = ctrl->val;
+> +		break;
+>   	default:
+>   		return -EINVAL;
+>   	}
+> @@ -307,6 +339,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>   	.qmenu = tpg_pattern_strings,
+>   };
+>   
+> +static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
+> +	.ops = &vimc_sen_ctrl_ops,
+> +	.id = VIMC_CID_SHOW_INFO,
+> +	.name = "Show Information",
+> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
+> +	.min = 0,
+> +	.max = 1,
+> +	.step = 1,
+> +	.def = 1,
+> +};
+> +
+>   static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>   					    const char *vcfg_name)
+>   {
+> @@ -323,6 +366,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>   
+>   	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>   	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
+>   	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>   			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>   	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> @@ -362,6 +406,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>   
+>   	/* Initialize the frame format */
+>   	vsen->mbus_format = fmt_default;
+> +	vsen->show_info = vimc_sen_ctrl_show_info.def;
+>   
+>   	return &vsen->ved;
+>   
+> 
