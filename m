@@ -2,124 +2,234 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1DD23E54
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EAF23E55
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XdlF+nsB";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="r6smU9a2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgFTRdd (ORCPT
+        id S1728327AbgFTRmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 13:33:33 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35586 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbgFTRdc (ORCPT
+        Sat, 20 Jun 2020 13:42:20 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:36364 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728204AbgFTRmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 13:33:32 -0400
-Received: by mail-pj1-f66.google.com with SMTP id i4so6085706pjd.0;
-        Sat, 20 Jun 2020 10:33:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=2P3Vzv5xtm8mkodco3WgSqBsNpt49S7EUwCeOg0xzd0=;
-        b=UsiqiPGQw/nRujRF8EsnHU6+gBVzQ6Bd2xfpo9Pzbc6GywP96mJDcsHF+Kg8ifSOVX
-         MoSizDL5Aw095ae3OeETxTCv0x3phTql7eRF8G9nVf8mUxl71W3Hrmun3wh+og5s7ZXe
-         s4bpj8iTSruYxDrWf9+7Wi4lOjmseAYOVVBf2YTqc/hcrT8+AZIIDCMgKE42SxS34wo2
-         EYJb7RAr97VKgw18JM7vx0VmxvCsvBppmfeMxmjlSkhwHx1LbRhItB5V8pZV+5P9Is6z
-         xLtdhlaC6Heo4c7szKToNJZT6ZPI4kOwB3R11Kt6JepweiqWrTZbdDtOxo3uQQN7hCD2
-         faRQ==
-X-Gm-Message-State: AOAM532OTLztNLuzQ72kr9znD3hv2hjMyHZSMLaMCzUzclC/8rMVlVw+
-        9rjePc5Upr1Gq6KC6Ab3lQej9WM4kV4=
-X-Google-Smtp-Source: ABdhPJytRswymFRQkcGFImTFiKQxq06LmY1uLhViW9168gtYVm2YXL6mzI9sfOCC4T0c2fQinH1mfg==
-X-Received: by 2002:a17:902:8a98:: with SMTP id p24mr12734212plo.90.1592674411462;
-        Sat, 20 Jun 2020 10:33:31 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id u19sm9947631pfk.98.2020.06.20.10.33.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 10:33:30 -0700 (PDT)
-Subject: Re: [PATCH v7 7/8] blktrace: ensure our debugfs dir exists
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200619204730.26124-1-mcgrof@kernel.org>
- <20200619204730.26124-8-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <379e1fc9-a070-7730-71cd-aee7f582d403@acm.org>
-Date:   Sat, 20 Jun 2020 10:33:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200619204730.26124-8-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sat, 20 Jun 2020 13:42:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E49F88EE1C8;
+        Sat, 20 Jun 2020 10:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592674939;
+        bh=Wjm8HTkUVvG2MwNrMxnygBRVlJRlbjR50PXYhnA9bt8=;
+        h=Subject:From:To:Cc:Date:From;
+        b=XdlF+nsBpv1cZOFxQJrI701+JpaR7W4xq3acKXjekzEi87pMl5LE+VHjKtEYOflpG
+         9CR5Tr67lDJ7Il+4qvP+aMiqLLQSKu0FSMjqb9mEsbo5N127Bpxj0bcIfmm8k6eUFS
+         enhk/BzEzNyV6NF51Fq/wP5OR2OYFZCOrWDVhfXs=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id kBQV30pNcngb; Sat, 20 Jun 2020 10:42:18 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 348F68EE0DF;
+        Sat, 20 Jun 2020 10:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592674938;
+        bh=Wjm8HTkUVvG2MwNrMxnygBRVlJRlbjR50PXYhnA9bt8=;
+        h=Subject:From:To:Cc:Date:From;
+        b=r6smU9a2Z2COX6LQxJjxj4HzyBcEoQ7+6dlbMwXD6NmZHYQGh37UTnu3Yn78p61WH
+         etmO815GJlZzrIvj5rOdO1xJOmeOKYtqdM+IAprYBBK5vt/wxLx/FIwXdlxryLmdYl
+         blO48pbW0GhM4gVqVNa7wjUdXRaSnmmMOVmBxKnE=
+Message-ID: <1592674936.3583.20.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.8-rc1
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 20 Jun 2020 10:42:16 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-19 13:47, Luis Chamberlain wrote:
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index e6e2d25fdbd6..098780ec018f 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -538,6 +538,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
->  #endif
->  		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
->  
-> +	/*
-> +	 * As blktrace relies on debugfs for its interface the debugfs directory
-> +	 * is required, contrary to the usual mantra of not checking for debugfs
-> +	 * files or directories.
-> +	 */
-> +	if (IS_ERR_OR_NULL(dir)) {
-> +		pr_warn("debugfs_dir not present for %s so skipping\n",
-> +			buts->name);
+One minor fix and two patches reworking the ata dma drain for the
+!CONFIG_LIBATA case.  The latter is a regression fix for cc97923a5bcc
+("block: move dma drain handling to scsi")
 
-Maybe mention in the message what is being skipped (block tracing)?
+The patch is available here:
 
-> +		ret = -ENOENT;
-> +		goto err;
-> +	}
-> +
->  	bt->dev = dev;
->  	atomic_set(&bt->dropped, 0);
->  	INIT_LIST_HEAD(&bt->running_list);
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Anyway:
+The short changelog is:
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Christoph Hellwig (2):
+      scsi: Wire up ata_scsi_dma_need_drain for SAS HBA drivers
+      scsi: libata: Provide an ata_scsi_dma_need_drain stub for !CONFIG_ATA
+
+Dinghao Liu (1):
+      scsi: ufs-bsg: Fix runtime PM imbalance on error
+
+
+And the diffstat:
+
+ drivers/scsi/aic94xx/aic94xx_init.c    | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
+ drivers/scsi/ipr.c                     | 1 +
+ drivers/scsi/isci/init.c               | 1 +
+ drivers/scsi/mvsas/mv_init.c           | 1 +
+ drivers/scsi/pm8001/pm8001_init.c      | 1 +
+ drivers/scsi/ufs/ufs_bsg.c             | 4 +++-
+ include/linux/libata.h                 | 4 ++++
+ 10 files changed, 15 insertions(+), 1 deletion(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
+index d022407e5645..bef47f38dd0d 100644
+--- a/drivers/scsi/aic94xx/aic94xx_init.c
++++ b/drivers/scsi/aic94xx/aic94xx_init.c
+@@ -40,6 +40,7 @@ static struct scsi_host_template aic94xx_sht = {
+ 	/* .name is initialized */
+ 	.name			= "aic94xx",
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= sas_slave_configure,
+ 	.scan_finished		= asd_scan_finished,
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 2e1718f9ade2..09a7669dad4c 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -1756,6 +1756,7 @@ static struct scsi_host_template sht_v1_hw = {
+ 	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= hisi_sas_slave_configure,
+ 	.scan_finished		= hisi_sas_scan_finished,
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index e7e7849a4c14..968d38702353 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -3532,6 +3532,7 @@ static struct scsi_host_template sht_v2_hw = {
+ 	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= hisi_sas_slave_configure,
+ 	.scan_finished		= hisi_sas_scan_finished,
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 3e6b78a1f993..55e2321a65bc 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3075,6 +3075,7 @@ static struct scsi_host_template sht_v3_hw = {
+ 	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= hisi_sas_slave_configure,
+ 	.scan_finished		= hisi_sas_scan_finished,
+diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
+index 7d77997d26d4..7d86f4ca266c 100644
+--- a/drivers/scsi/ipr.c
++++ b/drivers/scsi/ipr.c
+@@ -6731,6 +6731,7 @@ static struct scsi_host_template driver_template = {
+ 	.compat_ioctl = ipr_ioctl,
+ #endif
+ 	.queuecommand = ipr_queuecommand,
++	.dma_need_drain = ata_scsi_dma_need_drain,
+ 	.eh_abort_handler = ipr_eh_abort,
+ 	.eh_device_reset_handler = ipr_eh_dev_reset,
+ 	.eh_host_reset_handler = ipr_eh_host_reset,
+diff --git a/drivers/scsi/isci/init.c b/drivers/scsi/isci/init.c
+index 974c3b9116d5..085e285f427d 100644
+--- a/drivers/scsi/isci/init.c
++++ b/drivers/scsi/isci/init.c
+@@ -153,6 +153,7 @@ static struct scsi_host_template isci_sht = {
+ 	.name				= DRV_NAME,
+ 	.proc_name			= DRV_NAME,
+ 	.queuecommand			= sas_queuecommand,
++	.dma_need_drain			= ata_scsi_dma_need_drain,
+ 	.target_alloc			= sas_target_alloc,
+ 	.slave_configure		= sas_slave_configure,
+ 	.scan_finished			= isci_host_scan_finished,
+diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
+index 5973eed94938..b0de3bdb01db 100644
+--- a/drivers/scsi/mvsas/mv_init.c
++++ b/drivers/scsi/mvsas/mv_init.c
+@@ -33,6 +33,7 @@ static struct scsi_host_template mvs_sht = {
+ 	.module			= THIS_MODULE,
+ 	.name			= DRV_NAME,
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= sas_slave_configure,
+ 	.scan_finished		= mvs_scan_finished,
+diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
+index a8f5344fdfda..9e99262a2b9d 100644
+--- a/drivers/scsi/pm8001/pm8001_init.c
++++ b/drivers/scsi/pm8001/pm8001_init.c
+@@ -87,6 +87,7 @@ static struct scsi_host_template pm8001_sht = {
+ 	.module			= THIS_MODULE,
+ 	.name			= DRV_NAME,
+ 	.queuecommand		= sas_queuecommand,
++	.dma_need_drain		= ata_scsi_dma_need_drain,
+ 	.target_alloc		= sas_target_alloc,
+ 	.slave_configure	= sas_slave_configure,
+ 	.scan_finished		= pm8001_scan_finished,
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index 53dd87628cbe..516a7f573942 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -106,8 +106,10 @@ static int ufs_bsg_request(struct bsg_job *job)
+ 		desc_op = bsg_request->upiu_req.qr.opcode;
+ 		ret = ufs_bsg_alloc_desc_buffer(hba, job, &desc_buff,
+ 						&desc_len, desc_op);
+-		if (ret)
++		if (ret) {
++			pm_runtime_put_sync(hba->dev);
+ 			goto out;
++		}
+ 
+ 		/* fall through */
+ 	case UPIU_TRANSACTION_NOP_OUT:
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index af832852e620..042e584daca7 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1092,7 +1092,11 @@ extern int ata_scsi_ioctl(struct scsi_device *dev, unsigned int cmd,
+ #define ATA_SCSI_COMPAT_IOCTL /* empty */
+ #endif
+ extern int ata_scsi_queuecmd(struct Scsi_Host *h, struct scsi_cmnd *cmd);
++#if IS_ENABLED(CONFIG_ATA)
+ bool ata_scsi_dma_need_drain(struct request *rq);
++#else
++#define ata_scsi_dma_need_drain NULL
++#endif
+ extern int ata_sas_scsi_ioctl(struct ata_port *ap, struct scsi_device *dev,
+ 			    unsigned int cmd, void __user *arg);
+ extern bool ata_link_online(struct ata_link *link);
+
