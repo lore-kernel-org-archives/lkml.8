@@ -2,127 +2,196 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B060C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296F2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 090862256E
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kiDbVtnD"
+	by mail.kernel.org (Postfix) with ESMTP id 03E0122571
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbgFTAQR (ORCPT
+        id S1730722AbgFTAQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730616AbgFTAQQ (ORCPT
+        Fri, 19 Jun 2020 20:16:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35786 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730616AbgFTAQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:16:16 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9085BC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:16:16 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d27so6525608lfq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yH96O9ee+Uh/yst0CCmNawAFM7J3cnfjN7OBaXkMBuo=;
-        b=kiDbVtnDRJrd0GU7d+nWT7DQSV0scWLq3IyR0O/sZHnovyNUR/N8Bpwh6t3PlP0oWE
-         Leao5UmXekcawPaolmYTpEHrGtcFt+V59dfF+BpyaYEC5smEW+cpE/ofJ5Mz4M+JVy8h
-         XFCzI5u5VGSoaobU+A0Cfrz5i8RSUIlKq/r90lYVIFW0EOkTVgweezwves/J7cakSLFL
-         8RJMOlrhDtCTKOP0bsuoLdh4yI53KWbNy2T/77Cp8VqlGPCq4Tt3oyvLd95hz3tLXTVV
-         bLxqKp1uD4nF41KEeRvHqGEjaQM5x4+cd+WA6usKphDfHFyoddYNg0EqCh3PKHP0/V59
-         s16Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yH96O9ee+Uh/yst0CCmNawAFM7J3cnfjN7OBaXkMBuo=;
-        b=dXMeB2jvO4rpaHUJq7Nog6I/d+uxyKoyK/M6Sj2SSb+9QwEoKea5zR6NXi3Bvv29rn
-         U4AbNuEjEmvx3AC3xMpWDPf1Xyhc9w1wAiCC9v7TkV5IzNXr0rhO6ClVojOFJCruXxb5
-         A/Pao7ZbsDy/EZeM62eU1s5TGCXMnk9ZOirZzI51VQC7HuE5WJIY5IEniZj1Ke/1yVym
-         8nSX9mut0k/RXCXjlI1U75L0WXZjDvL2ZhfL6mKMPa/6yQxeSGxnEsRXCJNWARtgk5iu
-         XVGoXhlyUuwf9Fh16gOIhpr8TqYr4w9sOYS6jzMFMgUqlRv9oH0rbNUKq1LtGW+8fYGn
-         5voA==
-X-Gm-Message-State: AOAM531DF1QYBwOeJAfr84L4STyc3EZUq/EPJKTeT1/SDdkv42f1X35M
-        Kwnx7h1ox6iik2JZOBTwn4TdajWSTdCnrflBERIRuw==
-X-Google-Smtp-Source: ABdhPJy8ryuL3BCw9hMm/5NTZWmr36I40dkkLmQ/Ajt7q/cXxbYe2hymUNmDHkhdO7xsvm0E319wYDL7TZ6lkrF+vfI=
-X-Received: by 2002:a19:4301:: with SMTP id q1mr3259839lfa.96.1592612173404;
- Fri, 19 Jun 2020 17:16:13 -0700 (PDT)
+        Fri, 19 Jun 2020 20:16:39 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 2554B2A52D2
+Subject: Re: [PATCH v3] docs: block: Create blk-mq documentation
+To:     Jens Axboe <axboe@kernel.dk>, corbet@lwn.net,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, rdunlap@infradead.org,
+        dongli.zhang@oracle.com
+References: <20200619200114.6896-1-andrealmeid@collabora.com>
+ <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <36fcdfc6-4ba2-fdfc-411c-e337d2d86ea5@collabora.com>
+Date:   Fri, 19 Jun 2020 21:16:29 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-9-guro@fb.com>
-In-Reply-To: <20200608230654.828134-9-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 19 Jun 2020 17:16:02 -0700
-Message-ID: <CALvZod67=97-thcR0QhhazFChWZ5p=ZjFLXYNnpj0ft5trRgjg@mail.gmail.com>
-Subject: Re: [PATCH v6 08/19] mm: memcg/slab: save obj_cgroup for non-root
- slab objects
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c2f83c87-f473-4d30-2430-442e957de14f@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Store the obj_cgroup pointer in the corresponding place of
-> page->obj_cgroups for each allocated non-root slab object.
-> Make sure that each allocated object holds a reference to obj_cgroup.
->
-> Objcg pointer is obtained from the memcg->objcg dereferencing
-> in memcg_kmem_get_cache() and passed from pre_alloc_hook to
-> post_alloc_hook. Then in case of successful allocation(s) it's
-> getting stored in the page->obj_cgroups vector.
->
-> The objcg obtaining part look a bit bulky now, but it will be simplified
-> by next commits in the series.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+On 6/19/20 5:56 PM, Jens Axboe wrote:
+> On 6/19/20 2:01 PM, André Almeida wrote:
+>> Create a documentation providing a background and explanation around the
+>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+>>
+>> The reference for writing this documentation was the source code and
+>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+>> Systems", by Axboe et al.
+>>
+>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+>> ---
+>> Changes from v2:
+>> - More fixed typos
+>> - Once again, reworked the definition of `blk_mq_hw_ctx` in "Hardware
+>>   dispatch queues" section
+>>
+>> Changes from v1:
+>> - Fixed typos
+>> - Reworked blk_mq_hw_ctx
+>>
+>> Hello,
+>>
+>> This commit was tested using "make htmldocs" and the HTML output has
+>> been verified.
+>>
+>> Thanks,
+>> 	André
+>> ---
+>>  Documentation/block/blk-mq.rst | 155 +++++++++++++++++++++++++++++++++
+>>  Documentation/block/index.rst  |   1 +
+>>  2 files changed, 156 insertions(+)
+>>  create mode 100644 Documentation/block/blk-mq.rst
+>>
+>> diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+>> new file mode 100644
+>> index 000000000000..d1b8f04a822d
+>> --- /dev/null
+>> +++ b/Documentation/block/blk-mq.rst
+>> @@ -0,0 +1,155 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +================================================
+>> +Multi-Queue Block IO Queueing Mechanism (blk-mq)
+>> +================================================
+>> +
+>> +The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
+>> +devices to achieve a huge number of input/output operations per second (IOPS)
+>> +through queueing and submitting IO requests to block devices simultaneously,
+>> +benefiting from the parallelism offered by modern storage devices.
+>> +
+>> +Introduction
+>> +============
+>> +
+>> +Background
+>> +----------
+>> +
+>> +Magnetic hard disks have been the de facto standard from the beginning of the
+>> +development of the kernel. The Block IO subsystem aimed to achieve the best
+>> +performance possible for those devices with a high penalty when doing random
+>> +access, and the bottleneck was the mechanical moving parts, a lot slower than
+>> +any layer on the storage stack. One example of such optimization technique
+>> +involves ordering read/write requests according to the current position of the
+>> +hard disk head.
+>> +
+>> +However, with the development of Solid State Drives and Non-Volatile Memories
+>> +without mechanical parts nor random access penalty and capable of performing
+>> +high parallel access, the bottleneck of the stack had moved from the storage
+>> +device to the operating system. In order to take advantage of the parallelism
+>> +in those devices' design, the multi-queue mechanism was introduced.
+>> +
+>> +The former design had a single queue to store block IO requests with a single
+>> +lock. That did not scale well in SMP systems due to dirty data in cache and the
+>> +bottleneck of having a single lock for multiple processors. This setup also
+>> +suffered with congestion when different processes (or the same process, moving
+>> +to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
+>> +spawns multiple queues with individual entry points local to the CPU, removing
+>> +the need for a lock. A deeper explanation on how this works is covered in the
+>> +following section (`Operation`_).
+>> +
+>> +Operation
+>> +---------
+>> +
+>> +When the userspace performs IO to a block device (reading or writing a file,
+>> +for instance), blk-mq takes action: it will store and manage IO requests to
+>> +the block device, acting as middleware between the userspace (and a file
+>> +system, if present) and the block device driver.
+>> +
+>> +blk-mq has two group of queues: software staging queues and hardware dispatch
+>> +queues. When the request arrives at the block layer, it will try the shortest
+>> +path possible: send it directly to the hardware queue. However, there are two
+>> +cases that it might not do that: if there's an IO scheduler attached at the
+>> +layer or if we want to try to merge requests. In both cases, requests will be
+>> +sent to the software queue.
+>> +
+>> +Then, after the requests are processed by software queues, they will be placed
+>> +at the hardware queue, a second stage queue were the hardware has direct access
+>> +to process those requests. However, if the hardware does not have enough
+>> +resources to accept more requests, blk-mq will places requests on a temporary
+>> +queue, to be sent in the future, when the hardware is able.
+>> +
+>> +Software staging queues
+>> +~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +The block IO subsystem adds requests (represented by struct
+>> +:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
+> 
+> This reads a bit funny, did you want to put the blk_mq_ctx thing after
+> the "software staging queues"? Right now it looks like the requests are
+> of that type, which of course isn't true.
+> 
 
-One nit below otherwise:
+Oops, good catch.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>> +sent directly to the driver. A request is a collection of BIOs. They arrived at
+> 
+> I'd say "one or more BIOs", as there can be just one.
+> 
 
-> ---
-[snip]
-> +static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
-> +                                             struct obj_cgroup *objcg,
-> +                                             size_t size, void **p)
-> +{
-> +       struct page *page;
-> +       unsigned long off;
-> +       size_t i;
-> +
-> +       for (i = 0; i < size; i++) {
-> +               if (likely(p[i])) {
-> +                       page = virt_to_head_page(p[i]);
-> +                       off = obj_to_index(s, page, p[i]);
-> +                       obj_cgroup_get(objcg);
-> +                       page_obj_cgroups(page)[off] = objcg;
-> +               }
-> +       }
-> +       obj_cgroup_put(objcg);
+Done.
 
-Nit: we get the objcg reference in memcg_kmem_get_cache(), doesn't it
-look cleaner to put that reference in memcg_kmem_put_cache() instead
-of here.
+>> +IO Schedulers
+>> +^^^^^^^^^^^^^
+>> +
+>> +There are several schedulers implemented by the block layer, each one following
+>> +a heuristic to improve the IO performance. They are "pluggable" (as in plug
+>> +and play), in the sense of they can be selected at run time using sysfs. You
+>> +can read more about Linux's IO schedulers `here
+>> +<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
+>> +happens only between requests in the same queue, so it is not possible to merge
+>> +requests from different queues, otherwise there would be cache trashing and a
+>> +need to have a lock for each queue. After the scheduling, the requests are
+>> +eligible to be sent to the hardware. One of the possible schedulers to be
+>> +selected is the NOOP scheduler, the most straightforward one, that implements a
+>> +simple FIFO, without performing any reordering. This is useful in the following
+> 
+> NOOP is a relic from the single queue days, the basic "doesn't do much"
+> scheduler is NONE these days. And it doesn't provide FIFO ordering,
+> requests will basically just end up in whatever software queue the
+> process is running on. When someone runs the hardware queue, the
+> software queues mapped to that hardware queue will be drained in
+> sequence according to their mapping (generally from 0..N, if 0..N are
+> mapped to that hardware queue).
+> 
 
-> +       memcg_kmem_put_cache(s);
-> +}
-> +
+Thanks for the feedback. I replaced this part of the text with a basic
+explanation about NONE scheduler based on your words.
+
+v4 on the way.
