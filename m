@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7769CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD97C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58ADF22D75
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4AE22DA7
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lot0pPrz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jre00MLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbgFTCWm (ORCPT
+        id S1731791AbgFTCWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 22:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
+        Fri, 19 Jun 2020 22:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731713AbgFTCWh (ORCPT
+        with ESMTP id S1731766AbgFTCWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 22:22:37 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DAAC061794
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:22:36 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so4753292plk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:22:36 -0700 (PDT)
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DA2C0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:22:37 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x11so4742334plo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jYMqxDbYGVsmzfyOoyUgQX25c2OVSiaityK3R4E49i0=;
-        b=lot0pPrzjqlyDxv/SuV8XI7m9aTybBuOj1YqRPlx678kbiLzlnzGAjqq4CDeiA7ivp
-         AL9UQXicMdxZNhF2FlHGrtMSgojN3TX06x2mWcseGXicmI1+hH/rgHQ70vWJizdA/X2U
-         EKwwKyj5basYb7+AS5nUox1ZMLD/BTJeWPglc=
+        bh=8daI+7CHtS2SGwOQ57VLIhX3tB1mOsr4d2U1XP+ENVs=;
+        b=Jre00MLLpeaEgMC7xAvwh2VApA4lk7QcQsV8D6Mxzsvq52gxPrBBFi8bp0/8hHanCK
+         7E2qXxpp5//4sx2ENJklcEAzL5VVFcq1pAbfN1/DmdQB7AZY8ysHqm+KBKWhPRm14hTa
+         q+l3du9vfNpJxVxa+jI3vnJhiwzUUCNNx+vlw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jYMqxDbYGVsmzfyOoyUgQX25c2OVSiaityK3R4E49i0=;
-        b=i3uplImWPQDEAJhsdmaAlqDSrh8sHTVX9tVACxqNpSgKn5u5UASlbEnB9yMb42+qjt
-         BMWG47Obbf89Fve5GKTejpr/iXwIQ1bWwXk54jHKf5wvQwHVzHtRsl6lRx2juBQfhmZM
-         EHolvYt/9M/UdVq2KuybeMNCxGS/M3TFW5Oxa1WKSkoJwf1WnpXtYnZjPbvOxC2sI1M2
-         j/AJK95jafhCPS3guz/1xlKNq/ph6xRuV9dsu+g1wE8GmiDiCMw2s2mm+TT9Usjg8+PI
-         rJ6ENjlSV74ryi41A1/2cW6dQZkhVoRNpDobmqOZ68CCm4R9hOpjQFYvGGZ0pDX880Bg
-         MRHQ==
-X-Gm-Message-State: AOAM530dPjv5fwBzROsy81GldXoN/u8mHflICj7cGgCyJMXTvUic3iaP
-        J10XMgVBK+ydNV/Kdb+Sv4X8fg==
-X-Google-Smtp-Source: ABdhPJwV7Cpi88hQLo8D8HNN2earezSETvGWeKRiYxB+TMAW7r/NxE9wqpd6OZ9QAGCgnCahxPkjtA==
-X-Received: by 2002:a17:902:7d89:: with SMTP id a9mr10289321plm.309.1592619755935;
-        Fri, 19 Jun 2020 19:22:35 -0700 (PDT)
+        bh=8daI+7CHtS2SGwOQ57VLIhX3tB1mOsr4d2U1XP+ENVs=;
+        b=tAKQMxrAPrKn8iFOpfjuinLGjworoP9TjU3z133VNbt1tygavCXh3Xgopr/VtScrTB
+         JkjdeoDGLNi9wfixsCV/Kkazw05KVvHntj0SMRit4l6Bj0QCmSB4RnneH9QGsSXkfT+z
+         DqsUKfe1OsK7xa3dScs4q9lITUOqGEW9pPaUYa2WGC6yWNYUapbNuetB+fjhHYWFaBJD
+         hmVxJkEO/3oVBiRf5buF5+on1R9jZRzTm+BfuWTx+kMujXe4TMzzCIbxDpnWwoRRLuLw
+         eWnEmiXaw0VCScSd30rq5MYnWLxjVb8GFzLgSv5KRGa7F5SeVtGH4gjiXRYV62ASThca
+         Nitw==
+X-Gm-Message-State: AOAM531mxvLnoYFKspvLFsVj8sKq5BPkzI4dilWHrth+omizXO7xkOP6
+        oM0fcnYxyNEEA9clWlqdueBeVg==
+X-Google-Smtp-Source: ABdhPJxZVZK+DAbBoeCkpomttawBBc2pN2fNIkuE1bBJYMAglO+5AXAsYm304Uz2BQLoz+gqupcDXw==
+X-Received: by 2002:a17:902:ed49:: with SMTP id y9mr10440152plb.284.1592619756732;
+        Fri, 19 Jun 2020 19:22:36 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m14sm6241911pjv.12.2020.06.19.19.22.35
+        by smtp.gmail.com with ESMTPSA id m14sm6241911pjv.12.2020.06.19.19.22.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 19:22:35 -0700 (PDT)
+        Fri, 19 Jun 2020 19:22:36 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v1 1/2] spi: spi-geni-qcom: Simplify setup_fifo_xfer()
-Date:   Fri, 19 Jun 2020 19:22:32 -0700
-Message-Id: <20200620022233.64716-2-swboyd@chromium.org>
+Subject: [PATCH v1 2/2] spi: spi-geni-qcom: Don't set {tx,rx}_rem_bytes unnecessarily
+Date:   Fri, 19 Jun 2020 19:22:33 -0700
+Message-Id: <20200620022233.64716-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
 In-Reply-To: <20200620022233.64716-1-swboyd@chromium.org>
 References: <20200620022233.64716-1-swboyd@chromium.org>
@@ -74,61 +74,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The definition of SPI_FULL_DUPLEX (3) is really SPI_TX_ONLY (1) ORed
-with SPI_RX_ONLY (2). Let's drop the define and simplify the code here a
-bit by collapsing the setting of 'm_cmd' into conditions that are the
-same.
+We only need to test for these counters being non-zero when we see the
+end of a transfer. If we're doing a CS change then they will already be
+zero.  This implies that we don't need to set these to 0 if we're
+cancelling an in flight transfer too, because we only care to test these
+counters when the 'DONE' bit is set in the hardware and we've set them
+to non-zero for a transfer.
 
 This is a non-functional change, just cleanup to consolidate code.
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/spi/spi-geni-qcom.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/spi/spi-geni-qcom.c | 42 ++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 0c534d151370..d8f03ffb8594 100644
+index d8f03ffb8594..5b1dca1fff79 100644
 --- a/drivers/spi/spi-geni-qcom.c
 +++ b/drivers/spi/spi-geni-qcom.c
-@@ -51,7 +51,6 @@
- /* M_CMD OP codes for SPI */
- #define SPI_TX_ONLY		1
- #define SPI_RX_ONLY		2
--#define SPI_FULL_DUPLEX		3
- #define SPI_TX_RX		7
- #define SPI_CS_ASSERT		8
- #define SPI_CS_DEASSERT		9
-@@ -353,12 +352,6 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+@@ -122,7 +122,6 @@ static void handle_fifo_timeout(struct spi_master *spi,
+ 	reinit_completion(&mas->cancel_done);
+ 	writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+ 	mas->cur_xfer = NULL;
+-	mas->tx_rem_bytes = mas->rx_rem_bytes = 0;
+ 	geni_se_cancel_m_cmd(se);
+ 	spin_unlock_irq(&mas->lock);
  
- 	mas->tx_rem_bytes = 0;
- 	mas->rx_rem_bytes = 0;
--	if (xfer->tx_buf && xfer->rx_buf)
--		m_cmd = SPI_FULL_DUPLEX;
--	else if (xfer->tx_buf)
--		m_cmd = SPI_TX_ONLY;
--	else if (xfer->rx_buf)
--		m_cmd = SPI_RX_ONLY;
- 
- 	spi_tx_cfg &= ~CS_TOGGLE;
- 
-@@ -369,12 +362,14 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	len &= TRANS_LEN_MSK;
- 
- 	mas->cur_xfer = xfer;
--	if (m_cmd & SPI_TX_ONLY) {
-+	if (xfer->tx_buf) {
-+		m_cmd |= SPI_TX_ONLY;
- 		mas->tx_rem_bytes = xfer->len;
- 		writel(len, se->base + SE_SPI_TX_TRANS_LEN);
+@@ -513,29 +512,30 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+ 		if (mas->cur_xfer) {
+ 			spi_finalize_current_transfer(spi);
+ 			mas->cur_xfer = NULL;
++			/*
++			 * If this happens, then a CMD_DONE came before all the
++			 * Tx buffer bytes were sent out. This is unusual, log
++			 * this condition and disable the WM interrupt to
++			 * prevent the system from stalling due an interrupt
++			 * storm.
++			 *
++			 * If this happens when all Rx bytes haven't been
++			 * received, log the condition. The only known time
++			 * this can happen is if bits_per_word != 8 and some
++			 * registers that expect xfer lengths in num spi_words
++			 * weren't written correctly.
++			 */
++			if (mas->tx_rem_bytes) {
++				writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
++				dev_err(mas->dev, "Premature done. tx_rem = %d bpw%d\n",
++					mas->tx_rem_bytes, mas->cur_bits_per_word);
++			}
++			if (mas->rx_rem_bytes)
++				dev_err(mas->dev, "Premature done. rx_rem = %d bpw%d\n",
++					mas->rx_rem_bytes, mas->cur_bits_per_word);
+ 		} else {
+ 			complete(&mas->cs_done);
+ 		}
+-
+-		/*
+-		 * If this happens, then a CMD_DONE came before all the Tx
+-		 * buffer bytes were sent out. This is unusual, log this
+-		 * condition and disable the WM interrupt to prevent the
+-		 * system from stalling due an interrupt storm.
+-		 * If this happens when all Rx bytes haven't been received, log
+-		 * the condition.
+-		 * The only known time this can happen is if bits_per_word != 8
+-		 * and some registers that expect xfer lengths in num spi_words
+-		 * weren't written correctly.
+-		 */
+-		if (mas->tx_rem_bytes) {
+-			writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+-			dev_err(mas->dev, "Premature done. tx_rem = %d bpw%d\n",
+-				mas->tx_rem_bytes, mas->cur_bits_per_word);
+-		}
+-		if (mas->rx_rem_bytes)
+-			dev_err(mas->dev, "Premature done. rx_rem = %d bpw%d\n",
+-				mas->rx_rem_bytes, mas->cur_bits_per_word);
  	}
  
--	if (m_cmd & SPI_RX_ONLY) {
-+	if (xfer->rx_buf) {
-+		m_cmd |= SPI_RX_ONLY;
- 		writel(len, se->base + SE_SPI_RX_TRANS_LEN);
- 		mas->rx_rem_bytes = xfer->len;
- 	}
+ 	if (m_irq & M_CMD_CANCEL_EN)
 -- 
 Sent by a computer, using git, on the internet
 
