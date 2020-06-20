@@ -2,88 +2,130 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1259C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44E0C433DF
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 08:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D8A21924
+	by mail.kernel.org (Postfix) with ESMTP id B4CDA21924
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 08:56:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="c0RvMXGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgFTIyT (ORCPT
+        id S1727838AbgFTI42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 04:54:19 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:1572 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgFTIyS (ORCPT
+        Sat, 20 Jun 2020 04:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgFTI41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 04:54:18 -0400
-Received: from njvxl5505.vivo.xyz (unknown [157.0.31.125])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 4787E481E89;
-        Sat, 20 Jun 2020 16:54:13 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH v2] drm/amd: fix potential memleak in err branch
-Date:   Sat, 20 Jun 2020 16:54:06 +0800
-Message-Id: <20200620085407.21922-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZSxhKGUxKTUxCSx9DVkpOQklNT0hJTkhPQ0xVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ohg6Iyo5UTg1CQI*Cz0UITAi
-        PC0wCTlVSlVKTkJJTU9ISU5IQ0JCVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSU5ZV1kIAVlBSU5PSDcG
-X-HM-Tid: 0a72d0ef74b893bakuws4787e481e89
+        Sat, 20 Jun 2020 04:56:27 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF2CC06174E
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 01:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HkINJawlRBHwc9VNfEcMZvgjcar16lovqjBKst1T/h8=; b=c0RvMXGf8LMYYodMuFBnlGPA5
+        h3JK1D0vAcXa0tRBv93Q3jOqdlWFQcW1Y2zFSv9zuMaFffJHzW8y0a04xN1b5rtlaz2oBMbGC4ZIX
+        uRoG02au1wR0yha0mGobF+Uhyj4gj/O6v6gihU6qJj9mnC+LDmvkJWZC2U83PkpFYyBRv1PCrTrLf
+        SmrIxhXVJNpfqwG6smZdrlXW83kMBWT6Azs8qTaHYQ/BDAVm0tuWINrSRxGwlPdUxkN7Do1/pi0D5
+        WYLG50K8mu8WOowJ0Bev9At1TL/gy/77i5bRvhvW7GvcB0hD0aUcPCprpHBkRzK2gup6oC/BrgGYe
+        oX9vd11Jg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58864)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jmZII-0007Mf-B7; Sat, 20 Jun 2020 09:56:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jmYbZ-0006Th-Ck; Sat, 20 Jun 2020 09:12:01 +0100
+Date:   Sat, 20 Jun 2020 09:12:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/3] serial: 8250_dw: Simplify the ref clock rate
+ setting procedure
+Message-ID: <20200620081201.GQ1551@shell.armlinux.org.uk>
+References: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
+ <20200619200251.9066-3-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619200251.9066-3-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function kobject_init_and_add alloc memory like:
-kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-->kmalloc_slab, in err branch this memory not free. If use
-kmemleak, this path maybe catched.
-These changes are to add kobject_put in kobject_init_and_add
-failed branch, fix potential memleak.
+On Fri, Jun 19, 2020 at 11:02:50PM +0300, Serge Semin wrote:
+> Really instead of twice checking the clk_round_rate() return value
+> we could do it once, and if it isn't error the clock rate can be changed.
+> By doing so we decrease a number of ret-value tests and remove a weird
+> goto-based construction implemented in the dw8250_set_termios() method.
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
-Changes since V1:
-*Remove duplicate changed file kfd_topology.c, this file`s fix
-already applied to the main line.
----
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 2 ++
- 1 file changed, 2 insertions(+)
+This doesn't look right to me - neither the before code nor the after
+code.
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index d27221ddcdeb..5ee4d6cfb16d 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -124,6 +124,7 @@ void kfd_procfs_init(void)
- 	if (ret) {
- 		pr_warn("Could not create procfs proc folder");
- 		/* If we fail to create the procfs, clean up */
-+		kobject_put(procfs.kobj);
- 		kfd_procfs_shutdown();
- 	}
- }
-@@ -428,6 +429,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
- 					   (int)process->lead_thread->pid);
- 		if (ret) {
- 			pr_warn("Creating procfs pid directory failed");
-+			kobject_put(process->kobj);
- 			goto out;
- 		}
- 
+>  	clk_disable_unprepare(d->clk);
+>  	rate = clk_round_rate(d->clk, baud * 16);
+> -	if (rate < 0)
+> -		ret = rate;
+> -	else if (rate == 0)
+> -		ret = -ENOENT;
+> -	else
+> +	if (rate > 0) {
+>  		ret = clk_set_rate(d->clk, rate);
+> +		if (!ret)
+> +			p->uartclk = rate;
+> +	}
+>  	clk_prepare_enable(d->clk);
+>  
+> -	if (ret)
+> -		goto out;
+> -
+> -	p->uartclk = rate;
+
+	newrate = baud * 16;
+
+	clk_disable_unprepare(d->clk);
+	rate = clk_round_rate(newrate);
+	ret = clk_set_rate(d->clk, newrate);
+	if (!ret)
+		p->uartclk = rate;
+
+	ret = elk_prepare_enable(d->clk);
+	/* check ret for failure, means the clock is no longer running */
+
+is all that should be necessary: note that clk_round_rate() is required
+to return the rate that a successful call to clk_set_rate() would result
+in for that clock.  It is equivalent to:
+
+	ret = clk_set_rate(d->clk, newrate);
+	if (ret == 0)
+		p->uartclk = clk_get_rate(d->clk);
+
+The other commonly misunderstood thing about the clk API is that the
+rate you pass in to clk_round_rate() to discover the actual clock rate
+and the value passed in to clk_set_rate() _should_ be the same value.
+You should _not_ do clk_set_rate(clk, clk_round_rate(clk, newrate));
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
