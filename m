@@ -2,93 +2,76 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F84C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80AEB23D9C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="XZ/wFy9U"
+	by mail.kernel.org (Postfix) with ESMTP id 167AC23BCC
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFTQAM (ORCPT
+        id S1727916AbgFTQAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgFTQAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:00:10 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A11AC06174E
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:00:10 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id f185so11702853wmf.3
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=lFeqIL8bo4mlGyvfD4vGNnsSeHfU+7Jkg7P09FGBgVg=;
-        b=XZ/wFy9UTZB/NtxhyA7L6e7U7ful70u3itnS9SmmxsPdShFHBzpnULtsAVcVWm5HbS
-         Wv8tR/XpPz/P4Oqd8SkdPe9c/po7+QUOxKC+UZqsP2gvtIYHGE2LP4Il7ICtYy/hujy7
-         pYzHAbcT8/MvmfG0X8XQ7kDHmjZdeQHzK5eQuTFgrSsBDKhXudvArtHOcnMZ9w/un8iz
-         J8ATrwrGcnbr+2kcscSJ4bRLcyNU1Cs6DcOI0hEhby7FODtjEMckB0WbEDVKeANqSoNO
-         dIaJEDse0fC4j1XpgV/DofGpQ1t0I6G0Luai5TO/hPLVMzoYTTWDODFrPwehUgy9pjrS
-         FyAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=lFeqIL8bo4mlGyvfD4vGNnsSeHfU+7Jkg7P09FGBgVg=;
-        b=dwSzj33W2jwYL0hZqixIcoCQXUbPf8WMEYtHzuFk8U1CZzPvH40v2gDzmHN+ZPMJOV
-         i7iC1B5maJHBhvdZZg6+W3pPwniVizrJqcU7D0Va+T3LtyCtalyjbFZu3LuE8/2sSGhJ
-         p9EZKKAbOURYEo94B/fSE57EVxnscFn6KO9XHLOKVLGxefXgMhZ8fjKDZUkE7k89XcqO
-         wJt/shPCvLPavgjBRQSTH7r6JkPlmnJ6w4drVF0IG74FeaUjvkTsxgBE/VVOw6ukSJHa
-         W0PrHhtn+0MELcCgxqe4M4m5B9v/n4DtPXiHSa2L4gy4XwxXkt1WuSostglZDTsTq8Qu
-         yqsQ==
-X-Gm-Message-State: AOAM532rYAcACMFmsjUkIWLYy0/FrcYP9OR5SgeChgpIjOcShygm8NbH
-        Qdf4ROAMCHrlXG2s9MgaR3YE6pvg3r56vvOOvAfHf/r8LCw=
-X-Google-Smtp-Source: ABdhPJwxeQufihJk/rzMzyjtk/gbHIGDQ4OVmGHx3xjrbMo3qmpo8vcUMroxRpUEc63rUq72vyoPFLbNbbf8xCQDHJE=
-X-Received: by 2002:a1c:4804:: with SMTP id v4mr9293060wma.21.1592668808716;
- Sat, 20 Jun 2020 09:00:08 -0700 (PDT)
+        Sat, 20 Jun 2020 12:00:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50238 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgFTQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 12:00:44 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jmfv4-001PZO-NR; Sat, 20 Jun 2020 18:00:38 +0200
+Date:   Sat, 20 Jun 2020 18:00:38 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Luo bin <luobin9@huawei.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, luoxianjun@huawei.com,
+        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com
+Subject: Re: [PATCH net-next v1 5/5] hinic: add support to get eeprom
+ information
+Message-ID: <20200620160038.GQ304147@lunn.ch>
+References: <20200620094258.13181-1-luobin9@huawei.com>
+ <20200620094258.13181-6-luobin9@huawei.com>
 MIME-Version: 1.0
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Sat, 20 Jun 2020 08:59:57 -0700
-Message-ID: <CALCETrU_O4AxcJeBO77uXt2j8woYVtjZd18-YV0BuCKRAu00eA@mail.gmail.com>
-Subject: Linux FSGSBASE testing
-To:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Stas Sergeev <stsp@list.ru>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620094258.13181-6-luobin9@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stas-
+> +static int hinic_get_module_eeprom(struct net_device *netdev,
+> +				   struct ethtool_eeprom *ee, u8 *data)
+> +{
+> +	struct hinic_dev *nic_dev = netdev_priv(netdev);
+> +	u8 sfp_data[STD_SFP_INFO_MAX_SIZE];
 
-FSGSBASE support is queued up for Linux 5.9.  Since you're one of the
-more exotic users of segmentation on Linux, is there any chance you
-could test it?  The code is here:
+sfp_data will contain whatever is on the stack.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/fsgsbase
+> +	u16 len;
+> +	int err;
+> +
+> +	if (!ee->len || ((ee->len + ee->offset) > STD_SFP_INFO_MAX_SIZE))
+> +		return -EINVAL;
+> +
+> +	memset(data, 0, ee->len);
 
-There are two interesting cases to test:
+This clears what you are going to return.
 
-1. FSGSBASE on.  This is the default if you boot this kernel on Ivy
-Bridge or newer hardware.
+> +
+> +	err = hinic_get_sfp_eeprom(nic_dev->hwdev, sfp_data, &len);
 
-2. FSGSBASE off on a patched kernel.  Boot the same kernel as in #1
-but either pass nofsgsbase on the kernel command line or use pre-Ivy
-Bridge hardware.  You will *
+Upto len bytes of sfp_data now contain useful data. The rest of
+sfp_data is still stack data.
 
-You can tell you have FSGSBASE enabled for test #1 by running
-tools/testing/selftests/x86/fsgsbase_64 -- the first line of output
-will be :FSGSBASE instructions are enabled".  You can build it by
-cd-ing to tools/testing/selftests/x86 and running make.
 
-If anything is broken for you, I'd like to know before this makes it
-into a released kernel!
+> +	if (err)
+> +		return err;
+> +
+> +	memcpy(data, sfp_data + ee->offset, ee->len);
 
-Thanks,
-Andy
+If len < ee->len, you have just returned to user space some stack data.
+
+   Andrew
