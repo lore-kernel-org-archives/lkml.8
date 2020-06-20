@@ -4,109 +4,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE9A22265
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9481A23F59
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592672123;
-	bh=jh+Dtd6XxyvfeBpJwr5NXJeG+cGq9HQ6DALEAl2vhK8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ndI2OyzAfHI6UrYqVo0OOhKCnm8MlJ3dsdXNltepLbJluWkoksjFtPH0c4mQxxCYP
-	 WEUa1B7ioy07jxxNGjXfsUZ+A/aR7mj2gCLP+ksQ4P7P5X3SvWrGbAQ52Tq4ZUVxvf
-	 CiYluOUDxF6v4EIJecF7EmjKqi0fvRPZNey52VsQ=
+	s=default; t=1592672546;
+	bh=TPc1aRihxiW8KrfrlE2iGBzcoEmdzde6no77OOtN4xY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xz9k+pm/+ioOzDV1vL5WJPaoP4ny2EyyAr28Nzon/HN3zIF1IaSqwyZme47WXRvBv
+	 5m2C0xStgUoA8Ei76Btm99wfaKgA9I8k/jZGo7JPqZc4be58oa/+cU3F6W13MagzJE
+	 cLuFoRkvBx+Te1QzHUBj5oWDag+6ZA03a9CLfyIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgFTQzV (ORCPT
+        id S1728193AbgFTRCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFTQzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:55:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B9C206C1;
-        Sat, 20 Jun 2020 16:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592672120;
-        bh=jh+Dtd6XxyvfeBpJwr5NXJeG+cGq9HQ6DALEAl2vhK8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JPRzqSsXNNflaSN9W1VKLjKK2Tr5YQxLrly67XS/Qe764zuYMr+E9uH1bYZASM9Hv
-         nA9zxaJ/PEbaeWS/EdE2E8sgv8IGN1OZPB2q9h/1cC4du8Aj50MfGUkH/37NFIzkO8
-         b6E2rydpktC6hsBzvJSxhwYRnDREOCga+4RJ/QHw=
-Date:   Sat, 20 Jun 2020 17:55:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     lee.jones@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        matthias.bgg@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, dmurphy@ti.com, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Subject: Re: [PATCH v2 0/4] dt-bindings: mfd: Add bindings for the Mediatek
- MT6360
-Message-ID: <20200620175512.1e11d12c@archlinux>
-In-Reply-To: <1592567631-20363-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1592567631-20363-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 20 Jun 2020 13:02:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38352 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgFTRCX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:02:23 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x207so6087215pfc.5;
+        Sat, 20 Jun 2020 10:02:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hkYGXZYFNkz40ca5bdh2l8rwBQsGz5Dfq7lbQQ/ZMb4=;
+        b=X9q8UfJZmL34AI1GiO5Dnai9g9KS072++uMh4hlNtqTqlfTy5/ba7jBlkjyo535lWC
+         tUjHuWsJ6BPP/ng5gG33nwINjMbyZyZXMLjmIIqzIeVChyJTJIG4F6u8B9q4RB2Ma+y8
+         WJcvd4TZ3OI9OplZ3O/vxXPXbSeB8wfjr/U6oY6tCu2sC50Vye2G/kNYpLsk6cIOSamP
+         guRd24fxw8r53lgGCHCwHvgsFDXv+sVkbrHH5E41l0PLB8LSubGIpnQ6sJj/G6Mscd93
+         SSnVhc8HhP3+CXxlv76lEjbFs4oQuFkWahQsOtVi5j94GE4u11uRpTmvgCdU01InmuDF
+         noQw==
+X-Gm-Message-State: AOAM532IfNgmHSESpXOm/8YZ5RnmvNPpxNVpAeW2B8+AFwNFEkzkSkgR
+        tAqhwQpGJwLLW+PloRYKDzduPcQOyUA=
+X-Google-Smtp-Source: ABdhPJw4cY69dDBjGxi+dEmU+lne2Jaj+Kt7j3+OOL+ZesgQbK+T06ayny/Nuk+eU5cbc92qa9tynQ==
+X-Received: by 2002:a63:7c5e:: with SMTP id l30mr7050243pgn.276.1592672542711;
+        Sat, 20 Jun 2020 10:02:22 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x18sm9195784pfr.106.2020.06.20.10.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 10:02:20 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B439940430; Sat, 20 Jun 2020 17:02:19 +0000 (UTC)
+Date:   Sat, 20 Jun 2020 17:02:19 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] kernel: add a kernel_wait helper
+Message-ID: <20200620170219.GT11244@42.do-not-panic.com>
+References: <20200618144627.114057-1-hch@lst.de>
+ <20200618144627.114057-7-hch@lst.de>
+ <20200619211700.GS11244@42.do-not-panic.com>
+ <20200620063538.GA2408@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620063538.GA2408@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 19:53:47 +0800
-Gene Chen <gene.chen.richtek@gmail.com> wrote:
+On Sat, Jun 20, 2020 at 08:35:38AM +0200, Christoph Hellwig wrote:
+> On Fri, Jun 19, 2020 at 09:17:00PM +0000, Luis Chamberlain wrote:
+> > On Thu, Jun 18, 2020 at 04:46:27PM +0200, Christoph Hellwig wrote:
+> > > --- a/kernel/exit.c
+> > > +++ b/kernel/exit.c
+> > > @@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +int kernel_wait(pid_t pid, int *stat)
+> > > +{
+> > > +	struct wait_opts wo = {
+> > > +		.wo_type	= PIDTYPE_PID,
+> > > +		.wo_pid		= find_get_pid(pid),
+> > > +		.wo_flags	= WEXITED,
+> > > +	};
+> > > +	int ret;
+> > > +
+> > > +	ret = do_wait(&wo);
+> > > +	if (ret > 0 && wo.wo_stat)
+> > > +		*stat = wo.wo_stat;
+> > 
+> > Since all we care about is WEXITED, that could be simplified
+> > to something like this:
+> > 
+> > if (ret > 0 && KWIFEXITED(wo.wo_stat)
+> >  	*stat = KWEXITSTATUS(wo.wo_stat)
+> > 
+> > Otherwise callers have to use W*() wrappers.
+> > 
+> > > +	put_pid(wo.wo_pid);
+> > > +	return ret;
+> > > +}
+> > 
+> > Then we don't get *any* in-kernel code dealing with the W*() crap.
+> > I just unwrapped this for the umh [0], given that otherwise we'd
+> > have to use KW*() callers elsewhere. Doing it upshot one level
+> > further would be even better.
+> > 
+> > [0] https://lkml.kernel.org/r/20200610154923.27510-1-mcgrof@kernel.org              
+> Do you just want to pick this patch up, add your suggested bits and
+> add it to the beginning of your series?  That should clean the whole
+> thing up a bit.  Nothing else in this series depends on the patch.
 
-> This patch series add mt6360 sub-device adc/regulator and
-> fix mfd architecture and add dt-binding document
+Sure but let's wait to hear from the NFS folks.
 
-Hi Gene
+I'm waiting to hear from NFS folks if the one place where the UMH is
+fixed for the error code (on fs/nfsd/nfs4recover.c we never were
+disabling the upcall as the error code of -ENOENT or -EACCES was *never*
+properly checked for) to see how critical that was. If it can help
+stable kernels the fix can go in as I proposed, followed by this patch
+to further take the KWEXITSTATUS() up further, and ensure we *never*
+deal with this in-kernel. If its not a fix stable kernels should care
+for what you suggest of taking this patch first would be best and I'd be
+happy to do that.
 
-Please make sure you include linux-iio@vger.kernel.org in the cc list
-for any iio related series.  For now I'll take a quick look at the
-ADC driver patch (and +cc the list for my reply)
-
-Thanks,
-
-Jonathan
-
-> 
-> changelogs between v1 & v2
-> - adjust binding document schema include mfd/adc/regulator
-> - adc: use IIO_CHAN_INFO_PROCESSED only
-> - adc: use devm_iio_triggered_buffer_setup
-> - adc: use use s64 to record timestamp
-> - regulator: merge regmap to mfd driver for r/w with crc
-> 
-> Gene Chen (4)
->   dt-bindings: mfd: Add bindings for the Mediatek MT6360
->   mfd: mt6360: implement i2c R/W with CRC
->   iio: adc: mt6360: Add ADC driver for MT6360
->   regulator: mt6360: Add support for MT6360 regulator
-> 
->  Documentation/devicetree/bindings/mfd/mt6360.txt |  122 +++++
->  drivers/iio/adc/Kconfig                          |   11 
->  drivers/iio/adc/Makefile                         |    1 
->  drivers/iio/adc/mt6360-adc.c                     |  388 ++++++++++++++++
->  drivers/mfd/Kconfig                              |    1 
->  drivers/mfd/mt6360-core.c                        |  541 +++++++++++++++--------
->  drivers/regulator/Kconfig                        |    9 
->  drivers/regulator/Makefile                       |    1 
->  drivers/regulator/mt6360-regulator.c             |  485 ++++++++++++++++++++
->  include/dt-bindings/mfd/mt6360.h                 |   15 
->  include/linux/mfd/mt6360.h                       |  240 ----------
->  11 files changed, 1389 insertions(+), 425 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
->  create mode 100644 include/dt-bindings/mfd/mt6360.h
->  delete mode 100644 include/linux/mfd/mt6360.h
->  create mode 100644 drivers/iio/adc/mt6360-adc.c
->  create mode 100644 drivers/regulator/mt6360-regulator.c
-
+  Luis
