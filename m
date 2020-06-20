@@ -2,365 +2,194 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2139C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78002474C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592696234;
-	bh=CawSVpHd2GDDHBo6fZNEBEmKvXOVFkRFxpMFtCubX9U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TmmtHQrJq1Nsi2dy251iug5LGQOD04PwBo01BG0LR045fhKBPDdH7K4xMt8HHmEHo
-	 wir3I8TDrdk6XimZCWmaz8rbibIPHzHwlAc7whPTw4sFZug+KzjcdRoqIMl8EL9Eyu
-	 j+T4OpiaD9KZU6FSFEjyfp66zXyk/VosXYBWUNEU=
+	by mail.kernel.org (Postfix) with ESMTP id A8E512416F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p42qoBX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728586AbgFTXhE (ORCPT
+        id S1728691AbgFTXlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 19:37:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728199AbgFTXhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 19:37:03 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1DD2474C;
-        Sat, 20 Jun 2020 23:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592696222;
-        bh=CawSVpHd2GDDHBo6fZNEBEmKvXOVFkRFxpMFtCubX9U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kv25pqSEEfD0FgzqYZtxEoh3ej91+/gY4IldaQwyv3JThsK5+rn7c5nPOoIeT9OSd
-         sS+G9QET9eEqhZjnS4Q7vun3bVjw/uWL8DyH7DrKgKHvqsyIPWu4uk8PTGBRCKsxEl
-         RICRuvG28weCfu92RWxGFG5ShqYve8rLEYXNfAsM=
-Received: by mail-ej1-f43.google.com with SMTP id w6so2952728ejq.6;
-        Sat, 20 Jun 2020 16:37:02 -0700 (PDT)
-X-Gm-Message-State: AOAM533919irFnPT8OTNetLlBH21nLoDniSKkHnj+FFSdFGlueyNnS0v
-        ewZs5yODeqUu3QuYXF9bHnFnxTXjgubs0pDd0g==
-X-Google-Smtp-Source: ABdhPJztuHi2fjsSnmBaCSN95EJlMUxP3vDj4t8FVoFTF3CYTOdZnHHjg36lEWbohNJpDCh9W1cChQLxF0ZOsvN84UM=
-X-Received: by 2002:a17:906:3041:: with SMTP id d1mr9854937ejd.7.1592696220739;
- Sat, 20 Jun 2020 16:37:00 -0700 (PDT)
+        Sat, 20 Jun 2020 19:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgFTXli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 19:41:38 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B2DC061794;
+        Sat, 20 Jun 2020 16:41:38 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q8so15622488iow.7;
+        Sat, 20 Jun 2020 16:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zmpFquU+RDwglEiu3g5XtI6L0MxQfiK9BIIU4+njr4c=;
+        b=p42qoBX0x+QUwBEMwTlvIJFwxVb/vk6enFnuiqGy03GJN0Hqzv4C8aSDtnKrjjrMxI
+         zd3oiTy1wEfluO1kZ28JEdhsf+1h46J+/917uK2jBVQ7vCewZk1QHFM8aBW+so8ROTKJ
+         PvGBz+0Ed9b02BquP/17ZEnjb6ePpNByePVilFbkloA6WtOG3eiJnKxfW9QPSZf7oTsJ
+         tKCbDAzm7+57WDaBdmkW9ohSTy4OHCbTmIvkEcmz59OWS98q+lnvqrNIV7k32KIF1azs
+         4RkLkhLeOYCv8HOWa28LsDK/1md+bZcz+tyAKUzeI4GsEmOIRm5q7AaajoqlzMyK1Bm6
+         lD3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zmpFquU+RDwglEiu3g5XtI6L0MxQfiK9BIIU4+njr4c=;
+        b=i5MTwiDtkVQlmu9hosDko/5u40W8ZE0j/gaUzXtM/TpvPnrYW8W9YjusiEFLia3dhQ
+         Wx8UwQik/2URNcqwtE9idIfAfKCCde78c7w6Ji1K1BcdGG+4ccsUqzHFhQaX6P7mymn5
+         soOqNzYuaTIln+bcAe+Upmd4Ww11AaNwPNvXitOvFPanvuaioMeGM6lc673K6ZGTteG1
+         Kga+CiKX/0PXQuQ1TK/LYt+Yw+om5huHnDr8bjHNzrFvu9/b+ofqEQAK6Hgbi8OrIxBw
+         6Op9RiUoa+dqhWyoDSgtlMWzCxdSBNO65uXac/5LfBn4au0W5wSewmiolwenFs96GZc1
+         1b2w==
+X-Gm-Message-State: AOAM532alFS/G3BY8PV6wOrELDz4lYUm2Pm2wZonku2Kbg7PQ45pzsi5
+        iVpJmSiA68Q/nWVIsi9OBF51u/ZPyWcz8Xle4dc=
+X-Google-Smtp-Source: ABdhPJw1IKuvOhcqf7f1u5K8GleW+PAeAyMI1zht7qE+jj4nFzqK8yEt5hmb/7ucU8pHAL3X8xS9smg8nIMPszuldqI=
+X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr12192258iot.44.1592696497456;
+ Sat, 20 Jun 2020 16:41:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com>
- <1592559720-8482-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8JRnhGKOB+faOaHR6p2nknHiMjAnbfo=390c5jNHtp=A@mail.gmail.com>
- <1592623132.15277.7.camel@mtkswgap22>
-In-Reply-To: <1592623132.15277.7.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 21 Jun 2020 07:36:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
-Message-ID: <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <cover.1592224128.git.syednwaris@gmail.com> <fe12eedf3666f4af5138de0e70b67a07c7f40338.1592224129.git.syednwaris@gmail.com>
+ <20200616081428.GP2428291@smile.fi.intel.com>
+In-Reply-To: <20200616081428.GP2428291@smile.fi.intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sun, 21 Jun 2020 05:11:25 +0530
+Message-ID: <CACG_h5qK3KN5xYK=6h+U8u2kLo95979uC4_xfHhD8GqYeVgMLw@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] bitops: Introduce the for_each_set_clump macro
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
-
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8820=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:18=E5=AF=AB=E9=81=93=EF=BC=9A
+On Tue, Jun 16, 2020 at 1:44 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Hi Chun-Kuang,
+> On Mon, Jun 15, 2020 at 06:21:18PM +0530, Syed Nayyar Waris wrote:
+> > This macro iterates for each group of bits (clump) with set bits,
+> > within a bitmap memory region. For each iteration, "start" is set to
+> > the bit offset of the found clump, while the respective clump value is
+> > stored to the location pointed by "clump". Additionally, the
+> > bitmap_get_value and bitmap_set_value functions are introduced to
+> > respectively get and set a value of n-bits in a bitmap memory region.
+> > The n-bits can have any size less than or equal to BITS_PER_LONG.
+> > Moreover, during setting value of n-bit in bitmap, if a situation arise
+> > that the width of next n-bit is exceeding the word boundary, then it
+> > will divide itself such that some portion of it is stored in that word,
+> > while the remaining portion is stored in the next higher word. Similar
+> > situation occurs while retrieving value of n-bits from bitmap.
 >
-> Thanks for your quick feedback.
+> On the second view...
 >
-> On Sat, 2020-06-20 at 00:25 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8819=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:01=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > MT6873 bus frabric provides TrustZone security support and data
-> > > protection to prevent slaves from being accessed by unexpected
-> > > masters.
-> > > The security violations are logged and sent to the processor for
-> > > further analysis or countermeasures.
-> > >
-> > > Any occurrence of security violation would raise an interrupt, and
-> > > it will be handled by devapc-mt6873 driver. The violation
-> > > information is printed in order to find the murderer.
-> > >
-> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > ---
-> >
-> > [snip]
-> >
-> > > +
-> > > +/*
-> > > + * mtk_devapc_pd_get - get devapc pd_types of register address.
-> > > + *
-> > > + * Returns the value of reg addr
-> > > + */
-> > > +static void __iomem *mtk_devapc_pd_get(struct mtk_devapc_context *de=
-vapc_ctx,
-> > > +                                      int slave_type,
-> > > +                                      enum DEVAPC_PD_REG_TYPE pd_reg=
-_type,
-> > > +                                      u32 index)
-> > > +{
-> > > +       struct mtk_devapc_vio_info *vio_info =3D devapc_ctx->soc->vio=
-_info;
-> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
-> > > +       const u32 *devapc_pds =3D devapc_ctx->soc->devapc_pds;
-> >
-> > devapc_pds =3D mt6873_devapc_pds;
+> > +static inline unsigned long bitmap_get_value(const unsigned long *map,
+> > +                                           unsigned long start,
+> > +                                           unsigned long nbits)
+> > +{
+> > +     const size_t index = BIT_WORD(start);
+> > +     const unsigned long offset = start % BITS_PER_LONG;
 >
-> Are you saying all platform related variables & functions should assign
-> & call it directly in this common flow?
-> I don't think it's a good idea to go backwards since we already extract
-> the common out of it.
+> > +     const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+>
+> This perhaps should use round_up()
 
-I think we should "do one thing in one patch". When you mix two things
-into one patch, how does reviewer know each modification belong to
-first thing or second thing? For supporting multiple SoC, the patches
-sequence look like this:
+I checked with 'round_up'. I am getting the same values as I was
+getting with 'roundup'.
+I have checked with different clump tests.
+Moreover, wherever the 'space' was being evaluated as 64, in the case
+of 'roundup', it is also getting evaluated to the same value (of 64),
+in case of  'round_up' also.
 
-Patch 1: Add support SoC 1.
-Patch 2: Abstract function and variable for SoC 2.
-Patch 3: Add support SoC 2.
-Patch 4: Abstract function and variable for SoC 3.
-Patch 5: Add support SoC 3.
-Patch 6: Abstract function and variable for SoC 4.
-Patch 7: Add support SoC 4.
-
-In patch 1, you should not do any thing about abstraction, but you
-want to merge patch 2, 4, 6 into this patch, so this patch's title
-should be "Add support SoC 1 and abstract function and varible for SoC
-2, SoC 3, and SoC 4"
+Further below ...
 
 >
-> >
-> >
-> > > +       void __iomem *reg;
-> > > +
-> > > +       if (!devapc_pds)
-> >
-> > Never happen.
-> >
-> > > +               return NULL;
-> > > +
-> > > +       if ((slave_type < slave_type_num &&
-> > > +            index < vio_info->vio_mask_sta_num[slave_type]) &&
-> > > +           pd_reg_type < PD_REG_TYPE_NUM) {
-> >
-> > Always true.
-> >
-> > > +               reg =3D devapc_ctx->devapc_pd_base[slave_type] +
-> > > +                       devapc_pds[pd_reg_type];
-> > > +
-> > > +               if (pd_reg_type =3D=3D VIO_MASK || pd_reg_type =3D=3D=
- VIO_STA)
-> > > +                       reg +=3D 0x4 * index;
-> > > +
-> > > +       } else {
-> > > +               pr_err(PFX "Out Of Boundary, slave_type:0x%x/pd_reg_t=
-ype:0x%x/index:0x%x\n",
-> > > +                      slave_type, pd_reg_type, index);
-> > > +               return NULL;
-> > > +       }
-> > > +
-> > > +       return reg;
-> > > +}
-> > > +
-> >
-> > [snip]
-> >
-> > > +
-> > > +/*
-> > > + * start_devapc - initialize devapc status and start receiving inter=
-rupt
-> > > + *               while devapc violation is triggered.
-> > > + */
-> > > +static void start_devapc(struct mtk_devapc_context *devapc_ctx)
-> > > +{
-> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
-> > > +       const struct mtk_device_info **device_info;
-> > > +       const struct mtk_device_num *ndevices;
-> > > +       void __iomem *pd_vio_shift_sta_reg;
-> > > +       void __iomem *pd_apc_con_reg;
-> > > +       int slave_type, i, vio_idx, index;
-> > > +       u32 vio_shift_sta;
-> > > +
-> > > +       ndevices =3D devapc_ctx->soc->ndevices;
-> >
-> > ndevices =3D mtk6873_devices_num;
-> >
-> >
-> > > +
-> > > +       device_info =3D devapc_ctx->soc->device_info;
-> > > +
-> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
-e++) {
-> > > +               pd_apc_con_reg =3D mtk_devapc_pd_get(devapc_ctx, slav=
-e_type,
-> > > +                                                  APC_CON, 0);
-> > > +               pd_vio_shift_sta_reg =3D mtk_devapc_pd_get(devapc_ctx=
-, slave_type,
-> > > +                                                        VIO_SHIFT_ST=
-A, 0);
-> > > +
-> > > +               if (!pd_apc_con_reg || !pd_vio_shift_sta_reg || !devi=
-ce_info)
-> > > +                       return;
-> > > +
-> > > +               /* Clear DEVAPC violation status */
-> > > +               writel(BIT(31), pd_apc_con_reg);
-> > > +
-> > > +               /* Clear violation shift status */
-> > > +               vio_shift_sta =3D readl(pd_vio_shift_sta_reg);
-> > > +               if (vio_shift_sta)
-> > > +                       writel(vio_shift_sta, pd_vio_shift_sta_reg);
-> > > +
-> > > +               /* Clear type 2 violation status */
-> > > +               check_type2_vio_status(devapc_ctx, slave_type, &vio_i=
-dx, &i);
-> > > +
-> > > +               /* Clear violation status */
-> > > +               for (i =3D 0; i < ndevices[slave_type].vio_slave_num;=
- i++) {
-> > > +                       vio_idx =3D device_info[slave_type][i].vio_in=
-dex;
-> > > +                       if ((check_vio_status(devapc_ctx, slave_type,=
- vio_idx)
-> > > +                                             =3D=3D VIOLATION_TRIGGE=
-RED) &&
-> > > +                            clear_vio_status(devapc_ctx, slave_type,
-> > > +                                             vio_idx)) {
-> > > +                               pr_warn(PFX "Clear vio status failed,=
- slave_type:0x%x, vio_index:0x%x\n",
-> > > +                                       slave_type, vio_idx);
-> > > +
-> > > +                               index =3D i;
-> > > +                               mtk_devapc_dump_vio_dbg(devapc_ctx, s=
-lave_type,
-> > > +                                                       &vio_idx, &in=
-dex);
-> > > +                               i =3D index - 1;
-> > > +                       }
-> > > +
-> > > +                       mask_module_irq(devapc_ctx, slave_type, vio_i=
-dx, false);
-> > > +               }
-> > > +       }
-> > > +}
-> > > +
-> > > +static DEFINE_SPINLOCK(devapc_lock);
-> >
-> > Useless, so remove it.
+> > +     const unsigned long space = ceiling - start;
 >
-> We use devapc_lock in below isr, what do you mean useless?
+> And I think I see a scenario to complain.
+>
+> If start == 0, then ceiling will be 64.
+> space == 64. Not good.
 
-We use spinlock because a thread context and irq context would access
-the same resource, but where is the thread context? If the thread
-context exist in another patch, move this spinlock to that patch.
+Yes, you are right, when the 'start' is '0', then 'space' will be 64
+(on arch where BITS_PER_LONG is 64).
+But actually I want this to happen. I need 'space' to hold value 64
+when 'start' is '0'. The reason is as follows:
 
-Regards,
-Chun-Kuang.
+Taking the example of bitmap_set_value(). If the nbits is 16 (as
+example) and 'start' is zero, The 'if' condition will be executed
+inside bitmap_set_value() when 'start' is zero because space(64) >=
+nbits(16) is true. This 'if' condition is for the case when nbits
+falls completely into the first word and the nbits doesn't have to
+divide itself into another higher word of the bitmap.
+
+This is what should happen according to me. If space is less than 64,
+lets say 63 or 62, then it will not correctly indicate the remaining
+space for nbits to fill in (bitmap_set_value) or to extract from
+(bitmap_get_value).
+
+Kindly let me know If I have misunderstood something. Thanks !
 
 >
-> >
-> > > +
-> > > +/*
-> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
- will dump
-> > > + *                       violation information including which maste=
-r violates
-> > > + *                       access slave.
-> > > + */
-> > > +static irqreturn_t devapc_violation_irq(int irq_number,
-> > > +                                       struct mtk_devapc_context *de=
-vapc_ctx)
-> > > +{
-> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
-> > > +       const struct mtk_device_info **device_info;
-> > > +       struct mtk_devapc_vio_info *vio_info;
-> > > +       int slave_type, vio_idx, index;
-> > > +       const char *vio_master;
-> > > +       unsigned long flags;
-> > > +       u8 perm;
-> > > +
-> > > +       spin_lock_irqsave(&devapc_lock, flags);
-> > > +
-> > > +       device_info =3D devapc_ctx->soc->device_info;
-> > > +       vio_info =3D devapc_ctx->soc->vio_info;
-> > > +       vio_idx =3D -1;
-> > > +       index =3D -1;
-> > > +
-> > > +       /* There are multiple DEVAPC_PD */
-> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
-e++) {
-> > > +               if (!check_type2_vio_status(devapc_ctx, slave_type, &=
-vio_idx,
-> > > +                                           &index))
-> > > +                       if (!mtk_devapc_dump_vio_dbg(devapc_ctx, slav=
-e_type,
-> > > +                                                    &vio_idx, &index=
-))
-> > > +                               continue;
-> > > +
-> > > +               /* Ensure that violation info are written before
-> > > +                * further operations
-> > > +                */
-> > > +               smp_mb();
-> > > +
-> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, true=
-);
-> > > +
-> > > +               clear_vio_status(devapc_ctx, slave_type, vio_idx);
-> > > +
-> > > +               perm =3D get_permission(devapc_ctx, slave_type, index=
-,
-> > > +                                     vio_info->domain_id);
-> > > +
-> > > +               vio_master =3D devapc_ctx->soc->master_get
-> > > +                       (vio_info->master_id,
-> > > +                        vio_info->vio_addr,
-> > > +                        slave_type,
-> > > +                        vio_info->shift_sta_bit,
-> > > +                        vio_info->domain_id);
-> >
-> > Call mt6873_bus_id_to_master() directly.
-> >
-> > > +
-> > > +               if (!vio_master)
-> > > +                       vio_master =3D "UNKNOWN_MASTER";
-> > > +
-> > > +               pr_info(PFX "Violation - slave_type:0x%x, sys_index:0=
-x%x, ctrl_index:0x%x, vio_index:0x%x\n",
-> > > +                       slave_type,
-> > > +                       device_info[slave_type][index].sys_index,
-> > > +                       device_info[slave_type][index].ctrl_index,
-> > > +                       device_info[slave_type][index].vio_index);
-> > > +
-> > > +               pr_info(PFX "Violation Master: %s\n", vio_master);
-> > > +
-> > > +               devapc_vio_reason(perm);
-> > > +
-> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, fals=
-e);
-> > > +       }
-> > > +
-> > > +       spin_unlock_irqrestore(&devapc_lock, flags);
-> > > +       return IRQ_HANDLED;
-> > > +}
-> > > +
+> > +     unsigned long value_low, value_high;
+> > +
+> > +     if (space >= nbits)
+> > +             return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> > +     else {
+> > +             value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
+> > +             value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
+> > +             return (value_low >> offset) | (value_high << space);
+> > +     }
+> > +}
 >
-> [snip]
+> ...
+>
+> > +/**
+> > + * bitmap_set_value - set n-bit value within a memory region
+> > + * @map: address to the bitmap memory region
+> > + * @value: value of nbits
+> > + * @start: bit offset of the n-bit value
+> > + * @nbits: size of value in bits
+> > + */
+> > +static inline void bitmap_set_value(unsigned long *map,
+> > +                                 unsigned long value,
+> > +                                 unsigned long start, unsigned long nbits)
+> > +{
+> > +     const size_t index = BIT_WORD(start);
+> > +     const unsigned long offset = start % BITS_PER_LONG;
+>
+> > +     const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> > +     const unsigned long space = ceiling - start;
+>
+> Ditto for both lines.
+>
+> > +     value &= GENMASK(nbits - 1, 0);
+> > +
+> > +     if (space >= nbits) {
+> > +             map[index] &= ~(GENMASK(nbits + offset - 1, offset));
+> > +             map[index] |= value << offset;
+> > +     } else {
+> > +             map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
+> > +             map[index] |= value << offset;
+> > +             map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> > +             map[index + 1] |= (value >> space);
+> > +     }
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
 >
