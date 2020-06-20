@@ -2,132 +2,133 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3244C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF8B23AFB
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F36523B9A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QDUi4+cS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VIz3U0ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFTP5K (ORCPT
+        id S1727845AbgFTP51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 11:57:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgFTP5I (ORCPT
+        Sat, 20 Jun 2020 11:57:27 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48558 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727771AbgFTP5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 11:57:08 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02330C06174E
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g12so5377273pll.10
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9tYajToBSjCKrMeO3oPfRpy8eb8n4thx7RWSAT9gnU0=;
-        b=QDUi4+cS/+VkJarQJer8i54NB6wrYUApoWkctsr63KwWXWXArOZDidsHLokQDZp1dW
-         eZ4mUUVqPLdtc98QdwYojIxlVjsSvdT6uJdK2Pr6SfHfX+CS5ufDjNUbv4fBIhf1Kcxv
-         MQ/YY9T6qSNqLt4/98fJo5BCZXSyE37vzBS0w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9tYajToBSjCKrMeO3oPfRpy8eb8n4thx7RWSAT9gnU0=;
-        b=nueTCLOx/0Grb+7nocxoVDCgk8sSpeaQTODOE+MGndISmz1fCKpO2ksATZsfU5II+t
-         x+O1oT98pOyKOOdQeLxQqDib9HRU6yizRh1XwD6/z/KENsYYn7SDRbaRqCcJIbqrwiJG
-         6ACV7VJFYdNJv+O8lD/4TsBvhO5/rwqVkvUOno3fIj/Xrk1j+uPkny53IEkifvq/bE5R
-         aT0Enmt+EYt1kTQSdnWD7bQcy7Iy/IKekkhLLQXDn3nSeXlQufP6yIu8Ja/JZPL9ydvp
-         aDBNfQXe6guxliQ/j6t4on3jfLiKZFcHI7oaPmBWU8ThJ3dNcgySIg+c+i0yD/UeBA7m
-         COjA==
-X-Gm-Message-State: AOAM531V8IXSU0HHjPbHwJI/VVn2sKqLchWXWWZQGUyeZaZ2bPO1p7Ap
-        M60y9n9PP9wwcvFMLCXZii7KlA==
-X-Google-Smtp-Source: ABdhPJxL62JhXi8o+nSID6QHqBiLZ4YAHSAeaQKUwiACFjUcLS2k4S/MAlD8WL4T8tKBotrZuujIYg==
-X-Received: by 2002:a17:902:b78a:: with SMTP id e10mr12682612pls.201.1592668627259;
-        Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y4sm8954278pfr.182.2020.06.20.08.57.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 08:57:06 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 08:57:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mm@kvack.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2 00/16] Remove uninitialized_var() macro
-Message-ID: <202006200854.B2D8F21@keescook>
-References: <20200620033007.1444705-1-keescook@chromium.org>
- <CA+icZUWpHRR7ukyepiUH1dR3r4GMi-s2crfwR5vTszdt1SUTQw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUWpHRR7ukyepiUH1dR3r4GMi-s2crfwR5vTszdt1SUTQw@mail.gmail.com>
+        Sat, 20 Jun 2020 11:57:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592668644; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=BBBfKMGR+gMiO9YhDRvlSioav0U5MzKSOOLtx2cvzQY=; b=VIz3U0ij318nvkLSKNsR4vYRZEQi1jCT6qPp8cbPENRWvIX3Q1lQZNlwv/xnhLZ7NSA9Dk86
+ zegsAbi3fQiOw8GJFxz9HDXJZiT7dYwghGhlmHdjwCJnd0ipftIgl3R+kWG5MwMLeRA2CGKX
+ psmprT5xk5o2uvNGH5QhtGm32CE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5eee31e286de6ccd448be34c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 20 Jun 2020 15:57:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 17EA0C433CA; Sat, 20 Jun 2020 15:57:22 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C032C433C8;
+        Sat, 20 Jun 2020 15:57:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C032C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v12] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sat, 20 Jun 2020 21:27:15 +0530
+Message-Id: <1592668635-10894-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 09:03:34AM +0200, Sedat Dilek wrote:
-> On Sat, Jun 20, 2020 at 5:30 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > v2:
-> > - more special-cased fixes
-> > - add reviews
-> > v1: https://lore.kernel.org/lkml/20200603233203.1695403-1-keescook@chromium.org
-> >
-> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > (or can in the future), and suppresses unrelated compiler warnings
-> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
-> > either simply initialize the variable or make compiler changes.
-> >
-> > As recommended[2] by[3] Linus[4], remove the macro.
-> >
-> > Most of the 300 uses don't cause any warnings on gcc 9.3.0, so they're in
-> > a single treewide commit in this series. A few others needed to actually
-> > get cleaned up, and I broke those out into individual patches.
-> >
-> > The tree is:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/uninit/macro
-> >
-> > -Kees
-> >
-> 
-> Hi Kees,
-> 
-> thanks for doing a v2 of your patchset.
-> 
-> As I saw Jason Yan providing some "uninitialized_var() macro" patches
-> to the MLs I pointen him to your tree "v1".
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
 
-Thanks!
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+Changes from v11:
+- Add the optional regulator votes which are needed in case of SSR.
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-> BTW, I have tested your "v1" against Linux v5.7 (see [1]) - just
-> yesterday with Linux v5.7.5-rc1.
-> 
-> Is it possible to have a v2 of this patchset on top od Linux v5.7 - if
-> you do not mind.
-
-Since it's only going to be for post-v5.8, I'm fine skipping the v5.7
-testing. Mainly I'm looking at v5.8 and linux-next.
-
-Thanks for looking at it!
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 4e9149d..39dbfc8 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -389,6 +389,17 @@
+ 	};
+ };
+ 
++&wifi {
++	status = "okay";
++	vdd-0.8-cx-mx = <&vreg_l9a_0p6>;
++	vdd-1.8-xo = <&vreg_l1c_1p8>;
++	vdd-1.3-rfa = <&vreg_l2c_1p3>;
++	vdd-3.3-ch0 = <&vreg_l10c_3p3>;
++	wifi-firmware {
++		iommus = <&apps_smmu 0xc2 0x1>;
++	};
++};
++
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
+ &qspi_clk {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217..cd6d3b5 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2814,6 +2814,28 @@
+ 
+ 			#freq-domain-cells = <1>;
+ 		};
++
++		wifi: wifi@18800000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			iommus = <&apps_smmu 0xc0 0x1>;
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_mem>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	thermal-zones {
 -- 
-Kees Cook
+2.7.4
+
