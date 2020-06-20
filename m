@@ -2,133 +2,105 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE27EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D82320B80
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592625316;
-	bh=p498IFqQEqFxR3CQd9uyNIDEFRHE5ANadc1sTtnL6wo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WC/qmIVJ/c60hsEMLWj1zqyngkA2SXtbxuTVleerNXjiNNMeBp1PkdrVvfgg1Rgi9
-	 oTiaoeQZBMd7nHJQQF0qikjesLQrf0xGootLl1FXz6eqJkw2lZFqFSSMVLHTwfesMe
-	 CZe9tdYpsbupiJU7IJW1oknGAKJWwmhFreCbwoAA=
+	by mail.kernel.org (Postfix) with ESMTP id 05B01233A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QvlXEEss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgFTDzP (ORCPT
+        id S1726987AbgFTD7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 23:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFTDzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:55:14 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D701F222B8;
-        Sat, 20 Jun 2020 03:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592624767;
-        bh=p498IFqQEqFxR3CQd9uyNIDEFRHE5ANadc1sTtnL6wo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fggCmaHezkPbfYr1T9OgsskEZqeALL34/Y+whMd+h5L7RXIkxnIZYbI8jUdRrvy7T
-         RhxDKI7mblY6YqcN5rc6sq27O4zcr3yIQp9n6um0TUIge1UY/ds8FDbE+xYzd5PXXE
-         xd7x2+4XDBrKw23rxDlFvGsClOEqYT8w3H2inK7Q=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH 2/2] tracing: Fix event trigger to accept redundant spaces
-Date:   Sat, 20 Jun 2020 12:46:03 +0900
-Message-Id: <159262476352.185015.5261566783045364186.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159262474473.185015.177609153974879988.stgit@devnote2>
-References: <159262474473.185015.177609153974879988.stgit@devnote2>
-User-Agent: StGit/0.19
+        Fri, 19 Jun 2020 23:59:50 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49820 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbgFTD7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 23:59:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K3xYGG069386;
+        Sat, 20 Jun 2020 03:59:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=jCH3I8fpRAneS91Ia94tA1cV8cpC1hPLFvD4x1EGC0k=;
+ b=QvlXEEss6T6r9k7y0sfcxvKYyepruSnUGRqIoK9/XJtFSLs1IsxQIjS69RSblTNsEGwJ
+ Pu6HKtZL+eixxjGe9i8SrbSscHYWUUDlt7SkL5ShyCD4nS8IWusT7RFGqVK+rMUjnE4a
+ Z3Zy7iKnDvaufjGPag6kxCfwCg4OW/VlR80eIgjk/Ph4jiW/WLA1x/wZ2kcTPH2zPadI
+ /UhJQwxGetGZsuW+3hnJi2eJ4gKepn8EODjg7HU/bcVIz8+uybD4OLHMwGL1U328LP61
+ RcgaaO1Op12eJa+pkqDrTaIOQc+X0kRwlYzOwyW9m8LIko5o0OSnxNu0Uw9jU7NtP9AU Jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31s9vqr37g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 20 Jun 2020 03:59:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K3vT10097770;
+        Sat, 20 Jun 2020 03:59:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31sa8ykcyf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 20 Jun 2020 03:59:33 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05K3xTn1023442;
+        Sat, 20 Jun 2020 03:59:29 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jun 2020 20:26:46 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     alim.akhtar@samsung.com, Stanley Chu <stanley.chu@mediatek.com>,
+        jejb@linux.ibm.com, avri.altman@wdc.com,
+        linux-scsi@vger.kernel.org, asutoshd@codeaurora.org
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        bvanassche@acm.org, kuohong.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, chaotian.jing@mediatek.com,
+        matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        peter.wang@mediatek.com, cc.chou@mediatek.com,
+        andy.teng@mediatek.com, linux-mediatek@lists.infradead.org,
+        beanhuo@micron.com, linux-kernel@vger.kernel.org,
+        cang@codeaurora.org
+Subject: Re: [PATCH] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state as static function
+Date:   Fri, 19 Jun 2020 23:26:38 -0400
+Message-Id: <159262354733.7800.6869131850805388311.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200616095120.14570-1-stanley.chu@mediatek.com>
+References: <20200616095120.14570-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006200026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 phishscore=0 cotscore=-2147483648 spamscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006200026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+On Tue, 16 Jun 2020 17:51:20 +0800, Stanley Chu wrote:
 
-For example, these return -EINVAL
+> Fix build warning reported by kernel test robot:
+> Make ufs_mtk_wait_link_state() as static functon.
+> 
+> Warning:
+> >> drivers/scsi/ufs/ufs-mediatek.c:181:5: warning: no previous prototype
+> >> for 'ufs_mtk_wait_link_state' [-Wmissing-prototypes]
 
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
+Applied to 5.9/scsi-queue, thanks!
 
-But these are hard to find what is wrong.
+[1/1] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state static
+      https://git.kernel.org/mkp/scsi/c/9a3cd470f8e3
 
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_events_trigger.c |   21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 3a74736da363..f725802160c0 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -216,11 +216,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- int trigger_process_regex(struct trace_event_file *file, char *buff)
- {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
- 
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
- 
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
- 
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1368,6 +1380,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
