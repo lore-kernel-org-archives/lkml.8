@@ -2,112 +2,132 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21BC420786
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592667921;
-	bh=KahgNShgI+rYus9N9esjq/Bo8FVrHZeP7m0+5CCnMsI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ODdStHtAbSasLObSdrWj57iCfqKXFk4ujPoGEqQTyQHcwIIvSo9y58k5lcbor12Xk
-	 I6zIEyPgn4segAetuwDQJMYYxgko0otCqVEKXMg40T5JfIQmbuQt3vjgFQePcajKxI
-	 b2ksxfSlNtbTsSmqiUfBc6PO9zQQtAbnA0acRFfo=
+	by mail.kernel.org (Postfix) with ESMTP id 0AF8B23AFB
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QDUi4+cS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgFTPpT (ORCPT
+        id S1727113AbgFTP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 11:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgFTPpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 11:45:18 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECD7820706;
-        Sat, 20 Jun 2020 15:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592667918;
-        bh=KahgNShgI+rYus9N9esjq/Bo8FVrHZeP7m0+5CCnMsI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=QIC8IeVdwoIztnWGw4mc7Bo4cycDl5ubesDoouGrsd5aSTuNr8zDZPbBwqoTmGr3b
-         3WX0Lb9t1TLrz2AqoF27iOFTF7nUM1kDO+Mv1scJ5VUYwVIxOL3wg1jMlbD1raNAhs
-         9GuJYCQfmnUzQ2Jx0SicZOzqZewUJhawdkbSoOaU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D1A503522658; Sat, 20 Jun 2020 08:45:17 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 08:45:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 3/3] rcu/trace: Add name of the source for gp_seq to
- prevent confusion
-Message-ID: <20200620154517.GA14328@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200619013641.63453-1-joel@joelfernandes.org>
- <20200619013641.63453-3-joel@joelfernandes.org>
- <20200619020718.GA74764@google.com>
- <20200619174001.GL2723@paulmck-ThinkPad-P72>
- <20200620053608.GC9005@google.com>
+        Sat, 20 Jun 2020 11:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgFTP5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 11:57:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02330C06174E
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g12so5377273pll.10
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9tYajToBSjCKrMeO3oPfRpy8eb8n4thx7RWSAT9gnU0=;
+        b=QDUi4+cS/+VkJarQJer8i54NB6wrYUApoWkctsr63KwWXWXArOZDidsHLokQDZp1dW
+         eZ4mUUVqPLdtc98QdwYojIxlVjsSvdT6uJdK2Pr6SfHfX+CS5ufDjNUbv4fBIhf1Kcxv
+         MQ/YY9T6qSNqLt4/98fJo5BCZXSyE37vzBS0w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9tYajToBSjCKrMeO3oPfRpy8eb8n4thx7RWSAT9gnU0=;
+        b=nueTCLOx/0Grb+7nocxoVDCgk8sSpeaQTODOE+MGndISmz1fCKpO2ksATZsfU5II+t
+         x+O1oT98pOyKOOdQeLxQqDib9HRU6yizRh1XwD6/z/KENsYYn7SDRbaRqCcJIbqrwiJG
+         6ACV7VJFYdNJv+O8lD/4TsBvhO5/rwqVkvUOno3fIj/Xrk1j+uPkny53IEkifvq/bE5R
+         aT0Enmt+EYt1kTQSdnWD7bQcy7Iy/IKekkhLLQXDn3nSeXlQufP6yIu8Ja/JZPL9ydvp
+         aDBNfQXe6guxliQ/j6t4on3jfLiKZFcHI7oaPmBWU8ThJ3dNcgySIg+c+i0yD/UeBA7m
+         COjA==
+X-Gm-Message-State: AOAM531V8IXSU0HHjPbHwJI/VVn2sKqLchWXWWZQGUyeZaZ2bPO1p7Ap
+        M60y9n9PP9wwcvFMLCXZii7KlA==
+X-Google-Smtp-Source: ABdhPJxL62JhXi8o+nSID6QHqBiLZ4YAHSAeaQKUwiACFjUcLS2k4S/MAlD8WL4T8tKBotrZuujIYg==
+X-Received: by 2002:a17:902:b78a:: with SMTP id e10mr12682612pls.201.1592668627259;
+        Sat, 20 Jun 2020 08:57:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y4sm8954278pfr.182.2020.06.20.08.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 08:57:06 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 08:57:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mm@kvack.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2 00/16] Remove uninitialized_var() macro
+Message-ID: <202006200854.B2D8F21@keescook>
+References: <20200620033007.1444705-1-keescook@chromium.org>
+ <CA+icZUWpHRR7ukyepiUH1dR3r4GMi-s2crfwR5vTszdt1SUTQw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200620053608.GC9005@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+icZUWpHRR7ukyepiUH1dR3r4GMi-s2crfwR5vTszdt1SUTQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 01:36:08AM -0400, Joel Fernandes wrote:
-> On Fri, Jun 19, 2020 at 10:40:01AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 18, 2020 at 10:07:18PM -0400, Joel Fernandes wrote:
-> > > On Thu, Jun 18, 2020 at 09:36:41PM -0400, Joel Fernandes (Google) wrote:
-> > > [...]
-> > > > @@ -2019,7 +2019,7 @@ static int __noreturn rcu_gp_kthread(void *unused)
-> > > >  			cond_resched_tasks_rcu_qs();
-> > > >  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
-> > > >  			WARN_ON(signal_pending(current));
-> > > > -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
-> > > > +			trace_rcu_grace_period(rcu_state.name, TPS("rsp"), rcu_state.gp_seq,
-> > > >  					       TPS("reqwaitsig"));
-> > > >  		}
-> > > >  
-> > > > @@ -2263,7 +2263,7 @@ int rcutree_dying_cpu(unsigned int cpu)
-> > > >  		return 0;
-> > > >  
-> > > >  	blkd = !!(rnp->qsmask & rdp->grpmask);
-> > > > -	trace_rcu_grace_period(rcu_state.name, READ_ONCE(rnp->gp_seq),
-> > > > +	trace_rcu_grace_period(rcu_state.name, TPS("rsp"), READ_ONCE(rnp->gp_seq),
-> > > 
-> > > This should be: TPS("rnp")  :-(
-> > > 
-> > > Happy to fix it up and resend if you'd like. Thanks!
-> > 
-> > I queued and pushed 1/2 and 2/2.
+On Sat, Jun 20, 2020 at 09:03:34AM +0200, Sedat Dilek wrote:
+> On Sat, Jun 20, 2020 at 5:30 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > v2:
+> > - more special-cased fixes
+> > - add reviews
+> > v1: https://lore.kernel.org/lkml/20200603233203.1695403-1-keescook@chromium.org
+> >
+> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > (or can in the future), and suppresses unrelated compiler warnings
+> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> > either simply initialize the variable or make compiler changes.
+> >
+> > As recommended[2] by[3] Linus[4], remove the macro.
+> >
+> > Most of the 300 uses don't cause any warnings on gcc 9.3.0, so they're in
+> > a single treewide commit in this series. A few others needed to actually
+> > get cleaned up, and I broke those out into individual patches.
+> >
+> > The tree is:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/uninit/macro
+> >
+> > -Kees
+> >
 > 
-> Thanks!
+> Hi Kees,
 > 
-> > but again, I am still not at all
-> > convinced by 3/3.  If you want to make RCU trace output human
-> > readable, post-processing will be needed.
+> thanks for doing a v2 of your patchset.
 > 
-> Or I could post-process the code before building it since the pattern seems
-> easy to parse ;-)
+> As I saw Jason Yan providing some "uninitialized_var() macro" patches
+> to the MLs I pointen him to your tree "v1".
 
-For this one thing, perhaps.  For most other information of interest,
-doing so in-kernel would not be so good, for example, from a
-lock-contention viewpoint.
+Thanks!
 
-							Thanx, Paul
+> BTW, I have tested your "v1" against Linux v5.7 (see [1]) - just
+> yesterday with Linux v5.7.5-rc1.
+> 
+> Is it possible to have a v2 of this patchset on top od Linux v5.7 - if
+> you do not mind.
+
+Since it's only going to be for post-v5.8, I'm fine skipping the v5.7
+testing. Mainly I'm looking at v5.8 and linux-next.
+
+Thanks for looking at it!
+
+-- 
+Kees Cook
