@@ -2,159 +2,155 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A08C23B30
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CBA23433
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgFTLVk (ORCPT
+        id S1728059AbgFTL0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 07:21:40 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51528 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgFTLVi (ORCPT
+        Sat, 20 Jun 2020 07:26:19 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:1288 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727971AbgFTL0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 07:21:38 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 39A458053F;
-        Sat, 20 Jun 2020 13:21:34 +0200 (CEST)
-Date:   Sat, 20 Jun 2020 13:21:32 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for
- some panels
-Message-ID: <20200620112132.GB16901@ravnborg.org>
-References: <20200617222703.17080-1-digetx@gmail.com>
- <20200617222703.17080-8-digetx@gmail.com>
+        Sat, 20 Jun 2020 07:26:18 -0400
+X-IronPort-AV: E=Sophos;i="5.75,258,1589234400"; 
+   d="scan'208";a="352198204"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 13:26:14 +0200
+Date:   Sat, 20 Jun 2020 13:26:14 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Bernard <bernard@vivo.com>
+cc:     Markus Elfring <Markus.Elfring@web.de>, opensource.kernel@vivo.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
+        =?ISO-8859-15?Q?Felix_K=FChling?= <Felix.Kuehling@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Subject: Re:Re: [PATCH v2] drm/amdkfd: Fix memory leaks according to error
+ branches
+In-Reply-To: <ANUAnQAuCEPyRKFA*ek664qj.3.1592651815407.Hmail.bernard@vivo.com>
+Message-ID: <alpine.DEB.2.22.394.2006201324140.2918@hadrien>
+References: <ANUAnQAuCEPyRKFA*ek664qj.3.1592651815407.Hmail.bernard@vivo.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617222703.17080-8-digetx@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=weqEaMSWHVjOYctd_rUA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: multipart/mixed; boundary="8323329-1370080203-1592652375=:2918"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Thu, Jun 18, 2020 at 01:27:03AM +0300, Dmitry Osipenko wrote:
-> The DRM panel bridge core requires connector type to be set up properly,
-> otherwise it rejects the panel. The missing connector type problem popped
-> up while I was trying to wrap CLAA070WP03XG panel into a DRM bridge in
-> order to test whether panel's rotation property work properly using
-> panel-simple driver on NVIDIA Tegra30 Nexus 7 tablet device, which uses
-> CLAA070WP03XG display panel.
-> 
-> The NVIDIA Tegra DRM driver recently gained DRM bridges support for the
-> RGB output and now driver wraps directly-connected panels into DRM bridge.
-> Hence all panels should have connector type set properly now, otherwise
-> the panel's wrapping fails.
-> 
-> This patch adds missing connector types for the LVDS panels that are found
-> on NVIDIA Tegra devices:
-> 
->   1. AUO B101AW03
->   2. Chunghwa CLAA070WP03XG
->   3. Chunghwa CLAA101WA01A
->   4. Chunghwa CLAA101WB01
->   5. EDT ET057090DHU
->   6. Innolux N156BGE L21
->   7. Samsung LTN101NT05
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+--8323329-1370080203-1592652375=:2918
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Very good to have this fixed.
-I went ahead and pushed this commit to drm-misc-next as it is really
-independent from the rest of the series.
 
-	Sam
 
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 6764ac630e22..9eb2dbb7bfa6 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -687,6 +687,7 @@ static const struct panel_desc auo_b101aw03 = {
->  		.width = 223,
->  		.height = 125,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct display_timing auo_b101ean01_timing = {
-> @@ -1340,6 +1341,7 @@ static const struct panel_desc chunghwa_claa070wp03xg = {
->  		.width = 94,
->  		.height = 150,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode chunghwa_claa101wa01a_mode = {
-> @@ -1362,6 +1364,7 @@ static const struct panel_desc chunghwa_claa101wa01a = {
->  		.width = 220,
->  		.height = 120,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode chunghwa_claa101wb01_mode = {
-> @@ -1384,6 +1387,7 @@ static const struct panel_desc chunghwa_claa101wb01 = {
->  		.width = 223,
->  		.height = 125,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode dataimage_scf0700c48ggu18_mode = {
-> @@ -1573,6 +1577,7 @@ static const struct panel_desc edt_et057090dhu = {
->  	},
->  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
->  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode edt_etm0700g0dh6_mode = {
-> @@ -2055,6 +2060,7 @@ static const struct panel_desc innolux_n156bge_l21 = {
->  		.width = 344,
->  		.height = 193,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode innolux_p120zdg_bf1_mode = {
-> @@ -3001,6 +3007,7 @@ static const struct panel_desc samsung_ltn101nt05 = {
->  		.width = 223,
->  		.height = 125,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
->  
->  static const struct drm_display_mode samsung_ltn140at29_301_mode = {
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+On Sat, 20 Jun 2020, Bernard wrote:
+
+>
+>
+> From: Julia Lawall <julia.lawall@inria.fr>
+> Date: 2020-06-20 17:37:19
+> To:  Markus Elfring <Markus.Elfring@web.de>
+> Cc:  Bernard Zhao <bernard@vivo.com>,opensource.kernel@vivo.com,amd-gfx@lists.freedesktop.org,dri-devel@lists.freedesktop.org,kernel-janitors@vger.kernel.org,linux-kernel@vger.kernel.org,Alex Deucher <alexander.deucher@amd.com>,"Christian König" <christian.koenig@amd.com>,"Felix Kühling" <Felix.Kuehling@amd.com>,Daniel Vetter <daniel@ffwll.ch>,David Airlie <airlied@linux.ie>
+> Subject: Re: [PATCH v2] drm/amdkfd: Fix memory leaks according to error branches>
+> >
+> >On Sat, 20 Jun 2020, Markus Elfring wrote:
+> >
+> >> > The function kobject_init_and_add alloc memory like:
+> >> > kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+> >> > ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+> >> > ->kmalloc_slab, in err branch this memory not free. If use
+> >> > kmemleak, this path maybe catched.
+> >> > These changes are to add kobject_put in kobject_init_and_add
+> >> > failed branch, fix potential memleak.
+> >>
+> >> I suggest to improve this change description.
+> >>
+> >> * Can an other wording variant be nicer?
+> >
+> >Markus's suggestion is as usual extremely imprecise.  However, I also find
+> >the message quite unclear.
+> >
+> >It would be good to always use English words.  alloc and err are not
+> >English words.  Perhaps most people will figure out what they are
+> >abbreviations for, but it would be better to use a few more letters to
+> >make it so that no one has to guess.
+> >
+> >Then there are a bunch of things that are connected by arrows with no
+> >spaces between them.  The most obvious meaning of an arrow with no space
+> >around it is a variable dereference.  After spending some mental effort,
+> >one can realize that that is not what you mean here.  A layout like:
+> >
+> >   first_function ->
+> >     second_function ->
+> >       third_function
+> >
+> >would be much more readable.
+> >
+> >I don't know what "this patch maybe catched" means.  Is "catched" supposed
+> >to be "caught" or "cached"?  Overall, the sentence could be "Kmemleak
+> >could possibly detect this issue", or something like that.  But I don't
+> >know what this means.  Did you detect the problem with kmemleak?  if you
+> >did not detect the problem with kmemleak, and overall you don't know
+> >whether kmemleak would detect the bug or not, is this information useful
+> >at all for the patch?
+>
+> Hi:
+>
+> Kmemleak detected a memory leak as below:
+> kobject_init_and_add->
+> 	kobject_add_varg->
+> 		kobject_set_name_vargs->
+> 			kvasprintf_const->
+> 				kstrdup_const->
+> 					kstrdup->
+> 						kmalloc_track_caller->
+> 							kmalloc_slab
+>
+> If kobject_init_and_add is called, but kobject_put is not called in the error branch.
+> This will be detected by kmemleak.
+
+Thanks.  This is much more understandable.  The last part still seems a
+bit hypothetical.  After the trace, which explain why you made the change,
+just say what you did in the patch to fix the problem.
+
+julia
+
+>
+> BR//Bernard
+>
+> >"These changes are to" makes a lot of words with no information.  While it
+> >is perhaps not necessary to slavishly follow the rule about using the
+> >imperative, if it is convenient to use the imperative, doing so eliminates
+> >such meaningless phrases.
+> >
+> >memleak is also not an English word.  Memory leak is only a few more
+> >characters, and doesn't require the reader to make the small extra effort
+> >to figure out what you mean.
+> >
+> >julia
+> >
+> >>
+> >> * Will the tag “Fixes” become helpful for the commit message?
+> >>
+> >> Regards,
+> >> Markus
+> >>
+>
+>
+>
+--8323329-1370080203-1592652375=:2918--
