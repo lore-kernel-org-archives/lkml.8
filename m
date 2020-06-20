@@ -2,141 +2,143 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142EE22A84
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76E023BA6
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="AR5UA7OR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hShbR7Wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgFTNZ7 (ORCPT
+        id S1728167AbgFTN2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 09:25:59 -0400
-Received: from mail-eopbgr70093.outbound.protection.outlook.com ([40.107.7.93]:35219
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728064AbgFTNZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 09:25:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IgbLfBMuJ5igu/iQNq9aVpXXBmByDKkzxUFGcbS8rFjfZDbXXAWDkRNMxfb4xZ+3+qTnllUL7v+5Cwh9HEjreCDLh5KfP1Rro8P8SdelDPFvYEaCdYeY5MWJEFK6U9tfsSzMklhaLKLtvnflwwOYyd2w/Jiy17mmlQoPRfb1BoT+J3WC1o9zExfrwUwUc/1ZpJRKGZ0luf6yOTOdsmibevfX0TD9HPVfY2Ujsx+rcO9xb5Yd2gL9l3eSaDnzSnwpfjW9wDkFY2hM2fQHdMCPE5QdVxANagXMzqTWmlNoX12pflU4yBNlyE1Q5IgBkEANBdg4SWHo0pql2CJ5FrtIgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Se9TsmnyJkQ9cszpYSqvX6S6+z8dILbml9phNCG9hBI=;
- b=BPRJaJqdzbiM85dKCCAcSAQR1J07uFCwm19dnBbdx7E4hI/GKUHUnWePm6Ds9LtS0iyMgNJB6s+SvA9T6MfFH75m8fEXGpRN7YMjFSQRm5ztsKNt4z4JKsJ5lNiLOBYvruzcwCj0udiHR/9eu2fajyKMjH7YW4EjUrRWGh86mR75dE1U8wKdWcBSfH1TUDguHUOBJhZ+YG7v0oNzi+UapB7o1uIoI6hDw/V8fii1ZjFGhXcfJk8X5zcCoG/FjfmvbLAKYNvzNogA6S0kyij/YEY9Z5Varjae1QGuES3/m9GJ7eEao76hraZtta4IWI5Q7bIhmOrrUrLOcFzA/sHsWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Se9TsmnyJkQ9cszpYSqvX6S6+z8dILbml9phNCG9hBI=;
- b=AR5UA7ORjSt+qVtsLEQqbj9xfOfVDysH/0ajLbSHN2uv4R6X3H+JTM11Js5gcc9sYsCrxYB00cwcAA7+3yP/XDz6xiWwGAUQzIPsqTuveRL1DCxrpL+uDSabImO2rwBunIN/TXv7mW/Bd85ZOiooIdNmzA+s+hFV0BR1FpQGd5A=
-Authentication-Results: resnulli.us; dkim=none (message not signed)
- header.d=none;resnulli.us; dmarc=none action=none header.from=plvision.eu;
-Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:5c::21)
- by AM4P190MB0148.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:63::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Sat, 20 Jun
- 2020 13:25:51 +0000
-Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
- ([fe80::70db:92db:9750:5ae3]) by AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
- ([fe80::70db:92db:9750:5ae3%7]) with mapi id 15.20.3109.025; Sat, 20 Jun 2020
- 13:25:51 +0000
-Date:   Sat, 20 Jun 2020 16:25:47 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Ido Schimmel <idosch@idosch.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next 0/6] net: marvell: prestera: Add Switchdev driver for
- Prestera family ASIC device 98DX326x (AC3x)
-Message-ID: <20200620132547.GB6911@plvision.eu>
-References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
- <20200530142928.GA1624759@splinter>
- <20200530145231.GB19411@plvision.eu>
- <20200530155429.GA1639307@splinter>
- <20200601062417.GC2282@nanopsycho>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601062417.GC2282@nanopsycho>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM6P193CA0139.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:85::44) To AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:200:5c::21)
+        Sat, 20 Jun 2020 09:28:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbgFTN2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 09:28:35 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5673EC06174E;
+        Sat, 20 Jun 2020 06:28:35 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id m2so5794178pjv.2;
+        Sat, 20 Jun 2020 06:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vLLB/NoNdpMNfkjSscH7J11Fj+B4e6QUt2fHvp/Vnhs=;
+        b=hShbR7Wj+0+82D5VR7fW/WBZ7SxGMhIotrr/NOPhXdbQ4Thkcj0NbaNvVyikA1M78j
+         hBWOpWrMoYbECQmhvfble9FtO0pXsx6XOVXb/GscRuBVkvUbioNQGvHVZ9OjPBsmpgdW
+         buAaokMKH8RzHG+OMBm2PD5Geaual6xQwBRwcqSki2ju8S+szw2MxGzL++poWfFvJ6h9
+         eHqHas6HHWpSles+ASAeiLtyUGS16o+ax/Bfu+J94ftj5zK/uzzC1uTpNqEFRCELEBLS
+         mXq3GrRwfkpBcUmEBLMMCGgtLAlYffv0EIJ2bsdozemoXT26Gg0X1dNh0vLyWHMM6w9l
+         i+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vLLB/NoNdpMNfkjSscH7J11Fj+B4e6QUt2fHvp/Vnhs=;
+        b=ibxphX8T+9hb59g8dXuEYf0JH8/V9P1/wTCihD7Ia7rlOX9ly7/7VrZdW7VDGRwicQ
+         PT+4BlGKOg7FO7Mx1q/y/lXBHGdiQnbam0562cUeoPQP7q3Qj9zdZc7VXNileis28Jhv
+         aAXHitK6lPNuXPpZVmkkm3WGZ9uKJ7d0ciAXh+TQdz6rRPntIW0fH2lDnapgFCuKG0SZ
+         mbplY9hwugaKzWUSMBVh3hJ2x7lRG/CNN+9e3xF+/e2ThjWLrkcaS3AE+nkURR1nd0lV
+         UKxbbra285E791Ge3KewNfQPzTN0XOd1VZOwoYFqXETDmydJG42zDwCBWf/fz+iao0Ru
+         59xg==
+X-Gm-Message-State: AOAM530Mk2l91Wbj3GDFSW1Dl0sElRsvjCkXoZ4rKWijhDdIz7aGPvng
+        MBcuA1CZyxG42AGeA8VyaxPSq2F5
+X-Google-Smtp-Source: ABdhPJzk5GPE0Kf47Qd9mLc5v9UmSzYwuQmjZmkVD8LUr9j0EgHpcoq6WsCu7Zmm8mRO8P5LxFHamQ==
+X-Received: by 2002:a17:90a:7849:: with SMTP id y9mr8724431pjl.143.1592659714584;
+        Sat, 20 Jun 2020 06:28:34 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d184sm8822361pfd.85.2020.06.20.06.28.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 06:28:33 -0700 (PDT)
+Subject: Re: [PATCH 4.19 000/265] 4.19.129-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200620082214.928028424@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <81641b06-562b-2f24-da1f-522850b0677d@roeck-us.net>
+Date:   Sat, 20 Jun 2020 06:28:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM6P193CA0139.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:85::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Sat, 20 Jun 2020 13:25:49 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a0aba7e4-eb36-4d0c-01a0-08d8151d7347
-X-MS-TrafficTypeDiagnostic: AM4P190MB0148:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM4P190MB0148AFA555210E14E1A46ECF95990@AM4P190MB0148.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0440AC9990
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aUYJ0Z+yorLYJNLSBmQdYRmhxtQUelJ4aOTfkCahetQxIkp/zIWMm1Zn3s2GyS6McCqNwsPJaZSujtheEoyt+6VtWlSq/9ZCYu31wWFuphxX//7dy6WQBZnAextfLaWeMJdFOPGSZnIEPZ91LszpqCW6ZiYpnm51KkS3EIXpY/KpaMALDgcz8JvootPi/gWghYUaTyc8OsdANdZEdPNvWrs5gAgI/0Tu5hdcnqXHE4yeept2fcxq8cQzW5Y3k7V/WPlbKOf0+moRJ45L+M4Q5TizDlil7rFH5wyI2Ed68GsxSdv1y1UI651AXdJnpVL1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4P190MB0052.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(39830400003)(396003)(346002)(7696005)(7416002)(8936002)(83380400001)(8676002)(44832011)(2906002)(5660300002)(6916009)(26005)(52116002)(66556008)(66476007)(66946007)(1076003)(8886007)(4744005)(2616005)(55016002)(33656002)(508600001)(54906003)(956004)(86362001)(4326008)(186003)(36756003)(16526019)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: eyu1UVTULygheklciCubWCiFTCPJK2wJy/5pJsK91zq+/xgKp9HoLN7twKtu1T6gaS/i3DUDPM+xw9WWTTy2V3ZqnmrqJdcILAErafRoZFMbK1xbaTEcaN1Jnhmv4a2PpZrI5PX0OE666eHV17BiVug2tfT3l30S7GvZ7Azhi93enYKiOsdrfMI3HKdKnBS6g5EEMb/npHtpybr3A2bGwQTvo+CbcCNOCHprRRS8ALtXCm8ftaoadjGV2NY9K658tU+GBflZWEbmfFQcGKBd+YMYsVEF7gbiCu+Xpukk4L8jERGNpppQlJXGfISt++xaItCwPZIRgpr3wObVifDT99YKdPqIkYK+c8O1Nt9wEFfO4FRv77liagEp908J1JNYQcpmXhsYxQIG/eI5ha+tExag864q44WzKbk9b2L6bv9FYWIHkPWBLM+pRLp3AwIfsOsZE1DV7Vhj1q/mKfC/ojDJXjiQgiPczcEshjrYmwM=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0aba7e4-eb36-4d0c-01a0-08d8151d7347
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2020 13:25:51.1900
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sO5cJR4AvkKC8CNetba0HzjX/BIgZ5yh2FxC2Z/bM3sWmFV/xEdjZ8TFgxQ/qNF3fAwQBuzBMA7KoTMsUADrItjCEtbHgvYl3CGdmDOjPxQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4P190MB0148
+In-Reply-To: <20200620082214.928028424@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri, Ido,
+On 6/20/20 1:22 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.129 release.
+> There are 265 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 22 Jun 2020 08:21:23 +0000.
+> Anything received after that time might be too late.
+> 
 
-On Mon, Jun 01, 2020 at 08:24:17AM +0200, Jiri Pirko wrote:
-> Sat, May 30, 2020 at 05:54:29PM CEST, idosch@idosch.org wrote:
-> >On Sat, May 30, 2020 at 05:52:31PM +0300, Vadym Kochan wrote:
-> 
-> [...]
-> 
-> 
-> >> > WARNING: do not add new typedefs
-> >> > #1064: FILE: drivers/net/ethernet/marvell/prestera/prestera_hw.h:32:
-> >> > +typedef void (*prestera_event_cb_t)
-> >> I may be wrong, as I remember Jiri suggested it and looks like
-> >> it makes sense. I really don't have strong opinion about this.
-> >
-> >OK, so I'll let Jiri comment when he is back at work.
-> 
-> I was not aware of this warning, but for function callbacks, I think it
-> is very handy to have them as typedef instead of repeating the prototype
-> over and over. For that, I don't think this warning makes sense.
-> 
-> [...]
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 421 pass: 421 fail: 0
 
-As I said I have no strong opinion on this, but Jiri's suggestion makes
-sense. It looks like typedef check was mostly about 'struct' and native
-types definition.
-
-Regards,
-Vadym Kochan
+Guenter
