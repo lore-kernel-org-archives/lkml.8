@@ -2,151 +2,114 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A11C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6742C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2A922248
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mCErTwcX"
+	by mail.kernel.org (Postfix) with ESMTP id 8FC3E2404E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592675513;
+	bh=82NjauDJlTIVsz/7NSlMR0NOPfEGE23VmIXJnYf+sz0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HcmoP7wFGIGuESwyeCt/GLYc9HOSg8QP/EmWBzPHRnko9S2ZDBhyhBZFLLL61TkQw
+	 wJnE73vgZ1XdOoxoXWFDnQj3Y21GWwKeM05kT55q2n5qWPpo7v3mJdRuMF/nXzLbQB
+	 qslvq3P86gyPDR8WQKPPOhPQA6J5W2xQMoxFPPZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgFTRvJ (ORCPT
+        id S1728395AbgFTRvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 13:51:09 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:19100 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgFTRvJ (ORCPT
+        Sat, 20 Jun 2020 13:51:52 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38371 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgFTRvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 13:51:09 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200620175106epoutp011717ddd0873c9cd4ee8b924f53119a8c~aUeYT5TLW3036330363epoutp01h
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 17:51:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200620175106epoutp011717ddd0873c9cd4ee8b924f53119a8c~aUeYT5TLW3036330363epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592675466;
-        bh=kgQx6GkHG+g2FYavxug1XfQFwsmcK85FkVaRvxsVKak=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=mCErTwcXor+EgQBDL6q5bWbxhFnCLx9Dpmkh1GLuCfRAp2MuPtXfdH6sXfIXeocib
-         bzlM7Yxv2Uy9Dx86eoTp7xSyqt3cIUNeR+HzZsl6JiE4P4lESP8LHCwaK56Cm56Chm
-         IMpNJm0K1eKcPy9QYz+O/nL5YX0QA9Wd6xv+j3do=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200620175105epcas5p2a0f9f291f07c0bb8dc780b10d9f2f363~aUeXA9T8a2357823578epcas5p2L;
-        Sat, 20 Jun 2020 17:51:05 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B5.00.09475.98C4EEE5; Sun, 21 Jun 2020 02:51:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26~aUeVyRbn42357823578epcas5p2K;
-        Sat, 20 Jun 2020 17:51:04 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200620175104epsmtrp1c6797b3456983879c679dfb1c8b488b9~aUeVxm_Z81505115051epsmtrp1O;
-        Sat, 20 Jun 2020 17:51:04 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-e4-5eee4c8907b5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        72.0D.08382.78C4EEE5; Sun, 21 Jun 2020 02:51:04 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200620175102epsmtip1e73ed9d8a4a6d1ef5bca3b802c7f6bf3~aUeUes8-P3245232452epsmtip1T;
-        Sat, 20 Jun 2020 17:51:02 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     linux-scsi@vger.kernel.org
-Cc:     avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-kernel@vger.kernel.org,
-        jejb@linux.ibm.com, Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH -next] scsi: ufs: allow exynos ufs driver to build as module
-Date:   Sat, 20 Jun 2020 23:02:32 +0530
-Message-Id: <20200620173232.52521-1-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWy7bCmum6nz7s4g/O3JCwezNvGZvHy51U2
-        i0/rl7FaLLqxjcni5pajLBaXd81hs+i+voPNYvnxf0wWS7feZHTg9Ljc18vkMWHRAUaPlpP7
-        WTw+Pr3F4tG3ZRWjx+dNch7tB7qZAtijuGxSUnMyy1KL9O0SuDKezXjFVLCEv2J++0+mBsaj
-        vF2MnBwSAiYS/2duYwGxhQR2M0rcWCTaxcgFZH9ilFi75QUjhPONUeLnnj5mmI7FHR3sEIm9
-        jBIfOvexQ7S3MEl8Wc0NYrMJaEvcnb6FCcQWEZCT2Lz8KwtIA7PANUaJc21/wPYJC/hIfNv1
-        mRXEZhFQlbi4/D+YzStgI7H22yM2iG3yEqs3HGAGaZYQOMcusaX1GhNEwkViyYQfUEXCEq+O
-        b2GHsKUkXva3AdkcQHa2RM8uY4hwjcTSecdYIGx7iQNX5rCAlDALaEqs36UPEmYW4JPo/f2E
-        CaKTV6KjTQiiWlWi+d1VqE5piYnd3awQJR4SU2YwQnweK3Fu9T3WCYwysxBmLmBkXMUomVpQ
-        nJueWmxaYJyXWq5XnJhbXJqXrpecn7uJEZwCtLx3MD568EHvECMTB+MhRgkOZiUR3sPv38QJ
-        8aYkVlalFuXHF5XmpBYfYpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwGSX9XhyopC8
-        ufLT47FmuQ9/vvlRXfrkTfQJ/kofh9qYepHU3zGlD0WOP5tyYddV97t3/vyLWXhrgrjSqT1O
-        07mTrJ8Yc+7JXKPj8061R99sw7eW16cK1E/rH9TeJ63+OPf4ASP9nZkqrqeX/hXxPtMVlFCU
-        IhvcvWBqa8t1Q06L629tQ2u2Z82pFPnkee3LvfU37XY5Fnx4HZNrz+UQcW5y26LPXqfV8g2r
-        Znw925m8bpVa109tb525WV6h78+n5YaHPYs+dui9eKncp7lrP6Xsmah9pXDHB1NRkcbF/voT
-        2x89N5j7cO21T74tC4Sbw0+Usc6xuLv99u3IxV7RlntfB06/ldez9v6703vtDHqUWIozEg21
-        mIuKEwHr95rocAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSnG6Hz7s4g9XzmC0ezNvGZvHy51U2
-        i0/rl7FaLLqxjcni5pajLBaXd81hs+i+voPNYvnxf0wWS7feZHTg9Ljc18vkMWHRAUaPlpP7
-        WTw+Pr3F4tG3ZRWjx+dNch7tB7qZAtijuGxSUnMyy1KL9O0SuDKezXjFVLCEv2J++0+mBsaj
-        vF2MnBwSAiYSizs62LsYuTiEBHYzStw895IRIiEtcX3jBHYIW1hi5b/nUEVNTBIdW7YxgSTY
-        BLQl7k7fAmaLCMhJbF7+lQWkiFngAaNEz/fjLCAJYQEfiW+7PrOC2CwCqhIXl/8Hs3kFbCTW
-        fnvEBrFBXmL1hgPMExh5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECA44Lc0d
-        jNtXfdA7xMjEwXiIUYKDWUmE9/D7N3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhP
-        LEnNTk0tSC2CyTJxcEo1MIVtvnpqqsZGd8lXG93zDxx4sa/324PnBoY+4Xc/ftA2ehCTYTO7
-        c/+ir33f+xKN313TnrJpvZCE5EFN2YcFp8s/qsb6ez2Sjwq/dt64TH7nzN/T/cQOfNphuDm+
-        IfTVlQvsbbdsm6quKTwNfOdxb8X7s5smbVxswfTk6+ym8gKPqza8gVHN/infc/omB+5w/XPE
-        aGOG9rk5aZwXjTXUxW+su3T8k7Hc1sRO1h61Nr36e/K5TXnTtZqXv0iMrV77vjnA8EjyEZuJ
-        am+jIs83B3ox6s3lsS7KyGtsmjG5+r/9MqNYiW6lqet33dM+cN30sUxX9Frm649uLdwQcuGg
-        r+u1xx4+fvMP+ihznvp54pkSS3FGoqEWc1FxIgB4kK2XpwIAAA==
-X-CMS-MailID: 20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26
-References: <CGME20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26@epcas5p2.samsung.com>
+        Sat, 20 Jun 2020 13:51:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 9so14963931ljv.5
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 10:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rw44qjrMFmBDRvnMPg4gkmrn1yIH4AjuHTLNJbCwI1k=;
+        b=GdLj8pr5S7cigC4cW+Xmxd38FrVQGbVitJGT9j7Q5GXeusFmgKX8LlgD6DzMflaUnu
+         qQs/SLBfxFvz+tDtG/rljCMnv8zcDSp66pAREwA6hSY6HnWUarFujX3/l7KxQzHbR5zr
+         LP0+ZM1GtqvmvOCGfqguHi3FbKw9iUoe5Q4Ac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rw44qjrMFmBDRvnMPg4gkmrn1yIH4AjuHTLNJbCwI1k=;
+        b=JrQwOWQMav3DfwEh//vSjIddmmMQMFScQPMTfh9poBF0+l9njMfGID727rml7GV+eI
+         gkVuyr14LffQKs/Drp6tOt9SZmXkzEOUm0KqvxidlFAJPVYqC9YMfev+uhuxRJpyY0ZE
+         874Uj4ncHSYQ/5dWpsfSKFhLl/I7wCOdXgsJ/nde41D7uS4G0hrfZa7nJ9WCxHh9qSzt
+         hCcNhcgsKp4kPmCHDdvCGeu6+HfHO9AVjNDdUBX3dzF7oZHYSpODvZMc/2bisdHpyhJU
+         YzSIY7VlbPSjoyyLRE19lkNiOT/HnClBPZCaHJyx3BHW7/NyvUIA+hVRc3Fc6qZUf+KV
+         LWEA==
+X-Gm-Message-State: AOAM532QxsBQRQMOC5PXz7iKyS4u3zZi6V/s/yTZlwfOhnNlmOy/oGWf
+        IEo4KM0nkExwNXr1C2uOxJshLlz5Gx8=
+X-Google-Smtp-Source: ABdhPJxWKlVfa6fELgS4YqkZl/goxkz2Ta55nGUFTCorA8HyFhImdnumltOFkEbguOmskZchUtY44A==
+X-Received: by 2002:a2e:9586:: with SMTP id w6mr4314499ljh.318.1592675448775;
+        Sat, 20 Jun 2020 10:50:48 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id q1sm1793774lji.71.2020.06.20.10.50.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 10:50:47 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id q19so15011173lji.2
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 10:50:47 -0700 (PDT)
+X-Received: by 2002:a2e:974e:: with SMTP id f14mr4489285ljj.102.1592675446808;
+ Sat, 20 Jun 2020 10:50:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <alpine.DEB.2.22.394.2006181751270.9276@xps-7390>
+ <20200619065007.GA3041@lst.de> <alpine.DEB.2.22.394.2006182351090.9276@xps-7390>
+ <20200619074233.GA3723@lst.de> <alpine.DEB.2.22.394.2006200640370.2845@xps-7390>
+ <CAHk-=whj7YBvNT3FPHc8oUqwRhjbRkJESnUx6bbpA5ys6W9ujw@mail.gmail.com>
+In-Reply-To: <CAHk-=whj7YBvNT3FPHc8oUqwRhjbRkJESnUx6bbpA5ys6W9ujw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 20 Jun 2020 10:50:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=who=jSnB3RmZTUOn7aShx6rqHeS8E7tDv6f+kVUQUVBAw@mail.gmail.com>
+Message-ID: <CAHk-=who=jSnB3RmZTUOn7aShx6rqHeS8E7tDv6f+kVUQUVBAw@mail.gmail.com>
+Subject: Re: Commit 25f12ae45fc1 ("maccess: rename probe_kernel_address to
+ get_kernel_nofault") causing several OOPSes
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow Exynos UFS driver to build as a module.
-This patch fix the below build issue reported by
-kernel build robot.
+On Sat, Jun 20, 2020 at 9:49 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I'm staring at that opatch and not seeing how it could _possibly_ make
+> any difference in code generation.
+>
+> Which is the obvious next step: would you mind compiling that file
+> with and without the patch and sending me the two object files?
 
-drivers/scsi/ufs/ufs-exynos.o: in function `exynos_ufs_probe':
-drivers/scsi/ufs/ufs-exynos.c:1231: undefined reference to `ufshcd_pltfrm_init'
-drivers/scsi/ufs/ufs-exynos.o: in function `exynos_ufs_pre_pwr_mode':
-drivers/scsi/ufs/ufs-exynos.c:635: undefined reference to `ufshcd_get_pwr_dev_param'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_shutdown'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_suspend'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_resume'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_suspend'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_resume'
-drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_idle'
+Hmm. I did that here (well, I did the probe_roms.s files) and with gcc
+I didn't see any difference in the generated code what-so-ever. The
+assembler comments changed (because the line numbers changed), but the
+code didn't.
 
-Fixes: 55f4b1f73631 ("scsi: ufs: ufs-exynos: Add UFS host support for Exynos SoCs")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/scsi/ufs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With clang, the only difference is a slight code generation change in
+the end condition of the top for-loop in 'probe_roms()'.
 
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index 8cd90262784d..3188a50dfb51 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -162,7 +162,7 @@ config SCSI_UFS_BSG
- 	  If unsure, say N.
- 
- config SCSI_UFS_EXYNOS
--	bool "EXYNOS specific hooks to UFS controller platform driver"
-+	tristate "EXYNOS specific hooks to UFS controller platform driver"
- 	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS || COMPILE_TEST)
- 	select PHY_SAMSUNG_UFS
- 	help
+But that clang difference literally seems to be about instruction
+scheduling, not about any semantic change, although I find the code
+hard to read because clang has rotated the loop so it looks entirely
+different.
 
-base-commit: ce2cc8efd7a40cbd17841add878cb691d0ce0bba
-prerequisite-patch-id: c12207f678b32e29496ec7e324425c8f49422a2c
-prerequisite-patch-id: 8263330366e8c180c0ab9f76fbd4dbbcf0bee427
-prerequisite-patch-id: 7456972c04fc1a76c922196aecd98e9ed17cc6eb
--- 
-2.17.1
+Anyway, even after going through a compiler, the difference that
+Christoph's patch could possibly make is not obvious.
 
+So yeah, I'd like to see what the code generation difference is for
+you, since it seems to matter to your install for some odd reason.
+
+                      Linus
