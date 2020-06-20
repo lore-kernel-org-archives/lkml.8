@@ -2,61 +2,68 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 821F522E02
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BF022DD6
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbgFTC74 (ORCPT
+        id S1732291AbgFTDIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 22:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732074AbgFTC7z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 22:59:55 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC11CC06174E;
-        Fri, 19 Jun 2020 19:59:55 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 300A512784D15;
-        Fri, 19 Jun 2020 19:59:55 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 19:59:54 -0700 (PDT)
-Message-Id: <20200619.195954.1222983733521693534.davem@davemloft.net>
-To:     claudiu.beznea@microchip.com
-Cc:     nicolas.ferre@microchip.com, kuba@kernel.org,
-        linux@armlinux.org.uk, antoine.tenart@bootlin.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: macb: undo operations in case of failure
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1592469460-17825-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1592469460-17825-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 19 Jun 2020 19:59:55 -0700 (PDT)
+        Fri, 19 Jun 2020 23:08:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37086 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732074AbgFTDIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 23:08:42 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6931AC42FBC65265554C;
+        Sat, 20 Jun 2020 11:08:39 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 20 Jun 2020 11:08:28 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <achim_leubner@adaptec.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jingxiangfeng@huawei.com>
+Subject: [PATCH] scsi: gdth: remove unnecessary iounmap()
+Date:   Sat, 20 Jun 2020 11:11:50 +0800
+Message-ID: <20200620031150.152324-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Date: Thu, 18 Jun 2020 11:37:40 +0300
+When initialization of ioremap() fails, it is not needed to do
+iounmap(). Remove this iounmap.
 
-> Undo previously done operation in case macb_phylink_connect()
-> fails. Since macb_reset_hw() is the 1st undo operation the
-> napi_exit label was renamed to reset_hw.
-> 
-> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ drivers/scsi/gdth.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Applied and queued up for -stable, thank you.
+diff --git a/drivers/scsi/gdth.c b/drivers/scsi/gdth.c
+index fe03410268e6..8f077d316e8b 100644
+--- a/drivers/scsi/gdth.c
++++ b/drivers/scsi/gdth.c
+@@ -639,7 +639,6 @@ static int gdth_init_pci(struct pci_dev *pdev, gdth_pci_str *pcistr,
+         ha->brd = ioremap(pcistr->dpmem, sizeof(gdt6c_dpram_str));
+         if (ha->brd == NULL) {
+             printk("GDT-PCI: Initialization error (DPMEM remap error)\n");
+-            iounmap(ha->brd);
+             return 0;
+         }
+         /* check and reset interface area */
+-- 
+2.17.1
+
