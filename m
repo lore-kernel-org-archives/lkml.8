@@ -2,83 +2,84 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5706A20C09
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NcR1VWYd"
+	by mail.kernel.org (Postfix) with ESMTP id 296D1218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592639187;
+	bh=+2b1121LTHuB4XkuPsdDS/eTubprymdeg9DR5VhyQnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nurfTFUjPm1FEdVBEWA6yd5ShXt/v4/vVfD0pyGEllrcMlVMipAI0gq8q4m/oVFbY
+	 ot4f7h+8qGsxuOKeps4HvRuqJrQwDJ3X8KnJ2PBxjIKbnA/d23M87B/KNo2efUR9pd
+	 mDhNOe6ts+cD3FqY/znZARU3EjxJBo8hDdzN0IJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgFTHqA (ORCPT
+        id S1727779AbgFTHq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:46:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:24322 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725835AbgFTHqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:46:00 -0400
-X-UUID: 19be2c4aac3e441d903f9b1fd88945be-20200620
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W396ifFNhTXMU6Ao6v2NVBlA5nufvq++IW1xtDsWqvQ=;
-        b=NcR1VWYdt4U4MAXZYbeRRoWiLb4MntYhpBpLtk4Yg6n6wzwMy2mwK0Au/1dKZ3E8FwpTipD4NKbGJLFP9msIeQK8ensWbybephjRq3XUhlrT6EEQXrwfRFx41nrjBSqPl0MyXaTjRXcpBuZGujVzH3sm+cGsEFN1PPvtAQ6MB4Y=;
-X-UUID: 19be2c4aac3e441d903f9b1fd88945be-20200620
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1283702885; Sat, 20 Jun 2020 15:45:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 20 Jun 2020 15:45:53 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 20 Jun 2020 15:45:52 +0800
-Message-ID: <1592639154.5529.3.camel@mtksdaap41>
-Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Qii Wang <qii.wang@mediatek.com>
-CC:     <wsa@the-dreams.de>, <devicetree@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Sat, 20 Jun 2020 15:45:54 +0800
-In-Reply-To: <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
-         <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 20 Jun 2020 03:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727104AbgFTHqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 03:46:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDAF22A83;
+        Sat, 20 Jun 2020 07:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592639185;
+        bh=+2b1121LTHuB4XkuPsdDS/eTubprymdeg9DR5VhyQnQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=001RVeWlCwb+GeREnFW+J3mOta2bLzoNlml7UQ0eREbh3ZA9m25udjn6KMHf7hK3d
+         7cgy/f9v5p2UNwWuVSFoApx85zq61cdq8vX50JsKApwlZZ1Q2YdZlEaKQy35OPDjd5
+         eHIiBWf20WDBiTdUWFB6M2PP3jAtdebEhLM1tfvU=
+Date:   Sat, 20 Jun 2020 09:46:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/101] 4.4.228-rc1 review
+Message-ID: <20200620074621.GB2298609@kroah.com>
+References: <20200619141614.001544111@linuxfoundation.org>
+ <20200619164055.GA258515@roeck-us.net>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619164055.GA258515@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpTb3JyeSBmb3IgbGF0ZSByZXZpZXcuDQoNCg0KT24gVGh1LCAyMDIwLTA1LTE0IGF0IDIxOjA5
-ICswODAwLCBRaWkgV2FuZyB3cm90ZToNCj4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3JpdGhtIHRv
-IGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+IHdoaWNoIGNhbiBmdWxseSBt
-ZWV0IEkyQyBTcGVjLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcgPHFpaS53YW5nQG1l
-ZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIHwg
-MzI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAyNzcgaW5zZXJ0aW9ucygrKSwgNTEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nl
-cy9pMmMtbXQ2NXh4LmMNCj4gaW5kZXggMGNhNmMzOGEuLjcwMjA2MTggMTAwNjQ0DQo+IC0tLSBh
-L2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYnVz
-c2VzL2kyYy1tdDY1eHguYw0KDQo8Li4uPg0KDQo+IEBAIC05NDgsOSArMTE3Nyw2IEBAIHN0YXRp
-YyBpbnQgbXRrX2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCWlm
-IChyZXQpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgDQo+IC0JaWYgKGkyYy0+ZGV2X2NvbXAt
-PnRpbWluZ19hZGp1c3QpDQo+IC0JCWkyYy0+Y2xrX3NyY19kaXYgKj0gSTJDX0RFRkFVTFRfQ0xL
-X0RJVjsNCj4gLQ0KDQpBZnRlciB0aGlzIHBhdGNoLCB0aGUgJ2Nsb2NrLWRpdicgcHJvcGVydHkg
-aW4gZGV2aWNlIHRyZWUgaXMgbm8gbG9uZ2VyDQp1c2VkIGZvciBwbGF0Zm9ybSB3aXRoIHRpbWlu
-Z19hZGp1c3QgYWJpbGl0eS4NClBsZWFzZSBjaGFuZ2UgdGhlIGJpbmRpbmcsIHNvIHdlIGRvbid0
-IG5lZWQgdG8gcHJvdmlkZSAnY2xvY2stZGl2JyBmb3INCnRoZXNlIHBsYXRmb3JtLg0KDQpKb2Uu
-Qw0KDQo+ICAJaWYgKGkyYy0+aGF2ZV9wbWljICYmICFpMmMtPmRldl9jb21wLT5wbWljX2kyYykN
-Cj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICANCg0K
+On Fri, Jun 19, 2020 at 09:40:55AM -0700, Guenter Roeck wrote:
+> On Fri, Jun 19, 2020 at 04:31:49PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.228 release.
+> > There are 101 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Building powerpc:defconfig ... failed
+> --------------
+> Error log:
+> 
+> drivers/macintosh/windfarm_pm112.c: In function ‘create_cpu_loop’:
+> drivers/macintosh/windfarm_pm112.c:148:2: error: implicit declaration of function ‘kfree’
+> 
+> Affects v4.4.y.queue and v4.9.y.queue.
 
+Thanks, I've fixed this up by adding an #include <linux/slab.h> to the
+top of that driver for those trees.
+
+greg k-h
