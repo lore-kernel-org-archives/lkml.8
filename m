@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93156C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF08C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD0424728
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE72A24727
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="J+FgROFF"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jXPADqgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbgFTWnn (ORCPT
+        id S1729116AbgFTWnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:43:43 -0400
-Received: from mout.gmx.net ([212.227.15.19]:36951 "EHLO mout.gmx.net"
+        Sat, 20 Jun 2020 18:43:49 -0400
+Received: from mout.gmx.net ([212.227.17.20]:40865 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbgFTWnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:43:35 -0400
+        id S1728401AbgFTWne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 18:43:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592692955;
-        bh=ndIbgrYQmb2subu3Oe9fLJNTph0wDs4Jgr3O6ddsGCs=;
+        s=badeba3b8450; t=1592692960;
+        bh=quWpSURYzI37HAY+ZRXyoXMx0x6xymIR9XadTNWbOm0=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=J+FgROFFQ3bRtxN3HX8GAAM80SYvrFVum3jbjkMuDoZv82bbzd7p4v2lwUObmvi9U
-         RKKkU7ABlhhOf3ucQr/YoDYi2VelWwIOv4bta+W+0QX2BbXRhXfTtTs9zySXTLu11L
-         7T1AUf5LhLDeDqYz6VADvdNbwPyJo8wPvWSJhok8=
+        b=jXPADqgsQRfGRq3jn39dE8CWtm9UG80OHy4kt1PrelCzVkXkybJYMQphTkqHVBJPP
+         YLLnHZSdABYy1qBb26AMLiEERbuGCVV7DGKhldESZJ8O/um3jRfTMWYVgUr0dpqXBl
+         H2aQzH9d7skrZZ34gaihGa/eIu/8MAeG72wXESfI=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mzhj9-1j0ZJq0foH-00vh75; Sun, 21
- Jun 2020 00:42:35 +0200
+Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MybGX-1ixHWs3fLx-00yvXe; Sun, 21
+ Jun 2020 00:42:40 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -61,111 +61,99 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>
-Subject: [RFC PATCH 05/10] dt-bindings: pwm: Add bindings for PWM function in Netronix EC
-Date:   Sun, 21 Jun 2020 00:42:16 +0200
-Message-Id: <20200620224222.1312520-4-j.neuschaefer@gmx.net>
+Subject: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix embedded controller RTC
+Date:   Sun, 21 Jun 2020 00:42:18 +0200
+Message-Id: <20200620224222.1312520-6-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cHtrETJXmtzDsxaAmeos/P2xE+50CNmj6sgaAzFuUOlSUWq/6Ys
- cqIg7vWmvwXLCa21o6GeBXwf7oIpciGmMqEZBvyiohhFZM1XVsvYPlRTVOpG6EouIIfpHjN
- oRsfkw7/ClzqOiL+Ze+SJxfetrwj8+i5loPqfXmdK6ge0n7fr6C0p4UdWe8JtrynlkTEetf
- o6hOJXw2ktAxvqog9HAtw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U9UJEZBhzvM=:b/45FR0hRI3CJbRxSnghbs
- 4CVZ30R7wRT0hf/CVO3qu1lLPiL64OTe48LZB7taUb79jr8YtYz3PoP4kXOOJ7ly9HJYTV5Zc
- LgKtHTFsqYIQ3Go2aeby/iy3BgsvbCEcLEaMAGpNs2w0ICbZCNkB5Nfs/r6NcyWCrr2T8eTXs
- pk+5MnFTiweecLuDjO8tMwlItb4ERwxiReHLzWhIW+SGwLQO1br+3BDyWYilMsZmFECvPIXy7
- R8PTNl0Pp0XAS+VJJ8FETabtlYYJPyYzrm/sf4FxwfkNH8WmG7GQrKqSU/hE2kruPsomsJgbz
- VylHazUogB7jLAuVfvJRvOoTeBk/IhRxX8Wdu88H3NjVCM4NI3nEE5H4tmhnWtZsrMHj3P46J
- X2VwLnEIjtMvaRZauEtnc3Lk6f1e2EwKKjSmZra5J9wM8Zws9gFoU9Np5I9fsMyMS4DtVscHm
- iQST7d2sMiChWnmRRxzJqlXCtZLeJFK+ntFKVpupt/UAv0bJshq1daszb0BzPm0F6u0Qg3wtH
- Opt9xdEDU0G21u/025dZrOwyjdHl5VdwsscVUCkGlw5cOi1RsiOTY7gLP6CVlfOO+Fnr3ZUD6
- pB2BOCPTjKq6F13nAMl9erVGVBGcbjlp2VgFiajIgVQPWHVeGFI2CO0wU5hZ5UynxOcg8ekI4
- dHL8mcmn2v2Pr55i+kuNomAuiaPbfgMhqnGyafvkmxq0MPH2wvdUSs1SDAtaVdV6OY3rEEjnq
- iarr91l9VRFmF0XsEMKFC92gjt2XeM4Hzej52q0W38s6jVc9AaWx1aMYusxnObCZPeTAwFQbE
- 5g3U/ZxPlApbj67/DauJBq7BdZ8/NLQmOGCLMQVp2MAXAFFgtzYasDZZZWjOX/Th2kUcaDN+I
- /4je8CQoaIG0UGtbZsAkFLy/1LMvLLPS3RZnSBbBgeyqEUOKmMbV1QwweQvoxrDoyxrHMi7Gy
- f0CXDruLnA9KezIt5srHTBpDD/s8cnyqpoIMkRwLzNo6vntAGe4flze443K5S0lvoeTaE/Lhg
- FK6WurPDfcgGo7nc0XLaWxFV23mCGRplOl0wIVexTiT7P5ZX+0/H2CBUg1iNb/gUgsUz/OvYr
- NHO8JLR/iMAhn7YqXEib1JicjAFSXpl7DZCkiwZlBCf0qq3sZ9SQZ65/6ZdcYN44uMkx2/tSr
- JUicJiTDBAVIjZFgVdM/hOgF2/wViONZSXF3ZCMfWDTBXZHst1/sSne2cl0mqYQKVr5KeVl9W
- 4L+uoGkI98FY33KXZ
+X-Provags-ID: V03:K1:kINr04vGH8PFK0WI4mNxqdxrk/BTSB+q42S51+k3h8qzZN+MKBg
+ 39ozPRxm1iOnsGPo7aKAazPj9u1koqGdtnXsm0yBV2EzCMz/snPFdqb96BNKl5DiZ3SZSWJ
+ 3jTi+1yoxznDEVo2nCsnqKjZJ5DlIrdVICxcD6GJxhXyxEKFNkXUFUVbcUNMK2GZCU0rg3t
+ 5RQbWuraPRT5G7Q6GQWaA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l5Qjo2w9OhQ=:WCuhRPDe5N3Khy2z5xz9L/
+ rb0zLra1fWmgwAE5b/+YqxhmK/yGKgtg3IY3h5PLyFF7zFqLgdNUnnx9pLBByPyyoIlQ8gC8r
+ Z4zw3VuQ0ogI07MvbGLQZKYcxvwsXoUqUQ9FBQsuRgv3zURDWxpDnlNBCDgMq7jdyM4wEuBEH
+ NqJsSx/0rNq1lpV1LGrkaOrukiDghyQeDWJnXQxfaPbEglxcvj1EYTt7hVDH1R159ON7C0UZV
+ ZBfs8HE/KhSFrY1hJZRfjhJpLigZBGWslMko5jP/3lmVwjP5clf5t3mZ2gT7nY0M0A+tzuSiJ
+ RBajDzAVfUhP6ccgLptPSeM1KZImK/4X74SSSqSzyOI7r6y9lsvgP8AOa2KQoH6oB2fgwFdVW
+ foL+K1a9DZ9lP+pRQ/rWH5kfMa2J8fC4cVNiC9BmWP8K1sOXTAn/ge2mmubaCHwfmDf/vsy46
+ JEyOsAPT/vttnayLGhMGPptu9LqbzTae6H4cnDcCtv/Y4SMYyZLcOeCynP/B4I0Iduysl0DK6
+ du7lISZkqDGKtViqJOJgJRUHgLCHhT8P5PHhn2tn7e1eS9UTxVwR3LdkduObqwt78objrvyK4
+ K+qTMfG3AAebRFORWVrRaOkaF1WEfYlxHNk40k68P58qX7pPweH5Ih3IYrYzSTkeaE5JpblLO
+ VRdtn83Kx/eRKIXcYV216AEQLh7kfGzDlvHj4JTbqcg0Db+RNBJLTW3s7BehJF5VVBQc37TIp
+ m7SSMZnLXXnVAa+0rGwRd7+8OqpeUg2PKViDWJpo22mt0fIXjgNwpu8oH8cwPWJg2t8iii9jv
+ WVMw0tgfK00/RwA42SUEZGmay+gZw4/CgkSjttfjvgzZyT2T35bQAFFScpjE7n5FWn6Jr8aNP
+ e5CUOCuH9ccb2VF3wuRXDA+9ifLavvO1I95VLxybYSxaVQRwaxykN1Q7m+BdQMYDMR5J3Rn+r
+ g6b2pQA4ozXIa7tGrJXzcIdLFApeYA5h0SpHETeMHznHyf3lBug26ikiIK9SK8UINPXY9/WdD
+ WEt/jx1rTFj0Dldgk1uWPcevCtU3UelskVKKc0pzRDK9Q39xZd5CjZzFDNqBtKDYUC6w8PwlZ
+ qkIrrp4Jc/NstteeqCcs4awLU2EZ672W7G1LV8+9vJYa2s2JM/kpCX0DAD71Lxpp96gIEPpfD
+ pU/2wcDHBPnAISBOBHp6Ufn9BUzpo3Q9Hxp2YrvQ/KK+f2VauYs9yfaxcpTFj3rbhZytMLMS3
+ 4kXQD+CJkowm3JN8x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Netronix embedded controller as found in Kobo Aura and Tolino Shine
-supports one PWM channel, which is used to control the frontlight
-brightness on these devices.
+The Netronix EC implements an RTC with the following functionality:
 
-Known problems:
-- `make dt_binding_check` shows the following warnings:
-  Documentation/devicetree/bindings/mfd/netronix,ntxec.example.dts:49.17-4=
-2:
-  Warning (pwms_property): /example-0/backlight:pwms: cell 2 is not a
-  phandle reference
-  Documentation/devicetree/bindings/mfd/netronix,ntxec.example.dts:49.17-4=
-2:
-  Warning (pwms_property): /example-0/backlight:pwms: Could not get
-  phandle node for (cell 2)
+- Calendar-based time keeping with single-second resolution
+- Automatic power-on with single-minute resolution
+- Alarm at single-second resolution
+
+This binding only supports timekeeping for now.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- .../bindings/mfd/netronix,ntxec.yaml          | 13 ++++++++
- .../bindings/pwm/netronix,ntxec-pwm.yaml      | 33 +++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-p=
-wm.yaml
+ .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
+ .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-r=
+tc.yaml
 
 diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/D=
 ocumentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-index 596df460f98eb..6562c41c5a9a9 100644
+index 6562c41c5a9a9..f6a32f46f47bb 100644
 =2D-- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
 +++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-@@ -31,6 +31,9 @@ properties:
-     description:
-       The EC can signal interrupts via a GPIO line
+@@ -34,6 +34,9 @@ properties:
+   pwm:
+     $ref: ../pwm/netronix,ntxec-pwm.yaml
 
-+  pwm:
-+    $ref: ../pwm/netronix,ntxec-pwm.yaml
++  rtc:
++    $ref: ../rtc/netronix,ntxec-rtc.yaml
 +
  required:
    - compatible
    - reg
-@@ -53,5 +56,15 @@ examples:
-                     interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
-                     interrupt-controller;
-                     #interrupt-cells =3D <1>;
+@@ -61,6 +64,10 @@ examples:
+                             compatible =3D "netronix,ntxec-pwm";
+                             #pwm-cells =3D <1>;
+                     };
 +
-+                    ec_pwm: pwm {
-+                            compatible =3D "netronix,ntxec-pwm";
-+                            #pwm-cells =3D <1>;
++                    rtc {
++                            compatible =3D "netronix,ntxec-rtc";
 +                    };
              };
      };
-+
-+    backlight {
-+            compatible =3D "pwm-backlight";
-+            pwms =3D <&ec_pwm 0 50000>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml=
- b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml=
+ b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
 new file mode 100644
-index 0000000000000..1dc1b1aba081c
+index 0000000000000..4b301ef7319c8
 =2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
-@@ -0,0 +1,33 @@
++++ b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
+@@ -0,0 +1,27 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pwm/netronix,ntxec-pwm.yaml#
++$id: http://devicetree.org/schemas/rtc/netronix,ntxec-rtc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: PWM functionality in Netronix embedded controller
++title: RTC functionality in Netronix embedded controller
 +
 +maintainers:
 +  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
@@ -173,26 +161,21 @@ index 0000000000000..1dc1b1aba081c
 +description: |
 +  See also Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
 +
-+  The Netronix EC contains PWM functionality, which is usually used to dr=
-ive
-+  the backlight LED.
-+
-+  The following PWM channels are supported:
-+    - 0: The PWM channel controlled by registers 0xa1-0xa7
++  The Netronix EC contains an RTC, which can be used for time-keeping, al=
+arm,
++  and automatic power-on. Note that not all of this functionality is curr=
+ently
++  supported in this binding.
 +
 +allOf:
-+  - $ref: pwm.yaml#
++  - $ref: "rtc.yaml#"
 +
 +properties:
 +  compatible:
-+    const: netronix,ntxec-pwm
-+
-+  "#pwm-cells":
-+    const: 1
++    const: netronix,ntxec-rtc
 +
 +required:
 +  - compatible
-+  - "#pwm-cells"
 =2D-
 2.27.0
 
