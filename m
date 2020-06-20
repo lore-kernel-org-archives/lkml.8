@@ -2,133 +2,81 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 08:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D0823A32
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiF4Ek5J"
+	by mail.kernel.org (Postfix) with ESMTP id 719E323A3B
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 08:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592640012;
+	bh=589/oUwRbwHQ2Wtx/EzGGu6gy/0q2jv6lf4VXJk+V/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0IcWmyOFnhAn98wi0rpKQCqQ9CxKI5Qxm5hwkJmV7UXwdbezFDpY9WUhhsT4TsYt0
+	 jjcGqst6yTeCKOET+eb2HIfjUZZLiEmR/vyzCONj6BgfNj76lwRO7VQibPywMFM8uK
+	 cvsNUCMUV0k8FmY0RSC2Y7rs2RuyGaAcncSN96PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgFTH5h (ORCPT
+        id S1727784AbgFTIAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgFTH5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:57:36 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86579C06174E;
-        Sat, 20 Jun 2020 00:57:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so11754937wrr.10;
-        Sat, 20 Jun 2020 00:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+ni8LF6DiZ7e+Sa1bH9I96UUmF2BBDFC3xDwZDcw058=;
-        b=NiF4Ek5JpVCT1lkixtJWNHFOi/+jzvu5yqUj3bVi28nBXxd1qGW6SwIjRWQsHVZvQ1
-         /sN9tsPubXkYpuqaIOe2WnxiwZqgQAakf0KNEk2oKNHTdNO+l1Oj0svHDl4FSnAMkWg0
-         sjQSuriza/6E772gnStLKc8Dd+ZP24hlrXp1pQFOacPEJCRv7X5MnaV2n105XjmEVS+c
-         7t4HeE/LZWVXKY6rYGMkUtcMqVNx8jBnpGXPoNYK8/OBSesF0B3kuXHEPqVIuQQhwKza
-         R6ye/M+q2rTGF6UJbvBK0WlWpo0wqfwIYsh4RMJFfuYb/4J3XwOTd1Pg3Q/A8JtMiS5J
-         KJRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+ni8LF6DiZ7e+Sa1bH9I96UUmF2BBDFC3xDwZDcw058=;
-        b=effKCyDlDQeCPgiqd8WfGrAECWCVwvDTEwI3tOhp8P5FfsQ87uUT84LR+RHXjXNAlC
-         OUZieR9ZY6oWk1KKQ84PvTxmtGML20GOO4NWVcsFpMeN/lFKqy/yesRYyQ6wK38dzWQ9
-         HUPwtESq3r1zm+EmWXR4H2n/lDLIeM/L7zIEkjQsiauDPGcYSzv7fSSKZW4FYp3jC/wP
-         DLGqMbQs8AsmnR0CnV8lDqRymQCsGr4gnwe36vTcglZYSTvHSfcFUzJyd/i6GPlH0pAo
-         kJHdL+Vxk76i+jVSQkOrR/DpDTk1g1cfItD1fVa+KmVJyxocAHlwC60Zl1GcG0gmXEcp
-         Mfvw==
-X-Gm-Message-State: AOAM5301EQOHZmcA4V322O5uBJDtPlhv84AxgyNjEYoUF7qU5y51T2n4
-        FJ3QPIltlsEqHpAd+zdEJ2SkpGQ=
-X-Google-Smtp-Source: ABdhPJx2LzDP5vaEKmQra4DiB1bA7ic/ADuDUbl9U0GPCwzJ0K00W8lZUJcSkex4J9D5e32tWJ5TGQ==
-X-Received: by 2002:a05:6000:128e:: with SMTP id f14mr8750971wrx.276.1592639855172;
-        Sat, 20 Jun 2020 00:57:35 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.252.34])
-        by smtp.gmail.com with ESMTPSA id e25sm10429252wrc.69.2020.06.20.00.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 00:57:34 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 10:57:32 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Subject: Re: [PATCH] linux++, this: rename "struct notifier_block *this"
-Message-ID: <20200620075732.GA468070@localhost.localdomain>
-References: <20200618210645.GB2212102@localhost.localdomain>
- <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com>
+        Sat, 20 Jun 2020 04:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgFTIAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 04:00:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8825123A33;
+        Sat, 20 Jun 2020 08:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592640010;
+        bh=589/oUwRbwHQ2Wtx/EzGGu6gy/0q2jv6lf4VXJk+V/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aIL0Ua5+86Och7v8avjrLFX1gKGa3ePO5vabXQUp06QToqx+5tgsLT5B2DYX5FDQz
+         HIWP0fTJDKM5l2YY04Vq8yc0va7Lzp/24LHAq8OjjQun6nFU1Q8IAHBIEzZ78XWfQg
+         /CJWnCLQHEygCgGUCRGdFIvMEpd7wCdVLUfpWkTI=
+Date:   Sat, 20 Jun 2020 10:00:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/261] 5.4.48-rc1 review
+Message-ID: <20200620080006.GA2302354@kroah.com>
+References: <20200619141649.878808811@linuxfoundation.org>
+ <20200619160118.GA105163@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com>
+In-Reply-To: <20200619160118.GA105163@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:37:47AM -0700, Linus Torvalds wrote:
-> On Thu, Jun 18, 2020 at 2:06 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > Rename
-> >         struct notifier_block *this
-> > to
-> >         struct notifier_block *nb
-> >
-> > "nb" is arguably a better name for notifier block.
+On Fri, Jun 19, 2020 at 09:01:18AM -0700, Guenter Roeck wrote:
+> On Fri, Jun 19, 2020 at 04:30:11PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.48 release.
+> > There are 261 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Maybe it's a better name. But it doesn't seem worth it.
+> Building mips:defconfig ... failed
+> --------------
+> Error log:
+> arch/mips/mm/dma-noncoherent.c: In function 'cpu_needs_post_dma_flush':
+> arch/mips/mm/dma-noncoherent.c:36:7: error: 'CPU_LOONGSON2EF' undeclared
 > 
-> Because C++ reserved words are entirely irrelevant.
-> 
-> We did this same dance almost three decades ago, and the fact is, C++
-> has other reserved words that make it all pointless.
+> Also affects v4.19.y.queue, and causes almost all mips builds to fail.
 
-The real problems are "class" and "new" indeed.
+Thanks, I've dropped the offending patch from both trees now.
 
-> There is no way I will accept the renaming of various "new" variables.
-
-I'm not sending "new".
-
-> We did it, it was bad, we undid it, and we now have a _lot_ more uses
-> of 'new' and 'old', and no, we're not changing it for a braindead
-> language that isn't relevant to the kernel.
-> 
-> The fact is, C++ chose bad identifiers to make reserved words.
-> 
-> If you want to build the kernel with C++, you'd be a lot better off just doing
-> 
->    /* C++ braindamage */
->    #define this __this
->    #define new __new
-> 
-> and deal with that instead.
-
-Can't do this because of placement new.
-
-> Because no, the 'new' renaming will never happen, and while 'this'
-> isn't nearly as common or relevant a name, once you have the same
-> issue with 'new', what's the point of trying to deal with 'this'?
-
-I'm not sending "new".
-
-There is stuff which can be merge without breaking source compatibility
-and readability of C version:
-
-	private		=> priv
-	virtual		=> virt
-	this		=> self (in some contexts)
-
-and those which can not. I'm not sending the latter.
+greg k-h
