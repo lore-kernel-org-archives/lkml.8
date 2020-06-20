@@ -2,177 +2,175 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B130C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1355122CF8
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="jc23iq41"
+	by mail.kernel.org (Postfix) with ESMTP id 7D70C22CF8
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592617078;
+	bh=27uEGde3cS/BL9hltSLdg6dNULTrZtpxAPFo35C7kw0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0q4wwlfw5n8ccaQEg8cSXC7Cd66WX97xWVexo06+AEm5/oqEn/uZSoOG04vXuZIv4
+	 QXx8wZH5svnzmHLFYSFhapArpLxocQjxsMkj+il1N0wCrqMeIzkAI8IWKQtnzYaZPm
+	 /Z3b27E4MBgXgxogd/j6C1cMZwq+aBVmuvIkF44s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbgFTBhv (ORCPT
+        id S1731466AbgFTBh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 21:37:51 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37309 "EHLO mga14.intel.com"
+        Fri, 19 Jun 2020 21:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgFTBhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 21:37:50 -0400
-IronPort-SDR: JuuGMzE/j6eAuRBnDgU+wuTdg9DG4B2rG0XO9xWC9U1Wxb/xyUG3fEVzNOj1T5cB6Hh/q7kau7
- +H7KkrLwphOw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="142262526"
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="142262526"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 18:37:48 -0700
-IronPort-SDR: UvoCD/G3oFC1HVTHJ6vaE/NUBFNH4ZT3KDYInbi9H2iXGvUi85HWZ2jm74cl567fkIHr3Z/afD
- AQHd1hSqrmxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,256,1589266800"; 
-   d="scan'208";a="318285664"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2020 18:37:48 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 19 Jun 2020 18:37:48 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 19 Jun 2020 18:37:47 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 19 Jun 2020 18:37:47 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Fri, 19 Jun 2020 18:37:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kS0uUvu2oKUetTy8oBLAtbZLClSASCqgLToHjFBOaaF88KFGWTX7q8uvAQTpioHUAmYznYXgO1SsaZzetc54T+n9TF0hcSGj1jswHsx9Ky4wzBZTiQ82SCV1K+B92a0fnZAnME6edfwDudvihC7CVW9JUT/bPCJzTdAt6FuoqHYIV0xsDsU6AkibgkwzV7VWqbC02i4/m61nlW6XjXz0zsJi1XBOGnUR9jzshpHf+SCAfhImjkml+a2VKIOIcVMZkyFhzYbFVv+dAS0/y2udUxjExZ6jwagll7k9ajtZpUOt9iMzSy01toghmy+pNcm/hNyhxAHTEPtwcdEieBzFlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZU0IyHDbdUGZI1KqRqsqnv99mXPC/5lDZJgC3eiecq8=;
- b=XqGTSzcWO8U9CDOAj/ZBzDGJBfLcUaCZFe9jBWGXe0q7RGmEZ7OJSejNa0JAf8kl/Cfce8/zkYMh3/PherpQOKjGQ+13j9fTVPIFgBS9KKWqNRMVu0RgGUMPocvMAU7IDc1f6GSQ6cLHz1qZLs6z3gSnue1iDhbctPPAlGi+1KMd8LsIBKciY/PN3yWuYiezbM0ZW1Tjj+R/5YxdB6tUv+25oT95E7gtk5zHUtfc0BtnOsHB0xzKdZUPvwLG+bxtCh1lvfU6mSTAsoqAh2oncW9j11FZANKMjK/5T8X1R/n5NuGu9DwDHRlbrEwZsEHpzxF9biI3ZPd0XrAPF+ERuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZU0IyHDbdUGZI1KqRqsqnv99mXPC/5lDZJgC3eiecq8=;
- b=jc23iq4164LrHTKRqlqn4Y4M3ZR+LVpeZM1oKmGwSSUgqxOJk2R1p+VYJCXB5Dq6Lecyl8AJbD751a53cmcBllnrgXkO1fd3URWe7yzxHRSmBoVQOjbKQT9SKrcy2xcpv+AHXkoBNe/ZOh7Mo5tocXzsFvNsCjlNkJ09b5xk88Q=
-Received: from BN6PR11MB4132.namprd11.prod.outlook.com (2603:10b6:405:81::10)
- by BN8PR11MB3780.namprd11.prod.outlook.com (2603:10b6:408:90::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Sat, 20 Jun
- 2020 01:37:45 +0000
-Received: from BN6PR11MB4132.namprd11.prod.outlook.com
- ([fe80::f1fa:3128:2198:e48d]) by BN6PR11MB4132.namprd11.prod.outlook.com
- ([fe80::f1fa:3128:2198:e48d%4]) with mapi id 15.20.3109.023; Sat, 20 Jun 2020
- 01:37:45 +0000
-From:   "Williams, Dan J" <dan.j.williams@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "david@redhat.com" <david@redhat.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "richard.weiyang@gmail.com" <richard.weiyang@gmail.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-Thread-Topic: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-Thread-Index: AQHWRqNlMdaKs5n8vkexxU3ANW17sA==
-Date:   Sat, 20 Jun 2020 01:37:45 +0000
-Message-ID: <52c25f52d25d989b54e974f7c5c1c7de1bae674f.camel@intel.com>
-References: <20200619125923.22602-1-david@redhat.com>
-         <20200619125923.22602-2-david@redhat.com>
-In-Reply-To: <20200619125923.22602-2-david@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.223]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 227d9224-0083-4e53-6206-08d814ba883a
-x-ms-traffictypediagnostic: BN8PR11MB3780:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR11MB378010CB01CD587CC6DF92CBC6990@BN8PR11MB3780.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0440AC9990
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lBde4+kj8fq97g465uiaYa5yB+TJGcAD+Z4oYrYUIKOrHgZ3HWfE1cgb+C7m0LMwZn53huXTb1q2GjTqToFNDfxpgPFaXxJaK++YDKbD08EOnH9KHzxUci738/zyHH3T3BRTvlxI6DXrg944VEbwwfoAFIlgX5NZJHttli7+eEluhSxJ453wdmFpY/xqj6IUSre9eTOkcxwCoeYnC5eCRClmcHIJYiUAyo0k6SRmjDwZhmgoh6moCu8Fj1CcwEQjgitl6gV3DQbwp8XjhuSCUiuAlF3wGdyp0ILbgnY9gCPVxWJkykouWwtN6xJZ61qNm4oyF6Rh5niHMzTyOd2Mfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB4132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(366004)(376002)(346002)(83380400001)(71200400001)(2906002)(26005)(8936002)(186003)(6486002)(8676002)(4326008)(6506007)(7416002)(54906003)(2616005)(110136005)(86362001)(91956017)(66946007)(76116006)(6512007)(5660300002)(36756003)(66446008)(316002)(66556008)(478600001)(64756008)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 9Qd16Hobf9UYCTIYxsFo+wiJx5bV1Kk3B1NsvdLpCYINyDpkYcqcM0a9wNnk2rxuRKjXof3TguG5Y/OmCexTApej3srSf/ysmyXCHUwPuV8LRzgWs2Bba1FSPemKDUkbKiAS1yBRpQRG35py4yDx86ELzeT0NkDUOtdYoEmNRjgJ3N5XZOQe3XP4SY5DyMmqMnfU2yF/GdYJ/MsbOFIJCAC82aCg3anPa/0B/dMNeANCX7B6tCQdfpIGZRA17C68e5aYbIgrn/d+N2yc8YusgKc6a33zlbtIEXN4xSBkZi/xZgtB2osMEPuLNBelgHf0EhuqhM/S+1YvVBIc4DWdUWM6n3dra+iKpgEVp3IWZqZGIMy4phYtF0tglgIA6JwS94nPj3qFZn3LCZf69OUwIvOQ3LMDjRBapqyQlmobQYhNrOtY9COpMAlSZuwANm89oknVEnDW4fiuZu8WpZJ9tSQBM+tzo9zl8iV+zbQhOy4=
-Content-Type: text/plain; charset="utf-7"
-Content-ID: <7C683C8E3AA38147BEEAEE67C0A4ACCE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 227d9224-0083-4e53-6206-08d814ba883a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2020 01:37:45.3066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UyKu58XgkJHlPaoFIIICNBBojSZNZYEHwyNRp3eOAqNr4jeYpZHb1ydqpsdbu51wOQA+4CDnLEJbCMmsD9BblIwtR672rgkXeHgHNsgpxmE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3780
-X-OriginatorOrg: intel.com
+        id S1731418AbgFTBhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 21:37:53 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4166622CAE;
+        Sat, 20 Jun 2020 01:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592617072;
+        bh=27uEGde3cS/BL9hltSLdg6dNULTrZtpxAPFo35C7kw0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tk5t6SG9TGdp7HD/ryYTe0tswlBBPG1dMWhIKXwp43KKiuT4mmebafpvfvXQDSo2o
+         kgMglDrny0RHE0eYSApu/SeSx7Otom4Wd/Q4aFNONBv9RZcP1Y2DdgMbC4Vpw9Ipwh
+         TIEWsPrLwZwVj6QJ+S031DxQWUPVo4n9nDbepJiI=
+Date:   Sat, 20 Jun 2020 10:37:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-Id: <20200620103747.fb83f804083ef9956740acee@kernel.org>
+In-Reply-To: <20200619232820.GE353853@T590>
+References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
+        <20200618125438.GA191266@T590>
+        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+        <20200618231901.GA196099@T590>
+        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
+        <20200619072859.GA205278@T590>
+        <20200619081954.3d72a252@oasis.local.home>
+        <20200619133240.GA351476@T590>
+        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
+        <20200619232820.GE353853@T590>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-19 at 14:59 +-0200, David Hildenbrand wrote:
-+AD4- Especially with memory hotplug, we can have offline sections (with a
-+AD4- garbage memmap) and overlapping zones. We have to make sure to only
-+AD4- touch initialized memmaps (online sections managed by the buddy) and
-+AD4- that
-+AD4- the zone matches, to not move pages between zones.
-+AD4-=20
-+AD4- To test if this can actually happen, I added a simple
-+AD4- 	BUG+AF8-ON(page+AF8-zone(page+AF8-i) +ACEAPQ- page+AF8-zone(page+AF8=
--j))+ADs-
-+AD4- right before the swap. When hotplugging a 256M DIMM to a 4G x86-64 VM
-+AD4- and
-+AD4- onlining the first memory block +ACI-online+AF8-movable+ACI- and the =
-second
-+AD4- memory
-+AD4- block +ACI-online+AF8-kernel+ACI-, it will trigger the BUG, as both z=
-ones (NORMAL
-+AD4- and MOVABLE) overlap.
-+AD4-=20
-+AD4- This might result in all kinds of weird situations (e.g., double
-+AD4- allocations, list corruptions, unmovable allocations ending up in the
-+AD4- movable zone).
-+AD4-=20
-+AD4- Fixes: e900a918b098 (+ACI-mm: shuffle initial free memory to improve
-+AD4- memory-side-cache utilization+ACI-)
-+AD4- Acked-by: Michal Hocko +ADw-mhocko+AEA-suse.com+AD4-
-+AD4- Cc: stable+AEA-vger.kernel.org +ACM- v5.2+-
-+AD4- Cc: Andrew Morton +ADw-akpm+AEA-linux-foundation.org+AD4-
-+AD4- Cc: Johannes Weiner +ADw-hannes+AEA-cmpxchg.org+AD4-
-+AD4- Cc: Michal Hocko +ADw-mhocko+AEA-suse.com+AD4-
-+AD4- Cc: Minchan Kim +ADw-minchan+AEA-kernel.org+AD4-
-+AD4- Cc: Huang Ying +ADw-ying.huang+AEA-intel.com+AD4-
-+AD4- Cc: Wei Yang +ADw-richard.weiyang+AEA-gmail.com+AD4-
-+AD4- Cc: Mel Gorman +ADw-mgorman+AEA-techsingularity.net+AD4-
-+AD4- Signed-off-by: David Hildenbrand +ADw-david+AEA-redhat.com+AD4-
+Hi Ming,
 
-Looks good to me.
+On Sat, 20 Jun 2020 07:28:20 +0800
+Ming Lei <ming.lei@redhat.com> wrote:
 
-Acked-by: Dan Williams +ADw-dan.j.williams+AEA-intel.com+AD4-
+> > 
+> > Ah, after all it is as expected. With your kconfig, the kernel is
+> > very agressively optimized.
+> > 
+> > $ objdump -dS vmlinux | less
+> > ...
+> > ffffffff81256dc3 <__blkdev_put>:
+> > {
+> > ffffffff81256dc3:       e8 98 85 df ff          callq  ffffffff8104f360 <__fentry__>
+> > ffffffff81256dc8:       41 57                   push   %r15
+> > ffffffff81256dca:       41 56                   push   %r14
+> > ffffffff81256dcc:       41 55                   push   %r13
+> > ...
+> > ffffffff81256f05:       75 02                   jne    ffffffff81256f09 <__blkdev_put+0x146>
+> >         struct block_device *victim = NULL;
+> > ffffffff81256f07:       31 db                   xor    %ebx,%ebx
+> >                 bdev->bd_contains = NULL;
+> > ffffffff81256f09:       48 c7 45 60 00 00 00    movq   $0x0,0x60(%rbp)
+> > ffffffff81256f10:       00 
+> >                 put_disk_and_module(disk);
+> > ffffffff81256f11:       4c 89 f7                mov    %r14,%rdi
+> > ffffffff81256f14:       e8 c6 3d 11 00          callq  ffffffff8136acdf <put_disk_and_module>
+> >         mutex_unlock(&bdev->bd_mutex);
+> > ffffffff81256f19:       4c 89 ff                mov    %r15,%rdi
+> >                 __blkdev_put(victim, mode, 1);
+> > ffffffff81256f1c:       41 bc 01 00 00 00       mov    $0x1,%r12d
+> >         mutex_unlock(&bdev->bd_mutex);
+> > ffffffff81256f22:       e8 8d d7 48 00          callq  ffffffff816e46b4 <mutex_unlock>
+> >         bdput(bdev);
+> > ffffffff81256f27:       48 89 ef                mov    %rbp,%rdi
+> > ffffffff81256f2a:       e8 f0 e9 ff ff          callq  ffffffff8125591f <bdput>
+> >         if (victim)
+> > ffffffff81256f2f:       48 85 db                test   %rbx,%rbx
+> > ffffffff81256f32:       74 08                   je     ffffffff81256f3c <__blkdev_put+0x179>
+> > ffffffff81256f34:       48 89 dd                mov    %rbx,%rbp
+> > ffffffff81256f37:       e9 b4 fe ff ff          jmpq   ffffffff81256df0 <__blkdev_put+0x2d> <<-----THIS!!
+> > }
+> > ffffffff81256f3c:       48 8b 44 24 28          mov    0x28(%rsp),%rax
+> > ffffffff81256f41:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
+> > ffffffff81256f48:       00 00 
+> > ffffffff81256f4a:       74 05                   je     ffffffff81256f51 <__blkdev_put+0x18e>
+> > ffffffff81256f4c:       e8 5a 4e 48 00          callq  ffffffff816dbdab <__stack_chk_fail>
+> > ffffffff81256f51:       48 83 c4 30             add    $0x30,%rsp
+> > ffffffff81256f55:       5b                      pop    %rbx
+> > ffffffff81256f56:       5d                      pop    %rbp
+> > ffffffff81256f57:       41 5c                   pop    %r12
+> > ffffffff81256f59:       41 5d                   pop    %r13
+> > ffffffff81256f5b:       41 5e                   pop    %r14
+> > ffffffff81256f5d:       41 5f                   pop    %r15
+> > ffffffff81256f5f:       c3                      retq   
+> > 
+> > 
+> > As you can see, the nested __blkdev_put() is coverted to a loop.
+> > If you put kprobe on __blkdev_put+0x2d, you'll see the event twice.
+> 
+> Thanks for your investigation.
+> 
+> Some trace tools can just trace on function entry, such as bcc, and some
+> user script always trace on function entry.
+> 
+> I guess the issue should belong to kprobe implementation:
+> 
+> 1) __blkdev_put() is capable of being kprobed, so from user view, the
+> probe on entry of __blkdev_put() should be triggered
 
+Yes, it is correctly triggered.
+
+> 
+> 2) from implementation view, I understand exception should be trapped
+> on the entry of __blkdev_put(), looks it isn't done.
+
+No, it is correctly trapped the function entry address. The problem is
+that the gcc optimized the nested function call into jump to the
+beginning of function body (skip prologue).
+
+Usually, a function is compiled as below
+
+func()     (1) the entry address (func:)
+{          (2) the function prologue (setup stackframe)  
+  int a    (3) the beginning of function body 
+   ...
+  func()   (4) the nested function call
+
+And in this case, the gcc optimized (4) into jump to (3) instead of
+actual function call instruction. Thus, for the nested case (1) and
+(2) are skipped.
+ IOW, the code flow becomes
+  (1)->(2)->(3)->(4)->(3)
+ instead of 
+  (1)->(2)->(3)->(4)->(1)->(2)->(3)
+
+In this case, if we put a probe on (1) or (2), those are disappeared
+in the nested call. Thus if you put a probe on (3) ('perf probe __blkdev_put:2')
+you'll see the event twice.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
