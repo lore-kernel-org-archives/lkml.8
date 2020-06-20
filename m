@@ -2,156 +2,152 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D076C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7557223A5F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592673397;
-	bh=zbplmaCf3az+f6f2Jeh+YVePiNjF3AjtIdUa5LQ1o9Q=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SvlXngNihSBckzrzX5CqlEjpTQml5uIa+yj56ftcRYap01F6q3Vx0AhDEe3pX4CPg
-	 8iRIkqvOYe9i9DSoZvAbURmWuMonY56gooIQwwE1J/qjgMAZyMJG1LXC8hx7w4YE2m
-	 TUemH8Mssrz78Q3X9Q93H+3Ru20WzAQXdjPzu+LI=
+	by mail.kernel.org (Postfix) with ESMTP id BF1FF239EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgFTRQa (ORCPT
+        id S1728277AbgFTRb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 13:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgFTRQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 13:16:30 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF04222B2B;
-        Sat, 20 Jun 2020 17:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592673389;
-        bh=zbplmaCf3az+f6f2Jeh+YVePiNjF3AjtIdUa5LQ1o9Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BSkLiv8IKNwx4NWopyCN0hYF0VFJhyRHUMaOP5TpJRquYNvPyUVpzUMfyv4fIlUgj
-         7ROjWQzY9edJujwXbkl7hH6KRf5uqqxqoYLVYxM7e22XZHqgT5tkF5aHKH0g7tkmLW
-         FH8+ijHHtzwplN/agdOSjUGQC369GROP70HZNsaI=
-Date:   Sat, 20 Jun 2020 19:16:24 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.8
-Message-ID: <20200620171624.GA9805@kunai>
+        Sat, 20 Jun 2020 13:31:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33383 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgFTRbz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:31:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b201so6129437pfb.0;
+        Sat, 20 Jun 2020 10:31:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=76DjZtVoVNTfIvPgHLxvbVvnnrURAKQR9OKC4ML66Vc=;
+        b=NcMZn+Pzxwlz6Gc3cFevOO/D0qwfi7VTEkb0FG7Epa3QXMhJgsnU9SwDHmSF8BPEMI
+         WlkH0zPM1wJSlu6mFBuhk86denc+CsLLE5aKvguWZRE8RJRL45a3qdvecpTRufU2mBFW
+         66IxZW3dAxmGlUg3YKRHrp4VxhqsY9Bg/kKHoQZ/wTvJfd3P4EDICFMV43nAE1Ud7kG/
+         TR4AaqEU19zBeJU4d9futNbyEHsjIQpu5pNVM06fmqKxjC7P5o59bg7OTrkQx7RiQbZ8
+         F+vErMFePskpJIJhNfL+Ht9FnjD24vqUUG5P93YRMRcFH12g1aZjrBetNgxn+3Sr15bV
+         qn9g==
+X-Gm-Message-State: AOAM530vdv7tao7928QS4lfW93Wy3exu4Ua44WtN3X7j3aA2eQR9snQk
+        DW9dCaskM2PYdIVAoVElAg0=
+X-Google-Smtp-Source: ABdhPJx4WJJeoAZd88UMGoNU0tCyJbSMTb2c+Eg/pyZk/Y8Gvd8ak7lYZIWZRWF80NIVktK7gkeuqA==
+X-Received: by 2002:a05:6a00:22c2:: with SMTP id f2mr13824607pfj.187.1592674314328;
+        Sat, 20 Jun 2020 10:31:54 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id z11sm9592511pfk.141.2020.06.20.10.31.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 10:31:53 -0700 (PDT)
+Subject: Re: [PATCH v7 6/8] blktrace: fix debugfs use after free
+To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-7-mcgrof@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <75c3a94d-dcd1-05e4-47c6-db65f074136a@acm.org>
+Date:   Sat, 20 Jun 2020 10:31:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Content-Disposition: inline
+In-Reply-To: <20200619204730.26124-7-mcgrof@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-06-19 13:47, Luis Chamberlain wrote:
+> This goes tested with:
+       ^^^^
+       got?
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 7ff2ea5cd05e..e6e2d25fdbd6 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -524,10 +524,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  	if (!bt->msg_data)
+>  		goto err;
+>  
+> -	ret = -ENOENT;
+> -
+> -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> -	if (!dir)
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +	/*
+> +	 * When tracing whole make_request drivers (multiqueue) block devices,
+> +	 * reuse the existing debugfs directory created by the block layer on
+> +	 * init. For request-based block devices, all partitions block devices,
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+It seems like a word is missing from the comment? Or did you perhaps
+want to refer to "all partition block devices"?
 
-Linus,
+> +	 * and scsi-generic block devices we create a temporary new debugfs
+> +	 * directory that will be removed once the trace ends.
+> +	 */
+> +	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
+> +		dir = q->debugfs_dir;
+> +	else
+> +#endif
+>  		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
 
-I2C has for rc2:
+Can it happen that two different threads each try to set up block
+tracing and hence that debugfs_create_dir() fails because a directory
+with name buts->name already exists?
 
-- a small collection of remaining API conversion patches (all acked)
-  which allow to finally remove the deprecated API
-- some documentation fixes and a MAINTAINERS addition
+>  	bt->dev = dev;
+> @@ -565,8 +573,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  
+>  	ret = 0;
+>  err:
+> -	if (dir && !bt->dir)
+> -		dput(dir);
+>  	if (ret)
+>  		blk_trace_free(bt);
+>  	return ret;
 
-Please pull.
+Shouldn't bt->dir be removed in this error path for make_request drivers?
 
 Thanks,
 
-   Wolfram
+Bart.
 
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 28f9f8fb4f405ade488058f817b6cbd108e45e4e:
-
-  MAINTAINERS: Add robert and myself as qcom i2c cci maintainers (2020-06-19 15:07:00 +0200)
-
-----------------------------------------------------------------
-Daniel Schaefer (1):
-      Documentation/i2c: SMBus start signal is S not A
-
-Keyur Patel (1):
-      i2c: smbus: Fix spelling mistake in the comments
-
-Loic Poulain (1):
-      MAINTAINERS: Add robert and myself as qcom i2c cci maintainers
-
-Wolfram Sang (6):
-      drm: encoder_slave: fix refcouting error for modules
-      drm: encoder_slave: use new I2C API
-      x86/platform/intel-mid: convert to use i2c_new_client_device()
-      video: backlight: tosa_lcd: convert to use i2c_new_client_device()
-      Documentation: media: convert to use i2c_new_client_device()
-      i2c: remove deprecated i2c_new_device API
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      (Rev.) x86/platform/intel-mid: convert to use i2c_new_client_device()
-
-Daniel Thompson (1):
-      (Rev.) video: backlight: tosa_lcd: convert to use i2c_new_client_device()
-
-Emil Velikov (2):
-      (Rev.) drm: encoder_slave: use new I2C API
-      (Rev.) drm: encoder_slave: fix refcouting error for modules
-
-Mauro Carvalho Chehab (1):
-      (Rev.) Documentation: media: convert to use i2c_new_client_device()
-
- Documentation/driver-api/media/v4l2-subdev.rst    |  2 +-
- Documentation/i2c/smbus-protocol.rst              |  2 +-
- Documentation/userspace-api/media/conf_nitpick.py |  2 +-
- MAINTAINERS                                       |  9 ++++++++
- arch/x86/platform/intel-mid/sfi.c                 |  4 ++--
- drivers/gpu/drm/drm_encoder_slave.c               | 15 +++++---------
- drivers/i2c/i2c-core-base.c                       | 25 -----------------------
- drivers/i2c/i2c-core-smbus.c                      |  2 +-
- drivers/video/backlight/tosa_lcd.c                |  4 ++--
- include/linux/i2c.h                               |  8 +++-----
- 10 files changed, 25 insertions(+), 48 deletions(-)
-
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7uRGQACgkQFA3kzBSg
-Kba/sw/+KICcKVcOKJauUJqE1f8yccdPhyTOyEeVWDqq+bhOMrNcn51B45flcDNm
-jBkGe+SHGYxIExBAZq4kT5EEfkAaxEoUCxdyHLhu1F6oOudfP2o3c01q115rCqWy
-TiienA6mO4f/MdP4i+RPNZKLUpQJieoJ6hxfZtxT5RiiqVJcdGp0QAfbVhw97RFJ
-6UlVHrQzEMm+W4UXIaUpiiC0TBf7ih0mH7UeGvCMAG0mwHB8XV+W9SeJ3k6ke+kh
-yD5BALbTSsi0st3kHzrrhvk/Wr2uAlHQsyetWz32EUUNNqu8nxpAnPHyvHbisj7G
-QaI3v/rGSwKqw24XUDwVg0GEHyqIoMEZInDZSMOI16jZndFRS9n2Po6dpbNPSPey
-VoJ7olh2jMMx5B+4benEzN2YHd7vcHz3utaeIJgcOkDE2qSVVQjGwr0vZotdkf1x
-81qM4LubmOu/2O/QezpS9lviH5r2g+K4Fl9pZV7PHv3eleiYdNnrkCH6RSz9jjk6
-ooB4aji7CldwGFJ9cfsKgapCGjMu5loWg7n8OjnXLXuHnsIPu1ZsAe97ZSeB6V4A
-hF/eq/CWESVTgrWg5veySZMYUW//ZzLXiCJpwowGAGzK0H4aK1rwZhjMLz5gXpAM
-ESnI0KStQpKfdU60YwVHoBBz1ozdDKfj9OzwHyoGhuoR2xR6ebQ=
-=pbA3
------END PGP SIGNATURE-----
-
---y0ulUmNC+osPPQO6--
