@@ -2,214 +2,114 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB987C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D43C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99AC23B1C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA2723B1F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 11:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgFTK5T (ORCPT
+        id S1728033AbgFTLRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 06:57:19 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39269 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727996AbgFTK5O (ORCPT
+        Sat, 20 Jun 2020 07:17:34 -0400
+Received: from m176149.mail.qiye.163.com ([59.111.176.149]:11829 "EHLO
+        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgFTLRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 06:57:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id o12so8320996ilf.6
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 03:57:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=8GDLcHKAWL6B36TT6Nf4rJzMiJsHjfM/kCOmAs5JEyA=;
-        b=NUAUKXkIx6kYvCyvVwUBlg6s6mCKQDm7K1C5IrK9BTXstHFgf1bqrMRtH6TAzQ7NgY
-         rejEFAWQgdize3O0GZjoLhUx7BPIFen8D+IV/is0IVwDJ/foLXWxgWYMGUPgOlnstcDT
-         XOXpo/xfntnJ1V1s/Sk2EbHE7n6emTTggQLe6JXMySWUAm2PC1cDno0VKcYiqCd2Wwml
-         pmCYnuR4AKjnMLr+8APul0IGipvRl4PoZ7PfFiOCQFO0SlXfA754exEHDLyNGWzBrzbz
-         HfSlz4JKyh1Lqevrp/2sTSs/YrLqBgbOHHY7ttr6jsICMkaTlVY7fbcQ7+ES5eaSRmuV
-         oeqQ==
-X-Gm-Message-State: AOAM532hus7h1E1dQ+lcFi+eDDPVLue/16VbRHTru8dCJt4wUD2+WXPB
-        oGOi53PA40TT8bCYpuJYeKlQ4gt+OVwV5wlSj/oqMX9re3J/
-X-Google-Smtp-Source: ABdhPJzw9wh1dy1bqFQBiniZPWvy/ZxKf3U9KDNXoj4Sw1dPBRj2fhfGeQ31pI0G7ZHvkGYXVWMCVTFlfBqqtRBQ79v+km0Ub4N2
-MIME-Version: 1.0
-X-Received: by 2002:a6b:9143:: with SMTP id t64mr3764177iod.55.1592650632570;
- Sat, 20 Jun 2020 03:57:12 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 03:57:12 -0700
-In-Reply-To: <0000000000006bf03c05a86205bb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000034ad2805a881df44@google.com>
-Subject: Re: INFO: trying to register non-static key in ath9k_htc_rxep
-From:   syzbot <syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+        Sat, 20 Jun 2020 07:17:33 -0400
+Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
+        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 6562A2826FF;
+        Sat, 20 Jun 2020 19:16:55 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ANUAnQAuCEPyRKFA*ek664qj.3.1592651815407.Hmail.bernard@vivo.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Markus Elfring <Markus.Elfring@web.de>, opensource.kernel@vivo.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Felix_K=C3=BChling?= <Felix.Kuehling@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCB2Ml0gZHJtL2FtZGtmZDogRml4IG1lbW9yeSBsZWFrcyBhY2NvcmRpbmcgdG8gZXJyb3IgYnJhbmNoZXM=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 14.29.82.33
+In-Reply-To: <alpine.DEB.2.22.394.2006201126130.2918@hadrien>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [14.29.82.33) ] by ajax-webmail ( [127.0.0.1] ) ; Sat, 20 Jun 2020 19:16:55 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Sat, 20 Jun 2020 19:16:55 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZGB9NGUxOTU8eGk9DVkpOQklNTkpDSk5PTkxVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhDT0lCTExNTU5MN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6NS46FSo6Djg#KwIpMD06UR4QTU1PChFVSFVKTkJJTU5KQ0pOQ05LVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKT1VJQlVDSVVISFlXWQgBWUFNQ01MNwY+
+X-HM-Tid: 0a72d17219fe9395kuws6562a2826ff
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
-
-HEAD commit:    f8f02d5c USB: OTG: rename product list of devices
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=15fd18a5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f1981539b6376b73
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d2d56175b934b9a7bf9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14519481100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110318e9100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com
-
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:894 [inline]
- register_lock_class+0x1228/0x16d0 kernel/locking/lockdep.c:1206
- __lock_acquire+0x101/0x6270 kernel/locking/lockdep.c:4259
- lock_acquire+0x18b/0x7c0 kernel/locking/lockdep.c:4959
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
- ath9k_htc_rxep+0x31/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1128
- ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
- ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x996 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0xd3/0x1b0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
-RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
-RIP: 0010:acpi_safe_halt drivers/acpi/processor_idle.c:112 [inline]
-RIP: 0010:acpi_safe_halt+0x72/0x90 drivers/acpi/processor_idle.c:108
-Code: 74 06 5b e9 c0 32 9f fb e8 bb 32 9f fb e8 c6 96 a4 fb e9 0c 00 00 00 e8 ac 32 9f fb 0f 00 2d 45 6e 84 00 e8 a0 32 9f fb fb f4 <fa> e8 b8 94 a4 fb 5b e9 92 32 9f fb 48 89 df e8 7a e1 c8 fb eb ab
-RSP: 0018:ffff8881da22fc60 EFLAGS: 00000293
-RAX: ffff8881da213200 RBX: 0000000000000000 RCX: 1ffffffff1014efa
-RDX: 0000000000000000 RSI: ffffffff85a03aa0 RDI: ffff8881da213a38
-RBP: ffff8881d8d2a864 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881d8d2a864
-R13: 1ffff1103b445f96 R14: ffff8881d8d2a865 R15: 0000000000000001
- acpi_idle_do_entry+0xa9/0xe0 drivers/acpi/processor_idle.c:525
- acpi_idle_enter+0x42b/0xac0 drivers/acpi/processor_idle.c:651
- cpuidle_enter_state+0xdb/0xc20 drivers/cpuidle/cpuidle.c:234
- cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:345
- call_cpuidle kernel/sched/idle.c:117 [inline]
- cpuidle_idle_call kernel/sched/idle.c:207 [inline]
- do_idle+0x3c2/0x500 kernel/sched/idle.c:269
- cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:365
- start_secondary+0x294/0x370 arch/x86/kernel/smpboot.c:268
- secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:243
-BUG: unable to handle page fault for address: ffffffffffffffc8
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 7226067 P4D 7226067 PUD 7228067 PMD 0 
-Oops: 0000 [#1] SMP KASAN
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
-Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 70 56 62 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 ad 57 62 fe 45 84 ff 75 a8 e8 43 56
-RSP: 0018:ffff8881db3098b0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffffff81274370
-RDX: 0000000000000000 RSI: ffffffff82dd16d0 RDI: ffff8881db309820
-RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b661305
-R10: 0000000000000003 R11: ffffed103b661304 R12: ffff8881cd69b538
-R13: ffff8881cd69b100 R14: ffff8881cd69b548 R15: ffffed10392ce210
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffc8 CR3: 00000001cf9f6000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
- ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x996 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0xd3/0x1b0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
-RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
-RIP: 0010:acpi_safe_halt drivers/acpi/processor_idle.c:112 [inline]
-RIP: 0010:acpi_safe_halt+0x72/0x90 drivers/acpi/processor_idle.c:108
-Code: 74 06 5b e9 c0 32 9f fb e8 bb 32 9f fb e8 c6 96 a4 fb e9 0c 00 00 00 e8 ac 32 9f fb 0f 00 2d 45 6e 84 00 e8 a0 32 9f fb fb f4 <fa> e8 b8 94 a4 fb 5b e9 92 32 9f fb 48 89 df e8 7a e1 c8 fb eb ab
-RSP: 0018:ffff8881da22fc60 EFLAGS: 00000293
-RAX: ffff8881da213200 RBX: 0000000000000000 RCX: 1ffffffff1014efa
-RDX: 0000000000000000 RSI: ffffffff85a03aa0 RDI: ffff8881da213a38
-RBP: ffff8881d8d2a864 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881d8d2a864
-R13: 1ffff1103b445f96 R14: ffff8881d8d2a865 R15: 0000000000000001
- acpi_idle_do_entry+0xa9/0xe0 drivers/acpi/processor_idle.c:525
- acpi_idle_enter+0x42b/0xac0 drivers/acpi/processor_idle.c:651
- cpuidle_enter_state+0xdb/0xc20 drivers/cpuidle/cpuidle.c:234
- cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:345
- call_cpuidle kernel/sched/idle.c:117 [inline]
- cpuidle_idle_call kernel/sched/idle.c:207 [inline]
- do_idle+0x3c2/0x500 kernel/sched/idle.c:269
- cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:365
- start_secondary+0x294/0x370 arch/x86/kernel/smpboot.c:268
- secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:243
-Modules linked in:
-CR2: ffffffffffffffc8
----[ end trace 5a637b710bbf1999 ]---
-RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
-Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 70 56 62 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 ad 57 62 fe 45 84 ff 75 a8 e8 43 56
-RSP: 0018:ffff8881db3098b0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffffff81274370
-RDX: 0000000000000000 RSI: ffffffff82dd16d0 RDI: ffff8881db309820
-RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b661305
-R10: 0000000000000003 R11: ffffed103b661304 R12: ffff8881cd69b538
-R13: ffff8881cd69b100 R14: ffff8881cd69b548 R15: ffffed10392ce210
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffc8 CR3: 00000001cf9f6000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+CgpGcm9tOiBKdWxpYSBMYXdhbGwgPGp1bGlhLmxhd2FsbEBpbnJpYS5mcj4KRGF0ZTogMjAyMC0w
+Ni0yMCAxNzozNzoxOQpUbzogIE1hcmt1cyBFbGZyaW5nIDxNYXJrdXMuRWxmcmluZ0B3ZWIuZGU+
+CkNjOiAgQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29tPixvcGVuc291cmNlLmtlcm5lbEB2
+aXZvLmNvbSxhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnLGtlcm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5vcmcsbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZyxBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5jb20+
+LCJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPiwiRmVsaXggS8O8
+aGxpbmciIDxGZWxpeC5LdWVobGluZ0BhbWQuY29tPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
+bGwuY2g+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KU3ViamVjdDogUmU6IFtQQVRD
+SCB2Ml0gZHJtL2FtZGtmZDogRml4IG1lbW9yeSBsZWFrcyBhY2NvcmRpbmcgdG8gZXJyb3IgYnJh
+bmNoZXM+Cj4KPk9uIFNhdCwgMjAgSnVuIDIwMjAsIE1hcmt1cyBFbGZyaW5nIHdyb3RlOgo+Cj4+
+ID4gVGhlIGZ1bmN0aW9uIGtvYmplY3RfaW5pdF9hbmRfYWRkIGFsbG9jIG1lbW9yeSBsaWtlOgo+
+PiA+IGtvYmplY3RfaW5pdF9hbmRfYWRkLT5rb2JqZWN0X2FkZF92YXJnLT5rb2JqZWN0X3NldF9u
+YW1lX3ZhcmdzCj4+ID4gLT5rdmFzcHJpbnRmX2NvbnN0LT5rc3RyZHVwX2NvbnN0LT5rc3RyZHVw
+LT5rbWFsbG9jX3RyYWNrX2NhbGxlcgo+PiA+IC0+a21hbGxvY19zbGFiLCBpbiBlcnIgYnJhbmNo
+IHRoaXMgbWVtb3J5IG5vdCBmcmVlLiBJZiB1c2UKPj4gPiBrbWVtbGVhaywgdGhpcyBwYXRoIG1h
+eWJlIGNhdGNoZWQuCj4+ID4gVGhlc2UgY2hhbmdlcyBhcmUgdG8gYWRkIGtvYmplY3RfcHV0IGlu
+IGtvYmplY3RfaW5pdF9hbmRfYWRkCj4+ID4gZmFpbGVkIGJyYW5jaCwgZml4IHBvdGVudGlhbCBt
+ZW1sZWFrLgo+Pgo+PiBJIHN1Z2dlc3QgdG8gaW1wcm92ZSB0aGlzIGNoYW5nZSBkZXNjcmlwdGlv
+bi4KPj4KPj4gKiBDYW4gYW4gb3RoZXIgd29yZGluZyB2YXJpYW50IGJlIG5pY2VyPwo+Cj5NYXJr
+dXMncyBzdWdnZXN0aW9uIGlzIGFzIHVzdWFsIGV4dHJlbWVseSBpbXByZWNpc2UuICBIb3dldmVy
+LCBJIGFsc28gZmluZAo+dGhlIG1lc3NhZ2UgcXVpdGUgdW5jbGVhci4KPgo+SXQgd291bGQgYmUg
+Z29vZCB0byBhbHdheXMgdXNlIEVuZ2xpc2ggd29yZHMuICBhbGxvYyBhbmQgZXJyIGFyZSBub3QK
+PkVuZ2xpc2ggd29yZHMuICBQZXJoYXBzIG1vc3QgcGVvcGxlIHdpbGwgZmlndXJlIG91dCB3aGF0
+IHRoZXkgYXJlCj5hYmJyZXZpYXRpb25zIGZvciwgYnV0IGl0IHdvdWxkIGJlIGJldHRlciB0byB1
+c2UgYSBmZXcgbW9yZSBsZXR0ZXJzIHRvCj5tYWtlIGl0IHNvIHRoYXQgbm8gb25lIGhhcyB0byBn
+dWVzcy4KPgo+VGhlbiB0aGVyZSBhcmUgYSBidW5jaCBvZiB0aGluZ3MgdGhhdCBhcmUgY29ubmVj
+dGVkIGJ5IGFycm93cyB3aXRoIG5vCj5zcGFjZXMgYmV0d2VlbiB0aGVtLiAgVGhlIG1vc3Qgb2J2
+aW91cyBtZWFuaW5nIG9mIGFuIGFycm93IHdpdGggbm8gc3BhY2UKPmFyb3VuZCBpdCBpcyBhIHZh
+cmlhYmxlIGRlcmVmZXJlbmNlLiAgQWZ0ZXIgc3BlbmRpbmcgc29tZSBtZW50YWwgZWZmb3J0LAo+
+b25lIGNhbiByZWFsaXplIHRoYXQgdGhhdCBpcyBub3Qgd2hhdCB5b3UgbWVhbiBoZXJlLiAgQSBs
+YXlvdXQgbGlrZToKPgo+ICAgZmlyc3RfZnVuY3Rpb24gLT4KPiAgICAgc2Vjb25kX2Z1bmN0aW9u
+IC0+Cj4gICAgICAgdGhpcmRfZnVuY3Rpb24KPgo+d291bGQgYmUgbXVjaCBtb3JlIHJlYWRhYmxl
+Lgo+Cj5JIGRvbid0IGtub3cgd2hhdCAidGhpcyBwYXRjaCBtYXliZSBjYXRjaGVkIiBtZWFucy4g
+IElzICJjYXRjaGVkIiBzdXBwb3NlZAo+dG8gYmUgImNhdWdodCIgb3IgImNhY2hlZCI/ICBPdmVy
+YWxsLCB0aGUgc2VudGVuY2UgY291bGQgYmUgIkttZW1sZWFrCj5jb3VsZCBwb3NzaWJseSBkZXRl
+Y3QgdGhpcyBpc3N1ZSIsIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuICBCdXQgSSBkb24ndAo+a25v
+dyB3aGF0IHRoaXMgbWVhbnMuICBEaWQgeW91IGRldGVjdCB0aGUgcHJvYmxlbSB3aXRoIGttZW1s
+ZWFrPyAgaWYgeW91Cj5kaWQgbm90IGRldGVjdCB0aGUgcHJvYmxlbSB3aXRoIGttZW1sZWFrLCBh
+bmQgb3ZlcmFsbCB5b3UgZG9uJ3Qga25vdwo+d2hldGhlciBrbWVtbGVhayB3b3VsZCBkZXRlY3Qg
+dGhlIGJ1ZyBvciBub3QsIGlzIHRoaXMgaW5mb3JtYXRpb24gdXNlZnVsCj5hdCBhbGwgZm9yIHRo
+ZSBwYXRjaD8KCkhpOgoKS21lbWxlYWsgZGV0ZWN0ZWQgYSBtZW1vcnkgbGVhayBhcyBiZWxvdzoK
+a29iamVjdF9pbml0X2FuZF9hZGQtPgoJa29iamVjdF9hZGRfdmFyZy0+CgkJa29iamVjdF9zZXRf
+bmFtZV92YXJncy0+CgkJCWt2YXNwcmludGZfY29uc3QtPgoJCQkJa3N0cmR1cF9jb25zdC0+CgkJ
+CQkJa3N0cmR1cC0+CgkJCQkJCWttYWxsb2NfdHJhY2tfY2FsbGVyLT4KCQkJCQkJCWttYWxsb2Nf
+c2xhYgoJCklmIGtvYmplY3RfaW5pdF9hbmRfYWRkIGlzIGNhbGxlZCwgYnV0IGtvYmplY3RfcHV0
+IGlzIG5vdCBjYWxsZWQgaW4gdGhlIGVycm9yIGJyYW5jaC4KVGhpcyB3aWxsIGJlIGRldGVjdGVk
+IGJ5IGttZW1sZWFrLgoKQlIvL0Jlcm5hcmQKCj4iVGhlc2UgY2hhbmdlcyBhcmUgdG8iIG1ha2Vz
+IGEgbG90IG9mIHdvcmRzIHdpdGggbm8gaW5mb3JtYXRpb24uICBXaGlsZSBpdAo+aXMgcGVyaGFw
+cyBub3QgbmVjZXNzYXJ5IHRvIHNsYXZpc2hseSBmb2xsb3cgdGhlIHJ1bGUgYWJvdXQgdXNpbmcg
+dGhlCj5pbXBlcmF0aXZlLCBpZiBpdCBpcyBjb252ZW5pZW50IHRvIHVzZSB0aGUgaW1wZXJhdGl2
+ZSwgZG9pbmcgc28gZWxpbWluYXRlcwo+c3VjaCBtZWFuaW5nbGVzcyBwaHJhc2VzLgo+Cj5tZW1s
+ZWFrIGlzIGFsc28gbm90IGFuIEVuZ2xpc2ggd29yZC4gIE1lbW9yeSBsZWFrIGlzIG9ubHkgYSBm
+ZXcgbW9yZQo+Y2hhcmFjdGVycywgYW5kIGRvZXNuJ3QgcmVxdWlyZSB0aGUgcmVhZGVyIHRvIG1h
+a2UgdGhlIHNtYWxsIGV4dHJhIGVmZm9ydAo+dG8gZmlndXJlIG91dCB3aGF0IHlvdSBtZWFuLgo+
+Cj5qdWxpYQo+Cj4+Cj4+ICogV2lsbCB0aGUgdGFnIOKAnEZpeGVz4oCdIGJlY29tZSBoZWxwZnVs
+IGZvciB0aGUgY29tbWl0IG1lc3NhZ2U/Cj4+Cj4+IFJlZ2FyZHMsCj4+IE1hcmt1cwo+PgoNCg0K
