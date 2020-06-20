@@ -2,148 +2,156 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91967C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9B42098B
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD2022450
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VGckMN+j"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oX1UTtOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgFTB4B (ORCPT
+        id S1731589AbgFTB7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 21:56:01 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:37806 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731502AbgFTB4A (ORCPT
+        Fri, 19 Jun 2020 21:59:30 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:33960 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731604AbgFTB7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 21:56:00 -0400
-X-UUID: 2bc787466c3b412ba3838d3a1bf1cd50-20200620
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kAIt0Z+/hTe3smQtreW0Qb1ua6eXXNRNjDK8SIGfWDM=;
-        b=VGckMN+jdN3CeRRluUgomATFn0SnbT252Jn9hLGaJFtPBMM4mwWdoQEX6JaHHXcvasXeL0YE+lbgskQtE5eUb+PfAJJlP0wHTikRSjoPk7oQhlUD6+VTN63l753i7hgdLwAI5RksuFezaoNh8JB2wE6d1sj9GOn/JRxlO799bzw=;
-X-UUID: 2bc787466c3b412ba3838d3a1bf1cd50-20200620
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 302378567; Sat, 20 Jun 2020 09:55:45 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 20 Jun
- 2020 09:55:40 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 20 Jun 2020 09:55:43 +0800
-Message-ID: <1592617990.25512.76.camel@mhfsdcap03>
-Subject: Re: [PATCH] i2c: mediatek: Add to support continuous mode
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Qiangming Xia <qiangming.xia@mediatek.com>
-CC:     <wsa@the-dreams.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Date:   Sat, 20 Jun 2020 09:53:10 +0800
-In-Reply-To: <20200619080643.25269-1-qiangming.xia@mediatek.com>
-References: <20200619080643.25269-1-qiangming.xia@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 19 Jun 2020 21:59:30 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200620015927epoutp049ab3064d0e474f56a067f7721fd75799~aHfeYgVtk2845028450epoutp04Q
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 01:59:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200620015927epoutp049ab3064d0e474f56a067f7721fd75799~aHfeYgVtk2845028450epoutp04Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592618367;
+        bh=KdLaFttTZsyLbLRvJHiqZZhUTfRUx/An8XWa/zYCky0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=oX1UTtOWCoE5jUMS2elv7zih/NrgIjrYfj26zQDF7JtaQWbNDvu7nofN1zZEApbhr
+         qGolaSt1rlf4BnmObwyJwKATJNucFtBN9p1sUBm17I0Jx1TI0pEy3zUdcNy1axGl62
+         zeIQt+OYsfoYiGkpQo8ojgqxWmIqPSTF5fFv2GMY=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200620015926epcas5p38d9b638e7ae6c699ed72a6d851962376~aHfdv7hBN1787917879epcas5p3M;
+        Sat, 20 Jun 2020 01:59:26 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.5F.09467.E7D6DEE5; Sat, 20 Jun 2020 10:59:26 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200620015926epcas5p3bf08a9d9d8adab3e024bc8142a3d5b5a~aHfdKypJD1117311173epcas5p3b;
+        Sat, 20 Jun 2020 01:59:26 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200620015926epsmtrp1fcbb557b35ef1f78d20aa5ef881c26c1~aHfdHT9A21621516215epsmtrp1n;
+        Sat, 20 Jun 2020 01:59:26 +0000 (GMT)
+X-AuditID: b6c32a49-a29ff700000024fb-79-5eed6d7e42e9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9C.51.08303.D7D6DEE5; Sat, 20 Jun 2020 10:59:26 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200620015921epsmtip2d2869c2bab2e67208638cb55561d2589~aHfYlhY5W2707527075epsmtip2W;
+        Sat, 20 Jun 2020 01:59:20 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Kishon Vijay Abraham I'" <kishon@ti.com>, <robh@kernel.org>
+Cc:     <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
+        <linux-scsi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
+        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
+        <linux-kernel@vger.kernel.org>, "'Vinod Koul'" <vkoul@kernel.org>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>
+In-Reply-To: 
+Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
+Date:   Sat, 20 Jun 2020 07:29:18 +0530
+Message-ID: <000001d646a6$6cb5fd70$4621f850$@samsung.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 4B7D04965D99C8E8AF5B5E03961F4F8A7670FB6F82AA58D6E2B40474FE35321E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7Fhypb7UH7CADUNgsA==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEKsWRmVeSWpSXmKPExsWy7bCmhm5d7ts4gwlXtC1e/rzKZvFp/TJW
+        i/lHzrFaXHjaw2Zx/vwGdoubW46yWGx6fI3V4vKuOWwWM87vY7Lovr6DzWL58X9MFv/37GC3
+        WLr1JqPFzjsnmB34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
+        H+hmCuCM4rJJSc3JLEst0rdL4MronXqJueA4e8XzjmVsDYxfWbsYOTgkBEwkNm2w6mLk4hAS
+        2M0osfn3HGYI5xOjxMGjx1ggnM+MEid3PmTqYuQE61i3diETRGIXo8TlNQugWt4wShx7dYUV
+        pIpNQFdix+I2NpAdIgKOEg274kBqmAWamSWOfe4Di3MK8EpM+GcNUi4s4CTxesUesAUsAqoS
+        K7u7wGxeAUuJHceXsEPYghInZz5hAbGZBbQlli18zQxxkILEz6fLwNaKCIRJfH3yEapGXOLo
+        zx6w2yQEHnBInGs8CdXgIjHl8T0oW1ji1fEt7BC2lMTL/jZ2SLhkS/TsMoYI10gsnXeMBcK2
+        lzhwZQ4LSAmzgKbE+l36EKv4JHp/P2GC6OSV6GgTgqhWlWh+dxWqU1piYnc3NNA9JPqaRCcw
+        Ks5C8tcsJH/NQnL/LIRdCxhZVjFKphYU56anFpsWGOallusVJ+YWl+al6yXn525iBCc7Lc8d
+        jHcffNA7xMjEwXiIUYKDWUmE9/D7N3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZV+nIkTEkhP
+        LEnNTk0tSC2CyTJxcEo1MEWuEZ+wSevR/fYuPfZLuzy3LWMocTHNdiwTmp3wV8hiP1/0ZU6l
+        UJu/0+5/2Hnv3LSHx4ME7l02vLl7wQWTiN2eAaK+TI1C22bIN1lNODw5zIdtFt/eZDmDMpZZ
+        mW/WC28Ncu+yncn+7fq3ym/csyev1xU8U7xAtdRhYiXLHt1Ln1viz51u8UvYxD9xgVGkRcCb
+        RNfXq5c37vhcc0rspMLKWQvf1N1r+fXeuyPyooyseaGzZuKz+s5Jx9pnVPEy13AeYH4188jf
+        xaaKl3wKz88qneK14LRiz+J8uaBUu22KfYLFrw7npiyb0cvwLNvx3IXdQu29FzleK35/aHLS
+        Vicy5M/6i/ueCydUec7JnKrEUpyRaKjFXFScCADjEVON5QMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWy7bCSvG5d7ts4g19tTBYvf15ls/i0fhmr
+        xfwj51gtLjztYbM4f34Du8XNLUdZLDY9vsZqcXnXHDaLGef3MVl0X9/BZrH8+D8mi/97drBb
+        LN16k9Fi550TzA58Hpf7epk8Nq3qZPPYvKTeo+XkfhaPj09vsXj0bVnF6HH8xnYmj8+b5Dza
+        D3QzBXBGcdmkpOZklqUW6dslcGU0NF9gLtjEXnF89kGmBsZHrF2MnBwSAiYS69YuZAKxhQR2
+        MEr8OW0HEZeWuL5xAjuELSyx8t9zIJsLqOYVo8SjS6cZQRJsAroSOxa3sYHYIgLOEne3PWUF
+        KWIW6GeW2HJ/E1THMiaJh5f+AK3g4OAU4JWY8M8apEFYwEni9Yo9YJtZBFQlVnZ3gdm8ApYS
+        O44vYYewBSVOznzCAmIzC2hLPL35FM5etvA1M8R1ChI/ny5jhTgiTOLrk49QNeISR3/2ME9g
+        FJ6FZNQsJKNmIRk1C0nLAkaWVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwbGrpbWD
+        cc+qD3qHGJk4GA8xSnAwK4nwHn7/Jk6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNIT
+        S1KzU1MLUotgskwcnFINTKm2QeoLxG/p2817qGsWVa1woGeO1eLm6Ys/MU2Qi0tQ/vCSfdU6
+        CY7e7fx1bG/+8/r1GW2exMkZl2KcvrOsdF34RcF+ptrzMmeetsfKCr50WXlFfEZmo+N5xn/c
+        v40Wnuc1mPGNO+y3xUMu1TcnzU/eWxxpFPnoZtkhtQapgKXqLt9K8/e9jr5rNDmg3raG+SOX
+        5ZrFb9XNEm54XzFaF9A7waGzosl2z60TkQsubHPe1nHZZPqG5z6tey5nbjz9eJN3YertxxGe
+        22Z7nBZsOKcfdW7KTH+XyTXLdWaIKhR/e8Tt5dnDVsZR6W4Q0XO08LGUsqCP2OtY2YbXBbll
+        l+Zxzt7f1WK0rYNtjbmJEktxRqKhFnNRcSIABRKlukwDAAA=
+X-CMS-MailID: 20200620015926epcas5p3bf08a9d9d8adab3e024bc8142a3d5b5a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
+References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
+        <20200528011658.71590-1-alim.akhtar@samsung.com>
+        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
+        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
+        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com> 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA2LTE5IGF0IDE2OjA2ICswODAwLCBRaWFuZ21pbmcgWGlhIHdyb3RlOg0K
-PiBGcm9tOiAicWlhbmdtaW5nLnhpYSIgPHFpYW5nbWluZy54aWFAbWVkaWF0ZWsuY29tPg0KPiAN
-Cj4gICAgIE1lZGlhdGVrIGkyYyBjb250cm9sbGVyIHN1cHBvcnQgZm9yIGNvbnRpbnVvdXMgbW9k
-ZSwNCj4gaXQgYWxsb3cgdG8gdHJhbnNmZXIgb25jZSBtdWx0aXBsZSB3cml0aW5nIG1lc3NhZ2Vz
-IG9mIGVxdWFsIGxlbmd0aC4NCj4gICAgIEZvciBleGFtcGxlLCBhIHNsYXZlIG5lZWQgd3JpdGUg
-YSBzZXJpYWwgb2Ygbm9uLWNvbnRpbnVvdXMNCj4gb2Zmc2V0IHJhbmdlIGluIGNoaXAsZS5nLiB3
-cml0aW5nIG9mZnNldCAwLG9mZnNldCAyIGFuZCBvZmZzZXQgNC4NCj4gTm9ybWFsbHksIGl0IG5l
-ZWQgdGhyZWUgdGltZXMgaTJjIHdyaXRlIG9wZXJhdGlvbi4gSG93ZXZlcixpdCBjYW4NCj4gdXNl
-IG9uY2UgdHJhbnNmZXIgdG8gZmluaXNoIGl0IGJ5IHVzaW5nIGNvbnRpbnVvdXMgbW9kZS4NCj4g
-DQo+IENoYW5nZS1JZDogSWYwNjk5MWUzZmQzMjg2N2JkZWFhY2YxNWJiMjQ4NjRkNWM1OTA0ZDAN
-Cj4gU2lnbmVkLW9mZi1ieTogUWlhbmdtaW5nIFhpYSA8cWlhbmdtaW5nLnhpYUBtZWRpYXRlay5j
-b20+DQo+IC0tLQ0KPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyB8IDY3ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2Vy
-dGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4
-eC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiBpbmRleCBkZWVmNjllNTY5
-MDYuLjc2ZWM2NWQ4NjlmNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1t
-dDY1eHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+IEBAIC05
-Nyw2ICs5Nyw3IEBAIGVudW0gbXRrX3RyYW5zX29wIHsNCj4gIAlJMkNfTUFTVEVSX1dSID0gMSwN
-Cj4gIAlJMkNfTUFTVEVSX1JELA0KPiAgCUkyQ19NQVNURVJfV1JSRCwNCj4gKwlJMkNfTUFTVEVS
-X0NPTlRJTlVPVVNfV1IsDQo+ICB9Ow0KPiAgDQo+ICBlbnVtIEkyQ19SRUdTX09GRlNFVCB7DQo+
-IEBAIC04NDYsNiArODQ3LDkgQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVj
-dCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KPiAgCQkJCQkgICAgT0ZGU0VU
-X1RSQU5TRkVSX0xFTik7DQo+ICAJCX0NCj4gIAkJbXRrX2kyY193cml0ZXcoaTJjLCBJMkNfV1JS
-RF9UUkFOQUNfVkFMVUUsIE9GRlNFVF9UUkFOU0FDX0xFTik7DQo+ICsJfSBlbHNlIGlmIChpMmMt
-Pm9wID09IEkyQ19NQVNURVJfQ09OVElOVU9VU19XUikgew0KPiArCQltdGtfaTJjX3dyaXRldyhp
-MmMsIG1zZ3MtPmxlbiAvIG51bSwgT0ZGU0VUX1RSQU5TRkVSX0xFTik7DQo+ICsJCW10a19pMmNf
-d3JpdGV3KGkyYywgbnVtLCBPRkZTRVRfVFJBTlNBQ19MRU4pOw0KPiAgCX0gZWxzZSB7DQo+ICAJ
-CW10a19pMmNfd3JpdGV3KGkyYywgbXNncy0+bGVuLCBPRkZTRVRfVFJBTlNGRVJfTEVOKTsNCj4g
-IAkJbXRrX2kyY193cml0ZXcoaTJjLCBudW0sIE9GRlNFVF9UUkFOU0FDX0xFTik7DQo+IEBAIC04
-OTYsNiArOTAwLDIzIEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRr
-X2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gIAkJCXdyaXRlbChyZWdfNGdfbW9k
-ZSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9UWF80R19NT0RFKTsNCj4gIAkJfQ0KPiAgDQo+ICsJ
-CXdyaXRlbCgodTMyKXdwYWRkciwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9UWF9NRU1fQUREUik7
-DQo+ICsJCXdyaXRlbChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfTEVOKTsN
-Cj4gKwl9IGVsc2UgaWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9DT05USU5VT1VTX1dSKSB7DQo+
-ICsJCXdyaXRlbChJMkNfRE1BX0lOVF9GTEFHX05PTkUsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRf
-SU5UX0ZMQUcpOw0KPiArCQl3cml0ZWwoSTJDX0RNQV9DT05fVFgsIGkyYy0+cGRtYWJhc2UgKyBP
-RkZTRVRfQ09OKTsNCj4gKwkJd3BhZGRyID0gZG1hX21hcF9zaW5nbGUoaTJjLT5kZXYsIG1zZ3Mt
-PmJ1ZiwNCj4gKwkJCQkJbXNncy0+bGVuLCBETUFfVE9fREVWSUNFKTsNCj4gKwkJaWYgKGRtYV9t
-YXBwaW5nX2Vycm9yKGkyYy0+ZGV2LCB3cGFkZHIpKSB7DQo+ICsJCQlrZnJlZShtc2dzLT5idWYp
-Ow0KPiArCQkJcmV0dXJuIC1FTk9NRU07DQo+ICsJCX0NCj4gKw0KPiArCQlpZiAoaTJjLT5kZXZf
-Y29tcC0+c3VwcG9ydF8zM2JpdHMpIHsNCj4gKwkJCXJlZ180Z19tb2RlID0gbXRrX2kyY19zZXRf
-NGdfbW9kZSh3cGFkZHIpOw0KPiArCQkJd3JpdGVsKHJlZ180Z19tb2RlLCBpMmMtPnBkbWFiYXNl
-ICsgT0ZGU0VUX1RYXzRHX01PREUpOw0KPiArCQl9DQo+ICsNCj4gIAkJd3JpdGVsKCh1MzIpd3Bh
-ZGRyLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1RYX01FTV9BRERSKTsNCj4gIAkJd3JpdGVsKG1z
-Z3MtPmxlbiwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9UWF9MRU4pOw0KPiAgCX0gZWxzZSB7DQo+
-IEBAIC05NzksNiArMTAwMCwxMSBAQCBzdGF0aWMgaW50IG10a19pMmNfZG9fdHJhbnNmZXIoc3Ry
-dWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3MsDQo+ICAJCQkJIG1zZ3MtPmxl
-biwgRE1BX0ZST01fREVWSUNFKTsNCj4gIA0KPiAgCQlpMmNfcHV0X2RtYV9zYWZlX21zZ19idWYo
-ZG1hX3JkX2J1ZiwgbXNncywgdHJ1ZSk7DQo+ICsJfSBlbHNlIGlmIChpMmMtPm9wID09IEkyQ19N
-QVNURVJfQ09OVElOVU9VU19XUikgew0KPiArCQlkbWFfdW5tYXBfc2luZ2xlKGkyYy0+ZGV2LCB3
-cGFkZHIsDQo+ICsJCQkJIG1zZ3MtPmxlbiwgRE1BX1RPX0RFVklDRSk7DQo+ICsNCj4gKwkJa2Zy
-ZWUobXNncy0+YnVmKTsNCj4gIAl9IGVsc2Ugew0KPiAgCQlkbWFfdW5tYXBfc2luZ2xlKGkyYy0+
-ZGV2LCB3cGFkZHIsIG1zZ3MtPmxlbiwNCj4gIAkJCQkgRE1BX1RPX0RFVklDRSk7DQo+IEBAIC0x
-MDA5LDYgKzEwMzUsOSBAQCBzdGF0aWMgaW50IG10a19pMmNfdHJhbnNmZXIoc3RydWN0IGkyY19h
-ZGFwdGVyICphZGFwLA0KPiAgew0KPiAgCWludCByZXQ7DQo+ICAJaW50IGxlZnRfbnVtID0gbnVt
-Ow0KPiArCWludCBpLCBqOw0KPiArCXU4ICpkbWFfbXVsdGlfd3JfYnVmOw0KPiArCXN0cnVjdCBp
-MmNfbXNnIG11bHRpX21zZ1sxXTsNCj4gIAlzdHJ1Y3QgbXRrX2kyYyAqaTJjID0gaTJjX2dldF9h
-ZGFwZGF0YShhZGFwKTsNCj4gIA0KPiAgCXJldCA9IG10a19pMmNfY2xvY2tfZW5hYmxlKGkyYyk7
-DQo+IEBAIC0xMDI1LDYgKzEwNTQsNDQgQEAgc3RhdGljIGludCBtdGtfaTJjX3RyYW5zZmVyKHN0
-cnVjdCBpMmNfYWRhcHRlciAqYWRhcCwNCj4gIAkJfQ0KPiAgCX0NCj4gIA0KPiArCWlmIChudW0g
-PiAxKSB7DQo+ICsJCWZvciAoaSA9IDA7IGkgPCBudW0gLSAxOyBpKyspIHsNCj4gKwkJCWlmICgh
-KG1zZ3NbaV0uZmxhZ3MgJiBJMkNfTV9SRCkgJiYgIShtc2dzW2krMV0uZmxhZ3MgJg0KPiArCQkJ
-CUkyQ19NX1JEKSAmJiAobXNnc1tpXS5hZGRyID09IG1zZ3NbaSsxXS5hZGRyKQ0KPiArCQkJCQkm
-JiAobXNnc1tpXS5sZW4gPT0gbXNnc1tpKzFdLmxlbikpIHsNCg0KaWYgdGhlc2UgY29uZGl0aW9u
-cyBhcmUgbm90IG1ldCwgQ2FuIHRoZXNlIHRyYW5zZmVycyB3b3JrPw0KIA0KPiArCQkJCWNvbnRp
-bnVlOw0KPiArCQkJfSBlbHNlDQo+ICsJCQkJYnJlYWs7DQo+ICsJCX0NCj4gKwkJaWYgKGkgPj0g
-bnVtIC0gMSkgew0KPiArCQkJaTJjLT5vcCA9IEkyQ19NQVNURVJfQ09OVElOVU9VU19XUjsNCj4g
-KwkJCWogPSAwOw0KPiArCQkJZG1hX211bHRpX3dyX2J1ZiA9IGt6YWxsb2MobXNncy0+bGVuICog
-bnVtLCBHRlBfS0VSTkVMKTsNCj4gKwkJCWlmICghZG1hX211bHRpX3dyX2J1Zikgew0KPiArCQkJ
-CXJldCA9ICAtRU5PTUVNOw0KPiArCQkJCWdvdG8gZXJyX2V4aXQ7DQo+ICsJCQl9DQo+ICsJCQlt
-dWx0aV9tc2ctPmFkZHIgID0gbXNncy0+YWRkcjsNCj4gKwkJCW11bHRpX21zZy0+bGVuICAgPSBt
-c2dzLT5sZW4gKiBudW07DQo+ICsJCQltdWx0aV9tc2ctPmJ1ZiAgID0gZG1hX211bHRpX3dyX2J1
-ZjsNCj4gKwkJCW11bHRpX21zZy0+ZmxhZ3MgID0gMDsNCj4gKwkJCXdoaWxlIChqIDwgbnVtKSB7
-DQo+ICsJCQkJbWVtY3B5KGRtYV9tdWx0aV93cl9idWYgKyBtc2dzLT5sZW4gKiBqLA0KPiArCQkJ
-CQkJCW1zZ3MtPmJ1ZiwgbXNncy0+bGVuKTsNCj4gKwkJCQlqKys7DQo+ICsJCQkJbXNncysrOw0K
-PiArCQkJCX0NCj4gKw0KPiArCQkJaTJjLT5pZ25vcmVfcmVzdGFydF9pcnEgPSBmYWxzZTsNCj4g
-KwkJCXJldCA9IG10a19pMmNfZG9fdHJhbnNmZXIoaTJjLCBtdWx0aV9tc2csIG51bSwgMCk7DQo+
-ICsJCQlpZiAocmV0IDwgMCkNCj4gKwkJCQlnb3RvIGVycl9leGl0Ow0KPiArCQkJcmV0ID0gbnVt
-Ow0KPiArCQkJCWdvdG8gZXJyX2V4aXQ7DQo+ICsNCj4gKwkJfQ0KPiArCX0NCj4gKw0KPiAgCWlm
-IChpMmMtPmF1dG9fcmVzdGFydCAmJiBudW0gPj0gMiAmJiBpMmMtPnNwZWVkX2h6ID4gSTJDX01B
-WF9GQVNUX01PREVfRlJFUSkNCj4gIAkJLyogaWdub3JlIHRoZSBmaXJzdCByZXN0YXJ0IGlycSBh
-ZnRlciB0aGUgbWFzdGVyIGNvZGUsDQo+ICAJCSAqIG90aGVyd2lzZSB0aGUgZmlyc3QgdHJhbnNm
-ZXIgd2lsbCBiZSBkaXNjYXJkZWQuDQoNCg==
+Hi Kishon,
+
+> -----Original Message-----
+> From: Alim Akhtar <alim.akhtar=40samsung.com>
+> Sent: 11 June 2020 20:49
+> To: 'Kishon Vijay Abraham I' <kishon=40ti.com>; 'Martin K. Petersen'
+> > >>
+> > >> Applied =5B1,2,3,4,5,9=5D to 5.9/scsi-queue. The series won't show u=
+p
+> > >> in my
+> > > public
+> > >> tree until shortly after -rc1 is released.
+> > >>
+> > > Thanks Martin,
+> > > Hi Rob and Kishon/Vinod
+> > > Can you please pickup dt-bindings and PHY driver respectively?
+> >
+> > You might have CC'ed me only for the PHY patch. I don't have the
+> > dt-bindings in my inbox. Care to re-send what's missing again? This
+> > will be merged after -rc1 is tagged.
+> >
+
+-rc1 is out, I do not see phy driver patch in your tree=5B1=5D yet, let me =
+know if I am looking into right tree.
+=5B1=5D -> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
+
+Thanks=21=20
+
+> Sure, will re-send this series.
+>=20
+> > Thanks
+> > Kishon
 
