@@ -2,91 +2,83 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8A120B80
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592639151;
-	bh=cyiTE/KzPJSAeOM4IeYBB4emZmFtBxQ7E/Dcy3ohlp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JAWNCvFW9pe096otd1U4m0gkgCmyG4r0Wf7mWy1cunqN9Era9TbxUT+aUc88D8unP
-	 iSRjnz6WcxQWhu2Mv8movZlrR+H34cqS5SV76q7Q3jJCH9u/TQXQJr8pzPpuMveHT1
-	 le00N+UA5K0l6xDkpeDMa8SXoi4LBdroqXLEq2os=
+	by mail.kernel.org (Postfix) with ESMTP id 5706A20C09
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NcR1VWYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgFTHpr (ORCPT
+        id S1727095AbgFTHqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgFTHpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:45:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B120C2098B;
-        Sat, 20 Jun 2020 07:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592639146;
-        bh=cyiTE/KzPJSAeOM4IeYBB4emZmFtBxQ7E/Dcy3ohlp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VmdLE+NESAl68OplTAW64vq9q/2Qaw4oQ1s7/ALP0J2b4Ekh8v5eETEHlUhs4HFHX
-         Y2isltbU4t2yZHnIAZnoc8HfcAhaWujgaFOr1RfjtwdbENUDKms9sgq8k2AHHWUByl
-         pBqt/Xl0dns4IQV6gwQ3tX4G10wIWin0gIx7BQvo=
-Date:   Sat, 20 Jun 2020 09:45:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
-        Nicolai Stange <nicstange@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: debugfs_create_u32_array() memory leaks
-Message-ID: <20200620074542.GA2298609@kroah.com>
-References: <20200619161734.25e99fa4@kicinski-fedora-PC1C0HJN>
+        Sat, 20 Jun 2020 03:46:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24322 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725835AbgFTHqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 03:46:00 -0400
+X-UUID: 19be2c4aac3e441d903f9b1fd88945be-20200620
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W396ifFNhTXMU6Ao6v2NVBlA5nufvq++IW1xtDsWqvQ=;
+        b=NcR1VWYdt4U4MAXZYbeRRoWiLb4MntYhpBpLtk4Yg6n6wzwMy2mwK0Au/1dKZ3E8FwpTipD4NKbGJLFP9msIeQK8ensWbybephjRq3XUhlrT6EEQXrwfRFx41nrjBSqPl0MyXaTjRXcpBuZGujVzH3sm+cGsEFN1PPvtAQ6MB4Y=;
+X-UUID: 19be2c4aac3e441d903f9b1fd88945be-20200620
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1283702885; Sat, 20 Jun 2020 15:45:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 20 Jun 2020 15:45:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 20 Jun 2020 15:45:52 +0800
+Message-ID: <1592639154.5529.3.camel@mtksdaap41>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+CC:     <wsa@the-dreams.de>, <devicetree@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Sat, 20 Jun 2020 15:45:54 +0800
+In-Reply-To: <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
+References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
+         <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619161734.25e99fa4@kicinski-fedora-PC1C0HJN>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:17:34PM -0700, Jakub Kicinski wrote:
-> Hi!
-> 
-> I'm trying to use debugfs_create_u32_array() in drivers/net/netdevsim
-> and it causes memory leaks:
-> 
-> unreferenced object 0xffff8880546642a0 (size 16):
->   comm "test_udp_tuns.s", pid 2146, jiffies 4294928368 (age 3772.435s)
->   hex dump (first 16 bytes):
->     84 52 6a 4d 80 88 ff ff 04 00 00 00 f3 78 7e 89  .RjM.........x~.
->   backtrace:
->     [<000000006962a447>] debugfs_create_u32_array+0x3f/0x90
-> 
-> I can see that debugfs_create_u32_array() allocates a structure at
-> create time that ends up assigned to inode->i_private, but I don't 
-> see it freed anywhere.
-> 
-> Am I missing something? I'm pretty sure files get removed, cause the
-> driver calls debugfs_remove_recursive() and no other file types leaks.
+DQpTb3JyeSBmb3IgbGF0ZSByZXZpZXcuDQoNCg0KT24gVGh1LCAyMDIwLTA1LTE0IGF0IDIxOjA5
+ICswODAwLCBRaWkgV2FuZyB3cm90ZToNCj4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3JpdGhtIHRv
+IGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+IHdoaWNoIGNhbiBmdWxseSBt
+ZWV0IEkyQyBTcGVjLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcgPHFpaS53YW5nQG1l
+ZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIHwg
+MzI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAyNzcgaW5zZXJ0aW9ucygrKSwgNTEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nl
+cy9pMmMtbXQ2NXh4LmMNCj4gaW5kZXggMGNhNmMzOGEuLjcwMjA2MTggMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYnVz
+c2VzL2kyYy1tdDY1eHguYw0KDQo8Li4uPg0KDQo+IEBAIC05NDgsOSArMTE3Nyw2IEBAIHN0YXRp
+YyBpbnQgbXRrX2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCWlm
+IChyZXQpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgDQo+IC0JaWYgKGkyYy0+ZGV2X2NvbXAt
+PnRpbWluZ19hZGp1c3QpDQo+IC0JCWkyYy0+Y2xrX3NyY19kaXYgKj0gSTJDX0RFRkFVTFRfQ0xL
+X0RJVjsNCj4gLQ0KDQpBZnRlciB0aGlzIHBhdGNoLCB0aGUgJ2Nsb2NrLWRpdicgcHJvcGVydHkg
+aW4gZGV2aWNlIHRyZWUgaXMgbm8gbG9uZ2VyDQp1c2VkIGZvciBwbGF0Zm9ybSB3aXRoIHRpbWlu
+Z19hZGp1c3QgYWJpbGl0eS4NClBsZWFzZSBjaGFuZ2UgdGhlIGJpbmRpbmcsIHNvIHdlIGRvbid0
+IG5lZWQgdG8gcHJvdmlkZSAnY2xvY2stZGl2JyBmb3INCnRoZXNlIHBsYXRmb3JtLg0KDQpKb2Uu
+Qw0KDQo+ICAJaWYgKGkyYy0+aGF2ZV9wbWljICYmICFpMmMtPmRldl9jb21wLT5wbWljX2kyYykN
+Cj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICANCg0K
 
-Yeah, that's a bug, nice catch.  The debugfs_create*() functions should
-not allocate local memory as we can't know to free that memory when the
-file is removed.
-
-Can you fix this up, or do you want me to?  I only see one in-kernel
-user of this, so it shouldn't be that tough to do so.  The one user
-never removes that file so that's why no one noticed this before.
-
-thanks,
-
-greg k-h
