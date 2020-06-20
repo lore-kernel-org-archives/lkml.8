@@ -2,134 +2,124 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A45C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC184C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8772417C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYltxMsG"
+	by mail.kernel.org (Postfix) with ESMTP id A809E2416F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592677088;
+	bh=Pv/MCYWouTTqY8Tzng4DMBloSb1nDNzojh5j+tABf+I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j1oxkUx5ICBuQEsjJrVrlZE1xWnXfsF91fmLWUedLFeri8+jb3BZt+wWp4X6qpOla
+	 BkBTGNAbxBqbtEcK2fzLdpT37qASi+mkrbl1s1BR6vVf4uIccjB24xxEQK10FQWv5n
+	 die2yk/tKU2Tcs+/vXW9LfHr1T3zs24fXc3nmrO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgFTSI7 (ORCPT
+        id S1728426AbgFTSR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 14:08:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41641 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728436AbgFTSIJ (ORCPT
+        Sat, 20 Jun 2020 14:17:59 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41251 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbgFTSR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 14:08:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k15so9839285otp.8
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 11:08:08 -0700 (PDT)
+        Sat, 20 Jun 2020 14:17:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 9so15024011ljc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 11:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YvqTkcYAAN78pjSZwwNFeimQiSa/Q3KK8WoooVV/y3U=;
-        b=PYltxMsGAgvI/vD/oqJzAkm5smvWLJ64aCdWLGvjxktBnj4XmKm9GlBDiURZOA4XM/
-         eN4R9DnKirURibR+keUEh5BdY5pIVV9SIR7JvsoV1hJ/eSst8n0JyExxKD9FHjR9071G
-         xgafLBwT80CD6ptphAJqtEnTTVFjIA/ZTtz8cdtRmfaXTohYM1jv6FHDYrbYaiGRqNEn
-         6/s7E4udamJKdFfIJewdjI2VEtDtKMWlaw1RRlJWveXRm3ohoaYM0AUQNC0V/GbIwAby
-         uNxECNSTm2tePRIMK1xYZrr/xWRhUhC0nyJ0hgkvISPcrmwnfJHJXzyjC866FI9op0sE
-         iZgA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fvNVjKHLtWO1dFhcir+/iDU+Lfgpi6JKmP8lzEdvB4E=;
+        b=XZhtEb+0zgTmk7p1FKGgpCykCJGCR4QhBQlCJIvFhX2gO0uR1pqoBoOBIBXk8xm1oo
+         nnYsLEAqabKP6xPYAXRe3MXkcyadqTMH+s5IProFdvebzb7pzQ6AkXwlDow2qmIdedzm
+         oZw5CZPotJ22BL1wUHzVnLaBOGBVpYDODO31o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YvqTkcYAAN78pjSZwwNFeimQiSa/Q3KK8WoooVV/y3U=;
-        b=miyuTk/Tqc1hn/w77A1iKgFpn9ggK8z9nq2umkk7OUVu5Wy/tDfUG5HZT3PYe3bgpo
-         EH0K5vyHCz+iJI2kQIoY0j2phykHrbDW/uhnh3XZT7rSmTEmp8vULOV9G8aZETLlvkbi
-         sL6Jgh5K5IAanGFFs2j3S/53MeibBlzVWPhsJW54ZwzkIkbvDCkIX6lfwjRiPkKk4Ont
-         M8ghZ6w9dJ5S/x1dPLr6jrHiNcXvZbrs9qEy2VfRK9KjROIO/eC+55PLuGduSpm4DiHP
-         3I6VMtXjMWbFicDHcRsszaItcgK94vOjqB9cMOlaV4nVR5vp3EJFGD/7WkVukG5uSVZK
-         drBg==
-X-Gm-Message-State: AOAM5323DfhMstXT+EDzgbywk+bhoCVcfU97X0XO4A9/cLHOUji8Iaru
-        r/Vdssi4mexquiQXCxS49uM=
-X-Google-Smtp-Source: ABdhPJx0Qik2PYOM1hpQz7sN9BDV2yqDZcR3HbrgjLNbotAVz4ED9rJxu10Dnwd1H06mxbh4gFGu+w==
-X-Received: by 2002:a9d:2668:: with SMTP id a95mr7917558otb.284.1592676428020;
-        Sat, 20 Jun 2020 11:07:08 -0700 (PDT)
-Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id y31sm2077901otb.41.2020.06.20.11.07.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 11:07:07 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v4 06/17] dyndbg: fix overcounting of ram used by dyndbg
-Date:   Sat, 20 Jun 2020 12:06:32 -0600
-Message-Id: <20200620180643.887546-7-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200620180643.887546-1-jim.cromie@gmail.com>
-References: <20200620180643.887546-1-jim.cromie@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fvNVjKHLtWO1dFhcir+/iDU+Lfgpi6JKmP8lzEdvB4E=;
+        b=T5WXmHiC0OIqtLjcI+uIAfAKOJ6d+GXnAfJaTeezupQJrHgr6JDyNtbZYJuoBH2MC9
+         YgetSb8VICp3Jd2xo9KmhVRE6d0DvPjH35ns3oP8EB8n8BUx9PvR19lu/5w0u7xhQFWP
+         oaMJnGrm8FwglpinKFt1oR+H8zNfVVMnrXbqgEuzaqtycXX1gNz6xe6NiFSVvN01A97r
+         0hcnWFoMChHdR98Taxve2xE+QwZk/C9bTU92NQLr5a6SBPRqtNu28CrKNHWfCbWeZm1F
+         G3p40nJH2pvkpQmn/sKDlTwOgfjz8NU/EInBEp6S7mx3mqB8XRZoFMRZHE57rUDqXLGq
+         VA6Q==
+X-Gm-Message-State: AOAM532c64hAlC5RDP5WM/Hm4QYc4zF4VhQ9S8TwKl1mj704Asd91cmo
+        l8ISfIMGVA8MapdESbcIIsDRZMIcpQA=
+X-Google-Smtp-Source: ABdhPJw6JOZ1sK1SWpAOUQhQvf+j6VBLoNFMpwyPST191iF0OMxaXeuiE7UKEsJyqZRVefw62BKZPg==
+X-Received: by 2002:a2e:9b8c:: with SMTP id z12mr4441285lji.257.1592677012815;
+        Sat, 20 Jun 2020 11:16:52 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id w17sm2082335ljj.108.2020.06.20.11.16.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id c21so7371991lfb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
+X-Received: by 2002:a19:ae0f:: with SMTP id f15mr5206631lfc.142.1592677011252;
+ Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200618210645.GB2212102@localhost.localdomain>
+ <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com> <20200620075732.GA468070@localhost.localdomain>
+In-Reply-To: <20200620075732.GA468070@localhost.localdomain>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 20 Jun 2020 11:16:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjt=mTBqymWuRYeiXQxdEdf6si_it=Yzm7KR62ws0vknw@mail.gmail.com>
+Message-ID: <CAHk-=wjt=mTBqymWuRYeiXQxdEdf6si_it=Yzm7KR62ws0vknw@mail.gmail.com>
+Subject: Re: [PATCH] linux++, this: rename "struct notifier_block *this"
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-during dyndbg init, verbose logging prints its ram overhead.  It
-counted strlens of struct _ddebug's 4 string members, in all callsite
-entries, which would be approximately correct if each had been
-mallocd.  But they are pointers into shared .rodata; for example, all
-10 kobject callsites have identical filename, module values.
+On Sat, Jun 20, 2020 at 12:57 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> > If you want to build the kernel with C++, you'd be a lot better off just doing
+> >
+> >    /* C++ braindamage */
+> >    #define this __this
+> >    #define new __new
+> >
+> > and deal with that instead.
+>
+> Can't do this because of placement new.
 
-Its best not to count that memory at all, since we cannot know they
-were linked in because of CONFIG_DYNAMIC_DEBUG=y, and we want to
-report a number that reflects what ram is saved by deconfiguring it.
+Can you explain?
 
-Also fix wording and size under-reporting of the __dyndbg section.
+> > Because no, the 'new' renaming will never happen, and while 'this'
+> > isn't nearly as common or relevant a name, once you have the same
+> > issue with 'new', what's the point of trying to deal with 'this'?
+>
+> I'm not sending "new".
 
-Heres my overhead, on a virtme-run VM on a fedora-31 laptop:
+My point about 'new' is that
 
-  dynamic_debug:dynamic_debug_init: 260 modules, 2479 entries \
-    and 10400 bytes in ddebug tables, 138824 bytes in __dyndbg section
+ (a) there's a lot more 'new' than 'this'
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- lib/dynamic_debug.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ (b) without dealing with 'new', dealing with 'this' is pointless
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 66c0bdf06ce7..9b2445507988 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -1017,7 +1017,6 @@ static int __init dynamic_debug_init(void)
- 	char *cmdline;
- 	int ret = 0;
- 	int n = 0, entries = 0, modct = 0;
--	int verbose_bytes = 0;
- 
- 	if (&__start___dyndbg == &__stop___dyndbg) {
- 		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
-@@ -1033,9 +1032,6 @@ static int __init dynamic_debug_init(void)
- 	iter_start = iter;
- 	for (; iter < __stop___dyndbg; iter++) {
- 		entries++;
--		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
--			+ strlen(iter->filename) + strlen(iter->format);
--
- 		if (strcmp(modname, iter->modname)) {
- 			modct++;
- 			ret = ddebug_add_module(iter_start, n, modname);
-@@ -1052,9 +1048,9 @@ static int __init dynamic_debug_init(void)
- 		goto out_err;
- 
- 	ddebug_init_success = 1;
--	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
-+	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in __dyndbg section\n",
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
--		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
-+		 (int)(entries * sizeof(struct _ddebug)));
- 
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
--- 
-2.26.2
+So why bother? Without some kind of pre-processing phase to make our C
+code palatable to a C++ parser, it will never work.
 
+And if you _do_ have a pre-processing phase (which might be a #define,
+but might also be a completely separate pass with some special tool),
+converting 'this' in the kernel sources isn't useful anyway, because
+you could just do it in the pre-processing phase instead.
+
+See? THAT is why I'm harping on 'new'. Not because you sent me a patch
+to deal with 'new', but because such a patch will never be accepted,
+and without that patch the pain from 'this' seems entirely irrelevant.
+
+What's your plan for 'new'? And why doesn't that plan then work for 'this'?
+
+              Linus
