@@ -2,109 +2,103 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 19:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 19:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A6E2463D
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 19:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1132464E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 19:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qbC+poHv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eH7a5r35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgFTT2I (ORCPT
+        id S1728646AbgFTTgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 15:28:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40220 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728565AbgFTT2H (ORCPT
+        Sat, 20 Jun 2020 15:36:37 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30386 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728544AbgFTTgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 15:28:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p18so10465444eds.7;
-        Sat, 20 Jun 2020 12:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=scA6CqquoWk914rmLn3+nLtaspjuXK54NYNT8t78XLk=;
-        b=qbC+poHvs39ZVCGTzMyJeIJUpytQ6pFd5qeGE3oFWIyiMKZEs3zbCIIiubSaxryjqV
-         fHZRmmlzPFxZAmT4fjc315VsprFu9yXwFVTZN0vi4+ogvLhR+DUhLmUmDWlARfH4lqP0
-         r6IiIGw2ywL+HM32SWPgf681lb9qGq8eGvDXWEeP7vGDUbWHKB4A3orCW0P0W8Y6nkSZ
-         OgbgK/AvNr8N2kaXrsvn/ZibEN+NvJI3DnlZF4FJWQZOu5Cuhzmm1vvW9LZurAgweB8C
-         cz7vBuOmkMsfWs5srbSEo67PGDoGURRN6jPG9y+GnpFnomPdS9ocuZVCOabSLdFbm0uZ
-         2lHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=scA6CqquoWk914rmLn3+nLtaspjuXK54NYNT8t78XLk=;
-        b=RcqOrpg4NMSnAd+yvC74ESuwPsJ3FSUIm2PhPhyzN8LsLkiXV8+dva8lp8RnaHUdeh
-         pyKhnZNku0XpaTwaQpEBpmhYBC+VjubfEp9szS5e3zEpsTVZ8vhJTFFDnDszJB8UShUW
-         gAUiNmD4d9zmOcFEXQGGI4j/G6rkd8a1CL8Eteft9aKmryiqk9uGhDqKyW/uwFS7/nDE
-         sxUkqVkcFmmH0iYyrlNiGb3jBR2b+V6F0XSQuVw9o763hzvMDj+6s2DCYvh1U+UL3Cyf
-         P8SzlydAxDvwZJsd4OxlbTrGbI+8S+kV1KLEZ3qFdNtJMxnDIIIKqZV4woQnX5zYAqIN
-         f15Q==
-X-Gm-Message-State: AOAM531lmSTf+mfqCCWK8X+qyBWgFePNK1WMg5L7FbI7nsOEmGDCsw9s
-        XVKxsMqf4VV3I4DPovXW6i8=
-X-Google-Smtp-Source: ABdhPJy+PKswvEJEFTPfiOtJ7Poy9kSHj4bTMlki+nCfU+FckH9OWUmHYVZxY191m6NdiJ0yfebZbA==
-X-Received: by 2002:a50:d78f:: with SMTP id w15mr9700997edi.245.1592681224048;
-        Sat, 20 Jun 2020 12:27:04 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id gv18sm8034044ejb.113.2020.06.20.12.27.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 12:27:03 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] net: stmmac: dwmac-meson8b: add a compatible string for G12A SoCs
-Date:   Sat, 20 Jun 2020 21:26:41 +0200
-Message-Id: <20200620192641.175754-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200620192641.175754-1-martin.blumenstingl@googlemail.com>
-References: <20200620192641.175754-1-martin.blumenstingl@googlemail.com>
+        Sat, 20 Jun 2020 15:36:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592681795;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g8WdW3pAZTXSYPszUGjpxZHpJb0PKXk+NRFlf8yIkz0=;
+        b=eH7a5r35IyZEzKOHPYu2nsMSOv5b5uZUBYsUvKkiqrREQkkjLiOrRjhfYDjeFt3O2+KuGQ
+        LeSIch2tlNnNsVvt0naBbFFuaEHajt9UD+foCFt6gF8BsrI9yTur4EKyuOUF2yy5PVMNwP
+        UD8eadrKXzu3S75FmBtW9khO29+foTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-a7fo6He5Pi2qzdEZTmsM4Q-1; Sat, 20 Jun 2020 15:36:30 -0400
+X-MC-Unique: a7fo6He5Pi2qzdEZTmsM4Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74037835B40;
+        Sat, 20 Jun 2020 19:36:29 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A32A05BAD5;
+        Sat, 20 Jun 2020 19:36:23 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05KJaNfQ025067;
+        Sat, 20 Jun 2020 15:36:23 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05KJaMP8025063;
+        Sat, 20 Jun 2020 15:36:22 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Sat, 20 Jun 2020 15:36:21 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+cc:     Ignat Korchagin <ignat@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mike Snitzer <snitzer@redhat.com>, agk@redhat.com,
+        dm-devel@redhat.com, dm-crypt@saout.de,
+        linux-kernel@vger.kernel.org, kernel-team@cloudflare.com
+Subject: Re: [RFC PATCH 0/1] dm-crypt excessive overhead
+In-Reply-To: <20200620012332.GA25340@gondor.apana.org.au>
+Message-ID: <alpine.LRH.2.02.2006201535280.24999@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200619164132.1648-1-ignat@cloudflare.com> <20200619165548.GA24779@redhat.com> <alpine.LRH.2.02.2006191429060.23991@file01.intranet.prod.int.rdu2.redhat.com> <20200620012332.GA25340@gondor.apana.org.au>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amlogic Meson G12A, G12B and SM1 have the same (at least as far as we
-know at the time of writing) PRG_ETHERNET glue register implementation.
-This implementation however is slightly different from AXG as it now has
-an undocument "auto cali idx val" register in PRG_ETH1[17:16] which
-seems to be related to RGMII Ethernet.
 
-Add a new compatible string for G12A SoCs so the logic for this new
-register can be implemented in the future.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Sat, 20 Jun 2020, Herbert Xu wrote:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 234e8b6816ce..544bc621146c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -491,6 +491,10 @@ static const struct of_device_id meson8b_dwmac_match[] = {
- 		.compatible = "amlogic,meson-axg-dwmac",
- 		.data = &meson_axg_dwmac_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-g12a-dwmac",
-+		.data = &meson_axg_dwmac_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, meson8b_dwmac_match);
--- 
-2.27.0
+> On Fri, Jun 19, 2020 at 02:39:39PM -0400, Mikulas Patocka wrote:
+> >
+> > I'm looking at this and I'd like to know why does the crypto API fail in 
+> > hard-irq context and why does it work in tasklet context. What's the exact 
+> > reason behind this?
+> 
+> You're not supposed to do any real work in IRQ handlers.  All
+> the substantial work should be postponed to softirq context.
+
+I see.
+
+BTW - should it also warn if it is running in a process context with 
+interrupts disabled?
+
+Mikulas
+
+> Why do you need to do work in hard IRQ context?
+> 
+> Cheers,
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
 
