@@ -2,118 +2,77 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A629FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A56423A9C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A056A23A9C
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgFTJhW (ORCPT
+        id S1727894AbgFTJnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 05:37:22 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:63004 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727825AbgFTJhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 05:37:22 -0400
-X-IronPort-AV: E=Sophos;i="5.75,258,1589234400"; 
-   d="scan'208";a="455748139"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 11:37:19 +0200
-Date:   Sat, 20 Jun 2020 11:37:19 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Bernard Zhao <bernard@vivo.com>, opensource.kernel@vivo.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        =?ISO-8859-15?Q?Felix_K=FChling?= <Felix.Kuehling@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH v2] drm/amdkfd: Fix memory leaks according to error
- branches
-In-Reply-To: <0e76e678-94b1-8f69-d52c-2b67608d5ef8@web.de>
-Message-ID: <alpine.DEB.2.22.394.2006201126130.2918@hadrien>
-References: <0e76e678-94b1-8f69-d52c-2b67608d5ef8@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sat, 20 Jun 2020 05:43:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45050 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727855AbgFTJnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 05:43:51 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8AFD1A6764515297A373;
+        Sat, 20 Jun 2020 17:43:49 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 20 Jun 2020 17:43:43 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net-next v1 0/5] hinic: add some ethtool ops support
+Date:   Sat, 20 Jun 2020 17:42:53 +0800
+Message-ID: <20200620094258.13181-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1246811221-1592645840=:2918"
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+patch #1: support to set and get pause params with
+          "ethtool -A/a" cmd
+patch #2: support to set and get irq coalesce params with
+          "ethtool -C/c" cmd
+patch #3: support to do self test with "ethtool -t" cmd
+patch #4: support to identify physical device with "ethtool -p" cmd
+patch #5: support to get eeprom information with "ethtool -m" cmd
 
---8323329-1246811221-1592645840=:2918
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Luo bin (5):
+  hinic: add support to set and get pause params
+  hinic: add support to set and get irq coalesce
+  hinic: add self test support
+  hinic: add support to identify physical device
+  hinic: add support to get eeprom information
 
+ drivers/net/ethernet/huawei/hinic/hinic_dev.h |  14 +
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 677 +++++++++++++++++-
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  66 ++
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  31 +
+ .../net/ethernet/huawei/hinic/hinic_hw_io.h   |  10 +
+ .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   7 +-
+ .../net/ethernet/huawei/hinic/hinic_main.c    | 104 ++-
+ .../net/ethernet/huawei/hinic/hinic_port.c    | 200 ++++++
+ .../net/ethernet/huawei/hinic/hinic_port.h    |  99 +++
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  58 +-
+ .../net/ethernet/huawei/hinic/hinic_sriov.c   |   4 +-
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  80 +++
+ drivers/net/ethernet/huawei/hinic/hinic_tx.h  |   2 +
+ 13 files changed, 1341 insertions(+), 11 deletions(-)
 
+-- 
+2.17.1
 
-On Sat, 20 Jun 2020, Markus Elfring wrote:
-
-> > The function kobject_init_and_add alloc memory like:
-> > kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-> > ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-> > ->kmalloc_slab, in err branch this memory not free. If use
-> > kmemleak, this path maybe catched.
-> > These changes are to add kobject_put in kobject_init_and_add
-> > failed branch, fix potential memleak.
->
-> I suggest to improve this change description.
->
-> * Can an other wording variant be nicer?
-
-Markus's suggestion is as usual extremely imprecise.  However, I also find
-the message quite unclear.
-
-It would be good to always use English words.  alloc and err are not
-English words.  Perhaps most people will figure out what they are
-abbreviations for, but it would be better to use a few more letters to
-make it so that no one has to guess.
-
-Then there are a bunch of things that are connected by arrows with no
-spaces between them.  The most obvious meaning of an arrow with no space
-around it is a variable dereference.  After spending some mental effort,
-one can realize that that is not what you mean here.  A layout like:
-
-   first_function ->
-     second_function ->
-       third_function
-
-would be much more readable.
-
-I don't know what "this patch maybe catched" means.  Is "catched" supposed
-to be "caught" or "cached"?  Overall, the sentence could be "Kmemleak
-could possibly detect this issue", or something like that.  But I don't
-know what this means.  Did you detect the problem with kmemleak?  if you
-did not detect the problem with kmemleak, and overall you don't know
-whether kmemleak would detect the bug or not, is this information useful
-at all for the patch?
-
-"These changes are to" makes a lot of words with no information.  While it
-is perhaps not necessary to slavishly follow the rule about using the
-imperative, if it is convenient to use the imperative, doing so eliminates
-such meaningless phrases.
-
-memleak is also not an English word.  Memory leak is only a few more
-characters, and doesn't require the reader to make the small extra effort
-to figure out what you mean.
-
-julia
-
->
-> * Will the tag “Fixes” become helpful for the commit message?
->
-> Regards,
-> Markus
->
---8323329-1246811221-1592645840=:2918--
