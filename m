@@ -2,120 +2,82 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE96C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A53ED23A68
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840F623A68
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgFTJJj (ORCPT
+        id S1727843AbgFTJMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 05:09:39 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:40465 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgFTJJi (ORCPT
+        Sat, 20 Jun 2020 05:12:13 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:33920 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgFTJMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 05:09:38 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 5FCE728032723;
-        Sat, 20 Jun 2020 11:09:36 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 38F0B10CB8; Sat, 20 Jun 2020 11:09:36 +0200 (CEST)
-Date:   Sat, 20 Jun 2020 11:09:36 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     refactormyself@gmail.com
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: pciehp: Fix wrong failure check on
- pcie_capability_read_*()
-Message-ID: <20200620090936.3khh3gj46pnojnrw@wunner.de>
-References: <20200619201219.32126-1-refactormyself@gmail.com>
- <20200619201219.32126-3-refactormyself@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619201219.32126-3-refactormyself@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sat, 20 Jun 2020 05:12:12 -0400
+Received: from njvxl5505.vivo.xyz (unknown [157.0.31.125])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 03FEF4815C6;
+        Sat, 20 Jun 2020 17:11:59 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
+Subject: [PATCH v3] drm/amd: fix potential memleak in err branch
+Date:   Sat, 20 Jun 2020 17:11:52 +0800
+Message-Id: <20200620091152.11206-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZTB8dQ0pISUxOSk5IVkpOQklNT09ISkJJSE5VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTI6Sww5MDgxPwIySCg0MRUX
+        ITwKCUxVSlVKTkJJTU9PSEpCTU9JVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSU5ZV1kIAVlBSUhJQzcG
+X-HM-Tid: 0a72d0ffb7d393bakuws03fef4815c6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:12:19PM +0200, refactormyself@gmail.com wrote:
-> On failure, pcie_capabiility_read_*() will set the status value,
-> its last parameter to 0 and not ~0.
-> This bug fix checks for the proper value.
+The function kobject_init_and_add alloc memory like:
+kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+->kmalloc_slab, in err branch this memory not free. If use
+kmemleak, this path maybe catched.
+These changes are to add kobject_put in kobject_init_and_add
+failed branch, fix potential memleak.
 
-If a config space read times out, the PCIe controller fabricates
-an "all ones" response.  The code is checking for such a timeout,
-not for an error.  Hence the code is fine.
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+Changes since V2:
+*remove duplicate kobject_put in kfd_procfs_init.
 
-Thanks,
+Link for V1:
+*https://lore.kernel.org/patchwork/patch/1258608/
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Lukas
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index d27221ddcdeb..0e0c42e9f6a3 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -428,6 +428,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
+ 					   (int)process->lead_thread->pid);
+ 		if (ret) {
+ 			pr_warn("Creating procfs pid directory failed");
++			kobject_put(process->kobj);
+ 			goto out;
+ 		}
+ 
+-- 
+2.17.1
 
-> 
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 53433b37e181..c1a67054948a 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->  
->  	do {
->  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -		if (slot_status == (u16) ~0) {
-> +		if (slot_status == (u16)0) {
->  			ctrl_info(ctrl, "%s: no response from device\n",
->  				  __func__);
->  			return 0;
-> @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
->  	pcie_wait_cmd(ctrl);
->  
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-> -	if (slot_ctrl == (u16) ~0) {
-> +	if (slot_ctrl == (u16)0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		goto out;
->  	}
-> @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)0)
->  		return -ENODEV;
->  
->  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> @@ -440,7 +440,7 @@ int pciehp_card_present(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)0)
->  		return -ENODEV;
->  
->  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
-> @@ -592,7 +592,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  
->  read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
-> -	if (status == (u16) ~0) {
-> +	if (status == (u16)0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		if (parent)
->  			pm_runtime_put(parent);
-> -- 
-> 2.18.2
