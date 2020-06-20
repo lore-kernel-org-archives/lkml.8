@@ -2,122 +2,111 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D49C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA2F23F57
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE9A22265
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592671954;
-	bh=lc7v8dBdySWZJVKaRCaXBIyecuVR2aekPz7TkBHJxQI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fonm9p0+KlJx8XNpwSp6XrY/Om60K6BcsM59wLmBHRLudTc6uTjsVuPPRE0uGn4gr
-	 ceWfrCI7BF0NLx70vlh8Py87cy0JIZ1sslD9PxdhhbbOZyKEFCS89sahX7BfFAOzCb
-	 MzyIOWzNsUNdS0xChfxTO4LkaQLJE38V8Tob8KE4=
+	s=default; t=1592672123;
+	bh=jh+Dtd6XxyvfeBpJwr5NXJeG+cGq9HQ6DALEAl2vhK8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ndI2OyzAfHI6UrYqVo0OOhKCnm8MlJ3dsdXNltepLbJluWkoksjFtPH0c4mQxxCYP
+	 WEUa1B7ioy07jxxNGjXfsUZ+A/aR7mj2gCLP+ksQ4P7P5X3SvWrGbAQ52Tq4ZUVxvf
+	 CiYluOUDxF6v4EIJecF7EmjKqi0fvRPZNey52VsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgFTQvH (ORCPT
+        id S1728135AbgFTQzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:51:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34950 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFTQvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:51:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so14910725lji.2
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7gXamD6tdco3sX1rsWjyx/DNsG9Dx7HvJbp4Sgjo81s=;
-        b=JB70eXW6129XbjPHpJQunGUIMM53GNDzabriZYPRfLkmsKWzMVZsseChD9TekSyUpA
-         EVQwpFR3L7FM2Y9I+rLVZY00YWZJHYTfxve8+q//i3CHatLmxT3cCeBSGHuvknRjI6Pb
-         rL8GLj3b9jPvOO46NbZTvdDo/PPx58jx7G+YY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7gXamD6tdco3sX1rsWjyx/DNsG9Dx7HvJbp4Sgjo81s=;
-        b=cfYc/cO3dMgKeWH6nnm9LU4ptFUsj2BvOJYqBuxwVs+MJOtAiVcKXlt3oGgb2S4Mse
-         LSkoKnI1UkuxCbzMmF4bV0oM5xifkcr8g0RGan1aX90AQJfEBbl8953+BYM5QhnbR4VC
-         cBRcHHfx6eFkj467hcfxVCeNMNjY/tuTlvdjnJFV7fTGgcvWlnT7wxvLXhRUaLFo3pMj
-         4zX8urnSB4n7AOnXu+mUhnR3Z3MgTD4Z6DUlrtuWMATzZcu/XeKRBg5GlJNwBhyzvLF2
-         OYH3s2sL0lYyZAC2kgtkqfUZ9AB1dVkaygdwBmC4DsUPqPLiR8bBrxkrfpmhXdCn/R8l
-         InCg==
-X-Gm-Message-State: AOAM532pk1Pvc005O/VOsjJsSlc+EBfeOGP1Nelhyql7cFoLvnAduvX6
-        e+9beBJuMh/lleyxJXlC4ZRN7/gfPTo=
-X-Google-Smtp-Source: ABdhPJwmFdZynAkqymSpoFkU3tDwyXUrwM1u7eFu6j+cbukAmZbOQuioWKlJ1epO7E8Vb4mkBo3t1g==
-X-Received: by 2002:a2e:7006:: with SMTP id l6mr4857516ljc.453.1592671804614;
-        Sat, 20 Jun 2020 09:50:04 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id c6sm2174731lff.77.2020.06.20.09.50.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 09:50:03 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id a9so14869009ljn.6
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:50:03 -0700 (PDT)
-X-Received: by 2002:a2e:9cd4:: with SMTP id g20mr4470977ljj.371.1592671803344;
- Sat, 20 Jun 2020 09:50:03 -0700 (PDT)
+        Sat, 20 Jun 2020 12:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbgFTQzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 12:55:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B9C206C1;
+        Sat, 20 Jun 2020 16:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592672120;
+        bh=jh+Dtd6XxyvfeBpJwr5NXJeG+cGq9HQ6DALEAl2vhK8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JPRzqSsXNNflaSN9W1VKLjKK2Tr5YQxLrly67XS/Qe764zuYMr+E9uH1bYZASM9Hv
+         nA9zxaJ/PEbaeWS/EdE2E8sgv8IGN1OZPB2q9h/1cC4du8Aj50MfGUkH/37NFIzkO8
+         b6E2rydpktC6hsBzvJSxhwYRnDREOCga+4RJ/QHw=
+Date:   Sat, 20 Jun 2020 17:55:12 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     lee.jones@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        matthias.bgg@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, dmurphy@ti.com, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, shufan_lee@richtek.com,
+        cy_huang@richtek.com, benjamin.chao@mediatek.com
+Subject: Re: [PATCH v2 0/4] dt-bindings: mfd: Add bindings for the Mediatek
+ MT6360
+Message-ID: <20200620175512.1e11d12c@archlinux>
+In-Reply-To: <1592567631-20363-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <1592567631-20363-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <alpine.DEB.2.22.394.2006181751270.9276@xps-7390>
- <20200619065007.GA3041@lst.de> <alpine.DEB.2.22.394.2006182351090.9276@xps-7390>
- <20200619074233.GA3723@lst.de> <alpine.DEB.2.22.394.2006200640370.2845@xps-7390>
-In-Reply-To: <alpine.DEB.2.22.394.2006200640370.2845@xps-7390>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 20 Jun 2020 09:49:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whj7YBvNT3FPHc8oUqwRhjbRkJESnUx6bbpA5ys6W9ujw@mail.gmail.com>
-Message-ID: <CAHk-=whj7YBvNT3FPHc8oUqwRhjbRkJESnUx6bbpA5ys6W9ujw@mail.gmail.com>
-Subject: Re: Commit 25f12ae45fc1 ("maccess: rename probe_kernel_address to
- get_kernel_nofault") causing several OOPSes
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 6:46 AM Kenneth R. Crudup <kenny@panix.com> wrote:
->
-> So, be totally surprised :) I've just booted with "maccess: rename
-> probe_kernel_address to get_kernel_nofault" intact and your probe_roms.c
-> patch with no issues.
->
-> (Perhaps there's some sort of compiler optimization going on?)
+On Fri, 19 Jun 2020 19:53:47 +0800
+Gene Chen <gene.chen.richtek@gmail.com> wrote:
 
-Hmm.
+> This patch series add mt6360 sub-device adc/regulator and
+> fix mfd architecture and add dt-binding document
 
-Very strange. I was a tiny bit worried about that part of the patch,
-because I also changed the types (from "unsigned char *" to "void *"),
-but pointer arithmetic in "unsigned char *" and "void *" is the same,
-and Christoph's partial revert patch doesn't even revert that part.
+Hi Gene
 
-But I really don't see what Christoph's revert would really even
-change It switches the order of the arguments back..
+Please make sure you include linux-iio@vger.kernel.org in the cc list
+for any iio related series.  For now I'll take a quick look at the
+ADC driver patch (and +cc the list for my reply)
 
-It does re-introduce a bug in that macro that I fixed. This macro is
-buggy garbage:
+Thanks,
 
-+#define probe_kernel_address(addr, retval)             \
-+       copy_from_kernel_nofault(&retval, addr, sizeof(retval))
+Jonathan
 
-in case 'retval' is a complex expression, becasue of possibly changing
-the C order of operations. So it needs to be "&(retval)" in the macro
-body.
+> 
+> changelogs between v1 & v2
+> - adjust binding document schema include mfd/adc/regulator
+> - adc: use IIO_CHAN_INFO_PROCESSED only
+> - adc: use devm_iio_triggered_buffer_setup
+> - adc: use use s64 to record timestamp
+> - regulator: merge regmap to mfd driver for r/w with crc
+> 
+> Gene Chen (4)
+>   dt-bindings: mfd: Add bindings for the Mediatek MT6360
+>   mfd: mt6360: implement i2c R/W with CRC
+>   iio: adc: mt6360: Add ADC driver for MT6360
+>   regulator: mt6360: Add support for MT6360 regulator
+> 
+>  Documentation/devicetree/bindings/mfd/mt6360.txt |  122 +++++
+>  drivers/iio/adc/Kconfig                          |   11 
+>  drivers/iio/adc/Makefile                         |    1 
+>  drivers/iio/adc/mt6360-adc.c                     |  388 ++++++++++++++++
+>  drivers/mfd/Kconfig                              |    1 
+>  drivers/mfd/mt6360-core.c                        |  541 +++++++++++++++--------
+>  drivers/regulator/Kconfig                        |    9 
+>  drivers/regulator/Makefile                       |    1 
+>  drivers/regulator/mt6360-regulator.c             |  485 ++++++++++++++++++++
+>  include/dt-bindings/mfd/mt6360.h                 |   15 
+>  include/linux/mfd/mt6360.h                       |  240 ----------
+>  11 files changed, 1389 insertions(+), 425 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+>  create mode 100644 include/dt-bindings/mfd/mt6360.h
+>  delete mode 100644 include/linux/mfd/mt6360.h
+>  create mode 100644 drivers/iio/adc/mt6360-adc.c
+>  create mode 100644 drivers/regulator/mt6360-regulator.c
 
-But that is never the case for 'retval'. For 'addr', yes, but 'addr'
-is only used simply (and copy_from_kernel_nofault() isn't a macro).
-
-I'm staring at that opatch and not seeing how it could _possibly_ make
-any difference in code generation.
-
-Which is the obvious next step: would you mind compiling that file
-with and without the patch and sending me the two object files?
-
-              Linus
