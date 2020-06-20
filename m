@@ -2,97 +2,151 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A11C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F1323F38
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2A922248
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 17:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mCErTwcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgFTRtP (ORCPT
+        id S1728380AbgFTRvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 13:49:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:56222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgFTRtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 13:49:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 748B4C0A;
-        Sat, 20 Jun 2020 10:49:14 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1479B3F6CF;
-        Sat, 20 Jun 2020 10:49:13 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 18:49:12 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal
- pressure definition
-Message-ID: <20200620174912.GA18358@arm.com>
-References: <20200614010755.9129-1-valentin.schneider@arm.com>
- <20200614010755.9129-2-valentin.schneider@arm.com>
- <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 20 Jun 2020 13:51:09 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:19100 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgFTRvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:51:09 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200620175106epoutp011717ddd0873c9cd4ee8b924f53119a8c~aUeYT5TLW3036330363epoutp01h
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 17:51:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200620175106epoutp011717ddd0873c9cd4ee8b924f53119a8c~aUeYT5TLW3036330363epoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592675466;
+        bh=kgQx6GkHG+g2FYavxug1XfQFwsmcK85FkVaRvxsVKak=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=mCErTwcXor+EgQBDL6q5bWbxhFnCLx9Dpmkh1GLuCfRAp2MuPtXfdH6sXfIXeocib
+         bzlM7Yxv2Uy9Dx86eoTp7xSyqt3cIUNeR+HzZsl6JiE4P4lESP8LHCwaK56Cm56Chm
+         IMpNJm0K1eKcPy9QYz+O/nL5YX0QA9Wd6xv+j3do=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200620175105epcas5p2a0f9f291f07c0bb8dc780b10d9f2f363~aUeXA9T8a2357823578epcas5p2L;
+        Sat, 20 Jun 2020 17:51:05 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B5.00.09475.98C4EEE5; Sun, 21 Jun 2020 02:51:05 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26~aUeVyRbn42357823578epcas5p2K;
+        Sat, 20 Jun 2020 17:51:04 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200620175104epsmtrp1c6797b3456983879c679dfb1c8b488b9~aUeVxm_Z81505115051epsmtrp1O;
+        Sat, 20 Jun 2020 17:51:04 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-e4-5eee4c8907b5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        72.0D.08382.78C4EEE5; Sun, 21 Jun 2020 02:51:04 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200620175102epsmtip1e73ed9d8a4a6d1ef5bca3b802c7f6bf3~aUeUes8-P3245232452epsmtip1T;
+        Sat, 20 Jun 2020 17:51:02 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     linux-scsi@vger.kernel.org
+Cc:     avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-kernel@vger.kernel.org,
+        jejb@linux.ibm.com, Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH -next] scsi: ufs: allow exynos ufs driver to build as module
+Date:   Sat, 20 Jun 2020 23:02:32 +0530
+Message-Id: <20200620173232.52521-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWy7bCmum6nz7s4g/O3JCwezNvGZvHy51U2
+        i0/rl7FaLLqxjcni5pajLBaXd81hs+i+voPNYvnxf0wWS7feZHTg9Ljc18vkMWHRAUaPlpP7
+        WTw+Pr3F4tG3ZRWjx+dNch7tB7qZAtijuGxSUnMyy1KL9O0SuDKezXjFVLCEv2J++0+mBsaj
+        vF2MnBwSAiYS/2duYwGxhQR2M0rcWCTaxcgFZH9ilFi75QUjhPONUeLnnj5mmI7FHR3sEIm9
+        jBIfOvexQ7S3MEl8Wc0NYrMJaEvcnb6FCcQWEZCT2Lz8KwtIA7PANUaJc21/wPYJC/hIfNv1
+        mRXEZhFQlbi4/D+YzStgI7H22yM2iG3yEqs3HGAGaZYQOMcusaX1GhNEwkViyYQfUEXCEq+O
+        b2GHsKUkXva3AdkcQHa2RM8uY4hwjcTSecdYIGx7iQNX5rCAlDALaEqs36UPEmYW4JPo/f2E
+        CaKTV6KjTQiiWlWi+d1VqE5piYnd3awQJR4SU2YwQnweK3Fu9T3WCYwysxBmLmBkXMUomVpQ
+        nJueWmxaYJyXWq5XnJhbXJqXrpecn7uJEZwCtLx3MD568EHvECMTB+MhRgkOZiUR3sPv38QJ
+        8aYkVlalFuXHF5XmpBYfYpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwGSX9XhyopC8
+        ufLT47FmuQ9/vvlRXfrkTfQJ/kofh9qYepHU3zGlD0WOP5tyYddV97t3/vyLWXhrgrjSqT1O
+        07mTrJ8Yc+7JXKPj8061R99sw7eW16cK1E/rH9TeJ63+OPf4ASP9nZkqrqeX/hXxPtMVlFCU
+        IhvcvWBqa8t1Q06L629tQ2u2Z82pFPnkee3LvfU37XY5Fnx4HZNrz+UQcW5y26LPXqfV8g2r
+        Znw925m8bpVa109tb525WV6h78+n5YaHPYs+dui9eKncp7lrP6Xsmah9pXDHB1NRkcbF/voT
+        2x89N5j7cO21T74tC4Sbw0+Usc6xuLv99u3IxV7RlntfB06/ldez9v6703vtDHqUWIozEg21
+        mIuKEwHr95rocAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSnG6Hz7s4g9XzmC0ezNvGZvHy51U2
+        i0/rl7FaLLqxjcni5pajLBaXd81hs+i+voPNYvnxf0wWS7feZHTg9Ljc18vkMWHRAUaPlpP7
+        WTw+Pr3F4tG3ZRWjx+dNch7tB7qZAtijuGxSUnMyy1KL9O0SuDKezXjFVLCEv2J++0+mBsaj
+        vF2MnBwSAiYSizs62LsYuTiEBHYzStw895IRIiEtcX3jBHYIW1hi5b/nUEVNTBIdW7YxgSTY
+        BLQl7k7fAmaLCMhJbF7+lQWkiFngAaNEz/fjLCAJYQEfiW+7PrOC2CwCqhIXl/8Hs3kFbCTW
+        fnvEBrFBXmL1hgPMExh5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECA44Lc0d
+        jNtXfdA7xMjEwXiIUYKDWUmE9/D7N3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhP
+        LEnNTk0tSC2CyTJxcEo1MIVtvnpqqsZGd8lXG93zDxx4sa/324PnBoY+4Xc/ftA2ehCTYTO7
+        c/+ir33f+xKN313TnrJpvZCE5EFN2YcFp8s/qsb6ez2Sjwq/dt64TH7nzN/T/cQOfNphuDm+
+        IfTVlQvsbbdsm6quKTwNfOdxb8X7s5smbVxswfTk6+ym8gKPqza8gVHN/infc/omB+5w/XPE
+        aGOG9rk5aZwXjTXUxW+su3T8k7Hc1sRO1h61Nr36e/K5TXnTtZqXv0iMrV77vjnA8EjyEZuJ
+        am+jIs83B3ox6s3lsS7KyGtsmjG5+r/9MqNYiW6lqet33dM+cN30sUxX9Frm649uLdwQcuGg
+        r+u1xx4+fvMP+ihznvp54pkSS3FGoqEWc1FxIgB4kK2XpwIAAA==
+X-CMS-MailID: 20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26
+References: <CGME20200620175104epcas5p25068bb07029c9d6aff56623e4ecb0a26@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
+Allow Exynos UFS driver to build as a module.
+This patch fix the below build issue reported by
+kernel build robot.
 
-On Thursday 18 Jun 2020 at 17:03:24 (+0200), Vincent Guittot wrote:
-> On Sun, 14 Jun 2020 at 03:10, Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
-[..]
-> > diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-> > index e297e135c031..a1efd379b683 100644
-> > --- a/drivers/thermal/cpufreq_cooling.c
-> > +++ b/drivers/thermal/cpufreq_cooling.c
-> > @@ -417,6 +417,11 @@ static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
-> >         return 0;
-> >  }
-> >
-> > +__weak void
-> > +arch_set_thermal_pressure(const struct cpumask *cpus, unsigned long th_pressure)
-> > +{
-> > +}
-> 
-> Having this weak function declared in cpufreq_cooling is weird. This
-> means that we will have to do so for each one that wants to use it.
-> 
-> Can't you declare an empty function in a common header file ?
+drivers/scsi/ufs/ufs-exynos.o: in function `exynos_ufs_probe':
+drivers/scsi/ufs/ufs-exynos.c:1231: undefined reference to `ufshcd_pltfrm_init'
+drivers/scsi/ufs/ufs-exynos.o: in function `exynos_ufs_pre_pwr_mode':
+drivers/scsi/ufs/ufs-exynos.c:635: undefined reference to `ufshcd_get_pwr_dev_param'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_shutdown'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_suspend'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_resume'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_suspend'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_resume'
+drivers/scsi/ufs/ufs-exynos.o:undefined reference to `ufshcd_pltfrm_runtime_idle'
 
-Do we expect anyone other than cpufreq_cooling to call
-arch_set_thermal_pressure()?
+Fixes: 55f4b1f73631 ("scsi: ufs: ufs-exynos: Add UFS host support for Exynos SoCs")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/scsi/ufs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm not against any of the options, either having it here as a week
-default definition (same as done for arch_set_freq_scale() in cpufreq.c)
-or in a common header (as done for arch_scale_freq_capacity() in sched.h).
+diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+index 8cd90262784d..3188a50dfb51 100644
+--- a/drivers/scsi/ufs/Kconfig
++++ b/drivers/scsi/ufs/Kconfig
+@@ -162,7 +162,7 @@ config SCSI_UFS_BSG
+ 	  If unsure, say N.
+ 
+ config SCSI_UFS_EXYNOS
+-	bool "EXYNOS specific hooks to UFS controller platform driver"
++	tristate "EXYNOS specific hooks to UFS controller platform driver"
+ 	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS || COMPILE_TEST)
+ 	select PHY_SAMSUNG_UFS
+ 	help
 
-But for me, Valentin's implementation seems more natural as setters are
-usually only called from within the framework that does the control
-(throttling for thermal or frequency setting for cpufreq) and we
-probably want to think twice if we want to call them from other places.
+base-commit: ce2cc8efd7a40cbd17841add878cb691d0ce0bba
+prerequisite-patch-id: c12207f678b32e29496ec7e324425c8f49422a2c
+prerequisite-patch-id: 8263330366e8c180c0ab9f76fbd4dbbcf0bee427
+prerequisite-patch-id: 7456972c04fc1a76c922196aecd98e9ed17cc6eb
+-- 
+2.17.1
 
-Thanks,
-Ionela.
