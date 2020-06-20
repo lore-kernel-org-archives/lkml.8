@@ -2,104 +2,241 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27495C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2CCC23ECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qoUHSzwT"
+	by mail.kernel.org (Postfix) with ESMTP id 1BDFD23ECF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592670491;
+	bh=yFk/7+rPK7MOqWnuonpQQMycM7+nxJOyOSJPaBANaGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aWzjipH/BnStWtkos/NB4WWfd3dsjZdnf55TdKC/kmxUt5SCe+y28qPyNU6l+cJJ3
+	 IWVHJOG4vdZqTnTVGKcZdJCn4bYZlvnSMMmWOoa5fgxhPfr7KYcOuG2KA+s2R1jQzw
+	 0WnWOP1qta+ElyRn3IEDGVJlAPmuCCam7lz1KBT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgFTQ14 (ORCPT
+        id S1728168AbgFTQ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgFTQ14 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:27:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DD1C06174E;
-        Sat, 20 Jun 2020 09:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ama9No7LcT5b/qPuEpA7ghtbIZZe7ttjP4oS5TfpNFI=; b=qoUHSzwTi0k/IMsmObNSMt+L/Y
-        VDpGir+hw/HrjnqygnqAN+wb4HE0ci1oH8HJXb0TP8mz0AESEvWj0A0vOIaEPeDB7CaDQcee7H7N4
-        1pgj35IJlKhYhtfDvusBDq5mTZmNRKqjjybiGmyPAwmSKUdwvu4mSqa4jrFfuRhsVPC0448Ysiz2T
-        waTnm6QB6GZxFTFQ56FczUaCVxZd+U8yVA9hEsTwExj5blhtFEbl5T47iS823EMO+TkwGL2uOLwI4
-        Bnug6L13QpyKv0GhCCDaW3IYxaCPd0uJNErR166tdxiX+cYUGFkMO0p+luXF+Pmodkwo1NcmvooW+
-        K3OhISdg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmgLQ-0002AA-QI; Sat, 20 Jun 2020 16:27:52 +0000
-Date:   Sat, 20 Jun 2020 09:27:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>,
-        Wengang Wang <wen.gang.wang@oracle.com>
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
- dentries
-Message-ID: <20200620162752.GF8681@bombadil.infradead.org>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
- <20200618233958.GV8681@bombadil.infradead.org>
- <877dw3apn8.fsf@x220.int.ebiederm.org>
- <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
- <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
- <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
- <87k1036k9y.fsf@x220.int.ebiederm.org>
- <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
- <87blle4qze.fsf@x220.int.ebiederm.org>
+        Sat, 20 Jun 2020 12:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728050AbgFTQ2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 12:28:09 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C95123ECE;
+        Sat, 20 Jun 2020 16:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592670488;
+        bh=yFk/7+rPK7MOqWnuonpQQMycM7+nxJOyOSJPaBANaGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AfgPaqgmEq94lRamYUO8hAwdClsaJ7cCGp4mHebkROgiRcDVQ5Xe7RjavQipPVq6R
+         5W0QTNoyWXOfrzbB7gzaaHoBHn9qjFNNqmar8nqGvw8rqdpcOmViJJTZSQ0VdLugcA
+         /oOd9zXrhvM4KhOPUV3Rw9Kwjky+E8fQdkzgFACk=
+Date:   Sat, 20 Jun 2020 17:28:04 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] iio: at91_adc: remove usage of iio_priv_to_dev() helper
+Message-ID: <20200620172804.3e28e257@archlinux>
+In-Reply-To: <4b07863e8312e2abd0169a456f230a025621419c.camel@analog.com>
+References: <20200525102513.130664-1-alexandru.ardelean@analog.com>
+        <20200531154216.361285c6@archlinux>
+        <4b07863e8312e2abd0169a456f230a025621419c.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blle4qze.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 05:42:45PM -0500, Eric W. Biederman wrote:
-> Junxiao Bi <junxiao.bi@oracle.com> writes:
-> > Still high lock contention. Collect the following hot path.
-> 
-> A different location this time.
-> 
-> I know of at least exit_signal and exit_notify that take thread wide
-> locks, and it looks like exit_mm is another.  Those don't use the same
-> locks as flushing proc.
-> 
-> 
-> So I think you are simply seeing a result of the thundering herd of
-> threads shutting down at once.  Given that thread shutdown is fundamentally
-> a slow path there is only so much that can be done.
-> 
-> If you are up for a project to working through this thundering herd I
-> expect I can help some.  It will be a long process of cleaning up
-> the entire thread exit process with an eye to performance.
+On Fri, 19 Jun 2020 08:02:55 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Wengang had some tests which produced wall-clock values for this problem,
-which I agree is more informative.
+> On Sun, 2020-05-31 at 15:42 +0100, Jonathan Cameron wrote:
+> > [External]
+> > 
+> > On Mon, 25 May 2020 13:25:13 +0300
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> > > We may want to get rid of the iio_priv_to_dev() helper. The reason is
+> > > that
+> > > we will hide some of the members of the iio_dev structure (to prevent
+> > > drivers from accessing them directly), and that will also mean hiding
+> > > the
+> > > implementation of the iio_priv_to_dev() helper inside the IIO core.
+> > > 
+> > > Hiding the implementation of iio_priv_to_dev() implies that some fast-
+> > > paths
+> > > may not be fast anymore, so a general idea is to try to get rid of the
+> > > iio_priv_to_dev() altogether.
+> > > The iio_priv() helper won't be affected by the rework, as the iio_dev
+> > > struct will keep a reference to the private information.
+> > > 
+> > > For this driver, not using iio_priv_to_dev(), means reworking some
+> > > paths to
+> > > pass the iio device and using iio_priv() to access the private
+> > > information.
+> > > 
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > Looks good to me.  Will leave it a bit longer though to potentially
+> > get some people more familiar with the driver to sanity check it.
+> > 
+> > Poke me after the usual couple of weeks if I seem to have lost it
+> > down the back of the sofa.
+> >   
+> 
+> ping on this
 
-I'm not entirely sure what the customer workload is that requires a
-highly threaded workload to also shut down quickly.  To my mind, an
-overall workload is normally composed of highly-threaded tasks that run
-for a long time and only shut down rarely (thus performance of shutdown
-is not important) and single-threaded tasks that run for a short time.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it
 
-Understanding this workload is important to my next suggestion, which
-is that rather than searching for all the places in the exit path which
-contend on a single spinlock, we simply set the allowed CPUs for an
-exiting task to include only the CPU that this thread is running on.
-It will probably run faster to take the threads down in series on one
-CPU rather than take them down in parallel across many CPUs (or am I
-mistaken?  Is there inherently a lot of parallelism in the thread
-exiting process?)
+Thanks,
+
+J
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > >  drivers/iio/adc/at91_adc.c | 30 +++++++++++++++---------------
+> > >  1 file changed, 15 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+> > > index 0368b6dc6d60..896af58e88bc 100644
+> > > --- a/drivers/iio/adc/at91_adc.c
+> > > +++ b/drivers/iio/adc/at91_adc.c
+> > > @@ -287,13 +287,13 @@ static void handle_adc_eoc_trigger(int irq,
+> > > struct iio_dev *idev)
+> > >  	}
+> > >  }
+> > >  
+> > > -static int at91_ts_sample(struct at91_adc_state *st)
+> > > +static int at91_ts_sample(struct iio_dev *idev)
+> > >  {
+> > > +	struct at91_adc_state *st = iio_priv(idev);
+> > >  	unsigned int xscale, yscale, reg, z1, z2;
+> > >  	unsigned int x, y, pres, xpos, ypos;
+> > >  	unsigned int rxp = 1;
+> > >  	unsigned int factor = 1000;
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > >  
+> > >  	unsigned int xyz_mask_bits = st->res;
+> > >  	unsigned int xyz_mask = (1 << xyz_mask_bits) - 1;
+> > > @@ -449,7 +449,7 @@ static irqreturn_t at91_adc_9x5_interrupt(int irq,
+> > > void *private)
+> > >  
+> > >  		if (status & AT91_ADC_ISR_PENS) {
+> > >  			/* validate data by pen contact */
+> > > -			at91_ts_sample(st);
+> > > +			at91_ts_sample(idev);
+> > >  		} else {
+> > >  			/* triggered by event that is no pen contact, just
+> > > read
+> > >  			 * them to clean the interrupt and discard all.
+> > > @@ -737,10 +737,10 @@ static int at91_adc_read_raw(struct iio_dev
+> > > *idev,
+> > >  	return -EINVAL;
+> > >  }
+> > >  
+> > > -static int at91_adc_of_get_resolution(struct at91_adc_state *st,
+> > > +static int at91_adc_of_get_resolution(struct iio_dev *idev,
+> > >  				      struct platform_device *pdev)
+> > >  {
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > > +	struct at91_adc_state *st = iio_priv(idev);
+> > >  	struct device_node *np = pdev->dev.of_node;
+> > >  	int count, i, ret = 0;
+> > >  	char *res_name, *s;
+> > > @@ -866,10 +866,10 @@ static int at91_adc_probe_dt_ts(struct
+> > > device_node *node,
+> > >  	}
+> > >  }
+> > >  
+> > > -static int at91_adc_probe_dt(struct at91_adc_state *st,
+> > > +static int at91_adc_probe_dt(struct iio_dev *idev,
+> > >  			     struct platform_device *pdev)
+> > >  {
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > > +	struct at91_adc_state *st = iio_priv(idev);
+> > >  	struct device_node *node = pdev->dev.of_node;
+> > >  	struct device_node *trig_node;
+> > >  	int i = 0, ret;
+> > > @@ -910,7 +910,7 @@ static int at91_adc_probe_dt(struct at91_adc_state
+> > > *st,
+> > >  	}
+> > >  	st->vref_mv = prop;
+> > >  
+> > > -	ret = at91_adc_of_get_resolution(st, pdev);
+> > > +	ret = at91_adc_of_get_resolution(idev, pdev);
+> > >  	if (ret)
+> > >  		goto error_ret;
+> > >  
+> > > @@ -1010,9 +1010,9 @@ static void atmel_ts_close(struct input_dev *dev)
+> > >  		at91_adc_writel(st, AT91_ADC_IDR, AT91RL_ADC_IER_PEN);
+> > >  }
+> > >  
+> > > -static int at91_ts_hw_init(struct at91_adc_state *st, u32 adc_clk_khz)
+> > > +static int at91_ts_hw_init(struct iio_dev *idev, u32 adc_clk_khz)
+> > >  {
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > > +	struct at91_adc_state *st = iio_priv(idev);
+> > >  	u32 reg = 0;
+> > >  	u32 tssctim = 0;
+> > >  	int i = 0;
+> > > @@ -1085,11 +1085,11 @@ static int at91_ts_hw_init(struct
+> > > at91_adc_state *st, u32 adc_clk_khz)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static int at91_ts_register(struct at91_adc_state *st,
+> > > +static int at91_ts_register(struct iio_dev *idev,
+> > >  		struct platform_device *pdev)
+> > >  {
+> > > +	struct at91_adc_state *st = iio_priv(idev);
+> > >  	struct input_dev *input;
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > >  	int ret;
+> > >  
+> > >  	input = input_allocate_device();
+> > > @@ -1161,7 +1161,7 @@ static int at91_adc_probe(struct platform_device
+> > > *pdev)
+> > >  	st = iio_priv(idev);
+> > >  
+> > >  	if (pdev->dev.of_node)
+> > > -		ret = at91_adc_probe_dt(st, pdev);
+> > > +		ret = at91_adc_probe_dt(idev, pdev);
+> > >  	else
+> > >  		ret = at91_adc_probe_pdata(st, pdev);
+> > >  
+> > > @@ -1301,11 +1301,11 @@ static int at91_adc_probe(struct
+> > > platform_device *pdev)
+> > >  			goto error_disable_adc_clk;
+> > >  		}
+> > >  	} else {
+> > > -		ret = at91_ts_register(st, pdev);
+> > > +		ret = at91_ts_register(idev, pdev);
+> > >  		if (ret)
+> > >  			goto error_disable_adc_clk;
+> > >  
+> > > -		at91_ts_hw_init(st, adc_clk_khz);
+> > > +		at91_ts_hw_init(idev, adc_clk_khz);
+> > >  	}
+> > >  
+> > >  	ret = iio_device_register(idev);  
+
