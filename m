@@ -2,58 +2,59 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7805C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B55C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A7221D7A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2006D2313A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AtmMokfE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j8nQ3B7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732933AbgFTDah (ORCPT
+        id S1732999AbgFTDap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 23:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
+        Fri, 19 Jun 2020 23:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732833AbgFTDaX (ORCPT
+        with ESMTP id S1732873AbgFTDa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:30:23 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7816C061288
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:19 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s88so5282368pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:19 -0700 (PDT)
+        Fri, 19 Jun 2020 23:30:26 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A7BC061262
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k6so4798922pll.9
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YYIu82vaLERDRRVNezIsYro3B9HeZTQxC/aBbKcbPE4=;
-        b=AtmMokfEBFiCVkYDMGVHGJuJS9fKp3FifwZogKQ2q6x4hzDovnsRDnERm9pIhMX5VI
-         ToWY1NArXw8XqplWnXUVi18xafByHCkKQ3jNMc0A7Q42LSaPw/Owem45vKA8WDI8WLVz
-         orkNoFzi4U8cu25M9SMeU7hdywlADX44zclAo=
+        bh=Fi8ab2CkfvIdd/5P+r0S5dxyJT2k4tSVWykkUvi99fU=;
+        b=j8nQ3B7FpehCsunpSEVQSYjhSIMs22zucCRygwZBlcD7nkUj3GKDredCjm7jP++dYB
+         i7TY+cL1cZ8JWvzIZIwoGoSA4hKFNbTalPofMuwWJS+BqEcADvjf61J9SbvMWxiL2Qla
+         oIQyEGAM0IVcrPLyW1oKnN6H6KktioV1Ny5ps=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YYIu82vaLERDRRVNezIsYro3B9HeZTQxC/aBbKcbPE4=;
-        b=AD8w6Vp1Ame4IvilgslFQD900wZ6EPhS1scz3NDwMJJqgCeBPghuEsPvV6w+NKegNh
-         OGD+v6mvnVptp6Yl30eB4GB+ydbqzgRHKN4+YSeHVpHapmX88e6zVaOAyQNA7iCC5ncI
-         a8nqdnxNLZQLIb3KMIvzv2KSs68miG9yBytNKF/xuS8RC7xbFkmoWFT9gsNNTOlxFL0u
-         gCEoh/9ZE8/1g+RXChhl9CPxy2RWc6l0QTWdT3wMJUGE7ZUoHZeCAkApspWjqvCTwyOv
-         EpQjLZxU/D0vjcoQRQigyPoYCymfKOwGszmMXa2c+6kqdb2lv43fTfnH6mjiQpnjMh+k
-         gmQw==
-X-Gm-Message-State: AOAM531MC4AsRrOI3rGLPmX5GwJhLXHipAoQMI1WxGMdcdEvm5eAdso3
-        YVAYBtl6oV+lWKM6HBdUGeshig==
-X-Google-Smtp-Source: ABdhPJzr2vJct8/WkWUzne3Cmk1hS4+0nx/CV5ignmOUO6jPnss1JMiZ2KbcObWfeGsMcluI2vysoA==
-X-Received: by 2002:a17:90a:d244:: with SMTP id o4mr6477083pjw.186.1592623819315;
-        Fri, 19 Jun 2020 20:30:19 -0700 (PDT)
+        bh=Fi8ab2CkfvIdd/5P+r0S5dxyJT2k4tSVWykkUvi99fU=;
+        b=kcd/NTfoVzxncus4JMYLdxCJLDBPRw7p4tp1ThPQMh0pJ/5jkZIpwbCRzAUiImUBFE
+         fHk4TDAXtzzm1GMz/W/aapcPyzVbV9Oe+4AxMFcUbMn4XaBxETHMxmTc4Nmk3bkHQy/T
+         JiaCEkrT5+cKZFlQoYrP87Bqbz1tXaKzymeoCP7YXRZxVBipaXHDPjX43cA46M2mJEYy
+         6BWTZ954iDoC+ucCOvyEcq1wJ4j7Rir4MqbsnBWzThh8XcpKwFUaTyYRCLz0UyfbceGl
+         r3jodntdRfl5U+fZYNLhVqDXgl7LbUr+NnJdKslKypchu1PklHRiWVkagSeED1IN7S93
+         7AnA==
+X-Gm-Message-State: AOAM531brUBFedRvxEwbBMQCLIIb/3W1cDg6okB9vnMiXEADi8Ftl78j
+        Kx9X0RrbdSA3SQjbLlchXzR1m+HOCTg=
+X-Google-Smtp-Source: ABdhPJzKykKp69oTsLEAQ228A8aBga9uw6xzilqOJlYhvnET2ogoJrzcYkicI+7HggPAmmAR7pqRqg==
+X-Received: by 2002:a17:90b:3614:: with SMTP id ml20mr6333214pjb.41.1592623820052;
+        Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u14sm7848572pfk.211.2020.06.19.20.30.16
+        by smtp.gmail.com with ESMTPSA id p19sm7198155pff.116.2020.06.19.20.30.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 19 Jun 2020 20:30:17 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -70,9 +71,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH v2 04/16] b43: Remove uninitialized_var() usage
-Date:   Fri, 19 Jun 2020 20:29:55 -0700
-Message-Id: <20200620033007.1444705-5-keescook@chromium.org>
+Subject: [PATCH v2 01/16] docs: deprecated.rst: Add uninitialized_var()
+Date:   Fri, 19 Jun 2020 20:29:52 -0700
+Message-Id: <20200620033007.1444705-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200620033007.1444705-1-keescook@chromium.org>
 References: <20200620033007.1444705-1-keescook@chromium.org>
@@ -83,38 +84,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using uninitialized_var() is dangerous as it papers over real bugs[1]
-(or can in the future), and suppresses unrelated compiler warnings (e.g.
-"unused variable"). If the compiler thinks it is uninitialized, either
-simply initialize the variable or make compiler changes. As a precursor
-to removing[2] this[3] macro[4], just initialize this variable to NULL.
-No later NULL deref is possible due to the early returns outside of the
-(phy->rev >= 7 && phy->rev < 19) case, which explicitly tests for NULL.
+Nothing should be using this macro, and the entire idea of tricking the
+compiler into silencing such warnings is a mistake.
 
-[1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-[2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-[3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-[4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-
-Fixes: 58619b14d106 ("b43: move under broadcom vendor directory")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/broadcom/b43/phy_n.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/process/deprecated.rst | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-index c33b4235839d..46db91846007 100644
---- a/drivers/net/wireless/broadcom/b43/phy_n.c
-+++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-@@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
- 	u32 rfpwr_offset;
- 	u8 pga_gain, pad_gain;
- 	int i;
--	const s16 *uninitialized_var(rf_pwr_offset_table);
-+	const s16 *rf_pwr_offset_table = NULL;
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 652e2aa02a66..943a926ecbbb 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -51,6 +51,24 @@ to make sure their systems do not continue running in the face of
+ "unreachable" conditions. (For example, see commits like `this one
+ <https://git.kernel.org/linus/d4689846881d160a4d12a514e991a740bcb5d65a>`_.)
  
- 	table = b43_nphy_get_tx_gain_table(dev);
- 	if (!table)
++uninitialized_var()
++-------------------
++For any compiler warnings about uninitialized variables, just add
++an initializer. Using the uninitialized_var() macro (or similar
++warning-silencing tricks) is dangerous as it papers over `real bugs
++<https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/>`_
++(or can in the future), and suppresses unrelated compiler warnings
++(e.g. "unused variable"). If the compiler thinks it is uninitialized,
++either simply initialize the variable or make compiler changes. Keep in
++mind that in most cases, if an initialization is obviously redundant,
++the compiler's dead-store elimination pass will make sure there are no
++needless variable writes.
++
++As Linus has said, this macro
++`must <https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/>`_
++`be <https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/>`_
++`removed <https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/>`_.
++
+ open-coded arithmetic in allocator arguments
+ --------------------------------------------
+ Dynamic size calculations (especially multiplication) should not be
 -- 
 2.25.1
 
