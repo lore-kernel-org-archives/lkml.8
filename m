@@ -2,89 +2,119 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC29C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE64B2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BFD23ED2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tq9mJgf8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzWwEs6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgFTV0N (ORCPT
+        id S1729055AbgFTV12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 17:26:13 -0400
-Received: from mail-pf1-f178.google.com ([209.85.210.178]:43361 "EHLO
-        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728960AbgFTV0M (ORCPT
+        Sat, 20 Jun 2020 17:27:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42854 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbgFTV11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 17:26:12 -0400
-Received: by mail-pf1-f178.google.com with SMTP id j12so4078805pfn.10
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 14:26:10 -0700 (PDT)
+        Sat, 20 Jun 2020 17:27:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e9so6202133pgo.9;
+        Sat, 20 Jun 2020 14:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZHQxZ8TSsBGlpFQq4k9d8v+o7ASds0jY1nqeLeyAKZM=;
-        b=tq9mJgf8znyh63cAW4/PCMUgKxAvFPXOee0lCGMh+PVnK7V85Udxk8h8SFuYlnD3HA
-         kNQfv1l8ksPzM407nZlLinz8SF/qLgO/qsZS//FdSiDvrop/Ni6Vgr53A98UC8JSMAlQ
-         fbDJzvXLQ+1Sg7NRs2kRUKhN+ZNQxVM04UZoAlqX5BN6krzBB+CCHdzprJyM3V0XR9BZ
-         y/VscEiemKcwc8hS7iNjSiZXj3UfwOO0Cr70UAPvo9TV/CkX4gTYebwzvxyMrr0lewNK
-         7mCKXSN1fXA13mVyPBQb2+DscRE0RjoA5TAEnyNwlhQ/8u47O6Xfu4+CXh0AgP/HxTcS
-         4wNw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0X0DDjflRu40U/YjqFAViv4c+Dopp8yvdpsJ3G4W+d4=;
+        b=ZzWwEs6iC/AJfANlnwkhyBE2ml+iCExSzoUh4PxqnM+UB0rp2p7inTJW3YJjVzRj7M
+         iVVE98iK6SEnCdNOexAEbjlhBGBaKcPecwkyUnNYj+A5RHcRHpDrYtw4B5Mx7xR/IeDD
+         cIMvXa4Oi4SeEqM2E8l3wqKcVuedfr7hrmgOcQ+TmmbYDNkVA1YWONTbgngpYhX3khXU
+         Bur2dxc8ZUcPTOOxIcxt+edxyH/YC0bEgs5LuA5eIfgE61e5wM2XSlJW3dx6bmAXgiQu
+         FsePeuwmBFmOLkN6o0D6h1kC0KRkQ/bCax+cV+AWfAKSo7Fe7433Ik09vXOh++L90Xmo
+         TafA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZHQxZ8TSsBGlpFQq4k9d8v+o7ASds0jY1nqeLeyAKZM=;
-        b=YKei8v4dFhqLZuCbujWXqlslinATSb+nTWQrSPXU3r2qSy3i78y6aHpNfHe+9l9pLU
-         RmG3z851dZ/CDD+dxnPwuTtuDPp1skWZzLeYorBGAJjVJBT82s99HzByyWKKSwkl+hES
-         /YojdBIfzaWFhdJ/SltxpVstLOexfOMxRg3+xZm2P+VRUqN1GyX2N3N5dYlcWTeOuGwF
-         lVOcJPL9vU1+nvArccYfjydL5SKb4OgwKc+exqcxNx8q6ckeIGVtcExeZR3k22HY2GHv
-         FTIPhpMuPOiOwSLVDHsacNCAGjsLUhB+tySvr9gqZY3Uwm7RLyHUUoPPTgFLNMuj8JJl
-         pVvA==
-X-Gm-Message-State: AOAM532FIVNNSa+tLJJcDUanVWbtEiS03zKDKQG9e8qbNnaz1a4leqWD
-        a8dqCwBQbNBMXPnqHbquAWa6Lg==
-X-Google-Smtp-Source: ABdhPJwmnMQuLonweUZsPZUPLIboe9pPgWn1MfhYScHl5K2gI2YxMJhjuxDUHi0QW5YZGAoAX/Utow==
-X-Received: by 2002:a62:1c5:: with SMTP id 188mr13682576pfb.213.1592688310612;
-        Sat, 20 Jun 2020 14:25:10 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id p14sm8668872pju.7.2020.06.20.14.25.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 14:25:10 -0700 (PDT)
-Subject: Re: [PATCH][next] blk-iocost: Use struct_size() in kzalloc_node()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200619230830.GA25608@embeddedor>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e0afded8-386a-7619-a221-869ae2e606f6@kernel.dk>
-Date:   Sat, 20 Jun 2020 15:25:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0X0DDjflRu40U/YjqFAViv4c+Dopp8yvdpsJ3G4W+d4=;
+        b=audSLqMYoQPl+TuaZHUooXfUtEpAv9aDhqFUCdChX0h5xVEewrwCv6eI6s2ZLQwMiI
+         5ZKP0xvKaMZI5MFPP0ZK0JD5Q/GkijdXH26uqwTlEwQKckG9kwzPJlMeZs1g2zzJpksM
+         AbghqtCLIoHQxSS48f608arY8VB0Z+v4UQO2XUCaRqkWJebj+m1nUZ7jNFVyvBDOZY73
+         hCnAupB0D3/Q/JRxxsoVXoZtivVK7mUElXGPU9exDtT6kD3IufqQ3AC7E26xGAIL7DF0
+         6MIbUnkEfG/qm7UH8J6v+eEFShvsCtnLhA1zqpItvWU/mojD4IowP2fz5al6xtqi7Bd2
+         p0yw==
+X-Gm-Message-State: AOAM533ft7rtOHc1euzmj0ZNU6SDcqApkpBoMSyb9yplMPag3PpbZ5Iu
+        U5QxURhmO69muTce48+6bQg=
+X-Google-Smtp-Source: ABdhPJzcvjmtq3PMeDSVQKIdeWm9GAgtrPAZsQj5iFKq3SU7vplD5hrN58E21f0/s+oCsj/qFUmAjg==
+X-Received: by 2002:a63:b956:: with SMTP id v22mr4574957pgo.242.1592688386037;
+        Sat, 20 Jun 2020 14:26:26 -0700 (PDT)
+Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
+        by smtp.gmail.com with ESMTPSA id f14sm7808825pgj.62.2020.06.20.14.26.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 14:26:25 -0700 (PDT)
+From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
+To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH bpf v2] restore behaviour of CAP_SYS_ADMIN allowing the loading of networking bpf programs
+Date:   Sat, 20 Jun 2020 14:26:16 -0700
+Message-Id: <20200620212616.93894-1-zenczykowski@gmail.com>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+In-Reply-To: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
+References: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619230830.GA25608@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 5:08 PM, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> This code was detected with the help of Coccinelle and, audited and
-> fixed manually.
+From: Maciej Żenczykowski <maze@google.com>
 
-Applied, thanks.
+This is a fix for a regression introduced in 5.8-rc1 by:
+  commit 2c78ee898d8f10ae6fb2fa23a3fbaec96b1b7366
+  'bpf: Implement CAP_BPF'
 
+Before the above commit it was possible to load network bpf programs
+with just the CAP_SYS_ADMIN privilege.
+
+The Android bpfloader happens to run in such a configuration (it has
+SYS_ADMIN but not NET_ADMIN) and creates maps and loads bpf programs
+for later use by Android's netd (which has NET_ADMIN but not SYS_ADMIN).
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+---
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 8da159936bab..7d946435587d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2121,7 +2121,7 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ 	    !bpf_capable())
+ 		return -EPERM;
+ 
+-	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN))
++	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN) && !capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 	if (is_perfmon_prog_type(type) && !perfmon_capable())
+ 		return -EPERM;
 -- 
-Jens Axboe
+2.27.0.111.gc72c7da667-goog
 
