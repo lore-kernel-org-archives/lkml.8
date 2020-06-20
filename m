@@ -2,104 +2,130 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7334C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21A02224A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592611844;
-	bh=MF0hLepUxwBvinfeJBBZlK/ffPc/P/vgm80eyJnR3Mc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=tEQbir4eiNsR7EtufAx/W2iqRqbG2PIaiOFIo5TdF5VwKsBd9WjhFOTsqIsDgu2Jd
-	 BKC3KSUu5Bm8AFz6zeVjD6TwNdaet2KclcEDuu/3DfBgXyXbJ5cRK+0oVL/uqfiHFI
-	 obLYZMqbk8LTj0cX6mR5QaUSDoRoma/i9yu5g66k=
+	by mail.kernel.org (Postfix) with ESMTP id 0E1102224A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C8tcCrI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgFTAKU (ORCPT
+        id S1730637AbgFTAKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgFTAKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:10:18 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A39206D7;
-        Sat, 20 Jun 2020 00:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592611817;
-        bh=MF0hLepUxwBvinfeJBBZlK/ffPc/P/vgm80eyJnR3Mc=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iG7e6an+YvnjNJmyHNIli0/AmGc5US2MgFC90/8ERuXkVKM6WUw4hu2LlbsDbn5YU
-         MMvEVykmCPAEMwJ+IB5w+XRMokffYIq8tAzOFJ+LuK0Uj9dscWOzY6vJBtSSfpl7IV
-         ScfMtsNpm2ChReedBjA03Bl2NPxHGI7qcpD9KUfM=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 19 Jun 2020 20:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgFTAKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 20:10:37 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D076C0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:10:37 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k1so4617768pls.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bA2Hx5ZHpgALpLTRNJ8RED5WSk+bgJtyk0UtUvWs6Ck=;
+        b=C8tcCrI8g2+v2wcL3NpiNtX1IWiokLbLw8080bz8al5zRbmxNRQMiMlIXUUBpC6Pb3
+         fWgQJWNsW+zM/oSOPUPebSZypulS7JDINuPt9f3+7p3BQXL4kawkzNK0zrCz473Kn+ku
+         qlpP8WWn0Th6SbqDLG1uxkzeTxb6XjBlPWG9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bA2Hx5ZHpgALpLTRNJ8RED5WSk+bgJtyk0UtUvWs6Ck=;
+        b=FO9WVyANKFlJUB58peTfiKKbsbJ7HxIQFpmMKvtssO8cccQa5sg7vDKV4RBazcDq5D
+         a4lF7kO3zLsLYWcrnpRoAO078svmEe/NjkV6tqNLk7s6i46OeMqqmHX1L8RqSsiIFeoV
+         EcCvFYGMlY7bntlt8FhLzOz8B3oXvNk2RUrOw1dPGay0dGl8cIB8i8YDOxBXbT3MVQbl
+         njsZrAnhNcZnqus/MoldrX2HQrMVR5+W4QxMKz3yOKK7aC7gKP95k0ISUCIBabXSvzXe
+         USYv/wRvEwvzg6ol0Ya3IW0cDj5Az6+kIstq1tinNpvSnEypEgse62GUsleUNF2/Yokw
+         jQFw==
+X-Gm-Message-State: AOAM532GcsxtKcrKOS7bJQSREOwhpr5c7ihCgqP8iCRj7PbuwW5hwafV
+        p28tqcHDQJCcGKSqmpD3h1LJOg==
+X-Google-Smtp-Source: ABdhPJxutMk1mTkLK2Fj/BDxglLsp0izci0o1QVdjpFFc0keXGjw9NMDqSB7A3+jQt7om7jczbkn4g==
+X-Received: by 2002:a17:90a:9904:: with SMTP id b4mr5893613pjp.207.1592611836739;
+        Fri, 19 Jun 2020 17:10:36 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id y136sm7032325pfg.55.2020.06.19.17.10.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 17:10:36 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org,
+        mcchou@chromium.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH] Bluetooth: Add hci_dev_lock to get/set device flags
+Date:   Fri, 19 Jun 2020 17:10:24 -0700
+Message-Id: <20200619171016.1.I56e71a63b5d2712a1b198681e0f107b5aa3cd725@changeid>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <706f56a20d318b841792ca19a6fe7135cb6c61e3.camel@pengutronix.de>
-References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech> <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech> <810816166d8ef554e1bb1f4a2b39ea0b8a1a3d5b.camel@suse.de> <20200616121641.jpoz237p43sbndg2@gilmour.lan> <706f56a20d318b841792ca19a6fe7135cb6c61e3.camel@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] ARM: dts: bcm2711: Add HDMI DVP
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, linux-clk@vger.kernel.org
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Date:   Fri, 19 Jun 2020 17:10:17 -0700
-Message-ID: <159261181702.62212.6185371789718045244@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Philipp Zabel (2020-06-16 05:56:55)
-> Hi Maxime,
->=20
-> On Tue, 2020-06-16 at 14:16 +0200, Maxime Ripard wrote:
-> > Hi Nicolas,
-> >=20
-> > On Mon, Jun 15, 2020 at 06:26:19PM +0200, Nicolas Saenz Julienne wrote:
-> > > On Thu, 2020-06-11 at 11:23 +0200, Maxime Ripard wrote:
-> > > > Now that we have a driver for the DVP, let's add its DT node.
-> > > >=20
-> > > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > > ---
-> > >=20
-> > > I can take this patch, but I guess the rest should go trough the cloc=
-k tree.
-> > > Is it OK with you?
-> >=20
-> > We have a build dependency on the reset framework for that driver, so it
-> > should rather go through the reset tree (or Philipp should make an
-> > immutable branch that the clk maintainers can merge).
->=20
-> I've prepared an immutable branch that these patches could be based on
-> and that could be merged into the clk tree:
->=20
-> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c74=
-07:
->=20
->   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.pengutronix.de/git/pza/linux reset/simple
->=20
-> for you to fetch changes up to a9701376ed0fb61a5be4bb438daf26bd9cfa24b5:
->=20
->   reset: simple: Add reset callback (2020-06-16 14:19:57 +0200)
->=20
+Adding hci_dev_lock since hci_conn_params_(lookup|add) require this
+lock.
 
-Thanks. I've pulled it into clk-next.
+Suggested-by: Miao-chen Chou <mcchou@chromium.org>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+
+ net/bluetooth/mgmt.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 2a732cab1dc99d..5e9b9728eeac03 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -3895,6 +3895,8 @@ static int get_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
+ 	bt_dev_dbg(hdev, "Get device flags %pMR (type 0x%x)\n",
+ 		   &cp->addr.bdaddr, cp->addr.type);
+ 
++	hci_dev_lock(hdev);
++
+ 	if (cp->addr.type == BDADDR_BREDR) {
+ 		br_params = hci_bdaddr_list_lookup_with_flags(&hdev->whitelist,
+ 							      &cp->addr.bdaddr,
+@@ -3921,6 +3923,8 @@ static int get_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
+ 	status = MGMT_STATUS_SUCCESS;
+ 
+ done:
++	hci_dev_unlock(hdev);
++
+ 	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_GET_DEVICE_FLAGS, status,
+ 				&rp, sizeof(rp));
+ }
+@@ -3959,6 +3963,8 @@ static int set_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
+ 		goto done;
+ 	}
+ 
++	hci_dev_lock(hdev);
++
+ 	if (cp->addr.type == BDADDR_BREDR) {
+ 		br_params = hci_bdaddr_list_lookup_with_flags(&hdev->whitelist,
+ 							      &cp->addr.bdaddr,
+@@ -3985,6 +3991,8 @@ static int set_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
+ 	}
+ 
+ done:
++	hci_dev_unlock(hdev);
++
+ 	if (status == MGMT_STATUS_SUCCESS)
+ 		device_flags_changed(sk, hdev, &cp->addr.bdaddr, cp->addr.type,
+ 				     supported_flags, current_flags);
+-- 
+2.27.0.111.gc72c7da667-goog
+
