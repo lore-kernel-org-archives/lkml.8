@@ -2,84 +2,80 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6526C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296D1218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592639187;
-	bh=+2b1121LTHuB4XkuPsdDS/eTubprymdeg9DR5VhyQnQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nurfTFUjPm1FEdVBEWA6yd5ShXt/v4/vVfD0pyGEllrcMlVMipAI0gq8q4m/oVFbY
-	 ot4f7h+8qGsxuOKeps4HvRuqJrQwDJ3X8KnJ2PBxjIKbnA/d23M87B/KNo2efUR9pd
-	 mDhNOe6ts+cD3FqY/znZARU3EjxJBo8hDdzN0IJM=
+	by mail.kernel.org (Postfix) with ESMTP id 9F81D2396F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgFTHq0 (ORCPT
+        id S1727086AbgFTHyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgFTHqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:46:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDAF22A83;
-        Sat, 20 Jun 2020 07:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592639185;
-        bh=+2b1121LTHuB4XkuPsdDS/eTubprymdeg9DR5VhyQnQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=001RVeWlCwb+GeREnFW+J3mOta2bLzoNlml7UQ0eREbh3ZA9m25udjn6KMHf7hK3d
-         7cgy/f9v5p2UNwWuVSFoApx85zq61cdq8vX50JsKApwlZZ1Q2YdZlEaKQy35OPDjd5
-         eHIiBWf20WDBiTdUWFB6M2PP3jAtdebEhLM1tfvU=
-Date:   Sat, 20 Jun 2020 09:46:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/101] 4.4.228-rc1 review
-Message-ID: <20200620074621.GB2298609@kroah.com>
-References: <20200619141614.001544111@linuxfoundation.org>
- <20200619164055.GA258515@roeck-us.net>
+        Sat, 20 Jun 2020 03:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgFTHyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 03:54:37 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5609CC06174E;
+        Sat, 20 Jun 2020 00:54:36 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 400991B587B;
+        Sat, 20 Jun 2020 07:54:30 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/sphinx/parse-headers.pl
+Date:   Sat, 20 Jun 2020 09:54:02 +0200
+Message-Id: <20200620075402.22347-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619164055.GA258515@roeck-us.net>
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 09:40:55AM -0700, Guenter Roeck wrote:
-> On Fri, Jun 19, 2020 at 04:31:49PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.4.228 release.
-> > There are 101 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Building powerpc:defconfig ... failed
-> --------------
-> Error log:
-> 
-> drivers/macintosh/windfarm_pm112.c: In function ‘create_cpu_loop’:
-> drivers/macintosh/windfarm_pm112.c:148:2: error: implicit declaration of function ‘kfree’
-> 
-> Affects v4.4.y.queue and v4.9.y.queue.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Thanks, I've fixed this up by adding an #include <linux/slab.h> to the
-top of that driver for those trees.
+Deterministic algorithm:
+For each file:
+  For each line:
+    If doesn't contain `\bxmlns\b`:
+      For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+        If both the HTTP and HTTPS versions
+        return 200 OK and serve the same content:
+          Replace HTTP with HTTPS.
 
-greg k-h
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Documentation/sphinx/parse-headers.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/sphinx/parse-headers.pl b/Documentation/sphinx/parse-headers.pl
+index c518050ffc3f..00a69aceff44 100755
+--- a/Documentation/sphinx/parse-headers.pl
++++ b/Documentation/sphinx/parse-headers.pl
+@@ -393,7 +393,7 @@ Report bugs to Mauro Carvalho Chehab <mchehab@kernel.org>
+ 
+ Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab+samsung@kernel.org>.
+ 
+-License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
++License GPLv2: GNU GPL version 2 <https://gnu.org/licenses/gpl.html>.
+ 
+ This is free software: you are free to change and redistribute it.
+ There is NO WARRANTY, to the extent permitted by law.
+-- 
+2.27.0
+
