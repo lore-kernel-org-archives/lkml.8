@@ -2,133 +2,163 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3244C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA47C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F36523B9A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VIz3U0ij"
+	by mail.kernel.org (Postfix) with ESMTP id 7B57B23E1F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592668669;
+	bh=D8fKktaZdo0jD0i4fAQUF+z6/90romTLM3ZgSwzvpY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2etI/9LSIffZ+BQhO4ptOmFmhIu8O9qjOnYLUx4dXDxfcHTqAV9aEheLHR85bPKiR
+	 f0YEan9FQRPzLkjFi6Hm+3rwgG40QwqmD8Yr4T3+xZTc9OmP2CuJkYKwIgiCJasBnn
+	 lBzFnFj8oyDrfEOj5VhuyOk6CUyLaJy+0b/dR9Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgFTP51 (ORCPT
+        id S1727882AbgFTP5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 11:57:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:48558 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727771AbgFTP5Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 11:57:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592668644; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=BBBfKMGR+gMiO9YhDRvlSioav0U5MzKSOOLtx2cvzQY=; b=VIz3U0ij318nvkLSKNsR4vYRZEQi1jCT6qPp8cbPENRWvIX3Q1lQZNlwv/xnhLZ7NSA9Dk86
- zegsAbi3fQiOw8GJFxz9HDXJZiT7dYwghGhlmHdjwCJnd0ipftIgl3R+kWG5MwMLeRA2CGKX
- psmprT5xk5o2uvNGH5QhtGm32CE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5eee31e286de6ccd448be34c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 20 Jun 2020 15:57:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17EA0C433CA; Sat, 20 Jun 2020 15:57:22 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Sat, 20 Jun 2020 11:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgFTP5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 11:57:45 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C032C433C8;
-        Sat, 20 Jun 2020 15:57:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C032C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v12] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Sat, 20 Jun 2020 21:27:15 +0530
-Message-Id: <1592668635-10894-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id AB85823D6A;
+        Sat, 20 Jun 2020 15:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592668664;
+        bh=D8fKktaZdo0jD0i4fAQUF+z6/90romTLM3ZgSwzvpY8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pP6GKyBHjzZRcJx+iJFjVnoR2m7N67RQfT0Bm48HzxTwn/NPvrKJennJn5qtMW7A6
+         XWs9wB6b/eUtJcm1UKKlpAcNqOMDywl+aCTbaTc9WvlyB3E/UomafaAif3mEpR1rGF
+         BplKzw7hKoY66Q6EEC9wx43AN2/CjzSQOs+w4xz4=
+Date:   Sat, 20 Jun 2020 16:57:39 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+Message-ID: <20200620165739.29694b9b@archlinux>
+In-Reply-To: <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>
+References: <20200608204250.3291-1-jmaneyrol@invensense.com>
+        <20200608204250.3291-7-jmaneyrol@invensense.com>
+        <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
+        <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+On Sun, 14 Jun 2020 20:35:13 +0000
+Jean-Baptiste Maneyrol <JManeyrol@invensense.com> wrote:
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
-Changes from v11:
-- Add the optional regulator votes which are needed in case of SSR.
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+> Hello Lars,
+>=20
+> for the temperature data, the problem is that temperature in the FIFO (us=
+ed in buffer) is not in the same format than when reading the register.
+>=20
+> Reading the temperature register return a full precision value on 16 bits=
+. I am using a PROCESSED attribute for it.
+> Temperature data in buffer (coming from the FIFO) is on 8 bits in lower p=
+recision. It is reported as raw data, thus the need of the offset and scale=
+ values.
+>=20
+> So offset and scale values are only for transforming the temperature data=
+ from the buffer, and direct read is a full precision already processed in =
+m=C2=B0C.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 4e9149d..39dbfc8 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -389,6 +389,17 @@
- 	};
- };
- 
-+&wifi {
-+	status = "okay";
-+	vdd-0.8-cx-mx = <&vreg_l9a_0p6>;
-+	vdd-1.8-xo = <&vreg_l1c_1p8>;
-+	vdd-1.3-rfa = <&vreg_l2c_1p3>;
-+	vdd-3.3-ch0 = <&vreg_l10c_3p3>;
-+	wifi-firmware {
-+		iommus = <&apps_smmu 0xc2 0x1>;
-+	};
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qspi_clk {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217..cd6d3b5 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2814,6 +2814,28 @@
- 
- 			#freq-domain-cells = <1>;
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xc0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_mem>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	thermal-zones {
--- 
-2.7.4
+That is a problem.  We have no means of describing it in IIO.
+
+If the channel is processed via sysfs the assumption would normally
+be that it is processed in the buffer as well. We don't really
+have any means of describing the two separately.
+
+In cases where we've seen this before the way around it was to
+change the data in the fifo so that the scaling was the same as the
+sysfs channel (usually it's just a bit of padding).
+
+Can we do that here?  Looks like the ratio is 1:64 so should
+be possible.=20
+
+
+
+>=20
+> Thanks for the review,
+> JB
+>=20
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> Sent: Sunday, June 14, 2020 17:10
+> To: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; jic23@kernel.org <=
+jic23@kernel.org>; robh+dt@kernel.org <robh+dt@kernel.org>; robh@kernel.org=
+ <robh@kernel.org>; mchehab+huawei@kernel.org <mchehab+huawei@kernel.org>; =
+davem@davemloft.net <davem@davemloft.net>; gregkh@linuxfoundation.org <greg=
+kh@linuxfoundation.org>
+> Cc: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicetree@vge=
+r.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <li=
+nux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sen=
+sor support=20
+> =C2=A0
+> =C2=A0CAUTION: This email originated from outside of the organization. Pl=
+ease make sure the sender is who they say they are and do not click links o=
+r open attachments unless you recognize the sender and know the content is =
+safe.
+>=20
+> On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_PROCESSED:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ret =3D iio_device_claim_direct_mode(indio_dev);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (ret)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ret =3D inv_icm42600_temp_read(st, &temp);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 iio_device_release_direct_mode(indio_dev);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (ret)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *val =3D temp;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return IIO_VAL_INT;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_SCALE:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *val =3D 483;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *val2 =3D 91787;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return IIO_VAL_INT_PLUS_MICRO;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_OFFSET:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *val =3D 25000;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return IIO_VAL_INT; =20
+>=20
+> If the data is returned processed there is no need to specify scale and=20
+> offset.
+>=20
+> But since the transformation to turn the data into standard units is a=20
+> simple linear transform the preferred way to handle this is to return=20
+> RAW data and specify scale and offset.
 
