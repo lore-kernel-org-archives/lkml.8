@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF83DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80430C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878D7238E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D0D2395C
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r9OPc4mV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lea++MvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgFTHR2 (ORCPT
+        id S1727107AbgFTHRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        Sat, 20 Jun 2020 03:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgFTHRM (ORCPT
+        with ESMTP id S1727083AbgFTHRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:17:12 -0400
+        Sat, 20 Jun 2020 03:17:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2191FC06174E;
-        Sat, 20 Jun 2020 00:17:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46549C06174E;
+        Sat, 20 Jun 2020 00:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zelkr+SM8XFpWH/uxQ7pO/ZVcwZFMxEHAVg6KgUuZNw=; b=r9OPc4mVqFx6CMkHuQU2rk0CNs
-        aphyOheC3GNpDpzI352XMI/xrGUzNL3EgXHHrCowKKJjgASAD5ysQPs9NnsXchvkTatOkuW+UeSGV
-        /FG34j6ovPyQUerIQxm8dALSfd4evm3rRYfZByEi0kH7ZnIz3Vi06cdCqrAiAqWe0LhvWSjiNAwDG
-        xCyke98Sl0/qEXd4D7gyKzggxc/JEfPHlnE2CRQXEd24z+TpdOm3+iBdzMxuLwrnNVb+o6j1qq/Rc
-        unc7fpS5sgScoSEt1aDht54L+0LXu9CTsTJLw9NYVkATh/U2YNzHvYE8kHvL757Crt5r5FOxFDitu
-        /IE40kXA==;
+        bh=3sYWqj8JjLR1Bdg3r/XBhCA3mEw2Ww30VmPxbStNzPs=; b=Lea++MvGmvo2vTLnbq9YHSLUkK
+        STTWLb3tkkBifi11ZhIz21buWqXPhjcMfEtn3Bapr6a6QS9hzwNFRqZnHJQId3kHKRNsVMvKzgPIP
+        0yxrltdk1WqCDLTgfrEA1eKAorgJ90jVkMe6+X3hLU8OKqyjrJp4AXKmu0eeYoLEmtXZYSL43q1DP
+        CLTOJ1KBXEaFPOXicd2jsB/ioEYEh1WUu08n3WISFuEYyA0tOSQ3pE1R2Kjz6JvkPzLpCiA8Fpo6D
+        cLWvAV89YwrBhSIoEZyu2nN23s86CqAuE04jVcbSjekpisopH0BcXtNmvneJsduhLBGPqqxUHMpIi
+        VZzf3nEg==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmXkT-0003tj-Uw; Sat, 20 Jun 2020 07:17:10 +0000
+        id 1jmXkL-0003rw-BV; Sat, 20 Jun 2020 07:17:01 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/10] fs: move the buffer_heads_over_limit stub to buffer_head.h
-Date:   Sat, 20 Jun 2020 09:16:42 +0200
-Message-Id: <20200620071644.463185-9-hch@lst.de>
+Subject: [PATCH 05/10] fs: remove the mount_bdev and kill_block_super stubs
+Date:   Sat, 20 Jun 2020 09:16:39 +0200
+Message-Id: <20200620071644.463185-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200620071644.463185-1-hch@lst.de>
 References: <20200620071644.463185-1-hch@lst.de>
@@ -59,39 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the !CONFIG_BLOCK stub to the same place as the non-stub
-declaration.
+No one calls these functions without CONFIG_BLOCK, so don't bother
+stubbing them out.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/blkdev.h      | 1 -
- include/linux/buffer_head.h | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ include/linux/fs.h | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 50fccb121b876e..973253ce202d87 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1840,7 +1840,6 @@ struct block_device;
- /*
-  * stubs for when the block layer is configured out
-  */
--#define buffer_heads_over_limit 0
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 224edcc5b56e62..9ee09e2b5a9716 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2256,18 +2256,9 @@ struct file_system_type {
  
- static inline long nr_blockdev_pages(void)
- {
-diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-index 22fb11e2d2e04d..6b47f94378c5ad 100644
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -406,6 +406,7 @@ static inline int inode_has_buffers(struct inode *inode) { return 0; }
- static inline void invalidate_inode_buffers(struct inode *inode) {}
- static inline int remove_inode_buffers(struct inode *inode) { return 1; }
- static inline int sync_mapping_buffers(struct address_space *mapping) { return 0; }
-+#define buffer_heads_over_limit 0
+ #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
  
- #endif /* CONFIG_BLOCK */
- #endif /* _LINUX_BUFFER_HEAD_H */
+-#ifdef CONFIG_BLOCK
+ extern struct dentry *mount_bdev(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *data,
+ 	int (*fill_super)(struct super_block *, void *, int));
+-#else
+-static inline struct dentry *mount_bdev(struct file_system_type *fs_type,
+-	int flags, const char *dev_name, void *data,
+-	int (*fill_super)(struct super_block *, void *, int))
+-{
+-	return ERR_PTR(-ENODEV);
+-}
+-#endif
+ extern struct dentry *mount_single(struct file_system_type *fs_type,
+ 	int flags, void *data,
+ 	int (*fill_super)(struct super_block *, void *, int));
+@@ -2276,14 +2267,7 @@ extern struct dentry *mount_nodev(struct file_system_type *fs_type,
+ 	int (*fill_super)(struct super_block *, void *, int));
+ extern struct dentry *mount_subtree(struct vfsmount *mnt, const char *path);
+ void generic_shutdown_super(struct super_block *sb);
+-#ifdef CONFIG_BLOCK
+ void kill_block_super(struct super_block *sb);
+-#else
+-static inline void kill_block_super(struct super_block *sb)
+-{
+-	BUG();
+-}
+-#endif
+ void kill_anon_super(struct super_block *sb);
+ void kill_litter_super(struct super_block *sb);
+ void deactivate_super(struct super_block *sb);
 -- 
 2.26.2
 
