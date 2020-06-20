@@ -2,86 +2,141 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0646BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6A0323B53
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142EE22A84
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="AR5UA7OR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgFTNVr (ORCPT
+        id S1728173AbgFTNZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 09:21:47 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:25008 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728064AbgFTNVq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 09:21:46 -0400
-X-IronPort-AV: E=Sophos;i="5.75,258,1589234400"; 
-   d="scan'208";a="455762553"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 15:21:43 +0200
-Date:   Sat, 20 Jun 2020 15:21:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Bernard Zhao <bernard@vivo.com>, opensource.kernel@vivo.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?ISO-8859-15?Q?Felix_K=FChling?= <Felix.Kuehling@amd.com>,
-        =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3] drm/amd: Fix memory leak according to error branch
-In-Reply-To: <119b7d8c-b164-ef23-84cc-4904d34ac023@web.de>
-Message-ID: <alpine.DEB.2.22.394.2006201520590.2918@hadrien>
-References: <119b7d8c-b164-ef23-84cc-4904d34ac023@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sat, 20 Jun 2020 09:25:59 -0400
+Received: from mail-eopbgr70093.outbound.protection.outlook.com ([40.107.7.93]:35219
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728064AbgFTNZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 09:25:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IgbLfBMuJ5igu/iQNq9aVpXXBmByDKkzxUFGcbS8rFjfZDbXXAWDkRNMxfb4xZ+3+qTnllUL7v+5Cwh9HEjreCDLh5KfP1Rro8P8SdelDPFvYEaCdYeY5MWJEFK6U9tfsSzMklhaLKLtvnflwwOYyd2w/Jiy17mmlQoPRfb1BoT+J3WC1o9zExfrwUwUc/1ZpJRKGZ0luf6yOTOdsmibevfX0TD9HPVfY2Ujsx+rcO9xb5Yd2gL9l3eSaDnzSnwpfjW9wDkFY2hM2fQHdMCPE5QdVxANagXMzqTWmlNoX12pflU4yBNlyE1Q5IgBkEANBdg4SWHo0pql2CJ5FrtIgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Se9TsmnyJkQ9cszpYSqvX6S6+z8dILbml9phNCG9hBI=;
+ b=BPRJaJqdzbiM85dKCCAcSAQR1J07uFCwm19dnBbdx7E4hI/GKUHUnWePm6Ds9LtS0iyMgNJB6s+SvA9T6MfFH75m8fEXGpRN7YMjFSQRm5ztsKNt4z4JKsJ5lNiLOBYvruzcwCj0udiHR/9eu2fajyKMjH7YW4EjUrRWGh86mR75dE1U8wKdWcBSfH1TUDguHUOBJhZ+YG7v0oNzi+UapB7o1uIoI6hDw/V8fii1ZjFGhXcfJk8X5zcCoG/FjfmvbLAKYNvzNogA6S0kyij/YEY9Z5Varjae1QGuES3/m9GJ7eEao76hraZtta4IWI5Q7bIhmOrrUrLOcFzA/sHsWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Se9TsmnyJkQ9cszpYSqvX6S6+z8dILbml9phNCG9hBI=;
+ b=AR5UA7ORjSt+qVtsLEQqbj9xfOfVDysH/0ajLbSHN2uv4R6X3H+JTM11Js5gcc9sYsCrxYB00cwcAA7+3yP/XDz6xiWwGAUQzIPsqTuveRL1DCxrpL+uDSabImO2rwBunIN/TXv7mW/Bd85ZOiooIdNmzA+s+hFV0BR1FpQGd5A=
+Authentication-Results: resnulli.us; dkim=none (message not signed)
+ header.d=none;resnulli.us; dmarc=none action=none header.from=plvision.eu;
+Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:5c::21)
+ by AM4P190MB0148.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:63::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Sat, 20 Jun
+ 2020 13:25:51 +0000
+Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ ([fe80::70db:92db:9750:5ae3]) by AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ ([fe80::70db:92db:9750:5ae3%7]) with mapi id 15.20.3109.025; Sat, 20 Jun 2020
+ 13:25:51 +0000
+Date:   Sat, 20 Jun 2020 16:25:47 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Ido Schimmel <idosch@idosch.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next 0/6] net: marvell: prestera: Add Switchdev driver for
+ Prestera family ASIC device 98DX326x (AC3x)
+Message-ID: <20200620132547.GB6911@plvision.eu>
+References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
+ <20200530142928.GA1624759@splinter>
+ <20200530145231.GB19411@plvision.eu>
+ <20200530155429.GA1639307@splinter>
+ <20200601062417.GC2282@nanopsycho>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601062417.GC2282@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM6P193CA0139.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:209:85::44) To AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:200:5c::21)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1522092164-1592659303=:2918"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM6P193CA0139.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:85::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Sat, 20 Jun 2020 13:25:49 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a0aba7e4-eb36-4d0c-01a0-08d8151d7347
+X-MS-TrafficTypeDiagnostic: AM4P190MB0148:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM4P190MB0148AFA555210E14E1A46ECF95990@AM4P190MB0148.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0440AC9990
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aUYJ0Z+yorLYJNLSBmQdYRmhxtQUelJ4aOTfkCahetQxIkp/zIWMm1Zn3s2GyS6McCqNwsPJaZSujtheEoyt+6VtWlSq/9ZCYu31wWFuphxX//7dy6WQBZnAextfLaWeMJdFOPGSZnIEPZ91LszpqCW6ZiYpnm51KkS3EIXpY/KpaMALDgcz8JvootPi/gWghYUaTyc8OsdANdZEdPNvWrs5gAgI/0Tu5hdcnqXHE4yeept2fcxq8cQzW5Y3k7V/WPlbKOf0+moRJ45L+M4Q5TizDlil7rFH5wyI2Ed68GsxSdv1y1UI651AXdJnpVL1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4P190MB0052.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(39830400003)(396003)(346002)(7696005)(7416002)(8936002)(83380400001)(8676002)(44832011)(2906002)(5660300002)(6916009)(26005)(52116002)(66556008)(66476007)(66946007)(1076003)(8886007)(4744005)(2616005)(55016002)(33656002)(508600001)(54906003)(956004)(86362001)(4326008)(186003)(36756003)(16526019)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: eyu1UVTULygheklciCubWCiFTCPJK2wJy/5pJsK91zq+/xgKp9HoLN7twKtu1T6gaS/i3DUDPM+xw9WWTTy2V3ZqnmrqJdcILAErafRoZFMbK1xbaTEcaN1Jnhmv4a2PpZrI5PX0OE666eHV17BiVug2tfT3l30S7GvZ7Azhi93enYKiOsdrfMI3HKdKnBS6g5EEMb/npHtpybr3A2bGwQTvo+CbcCNOCHprRRS8ALtXCm8ftaoadjGV2NY9K658tU+GBflZWEbmfFQcGKBd+YMYsVEF7gbiCu+Xpukk4L8jERGNpppQlJXGfISt++xaItCwPZIRgpr3wObVifDT99YKdPqIkYK+c8O1Nt9wEFfO4FRv77liagEp908J1JNYQcpmXhsYxQIG/eI5ha+tExag864q44WzKbk9b2L6bv9FYWIHkPWBLM+pRLp3AwIfsOsZE1DV7Vhj1q/mKfC/ojDJXjiQgiPczcEshjrYmwM=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0aba7e4-eb36-4d0c-01a0-08d8151d7347
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2020 13:25:51.1900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sO5cJR4AvkKC8CNetba0HzjX/BIgZ5yh2FxC2Z/bM3sWmFV/xEdjZ8TFgxQ/qNF3fAwQBuzBMA7KoTMsUADrItjCEtbHgvYl3CGdmDOjPxQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4P190MB0148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Jiri, Ido,
 
---8323329-1522092164-1592659303=:2918
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+On Mon, Jun 01, 2020 at 08:24:17AM +0200, Jiri Pirko wrote:
+> Sat, May 30, 2020 at 05:54:29PM CEST, idosch@idosch.org wrote:
+> >On Sat, May 30, 2020 at 05:52:31PM +0300, Vadym Kochan wrote:
+> 
+> [...]
+> 
+> 
+> >> > WARNING: do not add new typedefs
+> >> > #1064: FILE: drivers/net/ethernet/marvell/prestera/prestera_hw.h:32:
+> >> > +typedef void (*prestera_event_cb_t)
+> >> I may be wrong, as I remember Jiri suggested it and looks like
+> >> it makes sense. I really don't have strong opinion about this.
+> >
+> >OK, so I'll let Jiri comment when he is back at work.
+> 
+> I was not aware of this warning, but for function callbacks, I think it
+> is very handy to have them as typedef instead of repeating the prototype
+> over and over. For that, I don't think this warning makes sense.
+> 
+> [...]
 
+As I said I have no strong opinion on this, but Jiri's suggestion makes
+sense. It looks like typedef check was mostly about 'struct' and native
+types definition.
 
-
-On Sat, 20 Jun 2020, Markus Elfring wrote:
-
-> > The function kobject_init_and_add alloc memory like:
-> > kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-> > ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-> > ->kmalloc_slab, in err branch this memory not free. If use
-> > kmemleak, this path maybe catched.
-> > These changes are to add kobject_put in kobject_init_and_add
-> > failed branch, fix potential memleak.
-> …
-> > Changes since V2:
-> > *remove duplicate kobject_put in kfd_procfs_init.
->
-> Under which circumstances are going to improve this change description accordingly?
-
-Bernard, please update the log message as well.  The mail you sent was
-much more clear, but mail just gets lost over time.  The log message
-itself should be improved.
-
-julia
-
->
-> Would you like to add the tag “Fixes” to the commit message?
->
-> Regards,
-> Markus
->
---8323329-1522092164-1592659303=:2918--
+Regards,
+Vadym Kochan
