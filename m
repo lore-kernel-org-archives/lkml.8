@@ -2,194 +2,124 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E434C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD04229C7
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAD42474A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592694535;
+	bh=2IEhfBYyQCSyZpnt+8yfDe7vxNgCoT7PUvnS8+aWFus=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q7dsA+iZiJbrq3u7ZzeaTeEEiArRYvVgHFzmeMkPviVt7nqBZJO0sX9a7znx0ydfD
+	 sLGRuv9DDW5zCvQvAjPC6ZBSLyp9r64OkcXl0AbGFQF6WQrBcl0e/SY2oyIFBnsYSr
+	 mpcFHzHtZVY/VQZCrN+zJTSWfQBNi1Rlwx+ylvLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgFTW4t (ORCPT
+        id S1728924AbgFTXIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:56:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28530 "EHLO mga04.intel.com"
+        Sat, 20 Jun 2020 19:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgFTW4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:56:48 -0400
-IronPort-SDR: 7zBop0lnKPCddEVt9S3vYEZeUod3TtbMrTXh9EiD7BvzO6oO4lmS4W8z+M0LQrnFFKnNcoup1O
- 7orTjpqYYiuw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="140925387"
-X-IronPort-AV: E=Sophos;i="5.75,260,1589266800"; 
-   d="scan'208";a="140925387"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 15:56:48 -0700
-IronPort-SDR: Gc1UfsmyD3m4OpIymYDVVPRDnAwP1NR3dqoKJLBYhKY1DO66qD8Qhu7GHxSCt8h6vqRj7NdbAT
- Yf5uQIQUceUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,260,1589266800"; 
-   d="scan'208";a="384157103"
-Received: from lkp-server02.sh.intel.com (HELO 3aa54c81372e) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Jun 2020 15:56:47 -0700
-Received: from kbuild by 3aa54c81372e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jmmPm-0001Q8-Lu; Sat, 20 Jun 2020 22:56:46 +0000
-Date:   Sun, 21 Jun 2020 06:56:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cleanups] BUILD SUCCESS
- 286d966b21587b6303081b902f5c5e30b691baf5
-Message-ID: <5eee9422.TwukKp1IwBbOzca1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S1728625AbgFTXIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 19:08:09 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF722474A;
+        Sat, 20 Jun 2020 23:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592694488;
+        bh=2IEhfBYyQCSyZpnt+8yfDe7vxNgCoT7PUvnS8+aWFus=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p2z32yzBQhfcyRgHHNzs+5IIrjXsczCwFLqNTLfNQZAgGw2PskunGFm17A39sq7F7
+         h5teGa9mbxApkzTetkvnhBrzC0Q/6z12nDNoEFjq+RsTefTJN/7BmVbrlNyygUWIN+
+         YZXHA6FESindISNeo/FJ3Fbf/7UT2GK19N71Vke0=
+Date:   Sat, 20 Jun 2020 16:08:07 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v13 00/18] per memcg lru lock
+Message-Id: <20200620160807.0e0997c3e0e3ca1b18e68a53@linux-foundation.org>
+In-Reply-To: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
-branch HEAD: 286d966b21587b6303081b902f5c5e30b691baf5  x86/idt: Make idt_descr static
+On Fri, 19 Jun 2020 16:33:38 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-elapsed time: 722m
+> This is a new version which bases on linux-next, merged much suggestion
+> from Hugh Dickins, from compaction fix to less TestClearPageLRU and
+> comments reverse etc. Thank a lot, Hugh!
+> 
+> Johannes Weiner has suggested:
+> "So here is a crazy idea that may be worth exploring:
+> 
+> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+> linked list.
+> 
+> Can we make PageLRU atomic and use it to stabilize the lru_lock
+> instead, and then use the lru_lock only serialize list operations?
 
-configs tested: 124
-configs skipped: 10
+I don't understand this sentence.  How can a per-page flag stabilize a
+per-pgdat spinlock?  Perhaps some additional description will help.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ..."
+> 
+> With new memcg charge path and this solution, we could isolate
+> LRU pages to exclusive visit them in compaction, page migration, reclaim,
+> memcg move_accunt, huge page split etc scenarios while keeping pages' 
+> memcg stable. Then possible to change per node lru locking to per memcg
+> lru locking. As to pagevec_lru_move_fn funcs, it would be safe to let
+> pages remain on lru list, lru lock could guard them for list integrity.
+> 
+> The patchset includes 3 parts:
+> 1, some code cleanup and minimum optimization as a preparation.
+> 2, use TestCleanPageLRU as page isolation's precondition
+> 3, replace per node lru_lock with per memcg per node lru_lock
+> 
+> The 3rd part moves per node lru_lock into lruvec, thus bring a lru_lock for
+> each of memcg per node. So on a large machine, each of memcg don't
+> have to suffer from per node pgdat->lru_lock competition. They could go
+> fast with their self lru_lock
+> 
+> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+> containers on a 2s * 26cores * HT box with a modefied case:
+> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+> 
+> With this patchset, the readtwice performance increased about 80%
+> in concurrent containers.
+> 
+> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
+> idea 8 years ago, and others who give comments as well: Daniel Jordan, 
+> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
+> 
+> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
+> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
+> 
+> ...
+>
+>  24 files changed, 500 insertions(+), 357 deletions(-)
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                         s3c6400_defconfig
-m68k                       bvme6000_defconfig
-arm                         mv78xx0_defconfig
-mips                           ip27_defconfig
-powerpc                 mpc8272_ads_defconfig
-arm                           spitz_defconfig
-m68k                        stmark2_defconfig
-sh                          r7780mp_defconfig
-s390                             allyesconfig
-csky                                defconfig
-powerpc                     mpc5200_defconfig
-mips                         rt305x_defconfig
-riscv                    nommu_virt_defconfig
-arm                         s5pv210_defconfig
-arm                        mini2440_defconfig
-sh                                  defconfig
-arm                       mainstone_defconfig
-m68k                       m5475evb_defconfig
-powerpc                          g5_defconfig
-mips                      pistachio_defconfig
-arm                        trizeps4_defconfig
-arc                      axs103_smp_defconfig
-mips                         db1xxx_defconfig
-riscv                            alldefconfig
-m68k                            mac_defconfig
-ia64                      gensparse_defconfig
-s390                             allmodconfig
-microblaze                        allnoconfig
-arm                          gemini_defconfig
-m68k                        m5407c3_defconfig
-arm                        oxnas_v6_defconfig
-m68k                        mvme16x_defconfig
-mips                        qi_lb60_defconfig
-x86_64                              defconfig
-arc                              alldefconfig
-arc                        nsimosci_defconfig
-s390                              allnoconfig
-mips                     cu1000-neo_defconfig
-sh                   secureedge5410_defconfig
-arm                           u8500_defconfig
-sh                        edosk7705_defconfig
-arm                        spear3xx_defconfig
-sh                               j2_defconfig
-arm                           h5000_defconfig
-h8300                            allmodconfig
-powerpc                      chrp32_defconfig
-arm                        clps711x_defconfig
-powerpc                  storcenter_defconfig
-xtensa                           alldefconfig
-powerpc                      pmac32_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+It's a large patchset and afaict the whole point is performance gain. 
+80% in one specialized test sounds nice, but is there a plan for more
+extensive quantification?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+There isn't much sign of completed review activity here, so I'll go
+into hiding for a while.
