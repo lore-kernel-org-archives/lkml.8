@@ -2,118 +2,113 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD5BB22DA7
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CE522DA7
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kVSbdH9S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s4CI5rQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbgFTCc5 (ORCPT
+        id S1731930AbgFTCda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 22:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49376 "EHLO
+        Fri, 19 Jun 2020 22:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731880AbgFTCc4 (ORCPT
+        with ESMTP id S1731882AbgFTCd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 22:32:56 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057A2C0613EF
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:32:55 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id n70so8796790ota.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:32:55 -0700 (PDT)
+        Fri, 19 Jun 2020 22:33:28 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7000CC0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:33:28 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k4so10239115oik.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 19:33:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0D6RM81CHxtLSPNd2h5o+DyxuvzJSa5Nzy3+jmmUj6k=;
-        b=kVSbdH9SLZhwQmFcOG+gMjul+MkxrpcfmmL5nmRC8j3xNsYEAGsXj5Ad47nXUniYS1
-         PZc0bfZYz5BSae/9VozU/EhlVyuy4YFoz3hPBpPgIHrjmMrlFKZiZhnofnPcILGl4ScO
-         t7vzCj+Zum03GDj4Q9ndBVVMKYO7bUhHNf8ha76qXC2YG6tlYcXK9v8Is/4HfwPCKgR3
-         HIjbrPfrot3wmhDhuPovWXb8NCmq4ZkzpEsNF/lcfeOS/bT3d9I5vKROM2bKMjG5YIAL
-         BrehL9e118MzeTeXR11y6VOZtXts/3lPlw2h1duJUZzom6sHt70zltClI55Q0ZNh3vKq
-         FZgQ==
+        bh=2izEUWmO2Z44gqGlokNsKJYCiU6NrD8s4mWVTOtP2bc=;
+        b=s4CI5rQA2oC41KDlMQtutcRiKWu4nTD2gRPf4ZpqQDclSutlsWz1q11wzgg5SpCVrB
+         vpeDt+HymrhzhRDYYUBdo59HdTt0DKIP9S7ovJhlf+iWvlUFTRf8Y71/jf1fFZwEY10e
+         hhAkJVTG412nIzCKVtxkFtzppe88Lq+gKhAMPNOcTZg8cTl/WRpIPw5cnA6PzJdMmkhN
+         6DsLyIGqhAnVoZ/zZZHo4VTNotbyFjC9sM7ABBV/YYqmwi2Qx+4EvdhqbG81HTkHEOvw
+         7ZO1lvU7Yf8FccTZzJCLyFSpwHF0yXqadkpxWIwk7X4UEPNRJ9W8kos63kFnqxjfJqOr
+         pfCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0D6RM81CHxtLSPNd2h5o+DyxuvzJSa5Nzy3+jmmUj6k=;
-        b=hKxMgpZe2S+WgSyoNgSoIkznXi9Fxz5tvDBvSFU9GF6bqVQHacdxET/4qu8vRrRJ9y
-         RCzzFX0NBu7Mj0276k1mnnOLAXCWeRpHcDXYytbUpCQy4anMSweZc0yBgHGPy0kSDgqK
-         a6b0MTieMYpDanQF+Veq80r5oZkNNc0ppuih7c+S9BG+Yi+2q4rLfTsqLcx61jYSBPYe
-         1s/avXCQ4+jneYj7qd0VFvYfWwYkzJfKNuQZjSub+sfoJBdP4FDZiMnqCj0A3h2JSgIm
-         ANMciJFmXSMWHjf6vnkOoLNVmrM2VcUhj0naY9h98onb/S6QF+Dq/cM3+ulVmQAvF9vR
-         cqnA==
-X-Gm-Message-State: AOAM5336cKM/89Hrx6vi7QnQ1/t8kJwARAs62QLcQWD/oDKlXXpeFafK
-        J1+WasyLdWyrNZNMJHhd28pp74qY9wT+mbEwCJYBEg==
-X-Google-Smtp-Source: ABdhPJxEiXH06dVVQQgwAAkquvCNpg4wOXt0fbkrP+XzPPPLx6X3/Hj0NM4tYLWfkqawUdxNY3Oz2MPc1FLWO8yu84s=
-X-Received: by 2002:a9d:67d6:: with SMTP id c22mr5217355otn.221.1592620374200;
- Fri, 19 Jun 2020 19:32:54 -0700 (PDT)
+        bh=2izEUWmO2Z44gqGlokNsKJYCiU6NrD8s4mWVTOtP2bc=;
+        b=SeuuVh01o3hsDMnILsb2ogBNrmsz8kz2PI/ytJbZdVF+hjQGLiDB8OSCOkuBS4esHA
+         sroaNEumQ4JxYctReZFGZxGD0k1X87aK3EtStDbc8n1n5j3byCZX4mxv/G8tsGCdU8lR
+         aaCgIKUc1w19ttr6iS+AEKx29l3EKbaMIkWAquADdudExmk32i99wZmdFXbyZwR4WMU1
+         1CiwIkjeCtx2axk9IZvbnsFHx2NYap+9/RvCFvz+ebkeitemtGhtNdxAkuaCEPgCsUqp
+         RSx1ECnLbdTAMC69xc5bVGX1yN56grhIgXha9DVzOEEoMlLxHM4aJEMp0LDjyYxW7mMS
+         CPpg==
+X-Gm-Message-State: AOAM531PdV6S8uHbWi6VJzllvk6h9C43c0fir6gxD0gObhvZye1ImFZu
+        iCKRMspZuuuT/LLtbHjgs5v8d7X0/Gj2FouYyqRUJQ==
+X-Google-Smtp-Source: ABdhPJzwMAGZETqCd57hDnIimD39x1lQ0rN7GHIBUMMaKf6xyMUxmekPnQIwoFszeceaY/MtRbLUsNoHsJe1HYXdiw8=
+X-Received: by 2002:aca:35d4:: with SMTP id c203mr5227824oia.30.1592620407638;
+ Fri, 19 Jun 2020 19:33:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200617105950.3165360-1-vkoul@kernel.org>
-In-Reply-To: <20200617105950.3165360-1-vkoul@kernel.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 19 Jun 2020 19:32:43 -0700
-Message-ID: <CALAqxLWSBrYWK8ggzd7JU4F8QGuLpP6D5ENxzYc8XXype84Jyw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add LT9611 DSI to HDMI bridge
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>,
+References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
+ <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+ <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
+ <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
+ <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
+ <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com> <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
+In-Reply-To: <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 19 Jun 2020 19:32:51 -0700
+Message-ID: <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
+ top level devices
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
+On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> This series adds driver and bindings for Lontium LT9611 bridge chip which
-> takes MIPI DSI as input and HDMI as output.
->
-> This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
->
-> [1]: https://www.96boards.org/product/rb3-platform/
->
-> Changes in v3:
->  - fix kbuild reported error
->  - rebase on v5.8-rc1
->
-> Changes in v2:
->  - Add acks by Rob
->  - Fix comments reported by Emil and rename the file to lontium-lt9611.c
->  - Fix comments reported by Laurent on binding and driver
->  - Add HDMI audio support
->
-> Vinod Koul (3):
->   dt-bindings: vendor-prefixes: Add Lontium vendor prefix
->   dt-bindings: display: bridge: Add documentation for LT9611
->   drm/bridge: Introduce LT9611 DSI to HDMI bridge
+> I think instead of deferred_probe_work_func() moving the device to the
+> end of the dpm_list, I think the device probing successfully is what
+> should move it to the end of the dpm_list. That way, the dpm_list is
+> actually ordered by when the devices become functional and not the
+> random order in DT or random probe order which can get pretty
+> convoluted with multiple deferred probes. This feels right and will
+> make suspend/resume more robust against DT ordering -- but I'm not
+> sure what other wide ranging impact this has for other platforms.
 
-Hey Vinod,
-  Thanks for pushing these!
-I know same-company tags aren't super valuable, but I'm actively using
-these patches for HDMI/audio support on the db845c w/ AOSP.
+Geert,
 
-So for what it's worth, for the series:
-Tested-by: John Stultz <john.stultz@linaro.org>
+If you want to play around with a potential fix to test my hypothesis,
+I think it's just adding this one line to driver_bound():
+============
+klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+device_links_driver_bound(dev);
++device_pm_move_to_tail(dev);
 
-thanks
--john
+device_pm_check_callbacks(dev);
+============
+
+-Saravana
