@@ -2,124 +2,725 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC184C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F328C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A809E2416F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592677088;
-	bh=Pv/MCYWouTTqY8Tzng4DMBloSb1nDNzojh5j+tABf+I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j1oxkUx5ICBuQEsjJrVrlZE1xWnXfsF91fmLWUedLFeri8+jb3BZt+wWp4X6qpOla
-	 BkBTGNAbxBqbtEcK2fzLdpT37qASi+mkrbl1s1BR6vVf4uIccjB24xxEQK10FQWv5n
-	 die2yk/tKU2Tcs+/vXW9LfHr1T3zs24fXc3nmrO0=
+	by mail.kernel.org (Postfix) with ESMTP id 6D27E2404F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 18:21:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Is1Ahqor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgFTSR7 (ORCPT
+        id S1728435AbgFTSVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 14:17:59 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41251 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgFTSR4 (ORCPT
+        Sat, 20 Jun 2020 14:21:52 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:41768 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgFTSVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 14:17:56 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 9so15024011ljc.8
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 11:17:54 -0700 (PDT)
+        Sat, 20 Jun 2020 14:21:50 -0400
+Received: by mail-ej1-f66.google.com with SMTP id dp18so13790752ejc.8;
+        Sat, 20 Jun 2020 11:21:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fvNVjKHLtWO1dFhcir+/iDU+Lfgpi6JKmP8lzEdvB4E=;
-        b=XZhtEb+0zgTmk7p1FKGgpCykCJGCR4QhBQlCJIvFhX2gO0uR1pqoBoOBIBXk8xm1oo
-         nnYsLEAqabKP6xPYAXRe3MXkcyadqTMH+s5IProFdvebzb7pzQ6AkXwlDow2qmIdedzm
-         oZw5CZPotJ22BL1wUHzVnLaBOGBVpYDODO31o=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NhP/u+SpJvrVlwoPx5izOIC9twE6XXMfmBOyf8VSDXU=;
+        b=Is1Ahqorzq9CA4b9HcRs0jpEgXHFgmjgDmXhxIxeor2U9lFfeedn22IRxbtxey0j8m
+         KhSF3eVViHrjVnlZ1ZVCFPy4/KBJGEgvLUV2lWsbp5R6qp6R0J8EgSo00tht8Kv6nZBu
+         +VEavMQgyey/sjB/qNiXpLI0i4wPzCECsZUxP1ety8oTmxtGkSimaEuQPMgJtfUlUxk9
+         R1uam/K8Mvs7LDXEYAQGfi52c+XK7VJz6dXlWdwXvqrk9DCdOvU84b/6gowzCjimmwtE
+         EtjPZrlIrclLEie2Erqdlhs42k0BR/yjz8aVSS403HtWceiSZPPzRrEDJexczMqvFW5p
+         wH/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fvNVjKHLtWO1dFhcir+/iDU+Lfgpi6JKmP8lzEdvB4E=;
-        b=T5WXmHiC0OIqtLjcI+uIAfAKOJ6d+GXnAfJaTeezupQJrHgr6JDyNtbZYJuoBH2MC9
-         YgetSb8VICp3Jd2xo9KmhVRE6d0DvPjH35ns3oP8EB8n8BUx9PvR19lu/5w0u7xhQFWP
-         oaMJnGrm8FwglpinKFt1oR+H8zNfVVMnrXbqgEuzaqtycXX1gNz6xe6NiFSVvN01A97r
-         0hcnWFoMChHdR98Taxve2xE+QwZk/C9bTU92NQLr5a6SBPRqtNu28CrKNHWfCbWeZm1F
-         G3p40nJH2pvkpQmn/sKDlTwOgfjz8NU/EInBEp6S7mx3mqB8XRZoFMRZHE57rUDqXLGq
-         VA6Q==
-X-Gm-Message-State: AOAM532c64hAlC5RDP5WM/Hm4QYc4zF4VhQ9S8TwKl1mj704Asd91cmo
-        l8ISfIMGVA8MapdESbcIIsDRZMIcpQA=
-X-Google-Smtp-Source: ABdhPJw6JOZ1sK1SWpAOUQhQvf+j6VBLoNFMpwyPST191iF0OMxaXeuiE7UKEsJyqZRVefw62BKZPg==
-X-Received: by 2002:a2e:9b8c:: with SMTP id z12mr4441285lji.257.1592677012815;
-        Sat, 20 Jun 2020 11:16:52 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id w17sm2082335ljj.108.2020.06.20.11.16.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id c21so7371991lfb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
-X-Received: by 2002:a19:ae0f:: with SMTP id f15mr5206631lfc.142.1592677011252;
- Sat, 20 Jun 2020 11:16:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NhP/u+SpJvrVlwoPx5izOIC9twE6XXMfmBOyf8VSDXU=;
+        b=MD/sgI+BW75hcrv1vB6z8X93bhlLMy5rPEk3XR1P6xh+XPR2kFPP+XXMMZMbN3n7Vn
+         grtqb2kt7OCtzupae0HNt96Y0vTR+VBzMMT2xveRAH2q9OFHd9Nh/2IiLErlQOEy0bqS
+         iu7v3OGxC5oIXKvKQIwDoB6pfaJPHQF6PrqUR4fNM3YbbWfKQvaSt9dRuw+9wAmVyvFd
+         BYwU6tVsIZvB7Wx9kyirStH5JJyEE3PowaKzrjeoMqHXR5Aguz+j/A5w8pY7oWKSvRnJ
+         GOlU6qLaMaOMYcta6fnqBc/Lt1Hkzn8J+27fqPyaJAdNsduwZA0MAWG4ocbd1IDNaEia
+         raAw==
+X-Gm-Message-State: AOAM530eZTdfQv2ceaPtTkGk7aDL31lf+H87t5EZQqb/EyT69gqXyuRY
+        c7rKIw2TFWLPd/deaO5mSkQ=
+X-Google-Smtp-Source: ABdhPJz2nEqtviql+9BabO2hwFysTdIdYkJgIRffPs8pRzW33CM3iU7JiJFUNjR67coDZiAjjEHKig==
+X-Received: by 2002:a17:907:20f4:: with SMTP id rh20mr8659402ejb.55.1592677245664;
+        Sat, 20 Jun 2020 11:20:45 -0700 (PDT)
+Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
+        by smtp.googlemail.com with ESMTPSA id q5sm8036061edr.21.2020.06.20.11.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 11:20:45 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 1/1] clk: qcom: gcc-msm8994: Add missing clocks, resets and GDSCs
+Date:   Sat, 20 Jun 2020 20:20:09 +0200
+Message-Id: <20200620182010.395097-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200618210645.GB2212102@localhost.localdomain>
- <CAHk-=whz7xz1EBqfyS-C8zTx3_q54R1GuX9tDHdK1-TG91WH-Q@mail.gmail.com> <20200620075732.GA468070@localhost.localdomain>
-In-Reply-To: <20200620075732.GA468070@localhost.localdomain>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 20 Jun 2020 11:16:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjt=mTBqymWuRYeiXQxdEdf6si_it=Yzm7KR62ws0vknw@mail.gmail.com>
-Message-ID: <CAHk-=wjt=mTBqymWuRYeiXQxdEdf6si_it=Yzm7KR62ws0vknw@mail.gmail.com>
-Subject: Re: [PATCH] linux++, this: rename "struct notifier_block *this"
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 12:57 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> > If you want to build the kernel with C++, you'd be a lot better off just doing
-> >
-> >    /* C++ braindamage */
-> >    #define this __this
-> >    #define new __new
-> >
-> > and deal with that instead.
->
-> Can't do this because of placement new.
+This change adds GDSCs, resets and most of the missing
+clocks to the msm8994 GCC driver. The remaining ones
+are of local_vote_clk and gate_clk type, which are not
+yet supported upstream. Also reorder them to match the
+original downstream driver.
 
-Can you explain?
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ drivers/clk/qcom/gcc-msm8994.c               | 388 ++++++++++++++++++-
+ include/dt-bindings/clock/qcom,gcc-msm8994.h |  77 +++-
+ 2 files changed, 444 insertions(+), 21 deletions(-)
 
-> > Because no, the 'new' renaming will never happen, and while 'this'
-> > isn't nearly as common or relevant a name, once you have the same
-> > issue with 'new', what's the point of trying to deal with 'this'?
->
-> I'm not sending "new".
+diff --git a/drivers/clk/qcom/gcc-msm8994.c b/drivers/clk/qcom/gcc-msm8994.c
+index b7fc8c7ba195..144d2ba7a9be 100644
+--- a/drivers/clk/qcom/gcc-msm8994.c
++++ b/drivers/clk/qcom/gcc-msm8994.c
+@@ -20,6 +20,7 @@
+ #include "clk-rcg.h"
+ #include "clk-branch.h"
+ #include "reset.h"
++#include "gdsc.h"
+ 
+ enum {
+ 	P_XO,
+@@ -1772,6 +1773,32 @@ static struct clk_branch gcc_gp3_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_lpass_q6_axi_clk = {
++	.halt_reg = 0x0280,
++	.clkr = {
++		.enable_reg = 0x0280,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_lpass_q6_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
++	.halt_reg = 0x0284,
++	.clkr = {
++		.enable_reg = 0x0284,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_mss_q6_bimc_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_pcie_0_aux_clk = {
+ 	.halt_reg = 0x1ad4,
+ 	.clkr = {
+@@ -1790,6 +1817,32 @@ static struct clk_branch gcc_pcie_0_aux_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_pcie_0_cfg_ahb_clk = {
++	.halt_reg = 0x1ad0,
++	.clkr = {
++		.enable_reg = 0x1ad0,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_0_cfg_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
++	.halt_reg = 0x1acc,
++	.clkr = {
++		.enable_reg = 0x1acc,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_0_mstr_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_pcie_0_pipe_clk = {
+ 	.halt_reg = 0x1ad8,
+ 	.halt_check = BRANCH_HALT_DELAY,
+@@ -1809,6 +1862,20 @@ static struct clk_branch gcc_pcie_0_pipe_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_pcie_0_slv_axi_clk = {
++	.halt_reg = 0x1ac8,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1ac8,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_0_slv_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_pcie_1_aux_clk = {
+ 	.halt_reg = 0x1b54,
+ 	.clkr = {
+@@ -1827,6 +1894,32 @@ static struct clk_branch gcc_pcie_1_aux_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_pcie_1_cfg_ahb_clk = {
++	.halt_reg = 0x1b54,
++	.clkr = {
++		.enable_reg = 0x1b54,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_1_cfg_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_pcie_1_mstr_axi_clk = {
++	.halt_reg = 0x1b50,
++	.clkr = {
++		.enable_reg = 0x1b50,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_1_mstr_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_pcie_1_pipe_clk = {
+ 	.halt_reg = 0x1b58,
+ 	.halt_check = BRANCH_HALT_DELAY,
+@@ -1846,6 +1939,19 @@ static struct clk_branch gcc_pcie_1_pipe_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_pcie_1_slv_axi_clk = {
++	.halt_reg = 0x1b48,
++	.clkr = {
++		.enable_reg = 0x1b48,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pcie_1_slv_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_pdm2_clk = {
+ 	.halt_reg = 0x0ccc,
+ 	.clkr = {
+@@ -1864,6 +1970,19 @@ static struct clk_branch gcc_pdm2_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_pdm_ahb_clk = {
++	.halt_reg = 0x0cc4,
++	.clkr = {
++		.enable_reg = 0x0cc4,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_pdm_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_sdcc1_apps_clk = {
+ 	.halt_reg = 0x04c4,
+ 	.clkr = {
+@@ -1899,6 +2018,23 @@ static struct clk_branch gcc_sdcc1_ahb_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_sdcc2_ahb_clk = {
++	.halt_reg = 0x0508,
++	.clkr = {
++		.enable_reg = 0x0508,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_sdcc2_ahb_clk",
++			.parent_names = (const char *[]){
++				"periph_noc_clk_src",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_sdcc2_apps_clk = {
+ 	.halt_reg = 0x0504,
+ 	.clkr = {
+@@ -1917,6 +2053,23 @@ static struct clk_branch gcc_sdcc2_apps_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_sdcc3_ahb_clk = {
++	.halt_reg = 0x0548,
++	.clkr = {
++		.enable_reg = 0x0548,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_sdcc3_ahb_clk",
++			.parent_names = (const char *[]){
++				"periph_noc_clk_src",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_sdcc3_apps_clk = {
+ 	.halt_reg = 0x0544,
+ 	.clkr = {
+@@ -1935,6 +2088,23 @@ static struct clk_branch gcc_sdcc3_apps_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_sdcc4_ahb_clk = {
++	.halt_reg = 0x0588,
++	.clkr = {
++		.enable_reg = 0x0588,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_sdcc4_ahb_clk",
++			.parent_names = (const char *[]){
++				"periph_noc_clk_src",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_sdcc4_apps_clk = {
+ 	.halt_reg = 0x0584,
+ 	.clkr = {
+@@ -1989,6 +2159,19 @@ static struct clk_branch gcc_sys_noc_usb3_axi_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_tsif_ahb_clk = {
++	.halt_reg = 0x0d84,
++	.clkr = {
++		.enable_reg = 0x0d84,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_tsif_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_tsif_ref_clk = {
+ 	.halt_reg = 0x0d88,
+ 	.clkr = {
+@@ -2007,6 +2190,19 @@ static struct clk_branch gcc_tsif_ref_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_ufs_ahb_clk = {
++	.halt_reg = 0x1d4c,
++	.clkr = {
++		.enable_reg = 0x1d4c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_ufs_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_axi_clk = {
+ 	.halt_reg = 0x1d48,
+ 	.clkr = {
+@@ -2043,6 +2239,34 @@ static struct clk_branch gcc_ufs_rx_cfg_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_ufs_rx_symbol_0_clk = {
++	.halt_reg = 0x1d60,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1d60,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_ufs_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_rx_symbol_1_clk = {
++	.halt_reg = 0x1d64,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1d64,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_ufs_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_tx_cfg_clk = {
+ 	.halt_reg = 0x1d50,
+ 	.clkr = {
+@@ -2061,6 +2285,47 @@ static struct clk_branch gcc_ufs_tx_cfg_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_ufs_tx_symbol_0_clk = {
++	.halt_reg = 0x1d58,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1d58,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_ufs_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_tx_symbol_1_clk = {
++	.halt_reg = 0x1d5c,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1d5c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_ufs_tx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_usb2_hs_phy_sleep_clk = {
++	.halt_reg = 0x04ac,
++	.clkr = {
++		.enable_reg = 0x04ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_usb2_hs_phy_sleep_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb30_master_clk = {
+ 	.halt_reg = 0x03c8,
+ 	.clkr = {
+@@ -2097,6 +2362,19 @@ static struct clk_branch gcc_usb30_mock_utmi_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_usb30_sleep_clk = {
++	.halt_reg = 0x03cc,
++	.clkr = {
++		.enable_reg = 0x03cc,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_usb30_sleep_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb3_phy_aux_clk = {
+ 	.halt_reg = 0x1408,
+ 	.clkr = {
+@@ -2115,6 +2393,19 @@ static struct clk_branch gcc_usb3_phy_aux_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_usb_hs_ahb_clk = {
++	.halt_reg = 0x0488,
++	.clkr = {
++		.enable_reg = 0x0488,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_usb_hs_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb_hs_system_clk = {
+ 	.halt_reg = 0x0484,
+ 	.clkr = {
+@@ -2133,6 +2424,59 @@ static struct clk_branch gcc_usb_hs_system_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
++	.halt_reg = 0x1a84,
++	.clkr = {
++		.enable_reg = 0x1a84,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data)
++		{
++			.name = "gcc_usb_phy_cfg_ahb2phy_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct gdsc pcie_gdsc = {
++		.gdscr = 0x1e18,
++		.pd = {
++			.name = "pcie",
++		},
++		.pwrsts = PWRSTS_OFF_ON,
++};
++
++static struct gdsc pcie_0_gdsc = {
++		.gdscr = 0x1ac4,
++		.pd = {
++			.name = "pcie_0",
++		},
++		.pwrsts = PWRSTS_OFF_ON,
++};
++
++static struct gdsc pcie_1_gdsc = {
++		.gdscr = 0x1b44,
++		.pd = {
++			.name = "pcie_1",
++		},
++		.pwrsts = PWRSTS_OFF_ON,
++};
++
++static struct gdsc usb30_gdsc = {
++		.gdscr = 0x3c4,
++		.pd = {
++			.name = "usb30",
++		},
++		.pwrsts = PWRSTS_OFF_ON,
++};
++
++static struct gdsc ufs_gdsc = {
++		.gdscr = 0x1d44,
++		.pd = {
++			.name = "ufs",
++		},
++		.pwrsts = PWRSTS_OFF_ON,
++};
++
+ static struct clk_regmap *gcc_msm8994_clocks[] = {
+ 	[GPLL0_EARLY] = &gpll0_early.clkr,
+ 	[GPLL0] = &gpll0.clkr,
+@@ -2233,26 +2577,64 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
+ 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
+ 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
++	[GCC_LPASS_Q6_AXI_CLK] = &gcc_lpass_q6_axi_clk.clkr,
++	[GCC_MSS_Q6_BIMC_AXI_CLK] = &gcc_mss_q6_bimc_axi_clk.clkr,
+ 	[GCC_PCIE_0_AUX_CLK] = &gcc_pcie_0_aux_clk.clkr,
++	[GCC_PCIE_0_CFG_AHB_CLK] = &gcc_pcie_0_cfg_ahb_clk.clkr,
++	[GCC_PCIE_0_MSTR_AXI_CLK] = &gcc_pcie_0_mstr_axi_clk.clkr,
+ 	[GCC_PCIE_0_PIPE_CLK] = &gcc_pcie_0_pipe_clk.clkr,
++	[GCC_PCIE_0_SLV_AXI_CLK] = &gcc_pcie_0_slv_axi_clk.clkr,
+ 	[GCC_PCIE_1_AUX_CLK] = &gcc_pcie_1_aux_clk.clkr,
++	[GCC_PCIE_1_CFG_AHB_CLK] = &gcc_pcie_1_cfg_ahb_clk.clkr,
++	[GCC_PCIE_1_MSTR_AXI_CLK] = &gcc_pcie_1_mstr_axi_clk.clkr,
+ 	[GCC_PCIE_1_PIPE_CLK] = &gcc_pcie_1_pipe_clk.clkr,
++	[GCC_PCIE_1_SLV_AXI_CLK] = &gcc_pcie_1_slv_axi_clk.clkr,
+ 	[GCC_PDM2_CLK] = &gcc_pdm2_clk.clkr,
++	[GCC_PDM_AHB_CLK] = &gcc_pdm_ahb_clk.clkr,
++	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
+ 	[GCC_SDCC1_APPS_CLK] = &gcc_sdcc1_apps_clk.clkr,
++	[GCC_SDCC2_AHB_CLK] = &gcc_sdcc2_ahb_clk.clkr,
+ 	[GCC_SDCC2_APPS_CLK] = &gcc_sdcc2_apps_clk.clkr,
++	[GCC_SDCC3_AHB_CLK] = &gcc_sdcc3_ahb_clk.clkr,
+ 	[GCC_SDCC3_APPS_CLK] = &gcc_sdcc3_apps_clk.clkr,
++	[GCC_SDCC4_AHB_CLK] = &gcc_sdcc4_ahb_clk.clkr,
+ 	[GCC_SDCC4_APPS_CLK] = &gcc_sdcc4_apps_clk.clkr,
+-	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
+ 	[GCC_SYS_NOC_UFS_AXI_CLK] = &gcc_sys_noc_ufs_axi_clk.clkr,
+ 	[GCC_SYS_NOC_USB3_AXI_CLK] = &gcc_sys_noc_usb3_axi_clk.clkr,
++	[GCC_TSIF_AHB_CLK] = &gcc_tsif_ahb_clk.clkr,
+ 	[GCC_TSIF_REF_CLK] = &gcc_tsif_ref_clk.clkr,
++	[GCC_UFS_AHB_CLK] = &gcc_ufs_ahb_clk.clkr,
+ 	[GCC_UFS_AXI_CLK] = &gcc_ufs_axi_clk.clkr,
+ 	[GCC_UFS_RX_CFG_CLK] = &gcc_ufs_rx_cfg_clk.clkr,
++	[GCC_UFS_RX_SYMBOL_0_CLK] = &gcc_ufs_rx_symbol_0_clk.clkr,
++	[GCC_UFS_RX_SYMBOL_1_CLK] = &gcc_ufs_rx_symbol_1_clk.clkr,
+ 	[GCC_UFS_TX_CFG_CLK] = &gcc_ufs_tx_cfg_clk.clkr,
++	[GCC_UFS_TX_SYMBOL_0_CLK] = &gcc_ufs_tx_symbol_0_clk.clkr,
++	[GCC_UFS_TX_SYMBOL_1_CLK] = &gcc_ufs_tx_symbol_1_clk.clkr,
++	[GCC_USB2_HS_PHY_SLEEP_CLK] = &gcc_usb2_hs_phy_sleep_clk.clkr,
+ 	[GCC_USB30_MASTER_CLK] = &gcc_usb30_master_clk.clkr,
+ 	[GCC_USB30_MOCK_UTMI_CLK] = &gcc_usb30_mock_utmi_clk.clkr,
++	[GCC_USB30_SLEEP_CLK] = &gcc_usb30_sleep_clk.clkr,
+ 	[GCC_USB3_PHY_AUX_CLK] = &gcc_usb3_phy_aux_clk.clkr,
++	[GCC_USB_HS_AHB_CLK] = &gcc_usb_hs_ahb_clk.clkr,
+ 	[GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
++	[GCC_USB_PHY_CFG_AHB2PHY_CLK] = &gcc_usb_phy_cfg_ahb2phy_clk.clkr,
++};
++
++static struct gdsc *gcc_msm8994_gdscs[] = {
++	[PCIE_GDSC] = &pcie_gdsc,
++	[PCIE_0_GDSC] = &pcie_0_gdsc,
++	[PCIE_1_GDSC] = &pcie_1_gdsc,
++	[USB30_GDSC] = &usb30_gdsc,
++	[UFS_GDSC] = &ufs_gdsc,
++};
++
++static const struct qcom_reset_map gcc_msm8994_resets[] = {
++	[USB3_PHY_RESET] = { 0x1400 },
++	[USB3PHY_PHY_RESET] = { 0x1404 },
++	[PCIE_PHY_0_RESET] = { 0x1b18 },
++	[PCIE_PHY_1_RESET] = { 0x1b98 },
++	[QUSB2_PHY_RESET] = { 0x04b8 },
+ };
+ 
+ static const struct regmap_config gcc_msm8994_regmap_config = {
+@@ -2267,6 +2649,10 @@ static const struct qcom_cc_desc gcc_msm8994_desc = {
+ 	.config = &gcc_msm8994_regmap_config,
+ 	.clks = gcc_msm8994_clocks,
+ 	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
++	.resets = gcc_msm8994_resets,
++	.num_resets = ARRAY_SIZE(gcc_msm8994_resets),
++	.gdscs = gcc_msm8994_gdscs,
++	.num_gdscs = ARRAY_SIZE(gcc_msm8994_gdscs),
+ };
+ 
+ static const struct of_device_id gcc_msm8994_match_table[] = {
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+index 938969309e00..d32c3fd2500c 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8994.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+@@ -106,25 +106,62 @@
+ #define GCC_GP1_CLK				96
+ #define GCC_GP2_CLK				97
+ #define GCC_GP3_CLK				98
+-#define GCC_PCIE_0_AUX_CLK			99
+-#define GCC_PCIE_0_PIPE_CLK			100
+-#define GCC_PCIE_1_AUX_CLK			101
+-#define GCC_PCIE_1_PIPE_CLK			102
+-#define GCC_PDM2_CLK				103
+-#define GCC_SDCC1_APPS_CLK			104
+-#define GCC_SDCC2_APPS_CLK			105
+-#define GCC_SDCC3_APPS_CLK			106
+-#define GCC_SDCC4_APPS_CLK			107
+-#define GCC_SYS_NOC_UFS_AXI_CLK			108
+-#define GCC_SYS_NOC_USB3_AXI_CLK		109
+-#define GCC_TSIF_REF_CLK			110
+-#define GCC_UFS_AXI_CLK				111
+-#define GCC_UFS_RX_CFG_CLK			112
+-#define GCC_UFS_TX_CFG_CLK			113
+-#define GCC_USB30_MASTER_CLK			114
+-#define GCC_USB30_MOCK_UTMI_CLK			115
+-#define GCC_USB3_PHY_AUX_CLK			116
+-#define GCC_USB_HS_SYSTEM_CLK			117
+-#define GCC_SDCC1_AHB_CLK			118
++#define GCC_LPASS_Q6_AXI_CLK            99
++#define GCC_MSS_Q6_BIMC_AXI_CLK         100
++#define GCC_PCIE_0_AUX_CLK			101
++#define GCC_PCIE_0_CFG_AHB_CLK      102
++#define GCC_PCIE_0_MSTR_AXI_CLK     103
++#define GCC_PCIE_0_PIPE_CLK			104
++#define GCC_PCIE_0_SLV_AXI_CLK      105
++#define GCC_PCIE_1_AUX_CLK			106
++#define GCC_PCIE_1_CFG_AHB_CLK      107
++#define GCC_PCIE_1_MSTR_AXI_CLK     108
++#define GCC_PCIE_1_PIPE_CLK			109
++#define GCC_PCIE_1_SLV_AXI_CLK      110
++#define GCC_PDM2_CLK				111
++#define GCC_PDM_AHB_CLK             112
++#define GCC_SDCC1_AHB_CLK			113
++#define GCC_SDCC1_APPS_CLK			114
++#define GCC_SDCC2_AHB_CLK           115
++#define GCC_SDCC2_APPS_CLK			116
++#define GCC_SDCC3_AHB_CLK           117
++#define GCC_SDCC3_APPS_CLK			118
++#define GCC_SDCC4_AHB_CLK           119
++#define GCC_SDCC4_APPS_CLK			120
++#define GCC_SYS_NOC_UFS_AXI_CLK     121
++#define GCC_SYS_NOC_USB3_AXI_CLK    122
++#define GCC_TSIF_AHB_CLK            123
++#define GCC_TSIF_REF_CLK			124
++#define GCC_UFS_AHB_CLK             125
++#define GCC_UFS_AXI_CLK				126
++#define GCC_UFS_RX_CFG_CLK			127
++#define GCC_UFS_RX_SYMBOL_0_CLK     128
++#define GCC_UFS_RX_SYMBOL_1_CLK     129
++#define GCC_UFS_TX_CFG_CLK			130
++#define GCC_UFS_TX_SYMBOL_0_CLK     131
++#define GCC_UFS_TX_SYMBOL_1_CLK     132
++#define GCC_USB2_HS_PHY_SLEEP_CLK   133
++#define GCC_USB30_MASTER_CLK        134
++#define GCC_USB30_MOCK_UTMI_CLK     135
++#define GCC_USB30_SLEEP_CLK         136
++#define GCC_USB3_PHY_AUX_CLK        137
++#define GCC_USB_HS_AHB_CLK          138
++#define GCC_USB_HS_SYSTEM_CLK       139
++#define GCC_USB_PHY_CFG_AHB2PHY_CLK 140
++
++/* GDSCs */
++#define PCIE_GDSC                   0
++#define PCIE_0_GDSC                 1
++#define PCIE_1_GDSC                 2
++#define USB30_GDSC                  3
++#define UFS_GDSC                    4
++
++/* Resets */
++#define USB3_PHY_RESET              0
++#define USB3PHY_PHY_RESET           1
++#define PCIE_PHY_0_RESET            2
++#define PCIE_PHY_1_RESET            3
++#define QUSB2_PHY_RESET             4
++
+ 
+ #endif
+-- 
+2.27.0
 
-My point about 'new' is that
-
- (a) there's a lot more 'new' than 'this'
-
- (b) without dealing with 'new', dealing with 'this' is pointless
-
-So why bother? Without some kind of pre-processing phase to make our C
-code palatable to a C++ parser, it will never work.
-
-And if you _do_ have a pre-processing phase (which might be a #define,
-but might also be a completely separate pass with some special tool),
-converting 'this' in the kernel sources isn't useful anyway, because
-you could just do it in the pre-processing phase instead.
-
-See? THAT is why I'm harping on 'new'. Not because you sent me a patch
-to deal with 'new', but because such a patch will never be accepted,
-and without that patch the pain from 'this' seems entirely irrelevant.
-
-What's your plan for 'new'? And why doesn't that plan then work for 'this'?
-
-              Linus
