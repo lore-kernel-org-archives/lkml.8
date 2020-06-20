@@ -2,116 +2,128 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2227C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 20:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1874C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 20:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7D020748
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 20:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB72A2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 20:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vp2Fr3N/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5YfqFjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgFTUKj (ORCPT
+        id S1728786AbgFTUQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 16:10:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43483 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgFTUKi (ORCPT
+        Sat, 20 Jun 2020 16:16:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42391 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgFTUQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 16:10:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g12so5586265pll.10
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 13:10:38 -0700 (PDT)
+        Sat, 20 Jun 2020 16:16:06 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y13so7470396lfe.9;
+        Sat, 20 Jun 2020 13:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iRX0OPkrMjtIh+IZlLNQE9USdarPLnAiygVqscVAq+o=;
-        b=Vp2Fr3N/AURy1KyePwnHI0cazWHmCk7MDLKFosyoUKWLEXQ4LrxbcX32Ph9y8jhALB
-         O/eBIuUuZ0qmZKDed/riTNoDf3lzXfgcFJJIPsJX67XzFHWhQ8G7pJ2wh1zIsrrwEPM9
-         CFNTTPMeFY4GYmC9ssoJPAG219oQ0sL245dKghz0ZtDTbatuov8erXjNsQmn382/QRB9
-         Gf4dfP2cwRwmarUED3grIFRwO3XE5Cc2FMiQPLm9rnK5lzTeOVM/dZmCUhCsy3shikza
-         gGGzSX7coIjsty7LdzyQm3k9ci3UJLghu9NnZ2PrsEZZ6s6qI3Nq7F1vjBzA892DhOss
-         uLrw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bUpHKuGvXMoT2ANSX5o0C6Pui2UhEVNyY7Dw51pTMzQ=;
+        b=I5YfqFjS1MNpAA5fUkekX8lImcYybPU8i5LRszlPW7+W9dKLRe3m7XPSm5OE+w0c9b
+         5HXVnVtUxQlg+UD7RL2IxB/0/3C7NCu7K8Mee31mtL2mTAQFbe5C+CAtInh54NDp4UD6
+         9m4czhc3CLvcGBo2hSguh/0vC3GWwiv4PiHumh48B6IyoFvnS0wFEnCdrMtfj/o3HLXZ
+         BKWsi3WvmM68qMWUqqK9ChMos92Bmv7K+9qWxDnP6pr7zY9dMZEp54VjnTG35um3Jd8f
+         ujcCDuSqIk8AkWnTklK3DXpRnp6k79C4svheru40Mz9r+/qD3zw9dVKPN2k8ZTqsR9BO
+         c3Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iRX0OPkrMjtIh+IZlLNQE9USdarPLnAiygVqscVAq+o=;
-        b=krjwYgU7OdMGv3vvdj+2fFWMFqxoiW6LCTrXYLaMlQvTAihzcKukx4E1KHRPuSmtrf
-         scGeKmEIlduVxs5+NH0ktGYJLMBCi92XplNmGUFLq2wYbFniZ6/beRh/7kFHrYlFq+k7
-         3C84o+tI0lcpRQJV82L8TbaGSknFdPtRuJOq8vwC71fXU7QHwqYi4BZzsxz8mrbV35il
-         UPB+Vx38BNy+3TdCZ2Yrf/kDE9n2CU/4gj8A+5Ua0teXMjC/9Zx7sY1/O1VgDcB1C4hT
-         Q61802BQquDu0rcDy5iMo/+U2JDiZKQTci8S9DwONT9MO/oSHom7zUsLinmuaMu+EZ29
-         +YjQ==
-X-Gm-Message-State: AOAM531Ket1zrJyozZlFvMS47whiLSSHDK1u3yiBkmpQ0pzZcBiczw2C
-        /r4Pfz1Ls3tIz8hBqYReDvE=
-X-Google-Smtp-Source: ABdhPJx2h6Q5/YN8i8jkpnFIy9lAv1yZIZuQJN/Gz8jrg5CMF1XcnAnB82QayyjUt0WXcyX+62s33g==
-X-Received: by 2002:a17:902:8681:: with SMTP id g1mr13031314plo.161.1592683777739;
-        Sat, 20 Jun 2020 13:09:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v9sm9376740pfe.198.2020.06.20.13.09.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 20 Jun 2020 13:09:37 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 13:09:36 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dma-pool: Fix too large DMA pools on medium systems
-Message-ID: <20200620200936.GA106151@roeck-us.net>
-References: <20200608132217.29945-1-geert@linux-m68k.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bUpHKuGvXMoT2ANSX5o0C6Pui2UhEVNyY7Dw51pTMzQ=;
+        b=CLkQ3z5mvcPCmXIVXGd/lT+3xw5ARgR9o7NFQUnF2WrL0Pkd+1mghE/DI/4SOeIB+d
+         0PERm69f2mQTJ5jY/Cag4CPSBm+WYpPy92Nk5sk8WG+TgnKLzbgRVPzT+SWhKfG0RBKh
+         xKNTLK+4VgFRpM+cV0NDI3WHufmAJSxAERhLfDY76a27wvQyVHrsS0ldIoglMdHy9VMB
+         P+6ni162NO7bNgiZoz6wWZdZkI4QCyOJyiGAgfoEKM9pQyH65kJfuZTL5YTc1nrvW+2p
+         8gpATBTJZuGnKtLax02zGDR5BOBooS+5ClG7XOLdrv7cxn0AScG8hqFcfOuGTkr2mvxC
+         M7yg==
+X-Gm-Message-State: AOAM533YZR6EmI8HN+Ms6QsUlZKQuDLapauylKUSfxaoWBxJHAQDM/MN
+        cJmBhJHvfpirPJTLXUnadKlZ78YvRItSVA==
+X-Google-Smtp-Source: ABdhPJy6pTdJ/npXRzJulS4+XYrhRZgNFxdrISm39OyM67KApATxV7ttOA6JOqpzlpmfhSceF2D2lg==
+X-Received: by 2002:a19:4cd:: with SMTP id 196mr1349954lfe.136.1592684103363;
+        Sat, 20 Jun 2020 13:15:03 -0700 (PDT)
+Received: from pc-sasha.localdomain ([146.120.244.6])
+        by smtp.gmail.com with ESMTPSA id b6sm2641347lfa.54.2020.06.20.13.15.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 13:15:02 -0700 (PDT)
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+To:     asmadeus@codewreck.org
+Cc:     lucho@ionkov.net, ericvh@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexander.kapshuk@gmail.com
+Subject: [PATCH] net/9p: Validate current->sighand in client.c
+Date:   Sat, 20 Jun 2020 23:14:56 +0300
+Message-Id: <20200620201456.14304-1-alexander.kapshuk@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618190807.GA20699@nautica>
+References: <20200618190807.GA20699@nautica>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608132217.29945-1-geert@linux-m68k.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 03:22:17PM +0200, Geert Uytterhoeven wrote:
-> On systems with at least 32 MiB, but less than 32 GiB of RAM, the DMA
-> memory pools are much larger than intended (e.g. 2 MiB instead of 128
-> KiB on a 256 MiB system).
-> 
-> Fix this by correcting the calculation of the number of GiBs of RAM in
-> the system.  Invert the order of the min/max operations, to keep on
-> calculating in pages until the last step, which aids readability.
-> 
-> Fixes: 1d659236fb43c4d2 ("dma-pool: scale the default DMA coherent pool size with memory capacity")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Acked-by: David Rientjes <rientjes@google.com>
+Use (un)lock_task_sighand instead of spin_lock_irqsave and
+spin_unlock_irqrestore to ensure current->sighand is a valid pointer as
+suggested in the email referenced below.
 
-This patch results in a boot failure in some of my powerpc boot tests,
-specifically those testing boots from mptsas1068 devices. Error message:
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Link: https://lore.kernel.org/lkml/20200618190807.GA20699@nautica/
+---
+ net/9p/client.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-mptsas 0000:00:02.0: enabling device (0000 -> 0002)
-mptbase: ioc0: Initiating bringup
-ioc0: LSISAS1068 A0: Capabilities={Initiator}
-mptbase: ioc0: ERROR - Unable to allocate Reply, Request, Chain Buffers!
-mptbase: ioc0: ERROR - didn't initialize properly! (-3)
-mptsas: probe of 0000:00:02.0 failed with error -3
+diff --git a/net/9p/client.c b/net/9p/client.c
+index fc1f3635e5dd..15f16f2baa8f 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -787,9 +787,14 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
+ 	}
+ recalc_sigpending:
+ 	if (sigpending) {
+-		spin_lock_irqsave(&current->sighand->siglock, flags);
++		if (!lock_task_sighand(current, &flags)) {
++			pr_warn("%s (%d): current->sighand==NULL in recalc_sigpending\n",
++				__func__, task_pid_nr(current));
++			err = -ESRCH;
++			goto reterr;
++		}
+ 		recalc_sigpending();
+-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
++		unlock_task_sighand(current, &flags);
+ 	}
+ 	if (err < 0)
+ 		goto reterr;
+@@ -869,9 +874,14 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
+ 	}
+ recalc_sigpending:
+ 	if (sigpending) {
+-		spin_lock_irqsave(&current->sighand->siglock, flags);
++		if (!lock_task_sighand(current, &flags)) {
++			pr_warn("%s (%d): current->sighand==NULL in recalc_sigpending\n",
++				__func__, task_pid_nr(current));
++			err = -ESRCH;
++			goto reterr;
++		}
+ 		recalc_sigpending();
+-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
++		unlock_task_sighand(current, &flags);
+ 	}
+ 	if (err < 0)
+ 		goto reterr;
+--
+2.27.0
 
-Configuration is bamboo:44x/bamboo_defconfig plus various added drivers.
-Qemu command line is
-
-qemu-system-ppc -kernel vmlinux -M bamboo \
-     -m 256 -no-reboot -snapshot -device mptsas1068,id=scsi \
-     -device scsi-hd,bus=scsi.0,drive=d0,wwn=0x5000c50015ea71ac -drive \
-     file=rootfs.ext2,format=raw,if=none,id=d0 \
-     --append "panic=-1 slub_debug=FZPUA root=/dev/sda  mem=256M console=ttyS0" \
-     -monitor none -nographic
-
-canyonlands_defconfig with sam460ex machine and otherwise similar command line
-fails as well.
-
-Reverting this patch fixes the problem.
-
-Guenter
