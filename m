@@ -2,175 +2,128 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21725C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D70C22CF8
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592617078;
-	bh=27uEGde3cS/BL9hltSLdg6dNULTrZtpxAPFo35C7kw0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0q4wwlfw5n8ccaQEg8cSXC7Cd66WX97xWVexo06+AEm5/oqEn/uZSoOG04vXuZIv4
-	 QXx8wZH5svnzmHLFYSFhapArpLxocQjxsMkj+il1N0wCrqMeIzkAI8IWKQtnzYaZPm
-	 /Z3b27E4MBgXgxogd/j6C1cMZwq+aBVmuvIkF44s=
+	by mail.kernel.org (Postfix) with ESMTP id F3F0822D05
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YXI2uDsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbgFTBh5 (ORCPT
+        id S1731478AbgFTBle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 21:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgFTBhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 21:37:53 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4166622CAE;
-        Sat, 20 Jun 2020 01:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592617072;
-        bh=27uEGde3cS/BL9hltSLdg6dNULTrZtpxAPFo35C7kw0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Tk5t6SG9TGdp7HD/ryYTe0tswlBBPG1dMWhIKXwp43KKiuT4mmebafpvfvXQDSo2o
-         kgMglDrny0RHE0eYSApu/SeSx7Otom4Wd/Q4aFNONBv9RZcP1Y2DdgMbC4Vpw9Ipwh
-         TIEWsPrLwZwVj6QJ+S031DxQWUPVo4n9nDbepJiI=
-Date:   Sat, 20 Jun 2020 10:37:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-Id: <20200620103747.fb83f804083ef9956740acee@kernel.org>
-In-Reply-To: <20200619232820.GE353853@T590>
-References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
-        <20200618125438.GA191266@T590>
-        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
-        <20200618231901.GA196099@T590>
-        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
-        <20200619072859.GA205278@T590>
-        <20200619081954.3d72a252@oasis.local.home>
-        <20200619133240.GA351476@T590>
-        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
-        <20200619232820.GE353853@T590>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jun 2020 21:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731400AbgFTBle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 21:41:34 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D7EC06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 18:41:33 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k11so12197203ejr.9
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 18:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cGEKlCMwGCVdgAUnlLlbikbWphYIp6lmyRBiC34xvQY=;
+        b=YXI2uDsxPIP5ikjSuPaoUIF1ub+ItyOscirT0PZX6vg5+S9mPCXhIixyDfmWkUXF2/
+         bGtT5MMsoK0KB1oN0FS8bAWiBHLJ1TJxoaObYThsr4ACcF60AupjpzkMEv2DkySF+2jw
+         i7DfE/dF8LfVQjnLlxhyGdB5uOX+JY9BocyLkq5YyVyc0ywIsmTqEeVLfBY1j0mX/OSN
+         pMRU14+JMtSgP4f8ozG7j4PTKh/+YOWGGfTITRSDNwPDd3PbAaOBVHW8LGNrKljVIAzA
+         tBftNKW/7zWcmS70mDCjWpXQjCQPSqayKz3jfPbC301Xf4J4YO+tZJyxuO/dJszlk9m0
+         xwzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cGEKlCMwGCVdgAUnlLlbikbWphYIp6lmyRBiC34xvQY=;
+        b=Z4EVoTyrqtKkM9moYpRoU/8bcoq6GN0l0wgxpZ1DRL7ALoQSZTXbcZa3vQaLY4XTxy
+         ti3Hzh2oGHeXkhcfQfq7PmRUANX07Sr1iyNx3PFAjGDfP+A4NdmvtoK3SPSq8DQC13nz
+         E/0BLJmKDLd3ZvTD2Nc33uNqKlNtRL52pUoJQ/PsRofPpol7eoYDitMuSCSCZjnE/C1T
+         4az53KbaoJYIEpQ7lR0OXX+1Gy+2G3TWRfUNuxUwNYpNUH3ap8YmdI9k98LPKgzK6dcA
+         0kyeWvvZPtZ+c1wV/ypI6XgBNwCvckthSIA14KpKs8Wxp2hK31IxXJEJqsXKVCm75IfZ
+         Gd6Q==
+X-Gm-Message-State: AOAM530BacZGVbOwINiULlw1yPOj78qYKofppmERZWu6sr+99GtN8Eta
+        9qiZ2ZqV4tALVEq7eUugCznmd7MGDwqKf8DOpzYblw==
+X-Google-Smtp-Source: ABdhPJymAe1wIbRyau9RlQ6rtHNZw5DceIsixBfHh6SSvyh/IXmUxdYQl3Gloshx2qUoNe5r4vkQUkPYAmNv0UbeP2s=
+X-Received: by 2002:a17:906:fac8:: with SMTP id lu8mr6018617ejb.432.1592617292159;
+ Fri, 19 Jun 2020 18:41:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200619125923.22602-1-david@redhat.com> <20200619125923.22602-3-david@redhat.com>
+In-Reply-To: <20200619125923.22602-3-david@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 19 Jun 2020 18:41:21 -0700
+Message-ID: <CAPcyv4hgHmnKd-isUbSy5PjohjhhCL03Y00x0NO8=JOvexvUtw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: document why shuffle_zone() is relevant
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ming,
+On Fri, Jun 19, 2020 at 6:00 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> It's not completely obvious why we have to shuffle the complete zone, as
+> some sort of shuffling is already performed when onlining pages via
+> __free_one_page(), placing MAX_ORDER-1 pages either to the head or the tail
+> of the freelist. Let's document why we have to shuffle the complete zone
+> when exposing larger, contiguous physical memory areas to the buddy.
+>
 
-On Sat, 20 Jun 2020 07:28:20 +0800
-Ming Lei <ming.lei@redhat.com> wrote:
+How about?
 
-> > 
-> > Ah, after all it is as expected. With your kconfig, the kernel is
-> > very agressively optimized.
-> > 
-> > $ objdump -dS vmlinux | less
-> > ...
-> > ffffffff81256dc3 <__blkdev_put>:
-> > {
-> > ffffffff81256dc3:       e8 98 85 df ff          callq  ffffffff8104f360 <__fentry__>
-> > ffffffff81256dc8:       41 57                   push   %r15
-> > ffffffff81256dca:       41 56                   push   %r14
-> > ffffffff81256dcc:       41 55                   push   %r13
-> > ...
-> > ffffffff81256f05:       75 02                   jne    ffffffff81256f09 <__blkdev_put+0x146>
-> >         struct block_device *victim = NULL;
-> > ffffffff81256f07:       31 db                   xor    %ebx,%ebx
-> >                 bdev->bd_contains = NULL;
-> > ffffffff81256f09:       48 c7 45 60 00 00 00    movq   $0x0,0x60(%rbp)
-> > ffffffff81256f10:       00 
-> >                 put_disk_and_module(disk);
-> > ffffffff81256f11:       4c 89 f7                mov    %r14,%rdi
-> > ffffffff81256f14:       e8 c6 3d 11 00          callq  ffffffff8136acdf <put_disk_and_module>
-> >         mutex_unlock(&bdev->bd_mutex);
-> > ffffffff81256f19:       4c 89 ff                mov    %r15,%rdi
-> >                 __blkdev_put(victim, mode, 1);
-> > ffffffff81256f1c:       41 bc 01 00 00 00       mov    $0x1,%r12d
-> >         mutex_unlock(&bdev->bd_mutex);
-> > ffffffff81256f22:       e8 8d d7 48 00          callq  ffffffff816e46b4 <mutex_unlock>
-> >         bdput(bdev);
-> > ffffffff81256f27:       48 89 ef                mov    %rbp,%rdi
-> > ffffffff81256f2a:       e8 f0 e9 ff ff          callq  ffffffff8125591f <bdput>
-> >         if (victim)
-> > ffffffff81256f2f:       48 85 db                test   %rbx,%rbx
-> > ffffffff81256f32:       74 08                   je     ffffffff81256f3c <__blkdev_put+0x179>
-> > ffffffff81256f34:       48 89 dd                mov    %rbx,%rbp
-> > ffffffff81256f37:       e9 b4 fe ff ff          jmpq   ffffffff81256df0 <__blkdev_put+0x2d> <<-----THIS!!
-> > }
-> > ffffffff81256f3c:       48 8b 44 24 28          mov    0x28(%rsp),%rax
-> > ffffffff81256f41:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
-> > ffffffff81256f48:       00 00 
-> > ffffffff81256f4a:       74 05                   je     ffffffff81256f51 <__blkdev_put+0x18e>
-> > ffffffff81256f4c:       e8 5a 4e 48 00          callq  ffffffff816dbdab <__stack_chk_fail>
-> > ffffffff81256f51:       48 83 c4 30             add    $0x30,%rsp
-> > ffffffff81256f55:       5b                      pop    %rbx
-> > ffffffff81256f56:       5d                      pop    %rbp
-> > ffffffff81256f57:       41 5c                   pop    %r12
-> > ffffffff81256f59:       41 5d                   pop    %r13
-> > ffffffff81256f5b:       41 5e                   pop    %r14
-> > ffffffff81256f5d:       41 5f                   pop    %r15
-> > ffffffff81256f5f:       c3                      retq   
-> > 
-> > 
-> > As you can see, the nested __blkdev_put() is coverted to a loop.
-> > If you put kprobe on __blkdev_put+0x2d, you'll see the event twice.
-> 
-> Thanks for your investigation.
-> 
-> Some trace tools can just trace on function entry, such as bcc, and some
-> user script always trace on function entry.
-> 
-> I guess the issue should belong to kprobe implementation:
-> 
-> 1) __blkdev_put() is capable of being kprobed, so from user view, the
-> probe on entry of __blkdev_put() should be triggered
+Fixes: e900a918b098 ("mm: shuffle initial free memory to improve
+memory-side-cache utilization")
 
-Yes, it is correctly triggered.
+...just like Patch1 since that original commit was missing the proper
+commentary in the code?
 
-> 
-> 2) from implementation view, I understand exception should be trapped
-> on the entry of __blkdev_put(), looks it isn't done.
 
-No, it is correctly trapped the function entry address. The problem is
-that the gcc optimized the nested function call into jump to the
-beginning of function body (skip prologue).
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory_hotplug.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 9b34e03e730a4..a0d81d404823d 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -822,6 +822,14 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+>         zone->zone_pgdat->node_present_pages += onlined_pages;
+>         pgdat_resize_unlock(zone->zone_pgdat, &flags);
+>
+> +       /*
+> +        * When exposing larger, physically contiguous memory areas to the
+> +        * buddy, shuffling in the buddy (when freeing onlined pages, putting
+> +        * them either to the head or the tail of the freelist) is only helpful
+> +        * for mainining the shuffle, but not for creating the initial shuffle.
 
-Usually, a function is compiled as below
+s/mainining/maintaining/
 
-func()     (1) the entry address (func:)
-{          (2) the function prologue (setup stackframe)  
-  int a    (3) the beginning of function body 
-   ...
-  func()   (4) the nested function call
+> +        * Shuffle the whole zone to make sure the just onlined pages are
+> +        * properly distributed across the whole freelist.
+> +        */
+>         shuffle_zone(zone);
+>
+>         node_states_set_node(nid, &arg);
 
-And in this case, the gcc optimized (4) into jump to (3) instead of
-actual function call instruction. Thus, for the nested case (1) and
-(2) are skipped.
- IOW, the code flow becomes
-  (1)->(2)->(3)->(4)->(3)
- instead of 
-  (1)->(2)->(3)->(4)->(1)->(2)->(3)
+Other than the above minor fixups you can add:
 
-In this case, if we put a probe on (1) or (2), those are disappeared
-in the nested call. Thus if you put a probe on (3) ('perf probe __blkdev_put:2')
-you'll see the event twice.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
