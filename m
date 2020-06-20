@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C26C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D304B238E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7E6238E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 07:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BG9cLxkr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ILYf7Jof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgFTHRE (ORCPT
+        id S1727120AbgFTHRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 03:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36378 "EHLO
+        Sat, 20 Jun 2020 03:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgFTHRA (ORCPT
+        with ESMTP id S1727097AbgFTHRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:17:00 -0400
+        Sat, 20 Jun 2020 03:17:06 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9984DC06174E;
-        Sat, 20 Jun 2020 00:17:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1685AC06174E;
+        Sat, 20 Jun 2020 00:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Hmdq74RZRFXfpfO9/RDPzhQUUxVgGOMLesCz3fORA5E=; b=BG9cLxkrEehmE2mHnPkXBWfH5Q
-        pwPWhbSjz+QbTzfhQNXvUwRtKKuo1BrmKKETe9J4JdBv7TOmAPWbqIkQazQlWVEC0DGbHNLiQYP8o
-        5/hk/SvZfyl02t/YpW9t1ZBuJTPhUYIEmtXH3sXQv+FEEFNw0SCrpyTUQEUKNkbejTFaL/7iV3Jms
-        ELzo5LXE1jzLKBC/MXzKH3hUh5sxSsOqdCZ3DjJZ/Q30iWIktScCmBbYuHglHR5n6ZSZdEPM8ZvWx
-        WX0QAy08qNNuq0sKdyWmbvfkXyEqh0Gu95rZVOZk0BC7Wqms83OL3Zctb79ODMimkpIEbp6TT7uw0
-        oeKjD67w==;
+        bh=PWoaAGkD37V49a5XO/d4L2SpxpwdiJM61vBFK3z1jao=; b=ILYf7Jofs+8veCFsDguNebS2Gq
+        +A8el1OsLv4tV1VEKZuWT1XW/oOJVB8piETb5Tu0Lh209/BsOV52f3Djhvt/QfrXYrvYvjIAYhv/m
+        zJBpxQQIZOIH8cYc0tf/x6Rs7Qfrtc/7KagJ4CqJUWPpxya2LaRdweibOKrS9UNuURKS+nXLUaY5+
+        y+lmuZfbAFjg44baawJdLeM2xqG7Wr7G5f59kmfcnJ45Gig6kIM4c5HZeq6h+qdkEdhgAXSrCGMEX
+        r7h2YEfJMhyOpEVjVHuDvxXigKaxzY2uj86VeyNtcksn0irpLKEhNYngU3Uz5oP4I/wGbF7Xxw/IX
+        di6yldeQ==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jmXkI-0003rm-CS; Sat, 20 Jun 2020 07:16:58 +0000
+        id 1jmXkO-0003sC-7C; Sat, 20 Jun 2020 07:17:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/10] fs: remove the HAVE_UNLOCKED_IOCTL and HAVE_COMPAT_IOCTL defines
-Date:   Sat, 20 Jun 2020 09:16:38 +0200
-Message-Id: <20200620071644.463185-5-hch@lst.de>
+Subject: [PATCH 06/10] block: simplify sb_is_blkdev_sb
+Date:   Sat, 20 Jun 2020 09:16:40 +0200
+Message-Id: <20200620071644.463185-7-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200620071644.463185-1-hch@lst.de>
 References: <20200620071644.463185-1-hch@lst.de>
@@ -59,31 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are not defined anywhere, and contrary to the comments we really
-do not care about out of tree code at all.
+Just use IS_ENABLED instead of providing a stub for !CONFIG_BLOCK.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/fs.h | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/fs.h | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0d282c853691a3..224edcc5b56e62 100644
+index 9ee09e2b5a9716..7f3ae38335d4b3 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1774,12 +1774,6 @@ struct dir_context {
- 	loff_t pos;
- };
+@@ -2557,6 +2557,12 @@ extern struct kmem_cache *names_cachep;
+ #define __getname()		kmem_cache_alloc(names_cachep, GFP_KERNEL)
+ #define __putname(name)		kmem_cache_free(names_cachep, (void *)(name))
  
--/* These macros are for out of kernel modules to test that
-- * the kernel supports the unlocked_ioctl and compat_ioctl
-- * fields in struct file_operations. */
--#define HAVE_COMPAT_IOCTL 1
--#define HAVE_UNLOCKED_IOCTL 1
++extern struct super_block *blockdev_superblock;
++static inline bool sb_is_blkdev_sb(struct super_block *sb)
++{
++	return IS_ENABLED(CONFIG_BLOCK) && sb == blockdev_superblock;
++}
++
+ #ifdef CONFIG_BLOCK
+ extern int register_blkdev(unsigned int, const char *);
+ extern void unregister_blkdev(unsigned int, const char *);
+@@ -2572,13 +2578,6 @@ extern struct super_block *freeze_bdev(struct block_device *);
+ extern void emergency_thaw_bdev(struct super_block *sb);
+ extern int thaw_bdev(struct block_device *bdev, struct super_block *sb);
+ extern int fsync_bdev(struct block_device *);
 -
- /*
-  * These flags let !MMU mmap() govern direct device mapping vs immediate
-  * copying more easily for MAP_PRIVATE, especially for ROM filesystems.
+-extern struct super_block *blockdev_superblock;
+-
+-static inline bool sb_is_blkdev_sb(struct super_block *sb)
+-{
+-	return sb == blockdev_superblock;
+-}
+ #else
+ static inline void bd_forget(struct inode *inode) {}
+ static inline int sync_blockdev(struct block_device *bdev) { return 0; }
+@@ -2602,11 +2601,6 @@ static inline int emergency_thaw_bdev(struct super_block *sb)
+ static inline void iterate_bdevs(void (*f)(struct block_device *, void *), void *arg)
+ {
+ }
+-
+-static inline bool sb_is_blkdev_sb(struct super_block *sb)
+-{
+-	return false;
+-}
+ #endif
+ void emergency_thaw_all(void);
+ extern int sync_filesystem(struct super_block *);
 -- 
 2.26.2
 
