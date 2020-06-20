@@ -2,142 +2,214 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB987C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B796623B1C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592649773;
-	bh=vr08zGSX4iKcuVGDMstJbaasHUd8GanPlLYX4Jpo9as=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iTGMPg7ocQG3Pw9hBim9yeAPak5JXF2LztmeNUE/or29k7+AM3biVNj8YyL4wvQK2
-	 yx1b3BgWFW3/gkng0jV+78uu73eEgF5aJmTFCCVNyH6irNAhCzX0eSpXJgCjWq586R
-	 ClHCWg5iNfuSP5dcjdTmLqy7TyHToHmESb1D1YTk=
+	by mail.kernel.org (Postfix) with ESMTP id B99AC23B1C
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 10:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgFTKlq (ORCPT
+        id S1728037AbgFTK5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 06:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgFTKlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 06:41:44 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849D22388E;
-        Sat, 20 Jun 2020 10:41:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592649704;
-        bh=vr08zGSX4iKcuVGDMstJbaasHUd8GanPlLYX4Jpo9as=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hER0vTb1Sm9lgDTW1JWJS/VHW2xTJIxy2r4/TnZ/KUb3MClGi8YgsoJUkXotTkNhe
-         tVqtf1jZyUTnL7FlnuYaLO1MbXsmBYFkCj0XmXCPNh4g1HFZcEXjFA7fPl8Y1F6Hp/
-         0QiLTkWpfJWvrnzJASXTXkftawh2ZXnq6LCRSuJc=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] sched: fix build with GCC_PLUGIN_RANDSTRUCT
-Date:   Sat, 20 Jun 2020 13:41:36 +0300
-Message-Id: <20200620104136.12195-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Sat, 20 Jun 2020 06:57:19 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:39269 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbgFTK5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 06:57:14 -0400
+Received: by mail-il1-f197.google.com with SMTP id o12so8320996ilf.6
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 03:57:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=8GDLcHKAWL6B36TT6Nf4rJzMiJsHjfM/kCOmAs5JEyA=;
+        b=NUAUKXkIx6kYvCyvVwUBlg6s6mCKQDm7K1C5IrK9BTXstHFgf1bqrMRtH6TAzQ7NgY
+         rejEFAWQgdize3O0GZjoLhUx7BPIFen8D+IV/is0IVwDJ/foLXWxgWYMGUPgOlnstcDT
+         XOXpo/xfntnJ1V1s/Sk2EbHE7n6emTTggQLe6JXMySWUAm2PC1cDno0VKcYiqCd2Wwml
+         pmCYnuR4AKjnMLr+8APul0IGipvRl4PoZ7PfFiOCQFO0SlXfA754exEHDLyNGWzBrzbz
+         HfSlz4JKyh1Lqevrp/2sTSs/YrLqBgbOHHY7ttr6jsICMkaTlVY7fbcQ7+ES5eaSRmuV
+         oeqQ==
+X-Gm-Message-State: AOAM532hus7h1E1dQ+lcFi+eDDPVLue/16VbRHTru8dCJt4wUD2+WXPB
+        oGOi53PA40TT8bCYpuJYeKlQ4gt+OVwV5wlSj/oqMX9re3J/
+X-Google-Smtp-Source: ABdhPJzw9wh1dy1bqFQBiniZPWvy/ZxKf3U9KDNXoj4Sw1dPBRj2fhfGeQ31pI0G7ZHvkGYXVWMCVTFlfBqqtRBQ79v+km0Ub4N2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:9143:: with SMTP id t64mr3764177iod.55.1592650632570;
+ Sat, 20 Jun 2020 03:57:12 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 03:57:12 -0700
+In-Reply-To: <0000000000006bf03c05a86205bb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000034ad2805a881df44@google.com>
+Subject: Re: INFO: trying to register non-static key in ath9k_htc_rxep
+From:   syzbot <syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+syzbot has found a reproducer for the following crash on:
 
-Since the commit a148866489fb ("sched: Replace rq::wake_list")
-task_struct and CSD_TYPE_TTWU objects can be on the same queue and this
-requires that have "layout similar enough".
+HEAD commit:    f8f02d5c USB: OTG: rename product list of devices
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=15fd18a5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f1981539b6376b73
+dashboard link: https://syzkaller.appspot.com/bug?extid=4d2d56175b934b9a7bf9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14519481100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110318e9100000
 
-This assumption is broken when CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com
 
-  CHK     include/generated/compile.h
-  CC      kernel/smp.o
-In file included from arch/x86/include/asm/atomic.h:5,
-                 from include/linux/atomic.h:7,
-                 from include/linux/llist.h:51,
-                 from include/linux/irq_work.h:5,
-                 from kernel/smp.c:10:
-kernel/smp.c: In function ‘smp_init’:
-include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_157’ declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) != offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist)
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
-  373 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-kernel/smp.c:687:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
-      |  ^~~~~~~~~~~~
-make[2]: *** [scripts/Makefile.build:280: kernel/smp.o] Error 1
-make[1]: *** [Makefile:1764: kernel] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make[1]: Leaving directory '/home/mike/build/kernel'
-make: *** [Makefile:185: __sub-make] Error 2
-
-Move 'wake_entry' and 'wake_entry_type' fiels of task_struct out of the
-randomized fields to keep their layout intact.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/linux/sched.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..c885573669ac 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -641,6 +641,15 @@ struct task_struct {
- 	/* -1 unrunnable, 0 runnable, >0 stopped: */
- 	volatile long			state;
- 
-+	/*
-+	 * The layout of these fields must match the layout CSD_TYPE_TTWU
-+	 * so they can be on the same the @call_single_queue
-+	 */
-+#ifdef CONFIG_SMP
-+	struct llist_node		wake_entry;
-+	unsigned int			wake_entry_type;
-+#endif
-+
- 	/*
- 	 * This begins the randomizable portion of task_struct. Only
- 	 * scheduling-critical items should be added above here.
-@@ -654,8 +663,6 @@ struct task_struct {
- 	unsigned int			ptrace;
- 
- #ifdef CONFIG_SMP
--	struct llist_node		wake_entry;
--	unsigned int			wake_entry_type;
- 	int				on_cpu;
- #ifdef CONFIG_THREAD_INFO_IN_TASK
- 	/* Current CPU: */
--- 
-2.25.4
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:894 [inline]
+ register_lock_class+0x1228/0x16d0 kernel/locking/lockdep.c:1206
+ __lock_acquire+0x101/0x6270 kernel/locking/lockdep.c:4259
+ lock_acquire+0x18b/0x7c0 kernel/locking/lockdep.c:4959
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+ ath9k_htc_rxep+0x31/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1128
+ ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x996 kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0xd3/0x1b0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
+RIP: 0010:acpi_safe_halt drivers/acpi/processor_idle.c:112 [inline]
+RIP: 0010:acpi_safe_halt+0x72/0x90 drivers/acpi/processor_idle.c:108
+Code: 74 06 5b e9 c0 32 9f fb e8 bb 32 9f fb e8 c6 96 a4 fb e9 0c 00 00 00 e8 ac 32 9f fb 0f 00 2d 45 6e 84 00 e8 a0 32 9f fb fb f4 <fa> e8 b8 94 a4 fb 5b e9 92 32 9f fb 48 89 df e8 7a e1 c8 fb eb ab
+RSP: 0018:ffff8881da22fc60 EFLAGS: 00000293
+RAX: ffff8881da213200 RBX: 0000000000000000 RCX: 1ffffffff1014efa
+RDX: 0000000000000000 RSI: ffffffff85a03aa0 RDI: ffff8881da213a38
+RBP: ffff8881d8d2a864 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881d8d2a864
+R13: 1ffff1103b445f96 R14: ffff8881d8d2a865 R15: 0000000000000001
+ acpi_idle_do_entry+0xa9/0xe0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x42b/0xac0 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xdb/0xc20 drivers/cpuidle/cpuidle.c:234
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:345
+ call_cpuidle kernel/sched/idle.c:117 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:207 [inline]
+ do_idle+0x3c2/0x500 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:365
+ start_secondary+0x294/0x370 arch/x86/kernel/smpboot.c:268
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:243
+BUG: unable to handle page fault for address: ffffffffffffffc8
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 7226067 P4D 7226067 PUD 7228067 PMD 0 
+Oops: 0000 [#1] SMP KASAN
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
+Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 70 56 62 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 ad 57 62 fe 45 84 ff 75 a8 e8 43 56
+RSP: 0018:ffff8881db3098b0 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffffff81274370
+RDX: 0000000000000000 RSI: ffffffff82dd16d0 RDI: ffff8881db309820
+RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b661305
+R10: 0000000000000003 R11: ffffed103b661304 R12: ffff8881cd69b538
+R13: ffff8881cd69b100 R14: ffff8881cd69b548 R15: ffffed10392ce210
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffc8 CR3: 00000001cf9f6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x996 kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0xd3/0x1b0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
+RIP: 0010:acpi_safe_halt drivers/acpi/processor_idle.c:112 [inline]
+RIP: 0010:acpi_safe_halt+0x72/0x90 drivers/acpi/processor_idle.c:108
+Code: 74 06 5b e9 c0 32 9f fb e8 bb 32 9f fb e8 c6 96 a4 fb e9 0c 00 00 00 e8 ac 32 9f fb 0f 00 2d 45 6e 84 00 e8 a0 32 9f fb fb f4 <fa> e8 b8 94 a4 fb 5b e9 92 32 9f fb 48 89 df e8 7a e1 c8 fb eb ab
+RSP: 0018:ffff8881da22fc60 EFLAGS: 00000293
+RAX: ffff8881da213200 RBX: 0000000000000000 RCX: 1ffffffff1014efa
+RDX: 0000000000000000 RSI: ffffffff85a03aa0 RDI: ffff8881da213a38
+RBP: ffff8881d8d2a864 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881d8d2a864
+R13: 1ffff1103b445f96 R14: ffff8881d8d2a865 R15: 0000000000000001
+ acpi_idle_do_entry+0xa9/0xe0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x42b/0xac0 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xdb/0xc20 drivers/cpuidle/cpuidle.c:234
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:345
+ call_cpuidle kernel/sched/idle.c:117 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:207 [inline]
+ do_idle+0x3c2/0x500 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:365
+ start_secondary+0x294/0x370 arch/x86/kernel/smpboot.c:268
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:243
+Modules linked in:
+CR2: ffffffffffffffc8
+---[ end trace 5a637b710bbf1999 ]---
+RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
+Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 70 56 62 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 ad 57 62 fe 45 84 ff 75 a8 e8 43 56
+RSP: 0018:ffff8881db3098b0 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffffff81274370
+RDX: 0000000000000000 RSI: ffffffff82dd16d0 RDI: ffff8881db309820
+RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b661305
+R10: 0000000000000003 R11: ffffed103b661304 R12: ffff8881cd69b538
+R13: ffff8881cd69b100 R14: ffff8881cd69b548 R15: ffffed10392ce210
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffc8 CR3: 00000001cf9f6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
