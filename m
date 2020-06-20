@@ -2,137 +2,134 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A774C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A7922DD6
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD3323102
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=icurse.nl header.i=@icurse.nl header.b="N0oGiZ7k"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZN2T7/JF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732318AbgFTDKI (ORCPT
+        id S1732355AbgFTDOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 23:10:08 -0400
-Received: from mail.ruun.network ([176.9.184.6]:38175 "EHLO mail.ruun.network"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732074AbgFTDKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:10:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=icurse.nl;
-         s=x; h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4E7qcFZA21pH5yMV3SBZIPprvk6klq6E9B/lBjV5CzQ=; b=N0oGiZ7kMa5fk56iAMEtKMObDZ
-        2+Btuc4IYoBA/EJ6PBKFoL5V7SY7TrO6dCpryI2aS5MsXLd6rIgk5ZNoIKvl9JDAg/80xiGcZaEAY
-        PTHY02ElJVRSJrUPdHYXXFgBc1ao/TEOskdekC8zYQQSYMBEMBkQ9buQJ0DwRzSd8n0TBfoHaNQ6c
-        egLEM5pddo4+0M/m3rDMwyl/UJEdTkbhJBCqTCJG6c4auhWNrRqbROrMcZY9DcQbkHA9XmJ2HZx+4
-        v5EuLo29nVm3+k1HP+eNLEXD4a5zMOTzzdkuega0J42UFOOCSrRGAs0rzrbFte/aTTOuZDFWYEnG1
-        hSnx1ogg==;
-Received: from cpe-98-14-166-248.nyc.res.rr.com ([98.14.166.248] helo=cinderbox)
-        by birchibald.ruun.network with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93.0.4)
-        (envelope-from <jeffrey@icurse.nl>)
-        id 1jmTtJ-0001Lx-OO; Sat, 20 Jun 2020 05:10:01 +0200
-Date:   Fri, 19 Jun 2020 23:09:33 -0400
-From:   Jeffrey Lin <jeffrey@icurse.nl>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (dell-smm) Add Latitude 5480 to fan control
- whitelist
-Message-ID: <20200619230933.52058bd7@cinderbox>
-In-Reply-To: <20200619121821.dz4slqvy4gigm6ns@pali>
-References: <20200619015529.285241-1-jeffrey@icurse.nl>
-        <20200619121821.dz4slqvy4gigm6ns@pali>
+        Fri, 19 Jun 2020 23:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732271AbgFTDOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 23:14:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57740C06174E
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:14:02 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b16so5332291pfi.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WxEmF09WoseIxP9Y3Uuc9kFSYRG1TlJlmbCTGKI9lsM=;
+        b=ZN2T7/JFLmDO2z2VqtuTRneyEd81ySh+CNB207RiG+HiHo1Pm9LVrpBN3CK/yC3X/3
+         uUJJtMJ2egHuHDNqrFuoTAtQf+zObtaa/8C8quuuZFpRLeyL+UFe4RK97pxafRMAnGEr
+         36VL+zUT3i8FmRbW8t+7Lh1PrnZGv8ZajT6A4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WxEmF09WoseIxP9Y3Uuc9kFSYRG1TlJlmbCTGKI9lsM=;
+        b=GFsCp8oYwe4PY7MBfq97OZZfqCzTAIWELB1kyN0r/1AuXghrM5KVJRuIlzZHkOFxlw
+         aYgs7/g/4ZNf+m6XSvFVrdGnLDUuhNPz/Q3iGfb9X8PoxiuAJvulR1Pxa0YbYL5Xgq2P
+         x7QyiTDh46hejL0kjP9J6P6PXmbNT0rJ6vpYrocsu6D+rqeZhU0EI76GEwAC4s9hS/4j
+         ZUItu6bJtULa7xo4X9JszGwA9MtsKEWGTXB71CVOJwZuEe5Ng749sUxfA7BAllsVMwA1
+         VVvE4DbfNXEl/NP3fGo3Hmd0vVdaLxuKvzLQSpzY7rclFb/XjWiBAjmy/W/EtYXNWouc
+         4bRQ==
+X-Gm-Message-State: AOAM533sZetoufQVDk1k95nFiIK38vuLJ86J2L3a79Qpaqidn5Rom1pc
+        OQgwkh2k0ftYE/CDAL8gTMVRhLxkIXg=
+X-Google-Smtp-Source: ABdhPJyMCJh40CWKlqEEw2lqNmH5tHb6m4VUOOna9wPFIuuJgq/28v5o8PV4xax85TfHCtDFn7HGzQ==
+X-Received: by 2002:a63:5d55:: with SMTP id o21mr5221073pgm.58.1592622841842;
+        Fri, 19 Jun 2020 20:14:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z9sm6283132pjr.39.2020.06.19.20.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 20:14:00 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 20:13:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Eric Biggers <ebiggers@kernel.org>, x86 <x86@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [tip: sched/urgent] sched: Fix RANDSTRUCT build fail
+Message-ID: <202006192008.337CB5212E@keescook>
+References: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MiWU=0FfamrKQ2j1Ef4=yfb";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Authenticated-Id: jeffrey@icurse.nl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MiWU=0FfamrKQ2j1Ef4=yfb
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 10, 2020 at 10:34:16AM -0000, tip-bot2 for Peter Zijlstra wrote:
+> The following commit has been merged into the sched/urgent branch of tip:
+> 
+> Commit-ID:     bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
+> Gitweb:        https://git.kernel.org/tip/bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
+> Author:        Peter Zijlstra <peterz@infradead.org>
+> AuthorDate:    Wed, 10 Jun 2020 12:14:09 +02:00
+> Committer:     Peter Zijlstra <peterz@infradead.org>
+> CommitterDate: Wed, 10 Jun 2020 12:30:19 +02:00
+> 
+> sched: Fix RANDSTRUCT build fail
+> 
+> As a temporary build fix, the proper cleanup needs more work.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Suggested-by: Eric Biggers <ebiggers@kernel.org>
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Fixes: a148866489fb ("sched: Replace rq::wake_list")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-On Fri, 19 Jun 2020 14:18:21 +0200
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
+Hi, can this please get sent to Linus before -rc2? With a148866489fb in
+-rc1, all the CI with the GCC plugins installed have been failing their
+all*config builds. This entered -next 9 days ago (and fixed the -next
+builds), but Linus's tree is still failing:
 
->On Thursday 18 June 2020 21:55:29 Jeffrey Lin wrote:
->> This allows manual PWM control without the BIOS fighting back on Dell
->> Latitude 5480.
->>=20
->> Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl> =20
->
->If it is working fine on your machine, you can add my:
+https://kernelci.org/build/mainline/branch/master/kernel/v5.8-rc1-226-g4333a9b0b67b/
+...
+https://kernelci.org/build/mainline/branch/master/kernel/v5.8-rc1/
 
-Yes, the below patch works on my machine.  dmesg reports "dell_smm_hwmon:
-enabling support for setting automatic/manual fan control" and writing 1 to
-/sys/class/hwmon/hwmon4/pwm1_enable allows pwmconfig/fancontrol full contro=
-l.
+Thanks!
 
->
->Acked-by: Pali Roh=C3=A1r <pali@kernel.org>
->
->> ---
->>  drivers/hwmon/dell-smm-hwmon.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>=20
->> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwm=
-on.c
->> index 16be012a95ed..ec448f5f2dc3 100644
->> --- a/drivers/hwmon/dell-smm-hwmon.c
->> +++ b/drivers/hwmon/dell-smm-hwmon.c
->> @@ -1187,6 +1187,14 @@ static struct dmi_system_id
->> i8k_whitelist_fan_control[] __initdata =3D { },
->>  		.driver_data =3D (void
->> *)&i8k_fan_control_data[I8K_FAN_34A3_35A3], },
->> +	{
->> +		.ident =3D "Dell Latitude 5480",
->> +		.matches =3D {
->> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5480"),
->> +		},
->> +		.driver_data =3D (void
->> *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
->> +	},
->>  	{
->>  		.ident =3D "Dell Latitude E6440",
->>  		.matches =3D {
->> --=20
->> 2.27.0
->>  =20
+-Kees
 
+> ---
+>  include/linux/sched.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 57a5ce9..59caeb9 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -653,8 +653,10 @@ struct task_struct {
+>  	unsigned int			ptrace;
+>  
+>  #ifdef CONFIG_SMP
+> -	struct llist_node		wake_entry;
+> -	unsigned int			wake_entry_type;
+> +	struct {
+> +		struct llist_node		wake_entry;
+> +		unsigned int			wake_entry_type;
+> +	};
+>  	int				on_cpu;
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>  	/* Current CPU: */
 
---Sig_/MiWU=0FfamrKQ2j1Ef4=yfb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQKTBAEBCgB9FiEETxvPxdIN5HH4UagwI3cxl4eiYmsFAl7tfe9fFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDRG
-MUJDRkM1RDIwREU0NzFGODUxQTgzMDIzNzczMTk3ODdBMjYyNkIACgkQI3cxl4ei
-Ymv0gxAAk9g/vTP5iuQmrQBaBjWeemQIWpagkCfNWvxeZ1SvHHKJMjezWDP1kug5
-KmgsMoZrKT+wWyls6pOdjVFv0kxjB6GAbmpozcStmWL3buzbBe3YfR7k2f9C4Rct
-lTYjv6M5XmzGINaRW8ybTmcLcOYOwNfcxzBDjcz873/jr60XZkhVCIqffn62HNuD
-nfEGW4X8OUBUTuQP4KGT7cDtaanOfLs1RWvmTBseEhJrGxz+LOx6/NtBUPM9Ztxn
-45+YMDwczWwS/De2W1HxtQBcmu3VRMhr/7pctkmHT+0uR4nHpXPXw+h5CEtFA6IK
-1tmLJ1bcnSKQB/pXEMUvtXZI/iYmGybYlxT8qYBYbiWBzBXXrqJrEcB9oTmQI8tk
-MaD+rbfPvHayoxO/Rb3QNuxNeYkywzJ8vLzpk51n2EnaxrnP65RcDPYzU3DEKLHm
-2bBoUt8t7BF1ytJU28caiM6rAlICozvwQLJlofRQT2TWXnCB9ik9Ez1cx5zGDHrq
-S4O7731sQEad4NJ4sZXO3qtKQnfaG18uOVo3Jm1IbrpSUAKpiZ/Zh0rgdxXnYc7N
-T0VBXSn0OLqg1FpZM0JxUNdeEcAmgT3NGCg0GpgyYL5vvJu4l6Ozt4rTeK9HiRRJ
-0IQ0fnCcbDOFOLyYblTIJd3I/RPQHgTgbkIDcC7Q8R5EmvP/D1w=
-=2GQf
------END PGP SIGNATURE-----
-
---Sig_/MiWU=0FfamrKQ2j1Ef4=yfb--
+-- 
+Kees Cook
