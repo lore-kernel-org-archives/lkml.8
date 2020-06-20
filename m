@@ -2,142 +2,881 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB068C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2561C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D36923B44
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52D223A69
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OfgsR1c2"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="xm3SwVR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgFTMhn (ORCPT
+        id S1728150AbgFTM46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 08:37:43 -0400
-Received: from mout.web.de ([212.227.15.14]:51589 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbgFTMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 08:37:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592656651;
-        bh=ITHlY66gl0MgNokIXLyjMVP7wGUV88CZWdzeFYFNWDg=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=OfgsR1c2Gf5nYREMdL+d5DG0NZyZ5cMfCJIfTWEng3TSedgUUQrhEHeHGNRT6b1Sy
-         Fiz38wEQa2ya+tVbuPmoFaiWBs6Ipdj9VDIHkLpC6VMMPlmGARzSAA9Pxsyxx1UkCj
-         shgnG7GXFNyMpFvcAMXlzzUAZ/lpCdppiBvhgL4U=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.139.185]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLy84-1jnkoQ4B4O-007kJV; Sat, 20
- Jun 2020 14:37:31 +0200
-To:     Bernard Zhao <bernard@vivo.com>, opensource.kernel@vivo.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3] drm/amd: Fix memory leak according to error branch
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <119b7d8c-b164-ef23-84cc-4904d34ac023@web.de>
-Date:   Sat, 20 Jun 2020 14:37:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 20 Jun 2020 08:56:58 -0400
+Received: from mail-am6eur05on2098.outbound.protection.outlook.com ([40.107.22.98]:64704
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728103AbgFTM4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 08:56:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jcv8sYQhpoQiS1XIzsY5JNaqOLzxjMXg5XS0dhQIP8uUBK9G//OxTOMKfvtZ4OP7C3jFUAtvnMiZqL9s41FLGkAQbdAmXdHMKns3/lhgTJzQ49kc/v8nSJk+Du4VUhjZqrYQ6xMxjf3lnyjsh9NQorGom2QVBCwM7GshR1vMFiiihsK+iwbAer0xsHIb0cGxhaYYVLwwfXfBgYErzPUT5Lt3owHNFFTsPCwuFfrNrjgAHae0ot5Yuzwi7Tuwe7cuQDlJqi1BrygpC+H4bSJBJWzvZaFNyL04+0MvUK9aUQkkZjg9H2Ttv6+BcR9Q8/qrmDfJFe8Fdsg25LP6SoJZ0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wI3UOahSSix8YRc+dMlPTS0oyZ1iF58Qkm/uSlxbl0U=;
+ b=S8y7SIyvdiJBLo6BpbZf5V+MVNkdt86o1aIwu/Om2OJVSJP9p0yl3uNqy6xeGuRFKHgGDnYSbldgxcVEvSGHdYN0+B+yDsdcTAkdd54dAPKraVsOdwzHBYkm7/G8JfJANj0VESM71mFD3RxboOO9mXO0eW8o3fS3dhyE0eAzJm8obOqyxeBCMBUVhIlo11MeeX1ei2O7vl4Z6cZI/kutb4MBZyT3XxTBwZsLdzJmMc8R55fOSVZfhMVdGko9ONtiAWIK+ysH9sHuQ7kRS1qbHOUc67LYC3wbh3kXH/8p/j5FFZEuDmuMT5Odn9cWNIzZ5Nthw/AkWmWw5FMVeBjgYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wI3UOahSSix8YRc+dMlPTS0oyZ1iF58Qkm/uSlxbl0U=;
+ b=xm3SwVR6wN+qiZL6Nw/o9xUTk1Wau3ZU6vyVlmVfAszSrfgBgSi+aB9LRHdQoapYNulk4AvYDE/lYM5kdNU/fpi+ReRohiOVhVmURWgcug6GofqwjjOCP4RktEJG4bMZxeDhtKz2Z0ItPUWy4xzf0Vyl21ihKX+EafRC+gOGSRQ=
+Authentication-Results: idosch.org; dkim=none (message not signed)
+ header.d=none;idosch.org; dmarc=none action=none header.from=plvision.eu;
+Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:5c::21)
+ by AM4P190MB0164.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:5f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Sat, 20 Jun
+ 2020 12:56:46 +0000
+Received: from AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ ([fe80::70db:92db:9750:5ae3]) by AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ ([fe80::70db:92db:9750:5ae3%7]) with mapi id 15.20.3109.025; Sat, 20 Jun 2020
+ 12:56:46 +0000
+Date:   Sat, 20 Jun 2020 15:56:39 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next 1/6] net: marvell: prestera: Add driver for Prestera
+ family ASIC devices
+Message-ID: <20200620125639.GA6911@plvision.eu>
+References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
+ <20200528151245.7592-2-vadym.kochan@plvision.eu>
+ <20200530154801.GB1624759@splinter>
+ <20200601105013.GB25323@plvision.eu>
+ <20200603092358.GA1841966@splinter>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603092358.GA1841966@splinter>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM5PR0602CA0024.eurprd06.prod.outlook.com
+ (2603:10a6:203:a3::34) To AM4P190MB0052.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:200:5c::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oXT06f42Q4s3s5cHYlyLWk4f54E74Wz+v/0QbzrhsHP/Fc3tgeP
- fhd7SZn4LgB+mYnBaOc4XleQyNGPw6lOhXzRcmHP4YzVXiCKG+0Ic4RSSxQcZPkI6B/svyp
- fLqoBPQC1lumHbcor85v41D5yphQ/Y2SWDe/4DO0242OjAfULRm10Pu8utW+FgoAJwKA3dH
- u0g6eRBnmES2U9Z1CYxVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W3WUjaFUM4I=:+uEKHLiyIy9oBO/whHk1kq
- /6pNth6kxQ6Vrhd67ncOvX8c5Er4m4i0X1MWNXmwYcoggxq8DFL8Ln9uAufeVWKVrcFnNjBcd
- HnD/H1l8sdQw3BSVjVuY0ySa2NoPFUH4OXOioijgAIJwyYBPu12sR7TswBDf4NSfysm4bvIru
- l/7dZXR0lNKgqhbUgvQw0U39y29Y4HYqfLAx9/KOixFGpisSEWxT81coCLLFnGg+Q66s9s+J6
- A73E6GjbA76QsY6mq7uINUDM191wd0C8bRfwFyJ9sdqNRchg3ZLkPCg4AeVO0ujNm7Hf6IhL4
- 2T5tTJc8nZFpl737rx3jkOomUzsFWEcser1j/ZnEf4O1jcN9ZqbTymL84EeiOaMFcF26t4hbB
- xpTFrxmD5XhQlc+gyKP+yGBXlPS69cOPzB6lx5uQZ3BOR1OxammVngO/5pg7U7fQ5cEQpd8N0
- C9BkxgFfQUEbjeKLBMWHWx1vjggZoDw8Xb4hCJcmtkipkQxX0zELYgSUlcK5YlqkaRsEg8WXI
- MjgauNLTF3W6otSlU6g7B2cmLtwG/BzCEGFFcnxvrUgI150aasI1wKmi+mol6J+mYqvR5VWPu
- uQuqv8I3KUQq0W5i1FcqiKgNHg+EO8AX+5/gUhEmR8E2spvsDjY5qWLREPRW0JTPEp/dd62uz
- 9/pF96BO8PrjE4uteARArPgSfADaVj8Tn6A9ywZLNZ1imKzQCHnEhyoHfaLU5/Bz5iE6isKAN
- S3QtLr0WCoaWF9LmieegPoI3cIinCrO6FtcFLgF80PC9ngYv+sKqVP5fWoDPnX+lYXI8YId5N
- E842DmfUDtjXTmzOzXlZf0RsiJI/NnQDKHz+6roHDb9Ww/PoEWcvx3doOXFyfWBWwGB6CIEex
- uIfEW40xrBtrOJdJTtiQ9fXE9XZ0cLBt1gftIVhC/fYXd48RicuQyMlgKLkYokhBbfQkHoT+R
- WXFeKvb1LMn5QYj5Tc1BNV9cX77kcxTijbJZ9fE6HgRVCxElaIYbDCgIe5EBK/xdtk6MJa9p7
- NbWapq6wAURvv6Z5p3R/FkqOX8X3f34uLRqVB0ki0ngrapVhzl9+XFKedpgH4oavYqYhalxOZ
- qjV3Izdvbwu8F83KRmsjS7XZ2Zw4f5PT6B8qjgCKJntdl2Aff69a2yfcgkFsQgw875CzZZSkC
- 6BMAEBp76Ot4AQb7BhZiQtwrtx1w2pgyIxM3pUm6HHgYbL2IvGmy/KMjX73G+snbWfo7Q36y1
- hRy7Cdyhf2fxp1PhR
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM5PR0602CA0024.eurprd06.prod.outlook.com (2603:10a6:203:a3::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Sat, 20 Jun 2020 12:56:45 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d500830-a976-4f28-1e36-08d815196386
+X-MS-TrafficTypeDiagnostic: AM4P190MB0164:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM4P190MB0164CB5869138E4EA5B2EB7D95990@AM4P190MB0164.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0440AC9990
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3dZmohWGx0USze2oJFwWndHmhobAWbBaAWbEFnPLYdCdm4LxEy8bapEQ5jtF/LxGRvypeuJLY9xkbVoP/NYiKAEMtWaXByAVp8laxNGOww5BAeBLch526bj9mI8cHzAluAfcubXPhJKhgQK/JEDzw25DT1RVlGUZ+8C7wWdS5EAojPrDoIe/ayBmNOn6uD9LXHib6zlM3fxwVre3A9zpL308w+WUzcwxv4fDyKEvNQgaJheFd/ljQUqEth2UkPPDN62dxaWm54AY5qifV0MghukAuEajFjhp/hMSScbxo085rR1YwMYLV2hDmMlbBqo8M7C4IdaI69hgDVaj1Jf3qPiV+bcd6Fne5HE0Mpr/NQ+LIY7TC5WHnxjpDFYxlMBZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4P190MB0052.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39830400003)(376002)(136003)(366004)(396003)(44832011)(956004)(8886007)(36756003)(86362001)(66946007)(54906003)(4326008)(1076003)(33656002)(316002)(2616005)(66476007)(83380400001)(8936002)(6666004)(7696005)(2906002)(5660300002)(30864003)(52116002)(16526019)(26005)(55016002)(186003)(66556008)(8676002)(508600001)(6916009)(21314003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: qmYVBUWeqPrKXT0dMasN6s/QT1OhAvUZjpdPJjSZfzGKPn9VTpuohlbzqoUPYUY6AMy0efsjmZSrB9agF4lhqcNe+uqpmdZocO2hyI9tWcZKrVNBfxDrCf9nt/lPkiLiKsw0oKeCzzvRwgan1wA9YtfafxWF7+UBmim6fzppY/5bT5T/95RD35sdmVcEFyTAjAFNJ1AiLw2bI9BrfRFGKpwaJJFvlLjNpz1dPS1xs4St5p9ZBGxsOk52RCXWf+uVNyVPQtrz4EqdYDifV6y5srN6toS+pZ+VRiFrpfwjXhKZRx4otbYoIZgXIn25UPf54AYbqJqlKIr5pfw9FUoCqDAOlaQtIX9xXFSMkwskzYUPn+3wdxoSUK5FeNCaXvHsDctfajJZRNSTQAz/wR/7zJPFa5CsdekCGnk6+ukOsIvocin+/ym/HQ04ULkqGLFghdh59UPY/KzKndaVjoEc6cQ9fl2JlczqFMbEdg2cJDY=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d500830-a976-4f28-1e36-08d815196386
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2020 12:56:46.4853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sXRAA0PsP25/i9pDc2i6Oo6u5xwf9ZW+pL1i/uXZnqXvUsohXe4S3LKzacvMyb6LmO9nN/sJ1l/lR/d/t7O7jfCFAstvAXaWlTD8IiKSRmE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4P190MB0164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The function kobject_init_and_add alloc memory like:
-> kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-> ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-> ->kmalloc_slab, in err branch this memory not free. If use
-> kmemleak, this path maybe catched.
-> These changes are to add kobject_put in kobject_init_and_add
-> failed branch, fix potential memleak.
-=E2=80=A6
-> Changes since V2:
-> *remove duplicate kobject_put in kfd_procfs_init.
+Hi Ido,
 
-Under which circumstances are going to improve this change description acc=
-ordingly?
+On Wed, Jun 03, 2020 at 12:23:58PM +0300, Ido Schimmel wrote:
+> On Mon, Jun 01, 2020 at 01:50:13PM +0300, Vadym Kochan wrote:
+> > Hi Ido,
+> > 
+> > On Sat, May 30, 2020 at 06:48:01PM +0300, Ido Schimmel wrote:
+> > > On Thu, May 28, 2020 at 06:12:40PM +0300, Vadym Kochan wrote:
+> > > 
+> > 
+> > [...]
+> > 
+> > > Nit: "From" ?
+> > > 
+> > > > +	PRESTERA_DSA_CMD_FROM_CPU,
+> > > > +};
+> > > > +
+> > > > +struct prestera_dsa_vlan {
+> > > > +	u16 vid;
+> > > > +	u8 vpt;
+> > > > +	u8 cfi_bit;
+> > > > +	bool is_tagged;
+> > > > +};
+> > > > +
+> > > > +struct prestera_dsa {
+> > > > +	struct prestera_dsa_vlan vlan;
+> > > > +	u32 hw_dev_num;
+> > > > +	u32 port_num;
+> > > > +};
+> > > > +
+> > > > +int prestera_dsa_parse(struct prestera_dsa *dsa, const u8 *dsa_buf);
+> > > > +int prestera_dsa_build(const struct prestera_dsa *dsa, u8 *dsa_buf);
+> > > > +
+> > > > +#endif /* _PRESTERA_DSA_H_ */
+> > > > diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.c b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
+> > > > new file mode 100644
+> > > > index 000000000000..3aa3974f957a
+> > > > --- /dev/null
+> > > > +++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
+> > > > @@ -0,0 +1,610 @@
+> > > > +// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+> > > > +/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved */
+> > > > +
+> > > > +#include <linux/etherdevice.h>
+> > > > +#include <linux/ethtool.h>
+> > > > +#include <linux/netdevice.h>
+> > > > +#include <linux/list.h>
+> > > > +
+> > > > +#include "prestera.h"
+> > > > +#include "prestera_hw.h"
+> > > > +
+> > > > +#define PRESTERA_SWITCH_INIT_TIMEOUT 30000000	/* 30sec */
+> > > 
+> > > Out of curiosity, how long does it actually take you to initialize the
+> > > hardware?
+It might be minimum 10-15 secs.
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+> > > 
+> > > Also, I find it useful to note the units in the name, so:
+> > > 
+> > > #define PRESTERA_SWITCH_INIT_TIMEOUT_US (30 * 1000 * 1000)
+> > > 
+> > > BTW, it says 30 seconds in comment, but the call chain where it is used
+> > > is:
+> > > 
+> > > prestera_cmd_ret_wait(, PRESTERA_SWITCH_INIT_TIMEOUT)
+> > >   __prestera_cmd_ret(..., wait)
+> > >     prestera_fw_send_req(..., waitms)
+> > >       prestera_fw_cmd_send(..., waitms)
+> > >         prestera_fw_wait_reg32(..., waitms)
+> > > 	  readl_poll_timeout(..., waitms * 1000)
+> > > 
+> > > So I think you should actually define it as:
+> > > 
+> > > #define PRESTERA_SWITCH_INIT_TIMEOUT_MS (30 * 1000)
+> > > 
+> > > And rename all these 'wait' arguments to 'waitms' so it's clearer which
+> > > unit they expect.
+> > > 
+> > [...]
+> > > > +static int __prestera_cmd_ret(struct prestera_switch *sw,
+> > > > +			      enum prestera_cmd_type_t type,
+> > > > +			      struct prestera_msg_cmd *cmd, size_t clen,
+> > > > +			      struct prestera_msg_ret *ret, size_t rlen,
+> > > > +			      int wait)
+> > > > +{
+> > > > +	struct prestera_device *dev = sw->dev;
+> > > > +	int err;
+> > > > +
+> > > > +	cmd->type = type;
+> > > > +
+> > > > +	err = dev->send_req(dev, (u8 *)cmd, clen, (u8 *)ret, rlen, wait);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	if (ret->cmd.type != PRESTERA_CMD_TYPE_ACK)
+> > > > +		return -EBADE;
+> > > > +	if (ret->status != PRESTERA_CMD_ACK_OK)
+> > > 
+> > > You don't have more states here other than OK / FAIL ? It might help you
+> > > in debugging if you include them. You might find trace_devlink_hwerr()
+> > > useful.
+> > Thanks, I will consider this.
+> > 
+> > > 
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int prestera_cmd_ret(struct prestera_switch *sw,
+> > > > +			    enum prestera_cmd_type_t type,
+> > > > +			    struct prestera_msg_cmd *cmd, size_t clen,
+> > > > +			    struct prestera_msg_ret *ret, size_t rlen)
+> > > > +{
+> > > > +	return __prestera_cmd_ret(sw, type, cmd, clen, ret, rlen, 0);
+> > > > +}
+> > > > +
+> > > > +static int prestera_cmd_ret_wait(struct prestera_switch *sw,
+> > > > +				 enum prestera_cmd_type_t type,
+> > > > +				 struct prestera_msg_cmd *cmd, size_t clen,
+> > > > +				 struct prestera_msg_ret *ret, size_t rlen,
+> > > > +				 int wait)
+> > > > +{
+> > > > +	return __prestera_cmd_ret(sw, type, cmd, clen, ret, rlen, wait);
+> > > > +}
+> > > > +
+> > > > +static int prestera_cmd(struct prestera_switch *sw,
+> > > > +			enum prestera_cmd_type_t type,
+> > > > +			struct prestera_msg_cmd *cmd, size_t clen)
+> > > > +{
+> > > > +	struct prestera_msg_common_resp resp;
+> > > > +
+> > > > +	return prestera_cmd_ret(sw, type, cmd, clen, &resp.ret, sizeof(resp));
+> > > > +}
+> > > > +
+> > > > +static int prestera_fw_parse_port_evt(u8 *msg, struct prestera_event *evt)
+> > > > +{
+> > > > +	struct prestera_msg_event_port *hw_evt;
+> > > > +
+> > > > +	hw_evt = (struct prestera_msg_event_port *)msg;
+> > > > +
+> > > > +	evt->port_evt.port_id = hw_evt->port_id;
+> > > > +
+> > > > +	if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
+> > > > +		evt->port_evt.data.oper_state = hw_evt->param.oper_state;
+> > > > +	else
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static struct prestera_fw_evt_parser {
+> > > > +	int (*func)(u8 *msg, struct prestera_event *evt);
+> > > > +} fw_event_parsers[PRESTERA_EVENT_TYPE_MAX] = {
+> > > > +	[PRESTERA_EVENT_TYPE_PORT] = {.func = prestera_fw_parse_port_evt},
+> > > > +};
+> > > > +
+> > > > +static struct prestera_fw_event_handler *
+> > > > +__find_event_handler(const struct prestera_switch *sw,
+> > > > +		     enum prestera_event_type type)
+> > > > +{
+> > > > +	struct prestera_fw_event_handler *eh;
+> > > > +
+> > > > +	list_for_each_entry_rcu(eh, &sw->event_handlers, list) {
+> > > 
+> > > It does not look that this is always called under RCU which will result
+> > > in various splats. For example in the following call path:
+> > > 
+> > > prestera_device_register()
+> > >   prestera_switch_init()
+> > >     prestera_event_handlers_register()
+> > >       prestera_hw_event_handler_register()
+> > >         __find_event_handler()
+> > > 
+> > > You want to make sure that you are testing with various debug options.
+> > > For example:
+> > So, right. Currently this prestera_hw_event_handler_register is called
+> > synchronously and as I understand does not require additional locking
+> > when use list rcu API. I will check with these options which you
+> > suggested.
+> > 
+> > > 
+> > > # Debug options
+> > > ## General debug options
+> > > config_enable CONFIG_PREEMPT
+> > > config_enable CONFIG_DEBUG_PREEMPT
+> > > config_enable CONFIG_DEBUG_INFO
+> > > config_enable CONFIG_UNWINDER_ORC
+> > > config_enable CONFIG_DYNAMIC_DEBUG
+> > > config_enable CONFIG_DEBUG_NOTIFIERS
+> > > ## Lock debugging
+> > > config_enable CONFIG_LOCKDEP
+> > > config_enable CONFIG_PROVE_LOCKING
+> > > config_enable CONFIG_DEBUG_ATOMIC_SLEEP
+> > > config_enable CONFIG_PROVE_RCU
+> > > config_enable CONFIG_DEBUG_MUTEXES
+> > > config_enable CONFIG_DEBUG_SPINLOCK
+> > > config_enable CONFIG_LOCK_STAT
+> > > ## Memory debugging
+> > > config_enable CONFIG_DEBUG_VM
+> > > config_enable CONFIG_FORTIFY_SOURCE
+> > > config_enable CONFIG_KASAN
+> > > config_enable CONFIG_KASAN_EXTRA
+> > > config_enable CONFIG_KASAN_INLINE
+> > > ## Reference counting debugging
+> > > config_enable CONFIG_REFCOUNT_FULL
+> > > ## Lockups debugging
+> > > config_enable CONFIG_LOCKUP_DETECTOR
+> > > config_enable CONFIG_SOFTLOCKUP_DETECTOR
+> > > config_enable CONFIG_HARDLOCKUP_DETECTOR
+> > > config_enable CONFIG_DETECT_HUNG_TASK
+> > > config_enable CONFIG_WQ_WATCHDOG
+> > > config_enable CONFIG_DETECT_HUNG_TASK
+> > > config_set_val CONFIG_DEFAULT_HUNG_TASK_TIMEOUT 120
+> > > ## Undefined behavior debugging
+> > > config_enable CONFIG_UBSAN
+> > > config_enable CONFIG_UBSAN_SANITIZE_ALL
+> > > config_disable CONFIG_UBSAN_ALIGNMENT
+> > > config_disable CONFIG_UBSAN_NULL
+> > > ## Memory debugging
+> > > config_enable CONFIG_SLUB_DEBUG
+> > > config_enable CONFIG_SLUB_DEBUG_ON
+> > > config_enable CONFIG_DEBUG_PAGEALLOC
+> > > config_enable CONFIG_DEBUG_KMEMLEAK
+> > > config_disable CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF
+> > > config_set_val CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE 8192
+> > > config_enable CONFIG_DEBUG_STACKOVERFLOW
+> > > config_enable CONFIG_DEBUG_LIST
+> > > config_enable CONFIG_DEBUG_PER_CPU_MAPS
+> > > config_set_val CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT 1
+> > > config_enable CONFIG_DEBUG_OBJECTS
+> > > config_enable CONFIG_DEBUG_OBJECTS_FREE
+> > > config_enable CONFIG_DEBUG_OBJECTS_TIMERS
+> > > config_enable CONFIG_DEBUG_OBJECTS_WORK
+> > > config_enable CONFIG_DEBUG_OBJECTS_PERCPU_COUNTER
+> > > config_enable CONFIG_DMA_API_DEBUG
+> > > ## Lock debugging
+> > > config_enable CONFIG_DEBUG_LOCK_ALLOC
+> > > config_enable CONFIG_PROVE_LOCKING
+> > > config_enable CONFIG_LOCK_STAT
+> > > config_enable CONFIG_DEBUG_OBJECTS_RCU_HEAD
+> > > config_enable CONFIG_SPARSE_RCU_POINTER
+> > > 
+> > > > +		if (eh->type == type)
+> > > > +			return eh;
+> > > > +	}
+> > > > +
+> > > > +	return NULL;
+> > > > +}
+> > > > +
+> > > > +static int prestera_find_event_handler(const struct prestera_switch *sw,
+> > > > +				       enum prestera_event_type type,
+> > > > +				       struct prestera_fw_event_handler *eh)
+> > > > +{
+> > > > +	struct prestera_fw_event_handler *tmp;
+> > > > +	int err = 0;
+> > > > +
+> > > > +	rcu_read_lock();
+> > > > +	tmp = __find_event_handler(sw, type);
+> > > > +	if (tmp)
+> > > > +		*eh = *tmp;
+> > > > +	else
+> > > > +		err = -EEXIST;
+> > > > +	rcu_read_unlock();
+> > > > +
+> > > > +	return err;
+> > > > +}
+> > > > +
+> > > > +static int prestera_evt_recv(struct prestera_device *dev, u8 *buf, size_t size)
+> > > > +{
+> > > > +	struct prestera_msg_event *msg = (struct prestera_msg_event *)buf;
+> > > > +	struct prestera_switch *sw = dev->priv;
+> > > > +	struct prestera_fw_event_handler eh;
+> > > > +	struct prestera_event evt;
+> > > > +	int err;
+> > > > +
+> > > > +	if (msg->type >= PRESTERA_EVENT_TYPE_MAX)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	err = prestera_find_event_handler(sw, msg->type, &eh);
+> > > > +
+> > > > +	if (err || !fw_event_parsers[msg->type].func)
+> > > > +		return 0;
+> > > > +
+> > > > +	evt.id = msg->id;
+> > > > +
+> > > > +	err = fw_event_parsers[msg->type].func(buf, &evt);
+> > > > +	if (!err)
+> > > > +		eh.func(sw, &evt, eh.arg);
+> > > > +
+> > > > +	return err;
+> > > > +}
+> > > > +
+> > > > +static void prestera_pkt_recv(struct prestera_device *dev)
+> > > > +{
+> > > > +	struct prestera_switch *sw = dev->priv;
+> > > > +	struct prestera_fw_event_handler eh;
+> > > > +	struct prestera_event ev;
+> > > > +	int err;
+> > > > +
+> > > > +	ev.id = PRESTERA_RXTX_EVENT_RCV_PKT;
+> > > > +
+> > > > +	err = prestera_find_event_handler(sw, PRESTERA_EVENT_TYPE_RXTX, &eh);
+> > > > +	if (err)
+> > > > +		return;
+> > > > +
+> > > > +	eh.func(sw, &ev, eh.arg);
+> > > > +}
+> > > > +
+> > > > +int prestera_hw_port_info_get(const struct prestera_port *port,
+> > > > +			      u16 *fp_id, u32 *hw_id, u32 *dev_id)
+> > > > +{
+> > > > +	struct prestera_msg_port_info_resp resp;
+> > > > +	struct prestera_msg_port_info_req req = {
+> > > > +		.port = port->id
+> > > > +	};
+> > > > +	int err;
+> > > > +
+> > > > +	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_INFO_GET,
+> > > > +			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	*hw_id = resp.hw_id;
+> > > > +	*dev_id = resp.dev_id;
+> > > > +	*fp_id = resp.fp_id;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +int prestera_hw_switch_mac_set(struct prestera_switch *sw, char *mac)
+> > > > +{
+> > > > +	struct prestera_msg_switch_attr_req req = {
+> > > > +		.attr = PRESTERA_CMD_SWITCH_ATTR_MAC,
+> > > > +	};
+> > > > +
+> > > > +	memcpy(req.param.mac, mac, sizeof(req.param.mac));
+> > > > +
+> > > > +	return prestera_cmd(sw, PRESTERA_CMD_TYPE_SWITCH_ATTR_SET,
+> > > > +			    &req.cmd, sizeof(req));
+> > > > +}
+> > > > +
+> > > > +int prestera_hw_switch_init(struct prestera_switch *sw)
+> > > > +{
+> > > > +	struct prestera_msg_switch_init_resp resp;
+> > > > +	struct prestera_msg_common_req req;
+> > > > +	int err;
+> > > > +
+> > > > +	INIT_LIST_HEAD(&sw->event_handlers);
+> > > > +
+> > > > +	err = prestera_cmd_ret_wait(sw, PRESTERA_CMD_TYPE_SWITCH_INIT,
+> > > > +				    &req.cmd, sizeof(req),
+> > > > +				    &resp.ret, sizeof(resp),
+> > > > +				    PRESTERA_SWITCH_INIT_TIMEOUT);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	sw->id = resp.switch_id;
+> > > > +	sw->port_count = resp.port_count;
+> > > > +	sw->mtu_min = PRESTERA_MIN_MTU;
+> > > > +	sw->mtu_max = resp.mtu_max;
+> > > > +	sw->dev->recv_msg = prestera_evt_recv;
+> > > > +	sw->dev->recv_pkt = prestera_pkt_recv;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > 
+> > > Consider adding prestera_hw_switch_fini() that verifies that
+> > > '&sw->event_handlers' is empty.
+> > > 
+> > As I see it can just warn on if list is not empty, right ?
+> 
+> Yes, something like:
+> 
+> WARN_ON(!list_empty(&sw->event_handlers));
+> 
+> > 
+> > > > +
+> > > > +int prestera_hw_port_state_set(const struct prestera_port *port,
+> > > > +			       bool admin_state)
+> > > > +{
+> > > > +	struct prestera_msg_port_attr_req req = {
+> > > > +		.attr = PRESTERA_CMD_PORT_ATTR_ADMIN_STATE,
+> > > > +		.port = port->hw_id,
+> > > > +		.dev = port->dev_id,
+> > > > +		.param = {.admin_state = admin_state}
+> > > > +	};
+> > > > +
+> > > > +	return prestera_cmd(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_SET,
+> > > > +			    &req.cmd, sizeof(req));
+> > > > +}
+> > > > +
+> > 
+> > [...]
+> > 
+> > > > +
+> > > > +struct prestera_port *prestera_port_find_by_hwid(struct prestera_switch *sw,
+> > > > +						 u32 dev_id, u32 hw_id)
+> > > > +{
+> > > > +	struct prestera_port *port;
+> > > > +
+> > > > +	rcu_read_lock();
+> > > > +
+> > > > +	list_for_each_entry_rcu(port, &sw->port_list, list) {
+> > > > +		if (port->dev_id == dev_id && port->hw_id == hw_id) {
+> > > > +			rcu_read_unlock();
+> > > > +			return port;
+> > > 
+> > > This does not look correct. You call rcu_read_unlock(), but do not take
+> > > a reference on the object, so nothing prevents it from being freed. 
+> > > 
+> > Currently there is no logic which can dynamically create/delete the
+> > port, so how do you think may I just use synchronize_rcu() when freeing
+> > the port instance on module unlolad ?
+> 
+> I don't understand what RCU is meant to protect here. You call
+> rcu_read_unlock() and then return the port. Calling synchronize_rcu()
+> before freeing the port will not prevent the caller of
+> prestera_port_find_by_hwid() from accessing freed memory.
+I just removed these rcu things, and looks like they does not
+needed currently.
 
-Regards,
-Markus
+> 
+> > 
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	rcu_read_unlock();
+> > > > +
+> > > > +	return NULL;
+> > > > +}
+> > > > +
+> > > > +static struct prestera_port *prestera_find_port(struct prestera_switch *sw,
+> > > > +						u32 port_id)
+> > > > +{
+> > > > +	struct prestera_port *port;
+> > > > +
+> > > > +	rcu_read_lock();
+> > > > +
+> > > > +	list_for_each_entry_rcu(port, &sw->port_list, list) {
+> > > > +		if (port->id == port_id)
+> > > > +			break;
+> > > > +	}
+> > > > +
+> > > > +	rcu_read_unlock();
+> > > > +
+> > > > +	return port;
+> > > 
+> > > Same here.
+> > > 
+> > > > +}
+> > > > +
+> > > > +static int prestera_port_state_set(struct net_device *dev, bool is_up)
+> > > > +{
+> > > > +	struct prestera_port *port = netdev_priv(dev);
+> > > > +	int err;
+> > > > +
+> > > > +	if (!is_up)
+> > > > +		netif_stop_queue(dev);
+> > > > +
+> > > > +	err = prestera_hw_port_state_set(port, is_up);
+> > > > +
+> > > > +	if (is_up && !err)
+> > > > +		netif_start_queue(dev);
+> > > > +
+> > > > +	return err;
+> > > > +}
+> > > > +
+> > 
+> > [...]
+> > 
+> > > > +static void prestera_port_destroy(struct prestera_port *port)
+> > > > +{
+> > > > +	struct net_device *dev = port->dev;
+> > > > +
+> > > > +	cancel_delayed_work_sync(&port->cached_hw_stats.caching_dw);
+> > > > +	unregister_netdev(dev);
+> > > > +
+> > > > +	list_del_rcu(&port->list);
+> > > > +
+> > > 
+> > > I'm not sure what is the point of these blank lines. Best to remove
+> > > them.
+> > Will fix it.
+> > 
+> > > 
+> > > > +	free_netdev(dev);
+> > > > +}
+> > > > +
+> > > > +static void prestera_destroy_ports(struct prestera_switch *sw)
+> > > > +{
+> > > > +	struct prestera_port *port, *tmp;
+> > > > +	struct list_head remove_list;
+> > > > +
+> > > > +	INIT_LIST_HEAD(&remove_list);
+> > > > +
+> > > > +	list_splice_init(&sw->port_list, &remove_list);
+> > > > +
+> > > > +	list_for_each_entry_safe(port, tmp, &remove_list, list)
+> > > > +		prestera_port_destroy(port);
+> > > > +}
+> > > > +
+> > > > +static int prestera_create_ports(struct prestera_switch *sw)
+> > > > +{
+> > > > +	u32 port;
+> > > > +	int err;
+> > > > +
+> > > > +	for (port = 0; port < sw->port_count; port++) {
+> > > > +		err = prestera_port_create(sw, port);
+> > > > +		if (err)
+> > > > +			goto err_ports_init;
+> > > 
+> > > err_port_create ?
+> > > 
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +
+> > > > +err_ports_init:
+> > > > +	prestera_destroy_ports(sw);
+> > > 
+> > > I'm not a fan of this construct. I find it best to always do proper
+> > > rollback in the error path. Then you can always maintain init() being
+> > > followed by fini() which is much easier to review.
+> > As I understand you meant to move this destroy_ports() recovery to the
+> > error path in xxx_switch_init() ?
+> 
+> No, I mean do proper rollback in this error path by calling
+> prestera_port_destroy() for each port you created thus far.
+> 
+> Then move prestera_destroy_ports() after prestera_create_ports(),
+> instead of before it.
+But it will look same as prestera_destroy_ports(), do you think
+this is not a problem to have a same logic doubled ?
+
+> 
+> > 
+> > > 
+> > > > +	return err;
+> > > > +}
+> > > > +
+> > > > +static void prestera_port_handle_event(struct prestera_switch *sw,
+> > > > +				       struct prestera_event *evt, void *arg)
+> > > > +{
+> > > > +	struct delayed_work *caching_dw;
+> > > > +	struct prestera_port *port;
+> > > > +
+> > > > +	port = prestera_find_port(sw, evt->port_evt.port_id);
+> > > > +	if (!port)
+> > > > +		return;
+> > > > +
+> > > > +	caching_dw = &port->cached_hw_stats.caching_dw;
+> > > > +
+> > > > +	if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED) {
+> > > > +		if (evt->port_evt.data.oper_state) {
+> > > > +			netif_carrier_on(port->dev);
+> > > > +			if (!delayed_work_pending(caching_dw))
+> > > > +				queue_delayed_work(prestera_wq, caching_dw, 0);
+> > > > +		} else {
+> > > > +			netif_carrier_off(port->dev);
+> > > > +			if (delayed_work_pending(caching_dw))
+> > > > +				cancel_delayed_work(caching_dw);
+> > > > +		}
+> > > > +	}
+> > > > +}
+> > > > +
+> > > > +static void prestera_event_handlers_unregister(struct prestera_switch *sw)
+> > > > +{
+> > > > +	prestera_hw_event_handler_unregister(sw, PRESTERA_EVENT_TYPE_PORT,
+> > > > +					     prestera_port_handle_event);
+> > > > +}
+> > > 
+> > > Please reverse the order so that register() is first.
+> > > 
+> > > > +
+> > > > +static int prestera_event_handlers_register(struct prestera_switch *sw)
+> > > > +{
+> > > > +	return prestera_hw_event_handler_register(sw, PRESTERA_EVENT_TYPE_PORT,
+> > > > +						  prestera_port_handle_event,
+> > > > +						  NULL);
+> > > > +}
+> > > > +
+> > > > +static int prestera_switch_set_base_mac_addr(struct prestera_switch *sw)
+> > > > +{
+> > > > +	struct device_node *base_mac_np;
+> > > > +	struct device_node *np;
+> > > > +
+> > > > +	np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
+> > > > +	if (np) {
+> > > > +		base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
+> > > > +		if (base_mac_np) {
+> > > > +			const char *base_mac;
+> > > > +
+> > > > +			base_mac = of_get_mac_address(base_mac_np);
+> > > > +			of_node_put(base_mac_np);
+> > > > +			if (!IS_ERR(base_mac))
+> > > > +				ether_addr_copy(sw->base_mac, base_mac);
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	if (!is_valid_ether_addr(sw->base_mac)) {
+> > > > +		eth_random_addr(sw->base_mac);
+> > > > +		dev_info(sw->dev->dev, "using random base mac address\n");
+> > > > +	}
+> > > > +
+> > > > +	return prestera_hw_switch_mac_set(sw, sw->base_mac);
+> > > > +}
+> > > > +
+> > > > +static int prestera_switch_init(struct prestera_switch *sw)
+> > > > +{
+> > > > +	int err;
+> > > > +
+> > > > +	err = prestera_hw_switch_init(sw);
+> > > > +	if (err) {
+> > > > +		dev_err(prestera_dev(sw), "Failed to init Switch device\n");
+> > > > +		return err;
+> > > > +	}
+> > > > +
+> > > > +	INIT_LIST_HEAD(&sw->port_list);
+> > > > +
+> > > > +	err = prestera_switch_set_base_mac_addr(sw);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	err = prestera_rxtx_switch_init(sw);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	err = prestera_event_handlers_register(sw);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	err = prestera_create_ports(sw);
+> > > > +	if (err)
+> > > > +		goto err_ports_create;
+> > > > +
+> > > > +	return 0;
+> > > > +
+> > > > +err_ports_create:
+> > > > +	prestera_event_handlers_unregister(sw);
+> > > > +
+> > > 
+> > > You are missing prestera_rxtx_switch_fini() here... With init() always
+> > > followed by fini() you can easily tell that the error path is not
+> > > symmetric with fini().
+> > Yeah, for some reason I mixed this fix with Switchdev patch, I will fix
+> > this.
+> > 
+> > > 
+> > > > +	return err;
+> > > > +}
+> > > > +
+> > > > +static void prestera_switch_fini(struct prestera_switch *sw)
+> > > > +{
+> > > > +	prestera_destroy_ports(sw);
+> > > > +	prestera_event_handlers_unregister(sw);
+> > > > +	prestera_rxtx_switch_fini(sw);
+> > > > +}
+> > > > +
+> > > > +int prestera_device_register(struct prestera_device *dev)
+> > > > +{
+> > > > +	struct prestera_switch *sw;
+> > > > +	int err;
+> > > > +
+> > > > +	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
+> > > > +	if (!sw)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	dev->priv = sw;
+> > > > +	sw->dev = dev;
+> > > > +
+> > > > +	err = prestera_switch_init(sw);
+> > > > +	if (err) {
+> > > > +		kfree(sw);
+> > > > +		return err;
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL(prestera_device_register);
+> > > > +
+> > > > +void prestera_device_unregister(struct prestera_device *dev)
+> > > > +{
+> > > > +	struct prestera_switch *sw = dev->priv;
+> > > > +
+> > > > +	prestera_switch_fini(sw);
+> > > > +	kfree(sw);
+> > > > +}
+> > 
+> > [...]
+> > 
+> > > > +int prestera_rxtx_port_init(struct prestera_port *port)
+> > > > +{
+> > > > +	int err;
+> > > > +
+> > > > +	err = prestera_hw_rxtx_port_init(port);
+> > > > +	if (err)
+> > > > +		return err;
+> > > > +
+> > > > +	port->dev->needed_headroom = PRESTERA_DSA_HLEN + ETH_FCS_LEN;
+> > > 
+> > > Why do you need headroom for FCS?
+> > > 
+> > I had issue when the SKB did not have additional bytes for the FCS, so I
+> > thought to added this to the needed_headroom to be sure.
+> 
+> But FCS is at the end of the frame. 'needed_headroom' is for headers you
+> need to prepend to each frame.
+> 
+> Which issues did you have? In mlxsw FCS is computed in hardware and we
+> pass the length of the frame without the FCS when posting the frame to
+> hardware.
+Looks like it really not needed.
+
+> 
+> > 
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +netdev_tx_t prestera_rxtx_xmit(struct prestera_port *port, struct sk_buff *skb)
+> > > > +{
+> > > > +	struct prestera_dsa dsa;
+> > > > +
+> > > > +	dsa.hw_dev_num = port->dev_id;
+> > > > +	dsa.port_num = port->hw_id;
+> > > > +
+> > > > +	if (skb_cow_head(skb, PRESTERA_DSA_HLEN) < 0)
+> > > > +		return NET_XMIT_DROP;
+> > > > +
+> > > > +	skb_push(skb, PRESTERA_DSA_HLEN);
+> > > > +	memmove(skb->data, skb->data + PRESTERA_DSA_HLEN, 2 * ETH_ALEN);
+> > > > +
+> > > > +	if (prestera_dsa_build(&dsa, skb->data + 2 * ETH_ALEN) != 0)
+> > > > +		return NET_XMIT_DROP;
+> > > > +
+> > > > +	return prestera_sdma_xmit(&port->sw->rxtx->sdma, skb);
+> > > > +}
+> > > > diff --git a/drivers/net/ethernet/marvell/prestera/prestera_rxtx.h b/drivers/net/ethernet/marvell/prestera/prestera_rxtx.h
+> > > > new file mode 100644
+> > > > index 000000000000..bbbadfa5accf
+> > > > --- /dev/null
+> > > > +++ b/drivers/net/ethernet/marvell/prestera/prestera_rxtx.h
+> > > > @@ -0,0 +1,21 @@
+> > > > +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+> > > > + *
+> > > > + * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
+> > > > + *
+> > > > + */
+> > > > +
+> > > > +#ifndef _PRESTERA_RXTX_H_
+> > > > +#define _PRESTERA_RXTX_H_
+> > > > +
+> > > > +#include <linux/netdevice.h>
+> > > > +
+> > > > +#include "prestera.h"
+> > > > +
+> > > > +int prestera_rxtx_switch_init(struct prestera_switch *sw);
+> > > > +void prestera_rxtx_switch_fini(struct prestera_switch *sw);
+> > > > +
+> > > > +int prestera_rxtx_port_init(struct prestera_port *port);
+> > > > +
+> > > > +netdev_tx_t prestera_rxtx_xmit(struct prestera_port *port, struct sk_buff *skb);
+> > > > +
+> > > > +#endif /* _PRESTERA_RXTX_H_ */
+> > > > -- 
+> > > > 2.17.1
+> > > > 
+> > 
+> > Thank you for review.
