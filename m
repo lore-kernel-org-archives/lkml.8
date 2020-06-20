@@ -6,68 +6,68 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76E023BA6
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B410123BA6
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hShbR7Wj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzO4a/b6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgFTN2g (ORCPT
+        id S1728180AbgFTN32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 09:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36394 "EHLO
+        Sat, 20 Jun 2020 09:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgFTN2f (ORCPT
+        with ESMTP id S1727787AbgFTN31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 09:28:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5673EC06174E;
-        Sat, 20 Jun 2020 06:28:35 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id m2so5794178pjv.2;
-        Sat, 20 Jun 2020 06:28:35 -0700 (PDT)
+        Sat, 20 Jun 2020 09:29:27 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9CBC06174E;
+        Sat, 20 Jun 2020 06:29:27 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j1so5862428pfe.4;
+        Sat, 20 Jun 2020 06:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vLLB/NoNdpMNfkjSscH7J11Fj+B4e6QUt2fHvp/Vnhs=;
-        b=hShbR7Wj+0+82D5VR7fW/WBZ7SxGMhIotrr/NOPhXdbQ4Thkcj0NbaNvVyikA1M78j
-         hBWOpWrMoYbECQmhvfble9FtO0pXsx6XOVXb/GscRuBVkvUbioNQGvHVZ9OjPBsmpgdW
-         buAaokMKH8RzHG+OMBm2PD5Geaual6xQwBRwcqSki2ju8S+szw2MxGzL++poWfFvJ6h9
-         eHqHas6HHWpSles+ASAeiLtyUGS16o+ax/Bfu+J94ftj5zK/uzzC1uTpNqEFRCELEBLS
-         mXq3GrRwfkpBcUmEBLMMCGgtLAlYffv0EIJ2bsdozemoXT26Gg0X1dNh0vLyWHMM6w9l
-         i+Iw==
+        bh=9IlKTkHtRXiSiRdGW+KXe5u7fl75eUcPoIBm0AcFU+M=;
+        b=HzO4a/b6ARXi7TF89N4C7I+rpfUbv3qSBuAeV86xpEy0ycxeIgEyglqd1qPOwq/nhz
+         xmLAO7Y2yPdejp8iJcZ3QZgQKa9VbxHHniu4mYwKcBB9oMgf8w1t535pOQIF69IvxT6h
+         +AfGJ3dxstXNqjIeB23vZRBxC+Uw0OUh3pC3UBQ0LacqtNn6ubu9DBNoscTp9MN0+DLr
+         vqlbHdsLsjkseYWE+0hy0VwO+YVtSMoLpXUkXgr40V29qqUUsT3t4xXM54JRSwuUHG5A
+         ZU4/l8/zL+gJyyCjbclVnkSX8Qx8P8YnJ2bp81PQpCQdMM1DRfEZeu7JWqtuiOOaLp94
+         6hWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=vLLB/NoNdpMNfkjSscH7J11Fj+B4e6QUt2fHvp/Vnhs=;
-        b=ibxphX8T+9hb59g8dXuEYf0JH8/V9P1/wTCihD7Ia7rlOX9ly7/7VrZdW7VDGRwicQ
-         PT+4BlGKOg7FO7Mx1q/y/lXBHGdiQnbam0562cUeoPQP7q3Qj9zdZc7VXNileis28Jhv
-         aAXHitK6lPNuXPpZVmkkm3WGZ9uKJ7d0ciAXh+TQdz6rRPntIW0fH2lDnapgFCuKG0SZ
-         mbplY9hwugaKzWUSMBVh3hJ2x7lRG/CNN+9e3xF+/e2ThjWLrkcaS3AE+nkURR1nd0lV
-         UKxbbra285E791Ge3KewNfQPzTN0XOd1VZOwoYFqXETDmydJG42zDwCBWf/fz+iao0Ru
-         59xg==
-X-Gm-Message-State: AOAM530Mk2l91Wbj3GDFSW1Dl0sElRsvjCkXoZ4rKWijhDdIz7aGPvng
-        MBcuA1CZyxG42AGeA8VyaxPSq2F5
-X-Google-Smtp-Source: ABdhPJzk5GPE0Kf47Qd9mLc5v9UmSzYwuQmjZmkVD8LUr9j0EgHpcoq6WsCu7Zmm8mRO8P5LxFHamQ==
-X-Received: by 2002:a17:90a:7849:: with SMTP id y9mr8724431pjl.143.1592659714584;
-        Sat, 20 Jun 2020 06:28:34 -0700 (PDT)
+        bh=9IlKTkHtRXiSiRdGW+KXe5u7fl75eUcPoIBm0AcFU+M=;
+        b=ImprL5+ikiIXyfKh3J3PFzGOWOHaUCa+E9YDQLsvFi0Xst0mSO61st8sioCVP9kaNH
+         H+uThU2EPe8CEHbaARzi0seuqO1W9jRC+MnO9eQhM6QrmW2bglRZHCENj+Ejd2HDvIdG
+         5sSSp2r8ZzlDy7QWpIAvKod1EX12c6spHZs18uvxVP5yZ+dtTkDSARY/rImSoNbmfymV
+         daweUk2J+VsZxevfN9hZlODrKbJbXmhge6HJWFwBBUr7Xap9t1XTRFGpczTohIUUunvS
+         XQx0rW3NHKPedNe1w91+CpeZnNkygMCqFBHflp0yOVdgnxJWcwQr692nn1UBj4ZbNIUD
+         OOdg==
+X-Gm-Message-State: AOAM530CprLaIBBp8Eh65htlWWwYWZU+7bSkp1A8ME7l+y8Gs+xtHW5V
+        HXTi365avmlMYN/08XfSyp1Y9maC
+X-Google-Smtp-Source: ABdhPJz3/+npCHfTMchsGrXKaxHj0tDC3Dfhb5w6Y5Y1pyIRjwGEg0j7ZC0xLjGoEPACz5IOIOzWaw==
+X-Received: by 2002:a62:5210:: with SMTP id g16mr11937457pfb.204.1592659766744;
+        Sat, 20 Jun 2020 06:29:26 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d184sm8822361pfd.85.2020.06.20.06.28.33
+        by smtp.gmail.com with ESMTPSA id j17sm8303080pjy.22.2020.06.20.06.29.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 06:28:33 -0700 (PDT)
-Subject: Re: [PATCH 4.19 000/265] 4.19.129-rc2 review
+        Sat, 20 Jun 2020 06:29:26 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/259] 5.4.48-rc2 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-References: <20200620082214.928028424@linuxfoundation.org>
+References: <20200620082215.905874302@linuxfoundation.org>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -112,12 +112,12 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <81641b06-562b-2f24-da1f-522850b0677d@roeck-us.net>
-Date:   Sat, 20 Jun 2020 06:28:32 -0700
+Message-ID: <01c4acf6-9f07-68af-3334-4b02a1e9c4a3@roeck-us.net>
+Date:   Sat, 20 Jun 2020 06:29:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200620082214.928028424@linuxfoundation.org>
+In-Reply-To: <20200620082215.905874302@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -126,19 +126,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/20 1:22 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.129 release.
-> There are 265 patches in this series, all will be posted as a response
+On 6/20/20 1:23 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.48 release.
+> There are 259 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
-> Responses should be made by Mon, 22 Jun 2020 08:21:23 +0000.
+> Responses should be made by Mon, 22 Jun 2020 08:21:26 +0000.
 > Anything received after that time might be too late.
 > 
 
 Build results:
-	total: 155 pass: 155 fail: 0
+	total: 157 pass: 157 fail: 0
 Qemu test results:
-	total: 421 pass: 421 fail: 0
+	total: 430 pass: 430 fail: 0
 
 Guenter
