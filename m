@@ -2,44 +2,44 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4170C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8A1F24731
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1D92468E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 22:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JBv4w0m4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZEwEkwBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgFTWoN (ORCPT
+        id S1728671AbgFTWqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:44:13 -0400
-Received: from mout.gmx.net ([212.227.15.18]:55943 "EHLO mout.gmx.net"
+        Sat, 20 Jun 2020 18:46:45 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60263 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728547AbgFTWoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:44:12 -0400
+        id S1728433AbgFTWqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 18:46:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592693002;
-        bh=exgY33UX1mwRdxvLq8yooJTHfmjPedUVVmEPFY8Wxms=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=JBv4w0m4fUZXFqvaoIbr9dXZUDiQqmvQ4ioKKwtnNr8qgyBa4BG/kOiVOASuUfdz3
-         yBjIZxS3dzErvIBYnwpky1YCgS0l7H4HVKd+2uPAAPrXdkPTrfPN+8ON0/SukiY+PA
-         sdnQbFWz+tk/LUoxvqth+RzEMaAVmP+9GtfVokZA=
+        s=badeba3b8450; t=1592693163;
+        bh=h/UMIY6fmTdd2wru1QoL9o5eOI3wFFzm7QlYKwwkUdM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=ZEwEkwBO1iCQDD7fQ6Rl7eNxSJ13psdqlSHmPznnxTCP/FrMHut31htqj8rYe8afX
+         HNB1qHhFqpjIw2Jxz5eU86XToSWStAo8VBMxQdvC0z6KWtUXvBL/VapPb9jaIfe0Ul
+         EcqNt8VKO+vz8MmWnXMi4T9kWacINg/OaRCgesO0=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlT2-1j328S1M1O-00jnKT; Sun, 21
- Jun 2020 00:43:22 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mt79F-1itzhS1A6r-00tT79; Sun, 21
+ Jun 2020 00:46:03 +0200
+Date:   Sun, 21 Jun 2020 00:46:01 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -60,75 +60,74 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Rob Herring <robh@kernel.org>
-Subject: [RFC PATCH 09/10] MAINTAINERS: Add entry for Netronix embedded controller
-Date:   Sun, 21 Jun 2020 00:42:20 +0200
-Message-Id: <20200620224222.1312520-8-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 02/10] dt-bindings: Add vendor prefix for Netronix,
+ Inc.
+Message-ID: <20200620224601.GB2581@latitude>
 References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:a65/Uk4zRPdbL+IjcV4kAQ99Lb08INVuwG5/wNz6bYWQ+nM3Q9r
- W2TutNVZXIZOUC0etTK03LElim/glyhxLFYIlDNQtixa6qEIkcInbfnpQZT8T68b1EVXG3S
- OWV1HTw+ppWJfHlftINozC77z0hcFIPAi8An81cPnK4/3eQPKRO8Z1pjVoICXx0dx9bF6WN
- tcWUPjbQ5/Su6cKOt9qiw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SU2qUZVZ8c0=:/3Mhge4lP4yfuQJDIZRgR0
- 86BKuRLH7WVPJTbL8W0owLdBkDGHeaG9UT47pAoJYP8IfeVL3vADlbKbgm+auZYEHucvgRdL9
- fJFj1bp/29hGVgPQqQRRCBMlm1p5HIOTfduwrRsV8YlQOdzhXvrSqZEo8eJVjz4OygZs7Iv/6
- DIUUM87Kc3wrk1pOB0rxZi7aC7fSRufRgaROttB5wGiCCnRcInBouWQEVjVFXKi4hlB7+SMr1
- WKXnzEqWE7zlR4hIO+ZsEWO2GWkBWPTU8/oBDbIXEc3NQJ23PbvniHtP4U/iA1xiIzF1+TUaN
- y5GPteuFASACUnekidZx/icd1yhXMB3I4ND/JSEQpXptG2PUJCKmelmoaxKL9p16sStZnpd1F
- wgd6jzuJqEN2h9bkraoVP8uUJbWMcx/8YXLY4vIeQ4S0vWUiKZp9kqbudPBJEj9mpM2alBeK7
- sNy3LNp3Ytx8wCP0I2jdZ2MylBitP0I7g1D+cLOnwweHT96RNHmDxZy/39kVd6FrS8r2PKsyp
- JcgZSv1f3MAnpzx4dgMB1wpSiDDtGfD0fchfdCjD9tcBhiInnd0IyVnTDFGyTIexVH9iIhH2G
- wREdD8OZ4r3dvpfoxtNKpBD3bXJZP8F1e8YXYI0Lnsatmai7DXd+GxmaJpokGSTSeAsOeIoxM
- mqb0wgkCpRb5waPJlbQ8Fy/U0xwqXB8vMLvVBAxhoCO4CbQ2pyz49doDo0Hyi38hUIFdz9V6x
- hksBJuOBfro5J/m7uMSsfJukLaLwEu+r/UoTkOEgXXtNj7CZZfY3Q7vHwR5gepy9sttLlzh/+
- 4GjzN5wCCzT+j3aEpseGoT+0SsPohsSZVomuwXFILCuWGOy9Wd+IXo2eCayCqvmK8cRN9+lfa
- 5UQJgUtOpTtpbAi33x3wM3OLl7rkq93mHEszi5aBdfrMdUwgfj5pexKanUGNHMHyYyNevZIUn
- 2X7w8Tp3p8Mf7J5ZGAqyzTaN4fvhBeRNnT0ROTGeNentL11rZ/LuLFBGXplL1qh2F5SxymYrf
- RLSPnsSJfgeFExQSz2vbygeelKnnJzUNDe3UToKBr1lrCUtcRED/y7tHC5GeoZ6JBBkEVbvVx
- bbWlvCNUSThgpz5ROBPR37Z0ehlC51dJhQX+RZOBMlkkAVDWZVOzJ8D89/z7GsHuNFsdN5soY
- B10kcBiNY4+hFpQc1ZsXIMku6byA+tWotmwEO11tO6K0c1y0en7KdFhRmgxy9SD+JGec8kTpC
- VLzmO1z4v03UOLN2j
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
+Content-Disposition: inline
+In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+X-Provags-ID: V03:K1:5O+YzEQ/vUdLi8utCOogyjE0FxfqX6VgcRxQrjBKDGTtmFSKYjw
+ Uwoa04dGgRh/DH6SxYr8fKCqy8jdmILH2jrPFgAp48BzZtNIivny/AR81+kT0m310ruexCA
+ lgedeh5W1LsTtR69899tKj4uRBIsiGP39JChZbHO8SNzhRFPFEcBrZkd1n8G1mlBRFmn4ej
+ 6Kmd3/qW51Rg2wM7Nmhbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g9z075SxS1I=:DHqkOKmSdMJd0/cw2/EzAl
+ ZHdbov55RWR5jgK2G3UtymifbK8pkIFsjdB+4K97PiN9at2UFVbd5EPUv4YMBunSahziy1NoZ
+ uYbZX8maLwxubFdsYS+xFch1G0IOpbS13LZhdS/DW1j/WNxwCQ/Z2nF7YtGMDHrLUr9AB4HuW
+ kJIE9S20cxeHJMevCnMpYzwV80VJ6HiYaQQ0P9ZANs8qrZPnWMa3x7egMRDXKoCabUPF5icO8
+ gCoKcIOXVn/tDLlbovFdtb+XYqWzcUqH7DRqv6CM0EmQXhoG752hL+aP/HrMHJcfefvnqc7Su
+ JR1DVjJKUdpJGkp/l4Jmv/8S2uRNxrcJCvzi69oYo7jVDvoqtu/PvkI+Bbtaj6btHIxJBryK5
+ d3fzwv4aIyN4bh3HJ9pvQiIxQ7bv4N9eLd50PPs/GFrLd2K5cf+tiLCem5pc630lhgClDykuZ
+ zx4VuE2R4/Kw2FqvEqAOq2EnGA9lGOE6uxVjtjpYRi79iRz0fTd8z4MJu8L8CdMkEgADRpoHF
+ iL4/FxANZC3qWF+motaVQBTVHdcy6FqxtvTS7MM8773gT65CYn0KJhznTIPRLM+am3E/i85SZ
+ yAbT6Fivg/GFesNe5Ctf5zaCBfUmNHjSenGgPgjT+VoTWMchSwgRYJgUlN6RmZ5UQBfzlqQbQ
+ Hps4C9dIo5IlD5bLvlfJmpmY+9tXPRIj21Su9kpHH2NP8U6aVYsP0qEScOT2fjJrnnY8oZfqf
+ MqgWKcKVOGLZ3Xv9+zlKZ180OXWpz9gvOp/glcdNcojEY521F1n+hm5IN8ONB00OssQHX2158
+ 74/hsejdGz1sCBfX0FNK/gODeH4JlNAXH11hf26T0FltDrxf/pWTN2mK/kczV3Zf2R9k0Q34Q
+ nlKCFBWdjzGxS861dHLmO1f9oM8qyapYxSsScddUIICU6aPmnX0DPbPNaCt9+P+ixzMNwGKKh
+ Avo70qo3qqo4uAaZYxjVkVLT5S5stEEUw3svLQW+5AXRdcIhFTO9Uc6fjGTHJV5QtqQd5weyf
+ upf1WrflYqYeUuXZdXWq4OGjZBhbF5fmLPcwTZ5TFG09Pn9DFWKOJX8r/TBrzpaNcbOKsscNo
+ HzJxkR7UAgmy4XftuJbYpIRCDldjqPh66x1xdlp7YNHd+YLJLjhOWb7QuiWKiZd1jlYzOs9GC
+ U7EngI85XOPmdpGwQXaTkXw9IiHVYyqsibfUcUBOqNafUvgBrzdzzOFvisy9EtalNkxC1Jztg
+ WQRIRlLxVbsFTHkMv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's make sure I'll notice when there are patches for the NTXEC
-drivers.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d46614c4..d4333f7490f5d 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11850,6 +11850,17 @@ F:	include/net/netrom.h
- F:	include/uapi/linux/netrom.h
- F:	net/netrom/
+On Sun, Jun 21, 2020 at 12:42:13AM +0200, Jonathan Neusch=C3=A4fer wrote:
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
 
-+NETRONIX EMBEDDED CONTROLLER
-+M:	Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+F:	Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
-+F:	Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
-+F:	drivers/mfd/ntxec.c
-+F:	drivers/pwm/pwm-ntxec.c
-+F:	drivers/rtc/rtc-ntxec.c
-+F:	include/linux/mfd/ntxec.h
-+
- NETRONOME ETHERNET DRIVERS
- M:	Jakub Kicinski <kuba@kernel.org>
- L:	oss-drivers@netronome.com
-=2D-
-2.27.0
+Oops, it seems the mail thread got split here when I resent patches 2-10
+after an error. Oh well.
 
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl7ukaIACgkQCDBEmo7z
+X9t5/Q/8Cbd0bFYhNk8CBuYZCY3Hb1671urdC0CCUDZHm8+6f4Hak3r6C2TRVz/l
+6mFc4ga7Eaib0kUGNXIr1PKcmAeRrBtDhmk1ouF+jKGoAGSi+vfzbvR3e8TLcwhi
+lK+vE4/GlQ8ucVuPDlazvpIraMLPlv61ucgjL7jaExvZK3q6g3uXSb32YGj2LHRF
+eaWS+o1coNYWk2D24vqwzlF8Ot5tKRlE8Nlk0tP6s2s5AzDyCGmaTanbpWbMrlkr
+f/BG5LbHqRkGnY2cuU1VK+EUxFrg3EtLyHjc9ASPBWDyX5zbPtp7qttUOQ65JUXT
+aE52FjQ83S59G+ibTloZWEpqiHf4WuGkb+erE/tWiFwJCRyymf6V+bfSL4bLLlcw
+0paBO5cdbdZjAprIzVM9jgTyz76Pd/6fSAvQpA1cnz/sGE/XhgXoOz4CjAGNHC0B
+lVCFxsg2lyq8dQx2rBnXiAIzCf7X/72TIf7932wsQd4HUEEILb9kBe0kGNDaHuSF
+v0krqal+swKx/ASrPMu3TTlBw3IGLf7JdrxcnUDNQ8N+TxfEE5dc4WGNELSgPpDF
+DLtzb0WCL8A6svnupjPbMtT10+e7EZf7ESzLFDlnAm932Cop0SsRc0OvWN790vIg
+x7ZzXfwX2B70qJv4yWjJuF1XKmDYluSh0T55EYU7r4oYHZ20DQo=
+=mZCk
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
