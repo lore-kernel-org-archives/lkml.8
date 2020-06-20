@@ -2,172 +2,117 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4596C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCE422AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC2322AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 00:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r8Q8AOnV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbgFTAm4 (ORCPT
+        id S1731013AbgFTAnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:42:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730293AbgFTAmz (ORCPT
+        Fri, 19 Jun 2020 20:43:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50886 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730293AbgFTAnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:42:55 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05K0WSwk183261;
-        Fri, 19 Jun 2020 20:42:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31s0pbagqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:42:09 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05K0WcPq186459;
-        Fri, 19 Jun 2020 20:42:08 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31s0pbagqa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:42:08 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05K0VFD0005552;
-        Sat, 20 Jun 2020 00:42:07 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 31q6c6faep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 20 Jun 2020 00:42:07 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05K0g61K49938852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 20 Jun 2020 00:42:06 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A88E7112062;
-        Sat, 20 Jun 2020 00:42:06 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3890A112061;
-        Sat, 20 Jun 2020 00:41:54 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.93.234])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Sat, 20 Jun 2020 00:41:53 +0000 (GMT)
-References: <20200618071045.471131-1-prsriva@linux.microsoft.com> <20200618071045.471131-3-prsriva@linux.microsoft.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [V2 PATCH 2/3] dt-bindings: chosen: Document ima-kexec-buffer
-In-reply-to: <20200618071045.471131-3-prsriva@linux.microsoft.com>
-Date:   Fri, 19 Jun 2020 21:41:49 -0300
-Message-ID: <87mu4yr2k2.fsf@morokweng.localdomain>
+        Fri, 19 Jun 2020 20:43:24 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K0YvUD133598;
+        Sat, 20 Jun 2020 00:43:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Zm4HMhoS8Kg8i91BJJp7jpLN4Zdhc+Xt1j6881tEgRY=;
+ b=r8Q8AOnV2/tnZPJ0X9ElaDuVS1EAjCp+uNG38yCwPNVG0BSGQbRcgAKBSwRkfMIx9mj6
+ uAuvyjZs7XAz0yfjn3DEGnknhrhEyLMzzRmv6yh2/nDZccgfneUemeaaj1CszaL8006U
+ LCidNp1RBdS5qx3MI8nEtdljik8lQqx2zC92fBISDhAyx8VSH2Og0I2DN5WNEmK05fGr
+ CeOpsoH+ZVq8DFuLtV/9z6xbtIbUVEykUGCNj3wkXmN+1q10drxjk17E1m5h5c5Nhmz3
+ 5fDrP92akQJ3oHKANpRntdaxGQwVaITkjRd2GVK+CPwjYMWT+DJrQ4040f5ul/EXiSqI Tw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31qecm7rr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 20 Jun 2020 00:43:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K0SqYU058298;
+        Sat, 20 Jun 2020 00:43:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 31s7jq9hvd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 20 Jun 2020 00:43:18 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05K0hGTr003731;
+        Sat, 20 Jun 2020 00:43:16 GMT
+Received: from dhcp-10-159-227-251.vpn.oracle.com (/10.159.227.251)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 20 Jun 2020 00:43:16 +0000
+Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+ <1591627576-920-2-git-send-email-divya.indi@oracle.com>
+ <20200609070026.GJ164174@unreal>
+ <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
+ <20200614064156.GB2132762@unreal>
+ <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
+ <20200617182410.GK6578@ziepe.ca>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <3770b85e-c684-f534-d6d5-84cf0874e485@oracle.com>
+Date:   Fri, 19 Jun 2020 17:43:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_22:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- suspectscore=0 priorityscore=1501 cotscore=-2147483648 lowpriorityscore=0
- clxscore=1015 spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+In-Reply-To: <20200617182410.GK6578@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 adultscore=0 mlxscore=0
+ mlxlogscore=844 phishscore=0 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006200000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 malwarescore=0
+ clxscore=1015 adultscore=0 suspectscore=3 spamscore=0 lowpriorityscore=0
+ mlxlogscore=862 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2004280000 definitions=main-2006200000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jason,
 
-Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+Thanks for taking the time to review!
 
-> Integrity measurement architecture(IMA) validates if files
-> have been accidentally or maliciously altered, both remotely and
-> locally, appraise a file's measurement against a "good" value stored
-> as an extended attribute, and enforce local file integrity.
+On 6/17/20 11:24 AM, Jason Gunthorpe wrote:
+> On Tue, Jun 16, 2020 at 10:56:53AM -0700, Divya Indi wrote:
+>> The other option might be to use GFP_NOWAIT conditionally ie
+>> (only use GFP_NOWAIT when GFP_ATOMIC is not specified in gfp_mask else
+>> use GFP_ATOMIC). Eventual goal being to not have a blocking memory allocation.
+> This is probably safest for now, unless you can audit all callers and
+> see if they can switch to GFP_NOWAIT as well
+
+At present the callers with GFP_ATOMIC appear to be ipoib. Might not be
+feasible to change them all to GFP_NOWAIT. 
+
+Will incorporate the review comments and send out v3 early next week.
+
+Thanks,
+Divya
+
 >
-> IMA also measures singatures of kernel and initrd during kexec along with
-> the command line used for kexec.
-> These measurements are critical to verify the seccurity posture of the OS.
->
-> Resering memory and adding the memory information to a device tree node
-> acts as the mechanism to carry over IMA measurement logs.
->
-> Update devicetree documentation to reflect the addition of new property
-> under the chosen node.
-
-Thank you for writing this documentation patch. It's something I should
-have done when I added the powerpc IMA kexec support.
-
-You addressed Rob Herring's comments regarding the commit message, but
-not the ones regarding the patch contents.
-
-When posting a new version of the patches, make sure to address all
-comments made so far. Addressing a comment doesn't necessarily mean
-implementing the requested change. If you don't then you should at least
-explain why you chose a different path.
-
-I mention it because this has occurred before with this patch series,
-and it's hard to make forward progress if review comments get ignored.
-
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 45e79172a646..a15f70c007ef 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -135,3 +135,20 @@ e.g.
->  		linux,initrd-end = <0x82800000>;
->  	};
->  };
-> +
-> +linux,ima-kexec-buffer
-> +----------------------
-> +
-> +This property(currently used by powerpc, arm64) holds the memory range,
-
-space before the parenthesis.
-
-> +the address and the size, of the IMA measurement logs that are being carried
-
-Maybe it's because English isn't my first language, but IMHO it's
-clearer if "the address and the size" is between parentheses rather than
-commas.
-
-> +over to the kexec session.
-
-I don't think there's a "kexec session", but I'm not sure what a good
-term would be. "linux,booted-from-kexec" uses "new kernel" so perhaps
-that's a good option to use instead of "kexec session".
-
-> +
-> +/ {
-> +	chosen {
-> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
-> +	};
-> +};
-> +
-> +This porperty does not represent real hardware, but the memory allocated for
-> +carrying the IMA measurement logs. The address and the suze are expressed in
-> +#address-cells and #size-cells, respectively of the root node.
-
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+> Jason
