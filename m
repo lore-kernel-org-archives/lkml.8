@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8593C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44FD23BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AADC23BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIeBcIrJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHflshu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgFTOse (ORCPT
+        id S1728589AbgFTOth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48570 "EHLO
+        Sat, 20 Jun 2020 10:49:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgFTOsZ (ORCPT
+        with ESMTP id S1728397AbgFTOsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 10:48:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACD7C0613EE;
-        Sat, 20 Jun 2020 07:48:25 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l11so12380599wru.0;
-        Sat, 20 Jun 2020 07:48:25 -0700 (PDT)
+        Sat, 20 Jun 2020 10:48:33 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297ACC06174E;
+        Sat, 20 Jun 2020 07:48:33 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g18so3286549wrm.2;
+        Sat, 20 Jun 2020 07:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p7Zl7lqrThNKdsqg3QbPFVZu6d1ST335CM8NkSqvRSU=;
-        b=LIeBcIrJ3ecmKXNYIeszQaZlRVNNTxuJ418s85/jubTj/u6h9YLE2j2TddBJ4/ZYTj
-         GaajqqoyzoJex+Tk+BAIrai+LxbgmjrZa4T+1PnJQTF1E6011BOqUnWhA/SzBXTz7kn7
-         +3RdTGEwZb4P2qCYbCbnKLrtcQvIltU+U6eulxE2H4IA91v3lWjQaps0dJfpVAuYFK1E
-         KkzOlY6PraOAmYlZqSkiZtWQ4SOZ1N2apP0Gd92d8h4+ukVMDpTyJqTegSGkhu91jl0x
-         I1qIHx8FgvizAxg46XsilMnEbEeQYkuP+YLp+7n9z5ro4KRAakKM8UPpKuSAfFIg65Wl
-         5ghQ==
+        bh=v6vJgKaplvVYu5CK3tSSKZqp8AdKD52jPGys9WAg2ik=;
+        b=jHflshu8MRE0tbnm3v4T8SNN7diDQz/65jfJwoRnXg9SXiyswmRiTudYNu5y2EhTd8
+         9LCUerKNPQnaudvq0y6cL0QTInaecz0xsTE9+MUTr5NkgN7G8FaSOdgkJkjcShOpsJap
+         hmcxl4nYNv5M6pVmc/baYFnx4Fv3QbOukg39FtzP0RbYSgf6YLozeyZ6IKPgMYSxOfOF
+         8DDJltnpYLnCfW+fmqDZlDlhzGKMyf52dLjpmx65XRL4bMthb1cCIdDikIpql7zs7CN7
+         szoQpR05oCjZigJhMedZX51o28754Nnwy7nlp8erOwDRf5hslsAWwfNHtF338mezZatQ
+         S4HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p7Zl7lqrThNKdsqg3QbPFVZu6d1ST335CM8NkSqvRSU=;
-        b=hQB8udHy1RR5cxK0u47j/08mLO26X4spqDR5lb6e8DGQMh9nF01uMMtq/ypxMKSD/h
-         cq6ewcvjqcB+s9kJXC8RwIrLr0cjwpe9lWi4sphtOTf+/K3vjczPXq5dh11pnk+sArNo
-         rYeWGcO+ngoxMaX9PLmZgVywdbC9SWBK8BSGnoWpQWoM6lAFefcMskE0ANeNZKgeappE
-         9P9PUZFk8KAxQvLkFuT2sxiMwO/0rRdYPU+gzEWHSV6KytytW5iQl1CKpVWArpoYCGDk
-         Os0K5DfXKmia71LlJHE1QlOtqv81SqHOAEujXmZWoMHtkrU/K1bTPCP7wmykZuzSUoR4
-         Ir/Q==
-X-Gm-Message-State: AOAM533UjsK+8d2fWv/AnFiy4T2HT83eWMbLKXCn4C4AKZfMW3BkoEM9
-        3N/v1uakqvwGDS9dzbaPpKY=
-X-Google-Smtp-Source: ABdhPJw1WAcTW3meA7eqByw3FB5W2Ahyf/5p/55ugLQgziZCG2Q2KAKToi6OI5m21LQPLucdThBjnQ==
-X-Received: by 2002:adf:e4cc:: with SMTP id v12mr9114825wrm.183.1592664501803;
-        Sat, 20 Jun 2020 07:48:21 -0700 (PDT)
+        bh=v6vJgKaplvVYu5CK3tSSKZqp8AdKD52jPGys9WAg2ik=;
+        b=EQmQy9EJPyfSb57QGiP4Ndvo9Au82ynaI6kAfG/1V/nb8ClmtR6CfgoSiqT3LAfdQw
+         Box3nQmKNP71mA/sSnJ5EyNjlijPAFrFcKdz5aXlNu6NdyMgnf+pASO/Bp8Y19cDvGBc
+         rrL2VT2mksPiGnR4MwsEZmsJTqid5Mdmtkth4CitJ9qehf7rx8VfOQza+tK/a9DXutoC
+         UMYyFNJ/excsF7WWScPHTYavTemEqx9n3GO1MJ3UzuxJ2LuZJxWj6AzZjUv9PcSToB+o
+         n1314ATC+hE1ZQoIL1JxWh2kkQ4g1NfxgkJFp0N5jZlPI0q57LiXvZoCJlfsacm1R8TH
+         8cnw==
+X-Gm-Message-State: AOAM532rTAjYilaDTuBf2IY01Pa6NgR2qlgoHgdVQXZdab1J5LL8cdkI
+        p5706piUWHLc6w7NfEUioCM=
+X-Google-Smtp-Source: ABdhPJzu4Y9C4y0Qd65ugxbI0YADYBBvj5/MB+c7KXfREiadsPdCL4sXLQALh/+8JVVDHClvdKd65w==
+X-Received: by 2002:adf:c404:: with SMTP id v4mr9061373wrf.85.1592664511955;
+        Sat, 20 Jun 2020 07:48:31 -0700 (PDT)
 Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.20
+        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:48:21 -0700 (PDT)
+        Sat, 20 Jun 2020 07:48:31 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -76,9 +76,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/21] arm64: dts: qcom: msm8994: Add PSCI node
-Date:   Sat, 20 Jun 2020 16:46:25 +0200
-Message-Id: <20200620144639.335093-10-konradybcio@gmail.com>
+Subject: [PATCH 12/21] arm64: dts: qcom: msm8994: Remove qcom,msm-id and qcom-pmic-id properties
+Date:   Sat, 20 Jun 2020 16:46:28 +0200
+Message-Id: <20200620144639.335093-13-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
 References: <20200620144639.335093-1-konradybcio@gmail.com>
@@ -89,33 +89,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PSCI node to enable multi-processor startup.
-
-Note that not every 8994 device firmware supports PSCI,
-and even if, then it can only start the cores and not
-shut them down.
+These should be set on a per-device basis, as they also include
+hardware revision bits that can vary between boards using the same SoC.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index adb1ebd15667..076da1fc52a1 100644
+index f363b678c3b3..b1a3f1732d84 100644
 --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -287,6 +287,11 @@ pmu {
- 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "hvc";
-+	};
+@@ -8,10 +8,7 @@
+ / {
+ 	model = "Qualcomm Technologies, Inc. MSM 8994";
+ 	compatible = "qcom,msm8994";
+-	// msm-id and pmic-id are required by bootloader for
+-	// proper selection of dt blob
+-	qcom,msm-id = <207 0x20000>;
+-	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 +
- 	clocks {
- 		xo_board: xo_board {
- 			compatible = "fixed-clock";
+ 	interrupt-parent = <&intc>;
+ 
+ 	#address-cells = <2>;
 -- 
 2.27.0
 
