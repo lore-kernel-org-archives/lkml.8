@@ -2,143 +2,277 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC939C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EE423ECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="O6qDxq2y"
+	by mail.kernel.org (Postfix) with ESMTP id 1F15820FC3
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592671242;
+	bh=lfSzalvbtneZ8u/8cfqsrPZxTlT9H2bEBJMac45J2rA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vT1zfuwlvUgHgTTk8T4WPdddcc2wd4I3Sz4QIZYGgOC0FgMK7jTCmfDfaxaruVowM
+	 ggPzrsuTABRRAENpIHL/9Q6bQAXlwoh3hDZjoy1IuZnhF4KzyMCqtaUHlSbeFLVeey
+	 ToHfVfwDRCJZpFUv/wWyw/wXoyJVE6UGKWrJd19o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgFTQhU (ORCPT
+        id S1728009AbgFTQkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 12:37:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgFTQhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:37:07 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A55C0613EE
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:37:07 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id x93so10177704ede.9
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 09:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qI+KLgcHGZ3cTHvlkPTGBhsaWBLAUPc1zpeWREZblPA=;
-        b=O6qDxq2yMHLFGGJbsYzsI+rIDfnFsX3XKNtroD0+uW16yAEWFPWutM0w0yHux3Z9+X
-         gKXzwScCGY59HeJd2oHMZTXKA6wp+QjMoOSgRxTf2cw1kK00PaPWvfFFYNIBBL4foahL
-         ONlv1VY4rjsO/CrAvP3wKYiT2wx6eRIUZoWleXBIGq/hj8D2TqKzq+Nl085RCT1XMeSs
-         ZHe1Luhyewh50YyAL8aa/L/nOxFesF54Ae78aW7Fn3H0TPAq0M0AfphVYlUM5K+dkHKa
-         T3U9zZvBu5shDX3wNAiDNzcuohhlbr/reutpA3aNpvS9hzxrcqZ70NG1dZvEd8PX1Ng+
-         dXuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qI+KLgcHGZ3cTHvlkPTGBhsaWBLAUPc1zpeWREZblPA=;
-        b=kIWEVcF+Ldn8IY08110Yj+glAyAFl+/TJ5uQzbC9QStX9D3p2PR0yZ6aZeWDnv2FsW
-         Y+5Pboc7lys2KchKFa2HbtBIFFYa7MclZ89PfwdPNI0RDmpzdD+VkC+/U4z3fz5vsx/o
-         /lLRxe37SJgsRM5e+42CrJ8xCmT3oWz8bPjNiyeILC9I+hM3yHLkZyRjfNAum+eUP7ew
-         NU7LYLO8xYo3pq+twYMeqOsO1pmSR/H9ni1FqKrITUps7f6dWCTo3HJz940xveFHkIDc
-         1ijPmt4uQBowC4Oi0iQVNkarQlr2Vqpu0MgoTPL3FhbvgP6ObVDWZTqixZfWuGgxvbfz
-         64tw==
-X-Gm-Message-State: AOAM531eonKWDl6wYQeZHwcsVAvgfb3bCuABjKSP6mEh5HQCYNq5OOkX
-        w1SZ6qsLFxyNsXgny43qdJI=
-X-Google-Smtp-Source: ABdhPJyg/dkss/6p4dO79EJEEhEXYP+thVEqeGX7aTivWvxH3c9atiLcDkD1IPNAWMc27jcB5oB3Wg==
-X-Received: by 2002:a50:9eaf:: with SMTP id a44mr8884095edf.121.1592671025708;
-        Sat, 20 Jun 2020 09:37:05 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id o90sm7839442edb.60.2020.06.20.09.37.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 09:37:05 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/3] ARM: dts: meson8b: odroidc1: enable the SDHC controller
-Date:   Sat, 20 Jun 2020 18:36:54 +0200
-Message-Id: <20200620163654.37207-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200620163654.37207-1-martin.blumenstingl@googlemail.com>
-References: <20200620163654.37207-1-martin.blumenstingl@googlemail.com>
+        Sat, 20 Jun 2020 12:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgFTQkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 12:40:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FCBF208D5;
+        Sat, 20 Jun 2020 16:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592671239;
+        bh=lfSzalvbtneZ8u/8cfqsrPZxTlT9H2bEBJMac45J2rA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pAqd9F3Tq6dKNOl+JLqJE94RTQ8RA+y2gHkD6XfvR23ET/VKwBv5V31BLXxbqORxC
+         3tEOumxZSSOl3VnVbkNYDhfJNyGl3GxvfxUZUC9fF9dwpynj8udwgyIUwhu5r5dG9y
+         FhO9dXAkwG/O4ajHz9/8n5Ex3NYsdsO3I2KSd64c=
+Date:   Sat, 20 Jun 2020 17:40:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "songqiang1304521@gmail.com" <songqiang1304521@gmail.com>,
+        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>
+Subject: Re: [PATCH v2 3/3] iio: remove
+ iio_triggered_buffer_postenable()/iio_triggered_buffer_predisable()
+Message-ID: <20200620174033.2ffec237@archlinux>
+In-Reply-To: <8ae96d9defc521ae3b8ac37ebfc9dd0f5b32cfb3.camel@analog.com>
+References: <20200525113855.178821-1-alexandru.ardelean@analog.com>
+        <20200525113855.178821-3-alexandru.ardelean@analog.com>
+        <20200531164020.765822dc@archlinux>
+        <a0253d719a4390f65668789e5fc182ec19355f17.camel@analog.com>
+        <20200602095406.00005add@Huawei.com>
+        <37ef45f4-9330-86ea-77c1-3138bb88601b@microchip.com>
+        <0eeae8e8c2c1a3f21e15c1931bacb197a8245104.camel@analog.com>
+        <e17fc5b3-fc6b-5980-7294-6d0a151138da@microchip.com>
+        <8ae96d9defc521ae3b8ac37ebfc9dd0f5b32cfb3.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Odroid-C1 has an eMMC connector where users can optionally install an
-eMMC module. The eMMC modules run off a 1.8V VQMMC supply which means
-that HS-200 mode can be used (this is the highest mode that the SDHC
-controller supports). Enable the SDHC controller so eMMC modules can be
-accessed.
+On Thu, 18 Jun 2020 13:37:16 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> On Thu, 2020-06-18 at 13:01 +0000, Eugen.Hristev@microchip.com wrote:
+> > On 17.06.2020 16:52, Ardelean, Alexandru wrote:  
+> > > On Wed, 2020-06-17 at 13:37 +0000, Eugen.Hristev@microchip.com wrote:  
+> > > > [External]
+> > > > 
+> > > > On 02.06.2020 11:54, Jonathan Cameron wrote:  
+> > > > > On Tue, 2 Jun 2020 07:50:23 +0000
+> > > > > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> > > > >   
+> > > > > > On Sun, 2020-05-31 at 16:40 +0100, Jonathan Cameron wrote:  
+> > > > > > > On Mon, 25 May 2020 14:38:55 +0300
+> > > > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > > > > > >   
+> > > > > > > > From: Lars-Peter Clausen <lars@metafoo.de>
+> > > > > > > > 
+> > > > > > > > This patch should be squashed into the first one, as the
+> > > > > > > > first one is
+> > > > > > > > breaking the build (intentionally) to make the IIO core files
+> > > > > > > > easier
+> > > > > > > > to
+> > > > > > > > review.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> > > > > > > > Signed-off-by: Alexandru Ardelean <  
+> > > > > > > > alexandru.ardelean@analog.com>  
+> > > > > > > > ---  
+> > > > > > > 
+> > > > > > > Friend poke.  Version log?  
+> > > > > > 
+> > > > > > Version log is in the first patch.
+> > > > > > I was wondering if I omitted it.
+> > > > > > Seems, this time I didn't. But I admit, it probably would have
+> > > > > > been better
+> > > > > > here.  
+> > > > > Ah fair enough.  That works fine if there is a cover letter but not
+> > > > > so much just putting things in the first patch!  
+> > > > > > > Other than the wistful comment below (which I'm not expecting
+> > > > > > > you to
+> > > > > > > do anything about btw!) whole series looks good to me.
+> > > > > > > 
+> > > > > > > These are obviously no functional changes (I think) so it's
+> > > > > > > only really
+> > > > > > > patch 2 that
+> > > > > > > could do with more eyes and acks.
+> > > > > > > 
+> > > > > > > Far as I can tell that case is fine as well because of the
+> > > > > > > protections
+> > > > > > > on being in the right mode, but more eyes on that would be
+> > > > > > > great.
+> > > > > > > 
+> > > > > > > So assuming that's fine, what commit message do you want me to
+> > > > > > > use for
+> > > > > > > the fused single patch?  
+> > > > > > 
+> > > > > > Commit message-wise: I think the message in the first commit
+> > > > > > would be
+> > > > > > mostly sufficient.
+> > > > > > No idea what other description would be needed.
+> > > > > > 
+> > > > > > So, maybe something like:
+> > > > > > 
+> > > > > > ---------------------------------------------------------------
+> > > > > > -------
+> > > > > > All devices using a triggered buffer need to attach and detach
+> > > > > > the trigger
+> > > > > > to the device in order to properly work. Instead of doing this in
+> > > > > > each and
+> > > > > > every driver by hand move this into the core.
+> > > > > > 
+> > > > > > At this point in time, all drivers should have been resolved to
+> > > > > > attach/detach the poll-function in the same order.
+> > > > > > 
+> > > > > > This patch removes all explicit calls of
+> > > > > > iio_triggered_buffer_postenable()
+> > > > > > & iio_triggered_buffer_predisable() in all drivers, since the
+> > > > > > core handles
+> > > > > > now the pollfunc attach/detach.
+> > > > > > 
+> > > > > > The more peculiar change is for the 'at91-sama5d2_adc' driver,
+> > > > > > since it's
+> > > > > > not obvious that removing the hooks doesn't break anything**
+> > > > > > ---------------------------------------------------------------
+> > > > > > -------
+> > > > > >   
+> > > > > 
+> > > > > Looks good.
+> > > > >   
+> > > > > > ** for the comment about 'at91-sama5d2_adc', we really do need to
+> > > > > > get some
+> > > > > > testing; otherwise this risks breaking it.  
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > I can test it, do we have any patchwork so I can easily download the
+> > > > patches ?
+> > > > I have issues when applying them.  
+> > > 
+> > > Is this good?
+> > > 
+> > > https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11568743/__;!!A3Ni8CS0y2Y!sOycjyvbMtVr_UDFBvb0vdcf9ONdhs0VBLhTcuYO4qnuZmazm5342mRE2T-119Sk7-d50A$ 
+> > > Series:
+> > > https://urldefense.com/v3/__https://patchwork.kernel.org/project/linux-iio/list/?series=293141__;!!A3Ni8CS0y2Y!sOycjyvbMtVr_UDFBvb0vdcf9ONdhs0VBLhTcuYO4qnuZmazm5342mRE2T-119TNWi1mbQ$ 
+> > > 
+> > > Many thanks
+> > > Alex  
+> > 
+> > On at91-sama5d2-adc driver, sama5d2-xplained board,
+> > Tested-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > 
+> > I applied all three patches and tested together with the other patch on 
+> > sama5d2-adc driver.
+> > It looks to be working fine. If I discover something later, I will let 
+> > you know.
+> > Thanks  
+> 
+> Also thanks from my side for testing.
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index cb21ac9f517c..0c26467de4d0 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -15,6 +15,7 @@ / {
- 	aliases {
- 		serial0 = &uart_AO;
- 		mmc0 = &sd_card_slot;
-+		mmc1 = &sdhc;
- 	};
- 
- 	chosen {
-@@ -26,6 +27,11 @@ memory {
- 		reg = <0x40000000 0x40000000>;
- 	};
- 
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		blue {
-@@ -310,6 +316,26 @@ &saradc {
- 	vref-supply = <&vcc_1v8>;
- };
- 
-+&sdhc {
-+	status = "okay";
-+
-+	pinctrl-0 = <&sdxc_c_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	max-frequency = <100000000>;
-+
-+	disable-wp;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	no-sdio;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vcc_1v8>;
-+};
-+
- &sdio {
- 	status = "okay";
- 
--- 
-2.27.0
+Great.  Thanks for testing Eugen!
+
+Applied and flattened into a single patch as discussed previously
+using a slightly edited version of your cover letter to reflect
+that Eugen was able to test it.
+
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.  Was a bit of fuzz but I don't think
+anything significant.
+
+Thanks for all your hard work driving this one through!
+
+Jonathan
+
+> 
+> 
+> >   
+> > > > Thanks !
+> > > >   
+> > > > > Agreed.
+> > > > >   
+> > > > > > > Thanks,
+> > > > > > > 
+> > > > > > > Jonathan
+> > > > > > >   
+> > > > > > > >    static const struct iio_trigger_ops
+> > > > > > > > atlas_interrupt_trigger_ops = {
+> > > > > > > > diff --git a/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> > > > > > > > b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> > > > > > > > index 17606eca42b4..8e13c53d4360 100644
+> > > > > > > > --- a/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> > > > > > > > +++ b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> > > > > > > > @@ -99,20 +99,6 @@ static irqreturn_t
+> > > > > > > > iio_simple_dummy_trigger_h(int
+> > > > > > > > irq, void *p)
+> > > > > > > >    }
+> > > > > > > > 
+> > > > > > > >    static const struct iio_buffer_setup_ops
+> > > > > > > > iio_simple_dummy_buffer_setup_ops = {
+> > > > > > > > - /*
+> > > > > > > > -  * iio_triggered_buffer_postenable:
+> > > > > > > > -  * Generic function that simply attaches the pollfunc to
+> > > > > > > > the
+> > > > > > > > trigger.
+> > > > > > > > -  * Replace this to mess with hardware state before we
+> > > > > > > > attach the
+> > > > > > > > -  * trigger.
+> > > > > > > > -  */
+> > > > > > > > - .postenable = &iio_triggered_buffer_postenable,
+> > > > > > > > - /*
+> > > > > > > > -  * iio_triggered_buffer_predisable:
+> > > > > > > > -  * Generic function that simple detaches the pollfunc from
+> > > > > > > > the
+> > > > > > > > trigger.
+> > > > > > > > -  * Replace this to put hardware state back again after the
+> > > > > > > > trigger
+> > > > > > > > is
+> > > > > > > > -  * detached but before userspace knows we have disabled the
+> > > > > > > > ring.
+> > > > > > > > -  */
+> > > > > > > > - .predisable = &iio_triggered_buffer_predisable,
+> > > > > > > >    };
+> > > > > > > >   
+> > > > > > > Hmm. Guess we should probably 'invent' a reason to illustrate
+> > > > > > > the bufer
+> > > > > > > ops in the dummy example.  Anyone feeling creative?  
+> > > > > > _______________________________________________
+> > > > > > linux-arm-kernel mailing list
+> > > > > > linux-arm-kernel@lists.infradead.org
+> > > > > > https://urldefense.com/v3/__http://lists.infradead.org/mailman/listinfo/linux-arm-kernel__;!!A3Ni8CS0y2Y!ulH92S3o_JWLMQfg5VBrFknwc_-a0K5AHpJBrTEB-RtYEp7PnRJ9jA_EacOzFQmbNIKO-Q$  
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > https://urldefense.com/v3/__http://lists.infradead.org/mailman/listinfo/linux-arm-kernel__;!!A3Ni8CS0y2Y!sOycjyvbMtVr_UDFBvb0vdcf9ONdhs0VBLhTcuYO4qnuZmazm5342mRE2T-119RWwM-1NA$ 
+> > >   
 
