@@ -2,84 +2,184 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7315C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30B7C433E0
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4C5233A0
+	by mail.kernel.org (Postfix) with ESMTP id ACAF82339E
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592624896;
-	bh=z256JtWU17ygIEPGlf5ik8tfeEi33L/eZkEqpyJhPiQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Ew8q0+XQt/k5QqRoLJNDjtBA4RlfmZE188OvVEbla9fNRbwc9hkOgd1YIW9Y+8EZ
-	 Kp2SaCUg5GOa0nP92aYhRkRofpTtiyr+Ecm6gkkiIu2lDDHkileQl211GeIM/DKL7Q
-	 q3QtmlyX2f/ebahasO8JVOfTZlY1R9tsJCRAMfSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgFTDsM (ORCPT
+        id S1726382AbgFTDsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 19 Jun 2020 23:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbgFTDp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:45:58 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A9E72100A;
-        Sat, 20 Jun 2020 03:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592624758;
-        bh=z256JtWU17ygIEPGlf5ik8tfeEi33L/eZkEqpyJhPiQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvQyfM3JgEnijk4mfEFV1o6ToajPwaZ6oinwciEX1LQhn7V5bXd8+AuSm0+rkNdeH
-         0StLkkNqxGgkyDE8nAskpQfxv1bZLsM0CeVLOCVY1Q7xHcRM2U61rcM2c+a5gOE+Q6
-         VyuI5oqWuwTr+muI/3qipT4uTnvP3fVkKnPzmdvQ=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH 1/2] tracing/boot: Fix config dependency for synthedic event
-Date:   Sat, 20 Jun 2020 12:45:54 +0900
-Message-Id: <159262475441.185015.5300725180746017555.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159262474473.185015.177609153974879988.stgit@devnote2>
-References: <159262474473.185015.177609153974879988.stgit@devnote2>
-User-Agent: StGit/0.19
+Received: from mail.loongson.cn ([114.242.206.163]:55488 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725290AbgFTDsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 23:48:11 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH2nXhu1eKzJHAA--.7854S3;
+        Sat, 20 Jun 2020 11:47:36 +0800 (CST)
+From:   maobibo <maobibo@loongson.cn>
+Subject: Re: [PATCH] MIPS: Do not flush tlb when setting pmd entry
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
+ <20200615101443.GA10075@alpha.franken.de>
+ <4bef403d-baba-ddf8-c25c-3d6968897a53@loongson.cn>
+ <20200617111403.GC9940@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
+Date:   Sat, 20 Jun 2020 11:47:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617111403.GC9940@alpha.franken.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxH2nXhu1eKzJHAA--.7854S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1xXr4kCw1rCrW3urWfXwb_yoWrWrWUpF
+        93JFn7tr4UJw1DJw4xJrW8Xr45tr15Ja45Jr15Gw18Jr1q9r48Kr1UJ348XayUJry5ArWU
+        XF4YqFyDXw1UJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bOoGdUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 726721a51838 ("tracing: Move synthetic events to
-a separate file") decoupled synthetic event from histogram,
-boot-time tracing also has to check CONFIG_SYNTH_EVENT instead
-of CONFIG_HIST_TRIGGERS.
 
-Fixes: 726721a51838 ("tracing: Move synthetic events to a separate file")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_boot.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 9de29bb45a27..8b5490cb02bb 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -120,7 +120,7 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- }
- #endif
- 
--#ifdef CONFIG_HIST_TRIGGERS
-+#ifdef CONFIG_SYNTH_EVENTS
- static int __init
- trace_boot_add_synth_event(struct xbc_node *node, const char *event)
- {
+On 06/17/2020 07:14 PM, Thomas Bogendoerfer wrote:
+> On Tue, Jun 16, 2020 at 06:34:21PM +0800, maobibo wrote:
+>>
+>>
+>> On 06/15/2020 06:14 PM, Thomas Bogendoerfer wrote:
+>>> On Wed, Jun 03, 2020 at 05:42:13PM +0800, Bibo Mao wrote:
+>>>> Function set_pmd_at is to set pmd entry, if tlb entry need to
+>>>> be flushed, there exists pmdp_huge_clear_flush alike function
+>>>> before set_pmd_at is called. So it is not necessary to call
+>>>> flush_tlb_all in this function.
+>>>
+>>> have you checked all set_pmd_at() calls ? I found a few case where
+>>> it's not clear to me, if tlb flushing is done... If you think this
+>>> is still the right thing to do, please change arch/mips/mm/pgtable-32.c
+>>> as well.
+>> well, I will double check this and do more testing about thp and hugepage.
+> 
+> I was more concerned about
+> 
+> fs/dax.c
+> fs/proc/task_mmu.c
+> mm/rmap.c
+
+I think that flush_tlb_all should not be called in function set_pmd_at
+on mips platform. However update_mmu_cache_pmd() should be called __after__
+set_pmd_at() function to update tlb entry at some places, it is another issue.
+Here is my analysis in the three files where set_pmd_at is called.
+
+in file fs/dax.c
+------------------------------------------------------
+                if (pmdp) {
+#ifdef CONFIG_FS_DAX_PMD
+                        pmd_t pmd;
+        
+                        if (pfn != pmd_pfn(*pmdp))
+                                goto unlock_pmd;          
+                        if (!pmd_dirty(*pmdp) && !pmd_write(*pmdp))
+                                goto unlock_pmd;
+        
+                        flush_cache_page(vma, address, pfn);
+                        pmd = pmdp_invalidate(vma, address, pmdp);
+                        pmd = pmd_wrprotect(pmd);
+                        pmd = pmd_mkclean(pmd);
+                        set_pmd_at(vma->vm_mm, address, pmdp, pmd);
+unlock_pmd:          
+#endif 
+------------------------------------------------------
+pmdp_invalidate is called here to flush pmd range already, it is not necessary
+to flush pmd range in function set_pmd_at
+
+------------------------------------------------------
+        if (!pmd_none(*(vmf->pmd))) {
+                spin_unlock(ptl);
+                goto fallback;
+        }
+
+        if (pgtable) {
+                pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
+                mm_inc_nr_ptes(vma->vm_mm);
+        }
+        pmd_entry = mk_pmd(zero_page, vmf->vma->vm_page_prot);
+        pmd_entry = pmd_mkhuge(pmd_entry);
+        set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
+        spin_unlock(ptl);
+        trace_dax_pmd_load_hole(inode, vmf, zero_page, *entry);
+        return VM_FAULT_NOPAGE;
+------------------------------------------------------
+pmd entry is none, does not need to flush pmd range
+
+
+in file fs/proc/task_mmu.c
+------------------------------------------------------
+static inline void clear_soft_dirty_pmd(struct vm_area_struct *vma,
+                unsigned long addr, pmd_t *pmdp)
+{
+        pmd_t old, pmd = *pmdp;
+
+        if (pmd_present(pmd)) {
+                /* See comment in change_huge_pmd() */
+                old = pmdp_invalidate(vma, addr, pmdp);
+                if (pmd_dirty(old))
+                        pmd = pmd_mkdirty(pmd);
+                if (pmd_young(old))
+                        pmd = pmd_mkyoung(pmd);
+
+                pmd = pmd_wrprotect(pmd);
+                pmd = pmd_clear_soft_dirty(pmd);
+
+                set_pmd_at(vma->vm_mm, addr, pmdp, pmd);
+        } else if (is_migration_entry(pmd_to_swp_entry(pmd))) {
+                pmd = pmd_swp_clear_soft_dirty(pmd);
+                set_pmd_at(vma->vm_mm, addr, pmdp, pmd);
+        }
+}
+------------------------------------------------------
+At the first place where set_pmd_at is called, pmdp_invalidate is called to
+flush pmd range. At the second place, on mips system pmd_swp_clear_soft_dirty(pmd)
+is equal to pmd, pmd entry has no change, does not need to flush pmd range
+
+in file linux/mm/rmap.c:
+------------------------------------------------------
+                        pmd_t *pmd = pvmw.pmd;
+                        pmd_t entry;
+                                                          
+                        if (!pmd_dirty(*pmd) && !pmd_write(*pmd))
+                                continue;
+        
+                        flush_cache_page(vma, address, page_to_pfn(page));
+                        entry = pmdp_invalidate(vma, address, pmd);
+                        entry = pmd_wrprotect(entry);
+                        entry = pmd_mkclean(entry);
+                        set_pmd_at(vma->vm_mm, address, pmd, entry);
+                        ret = 1;
+------------------------------------------------------
+pmdp_invalidate is called to flush pmd range, does not need to flush pmd range
+again in function set_pmd_at.
+
+> 
+> Thomas.
+> 
 
