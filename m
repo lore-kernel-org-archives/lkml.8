@@ -2,64 +2,64 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B55C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE80C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2006D2313A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD2E21D7A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 03:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j8nQ3B7F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nLZb9q5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732999AbgFTDap (ORCPT
+        id S1733195AbgFTDbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 23:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
+        Fri, 19 Jun 2020 23:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732873AbgFTDa0 (ORCPT
+        with ESMTP id S1733070AbgFTDbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:30:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A7BC061262
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k6so4798922pll.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
+        Fri, 19 Jun 2020 23:31:01 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38376C0619EE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:25 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ne5so4984650pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 20:30:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fi8ab2CkfvIdd/5P+r0S5dxyJT2k4tSVWykkUvi99fU=;
-        b=j8nQ3B7FpehCsunpSEVQSYjhSIMs22zucCRygwZBlcD7nkUj3GKDredCjm7jP++dYB
-         i7TY+cL1cZ8JWvzIZIwoGoSA4hKFNbTalPofMuwWJS+BqEcADvjf61J9SbvMWxiL2Qla
-         oIQyEGAM0IVcrPLyW1oKnN6H6KktioV1Ny5ps=
+        bh=TsJU39le/9mzUUvkg/vEQ1ejtljvEC7MElEcoRxU/hs=;
+        b=nLZb9q5MNXSO30mRLC8p+Z6tp7SeKI4c8mbyilFhnvlC39t+V3j0iQJ4vfU5EbJ/Ge
+         yJs0yUXWykR2+lKlShzU2CG/atXeM++8u60h/nbziIo1McpvPT8URV5HcgXBrobq0ydJ
+         LtCik9CXYKbYzZN1wG1+1XbNp5/sueNlWfLSk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fi8ab2CkfvIdd/5P+r0S5dxyJT2k4tSVWykkUvi99fU=;
-        b=kcd/NTfoVzxncus4JMYLdxCJLDBPRw7p4tp1ThPQMh0pJ/5jkZIpwbCRzAUiImUBFE
-         fHk4TDAXtzzm1GMz/W/aapcPyzVbV9Oe+4AxMFcUbMn4XaBxETHMxmTc4Nmk3bkHQy/T
-         JiaCEkrT5+cKZFlQoYrP87Bqbz1tXaKzymeoCP7YXRZxVBipaXHDPjX43cA46M2mJEYy
-         6BWTZ954iDoC+ucCOvyEcq1wJ4j7Rir4MqbsnBWzThh8XcpKwFUaTyYRCLz0UyfbceGl
-         r3jodntdRfl5U+fZYNLhVqDXgl7LbUr+NnJdKslKypchu1PklHRiWVkagSeED1IN7S93
-         7AnA==
-X-Gm-Message-State: AOAM531brUBFedRvxEwbBMQCLIIb/3W1cDg6okB9vnMiXEADi8Ftl78j
-        Kx9X0RrbdSA3SQjbLlchXzR1m+HOCTg=
-X-Google-Smtp-Source: ABdhPJzKykKp69oTsLEAQ228A8aBga9uw6xzilqOJlYhvnET2ogoJrzcYkicI+7HggPAmmAR7pqRqg==
-X-Received: by 2002:a17:90b:3614:: with SMTP id ml20mr6333214pjb.41.1592623820052;
-        Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
+        bh=TsJU39le/9mzUUvkg/vEQ1ejtljvEC7MElEcoRxU/hs=;
+        b=kIaXVMY6E7dKCrI76jWqF4V5HsYro0HiYwxs0BWtMMMYmk2DmDfVK5dyHWrGrkzlj8
+         ldNNAkqqh1fyBkKoG5/JmSVFILGsoLtaoSHz1Pl6HA3jb8GhTlnRa/6jmcGIz4IQxms4
+         F+/TdX1WD9AKLMBDrqc/Rfp8t4YHD2ofA7L7j8SD5CF9Ejk99RYM+diRsBDdVmhkToxW
+         z6AYIF0ThpcQ409N88wE2LDRIqRzepnkpQmKHpbmKO7D+/Cu7d3jzcDv43fDgwfW9xkh
+         wbViq2kmdPcnebVRSu8L6LZRgGVo7caHufMa3n0s6h//wRuRyoEA+9t6J3HBrFB30KrJ
+         ay8Q==
+X-Gm-Message-State: AOAM533GnrlcbyvLjXS+7EZRMVJ65aM3L4rNT5TM3lqRoqNFrls5d0BQ
+        dDsTj7Od8atCZORldi+NPrX2iw==
+X-Google-Smtp-Source: ABdhPJx/5DcfB27JAL/c3SFwGw95qhIKfr9dnkeTlJXy/0XzMHLMuVPklbRvet5f9iLDNbeJ3PiIXQ==
+X-Received: by 2002:a17:902:8f83:: with SMTP id z3mr10333002plo.203.1592623824777;
+        Fri, 19 Jun 2020 20:30:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p19sm7198155pff.116.2020.06.19.20.30.16
+        by smtp.gmail.com with ESMTPSA id ev20sm6238855pjb.8.2020.06.19.20.30.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 20:30:17 -0700 (PDT)
+        Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Alexander Potapenko <glider@google.com>,
@@ -71,9 +71,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH v2 01/16] docs: deprecated.rst: Add uninitialized_var()
-Date:   Fri, 19 Jun 2020 20:29:52 -0700
-Message-Id: <20200620033007.1444705-2-keescook@chromium.org>
+Subject: [PATCH v2 10/16] KVM: PPC: Book3S PR: Remove uninitialized_var() usage
+Date:   Fri, 19 Jun 2020 20:30:01 -0700
+Message-Id: <20200620033007.1444705-11-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200620033007.1444705-1-keescook@chromium.org>
 References: <20200620033007.1444705-1-keescook@chromium.org>
@@ -84,43 +84,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing should be using this macro, and the entire idea of tricking the
-compiler into silencing such warnings is a mistake.
+Using uninitialized_var() is dangerous as it papers over real bugs[1]
+(or can in the future), and suppresses unrelated compiler warnings (e.g.
+"unused variable"). If the compiler thinks it is uninitialized, either
+simply initialize the variable or make compiler changes. As a precursor
+to removing[2] this[3] macro[4], just remove this variable since it was
+actually unused:
 
+arch/powerpc/kvm/book3s_pr.c:1832:16: warning: unused variable 'vrsave' [-Wunused-variable]
+        unsigned long vrsave;
+                      ^
+
+[1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+[2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+[3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+[4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: f05ed4d56e9c ("KVM: PPC: Split out code from book3s.c into book3s_pr.c")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/process/deprecated.rst | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/powerpc/kvm/book3s_pr.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 652e2aa02a66..943a926ecbbb 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -51,6 +51,24 @@ to make sure their systems do not continue running in the face of
- "unreachable" conditions. (For example, see commits like `this one
- <https://git.kernel.org/linus/d4689846881d160a4d12a514e991a740bcb5d65a>`_.)
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index ef54f917bdaf..ed12dfbf9bb5 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1828,9 +1828,6 @@ static int kvmppc_vcpu_run_pr(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_run *run = vcpu->run;
+ 	int ret;
+-#ifdef CONFIG_ALTIVEC
+-	unsigned long uninitialized_var(vrsave);
+-#endif
  
-+uninitialized_var()
-+-------------------
-+For any compiler warnings about uninitialized variables, just add
-+an initializer. Using the uninitialized_var() macro (or similar
-+warning-silencing tricks) is dangerous as it papers over `real bugs
-+<https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/>`_
-+(or can in the future), and suppresses unrelated compiler warnings
-+(e.g. "unused variable"). If the compiler thinks it is uninitialized,
-+either simply initialize the variable or make compiler changes. Keep in
-+mind that in most cases, if an initialization is obviously redundant,
-+the compiler's dead-store elimination pass will make sure there are no
-+needless variable writes.
-+
-+As Linus has said, this macro
-+`must <https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/>`_
-+`be <https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/>`_
-+`removed <https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/>`_.
-+
- open-coded arithmetic in allocator arguments
- --------------------------------------------
- Dynamic size calculations (especially multiplication) should not be
+ 	/* Check if we can run the vcpu at all */
+ 	if (!vcpu->arch.sane) {
 -- 
 2.25.1
 
