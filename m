@@ -2,124 +2,82 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E434C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52826C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEAD42474A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592694535;
-	bh=2IEhfBYyQCSyZpnt+8yfDe7vxNgCoT7PUvnS8+aWFus=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q7dsA+iZiJbrq3u7ZzeaTeEEiArRYvVgHFzmeMkPviVt7nqBZJO0sX9a7znx0ydfD
-	 sLGRuv9DDW5zCvQvAjPC6ZBSLyp9r64OkcXl0AbGFQF6WQrBcl0e/SY2oyIFBnsYSr
-	 mpcFHzHtZVY/VQZCrN+zJTSWfQBNi1Rlwx+ylvLA=
+	by mail.kernel.org (Postfix) with ESMTP id 3828A2474A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgFTXIK (ORCPT
+        id S1729076AbgFTXJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 19:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728625AbgFTXIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 19:08:09 -0400
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF722474A;
-        Sat, 20 Jun 2020 23:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592694488;
-        bh=2IEhfBYyQCSyZpnt+8yfDe7vxNgCoT7PUvnS8+aWFus=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p2z32yzBQhfcyRgHHNzs+5IIrjXsczCwFLqNTLfNQZAgGw2PskunGFm17A39sq7F7
-         h5teGa9mbxApkzTetkvnhBrzC0Q/6z12nDNoEFjq+RsTefTJN/7BmVbrlNyygUWIN+
-         YZXHA6FESindISNeo/FJ3Fbf/7UT2GK19N71Vke0=
-Date:   Sat, 20 Jun 2020 16:08:07 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v13 00/18] per memcg lru lock
-Message-Id: <20200620160807.0e0997c3e0e3ca1b18e68a53@linux-foundation.org>
-In-Reply-To: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1592555636-115095-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 20 Jun 2020 19:09:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36666 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728969AbgFTXJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 19:09:41 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C7A1244EF19071396E52;
+        Sun, 21 Jun 2020 07:09:38 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.202.231) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 21 Jun 2020 07:09:28 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH] crypto: scompress - call the completion callback for the completed acomp_req
+Date:   Sun, 21 Jun 2020 11:07:56 +1200
+Message-ID: <20200620230756.6592-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.202.231]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 16:33:38 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
+While using acomp_req, users may customize a completion callback, if the
+backend of acomp is actually scomp, this callback will never be called.
+This looks a bit messy to users. For one user, all scomp details should
+be hidden by acomp APIs.
 
-> This is a new version which bases on linux-next, merged much suggestion
-> from Hugh Dickins, from compaction fix to less TestClearPageLRU and
-> comments reverse etc. Thank a lot, Hugh!
-> 
-> Johannes Weiner has suggested:
-> "So here is a crazy idea that may be worth exploring:
-> 
-> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-> linked list.
-> 
-> Can we make PageLRU atomic and use it to stabilize the lru_lock
-> instead, and then use the lru_lock only serialize list operations?
+But it won't cause any real problem if users simply use crypto_req_done()
+as the callback, and further use crypto_wait_req() to wait for request to
+be done since crypto_wait_req() depends on the callback only if queuing
+acomp_req returns -EINPROGRESS or -EBUSY.
 
-I don't understand this sentence.  How can a per-page flag stabilize a
-per-pgdat spinlock?  Perhaps some additional description will help.
+This patch will make sure the customized completion callback is called
+for the first case. And it won't break the second case in which users
+use the common crypto_req_done() and crypto_wait_req() only.
 
-> ..."
-> 
-> With new memcg charge path and this solution, we could isolate
-> LRU pages to exclusive visit them in compaction, page migration, reclaim,
-> memcg move_accunt, huge page split etc scenarios while keeping pages' 
-> memcg stable. Then possible to change per node lru locking to per memcg
-> lru locking. As to pagevec_lru_move_fn funcs, it would be safe to let
-> pages remain on lru list, lru lock could guard them for list integrity.
-> 
-> The patchset includes 3 parts:
-> 1, some code cleanup and minimum optimization as a preparation.
-> 2, use TestCleanPageLRU as page isolation's precondition
-> 3, replace per node lru_lock with per memcg per node lru_lock
-> 
-> The 3rd part moves per node lru_lock into lruvec, thus bring a lru_lock for
-> each of memcg per node. So on a large machine, each of memcg don't
-> have to suffer from per node pgdat->lru_lock competition. They could go
-> fast with their self lru_lock
-> 
-> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
-> containers on a 2s * 26cores * HT box with a modefied case:
-> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-> 
-> With this patchset, the readtwice performance increased about 80%
-> in concurrent containers.
-> 
-> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
-> idea 8 years ago, and others who give comments as well: Daniel Jordan, 
-> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
-> 
-> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
-> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
-> 
-> ...
->
->  24 files changed, 500 insertions(+), 357 deletions(-)
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ crypto/scompress.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-It's a large patchset and afaict the whole point is performance gain. 
-80% in one specialized test sounds nice, but is there a plan for more
-extensive quantification?
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index 738f4f8f0f41..634b7ced9348 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -158,6 +158,10 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 	}
+ out:
+ 	spin_unlock(&scratch->lock);
++
++	if (req->base.complete)
++		acomp_request_complete(req, ret);
++
+ 	return ret;
+ }
+ 
+-- 
+2.27.0
 
-There isn't much sign of completed review activity here, so I'll go
-into hiding for a while.
+
