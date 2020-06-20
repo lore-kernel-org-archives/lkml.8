@@ -2,128 +2,114 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21725C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F0822D05
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YXI2uDsx"
+	by mail.kernel.org (Postfix) with ESMTP id 49D2022D07
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 01:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592617496;
+	bh=dlM11YL6n9RlDcOzhIHrZM9jsOceBXP57p6f1JNaSrw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YlRq7KUl/fjU0deg5ZbfnNBN/qV1PYp7P6zM+dvcU6uipsAsdc/fjU6yyrGtjWNSY
+	 OrVLZEHeKCnsBP4mEjQnVAHZnqXe9Pd/1hT/u6rvVQGbrWVvD897qiYzioCY5tR4Yg
+	 87F6UR1r/g6Wz2A093yMF1RfLk19uVO4OvDIx9QI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbgFTBle (ORCPT
+        id S1731499AbgFTBoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 21:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731400AbgFTBle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 21:41:34 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D7EC06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 18:41:33 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id k11so12197203ejr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 18:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cGEKlCMwGCVdgAUnlLlbikbWphYIp6lmyRBiC34xvQY=;
-        b=YXI2uDsxPIP5ikjSuPaoUIF1ub+ItyOscirT0PZX6vg5+S9mPCXhIixyDfmWkUXF2/
-         bGtT5MMsoK0KB1oN0FS8bAWiBHLJ1TJxoaObYThsr4ACcF60AupjpzkMEv2DkySF+2jw
-         i7DfE/dF8LfVQjnLlxhyGdB5uOX+JY9BocyLkq5YyVyc0ywIsmTqEeVLfBY1j0mX/OSN
-         pMRU14+JMtSgP4f8ozG7j4PTKh/+YOWGGfTITRSDNwPDd3PbAaOBVHW8LGNrKljVIAzA
-         tBftNKW/7zWcmS70mDCjWpXQjCQPSqayKz3jfPbC301Xf4J4YO+tZJyxuO/dJszlk9m0
-         xwzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cGEKlCMwGCVdgAUnlLlbikbWphYIp6lmyRBiC34xvQY=;
-        b=Z4EVoTyrqtKkM9moYpRoU/8bcoq6GN0l0wgxpZ1DRL7ALoQSZTXbcZa3vQaLY4XTxy
-         ti3Hzh2oGHeXkhcfQfq7PmRUANX07Sr1iyNx3PFAjGDfP+A4NdmvtoK3SPSq8DQC13nz
-         E/0BLJmKDLd3ZvTD2Nc33uNqKlNtRL52pUoJQ/PsRofPpol7eoYDitMuSCSCZjnE/C1T
-         4az53KbaoJYIEpQ7lR0OXX+1Gy+2G3TWRfUNuxUwNYpNUH3ap8YmdI9k98LPKgzK6dcA
-         0kyeWvvZPtZ+c1wV/ypI6XgBNwCvckthSIA14KpKs8Wxp2hK31IxXJEJqsXKVCm75IfZ
-         Gd6Q==
-X-Gm-Message-State: AOAM530BacZGVbOwINiULlw1yPOj78qYKofppmERZWu6sr+99GtN8Eta
-        9qiZ2ZqV4tALVEq7eUugCznmd7MGDwqKf8DOpzYblw==
-X-Google-Smtp-Source: ABdhPJymAe1wIbRyau9RlQ6rtHNZw5DceIsixBfHh6SSvyh/IXmUxdYQl3Gloshx2qUoNe5r4vkQUkPYAmNv0UbeP2s=
-X-Received: by 2002:a17:906:fac8:: with SMTP id lu8mr6018617ejb.432.1592617292159;
- Fri, 19 Jun 2020 18:41:32 -0700 (PDT)
+        Fri, 19 Jun 2020 21:44:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731480AbgFTBox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 21:44:53 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F17122D05;
+        Sat, 20 Jun 2020 01:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592617492;
+        bh=dlM11YL6n9RlDcOzhIHrZM9jsOceBXP57p6f1JNaSrw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aPMnOjSJgY5+/s7lTP00m/u2/uooEn2dghxG8T7DoPfKtVwSZ3ljJSVYWk6i3QShd
+         FPtNZjknvtiuSWKlNRsqfu+fV/kaRVA3hw7MptjiCd2rRERUzppwcoldRIA+6YnCWy
+         DklCbVMS8p8bpoKq32v4+CAys/q0IzzHXzYKUfyA=
+Received: by mail-lj1-f177.google.com with SMTP id e4so13536906ljn.4;
+        Fri, 19 Jun 2020 18:44:52 -0700 (PDT)
+X-Gm-Message-State: AOAM533Y4HB5JPbkq9P/tgFglCGNcEe+4U2lEZpoOff/koP5CNLdKJ32
+        unQgb0sjepcPYkt3fDUqSasIr3Fpci3g94YToOc=
+X-Google-Smtp-Source: ABdhPJwyLXmFCCSeJMm9cfxXMHbfwE3locG8r1u3EvNL3/y/qlko5EFrUKzllfhIQF+0IYCsFwt+iV/XtbmqndS3RNM=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr3075924ljp.346.1592617490547;
+ Fri, 19 Jun 2020 18:44:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200619125923.22602-1-david@redhat.com> <20200619125923.22602-3-david@redhat.com>
-In-Reply-To: <20200619125923.22602-3-david@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 19 Jun 2020 18:41:21 -0700
-Message-ID: <CAPcyv4hgHmnKd-isUbSy5PjohjhhCL03Y00x0NO8=JOvexvUtw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: document why shuffle_zone() is relevant
-To:     David Hildenbrand <david@redhat.com>
+References: <20200619160538.8641-1-peterx@redhat.com> <20200619160538.8641-7-peterx@redhat.com>
+In-Reply-To: <20200619160538.8641-7-peterx@redhat.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 20 Jun 2020 09:44:31 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS+6UwSAbHk9236g2FOhyYniKZ-W3DcKJuSYMF13qHZxQ@mail.gmail.com>
+Message-ID: <CAJF2gTS+6UwSAbHk9236g2FOhyYniKZ-W3DcKJuSYMF13qHZxQ@mail.gmail.com>
+Subject: Re: [PATCH 06/26] mm/csky: Use general page fault accounting
+To:     Peter Xu <peterx@redhat.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
+        linux-mm@kvack.org, Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-csky@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 6:00 AM David Hildenbrand <david@redhat.com> wrote:
+On Sat, Jun 20, 2020 at 12:05 AM Peter Xu <peterx@redhat.com> wrote:
 >
-> It's not completely obvious why we have to shuffle the complete zone, as
-> some sort of shuffling is already performed when onlining pages via
-> __free_one_page(), placing MAX_ORDER-1 pages either to the head or the tail
-> of the freelist. Let's document why we have to shuffle the complete zone
-> when exposing larger, contiguous physical memory areas to the buddy.
+> Use the general page fault accounting by passing regs into handle_mm_faul=
+t().
+> It naturally solve the issue of multiple page fault accounting when page =
+fault
+> retry happened.
 >
-
-How about?
-
-Fixes: e900a918b098 ("mm: shuffle initial free memory to improve
-memory-side-cache utilization")
-
-...just like Patch1 since that original commit was missing the proper
-commentary in the code?
-
-
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> CC: Guo Ren <guoren@kernel.org>
+> CC: linux-csky@vger.kernel.org
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 > ---
->  mm/memory_hotplug.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/csky/mm/fault.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
 >
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 9b34e03e730a4..a0d81d404823d 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -822,6 +822,14 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->         zone->zone_pgdat->node_present_pages += onlined_pages;
->         pgdat_resize_unlock(zone->zone_pgdat, &flags);
->
-> +       /*
-> +        * When exposing larger, physically contiguous memory areas to the
-> +        * buddy, shuffling in the buddy (when freeing onlined pages, putting
-> +        * them either to the head or the tail of the freelist) is only helpful
-> +        * for mainining the shuffle, but not for creating the initial shuffle.
+> diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
+> index b14f97d3cb15..a3e0aa3ebb79 100644
+> --- a/arch/csky/mm/fault.c
+> +++ b/arch/csky/mm/fault.c
+> @@ -151,7 +151,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, u=
+nsigned long write,
+>          * the fault.
+>          */
+>         fault =3D handle_mm_fault(vma, address, write ? FAULT_FLAG_WRITE =
+: 0,
+> -                               NULL);
+> +                               regs);
+what's your kernel version ? =EF=BC=884th arg exsist ?=EF=BC=89
+        /*
+         * If for any reason at all we couldn't handle the fault,
+         * make sure we exit gracefully rather than endlessly redo
+         * the fault.
+         */
+        fault =3D handle_mm_fault(vma, address, write ? FAULT_FLAG_WRITE : =
+0);
+        if (unlikely(fault & VM_FAULT_ERROR)) {
 
-s/mainining/maintaining/
 
-> +        * Shuffle the whole zone to make sure the just onlined pages are
-> +        * properly distributed across the whole freelist.
-> +        */
->         shuffle_zone(zone);
->
->         node_states_set_node(nid, &arg);
 
-Other than the above minor fixups you can add:
+--=20
+Best Regards
+ Guo Ren
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+ML: https://lore.kernel.org/linux-csky/
