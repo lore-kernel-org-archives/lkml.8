@@ -2,119 +2,107 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BFD23ED2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895B7246D1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 21:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzWwEs6i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dMaCyk5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgFTV12 (ORCPT
+        id S1729067AbgFTV2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 17:27:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42854 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728960AbgFTV11 (ORCPT
+        Sat, 20 Jun 2020 17:28:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33447 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgFTV2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 17:27:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e9so6202133pgo.9;
-        Sat, 20 Jun 2020 14:27:26 -0700 (PDT)
+        Sat, 20 Jun 2020 17:28:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s1so15329813ljo.0
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 14:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0X0DDjflRu40U/YjqFAViv4c+Dopp8yvdpsJ3G4W+d4=;
-        b=ZzWwEs6iC/AJfANlnwkhyBE2ml+iCExSzoUh4PxqnM+UB0rp2p7inTJW3YJjVzRj7M
-         iVVE98iK6SEnCdNOexAEbjlhBGBaKcPecwkyUnNYj+A5RHcRHpDrYtw4B5Mx7xR/IeDD
-         cIMvXa4Oi4SeEqM2E8l3wqKcVuedfr7hrmgOcQ+TmmbYDNkVA1YWONTbgngpYhX3khXU
-         Bur2dxc8ZUcPTOOxIcxt+edxyH/YC0bEgs5LuA5eIfgE61e5wM2XSlJW3dx6bmAXgiQu
-         FsePeuwmBFmOLkN6o0D6h1kC0KRkQ/bCax+cV+AWfAKSo7Fe7433Ik09vXOh++L90Xmo
-         TafA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=doiVnpeZz6EAtF+e39qR7j8SwcJoFsavM/hNbCfLqRM=;
+        b=dMaCyk5rj0t13GaC05m6pfHgrVmAkqDcGWe/Aw36gXR7OcbEAac4PBq6IW1dkGlW8A
+         iNY2Z/fqeyYQCeQS2wSz6HnwCgj7wn503dK/K1XccKAGrOQ3D9/WDTXobNV1QCZtENgM
+         n0LeTgXZ56xLC3oHJGwUgYNIchSHbWcdeax05kfbmx+y/5jlKLBZjk/pwXtQ17NHnBW1
+         d5U1KDgK43yNdEMyfobXWTZqF8MOMPmie/M3W3lf8F+0+QSg4JVwgfX8gQz/NlJtZPU3
+         6RVVT4ndlrSTZUnFopUcjCJ2Uxt4XyxtwkWXi3oa3fy4CzD/vviVU/aW305KXamQ14+w
+         0NHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0X0DDjflRu40U/YjqFAViv4c+Dopp8yvdpsJ3G4W+d4=;
-        b=audSLqMYoQPl+TuaZHUooXfUtEpAv9aDhqFUCdChX0h5xVEewrwCv6eI6s2ZLQwMiI
-         5ZKP0xvKaMZI5MFPP0ZK0JD5Q/GkijdXH26uqwTlEwQKckG9kwzPJlMeZs1g2zzJpksM
-         AbghqtCLIoHQxSS48f608arY8VB0Z+v4UQO2XUCaRqkWJebj+m1nUZ7jNFVyvBDOZY73
-         hCnAupB0D3/Q/JRxxsoVXoZtivVK7mUElXGPU9exDtT6kD3IufqQ3AC7E26xGAIL7DF0
-         6MIbUnkEfG/qm7UH8J6v+eEFShvsCtnLhA1zqpItvWU/mojD4IowP2fz5al6xtqi7Bd2
-         p0yw==
-X-Gm-Message-State: AOAM533ft7rtOHc1euzmj0ZNU6SDcqApkpBoMSyb9yplMPag3PpbZ5Iu
-        U5QxURhmO69muTce48+6bQg=
-X-Google-Smtp-Source: ABdhPJzcvjmtq3PMeDSVQKIdeWm9GAgtrPAZsQj5iFKq3SU7vplD5hrN58E21f0/s+oCsj/qFUmAjg==
-X-Received: by 2002:a63:b956:: with SMTP id v22mr4574957pgo.242.1592688386037;
-        Sat, 20 Jun 2020 14:26:26 -0700 (PDT)
-Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
-        by smtp.gmail.com with ESMTPSA id f14sm7808825pgj.62.2020.06.20.14.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 14:26:25 -0700 (PDT)
-From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
-To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH bpf v2] restore behaviour of CAP_SYS_ADMIN allowing the loading of networking bpf programs
-Date:   Sat, 20 Jun 2020 14:26:16 -0700
-Message-Id: <20200620212616.93894-1-zenczykowski@gmail.com>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-In-Reply-To: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
-References: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=doiVnpeZz6EAtF+e39qR7j8SwcJoFsavM/hNbCfLqRM=;
+        b=TTcIZ9CR0uE6XYasiQE3S0miynjxlNig7rEVAJbrheVV8cgQ7Fk7lf1A4AharDHX2w
+         oc3idL6nf867SZxcNrPFObBVseC+UJXe9mx7pb/tF2RJ3Ms/niRvNBlLreeifDZ8i8NQ
+         b1Xroncu3Tz6B3ug4SI/et4hwi6Ef9KbWdVfKgV6savQusA32xYu806rrXVCIpC9/a7C
+         rplcuee12deDrd/aZNb1/gvPv9wVC9ceEtELNF1pg1Njm4kz2ht2peKERkhZrTkjWJXq
+         ooKP6P997+aQiIRRC7bfuME3f97y1SHJeM2QirIvETPJAqWksHwYotMDzFzGZ8dGoFOb
+         qrBA==
+X-Gm-Message-State: AOAM5320OrBO9Jrn5zC6KCKXTZ3gUhOmA7cv4fQQgTctjxdlNyaAdoQo
+        1/ciKs5+yAn/cFa2oWRJDz6hA4HCmKQWKxHlbe5sAA==
+X-Google-Smtp-Source: ABdhPJxB9N+8xAoSiMjHclEoJhQGLQvt4YO+a0WPgzhjdSRi4sucZUPooGGNjhuqRmwkAGGKgnMCsQx+AqKXnb91A5E=
+X-Received: by 2002:a2e:a40f:: with SMTP id p15mr5291445ljn.286.1592688439815;
+ Sat, 20 Jun 2020 14:27:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-3-frank@allwinnertech.com> <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
+ <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
+ <20200605151306.kqmyj673kux4sbaa@gilmour.lan> <CAEExFWutOjweJ_=WYKifebCPohStJdo0UJnHtmzvmhQ+VTb3kg@mail.gmail.com>
+In-Reply-To: <CAEExFWutOjweJ_=WYKifebCPohStJdo0UJnHtmzvmhQ+VTb3kg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 20 Jun 2020 23:27:08 +0200
+Message-ID: <CACRpkdYJeh0-cNbk++CdE664V+2wZirOt1CzfxT-Njp0nq5XxQ@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IOWbnuWkje+8mltQQVRDSCAyLzRdIHBpbmN0cmw6IHN1bnhpOiBhZGQgc3VwcG9ydA==?=
+        =?UTF-8?B?IGZvciB0aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>, wens <wens@csie.org>,
+        =?UTF-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>,
+        "robh+dt" <robh+dt@kernel.org>,
+        mturquette <mturquette@baylibre.com>, sboyd <sboyd@kernel.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
+On Tue, Jun 16, 2020 at 11:27 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+> HI Chen-Yu,  Linus,
+> On Fri, Jun 5, 2020 at 11:13 PM Maxime Ripard <maxime@cerno.tech> wrote:
 
-This is a fix for a regression introduced in 5.8-rc1 by:
-  commit 2c78ee898d8f10ae6fb2fa23a3fbaec96b1b7366
-  'bpf: Implement CAP_BPF'
+> > > Considering that the same pin has multiple same functions,
+> > > so add a suffix, like i2s3_dout3 and i2s3_din3?
+> > >
+> > > Or specify muxsel in the device tree may be another solution.
+> >
+> > Having muxsel is not really an option. We have two sets of bindings to
+> > maintain already, adding a third one would make it fairly hard to
+> > maintain. And the second binding we support is the generic pinctrl
+> > binding, so I'm not really sure why we would want to move away from
+> > that.
+> >
+> > And I'm not really fond of having a suffix either. It kind of breaks the
+> > consistency we had so far, and ideally I'd like to keep that.
+> >
+> > Chen-Yu, Linus? Any input on that one?
 
-Before the above commit it was possible to load network bpf programs
-with just the CAP_SYS_ADMIN privilege.
+This is entirely up to the driver maintainer. They need to keep the
+code together and the naming consistent with how they perceive the
+hardware works and/or is intended to work.
 
-The Android bpfloader happens to run in such a configuration (it has
-SYS_ADMIN but not NET_ADMIN) and creates maps and loads bpf programs
-for later use by Android's netd (which has NET_ADMIN but not SYS_ADMIN).
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
----
- kernel/bpf/syscall.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 8da159936bab..7d946435587d 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2121,7 +2121,7 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 	    !bpf_capable())
- 		return -EPERM;
- 
--	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN))
-+	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN) && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 	if (is_perfmon_prog_type(type) && !perfmon_capable())
- 		return -EPERM;
--- 
-2.27.0.111.gc72c7da667-goog
-
+Yours,
+Linus Walleij
