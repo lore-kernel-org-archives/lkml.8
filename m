@@ -2,143 +2,186 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC092C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B410123BA6
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B205E22D6F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 13:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzO4a/b6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rcxaeLlz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgFTN32 (ORCPT
+        id S1728174AbgFTNp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 09:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
+        Sat, 20 Jun 2020 09:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgFTN31 (ORCPT
+        with ESMTP id S1728051AbgFTNp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 09:29:27 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9CBC06174E;
-        Sat, 20 Jun 2020 06:29:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id j1so5862428pfe.4;
-        Sat, 20 Jun 2020 06:29:27 -0700 (PDT)
+        Sat, 20 Jun 2020 09:45:57 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6ADC06174E;
+        Sat, 20 Jun 2020 06:45:57 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so11457563iov.11;
+        Sat, 20 Jun 2020 06:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9IlKTkHtRXiSiRdGW+KXe5u7fl75eUcPoIBm0AcFU+M=;
-        b=HzO4a/b6ARXi7TF89N4C7I+rpfUbv3qSBuAeV86xpEy0ycxeIgEyglqd1qPOwq/nhz
-         xmLAO7Y2yPdejp8iJcZ3QZgQKa9VbxHHniu4mYwKcBB9oMgf8w1t535pOQIF69IvxT6h
-         +AfGJ3dxstXNqjIeB23vZRBxC+Uw0OUh3pC3UBQ0LacqtNn6ubu9DBNoscTp9MN0+DLr
-         vqlbHdsLsjkseYWE+0hy0VwO+YVtSMoLpXUkXgr40V29qqUUsT3t4xXM54JRSwuUHG5A
-         ZU4/l8/zL+gJyyCjbclVnkSX8Qx8P8YnJ2bp81PQpCQdMM1DRfEZeu7JWqtuiOOaLp94
-         6hWg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UNXH1YyCsCCl1PMwAp+oXRKvH3YYWfnwY9YvlVxqdww=;
+        b=rcxaeLlz/cgHimzyoWhZdWGHIbENtRp2IsSWqCwO0Cwf3isdxM8xKq/gDUNc3Zk7cE
+         p747aOnwWPvG/Y4JTrI5jg2xyU77w77Hrm+hXGJdlddukqkMncO2o5GLb61u2ggOZotB
+         errbF9SKLDVyYf0hySHJasYmmAXl57Cz29wl8NcccwTzNMbDKoIF1ojelhyUrglBmS+l
+         ieIZ4/MILunQnTe79G2qbK2a41INV/3Ce9jF4hAwgdRL/kGCjhnbHaSI25275MOH8OMc
+         fY4v9/iewjdumxIwwr0fLSDfn88cWr8lwjBtENKvY3qIxcEK7KeX1yWi8/4NBUMmIqTs
+         5gng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9IlKTkHtRXiSiRdGW+KXe5u7fl75eUcPoIBm0AcFU+M=;
-        b=ImprL5+ikiIXyfKh3J3PFzGOWOHaUCa+E9YDQLsvFi0Xst0mSO61st8sioCVP9kaNH
-         H+uThU2EPe8CEHbaARzi0seuqO1W9jRC+MnO9eQhM6QrmW2bglRZHCENj+Ejd2HDvIdG
-         5sSSp2r8ZzlDy7QWpIAvKod1EX12c6spHZs18uvxVP5yZ+dtTkDSARY/rImSoNbmfymV
-         daweUk2J+VsZxevfN9hZlODrKbJbXmhge6HJWFwBBUr7Xap9t1XTRFGpczTohIUUunvS
-         XQx0rW3NHKPedNe1w91+CpeZnNkygMCqFBHflp0yOVdgnxJWcwQr692nn1UBj4ZbNIUD
-         OOdg==
-X-Gm-Message-State: AOAM530CprLaIBBp8Eh65htlWWwYWZU+7bSkp1A8ME7l+y8Gs+xtHW5V
-        HXTi365avmlMYN/08XfSyp1Y9maC
-X-Google-Smtp-Source: ABdhPJz3/+npCHfTMchsGrXKaxHj0tDC3Dfhb5w6Y5Y1pyIRjwGEg0j7ZC0xLjGoEPACz5IOIOzWaw==
-X-Received: by 2002:a62:5210:: with SMTP id g16mr11937457pfb.204.1592659766744;
-        Sat, 20 Jun 2020 06:29:26 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j17sm8303080pjy.22.2020.06.20.06.29.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 06:29:26 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/259] 5.4.48-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200620082215.905874302@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <01c4acf6-9f07-68af-3334-4b02a1e9c4a3@roeck-us.net>
-Date:   Sat, 20 Jun 2020 06:29:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UNXH1YyCsCCl1PMwAp+oXRKvH3YYWfnwY9YvlVxqdww=;
+        b=iMg/FfxPvIQE/nA5JCMaXIhZfLSo3F9H46qgVjDTRx8MQdEdarWadfVyczx59rRURq
+         AeomT/HtM/Ln+6kXZp/dSt1k7dTgAG6753LkeMhTsNURmEieFJMMQQFV/1AurlrxuKrj
+         F0NcdeQLxTylfWoA9785RY++bgjYykmEJXNkJhWkaadAmULlA2SeDFFkf9quokvCDyse
+         zhNoy/Sz+kJkpFwNNWsnI/fBNU5/BW8zf2Dnldr4N5Nj/mK8BclcSX1bL4hpg4ZI7Sf2
+         PSBChzAWfjScRd6zNWmvQ1XQtKUNcNxVd/vghMsUECeQ1FlTRjB2j577mDap1cCj4RX9
+         IUrw==
+X-Gm-Message-State: AOAM5334oWxB0gtZOEHZ10Nt0hqDrkOXFR0caHn2BeWPPoHLTW5Ol0qJ
+        TWBKdhkD/28UenQjhD3+rD7tjzmSrJzKSPoojHA=
+X-Google-Smtp-Source: ABdhPJyLtGRtpXnIWl94atiG4W1tkPfkoeM7pynAOTFue99EdcoR7NJAVK+TmeaitSyzQMqns7VsTbyYaihfRUHhPcM=
+X-Received: by 2002:a02:c4c8:: with SMTP id h8mr8758326jaj.64.1592660756641;
+ Sat, 20 Jun 2020 06:45:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200620082215.905874302@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1592224128.git.syednwaris@gmail.com> <fe12eedf3666f4af5138de0e70b67a07c7f40338.1592224129.git.syednwaris@gmail.com>
+ <20200616081428.GP2428291@smile.fi.intel.com>
+In-Reply-To: <20200616081428.GP2428291@smile.fi.intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sat, 20 Jun 2020 19:15:44 +0530
+Message-ID: <CACG_h5rDCX10qdbvtD93hL0-hNgJ-J_Orr6X_1WW-9u-CCU36g@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] bitops: Introduce the for_each_set_clump macro
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/20 1:23 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.48 release.
-> There are 259 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Mon, 22 Jun 2020 08:21:26 +0000.
-> Anything received after that time might be too late.
-> 
+On Tue, Jun 16, 2020 at 1:44 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Jun 15, 2020 at 06:21:18PM +0530, Syed Nayyar Waris wrote:
+> > This macro iterates for each group of bits (clump) with set bits,
+> > within a bitmap memory region. For each iteration, "start" is set to
+> > the bit offset of the found clump, while the respective clump value is
+> > stored to the location pointed by "clump". Additionally, the
+> > bitmap_get_value and bitmap_set_value functions are introduced to
+> > respectively get and set a value of n-bits in a bitmap memory region.
+> > The n-bits can have any size less than or equal to BITS_PER_LONG.
+> > Moreover, during setting value of n-bit in bitmap, if a situation arise
+> > that the width of next n-bit is exceeding the word boundary, then it
+> > will divide itself such that some portion of it is stored in that word,
+> > while the remaining portion is stored in the next higher word. Similar
+> > situation occurs while retrieving value of n-bits from bitmap.
+>
+> On the second view...
+>
+> > +static inline unsigned long bitmap_get_value(const unsigned long *map,
+> > +                                           unsigned long start,
+> > +                                           unsigned long nbits)
+> > +{
+> > +     const size_t index = BIT_WORD(start);
+> > +     const unsigned long offset = start % BITS_PER_LONG;
+>
+> > +     const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+>
+> This perhaps should use round_up()
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+Hi Andy. I will see with round_up(). I will check and inform you.
+Further below ...
 
-Guenter
+>
+> > +     const unsigned long space = ceiling - start;
+>
+> And I think I see a scenario to complain.
+>
+> If start == 0, then ceiling will be 64.
+> space == 64. Not good.
+
+Yes, you are right, when the 'start' is '0', then 'space' will be 64
+(on arch where BITS_PER_LONG is 64).
+But actually I want this to happen. I need 'space' to hold value 64
+when 'start' is '0'. The reason is as follows:
+
+Taking the example of bitmap_set_value(). If the nbits is 16 (as
+example) and 'start' is zero, The 'if' condition will be executed
+inside bitmap_set_value() when 'start' is zero because space(64) >=
+nbits(16) is true. This 'if' condition is for the case when nbits
+falls completely into the first word and the nbits doesn't have to
+divide itself into another higher word of the bitmap.
+
+This is what I want to happen. I will think more about this and let
+you know further.
+
+Kindly let me know If I have misunderstood something. Thanks !
+
+>
+> > +     unsigned long value_low, value_high;
+> > +
+> > +     if (space >= nbits)
+> > +             return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> > +     else {
+> > +             value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
+> > +             value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
+> > +             return (value_low >> offset) | (value_high << space);
+> > +     }
+> > +}
+>
+> ...
+>
+> > +/**
+> > + * bitmap_set_value - set n-bit value within a memory region
+> > + * @map: address to the bitmap memory region
+> > + * @value: value of nbits
+> > + * @start: bit offset of the n-bit value
+> > + * @nbits: size of value in bits
+> > + */
+> > +static inline void bitmap_set_value(unsigned long *map,
+> > +                                 unsigned long value,
+> > +                                 unsigned long start, unsigned long nbits)
+> > +{
+> > +     const size_t index = BIT_WORD(start);
+> > +     const unsigned long offset = start % BITS_PER_LONG;
+>
+> > +     const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> > +     const unsigned long space = ceiling - start;
+>
+> Ditto for both lines.
+>
+> > +     value &= GENMASK(nbits - 1, 0);
+> > +
+> > +     if (space >= nbits) {
+> > +             map[index] &= ~(GENMASK(nbits + offset - 1, offset));
+> > +             map[index] |= value << offset;
+> > +     } else {
+> > +             map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
+> > +             map[index] |= value << offset;
+> > +             map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> > +             map[index + 1] |= (value >> space);
+> > +     }
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
