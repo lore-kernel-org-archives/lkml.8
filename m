@@ -7,46 +7,78 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA45EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6698AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2CDD23BCD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA5A23BDB
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 14:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgFTOih (ORCPT
+        id S1728239AbgFTOi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:38:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31260 "EHLO mga02.intel.com"
+        Sat, 20 Jun 2020 10:38:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63676 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728210AbgFTOid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 10:38:33 -0400
-IronPort-SDR: z5If8m8OMl/WlQxBYGGmX8FLYS6o9MkdOcFAHJrH7GH0q1t6UUmnLWHvpTqZ40nyfZ4xKE9XIf
- NHij8MxqdBrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="131737882"
+        id S1728210AbgFTOiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 10:38:55 -0400
+IronPort-SDR: RaZI7MJIZ0C2V4r6INtHBU5XElMbsPjrmx+Kyb1ohs/0iHGYEmbVrpq1PX76XxMjh0kLuU3Ib/
+ 84e70kk8WuhQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9657"; a="142381936"
 X-IronPort-AV: E=Sophos;i="5.75,258,1589266800"; 
-   d="yaml'?scan'208";a="131737882"
+   d="yaml'?scan'208";a="142381936"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 07:37:58 -0700
-IronPort-SDR: +dWvkJbITViO19x4WzkBA91No1M5/m9AVO5yoiVhjemyE9MZwkUJCfPo/F9H+0/IDNw94k3a/E
- 7hJ5b0qXWjpQ==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 07:38:38 -0700
+IronPort-SDR: /XSOGW2NpHvFTHzbCso+0oy6Au1fmagnzm0XIKUCyEm8e/vE0PuiKFWcci79a6aM3bQM63LUdc
+ W3iSAz25q1QQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,258,1589266800"; 
-   d="yaml'?scan'208";a="451331945"
+   d="yaml'?scan'208";a="278303961"
 Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
-  by orsmga005.jf.intel.com with ESMTP; 20 Jun 2020 07:37:55 -0700
-Date:   Sat, 20 Jun 2020 22:37:35 +0800
+  by orsmga006.jf.intel.com with ESMTP; 20 Jun 2020 07:38:28 -0700
+Date:   Sat, 20 Jun 2020 22:38:08 +0800
 From:   kernel test robot <rong.a.chen@intel.com>
-To:     Stanislav Fomichev <sdf@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chris Zankel <chris@zankel.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Helge Deller <deller@gmx.de>, Ingo Molnar <mingo@redhat.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Mark Salter <msalter@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
         LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: [bpf] 6890896bd7: will-it-scale.per_process_ops -5.2% regression
-Message-ID: <20200620143735.GF5535@shao2-debian>
+Subject: [mm] 974b9b2c68: will-it-scale.per_process_ops -1.8% regression
+Message-ID: <20200620143808.GG5535@shao2-debian>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="XStn23h1fwudRqtG"
+Content-Type: multipart/mixed; boundary="3607uds81ZQvwCD0"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 User-Agent: NeoMutt/20170113 (1.7.2)
@@ -56,28 +88,28 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---XStn23h1fwudRqtG
+--3607uds81ZQvwCD0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
 Greeting,
 
-FYI, we noticed a -5.2% regression of will-it-scale.per_process_ops due to commit:
+FYI, we noticed a -1.8% regression of will-it-scale.per_process_ops due to commit:
 
 
-commit: 6890896bd765b0504761c61901c9804fca23bfb2 ("bpf: Fix missing bpf_base_func_proto in cgroup_base_func_proto for CGROUP_NET=n")
+commit: 974b9b2c68f3d35a65e80af9657fe378d2439b60 ("mm: consolidate pte_index() and pte_offset_*() definitions")
 https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
 in testcase: will-it-scale
-on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
+on test machine: 104 threads Skylake with 192G memory
 with following parameters:
 
-	nr_task: 16
+	nr_task: 100%
 	mode: process
-	test: mmap2
+	test: brk1
 	cpufreq_governor: performance
-	ucode: 0x21
+	ucode: 0x2000065
 
 test-description: Will It Scale takes a testcase and runs it from 1 through to n parallel copies to see if the testcase will scale. It builds both a process and threads based test in order to see any differences between the two.
 test-url: https://github.com/antonblanchard/will-it-scale
@@ -101,144 +133,241 @@ To reproduce:
 
 =========================================================================================
 compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase/ucode:
-  gcc-9/performance/x86_64-rhel-7.6/process/16/debian-x86_64-20191114.cgz/lkp-ivb-d02/mmap2/will-it-scale/0x21
+  gcc-9/performance/x86_64-rhel-7.6/process/100%/debian-x86_64-20191114.cgz/lkp-skl-fpga01/brk1/will-it-scale/0x2000065
 
 commit: 
-  745abfaa9e ("bpf, riscv: Fix tail call count off by one in RV32 BPF JIT")
-  6890896bd7 ("bpf: Fix missing bpf_base_func_proto in cgroup_base_func_proto for CGROUP_NET=n")
+  e05c7b1f2b ("mm: pgtable: add shortcuts for accessing kernel PMD and PTE")
+  974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() definitions")
 
-745abfaa9eafa597 6890896bd765b0504761c61901c 
+e05c7b1f2bc4b7b2 974b9b2c68f3d35a65e80af9657 
 ---------------- --------------------------- 
          %stddev     %change         %stddev
              \          |                \  
-     63928            -5.2%      60630        will-it-scale.per_process_ops
-   1022864            -5.2%     970096        will-it-scale.workload
-     63.20            +2.4%      64.71        boot-time.idle
-   2439913 ± 19%     +35.0%    3294976 ± 10%  cpuidle.C6.time
-    202.25 ± 30%     -31.0%     139.50        slabinfo.fsnotify_mark_connector.active_objs
-     16.38 ± 19%     +45.3%      23.79 ± 10%  sched_debug.cfs_rq:/.nr_spread_over.max
-      6.61 ± 36%     +53.3%      10.13 ± 12%  sched_debug.cfs_rq:/.nr_spread_over.stddev
-      4230 ±125%    +371.5%      19944 ± 64%  sched_debug.cfs_rq:/.spread0.max
-    238.04 ± 13%     -44.2%     132.83 ± 28%  sched_debug.cfs_rq:/.util_est_enqueued.min
-     59416 ±  4%      -9.2%      53953 ±  2%  sched_debug.cpu.sched_count.min
-     16080 ± 11%     -21.6%      12609 ±  7%  sched_debug.cpu.ttwu_count.min
-     13342 ± 10%     -24.3%      10099 ±  6%  sched_debug.cpu.ttwu_local.min
- 2.661e+09            -5.1%  2.525e+09        perf-stat.i.branch-instructions
-  14914488            -4.1%   14298109        perf-stat.i.branch-misses
-      4.04            +0.4        4.46 ±  3%  perf-stat.i.cache-miss-rate%
-   4438980            -5.8%    4183284        perf-stat.i.cache-references
-      1.15            +5.4%       1.21        perf-stat.i.cpi
- 3.355e+09            -4.8%  3.194e+09        perf-stat.i.dTLB-loads
-   4442441 ±  4%      -9.6%    4014009        perf-stat.i.dTLB-store-misses
- 1.579e+09            -4.9%  1.502e+09        perf-stat.i.dTLB-stores
-     45.02           +12.4       57.47        perf-stat.i.iTLB-load-miss-rate%
-   1224412 ±  3%      -3.7%    1178714        perf-stat.i.iTLB-load-misses
-   1500623           -41.9%     872114        perf-stat.i.iTLB-loads
- 1.142e+10            -5.1%  1.083e+10        perf-stat.i.instructions
-      0.87            -5.1%       0.83        perf-stat.i.ipc
-      0.91 ±  2%      -2.5%       0.89        perf-stat.i.metric.K/sec
-      1901            -4.9%       1807        perf-stat.i.metric.M/sec
-      4.32 ±  2%      +0.3        4.64 ±  3%  perf-stat.overall.cache-miss-rate%
-      1.15            +5.4%       1.21        perf-stat.overall.cpi
-     44.92           +12.5       57.47        perf-stat.overall.iTLB-load-miss-rate%
-      0.87            -5.1%       0.83        perf-stat.overall.ipc
- 2.652e+09            -5.1%  2.517e+09        perf-stat.ps.branch-instructions
-  14865210            -4.1%   14250821        perf-stat.ps.branch-misses
-   4424338            -5.8%    4169457        perf-stat.ps.cache-references
- 3.344e+09            -4.8%  3.183e+09        perf-stat.ps.dTLB-loads
-   4427694 ±  4%      -9.6%    4000716        perf-stat.ps.dTLB-store-misses
- 1.574e+09            -4.9%  1.497e+09        perf-stat.ps.dTLB-stores
-   1220351 ±  3%      -3.7%    1174812        perf-stat.ps.iTLB-load-misses
-   1495642           -41.9%     869227        perf-stat.ps.iTLB-loads
- 1.138e+10            -5.1%   1.08e+10        perf-stat.ps.instructions
- 3.437e+12            -5.1%  3.262e+12        perf-stat.total.instructions
-      3.19 ± 13%      -0.9        2.25 ±  3%  perf-profile.calltrace.cycles-pp.percpu_counter_add_batch.__do_munmap.__vm_munmap.__x64_sys_munmap.do_syscall_64
-     23.75            -0.8       22.98        perf-profile.calltrace.cycles-pp.do_mmap.vm_mmap_pgoff.ksys_mmap_pgoff.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     41.40            -0.8       40.63        perf-profile.calltrace.cycles-pp.mmap64
-     18.86            -0.6       18.21        perf-profile.calltrace.cycles-pp.mmap_region.do_mmap.vm_mmap_pgoff.ksys_mmap_pgoff.do_syscall_64
-     27.02            -0.6       26.40        perf-profile.calltrace.cycles-pp.vm_mmap_pgoff.ksys_mmap_pgoff.do_syscall_64.entry_SYSCALL_64_after_hwframe.mmap64
-     26.71            -0.5       26.17        perf-profile.calltrace.cycles-pp.unmap_page_range.unmap_vmas.unmap_region.__do_munmap.__vm_munmap
-      0.74 ±  3%      -0.1        0.62 ±  8%  perf-profile.calltrace.cycles-pp.security_vm_enough_memory_mm.mmap_region.do_mmap.vm_mmap_pgoff.ksys_mmap_pgoff
-      2.66 ±  2%      -0.1        2.55 ±  2%  perf-profile.calltrace.cycles-pp.d_path.perf_event_mmap.mmap_region.do_mmap.vm_mmap_pgoff
-      2.60            -0.1        2.50        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64.munmap
-      1.96            -0.1        1.89 ±  2%  perf-profile.calltrace.cycles-pp.arch_get_unmapped_area_topdown.shmem_get_unmapped_area.get_unmapped_area.do_mmap.vm_mmap_pgoff
-      0.90 ±  5%      +0.1        0.98 ±  4%  perf-profile.calltrace.cycles-pp._raw_spin_lock_irqsave.percpu_counter_add_batch.__do_munmap.__vm_munmap.__x64_sys_munmap
-      1.04 ±  9%      +0.1        1.19 ±  6%  perf-profile.calltrace.cycles-pp.kmem_cache_alloc_trace.perf_event_mmap.mmap_region.do_mmap.vm_mmap_pgoff
-      0.70 ±  6%      +0.3        1.01 ± 12%  perf-profile.calltrace.cycles-pp.kmem_cache_free.remove_vma.__do_munmap.__vm_munmap.__x64_sys_munmap
-      1.40 ±  6%      +0.4        1.84 ±  5%  perf-profile.calltrace.cycles-pp.remove_vma.__do_munmap.__vm_munmap.__x64_sys_munmap.do_syscall_64
-      0.27 ±100%      +0.5        0.73 ± 16%  perf-profile.calltrace.cycles-pp.up_read.__vm_munmap.__x64_sys_munmap.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     44.30            +0.5       44.77        perf-profile.calltrace.cycles-pp.__do_munmap.__vm_munmap.__x64_sys_munmap.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      4.82 ±  2%      +0.6        5.40 ±  3%  perf-profile.calltrace.cycles-pp.free_pgd_range.unmap_region.__do_munmap.__vm_munmap.__x64_sys_munmap
-      4.42 ±  2%      +0.6        5.02 ±  3%  perf-profile.calltrace.cycles-pp.free_p4d_range.free_pgd_range.unmap_region.__do_munmap.__vm_munmap
-     58.12            +0.8       58.91        perf-profile.calltrace.cycles-pp.munmap
-     45.84            +0.8       46.64        perf-profile.calltrace.cycles-pp.__vm_munmap.__x64_sys_munmap.do_syscall_64.entry_SYSCALL_64_after_hwframe.munmap
-     46.34            +0.9       47.21        perf-profile.calltrace.cycles-pp.__x64_sys_munmap.do_syscall_64.entry_SYSCALL_64_after_hwframe.munmap
-     51.57            +0.9       52.47        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.munmap
-     51.28            +0.9       52.21        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.munmap
-     41.75            -0.8       40.95        perf-profile.children.cycles-pp.mmap64
-     23.84            -0.8       23.05        perf-profile.children.cycles-pp.do_mmap
-     18.98            -0.6       18.35        perf-profile.children.cycles-pp.mmap_region
-     27.09            -0.6       26.48        perf-profile.children.cycles-pp.vm_mmap_pgoff
-      1.41 ± 10%      -0.5        0.88 ±  4%  perf-profile.children.cycles-pp._raw_spin_unlock_irqrestore
-      4.18 ±  2%      -0.4        3.77 ±  3%  perf-profile.children.cycles-pp.percpu_counter_add_batch
-      5.20            -0.2        5.02        perf-profile.children.cycles-pp.entry_SYSCALL_64
-      0.56 ±  3%      -0.1        0.44 ± 13%  perf-profile.children.cycles-pp.cap_vm_enough_memory
-      2.69            -0.1        2.57 ±  2%  perf-profile.children.cycles-pp.d_path
-      0.75 ±  4%      -0.1        0.64 ±  7%  perf-profile.children.cycles-pp.security_vm_enough_memory_mm
-      0.38 ±  6%      -0.1        0.28 ± 30%  perf-profile.children.cycles-pp.security_mmap_addr
-      0.27 ± 13%      -0.1        0.18 ± 26%  perf-profile.children.cycles-pp.may_expand_vm
-      0.20 ±  9%      -0.1        0.14 ± 16%  perf-profile.children.cycles-pp.cap_capable
-      0.21 ±  7%      +0.1        0.26 ±  9%  perf-profile.children.cycles-pp.cap_mmap_file
-      0.00            +0.1        0.05 ±  9%  perf-profile.children.cycles-pp.profile_munmap
-      0.45            +0.1        0.51 ±  5%  perf-profile.children.cycles-pp.lru_add_drain
-      0.83 ±  3%      +0.1        0.97 ±  4%  perf-profile.children.cycles-pp.__might_sleep
-      0.43 ±  2%      +0.1        0.57 ±  7%  perf-profile.children.cycles-pp.fpregs_assert_state_consistent
-      1.10 ±  8%      +0.2        1.26 ±  7%  perf-profile.children.cycles-pp.kmem_cache_alloc_trace
-      0.52 ± 10%      +0.3        0.78 ± 16%  perf-profile.children.cycles-pp.up_read
-      0.70 ±  6%      +0.3        1.02 ± 12%  perf-profile.children.cycles-pp.kmem_cache_free
-      1.44 ±  6%      +0.4        1.89 ±  5%  perf-profile.children.cycles-pp.remove_vma
-     44.38            +0.5       44.86        perf-profile.children.cycles-pp.__do_munmap
-     86.47            +0.5       86.96        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
-     85.91            +0.5       86.41        perf-profile.children.cycles-pp.do_syscall_64
-      4.86 ±  2%      +0.6        5.42 ±  3%  perf-profile.children.cycles-pp.free_pgd_range
-      4.43 ±  2%      +0.6        5.02 ±  3%  perf-profile.children.cycles-pp.free_p4d_range
-     58.50            +0.8       59.29        perf-profile.children.cycles-pp.munmap
-     45.89            +0.8       46.71        perf-profile.children.cycles-pp.__vm_munmap
-     46.38            +0.9       47.27        perf-profile.children.cycles-pp.__x64_sys_munmap
-      1.37 ± 10%      -0.5        0.84 ±  3%  perf-profile.self.cycles-pp._raw_spin_unlock_irqrestore
-      0.26 ± 12%      -0.1        0.16 ± 25%  perf-profile.self.cycles-pp.may_expand_vm
-      0.19 ± 10%      -0.1        0.13 ± 21%  perf-profile.self.cycles-pp.cap_capable
-      0.11 ±  9%      -0.0        0.09 ±  7%  perf-profile.self.cycles-pp.security_mmap_addr
-      0.07 ± 12%      +0.0        0.10 ± 11%  perf-profile.self.cycles-pp.lru_add_drain
-      0.23 ±  7%      +0.0        0.27 ±  5%  perf-profile.self.cycles-pp.userfaultfd_unmap_prep
-      0.19 ± 10%      +0.0        0.23 ± 11%  perf-profile.self.cycles-pp.cap_mmap_file
-      0.75 ±  3%      +0.1        0.86 ±  4%  perf-profile.self.cycles-pp.__might_sleep
-      0.41 ±  2%      +0.1        0.53 ± 10%  perf-profile.self.cycles-pp.fpregs_assert_state_consistent
-      1.23 ±  2%      +0.2        1.40 ±  2%  perf-profile.self.cycles-pp.__do_munmap
-      0.63 ± 17%      +0.2        0.83 ± 16%  perf-profile.self.cycles-pp.common_file_perm
-      0.50 ± 10%      +0.3        0.75 ± 18%  perf-profile.self.cycles-pp.up_read
-      0.69 ±  6%      +0.3        1.01 ± 13%  perf-profile.self.cycles-pp.kmem_cache_free
-      4.40 ±  2%      +0.6        4.98 ±  3%  perf-profile.self.cycles-pp.free_p4d_range
+    888745            -1.8%     872327        will-it-scale.per_process_ops
+  92429549            -1.8%   90722137        will-it-scale.workload
+  18772480 ±  6%     +19.8%   22486016 ±  6%  meminfo.DirectMap2M
+     30.25            -4.1%      29.00        vmstat.cpu.us
+     27762 ± 60%     -83.1%       4691 ± 44%  proc-vmstat.numa_pte_updates
+    751487            -1.9%     736909        proc-vmstat.pgfree
+      9726 ± 13%     +18.3%      11509 ± 20%  sched_debug.cfs_rq:/.load.avg
+      7758 ±115%    +188.5%      22385 ± 86%  sched_debug.cfs_rq:/.load.stddev
+      1309 ±  7%     -15.2%       1110 ± 11%  slabinfo.dmaengine-unmap-16.active_objs
+      1309 ±  7%     -15.2%       1110 ± 11%  slabinfo.dmaengine-unmap-16.num_objs
+     15093 ± 20%     -48.2%       7824 ± 76%  numa-meminfo.node0.Inactive
+     16391 ± 19%     -45.6%       8911 ± 71%  numa-meminfo.node0.Shmem
+     62393 ±  4%     +12.5%      70188 ±  7%  numa-meminfo.node1.Shmem
+      4097 ± 19%     -45.6%       2227 ± 71%  numa-vmstat.node0.nr_shmem
+     15601 ±  4%     +12.4%      17536 ±  7%  numa-vmstat.node1.nr_shmem
+     42915 ± 32%     -20.1%      34296 ± 24%  numa-vmstat.node1.numa_other
+    662.50 ± 36%     -65.0%     231.75 ± 29%  interrupts.39:PCI-MSI.67633154-edge.eth0-TxRx-1
+     11473 ± 40%     -94.1%     679.25 ± 19%  interrupts.41:PCI-MSI.67633156-edge.eth0-TxRx-3
+    970.25 ± 52%     -40.2%     579.75 ± 13%  interrupts.CPU27.RES:Rescheduling_interrupts
+    662.50 ± 36%     -65.0%     231.75 ± 29%  interrupts.CPU31.39:PCI-MSI.67633154-edge.eth0-TxRx-1
+     11473 ± 40%     -94.1%     679.25 ± 19%  interrupts.CPU33.41:PCI-MSI.67633156-edge.eth0-TxRx-3
+    475.50 ±  6%     +67.9%     798.25 ± 46%  interrupts.CPU4.CAL:Function_call_interrupts
+    959.75 ± 68%     -52.7%     454.00        interrupts.CPU73.CAL:Function_call_interrupts
+      4688 ± 21%     -33.3%       3126 ±  8%  interrupts.CPU79.CAL:Function_call_interrupts
+    494.25 ±  6%     -11.9%     435.50 ±  7%  interrupts.CPU95.CAL:Function_call_interrupts
+  3.54e+10            -1.8%  3.475e+10        perf-stat.i.branch-instructions
+      0.73            +0.0        0.75        perf-stat.i.branch-miss-rate%
+      6.76 ±  4%      +0.6        7.35 ±  5%  perf-stat.i.cache-miss-rate%
+      1.69            +2.1%       1.73        perf-stat.i.cpi
+  92081628            -1.8%   90379569        perf-stat.i.dTLB-load-misses
+ 4.834e+10            -1.8%  4.745e+10        perf-stat.i.dTLB-loads
+ 2.604e+10            -1.9%  2.555e+10        perf-stat.i.dTLB-stores
+ 1.662e+11            -1.8%  1.631e+11        perf-stat.i.instructions
+      0.59            -2.0%       0.58        perf-stat.i.ipc
+      1055            -1.8%       1036        perf-stat.i.metric.M/sec
+      0.72            +0.0        0.73        perf-stat.overall.branch-miss-rate%
+      1.69            +2.1%       1.73        perf-stat.overall.cpi
+      1787            -1.5%       1760        perf-stat.overall.instructions-per-iTLB-miss
+      0.59            -2.0%       0.58        perf-stat.overall.ipc
+ 3.528e+10            -1.8%  3.463e+10        perf-stat.ps.branch-instructions
+  91760658            -1.8%   90065850        perf-stat.ps.dTLB-load-misses
+ 4.818e+10            -1.8%  4.729e+10        perf-stat.ps.dTLB-loads
+ 2.595e+10            -1.9%  2.547e+10        perf-stat.ps.dTLB-stores
+ 1.656e+11            -1.8%  1.626e+11        perf-stat.ps.instructions
+ 4.998e+13            -1.8%  4.909e+13        perf-stat.total.instructions
+      2.89 ±  2%      -1.6        1.31        perf-profile.calltrace.cycles-pp.security_mmap_addr.get_unmapped_area.do_brk_flags.__x64_sys_brk.do_syscall_64
+      5.27            -1.3        3.92        perf-profile.calltrace.cycles-pp.get_unmapped_area.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      1.77 ±  2%      -0.9        0.84        perf-profile.calltrace.cycles-pp.cap_mmap_addr.security_mmap_addr.get_unmapped_area.do_brk_flags.__x64_sys_brk
+     24.91            -0.7       24.20        perf-profile.calltrace.cycles-pp.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe.brk
+     74.80            -0.6       74.21        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.brk
+     75.79            -0.6       75.22        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.brk
+      0.83            -0.3        0.57 ±  2%  perf-profile.calltrace.cycles-pp.__vma_rb_erase.__do_munmap.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+     57.44            -0.2       57.23        perf-profile.calltrace.cycles-pp.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe.brk
+      2.06            -0.2        1.86        perf-profile.calltrace.cycles-pp.vma_link.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      0.71            -0.1        0.60        perf-profile.calltrace.cycles-pp.__vm_enough_memory.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      2.17            -0.1        2.09        perf-profile.calltrace.cycles-pp.remove_vma.__do_munmap.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      1.23            -0.1        1.15        perf-profile.calltrace.cycles-pp.__vma_link_rb.vma_link.do_brk_flags.__x64_sys_brk.do_syscall_64
+     99.88            -0.0       99.84        perf-profile.calltrace.cycles-pp.brk
+      0.66            +0.0        0.69 ±  2%  perf-profile.calltrace.cycles-pp.vma_merge.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      0.55            +0.0        0.58        perf-profile.calltrace.cycles-pp.___might_sleep.unmap_page_range.unmap_vmas.unmap_region.__do_munmap
+      0.61            +0.0        0.65        perf-profile.calltrace.cycles-pp.tlb_gather_mmu.unmap_region.__do_munmap.__x64_sys_brk.do_syscall_64
+      0.99            +0.1        1.08        perf-profile.calltrace.cycles-pp.strlcpy.perf_event_mmap.do_brk_flags.__x64_sys_brk.do_syscall_64
+      1.00            +0.1        1.12        perf-profile.calltrace.cycles-pp.cap_vm_enough_memory.security_vm_enough_memory_mm.do_brk_flags.__x64_sys_brk.do_syscall_64
+     24.57            +0.1       24.71        perf-profile.calltrace.cycles-pp.__do_munmap.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe.brk
+      1.14            +0.2        1.31        perf-profile.calltrace.cycles-pp.tlb_finish_mmu.unmap_region.__do_munmap.__x64_sys_brk.do_syscall_64
+      8.01            +0.2        8.19        perf-profile.calltrace.cycles-pp.perf_event_mmap.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      5.22            +0.2        5.46        perf-profile.calltrace.cycles-pp.unmap_page_range.unmap_vmas.unmap_region.__do_munmap.__x64_sys_brk
+     12.78            +0.2       13.03        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64.brk
+     10.13            +0.3       10.43        perf-profile.calltrace.cycles-pp.syscall_return_via_sysret.brk
+      2.00            +0.3        2.31        perf-profile.calltrace.cycles-pp.kmem_cache_alloc.vm_area_alloc.do_brk_flags.__x64_sys_brk.do_syscall_64
+      1.32            +0.4        1.68        perf-profile.calltrace.cycles-pp.find_vma.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe.brk
+      1.36            +0.4        1.73        perf-profile.calltrace.cycles-pp.security_vm_enough_memory_mm.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      1.39            +0.4        1.81        perf-profile.calltrace.cycles-pp.arch_get_unmapped_area_topdown.get_unmapped_area.do_brk_flags.__x64_sys_brk.do_syscall_64
+      6.87            +0.4        7.30        perf-profile.calltrace.cycles-pp.unmap_vmas.unmap_region.__do_munmap.__x64_sys_brk.do_syscall_64
+      3.53            +0.5        3.99        perf-profile.calltrace.cycles-pp.vm_area_alloc.do_brk_flags.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      0.00            +0.5        0.54        perf-profile.calltrace.cycles-pp.memcpy_erms.strlcpy.perf_event_mmap.do_brk_flags.__x64_sys_brk
+      5.99            +0.6        6.55        perf-profile.calltrace.cycles-pp.find_vma.__do_munmap.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      1.85            +0.7        2.59        perf-profile.calltrace.cycles-pp.vmacache_find.find_vma.__do_munmap.__x64_sys_brk.do_syscall_64
+     10.61            +0.9       11.47        perf-profile.calltrace.cycles-pp.unmap_region.__do_munmap.__x64_sys_brk.do_syscall_64.entry_SYSCALL_64_after_hwframe
+      2.92 ±  2%      -1.6        1.32        perf-profile.children.cycles-pp.security_mmap_addr
+      5.36            -1.4        4.00        perf-profile.children.cycles-pp.get_unmapped_area
+      1.84 ±  2%      -1.0        0.84        perf-profile.children.cycles-pp.cap_mmap_addr
+     25.05            -0.7       24.36        perf-profile.children.cycles-pp.do_brk_flags
+     74.90            -0.6       74.30        perf-profile.children.cycles-pp.do_syscall_64
+     75.87            -0.6       75.30        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
+      0.86            -0.5        0.35 ±  2%  perf-profile.children.cycles-pp.userfaultfd_unmap_prep
+      0.84            -0.3        0.57        perf-profile.children.cycles-pp.__vma_rb_erase
+     57.65            -0.2       57.42        perf-profile.children.cycles-pp.__x64_sys_brk
+      2.17            -0.2        1.96        perf-profile.children.cycles-pp.vma_link
+      0.73            -0.1        0.63        perf-profile.children.cycles-pp.__vm_enough_memory
+      0.43 ±  3%      -0.1        0.34        perf-profile.children.cycles-pp.__x86_retpoline_rbp
+      2.27            -0.1        2.19        perf-profile.children.cycles-pp.remove_vma
+      1.24            -0.1        1.16        perf-profile.children.cycles-pp.__vma_link_rb
+      0.95            -0.1        0.89        perf-profile.children.cycles-pp.percpu_counter_add_batch
+      0.25            -0.0        0.21 ±  2%  perf-profile.children.cycles-pp.__vma_link_list
+      0.43 ±  2%      -0.0        0.39 ±  3%  perf-profile.children.cycles-pp.unmap_single_vma
+      0.39 ±  2%      -0.0        0.35        perf-profile.children.cycles-pp.fpregs_assert_state_consistent
+      0.41 ±  2%      -0.0        0.37 ±  2%  perf-profile.children.cycles-pp.lru_add_drain_cpu
+      0.36 ±  2%      -0.0        0.33 ±  2%  perf-profile.children.cycles-pp.userfaultfd_unmap_complete
+      0.21 ±  2%      -0.0        0.18 ±  2%  perf-profile.children.cycles-pp.__rb_insert_augmented
+      0.11            -0.0        0.09 ±  4%  perf-profile.children.cycles-pp.__vma_link_file
+      0.36 ±  2%      +0.0        0.38        perf-profile.children.cycles-pp.sync_mm_rss
+      0.31 ±  3%      +0.0        0.34 ±  2%  perf-profile.children.cycles-pp.cap_capable
+      0.68            +0.0        0.72 ±  2%  perf-profile.children.cycles-pp.vma_merge
+      0.72            +0.0        0.77 ±  2%  perf-profile.children.cycles-pp.rcu_all_qs
+      0.53            +0.1        0.59        perf-profile.children.cycles-pp.memcpy_erms
+      0.93            +0.1        1.00        perf-profile.children.cycles-pp.vmacache_update
+      1.41            +0.1        1.48        perf-profile.children.cycles-pp._cond_resched
+      0.17 ±  4%      +0.1        0.24        perf-profile.children.cycles-pp.__x86_indirect_thunk_rax
+      0.65            +0.1        0.73        perf-profile.children.cycles-pp.tlb_gather_mmu
+      1.03            +0.1        1.12        perf-profile.children.cycles-pp.strlcpy
+      0.12 ±  3%      +0.1        0.21 ±  2%  perf-profile.children.cycles-pp.tlb_table_flush
+      0.38 ±  2%      +0.1        0.48        perf-profile.children.cycles-pp.free_pgd_range
+      1.03            +0.1        1.15        perf-profile.children.cycles-pp.cap_vm_enough_memory
+      0.84            +0.1        0.96        perf-profile.children.cycles-pp.__x86_retpoline_rax
+      0.39            +0.1        0.51        perf-profile.children.cycles-pp.may_expand_vm
+      0.39            +0.1        0.51        perf-profile.children.cycles-pp.tlb_flush_mmu
+      1.20            +0.2        1.36        perf-profile.children.cycles-pp.__might_sleep
+      2.45            +0.2        2.62        perf-profile.children.cycles-pp.___might_sleep
+      1.18            +0.2        1.36        perf-profile.children.cycles-pp.tlb_finish_mmu
+      8.14            +0.2        8.33        perf-profile.children.cycles-pp.perf_event_mmap
+     11.49            +0.2       11.73        perf-profile.children.cycles-pp.syscall_return_via_sysret
+      5.34            +0.2        5.59        perf-profile.children.cycles-pp.unmap_page_range
+     11.38            +0.3       11.66        perf-profile.children.cycles-pp.entry_SYSCALL_64
+      2.09            +0.3        2.41        perf-profile.children.cycles-pp.kmem_cache_alloc
+      1.38            +0.4        1.75        perf-profile.children.cycles-pp.security_vm_enough_memory_mm
+      1.41            +0.4        1.84        perf-profile.children.cycles-pp.arch_get_unmapped_area_topdown
+      6.92            +0.4        7.36        perf-profile.children.cycles-pp.unmap_vmas
+      3.54            +0.5        4.00        perf-profile.children.cycles-pp.vm_area_alloc
+     10.72            +0.9       11.58        perf-profile.children.cycles-pp.unmap_region
+      7.63            +0.9        8.56        perf-profile.children.cycles-pp.find_vma
+      2.18            +1.0        3.18        perf-profile.children.cycles-pp.vmacache_find
+      1.75 ±  2%      -1.0        0.77        perf-profile.self.cycles-pp.cap_mmap_addr
+      3.48            -0.8        2.71        perf-profile.self.cycles-pp.__do_munmap
+      0.89            -0.5        0.38        perf-profile.self.cycles-pp.security_mmap_addr
+      0.64            -0.3        0.31 ±  2%  perf-profile.self.cycles-pp.userfaultfd_unmap_prep
+     16.64            -0.3       16.33        perf-profile.self.cycles-pp.do_syscall_64
+      0.80            -0.2        0.55 ±  2%  perf-profile.self.cycles-pp.__vma_rb_erase
+      0.93 ±  2%      -0.2        0.72        perf-profile.self.cycles-pp.get_unmapped_area
+      2.75            -0.2        2.56        perf-profile.self.cycles-pp.do_brk_flags
+      4.61            -0.2        4.46        perf-profile.self.cycles-pp.find_vma
+      0.39 ±  5%      -0.1        0.30        perf-profile.self.cycles-pp.__x86_retpoline_rbp
+      1.21            -0.1        1.13        perf-profile.self.cycles-pp.__vma_link_rb
+      0.25 ±  2%      -0.1        0.19        perf-profile.self.cycles-pp.__vm_enough_memory
+      0.90            -0.1        0.84        perf-profile.self.cycles-pp.percpu_counter_add_batch
+      0.41 ±  2%      -0.0        0.36 ±  2%  perf-profile.self.cycles-pp.unmap_single_vma
+      0.43            -0.0        0.40        perf-profile.self.cycles-pp.vma_link
+      0.38 ±  2%      -0.0        0.34 ±  3%  perf-profile.self.cycles-pp.fpregs_assert_state_consistent
+      0.21 ±  2%      -0.0        0.18 ±  2%  perf-profile.self.cycles-pp.__vma_link_list
+      0.21 ±  2%      -0.0        0.18        perf-profile.self.cycles-pp.__rb_insert_augmented
+      0.34 ±  2%      -0.0        0.31 ±  2%  perf-profile.self.cycles-pp.userfaultfd_unmap_complete
+      0.39 ±  2%      -0.0        0.36        perf-profile.self.cycles-pp.lru_add_drain_cpu
+      0.76            -0.0        0.74        perf-profile.self.cycles-pp.kmem_cache_free
+      0.40            -0.0        0.38        perf-profile.self.cycles-pp.up_write
+      0.10            +0.0        0.11        perf-profile.self.cycles-pp.unlink_file_vma
+      0.34 ±  2%      +0.0        0.35        perf-profile.self.cycles-pp.remove_vma
+      0.47            +0.0        0.49        perf-profile.self.cycles-pp.strlcpy
+      0.27            +0.0        0.30        perf-profile.self.cycles-pp.tlb_flush_mmu
+      0.28 ±  3%      +0.0        0.31 ±  2%  perf-profile.self.cycles-pp.cap_capable
+      0.66 ±  2%      +0.0        0.70        perf-profile.self.cycles-pp.vma_merge
+      0.56 ±  2%      +0.0        0.61 ±  2%  perf-profile.self.cycles-pp.rcu_all_qs
+      0.45            +0.0        0.49 ±  2%  perf-profile.self.cycles-pp.unmap_region
+      2.02            +0.0        2.07        perf-profile.self.cycles-pp.perf_event_mmap_output
+      0.78 ±  2%      +0.1        0.83 ±  2%  perf-profile.self.cycles-pp.tlb_finish_mmu
+      0.74            +0.1        0.79        perf-profile.self.cycles-pp.__x86_retpoline_rax
+      0.51            +0.1        0.57        perf-profile.self.cycles-pp.memcpy_erms
+      0.21 ±  3%      +0.1        0.27 ±  3%  perf-profile.self.cycles-pp.security_vm_enough_memory_mm
+      0.84            +0.1        0.90        perf-profile.self.cycles-pp.vmacache_update
+      0.67            +0.1        0.73        perf-profile.self.cycles-pp.cap_vm_enough_memory
+      0.10 ±  7%      +0.1        0.17 ±  2%  perf-profile.self.cycles-pp.__x86_indirect_thunk_rax
+      0.55            +0.1        0.62        perf-profile.self.cycles-pp.unmap_vmas
+      1.12            +0.1        1.20        perf-profile.self.cycles-pp.kmem_cache_alloc
+      0.62            +0.1        0.72        perf-profile.self.cycles-pp.tlb_gather_mmu
+      0.09 ±  4%      +0.1        0.19 ±  2%  perf-profile.self.cycles-pp.tlb_table_flush
+      0.37            +0.1        0.47        perf-profile.self.cycles-pp.free_pgd_range
+      0.37 ±  2%      +0.1        0.47        perf-profile.self.cycles-pp.may_expand_vm
+      2.15            +0.1        2.26        perf-profile.self.cycles-pp.perf_event_mmap
+      1.40            +0.1        1.55        perf-profile.self.cycles-pp.vm_area_alloc
+      1.10            +0.2        1.25        perf-profile.self.cycles-pp.__might_sleep
+      2.40            +0.2        2.57        perf-profile.self.cycles-pp.___might_sleep
+      3.67            +0.2        3.85        perf-profile.self.cycles-pp.unmap_page_range
+      2.48            +0.2        2.67        perf-profile.self.cycles-pp.__x64_sys_brk
+     11.48            +0.2       11.72        perf-profile.self.cycles-pp.syscall_return_via_sysret
+      9.95            +0.3       10.27        perf-profile.self.cycles-pp.entry_SYSCALL_64
+      1.31            +0.4        1.72        perf-profile.self.cycles-pp.arch_get_unmapped_area_topdown
+      2.01            +1.0        3.00        perf-profile.self.cycles-pp.vmacache_find
 
 
                                                                                 
                             will-it-scale.per_process_ops                       
                                                                                 
-  64500 +-------------------------------------------------------------------+   
-        |            +.+                                .+                  |   
-  64000 |-+.+.+..   +   +                     +.  .+.+.+                    |   
-  63500 |.+      +.+     +.+.+.  .+. .+.     :  +.                          |   
-        |                      +.   +   +.+. :                              |   
-  63000 |-+                                 +                               |   
-  62500 |-+                       O   O                          O          |   
-        |                      O    O                               O       |   
-  62000 |-+          O                                                      |   
-  61500 |-O O O            O                                                |   
-        |        O O   O     O                           O O                |   
-  61000 |-+              O                           O                      |   
-  60500 |-+                             O   O O        O     O O      O O O |   
-        |                                 O     O  O                        |   
-  60000 +-------------------------------------------------------------------+   
+  900000 +------------------------------------------------------------------+   
+         |   :  :     O O        O O : O :    :   :     :  :                |   
+  800000 |-+ :  :                    :   :    :   :     :  :                |   
+  700000 |-+ :  :                    :   :    :   :     :  :                |   
+         |    : :                     : :      : :      : :                 |   
+  600000 |-+  : :                     : :      : :      : :                 |   
+  500000 |-+  : :                     : :      : :      : :                 |   
+         |    : :                     : :      : :       ::                 |   
+  400000 |-+  ::                      : :      : :       ::                 |   
+  300000 |-+  ::                      : :      : :       ::                 |   
+         |    ::                      : :      : :       ::                 |   
+  200000 |-+   :                       :        :        :                  |   
+  100000 |-+   :                       :        :        :                  |   
+         |     :                       :        :        :                  |   
+       0 +------------------------------------------------------------------+   
+                                                                                
+                                                                                                                                                                
+                               will-it-scale.workload                           
+                                                                                
+  1e+08 +-------------------------------------------------------------------+   
+  9e+07 |.+.+ O ++.+.+.+.+.+.+.+.++.+ O +.+.+.+ O ++.+.+   +.+.+.+.++.+.+.+.|   
+        |   :   :                   :   :     :   :    :   :                |   
+  8e+07 |-+ :   :                   :   :     :   :    :   :                |   
+  7e+07 |-+ :   :                   :   :     :   :    :   :                |   
+        |    : :                     : :       : :      : :                 |   
+  6e+07 |-+  : :                     : :       : :      : :                 |   
+  5e+07 |-+  : :                     : :       : :      : :                 |   
+  4e+07 |-+  : :                     : :       : :      : :                 |   
+        |    : :                     : :       : :      : :                 |   
+  3e+07 |-+  : :                     : :       : :      : :                 |   
+  2e+07 |-+   :                       :         :        :                  |   
+        |     :                       :         :        :                  |   
+  1e+07 |-+   :                       :         :        :                  |   
+      0 +-------------------------------------------------------------------+   
                                                                                 
                                                                                 
 [*] bisect-good sample
@@ -256,26 +385,23 @@ Thanks,
 Rong Chen
 
 
---XStn23h1fwudRqtG
+--3607uds81ZQvwCD0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="config-5.7.0-rc2-00635-g6890896bd765b0"
+Content-Disposition: attachment; filename="config-5.7.0-13148-g974b9b2c68f3d"
 
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86_64 5.7.0-rc2 Kernel Configuration
+# Linux/x86_64 5.7.0 Kernel Configuration
 #
-
-#
-# Compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-#
+CONFIG_CC_VERSION_TEXT="gcc-9 (Debian 9.3.0-13) 9.3.0"
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=90300
 CONFIG_LD_VERSION=234000000
 CONFIG_CLANG_VERSION=0
 CONFIG_CC_CAN_LINK=y
+CONFIG_CC_CAN_LINK_STATIC=y
 CONFIG_CC_HAS_ASM_GOTO=y
 CONFIG_CC_HAS_ASM_INLINE=y
-CONFIG_CC_HAS_WARN_MAYBE_UNINITIALIZED=y
 CONFIG_IRQ_WORK=y
 CONFIG_BUILDTIME_TABLE_SORT=y
 CONFIG_THREAD_INFO_IN_TASK=y
@@ -300,6 +426,7 @@ CONFIG_KERNEL_GZIP=y
 # CONFIG_KERNEL_XZ is not set
 # CONFIG_KERNEL_LZO is not set
 # CONFIG_KERNEL_LZ4 is not set
+CONFIG_DEFAULT_INIT=""
 CONFIG_DEFAULT_HOSTNAME="(none)"
 CONFIG_SWAP=y
 CONFIG_SYSVIPC=y
@@ -388,7 +515,10 @@ CONFIG_TREE_RCU=y
 # CONFIG_RCU_EXPERT is not set
 CONFIG_SRCU=y
 CONFIG_TREE_SRCU=y
+CONFIG_TASKS_RCU_GENERIC=y
 CONFIG_TASKS_RCU=y
+CONFIG_TASKS_RUDE_RCU=y
+CONFIG_TASKS_TRACE_RCU=y
 CONFIG_RCU_STALL_COMMON=y
 CONFIG_RCU_NEED_SEGCBLIST=y
 CONFIG_RCU_NOCB_CPU=y
@@ -419,7 +549,6 @@ CONFIG_CGROUPS=y
 CONFIG_PAGE_COUNTER=y
 CONFIG_MEMCG=y
 CONFIG_MEMCG_SWAP=y
-CONFIG_MEMCG_SWAP_ENABLED=y
 CONFIG_MEMCG_KMEM=y
 CONFIG_BLK_CGROUP=y
 CONFIG_CGROUP_WRITEBACK=y
@@ -682,7 +811,6 @@ CONFIG_AMD_MEM_ENCRYPT=y
 CONFIG_NUMA=y
 CONFIG_AMD_NUMA=y
 CONFIG_X86_64_ACPI_NUMA=y
-CONFIG_NODES_SPAN_OTHER_NODES=y
 CONFIG_NUMA_EMU=y
 CONFIG_NODES_SHIFT=10
 CONFIG_ARCH_SPARSEMEM_ENABLE=y
@@ -762,6 +890,7 @@ CONFIG_SUSPEND=y
 CONFIG_SUSPEND_FREEZER=y
 CONFIG_HIBERNATE_CALLBACKS=y
 CONFIG_HIBERNATION=y
+CONFIG_HIBERNATION_SNAPSHOT_DEV=y
 CONFIG_PM_STD_PARTITION=""
 CONFIG_PM_SLEEP=y
 CONFIG_PM_SLEEP_SMP=y
@@ -937,6 +1066,7 @@ CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE=y
 CONFIG_EFI_RUNTIME_MAP=y
 # CONFIG_EFI_FAKE_MEMMAP is not set
 CONFIG_EFI_RUNTIME_WRAPPERS=y
+CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
 # CONFIG_EFI_BOOTLOADER_CONTROL is not set
 # CONFIG_EFI_CAPSULE_LOADER is not set
 # CONFIG_EFI_TEST is not set
@@ -980,6 +1110,7 @@ CONFIG_KVM_MMU_AUDIT=y
 CONFIG_AS_AVX512=y
 CONFIG_AS_SHA1_NI=y
 CONFIG_AS_SHA256_NI=y
+CONFIG_AS_TPAUSE=y
 
 #
 # General architecture-dependent options
@@ -1132,6 +1263,7 @@ CONFIG_BLK_DEV_THROTTLING=y
 CONFIG_BLK_DEBUG_FS=y
 CONFIG_BLK_DEBUG_FS_ZONED=y
 # CONFIG_BLK_SED_OPAL is not set
+# CONFIG_BLK_INLINE_ENCRYPTION is not set
 
 #
 # Partition Types
@@ -1188,6 +1320,7 @@ CONFIG_ARCH_USE_QUEUED_SPINLOCKS=y
 CONFIG_QUEUED_SPINLOCKS=y
 CONFIG_ARCH_USE_QUEUED_RWLOCKS=y
 CONFIG_QUEUED_RWLOCKS=y
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE=y
 CONFIG_ARCH_HAS_SYNC_CORE_BEFORE_USERMODE=y
 CONFIG_ARCH_HAS_SYSCALL_WRAPPER=y
 CONFIG_FREEZER=y
@@ -1215,7 +1348,6 @@ CONFIG_HAVE_MEMORY_PRESENT=y
 CONFIG_SPARSEMEM_EXTREME=y
 CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
 CONFIG_SPARSEMEM_VMEMMAP=y
-CONFIG_HAVE_MEMBLOCK_NODE_MAP=y
 CONFIG_HAVE_FAST_GUP=y
 CONFIG_NUMA_KEEP_MEMINFO=y
 CONFIG_MEMORY_ISOLATION=y
@@ -1269,7 +1401,7 @@ CONFIG_ZPOOL=y
 CONFIG_ZBUD=y
 # CONFIG_Z3FOLD is not set
 CONFIG_ZSMALLOC=y
-# CONFIG_PGTABLE_MAPPING is not set
+# CONFIG_ZSMALLOC_PGTABLE_MAPPING is not set
 # CONFIG_ZSMALLOC_STAT is not set
 CONFIG_GENERIC_EARLY_IOREMAP=y
 CONFIG_DEFERRED_STRUCT_PAGE_INIT=y
@@ -1383,6 +1515,7 @@ CONFIG_IPV6_OPTIMISTIC_DAD=y
 CONFIG_INET6_AH=m
 CONFIG_INET6_ESP=m
 # CONFIG_INET6_ESP_OFFLOAD is not set
+# CONFIG_INET6_ESPINTCP is not set
 CONFIG_INET6_IPCOMP=m
 CONFIG_IPV6_MIP6=m
 # CONFIG_IPV6_ILA is not set
@@ -1784,6 +1917,7 @@ CONFIG_MRP=m
 CONFIG_BRIDGE=m
 CONFIG_BRIDGE_IGMP_SNOOPING=y
 CONFIG_BRIDGE_VLAN_FILTERING=y
+# CONFIG_BRIDGE_MRP is not set
 CONFIG_HAVE_NET_DSA=y
 # CONFIG_NET_DSA is not set
 CONFIG_VLAN_8021Q=m
@@ -1903,6 +2037,7 @@ CONFIG_NET_ACT_CONNMARK=m
 CONFIG_NET_ACT_SKBMOD=m
 # CONFIG_NET_ACT_IFE is not set
 CONFIG_NET_ACT_TUNNEL_KEY=m
+# CONFIG_NET_ACT_GATE is not set
 # CONFIG_NET_TC_SKB_EXT is not set
 CONFIG_NET_SCH_FIFO=y
 CONFIG_DCB=y
@@ -1927,6 +2062,7 @@ CONFIG_NET_NSH=m
 # CONFIG_HSR is not set
 CONFIG_NET_SWITCHDEV=y
 # CONFIG_NET_L3_MASTER_DEV is not set
+# CONFIG_QRTR is not set
 # CONFIG_NET_NCSI is not set
 CONFIG_RPS=y
 CONFIG_RFS_ACCEL=y
@@ -2735,6 +2871,7 @@ CONFIG_DM_THIN_PROVISIONING=m
 CONFIG_DM_CACHE=m
 CONFIG_DM_CACHE_SMQ=m
 # CONFIG_DM_WRITECACHE is not set
+# CONFIG_DM_EBS is not set
 CONFIG_DM_ERA=m
 # CONFIG_DM_CLONE is not set
 CONFIG_DM_MIRROR=m
@@ -2744,6 +2881,7 @@ CONFIG_DM_ZERO=m
 CONFIG_DM_MULTIPATH=m
 CONFIG_DM_MULTIPATH_QL=m
 CONFIG_DM_MULTIPATH_ST=m
+# CONFIG_DM_MULTIPATH_HST is not set
 CONFIG_DM_DELAY=m
 # CONFIG_DM_DUST is not set
 CONFIG_DM_UEVENT=y
@@ -3250,6 +3388,8 @@ CONFIG_WLAN_VENDOR_MEDIATEK=y
 # CONFIG_MT76x2U is not set
 # CONFIG_MT7603E is not set
 # CONFIG_MT7615E is not set
+# CONFIG_MT7663U is not set
+# CONFIG_MT7915E is not set
 CONFIG_WLAN_VENDOR_RALINK=y
 # CONFIG_RT2X00 is not set
 CONFIG_WLAN_VENDOR_REALTEK=y
@@ -3606,6 +3746,7 @@ CONFIG_SERIAL_8250_MID=y
 CONFIG_SERIAL_CORE=y
 CONFIG_SERIAL_CORE_CONSOLE=y
 CONFIG_SERIAL_JSM=m
+# CONFIG_SERIAL_LANTIQ is not set
 # CONFIG_SERIAL_SCCNXP is not set
 # CONFIG_SERIAL_SC16IS7XX is not set
 # CONFIG_SERIAL_ALTERA_JTAGUART is not set
@@ -3821,6 +3962,7 @@ CONFIG_SPI_PXA2XX_PCI=m
 # CONFIG_SPI_XCOMM is not set
 # CONFIG_SPI_XILINX is not set
 # CONFIG_SPI_ZYNQMP_GQSPI is not set
+# CONFIG_SPI_AMD is not set
 
 #
 # SPI Multiplexer support
@@ -3881,6 +4023,7 @@ CONFIG_PINCTRL_CANNONLAKE=m
 CONFIG_PINCTRL_DENVERTON=m
 CONFIG_PINCTRL_GEMINILAKE=m
 # CONFIG_PINCTRL_ICELAKE is not set
+# CONFIG_PINCTRL_JASPERLAKE is not set
 CONFIG_PINCTRL_LEWISBURG=m
 CONFIG_PINCTRL_SUNRISEPOINT=m
 # CONFIG_PINCTRL_TIGERLAKE is not set
@@ -3959,6 +4102,7 @@ CONFIG_GPIO_ICH=m
 CONFIG_GPIO_VIPERBOARD=m
 # end of USB GPIO expanders
 
+# CONFIG_GPIO_AGGREGATOR is not set
 # CONFIG_GPIO_MOCKUP is not set
 # CONFIG_W1 is not set
 # CONFIG_POWER_AVS is not set
@@ -4023,6 +4167,7 @@ CONFIG_SENSORS_ASC7621=m
 CONFIG_SENSORS_K8TEMP=m
 CONFIG_SENSORS_K10TEMP=m
 CONFIG_SENSORS_FAM15H_POWER=m
+# CONFIG_SENSORS_AMD_ENERGY is not set
 CONFIG_SENSORS_APPLESMC=m
 CONFIG_SENSORS_ASB100=m
 # CONFIG_SENSORS_ASPEED is not set
@@ -4116,6 +4261,7 @@ CONFIG_SENSORS_LM25066=m
 CONFIG_SENSORS_LTC2978=m
 # CONFIG_SENSORS_LTC3815 is not set
 CONFIG_SENSORS_MAX16064=m
+# CONFIG_SENSORS_MAX16601 is not set
 # CONFIG_SENSORS_MAX20730 is not set
 # CONFIG_SENSORS_MAX20751 is not set
 # CONFIG_SENSORS_MAX31785 is not set
@@ -4332,6 +4478,7 @@ CONFIG_MFD_CORE=y
 # CONFIG_MFD_DLN2 is not set
 # CONFIG_MFD_MC13XXX_SPI is not set
 # CONFIG_MFD_MC13XXX_I2C is not set
+# CONFIG_MFD_MP2629 is not set
 # CONFIG_HTC_PASIC3 is not set
 # CONFIG_HTC_I2CPLD is not set
 # CONFIG_MFD_INTEL_QUARK_I2C_GPIO is not set
@@ -4341,6 +4488,7 @@ CONFIG_LPC_SCH=m
 CONFIG_MFD_INTEL_LPSS=y
 CONFIG_MFD_INTEL_LPSS_ACPI=y
 CONFIG_MFD_INTEL_LPSS_PCI=y
+# CONFIG_MFD_INTEL_PMC_BXT is not set
 # CONFIG_MFD_IQS62X is not set
 # CONFIG_MFD_JANZ_CMODIO is not set
 # CONFIG_MFD_KEMPLD is not set
@@ -4354,6 +4502,7 @@ CONFIG_MFD_INTEL_LPSS_PCI=y
 # CONFIG_MFD_MAX8925 is not set
 # CONFIG_MFD_MAX8997 is not set
 # CONFIG_MFD_MAX8998 is not set
+# CONFIG_MFD_MT6360 is not set
 # CONFIG_MFD_MT6397 is not set
 # CONFIG_MFD_MENF21BMC is not set
 # CONFIG_EZX_PCAP is not set
@@ -4438,41 +4587,66 @@ CONFIG_IR_TTUSBIR=m
 # CONFIG_IR_SERIAL is not set
 # CONFIG_IR_SIR is not set
 # CONFIG_RC_XBOX_DVD is not set
+# CONFIG_MEDIA_CEC_SUPPORT is not set
 CONFIG_MEDIA_SUPPORT=m
+CONFIG_MEDIA_SUPPORT_FILTER=y
+CONFIG_MEDIA_SUBDRV_AUTOSELECT=y
 
 #
-# Multimedia core support
+# Media device types
 #
 CONFIG_MEDIA_CAMERA_SUPPORT=y
 CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
 CONFIG_MEDIA_DIGITAL_TV_SUPPORT=y
 CONFIG_MEDIA_RADIO_SUPPORT=y
 # CONFIG_MEDIA_SDR_SUPPORT is not set
-# CONFIG_MEDIA_CEC_SUPPORT is not set
-CONFIG_MEDIA_CONTROLLER=y
-CONFIG_MEDIA_CONTROLLER_DVB=y
+# CONFIG_MEDIA_PLATFORM_SUPPORT is not set
+# CONFIG_MEDIA_TEST_SUPPORT is not set
+# end of Media device types
+
 CONFIG_VIDEO_DEV=m
-# CONFIG_VIDEO_V4L2_SUBDEV_API is not set
+CONFIG_MEDIA_CONTROLLER=y
+CONFIG_DVB_CORE=m
+
+#
+# Video4Linux options
+#
 CONFIG_VIDEO_V4L2=m
 CONFIG_VIDEO_V4L2_I2C=y
+# CONFIG_VIDEO_V4L2_SUBDEV_API is not set
 # CONFIG_VIDEO_ADV_DEBUG is not set
 # CONFIG_VIDEO_FIXED_MINOR_RANGES is not set
 CONFIG_VIDEO_TUNER=m
 CONFIG_VIDEOBUF_GEN=m
 CONFIG_VIDEOBUF_DMA_SG=m
 CONFIG_VIDEOBUF_VMALLOC=m
-CONFIG_DVB_CORE=m
+# end of Video4Linux options
+
+#
+# Media controller options
+#
+CONFIG_MEDIA_CONTROLLER_DVB=y
+# end of Media controller options
+
+#
+# Digital TV options
+#
 # CONFIG_DVB_MMAP is not set
 CONFIG_DVB_NET=y
-CONFIG_TTPCI_EEPROM=m
 CONFIG_DVB_MAX_ADAPTERS=8
 CONFIG_DVB_DYNAMIC_MINORS=y
 # CONFIG_DVB_DEMUX_SECTION_LOSS_LOG is not set
 # CONFIG_DVB_ULE_DEBUG is not set
+# end of Digital TV options
 
 #
 # Media drivers
 #
+
+#
+# Drivers filtered as selected at 'Filter media drivers'
+#
+CONFIG_TTPCI_EEPROM=m
 CONFIG_MEDIA_USB_SUPPORT=y
 
 #
@@ -4696,15 +4870,7 @@ CONFIG_DVB_DDBRIDGE=m
 # CONFIG_DVB_DDBRIDGE_MSIENABLE is not set
 # CONFIG_DVB_SMIPCIE is not set
 # CONFIG_DVB_NETUP_UNIDVB is not set
-# CONFIG_V4L_PLATFORM_DRIVERS is not set
-# CONFIG_V4L_MEM2MEM_DRIVERS is not set
-# CONFIG_V4L_TEST_DRIVERS is not set
-# CONFIG_DVB_PLATFORM_DRIVERS is not set
-
-#
-# Supported MMC/SDIO adapters
-#
-CONFIG_SMS_SDIO_DRV=m
+# CONFIG_VIDEO_IPU3_CIO2 is not set
 CONFIG_RADIO_ADAPTERS=y
 CONFIG_RADIO_TEA575X=m
 # CONFIG_RADIO_SI470X is not set
@@ -4721,17 +4887,6 @@ CONFIG_RADIO_TEA575X=m
 # CONFIG_RADIO_SAA7706H is not set
 # CONFIG_RADIO_TEF6862 is not set
 # CONFIG_RADIO_WL1273 is not set
-
-#
-# Texas Instruments WL128x FM driver (ST based)
-#
-# end of Texas Instruments WL128x FM driver (ST based)
-
-#
-# Supported FireWire (IEEE 1394) Adapters
-#
-CONFIG_DVB_FIREDTV=m
-CONFIG_DVB_FIREDTV_INPUT=y
 CONFIG_MEDIA_COMMON_OPTIONS=y
 
 #
@@ -4751,22 +4906,28 @@ CONFIG_VIDEO_SAA7146=m
 CONFIG_VIDEO_SAA7146_VV=m
 CONFIG_SMS_SIANO_MDTV=m
 CONFIG_SMS_SIANO_RC=y
-# CONFIG_SMS_SIANO_DEBUGFS is not set
 
 #
-# Media ancillary drivers (tuners, sensors, i2c, spi, frontends)
+# FireWire (IEEE 1394) Adapters
 #
-CONFIG_MEDIA_SUBDRV_AUTOSELECT=y
+CONFIG_DVB_FIREDTV=m
+CONFIG_DVB_FIREDTV_INPUT=y
+# end of Media drivers
+
 CONFIG_MEDIA_HIDE_ANCILLARY_SUBDRV=y
+
+#
+# Media ancillary drivers
+#
 CONFIG_MEDIA_ATTACH=y
+
+#
+# IR I2C driver auto-selected by 'Autoselect ancillary drivers'
+#
 CONFIG_VIDEO_IR_I2C=m
 
 #
-# I2C drivers hidden by 'Autoselect ancillary drivers'
-#
-
-#
-# Audio decoders, processors and mixers
+# audio, video and radio I2C drivers auto-selected by 'Autoselect ancillary drivers'
 #
 CONFIG_VIDEO_TVAUDIO=m
 CONFIG_VIDEO_TDA7432=m
@@ -4777,15 +4938,7 @@ CONFIG_VIDEO_CS53L32A=m
 CONFIG_VIDEO_WM8775=m
 CONFIG_VIDEO_WM8739=m
 CONFIG_VIDEO_VP27SMPX=m
-
-#
-# RDS decoders
-#
 CONFIG_VIDEO_SAA6588=m
-
-#
-# Video decoders
-#
 CONFIG_VIDEO_SAA711X=m
 
 #
@@ -4793,46 +4946,83 @@ CONFIG_VIDEO_SAA711X=m
 #
 CONFIG_VIDEO_SAA717X=m
 CONFIG_VIDEO_CX25840=m
-
-#
-# Video encoders
-#
 CONFIG_VIDEO_SAA7127=m
+CONFIG_VIDEO_UPD64031A=m
+CONFIG_VIDEO_UPD64083=m
+CONFIG_VIDEO_SAA6752HS=m
+CONFIG_VIDEO_M52790=m
 
 #
 # Camera sensor devices
 #
+# CONFIG_VIDEO_HI556 is not set
+# CONFIG_VIDEO_IMX219 is not set
+# CONFIG_VIDEO_IMX258 is not set
+# CONFIG_VIDEO_IMX274 is not set
+# CONFIG_VIDEO_IMX290 is not set
+# CONFIG_VIDEO_IMX319 is not set
+# CONFIG_VIDEO_IMX355 is not set
+# CONFIG_VIDEO_OV2640 is not set
+# CONFIG_VIDEO_OV2659 is not set
+# CONFIG_VIDEO_OV2680 is not set
+# CONFIG_VIDEO_OV2685 is not set
+# CONFIG_VIDEO_OV2740 is not set
+# CONFIG_VIDEO_OV5647 is not set
+# CONFIG_VIDEO_OV6650 is not set
+# CONFIG_VIDEO_OV5670 is not set
+# CONFIG_VIDEO_OV5675 is not set
+# CONFIG_VIDEO_OV5695 is not set
+# CONFIG_VIDEO_OV7251 is not set
+# CONFIG_VIDEO_OV772X is not set
+# CONFIG_VIDEO_OV7640 is not set
+# CONFIG_VIDEO_OV7670 is not set
+# CONFIG_VIDEO_OV7740 is not set
+# CONFIG_VIDEO_OV8856 is not set
+# CONFIG_VIDEO_OV9640 is not set
+# CONFIG_VIDEO_OV9650 is not set
+# CONFIG_VIDEO_OV13858 is not set
+# CONFIG_VIDEO_VS6624 is not set
+# CONFIG_VIDEO_MT9M001 is not set
+# CONFIG_VIDEO_MT9M032 is not set
+# CONFIG_VIDEO_MT9M111 is not set
+# CONFIG_VIDEO_MT9P031 is not set
+# CONFIG_VIDEO_MT9T001 is not set
+# CONFIG_VIDEO_MT9T112 is not set
+# CONFIG_VIDEO_MT9V011 is not set
+# CONFIG_VIDEO_MT9V032 is not set
+# CONFIG_VIDEO_MT9V111 is not set
+# CONFIG_VIDEO_SR030PC30 is not set
+# CONFIG_VIDEO_NOON010PC30 is not set
+# CONFIG_VIDEO_M5MOLS is not set
+# CONFIG_VIDEO_RJ54N1 is not set
+# CONFIG_VIDEO_S5K6AA is not set
+# CONFIG_VIDEO_S5K6A3 is not set
+# CONFIG_VIDEO_S5K4ECGX is not set
+# CONFIG_VIDEO_S5K5BAF is not set
+# CONFIG_VIDEO_SMIAPP is not set
+# CONFIG_VIDEO_ET8EK8 is not set
+# CONFIG_VIDEO_S5C73M3 is not set
+# end of Camera sensor devices
 
 #
 # Lens drivers
 #
+# CONFIG_VIDEO_AD5820 is not set
+# CONFIG_VIDEO_AK7375 is not set
+# CONFIG_VIDEO_DW9714 is not set
+# CONFIG_VIDEO_DW9807_VCM is not set
+# end of Lens drivers
 
 #
 # Flash devices
 #
+# CONFIG_VIDEO_ADP1653 is not set
+# CONFIG_VIDEO_LM3560 is not set
+# CONFIG_VIDEO_LM3646 is not set
+# end of Flash devices
 
 #
-# Video improvement chips
-#
-CONFIG_VIDEO_UPD64031A=m
-CONFIG_VIDEO_UPD64083=m
-
-#
-# Audio/Video compression chips
-#
-CONFIG_VIDEO_SAA6752HS=m
-
-#
-# SDR tuner chips
-#
-
-#
-# Miscellaneous helper chips
-#
-CONFIG_VIDEO_M52790=m
-
-#
-# SPI drivers hidden by 'Autoselect ancillary drivers'
+# SPI I2C drivers auto-selected by 'Autoselect ancillary drivers'
 #
 
 #
@@ -4844,7 +5034,7 @@ CONFIG_VIDEO_M52790=m
 CONFIG_MEDIA_TUNER=m
 
 #
-# Tuner drivers hidden by 'Autoselect ancillary drivers'
+# Tuner drivers auto-selected by 'Autoselect ancillary drivers'
 #
 CONFIG_MEDIA_TUNER_SIMPLE=m
 CONFIG_MEDIA_TUNER_TDA18250=m
@@ -4883,7 +5073,7 @@ CONFIG_MEDIA_TUNER_QM1D1C0042=m
 CONFIG_MEDIA_TUNER_QM1D1B0004=m
 
 #
-# DVB Frontend drivers hidden by 'Autoselect ancillary drivers'
+# DVB Frontend drivers auto-selected by 'Autoselect ancillary drivers'
 #
 
 #
@@ -5032,11 +5222,7 @@ CONFIG_DVB_AF9033=m
 # Common Interface (EN50221) controller drivers
 #
 CONFIG_DVB_CXD2099=m
-
-#
-# Tools to develop new frontends
-#
-CONFIG_DVB_DUMMY_FE=m
+# end of Media ancillary drivers
 
 #
 # Graphics support
@@ -5090,6 +5276,7 @@ CONFIG_DRM_I915_COMPRESS_ERROR=y
 CONFIG_DRM_I915_USERPTR=y
 CONFIG_DRM_I915_GVT=y
 CONFIG_DRM_I915_GVT_KVMGT=m
+CONFIG_DRM_I915_FENCE_TIMEOUT=10000
 CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND=250
 CONFIG_DRM_I915_HEARTBEAT_INTERVAL=2500
 CONFIG_DRM_I915_PREEMPT_TIMEOUT=640
@@ -5106,7 +5293,6 @@ CONFIG_DRM_GMA3600=y
 CONFIG_DRM_UDL=m
 CONFIG_DRM_AST=m
 CONFIG_DRM_MGAG200=m
-CONFIG_DRM_CIRRUS_QEMU=m
 CONFIG_DRM_QXL=m
 CONFIG_DRM_BOCHS=m
 CONFIG_DRM_VIRTIO_GPU=m
@@ -5128,6 +5314,7 @@ CONFIG_DRM_PANEL_BRIDGE=y
 # end of Display Interface Bridges
 
 # CONFIG_DRM_ETNAVIV is not set
+CONFIG_DRM_CIRRUS_QEMU=m
 # CONFIG_DRM_GM12U320 is not set
 # CONFIG_TINYDRM_HX8357D is not set
 # CONFIG_TINYDRM_ILI9225 is not set
@@ -5463,6 +5650,7 @@ CONFIG_SND_SOC_TOPOLOGY=y
 CONFIG_SND_SOC_ACPI=m
 # CONFIG_SND_SOC_AMD_ACP is not set
 # CONFIG_SND_SOC_AMD_ACP3x is not set
+# CONFIG_SND_SOC_AMD_RENOIR is not set
 # CONFIG_SND_ATMEL_SOC is not set
 # CONFIG_SND_BCM63XX_I2S_WHISTLER is not set
 # CONFIG_SND_DESIGNWARE_I2S is not set
@@ -5612,6 +5800,7 @@ CONFIG_SND_SOC_MAX98357A=m
 # CONFIG_SND_SOC_MAX9867 is not set
 CONFIG_SND_SOC_MAX98927=m
 # CONFIG_SND_SOC_MAX98373 is not set
+# CONFIG_SND_SOC_MAX98390 is not set
 # CONFIG_SND_SOC_MAX9860 is not set
 # CONFIG_SND_SOC_MSM8916_WCD_DIGITAL is not set
 # CONFIG_SND_SOC_PCM1681 is not set
@@ -5696,6 +5885,7 @@ CONFIG_SND_SOC_TS3A227E=m
 # CONFIG_SND_SOC_WM8974 is not set
 # CONFIG_SND_SOC_WM8978 is not set
 # CONFIG_SND_SOC_WM8985 is not set
+# CONFIG_SND_SOC_ZL38060 is not set
 # CONFIG_SND_SOC_ZX_AUD96P22 is not set
 # CONFIG_SND_SOC_MAX9759 is not set
 # CONFIG_SND_SOC_MT6351 is not set
@@ -5891,6 +6081,7 @@ CONFIG_USB_MON=y
 CONFIG_USB_XHCI_HCD=y
 # CONFIG_USB_XHCI_DBGCAP is not set
 CONFIG_USB_XHCI_PCI=y
+# CONFIG_USB_XHCI_PCI_RENESAS is not set
 # CONFIG_USB_XHCI_PLATFORM is not set
 CONFIG_USB_EHCI_HCD=y
 CONFIG_USB_EHCI_ROOT_HUB_TT=y
@@ -6231,6 +6422,8 @@ CONFIG_INFINIBAND_SRP=m
 CONFIG_INFINIBAND_SRPT=m
 # CONFIG_INFINIBAND_ISER is not set
 # CONFIG_INFINIBAND_ISERT is not set
+# CONFIG_INFINIBAND_RTRS_CLIENT is not set
+# CONFIG_INFINIBAND_RTRS_SERVER is not set
 # CONFIG_INFINIBAND_OPA_VNIC is not set
 CONFIG_EDAC_ATOMIC_SCRUB=y
 CONFIG_EDAC_SUPPORT=y
@@ -6613,6 +6806,7 @@ CONFIG_ACPI_WMI=m
 CONFIG_WMI_BMOF=m
 # CONFIG_ALIENWARE_WMI is not set
 # CONFIG_HUAWEI_WMI is not set
+# CONFIG_INTEL_WMI_SBL_FW_UPDATE is not set
 CONFIG_INTEL_WMI_THUNDERBOLT=m
 CONFIG_MXM_WMI=m
 # CONFIG_PEAQ_WMI is not set
@@ -6697,8 +6891,9 @@ CONFIG_INTEL_IPS=m
 # CONFIG_INTEL_TURBO_MAX_3 is not set
 # CONFIG_INTEL_UNCORE_FREQ_CONTROL is not set
 CONFIG_INTEL_PMC_CORE=m
-# CONFIG_INTEL_PMC_IPC is not set
 # CONFIG_INTEL_PUNIT_IPC is not set
+# CONFIG_INTEL_SCU_PCI is not set
+# CONFIG_INTEL_SCU_PLATFORM is not set
 CONFIG_PMC_ATOM=y
 # CONFIG_MFD_CROS_EC is not set
 # CONFIG_CHROME_PLATFORMS is not set
@@ -6900,6 +7095,8 @@ CONFIG_HID_SENSOR_ACCEL_3D=m
 # CONFIG_AD7923 is not set
 # CONFIG_AD7949 is not set
 # CONFIG_AD799X is not set
+# CONFIG_AD9467 is not set
+# CONFIG_ADI_AXI_ADC is not set
 # CONFIG_HI8435 is not set
 # CONFIG_HX711 is not set
 # CONFIG_INA2XX_ADC is not set
@@ -6910,6 +7107,7 @@ CONFIG_HID_SENSOR_ACCEL_3D=m
 # CONFIG_MAX1027 is not set
 # CONFIG_MAX11100 is not set
 # CONFIG_MAX1118 is not set
+# CONFIG_MAX1241 is not set
 # CONFIG_MAX1363 is not set
 # CONFIG_MAX9611 is not set
 # CONFIG_MCP320X is not set
@@ -6946,6 +7144,7 @@ CONFIG_HID_SENSOR_ACCEL_3D=m
 # Chemical Sensors
 #
 # CONFIG_ATLAS_PH_SENSOR is not set
+# CONFIG_ATLAS_EZO_SENSOR is not set
 # CONFIG_BME680 is not set
 # CONFIG_CCS811 is not set
 # CONFIG_IAQCORE is not set
@@ -7074,6 +7273,7 @@ CONFIG_HID_SENSOR_GYRO_3D=m
 #
 # CONFIG_ADIS16400 is not set
 # CONFIG_ADIS16460 is not set
+# CONFIG_ADIS16475 is not set
 # CONFIG_ADIS16480 is not set
 # CONFIG_BMI160_I2C is not set
 # CONFIG_BMI160_SPI is not set
@@ -7234,8 +7434,10 @@ CONFIG_HID_SENSOR_PRESS=m
 # CONFIG_PING is not set
 # CONFIG_RFD77402 is not set
 # CONFIG_SRF04 is not set
+# CONFIG_SX9310 is not set
 # CONFIG_SX9500 is not set
 # CONFIG_SRF08 is not set
+# CONFIG_VCNL3020 is not set
 # CONFIG_VL53L0X_I2C is not set
 # end of Proximity and distance sensors
 
@@ -7556,6 +7758,7 @@ CONFIG_PSTORE_COMPRESS_DEFAULT="deflate"
 # CONFIG_PSTORE_PMSG is not set
 # CONFIG_PSTORE_FTRACE is not set
 CONFIG_PSTORE_RAM=m
+# CONFIG_PSTORE_BLK is not set
 # CONFIG_SYSV_FS is not set
 # CONFIG_UFS_FS is not set
 # CONFIG_EROFS_FS is not set
@@ -7687,7 +7890,6 @@ CONFIG_IO_WQ=y
 CONFIG_KEYS=y
 # CONFIG_KEYS_REQUEST_CACHE is not set
 CONFIG_PERSISTENT_KEYRINGS=y
-CONFIG_BIG_KEYS=y
 CONFIG_TRUSTED_KEYS=y
 CONFIG_ENCRYPTED_KEYS=y
 # CONFIG_KEY_DH_OPERATIONS is not set
@@ -8048,6 +8250,7 @@ CONFIG_GENERIC_PCI_IOMAP=y
 CONFIG_GENERIC_IOMAP=y
 CONFIG_ARCH_USE_CMPXCHG_LOCKREF=y
 CONFIG_ARCH_HAS_FAST_MULTIPLIER=y
+CONFIG_ARCH_USE_SYM_ANNOTATIONS=y
 CONFIG_CRC_CCITT=y
 CONFIG_CRC16=y
 CONFIG_CRC_T10DIF=y
@@ -8108,6 +8311,9 @@ CONFIG_ARCH_DMA_ADDR_T_64BIT=y
 CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED=y
 CONFIG_DMA_VIRT_OPS=y
 CONFIG_SWIOTLB=y
+CONFIG_DMA_NONCOHERENT_MMAP=y
+CONFIG_DMA_REMAP=y
+CONFIG_DMA_COHERENT_POOL=y
 CONFIG_DMA_CMA=y
 
 #
@@ -8167,6 +8373,7 @@ CONFIG_CONSOLE_LOGLEVEL_QUIET=4
 CONFIG_MESSAGE_LOGLEVEL_DEFAULT=4
 CONFIG_BOOT_PRINTK_DELAY=y
 CONFIG_DYNAMIC_DEBUG=y
+CONFIG_DYNAMIC_DEBUG_CORE=y
 CONFIG_SYMBOLIC_ERRNAME=y
 CONFIG_DEBUG_BUGVERBOSE=y
 # end of printk and dmesg options
@@ -8176,6 +8383,7 @@ CONFIG_DEBUG_BUGVERBOSE=y
 #
 CONFIG_DEBUG_INFO=y
 CONFIG_DEBUG_INFO_REDUCED=y
+# CONFIG_DEBUG_INFO_COMPRESSED is not set
 # CONFIG_DEBUG_INFO_SPLIT is not set
 # CONFIG_DEBUG_INFO_DWARF4 is not set
 # CONFIG_GDB_SCRIPTS is not set
@@ -8216,6 +8424,8 @@ CONFIG_DEBUG_MISC=y
 # CONFIG_PAGE_POISONING is not set
 # CONFIG_DEBUG_PAGE_REF is not set
 CONFIG_DEBUG_RODATA_TEST=y
+CONFIG_ARCH_HAS_DEBUG_WX=y
+# CONFIG_DEBUG_WX is not set
 CONFIG_GENERIC_PTDUMP=y
 # CONFIG_PTDUMP_DEBUGFS is not set
 # CONFIG_DEBUG_OBJECTS is not set
@@ -8225,7 +8435,9 @@ CONFIG_HAVE_DEBUG_KMEMLEAK=y
 # CONFIG_DEBUG_KMEMLEAK is not set
 # CONFIG_DEBUG_STACK_USAGE is not set
 # CONFIG_SCHED_STACK_END_CHECK is not set
+CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE=y
 # CONFIG_DEBUG_VM is not set
+# CONFIG_DEBUG_VM_PGTABLE is not set
 CONFIG_ARCH_HAS_DEBUG_VIRTUAL=y
 # CONFIG_DEBUG_VIRTUAL is not set
 CONFIG_DEBUG_MEMORY_INIT=y
@@ -8394,8 +8606,6 @@ CONFIG_EARLY_PRINTK=y
 CONFIG_EARLY_PRINTK_DBGP=y
 # CONFIG_EARLY_PRINTK_USB_XDBC is not set
 # CONFIG_EFI_PGT_DUMP is not set
-# CONFIG_DEBUG_WX is not set
-CONFIG_DOUBLEFAULT=y
 # CONFIG_DEBUG_TLBFLUSH is not set
 # CONFIG_IOMMU_DEBUG is not set
 CONFIG_HAVE_MMIOTRACE_SUPPORT=y
@@ -8462,6 +8672,7 @@ CONFIG_ATOMIC64_SELFTEST=y
 # CONFIG_TEST_HASH is not set
 # CONFIG_TEST_IDA is not set
 # CONFIG_TEST_LKM is not set
+# CONFIG_TEST_BITOPS is not set
 # CONFIG_TEST_VMALLOC is not set
 # CONFIG_TEST_USER_COPY is not set
 CONFIG_TEST_BPF=m
@@ -8471,6 +8682,7 @@ CONFIG_TEST_BPF=m
 # CONFIG_TEST_SYSCTL is not set
 CONFIG_SYSCTL_KUNIT_TEST=m
 CONFIG_LIST_KUNIT_TEST=m
+# CONFIG_LINEAR_RANGES_TEST is not set
 # CONFIG_TEST_UDELAY is not set
 # CONFIG_TEST_STATIC_KEYS is not set
 # CONFIG_TEST_KMOD is not set
@@ -8483,7 +8695,7 @@ CONFIG_LIST_KUNIT_TEST=m
 # end of Kernel Testing and Coverage
 # end of Kernel hacking
 
---XStn23h1fwudRqtG
+--3607uds81ZQvwCD0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=job-script
 
@@ -8494,44 +8706,37 @@ export_top_env()
 	export suite='will-it-scale'
 	export testcase='will-it-scale'
 	export category='benchmark'
-	export nr_task=16
-	export job_origin='/lkp/lkp/.src-20200612-113540/allot/cyclic:p1:linux-devel:devel-hourly/lkp-ivb-d02/will-it-scale-16.yaml'
+	export nr_task=104
+	export job_origin='/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-skl-fpga01/will-it-scale-100.yaml'
 	export queue_cmdline_keys='branch
 commit
 queue_at_least_once'
 	export queue='validate'
-	export testbox='lkp-ivb-d02'
-	export tbox_group='lkp-ivb-d02'
+	export testbox='lkp-skl-fpga01'
+	export tbox_group='lkp-skl-fpga01'
 	export kconfig='x86_64-rhel-7.6'
-	export submit_id='5eed3ef860276c2207515748'
-	export job_file='/lkp/jobs/scheduled/lkp-ivb-d02/will-it-scale-performance-process-16-mmap2-ucode=0x21-debian-x86_64-20191114.cgz-6890896bd765b0504761c61901c9804fca23bfb2-20200620-8711-zbuw6v-2.yaml'
-	export id='6f585423de609a1f40830b5fb7dacf3f0a2ba04e'
+	export submit_id='5eedb3f28d4ad11e8d764073'
+	export job_file='/lkp/jobs/scheduled/lkp-skl-fpga01/will-it-scale-performance-process-100%-brk1-ucode=0x2000065-debian-x86_64-20191114.cgz-974b9b2c68f3d35a65e80af9657fe378d2439b60-20200620-7821-1tcqthn-2.yaml'
+	export id='0dd563240d3449adbb77bf885d38080b140e69e0'
 	export queuer_version='/lkp-src'
-	export model='Ivy Bridge'
-	export nr_node=1
-	export nr_cpu=4
-	export memory='8G'
-	export nr_hdd_partitions=2
-	export hdd_partitions='/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part1 /dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part2'
-	export swap_partitions='/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part3'
-	export rootfs_partition='/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part4'
-	export brand='Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz'
-	export commit='6890896bd765b0504761c61901c9804fca23bfb2'
-	export netconsole_port=6673
-	export ucode='0x21'
-	export need_kconfig_hw='CONFIG_NET_VENDOR_REALTEK=y
-CONFIG_R8169=y
-CONFIG_SATA_AHCI'
-	export enqueue_time='2020-06-20 06:40:56 +0800'
-	export _id='5eed3ef860276c2207515748'
-	export _rt='/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2'
+	export model='Skylake'
+	export nr_node=2
+	export nr_cpu=104
+	export memory='192G'
+	export kernel_cmdline_hw='acpi_rsdp=0x6b447014'
+	export rootfs_partition='/dev/disk/by-id/ata-INTEL_SSDSC2BB800G4_CVWL34300015800RGN-part1'
+	export commit='974b9b2c68f3d35a65e80af9657fe378d2439b60'
+	export ucode='0x2000065'
+	export enqueue_time='2020-06-20 15:00:02 +0800'
+	export _id='5eedb3f28d4ad11e8d764073'
+	export _rt='/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60'
 	export user='lkp'
 	export compiler='gcc-9'
-	export head_commit='d822ee11bc8eab52e59c3d5b8c3b376137cd7a9c'
-	export base_commit='3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162'
-	export branch='linux-devel/devel-hourly-2020061211'
+	export head_commit='9aa1ae9576096c0799d711b9f8d2bab9a4787a09'
+	export base_commit='b3a9e3b9622ae10064826dccb4f7a52bd88c7407'
+	export branch='linux-devel/devel-hourly-2020061516'
 	export rootfs='debian-x86_64-20191114.cgz'
-	export result_root='/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/3'
+	export result_root='/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/3'
 	export scheduler_version='/lkp/lkp/.src-20200619-190700'
 	export LKP_SERVER='inn'
 	export arch='x86_64'
@@ -8539,14 +8744,15 @@ CONFIG_SATA_AHCI'
 	export initrd='/osimage/debian/debian-x86_64-20191114.cgz'
 	export bootloader_append='root=/dev/ram0
 user=lkp
-job=/lkp/jobs/scheduled/lkp-ivb-d02/will-it-scale-performance-process-16-mmap2-ucode=0x21-debian-x86_64-20191114.cgz-6890896bd765b0504761c61901c9804fca23bfb2-20200620-8711-zbuw6v-2.yaml
+job=/lkp/jobs/scheduled/lkp-skl-fpga01/will-it-scale-performance-process-100%-brk1-ucode=0x2000065-debian-x86_64-20191114.cgz-974b9b2c68f3d35a65e80af9657fe378d2439b60-20200620-7821-1tcqthn-2.yaml
 ARCH=x86_64
 kconfig=x86_64-rhel-7.6
-branch=linux-devel/devel-hourly-2020061211
-commit=6890896bd765b0504761c61901c9804fca23bfb2
-BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/vmlinuz-5.7.0-rc2-00635-g6890896bd765b0
+branch=linux-devel/devel-hourly-2020061516
+commit=974b9b2c68f3d35a65e80af9657fe378d2439b60
+BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/vmlinuz-5.7.0-13148-g974b9b2c68f3d
+acpi_rsdp=0x6b447014
 max_uptime=1500
-RESULT_ROOT=/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/3
+RESULT_ROOT=/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/3
 LKP_SERVER=inn
 nokaslr
 selinux=0
@@ -8570,20 +8776,20 @@ earlyprintk=ttyS0,115200
 console=ttyS0,115200
 vga=normal
 rw'
-	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/modules.cgz'
+	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/modules.cgz'
 	export bm_initrd='/osimage/deps/debian-x86_64-20180403.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-20180403.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/will-it-scale_2020-01-07.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/will-it-scale-x86_64-0f26364-1_20200528.cgz,/osimage/deps/debian-x86_64-20180403.cgz/mpstat_2020-01-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/vmstat_2020-01-07.cgz,/osimage/deps/debian-x86_64-20180403.cgz/perf_20200325.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/perf-x86_64-76ccd234269b-1_20200325.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/sar-x86_64-e011d97-1_2020-01-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/hw_2020-01-02.cgz'
 	export ucode_initrd='/osimage/ucode/intel-ucode-20191114.cgz'
 	export lkp_initrd='/osimage/user/lkp/lkp-x86_64.cgz'
 	export site='inn'
 	export LKP_CGI_PORT=80
 	export LKP_CIFS_PORT=139
-	export last_kernel='4.20.0'
+	export last_kernel='5.7.0-10954-g9daa0a27a0bce'
 	export repeat_to=4
 	export schedule_notify_address=
 	export queue_at_least_once=1
-	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/vmlinuz-5.7.0-rc2-00635-g6890896bd765b0'
-	export dequeue_time='2020-06-20 06:57:06 +0800'
-	export job_initrd='/lkp/jobs/scheduled/lkp-ivb-d02/will-it-scale-performance-process-16-mmap2-ucode=0x21-debian-x86_64-20191114.cgz-6890896bd765b0504761c61901c9804fca23bfb2-20200620-8711-zbuw6v-2.cgz'
+	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/vmlinuz-5.7.0-13148-g974b9b2c68f3d'
+	export dequeue_time='2020-06-20 15:09:17 +0800'
+	export job_initrd='/lkp/jobs/scheduled/lkp-skl-fpga01/will-it-scale-performance-process-100%-brk1-ucode=0x2000065-debian-x86_64-20191114.cgz-974b9b2c68f3d35a65e80af9657fe378d2439b60-20200620-7821-1tcqthn-2.cgz'
 
 	[ -n "$LKP_SRC" ] ||
 	export LKP_SRC=/lkp/${user:-lkp}/src
@@ -8629,7 +8835,7 @@ run_job()
 	run_monitor $LKP_SRC/monitors/wrapper oom-killer
 	run_monitor $LKP_SRC/monitors/plain/watchdog
 
-	run_test mode='process' test='mmap2' $LKP_SRC/tests/wrapper will-it-scale
+	run_test mode='process' test='brk1' $LKP_SRC/tests/wrapper will-it-scale
 }
 
 extract_stats()
@@ -8670,21 +8876,21 @@ extract_stats()
 
 "$@"
 
---XStn23h1fwudRqtG
+--3607uds81ZQvwCD0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename="job.yaml"
 
 ---
 
-#! jobs/will-it-scale-16.yaml
+#! jobs/will-it-scale-100.yaml
 suite: will-it-scale
 testcase: will-it-scale
 category: benchmark
-nr_task: 16
+nr_task: 100%
 will-it-scale:
   mode: process
-  test: mmap2
-job_origin: "/lkp/lkp/.src-20200612-113540/allot/cyclic:p1:linux-devel:devel-hourly/lkp-ivb-d02/will-it-scale-16.yaml"
+  test: brk1
+job_origin: "/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-skl-fpga01/will-it-scale-100.yaml"
 
 #! queue options
 queue_cmdline_keys:
@@ -8692,24 +8898,21 @@ queue_cmdline_keys:
 - commit
 - queue_at_least_once
 queue: bisect
-testbox: lkp-ivb-d02
-tbox_group: lkp-ivb-d02
+testbox: lkp-skl-fpga01
+tbox_group: lkp-skl-fpga01
 kconfig: x86_64-rhel-7.6
-submit_id: 5eed083860276c1ea39e907d
-job_file: "/lkp/jobs/scheduled/lkp-ivb-d02/will-it-scale-performance-process-16-mmap2-ucode=0x21-debian-x86_64-20191114.cgz-6890896bd765b0504761c61901c9804fca23bfb2-20200620-7843-jhn6e3-1.yaml"
-id: a9cd5e97a85a9b767f9c6b54c2dfac6ab657d9b5
+submit_id: 5eed977d8d4ad11c85770744
+job_file: "/lkp/jobs/scheduled/lkp-skl-fpga01/will-it-scale-performance-process-100%-brk1-ucode=0x2000065-debian-x86_64-20191114.cgz-974b9b2c68f3d35a65e80af9657fe378d2439b60-20200620-7301-1p16opl-0.yaml"
+id: a765b6da2c030c455184c4c9a234366cc729d99f
 queuer_version: "/lkp-src"
 
-#! hosts/lkp-ivb-d02
-model: Ivy Bridge
-nr_node: 1
-nr_cpu: 4
-memory: 8G
-nr_hdd_partitions: 2
-hdd_partitions: "/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part1 /dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part2"
-swap_partitions: "/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part3"
-rootfs_partition: "/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1DBQSB0-part4"
-brand: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz
+#! hosts/lkp-skl-fpga01
+model: Skylake
+nr_node: 2
+nr_cpu: 104
+memory: 192G
+kernel_cmdline_hw: acpi_rsdp=0x6b447014
+rootfs_partition: "/dev/disk/by-id/ata-INTEL_SSDSC2BB800G4_CVWL34300015800RGN-part1"
 
 #! include/category/benchmark
 kmsg: 
@@ -8742,27 +8945,22 @@ perf-profile:
 cpufreq_governor: performance
 
 #! include/queue/cyclic
-commit: 6890896bd765b0504761c61901c9804fca23bfb2
+commit: 974b9b2c68f3d35a65e80af9657fe378d2439b60
 
-#! include/testbox/lkp-ivb-d02
-netconsole_port: 6673
-ucode: '0x21'
-need_kconfig_hw:
-- CONFIG_NET_VENDOR_REALTEK=y
-- CONFIG_R8169=y
-- CONFIG_SATA_AHCI
-enqueue_time: 2020-06-20 02:47:20.965843759 +08:00
-_id: 5eed0c3b60276c1ea39e907e
-_rt: "/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2"
+#! include/testbox/lkp-skl-fpga01
+ucode: '0x2000065'
+enqueue_time: 2020-06-20 12:58:37.732246784 +08:00
+_id: 5eed977d8d4ad11c85770744
+_rt: "/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60"
 
 #! schedule options
 user: lkp
 compiler: gcc-9
-head_commit: d822ee11bc8eab52e59c3d5b8c3b376137cd7a9c
-base_commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-branch: linux-devel/devel-hourly-2020061211
+head_commit: 9aa1ae9576096c0799d711b9f8d2bab9a4787a09
+base_commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+branch: linux-devel/devel-hourly-2020061516
 rootfs: debian-x86_64-20191114.cgz
-result_root: "/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/0"
+result_root: "/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/0"
 scheduler_version: "/lkp/lkp/.src-20200619-190700"
 LKP_SERVER: inn
 arch: x86_64
@@ -8771,14 +8969,15 @@ initrd: "/osimage/debian/debian-x86_64-20191114.cgz"
 bootloader_append:
 - root=/dev/ram0
 - user=lkp
-- job=/lkp/jobs/scheduled/lkp-ivb-d02/will-it-scale-performance-process-16-mmap2-ucode=0x21-debian-x86_64-20191114.cgz-6890896bd765b0504761c61901c9804fca23bfb2-20200620-7843-jhn6e3-1.yaml
+- job=/lkp/jobs/scheduled/lkp-skl-fpga01/will-it-scale-performance-process-100%-brk1-ucode=0x2000065-debian-x86_64-20191114.cgz-974b9b2c68f3d35a65e80af9657fe378d2439b60-20200620-7301-1p16opl-0.yaml
 - ARCH=x86_64
 - kconfig=x86_64-rhel-7.6
-- branch=linux-devel/devel-hourly-2020061211
-- commit=6890896bd765b0504761c61901c9804fca23bfb2
-- BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/vmlinuz-5.7.0-rc2-00635-g6890896bd765b0
+- branch=linux-devel/devel-hourly-2020061516
+- commit=974b9b2c68f3d35a65e80af9657fe378d2439b60
+- BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/vmlinuz-5.7.0-13148-g974b9b2c68f3d
+- acpi_rsdp=0x6b447014
 - max_uptime=1500
-- RESULT_ROOT=/result/will-it-scale/performance-process-16-mmap2-ucode=0x21/lkp-ivb-d02/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/0
+- RESULT_ROOT=/result/will-it-scale/performance-process-100%-brk1-ucode=0x2000065/lkp-skl-fpga01/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/0
 - LKP_SERVER=inn
 - nokaslr
 - selinux=0
@@ -8802,36 +9001,36 @@ bootloader_append:
 - console=ttyS0,115200
 - vga=normal
 - rw
-modules_initrd: "/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/modules.cgz"
+modules_initrd: "/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/modules.cgz"
 bm_initrd: "/osimage/deps/debian-x86_64-20180403.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-20180403.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/will-it-scale_2020-01-07.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/will-it-scale-x86_64-0f26364-1_20200528.cgz,/osimage/deps/debian-x86_64-20180403.cgz/mpstat_2020-01-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/vmstat_2020-01-07.cgz,/osimage/deps/debian-x86_64-20180403.cgz/perf_20200325.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/perf-x86_64-76ccd234269b-1_20200325.cgz,/osimage/pkg/debian-x86_64-20180403.cgz/sar-x86_64-e011d97-1_2020-01-03.cgz,/osimage/deps/debian-x86_64-20180403.cgz/hw_2020-01-02.cgz"
 ucode_initrd: "/osimage/ucode/intel-ucode-20191114.cgz"
 lkp_initrd: "/osimage/user/lkp/lkp-x86_64.cgz"
 site: inn
 
-#! /lkp/lkp/.src-20200612-204505/include/site/inn
+#! /lkp/lkp/.src-20200615-180540/include/site/inn
 LKP_CGI_PORT: 80
 LKP_CIFS_PORT: 139
 oom-killer: 
 watchdog: 
 
 #! runtime status
-last_kernel: 4.20.0
+last_kernel: 5.8.0-rc1-04556-g5488955bcd07e
 repeat_to: 2
 schedule_notify_address: 
 
 #! user overrides
 queue_at_least_once: 0
-kernel: "/pkg/linux/x86_64-rhel-7.6/gcc-9/6890896bd765b0504761c61901c9804fca23bfb2/vmlinuz-5.7.0-rc2-00635-g6890896bd765b0"
-dequeue_time: 2020-06-20 03:10:04.611646732 +08:00
+kernel: "/pkg/linux/x86_64-rhel-7.6/gcc-9/974b9b2c68f3d35a65e80af9657fe378d2439b60/vmlinuz-5.7.0-13148-g974b9b2c68f3d"
+dequeue_time: 2020-06-20 13:29:48.633289889 +08:00
 
 #! /lkp/lkp/.src-20200619-190700/include/site/inn
 job_state: finished
-loadavg: 14.79 10.22 4.54 1/132 4968
-start_time: '1592593850'
-end_time: '1592594151'
+loadavg: 87.70 64.08 28.59 1/776 9700
+start_time: '1592631056'
+end_time: '1592631358'
 version: "/lkp/lkp/.src-20200619-190732:c0ef8a7a:3391efd8c"
 
---XStn23h1fwudRqtG
+--3607uds81ZQvwCD0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=reproduce
 
@@ -8845,6 +9044,6 @@ do
 	[ -f "$file" ] && echo "performance" > "$file"
 done
 
- "/lkp/benchmarks/python3/bin/python3" "./runtest.py" "mmap2" "295" "process" "16"
+ "/lkp/benchmarks/python3/bin/python3" "./runtest.py" "brk1" "295" "process" "104"
 
---XStn23h1fwudRqtG--
+--3607uds81ZQvwCD0--
