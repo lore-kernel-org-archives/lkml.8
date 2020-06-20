@@ -2,277 +2,142 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E286BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB068C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B848A23B44
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D36923B44
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 12:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hL2+O+9o"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OfgsR1c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgFTMhO (ORCPT
+        id S1728137AbgFTMhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 08:37:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33787 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728064AbgFTMhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 08:37:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592656631;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0RorBc5ECZc8+1+a5B1yD6cCotC1YvdgMnIN6XU4Cgs=;
-        b=hL2+O+9oQvG2FYAwmpJVEMp3IbfAKU8qsUcXBOT8EVvq8uwcn8acWkFk0e8iiyzaxc8P/9
-        TYcQ9nLmXHQz+6QOwP9TlNGgA2PgLtxAQcrpycjbdMLXVAlV8+HjVvuObahKIzRFFqIURJ
-        WF7BoJyALlZDX5Hm/W2zuFyggoVcUko=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-Mi6Z89G7OGSHtQjHy7reew-1; Sat, 20 Jun 2020 08:37:09 -0400
-X-MC-Unique: Mi6Z89G7OGSHtQjHy7reew-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFA25107ACF4;
-        Sat, 20 Jun 2020 12:37:07 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-42.ams2.redhat.com [10.36.112.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C520D7C1E0;
-        Sat, 20 Jun 2020 12:37:06 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: Add new intel_atomisp2_led driver
-Date:   Sat, 20 Jun 2020 14:37:05 +0200
-Message-Id: <20200620123705.72625-1-hdegoede@redhat.com>
+        Sat, 20 Jun 2020 08:37:43 -0400
+Received: from mout.web.de ([212.227.15.14]:51589 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728064AbgFTMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 08:37:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592656651;
+        bh=ITHlY66gl0MgNokIXLyjMVP7wGUV88CZWdzeFYFNWDg=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=OfgsR1c2Gf5nYREMdL+d5DG0NZyZ5cMfCJIfTWEng3TSedgUUQrhEHeHGNRT6b1Sy
+         Fiz38wEQa2ya+tVbuPmoFaiWBs6Ipdj9VDIHkLpC6VMMPlmGARzSAA9Pxsyxx1UkCj
+         shgnG7GXFNyMpFvcAMXlzzUAZ/lpCdppiBvhgL4U=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.139.185]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLy84-1jnkoQ4B4O-007kJV; Sat, 20
+ Jun 2020 14:37:31 +0200
+To:     Bernard Zhao <bernard@vivo.com>, opensource.kernel@vivo.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3] drm/amd: Fix memory leak according to error branch
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <119b7d8c-b164-ef23-84cc-4904d34ac023@web.de>
+Date:   Sat, 20 Jun 2020 14:37:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oXT06f42Q4s3s5cHYlyLWk4f54E74Wz+v/0QbzrhsHP/Fc3tgeP
+ fhd7SZn4LgB+mYnBaOc4XleQyNGPw6lOhXzRcmHP4YzVXiCKG+0Ic4RSSxQcZPkI6B/svyp
+ fLqoBPQC1lumHbcor85v41D5yphQ/Y2SWDe/4DO0242OjAfULRm10Pu8utW+FgoAJwKA3dH
+ u0g6eRBnmES2U9Z1CYxVQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W3WUjaFUM4I=:+uEKHLiyIy9oBO/whHk1kq
+ /6pNth6kxQ6Vrhd67ncOvX8c5Er4m4i0X1MWNXmwYcoggxq8DFL8Ln9uAufeVWKVrcFnNjBcd
+ HnD/H1l8sdQw3BSVjVuY0ySa2NoPFUH4OXOioijgAIJwyYBPu12sR7TswBDf4NSfysm4bvIru
+ l/7dZXR0lNKgqhbUgvQw0U39y29Y4HYqfLAx9/KOixFGpisSEWxT81coCLLFnGg+Q66s9s+J6
+ A73E6GjbA76QsY6mq7uINUDM191wd0C8bRfwFyJ9sdqNRchg3ZLkPCg4AeVO0ujNm7Hf6IhL4
+ 2T5tTJc8nZFpl737rx3jkOomUzsFWEcser1j/ZnEf4O1jcN9ZqbTymL84EeiOaMFcF26t4hbB
+ xpTFrxmD5XhQlc+gyKP+yGBXlPS69cOPzB6lx5uQZ3BOR1OxammVngO/5pg7U7fQ5cEQpd8N0
+ C9BkxgFfQUEbjeKLBMWHWx1vjggZoDw8Xb4hCJcmtkipkQxX0zELYgSUlcK5YlqkaRsEg8WXI
+ MjgauNLTF3W6otSlU6g7B2cmLtwG/BzCEGFFcnxvrUgI150aasI1wKmi+mol6J+mYqvR5VWPu
+ uQuqv8I3KUQq0W5i1FcqiKgNHg+EO8AX+5/gUhEmR8E2spvsDjY5qWLREPRW0JTPEp/dd62uz
+ 9/pF96BO8PrjE4uteARArPgSfADaVj8Tn6A9ywZLNZ1imKzQCHnEhyoHfaLU5/Bz5iE6isKAN
+ S3QtLr0WCoaWF9LmieegPoI3cIinCrO6FtcFLgF80PC9ngYv+sKqVP5fWoDPnX+lYXI8YId5N
+ E842DmfUDtjXTmzOzXlZf0RsiJI/NnQDKHz+6roHDb9Ww/PoEWcvx3doOXFyfWBWwGB6CIEex
+ uIfEW40xrBtrOJdJTtiQ9fXE9XZ0cLBt1gftIVhC/fYXd48RicuQyMlgKLkYokhBbfQkHoT+R
+ WXFeKvb1LMn5QYj5Tc1BNV9cX77kcxTijbJZ9fE6HgRVCxElaIYbDCgIe5EBK/xdtk6MJa9p7
+ NbWapq6wAURvv6Z5p3R/FkqOX8X3f34uLRqVB0ki0ngrapVhzl9+XFKedpgH4oavYqYhalxOZ
+ qjV3Izdvbwu8F83KRmsjS7XZ2Zw4f5PT6B8qjgCKJntdl2Aff69a2yfcgkFsQgw875CzZZSkC
+ 6BMAEBp76Ot4AQb7BhZiQtwrtx1w2pgyIxM3pUm6HHgYbL2IvGmy/KMjX73G+snbWfo7Q36y1
+ hRy7Cdyhf2fxp1PhR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many Bay Trail and Cherry Trail devices come with a camera attached to
-Intel's Image Signal Processor. Linux currently does not have a driver for
-these, so they do not work as a camera.
+> The function kobject_init_and_add alloc memory like:
+> kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+> ->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+> ->kmalloc_slab, in err branch this memory not free. If use
+> kmemleak, this path maybe catched.
+> These changes are to add kobject_put in kobject_init_and_add
+> failed branch, fix potential memleak.
+=E2=80=A6
+> Changes since V2:
+> *remove duplicate kobject_put in kfd_procfs_init.
 
-Some of these camera's have a status LED which is controlled through a GPIO
-in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
-issue where the LED gets turned on at boot.
+Under which circumstances are going to improve this change description acc=
+ordingly?
 
-This commit adds a Linux LED driver for the camera LED on these devices.
-This driver will turn the LED off at boot and also allows controlling the
-LED (so the user can repurpose it) through the sysfs LED interface.
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
 
-Which GPIO is attached to the LED is usually not described in the ACPI
-tables, so this driver contains per-system info about the GPIO inside the
-driver. This means that this driver only works on systems the driver knows
-about.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Rebase on top of v5.8-rc1
-- Use PTR_ERR_OR_ZERO
----
- MAINTAINERS                               |   6 ++
- drivers/platform/x86/Kconfig              |  21 ++++
- drivers/platform/x86/Makefile             |   1 +
- drivers/platform/x86/intel_atomisp2_led.c | 116 ++++++++++++++++++++++
- 4 files changed, 144 insertions(+)
- create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 301330e02bca..5535761f2b54 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8600,6 +8600,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_atomisp2_pm.c
- 
-+INTEL ATOMISP2 LED DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel_atomisp2_led.c
-+
- INTEL BROXTON PMC DRIVER
- M:	Mika Westerberg <mika.westerberg@linux.intel.com>
- M:	Zha Qipeng <qipeng.zha@intel.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0581a54cf562..318e083f38b3 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -761,6 +761,27 @@ config INTEL_ATOMISP2_PM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_atomisp2_pm.
- 
-+config INTEL_ATOMISP2_LED
-+	tristate "Intel AtomISP2 camera LED driver"
-+	depends on GPIOLIB && LEDS_GPIO
-+	help
-+	  Many Bay Trail and Cherry Trail devices come with a camera attached
-+	  to Intel's Image Signal Processor. Linux currently does not have a
-+	  driver for these, so they do not work as a camera. Some of these
-+	  camera's have a LED which is controlled through a GPIO.
-+
-+	  Some of these devices have a firmware issue where the LED gets turned
-+	  on at boot. This driver will turn the LED off at boot and also allows
-+	  controlling the LED (repurposing it) through the sysfs LED interface.
-+
-+	  Which GPIO is attached to the LED is usually not described in the
-+	  ACPI tables, so this driver contains per-system info about the GPIO
-+	  inside the driver, this means that this driver only works on systems
-+	  the driver knows about.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_atomisp2_led.
-+
- config INTEL_CHT_INT33FE
- 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
- 	depends on X86 && ACPI && I2C && REGULATOR
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 2b85852a1a87..7a78cc0bb249 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- 
- # Intel
- obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
-+obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
- obj-$(CONFIG_INTEL_CHT_INT33FE)		+= intel_cht_int33fe.o
- intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
- 					   intel_cht_int33fe_typec.o \
-diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel_atomisp2_led.c
-new file mode 100644
-index 000000000000..5935dfca166f
---- /dev/null
-+++ b/drivers/platform/x86/intel_atomisp2_led.c
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for controlling LEDs for cameras connected to the Intel atomisp2
-+ * The main purpose of this driver is to turn off LEDs which are on at boot.
-+ *
-+ * Copyright (C) 2020 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/dmi.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+
-+/* This must be leds-gpio as the leds-gpio driver binds to the name */
-+#define DEV_NAME		"leds-gpio"
-+
-+static const struct gpio_led atomisp2_leds[] = {
-+	{
-+		.name = "atomisp2::camera",
-+		.default_state  = LEDS_GPIO_DEFSTATE_OFF,
-+	},
-+};
-+
-+static const struct gpio_led_platform_data atomisp2_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(atomisp2_leds),
-+	.leds		= atomisp2_leds,
-+};
-+
-+static struct gpiod_lookup_table asus_t100ta_lookup = {
-+	.dev_id = DEV_NAME,
-+	.table = {
-+		GPIO_LOOKUP_IDX("INT33FC:02", 8, NULL, 0, GPIO_ACTIVE_HIGH),
-+		{ }
-+	}
-+};
-+
-+static struct gpiod_lookup_table asus_t100chi_lookup = {
-+	.dev_id = DEV_NAME,
-+	.table = {
-+		GPIO_LOOKUP_IDX("INT33FC:01", 24, NULL, 0, GPIO_ACTIVE_HIGH),
-+		{ }
-+	}
-+};
-+
-+static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+		.driver_data = &asus_t100ta_lookup,
-+	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+		.driver_data = &asus_t100ta_lookup,
-+	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100CHI"),
-+		},
-+		.driver_data = &asus_t100chi_lookup,
-+	},
-+	{} /* Terminating entry */
-+};
-+MODULE_DEVICE_TABLE(dmi, atomisp2_led_systems);
-+
-+static struct gpiod_lookup_table *gpio_lookup;
-+static struct platform_device *pdev;
-+
-+static int __init atomisp2_led_init(void)
-+{
-+	const struct dmi_system_id *system;
-+
-+	system = dmi_first_match(atomisp2_led_systems);
-+	if (!system)
-+		return -ENODEV;
-+
-+	gpio_lookup = system->driver_data;
-+	gpiod_add_lookup_table(gpio_lookup);
-+
-+	pdev = platform_device_register_resndata(NULL,
-+						 DEV_NAME, PLATFORM_DEVID_NONE,
-+						 NULL, 0, &atomisp2_leds_pdata,
-+						 sizeof(atomisp2_leds_pdata));
-+	if (IS_ERR(pdev))
-+		gpiod_remove_lookup_table(gpio_lookup);
-+
-+	return PTR_ERR_OR_ZERO(pdev);
-+}
-+
-+static void __exit atomisp2_led_cleanup(void)
-+{
-+	platform_device_unregister(pdev);
-+	gpiod_remove_lookup_table(gpio_lookup);
-+}
-+
-+module_init(atomisp2_led_init);
-+module_exit(atomisp2_led_cleanup);
-+
-+/*
-+ * The ACPI INIT method from Asus WMI's code on the T100TA and T200TA turns the
-+ * LED on (without the WMI interface allowing further control over the LED).
-+ * Ensure we are loaded after asus-nb-wmi so that we turn the LED off again.
-+ */
-+MODULE_SOFTDEP("pre: asus_nb_wmi");
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
-+MODULE_DESCRIPTION("Intel atomisp2 camera LED driver");
-+MODULE_LICENSE("GPL");
--- 
-2.26.2
-
+Regards,
+Markus
