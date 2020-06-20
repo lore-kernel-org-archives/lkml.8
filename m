@@ -2,52 +2,56 @@ Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55953C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3113023AF8
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EF723AF8
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 09:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ERDMEpvc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UimnWIqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgFTJwZ (ORCPT
+        id S1727960AbgFTJx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 05:52:25 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12917 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgFTJwY (ORCPT
+        Sat, 20 Jun 2020 05:53:29 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9331 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbgFTJx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 05:52:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eeddc000000>; Sat, 20 Jun 2020 02:50:56 -0700
+        Sat, 20 Jun 2020 05:53:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eeddc8c0000>; Sat, 20 Jun 2020 02:53:16 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 20 Jun 2020 02:52:24 -0700
+  Sat, 20 Jun 2020 02:53:28 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 20 Jun 2020 02:52:24 -0700
+        by hqpgpgate101.nvidia.com on Sat, 20 Jun 2020 02:53:28 -0700
 Received: from [10.26.73.131] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 20 Jun
- 2020 09:52:21 +0000
-Subject: Re: [PATCH 5.7 000/376] 5.7.5-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ 2020 09:53:22 +0000
+Subject: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM imbalance
+ on error
+To:     <dinghao.liu@zju.edu.cn>
+CC:     <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200619141710.350494719@linuxfoundation.org>
+References: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
+ <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
+ <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8d7dd6fa-3018-5da3-0736-0d58fad8fd68@nvidia.com>
-Date:   Sat, 20 Jun 2020 10:52:19 +0100
+Message-ID: <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
+Date:   Sat, 20 Jun 2020 10:53:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+In-Reply-To: <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -55,56 +59,34 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592646656; bh=lD07L5NNMIdNB7yVyT49Fb0e5CR/+FCLThENGCom1R0=;
+        t=1592646796; bh=skDQ77maO2GC7cm4xW7BXoWafTy1w2SK+o9txAtL5SE=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=ERDMEpvcnrFy9hy/XA2paFCD893OOTdLw77+wY6+PIVUd/UDu1YYmXHYkwhpl0e2T
-         kZUTcFgsOAgz6c75NrqSrbSqZLZUwQevJgdMylWP/262Zuze0DqTKfPQOAy2MrFYj4
-         0hXPu7SXKZzBn+8kkxOq9q7CIh+PN/vSHisXFLQwf/pgWzhYgl0a3vBl/7w4vQIbC9
-         iGGwjil0Uwz/afT4jbgn1kIBLD9oNVgZEedCpK6ge7d8W6fDaRfFleYlDF/pW1Q1Mz
-         +mNB9FfWyCM54o5cUmox1tKrd2yiFkKAEg756IOYYR0vmVlqPCDrIBb41GCi6ZGsZC
-         kNw5k0vfMlRpQ==
+        b=UimnWIqpRJy7kUAKmx0otVxsMGTTOcIcq44DP2Q5g9xTeWqUH6NSnNDqR6hnTZ/mO
+         RW22vRCa6BZ6k/TDgdYcAmeWCLgM+1gQHulmACKUapQXyooMt7XRyx/UKASP+XhFBB
+         XN1AXJtTB3koVzlED+vKIUKDGJkEGtjP+AdLktNtOINJfFLMTafwfYGt0AfZZlTZ5C
+         djhZUysytC6torZrMRhRcjfHk3IpOnp9GURpLmvi5AdwIVa4HsC5C3j09ZMBbrOv3L
+         tHH7g9g8VZfW89oOtP94NLhHaSV7L3E0wlc1z0QcQ29SDRUIF9HOklT6Kc/rjqDeFN
+         E+L169HQ1F3xQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 19/06/2020 15:28, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.5 release.
-> There are 376 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 19/06/2020 02:59, dinghao.liu@zju.edu.cn wrote:
+>>
+>> Why noidle?
+>>
 > 
-> Responses should be made by Sun, 21 Jun 2020 14:15:50 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> _noidle is enough for fixing this bug. _sync may suspend
+> the device beyond expectation.
 
-All tests are passing for Tegra ...
+In that case, then the other instance you are fixing with this patch is
+not correct.
 
-Test results for stable-v5.7:
-    11 builds:	11 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    56 tests:	56 pass, 0 fail
-
-Linux version:	5.7.5-rc1-g19411dc6b061
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
 Jon
 
 -- 
