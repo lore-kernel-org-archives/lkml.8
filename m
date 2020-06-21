@@ -2,79 +2,116 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF78C24881
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27C024882
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgFUITA (ORCPT
+        id S1729510AbgFUIXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 04:19:00 -0400
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:58939 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729457AbgFUIS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 04:18:59 -0400
-Received: from localhost.localdomain ([93.22.149.109])
-        by mwinf5d20 with ME
-        id tkJw2200D2MrWsD03kJxC6; Sun, 21 Jun 2020 10:18:58 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 21 Jun 2020 10:18:58 +0200
-X-ME-IP: 93.22.149.109
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] drivers: base: power: mark 2 functions as __init to save some memory
-Date:   Sun, 21 Jun 2020 10:18:54 +0200
-Message-Id: <20200621081854.882705-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 21 Jun 2020 04:23:19 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:40830 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729491AbgFUIXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 04:23:18 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jmvFn-0003ad-EX; Sun, 21 Jun 2020 18:23:04 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sun, 21 Jun 2020 18:23:03 +1000
+Date:   Sun, 21 Jun 2020 18:23:03 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.8
+Message-ID: <20200621082303.GA30729@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200408061513.GA23636@gondor.apana.org.au>
+ <20200611040544.GA27603@gondor.apana.org.au>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611040544.GA27603@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'early_resume_init()' and 'late_resume_init() 'are only called respectively
-via 'early_resume_init' and 'late_resume_init'.
-They can be marked as __init to save a few bytes of memory.
+Hi Linus:
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/base/power/trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This push contains a number of fixes:
 
-diff --git a/drivers/base/power/trace.c b/drivers/base/power/trace.c
-index 977d27bd1a22..a97f33d0c59f 100644
---- a/drivers/base/power/trace.c
-+++ b/drivers/base/power/trace.c
-@@ -265,14 +265,14 @@ static struct notifier_block pm_trace_nb = {
- 	.notifier_call = pm_trace_notify,
- };
- 
--static int early_resume_init(void)
-+static int __init early_resume_init(void)
- {
- 	hash_value_early_read = read_magic_time();
- 	register_pm_notifier(&pm_trace_nb);
- 	return 0;
- }
- 
--static int late_resume_init(void)
-+static int __init late_resume_init(void)
- {
- 	unsigned int val = hash_value_early_read;
- 	unsigned int user, file, dev;
+- NULL dereference in octeontx.
+- PM reference imbalance in ks-sa.
+- Dead-lock in crypto manager.
+- Memory leak in drbg.
+- Missing socket limit check on receive SG list size in algif_skcipher.
+- Typos in caam.
+- Warnings in ccp and hisilicon.
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+
+for you to fetch changes up to 819966c06b759022e9932f328284314d9272b9f3:
+
+  crypto: drbg - always try to free Jitter RNG instance (2020-06-15 17:38:54 +1000)
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      crypto: marvell/octeontx - Fix a potential NULL dereference
+
+Dinghao Liu (1):
+      hwrng: ks-sa - Fix runtime PM imbalance on error
+
+Eric Biggers (1):
+      crypto: algboss - don't wait during notifier callback
+
+Heinrich Schuchardt (1):
+      crypto: caam - fix typos
+
+Herbert Xu (3):
+      crypto: algif_skcipher - Cap recv SG list at ctx->used
+      crypto: hisilicon - Cap block size at 2^31
+      crypto: ccp - Fix sparse warnings in sev-dev
+
+Stephan Müller (1):
+      crypto: drbg - always try to free Jitter RNG instance
+
+ crypto/algboss.c                                 |  2 --
+ crypto/algif_skcipher.c                          |  6 +-----
+ crypto/drbg.c                                    |  6 ++++--
+ drivers/char/hw_random/ks-sa-rng.c               |  1 +
+ drivers/crypto/caam/Kconfig                      |  2 +-
+ drivers/crypto/caam/ctrl.c                       | 18 +++++++++---------
+ drivers/crypto/caam/desc.h                       |  4 ++--
+ drivers/crypto/caam/pdb.h                        |  2 +-
+ drivers/crypto/ccp/sev-dev.c                     | 23 ++++++++++++++++-------
+ drivers/crypto/hisilicon/sgl.c                   |  3 ++-
+ drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 11 +++++++----
+ include/linux/psp-sev.h                          |  2 +-
+ 12 files changed, 45 insertions(+), 35 deletions(-)
+
+Thanks,
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
