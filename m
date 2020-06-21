@@ -2,261 +2,97 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B42CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BFE247FA
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E93924905
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U98BGKB8"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="W2N41+5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730859AbgFUWwi (ORCPT
+        id S1730908AbgFUW5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 18:52:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
+        Sun, 21 Jun 2020 18:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgFUWwh (ORCPT
+        with ESMTP id S1726064AbgFUW5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 18:52:37 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196DDC061794;
-        Sun, 21 Jun 2020 15:52:37 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id l188so954244qkf.10;
-        Sun, 21 Jun 2020 15:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zTVIHWDDmj7Tn2Zh1WfJEgDZE8El5j9C1V5flsPUvRU=;
-        b=U98BGKB8WE6raxyIpeNGmN18FU/WhUoqPNBqyYc7Mv4r8I0WcfjVl0sRJb4LznpQSQ
-         s4VRjd+DeUAybdbXSyBm30de/J0rhfjFlgFsOR5Nv5YN2eTWFqfHpwpJc4NMT5Cm5hNk
-         tyH530t9hYCNyVRM6e2BnVBLwtR2Jo5KgsC0XByXlZJgghhDceTQTAt+O6oahYvA3BsQ
-         0+nE7x2Iczo279XgLX3JlxnH7A0hEq6zARdYLTA0ehylqpxlpTAZ2ZI5M0O36TssX8dI
-         cehpZkG679sgEllUoUb8LL6bz++98rgjjr1xL8/WdmhVlS2WQe3Vgvf4SmtkkyCaBexY
-         OMOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zTVIHWDDmj7Tn2Zh1WfJEgDZE8El5j9C1V5flsPUvRU=;
-        b=SAEBYILbBU7Pt1z4F8cTDs/iH66cN+4iOCRVC4dspDzH2/+LNro1aA9iheFHonQjXe
-         a2jDYnr8NDJ+jqFiiTDUfmew2X8jOiT58YO7kIuk7mQIRB4MPMRFRJNJgjVr4+uyINHf
-         NPJ9T40Hyc/jgpG8ry05KcIsWSHOrtT50EvAKAIwrbbSAKVehktM1K4YXs5oQsVUTElk
-         oYu1F+qCNaN7NDn+2aFVLObYs7jrYqNssWQGCdYup6hFOi0jB2spdy3C0/FmzJhAE6xf
-         OJqh4eKe+3zMtheriZoWIsxMtXT4ykIrc2XoyeVjSXKVaqpLZ4sz08nQ/Ik/WpHGMtwM
-         dhWw==
-X-Gm-Message-State: AOAM530/o4JoeZBnrRfMokwGN4pNKBtOfdjxZ99iagO2mK8eEBm94swF
-        KHtSLv0X4+6qmEYYKMjb824=
-X-Google-Smtp-Source: ABdhPJwjs/124zVcImjhcG2ljTMKtaT5dcxySM1zy+oaeg6UkikrqcQdz31KU8KAWSDjLfh6b/5/IA==
-X-Received: by 2002:a05:620a:15da:: with SMTP id o26mr11998600qkm.304.1592779956102;
-        Sun, 21 Jun 2020 15:52:36 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id r2sm6743965qtn.27.2020.06.21.15.52.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jun 2020 15:52:35 -0700 (PDT)
-Subject: Re: RFC: KTAP documentation - expected messages
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
-Message-ID: <8434df9b-d7c7-a873-41a2-b4b9e8c46d6d@gmail.com>
-Date:   Sun, 21 Jun 2020 17:52:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 21 Jun 2020 18:57:16 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E71C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 15:57:15 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 27EE88066C;
+        Mon, 22 Jun 2020 10:57:10 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1592780230;
+        bh=YCsbe4EpQ2HQPtwpZQRB0Vn4aud+zoi8XPglVswF6LQ=;
+        h=From:To:Cc:Subject:Date;
+        b=W2N41+5Wfe0dFv15oUj3+vt7pc1SPbXC2zK50GFEnMjTR/3ge0zFX1uVO0b1FK2wq
+         ayozR9dUZogcGhAdkvKSs3H8GpYx9OajdRiwmDg8a21ZlksA845tuKoJ+asJFYBFcu
+         yW5CoQSNzcw9uPdtsJBcdO1ltC3d5LH3YXmOjRHWW36N8+P+26mVP4678EPgR/i8mZ
+         jXOB+6CfmCXQyk7JIP5WjhPKYrn+EUGKo3ssCSU1SR88lfKQWpwSI8n8DWe+gXlAUz
+         xOo5CUPunQkF92ZQx+CUFM83pWEaPWLJssUwPQOc0j+lnB7a66SVxLUH6vVJC6x5GG
+         zZumFcCuksH9w==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5eefe5c40000>; Mon, 22 Jun 2020 10:57:08 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id DE9F513EEA8;
+        Mon, 22 Jun 2020 10:57:08 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id E23ED28005D; Mon, 22 Jun 2020 10:57:09 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     wsa@kernel.org, andriy.shevchenko@linux.intel.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] i2c: algo-pca: Add 0x78 as SCL stuck low status
+Date:   Mon, 22 Jun 2020 10:57:05 +1200
+Message-Id: <20200621225705.21666-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-21 17:45, Frank Rowand wrote:
-> Tim Bird started a thread [1] proposing that he document the selftest result
-> format used by Linux kernel tests.  
-> 
-> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
-> 
-> The issue of messages generated by the kernel being tested (that are not
-> messages directly created by the tests, but are instead triggered as a
-> side effect of the test) came up.  In this thread, I will call these
-> messages "expected messages".  Instead of sidetracking that thread with
-> a proposal to handle expected messages, I am starting this new thread.
-> 
-> I implemented an API for expected messages that are triggered by tests
-> in the Devicetree unittest code, with the expectation that the specific
-> details may change when the Devicetree unittest code adapts the KUnit
-> API.  It seems appropriate to incorporate the concept of expected
-> messages in Tim's documentation instead of waiting to address the
-> subject when the Devicetree unittest code adapts the KUnit API, since
-> Tim's document may become the kernel selftest standard.
-> 
-> Instead of creating a very long email containing multiple objects,
-> I will reply to this email with a separate reply for each of:
-> 
->   The "expected messages" API implemention and use can be from
->   drivers/of/unittest.c in the mainline kernel.
-> 
->   of_unittest_expect - A proof of concept perl program to filter console
->                        output containing expected messages output
-> 
->                        of_unittest_expect is also available by cloning
->                        https://github.com/frowand/dt_tools.git
-> 
->   An example raw console output with timestamps and expect messages.
-> 
->   An example of console output processed by filter program
->   of_unittest_expect to be more human readable.  The expected
->   messages are not removed, but are flagged.
-> 
->   An example of console output processed by filter program
->   of_unittest_expect to be more human readable.  The expected
->   messages are removed instead of being flagged.
-> 
+The PCA9665 datasheet says that I2CSTA =3D 78h indicates that SCL is stuc=
+k
+low, this differs to the PCA9564 which uses 90h for this indication.
+Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
 
-reply 5/5
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Based on looking through the PCA9564 and PCA9665 datasheets this should b=
+e
+safe. The PCA9564 should not return 0x78 for any valid state and the PCA9=
+665
+should not return 0x90.
 
-This is the previous raw console output for the Devicetree unittest,
-filtered by of_unittest_expect.  The expected messages are eliminated
-instead of being flagged.
+ drivers/i2c/algos/i2c-algo-pca.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Lines 1 - 205 deleted again.
+diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-alg=
+o-pca.c
+index 7f10312d1b88..e3017329cea8 100644
+--- a/drivers/i2c/algos/i2c-algo-pca.c
++++ b/drivers/i2c/algos/i2c-algo-pca.c
+@@ -314,6 +314,7 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
+ 			DEB2("BUS ERROR - SDA Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
++		case 0x78: /* Bus error - SCL stuck low */
+ 		case 0x90: /* Bus error - SCL stuck low */
+ 			DEB2("BUS ERROR - SCL Stuck low\n");
+ 			pca_reset(adap);
+--=20
+2.27.0
 
-The output is still somewhat noisy because the Devicetree unittest
-is running in parallel with some unrelated driver initialization.
-
-This test run shows one of the unittests failing (search for
-the string "FAIL") and an associated expected console error
-message is missing.
-
-  EXPECT begin and EXPECT end lines are suppressed.
-  Lines that match an EXPECT line are suppressed.
-  Lines reporting a of_unittest_expect warning or error are flagged
-     with a leading '**'.
-  Lines reporting start or end of the unittests are flagged
-     with a leading '->'.
-  Lines reporting a unittest test FAIL are flagged
-     with a leading '>>'.
-
-
-   s4: supplied by regulator-dummy
-   s4: Bringing 0uV into 500000-500000uV
-   s5: supplied by regulator-dummy
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   rtc-pm8xxx fc4cf000.spmi:pm8941@0:rtc@6000: setting system clock to 1970-02-07T19:24:17 UTC (3266657)
--> ### dt-test ### start of unittest - you will see error messages
-   s6: supplied by regulator-dummy
-   s7: supplied by regulator-dummy
-   s8: supplied by regulator-dummy
-   s1: supplied by regulator-dummy
-   s1: Bringing 0uV into 1300000-1300000uV
-   s2: supplied by regulator-dummy
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   s2: Bringing 0uV into 2150000-2150000uV
-   s3: supplied by regulator-dummy
-   s3: Bringing 0uV into 1800000-1800000uV
-   l1: supplied by s1
-   l1: Bringing 0uV into 1225000-1225000uV
-   l2: supplied by s3
-   l2: Bringing 0uV into 1200000-1200000uV
-   l3: supplied by s1
-   l3: Bringing 0uV into 1225000-1225000uV
-   l4: supplied by s1
-   l4: Bringing 0uV into 1225000-1225000uV
-   l5: supplied by s2
-   l5: Bringing 0uV into 1800000-1800000uV
-   l6: supplied by s2
-   l6: Bringing 0uV into 1800000-1800000uV
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   l7: supplied by s2
-   l7: Bringing 0uV into 1800000-1800000uV
-   l8: supplied by regulator-dummy
-   l8: Bringing 0uV into 1800000-1800000uV
-   l9: supplied by regulator-dummy
-   l9: Bringing 0uV into 1800000-1800000uV
-   l10: supplied by regulator-dummy
-   l10: Bringing 0uV into 1800000-1800000uV
-   l11: supplied by s1
-   l11: Bringing 0uV into 1300000-1300000uV
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   l12: supplied by s2
-   l12: Bringing 0uV into 1800000-1800000uV
-   l13: supplied by regulator-dummy
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   l13: Bringing 0uV into 1800000-1800000uV
-   l14: supplied by s2
-   l14: Bringing 0uV into 1800000-1800000uV
-   l15: supplied by s2
-   l15: Bringing 0uV into 2050000-2050000uV
-   l16: supplied by regulator-dummy
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   l16: Bringing 0uV into 2700000-2700000uV
-   l17: supplied by regulator-dummy
-   l17: Bringing 0uV into 2700000-2700000uV
-   l18: supplied by regulator-dummy
-   l18: Bringing 0uV into 2850000-2850000uV
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   l19: supplied by regulator-dummy
-   l19: Bringing 0uV into 3300000-3300000uV
-   l20: supplied by regulator-dummy
-   l20: Bringing 0uV into 2950000-2950000uV
-   l21: supplied by regulator-dummy
-   l21: Bringing 0uV into 2950000-2950000uV
-   l22: supplied by regulator-dummy
-   l22: Bringing 0uV into 3000000-3000000uV
-   l23: supplied by regulator-dummy
-   l23: Bringing 0uV into 3000000-3000000uV
-** of_unittest_expect WARNING - not found ---> GPIO line <<int>> (line-C-input) hogged as input
-   l24: supplied by regulator-dummy
-   mmc0: SDHCI controller on f9824900.sdhci [f9824900.sdhci] using ADMA
-   l24: Bringing 0uV into 3075000-3075000uV
->> ### dt-test ### FAIL of_unittest_overlay_gpio():2664 unittest_gpio_chip_request() called 0 times (expected 1 time)
-   lvs1: supplied by s3
-   lvs2: supplied by s3
-   sdhci_msm f98a4900.sdhci: Got CD GPIO
-   lvs3: supplied by s3
-   5vs1: supplied by s4
-   5vs2: supplied by s4
-   mmc1: SDHCI controller on f98a4900.sdhci [f98a4900.sdhci] using ADMA
-   msm_hsusb f9a55000.usb: failed to create device link to ci_hdrc.0.ulpi
-   mmc1: new ultra high speed DDR50 SDHC card at address aaaa
-   mmcblk1: mmc1:aaaa SU16G 14.8 GiB 
-    mmcblk1: p1
--> ### dt-test ### end of unittest - 258 passed, 1 failed
-   ALSA device list:
-     No soundc�[    4.382470] Freeing unused kernel memory: 1024K
-   mmcblk0: mmc0:0001 SEM16G 14.7 GiB 
-   mmcblk0boot0: mmc0:0001 SEM16G partition 1 4.00 MiB
-   mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
-   mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB, chardev (247:0)
-   Run /init as init process
-    mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20
-   mkdir: can't create directory '/bin': File exists
-   mkdir: can't create directory '/dev': File exists
-   /init: line 25: can't create /proc/sys/kernel/hotplug: nonexistent directory
-   mdev: unknown user/group 'root:uucp' on line 34
-   Attempt to mount partitions: /usr/system /usr/data
-   Mounting partitions from: /dev/mmcblk0
-   EXT4-fs (mmcblk0p12): mounted filesystem with ordered data mode. Opts: (null)
-   EXT4-fs (mmcblk0p13): recovery complete
-   EXT4-fs (mmcblk0p13): mounted filesystem with ordered data mode. Opts: (null)
-   / # [    5.288283] random: fast init done
-   
-   / # cat /proc/version
-   Linux version 5.6.0-rc1-00002-g6be01ed870a2-dirty (frowand@xps8900) (gcc version 4.6.x-google 20120106 (prerelease) (GCC)) #4 SMP PREEMPT Wed Feb 19 18:23:24 CST 2020
-   / # 
