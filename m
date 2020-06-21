@@ -2,101 +2,155 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F211BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 15:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 15:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D75BA251F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 15:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CB8251F7
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 15:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbgFUPir (ORCPT
+        id S1730399AbgFUPnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 11:38:47 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57011 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730348AbgFUPir (ORCPT
+        Sun, 21 Jun 2020 11:43:05 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:56875 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730356AbgFUPnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 11:38:47 -0400
-Received: from webmail.gandi.net (webmail21.sd4.0x35.net [10.200.201.21])
-        (Authenticated sender: foss@0leil.net)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPA id 50CEEC0005;
-        Sun, 21 Jun 2020 15:38:42 +0000 (UTC)
+        Sun, 21 Jun 2020 11:43:05 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.143.237])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 0C88D63E478B;
+        Sun, 21 Jun 2020 17:43:02 +0200 (CEST)
+Received: from localhost (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 21 Jun
+ 2020 17:43:01 +0200
+Date:   Sun, 21 Jun 2020 17:40:37 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200621154037.GA13809@arch>
+References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+ <20200620172502.0d532081@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 21 Jun 2020 17:38:42 +0200
-From:   Quentin Schulz <foss@0leil.net>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com
-Subject: Re: [PATCH net-next v3 4/8] net: phy: mscc: take into account the
- 1588 block in MACsec init
-In-Reply-To: <20200619122300.2510533-5-antoine.tenart@bootlin.com>
-References: <20200619122300.2510533-1-antoine.tenart@bootlin.com>
- <20200619122300.2510533-5-antoine.tenart@bootlin.com>
-Message-ID: <964739eb70dcd58153d8548f7b57719b@0leil.net>
-X-Sender: foss@0leil.net
-User-Agent: Roundcube Webmail/1.3.8
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200620172502.0d532081@archlinux>
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 9225060887347813458
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Antoine,
+On Sat, Jun 20, 2020 at 05:25:02PM +0100, Jonathan Cameron wrote:
+> On Sun, 7 Jun 2020 19:58:09 +0200
+> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+>
+> > Add Sensirion SCD30 carbon dioxide core driver.
+> >
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+>
+> A few things I'd missed showed up in warnings when I applied this and
+> ran a sparse check.  Please fix up and send a v6.
+> Also sanity check the rest with sparse. Note if I'd missed this 0-day
+> would have sent use these warnings.
+>
 
-On 2020-06-19 14:22, Antoine Tenart wrote:
-> This patch takes in account the use of the 1588 block in the MACsec
-> initialization, as a conditional configuration has to be done (when the
-> 1588 block is used).
-> 
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> ---
->  drivers/net/phy/mscc/mscc_macsec.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/mscc/mscc_macsec.c
-> b/drivers/net/phy/mscc/mscc_macsec.c
-> index c0eeb62cb940..713c62b1d1f0 100644
-> --- a/drivers/net/phy/mscc/mscc_macsec.c
-> +++ b/drivers/net/phy/mscc/mscc_macsec.c
-> @@ -285,7 +285,9 @@ static void vsc8584_macsec_mac_init(struct
-> phy_device *phydev,
->  				 MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA |
->  				 MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA |
->  				 (bank == HOST_MAC ?
-> -				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0));
-> +				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0) |
-> +				 (IS_ENABLED(CONFIG_NETWORK_PHY_TIMESTAMPING) ?
-> +				  MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS(0x8) : 
-> 0));
+Ah, forgot to add C=2 to prior building. Thanks for catching this.
 
-Do we have more info on this 0x8? Where does it come from? What does it 
-mean?
+> Thanks,
+>
+> Jonathan
+>
+> > +
+> > +static int scd30_read_meas(struct scd30_state *state)
+> > +{
+> > +	int i, ret;
+> > +
+> > +	ret = state->command(state, CMD_READ_MEAS, 0, state->meas, sizeof(state->meas));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	be32_to_cpu_array(state->meas, state->meas, ARRAY_SIZE(state->meas));
+>
+> The type of the input to the above has the wrong endian markings.
+>
+> CHECK   drivers/iio/chemical/scd30_core.c
+> drivers/iio/chemical/scd30_core.c:123:40: warning: incorrect type in argument 2 (different base types)
+> drivers/iio/chemical/scd30_core.c:123:40:    expected restricted __be32 const [usertype] *src
+> drivers/iio/chemical/scd30_core.c:123:40:    got int *
+>
+> Whilst you could use a cast, it would be tidier to use an array of __be32.
+>
 
-Also this starts to get a little bit hard to read. Would it make sense 
-to have
-two temp variables? e.g.:
+Here's the only place where it's a __be32. All other places assume
+cpu endianess which means changing array type generates a few other warnings
+here and there. So I'd prefer to be lazy here and use a cast :).
 
-	padding = bank == HOST_MAC ? MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING 
-: 0;
-	ptp_stall_clks = IS_ENABLED(CONFIG_NETWORK_PHY_TIMESTAMPING) ?
-		MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS(0x8) : 0;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(state->meas); i++)
+> > +		state->meas[i] = scd30_float_to_fp(state->meas[i]);
+> > +
+> > +	/*
+> > +	 * co2 is left unprocessed while temperature and humidity are scaled
+> > +	 * to milli deg C and milli percent respectively.
+> > +	 */
+> > +	state->meas[SCD30_TEMP] *= 10;
+> > +	state->meas[SCD30_HR] *= 10;
+> > +
+> > +	return 0;
+> > +}
+> > +
+>
+> ...
+>
+> > +
+> > +static irqreturn_t scd30_trigger_handler(int irq, void *p)
+> > +{
+> > +	struct iio_poll_func *pf = p;
+> > +	struct iio_dev *indio_dev = pf->indio_dev;
+> > +	struct scd30_state *state = iio_priv(indio_dev);
+> > +	struct {
+> > +		int data[SCD30_MEAS_COUNT];
+> > +		s64 ts __aligned(8);
+> > +	} scan = { 0, };
+> should be scan = { {0, }, }; or something like that
+> as first element happens to be an array.
+>
+> Actually there is padding in here you need to zero I think.
+> So memset is a better bet.
+>
 
-	vsc8584_macsec_phy_write(phydev, bank, MSCC_MAC_CFG_PKTINF_CFG,
-				 MSCC_MAC_CFG_PKTINF_CFG_STRIP_FCS_ENA |
-				 MSCC_MAC_CFG_PKTINF_CFG_INSERT_FCS_ENA |
-				 MSCC_MAC_CFG_PKTINF_CFG_LPI_RELAY_ENA |
-				 MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA |
-				 MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA |
-				 padding |
-				 ptp_stall_clks);
+Sure.
 
-Thanks,
-Quentin
+> > +	int ret;
+> > +
+> > +	mutex_lock(&state->lock);
+> > +	if (!iio_trigger_using_own(indio_dev))
+> > +		ret = scd30_read_poll(state);
+> > +	else
+> > +		ret = scd30_read_meas(state);
+> > +	memcpy(scan.data, state->meas, sizeof(state->meas));
+> > +	mutex_unlock(&state->lock);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	iio_push_to_buffers_with_timestamp(indio_dev, &scan, iio_get_time_ns(indio_dev));
+> > +out:
+> > +	iio_trigger_notify_done(indio_dev->trig);
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> ...
