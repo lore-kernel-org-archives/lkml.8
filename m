@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165BEC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F7EC433E1
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB944248CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCCE248BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgFUMcR (ORCPT
+        id S1730086AbgFUMcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 08:32:17 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8940 "EHLO
+        Sun, 21 Jun 2020 08:32:07 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7470 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730072AbgFUMcD (ORCPT
+        by vger.kernel.org with ESMTP id S1730044AbgFUMcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 08:32:03 -0400
+        Sun, 21 Jun 2020 08:32:01 -0400
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05LCUDMG007247;
-        Sun, 21 Jun 2020 08:31:47 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05LCNA0F030148;
+        Sun, 21 Jun 2020 08:31:43 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31sfc5abfr-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 31sfc5abfm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 21 Jun 2020 08:31:46 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05LCVjQH040927
+        Sun, 21 Jun 2020 08:31:43 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05LCVgCi040918
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sun, 21 Jun 2020 08:31:45 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Sun, 21 Jun
- 2020 08:31:44 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 21 Jun 2020 08:31:44 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05LCVWVg007980;
         Sun, 21 Jun 2020 08:31:42 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 21 Jun 2020 08:31:41 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 21 Jun 2020 08:31:41 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sun, 21 Jun 2020 08:31:41 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05LCVWVd007980;
+        Sun, 21 Jun 2020 08:31:38 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
         <knaack.h@gmx.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 7/7] iio: core: move event interface on the opaque struct
-Date:   Sun, 21 Jun 2020 15:33:45 +0300
-Message-ID: <20200621123345.2469-8-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 4/7] iio: core: move debugfs data on the private iio dev info
+Date:   Sun, 21 Jun 2020 15:33:42 +0300
+Message-ID: <20200621123345.2469-5-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200621123345.2469-1-alexandru.ardelean@analog.com>
 References: <20200621123345.2469-1-alexandru.ardelean@analog.com>
@@ -58,7 +62,7 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-21_05:2020-06-19,2020-06-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
  priorityscore=1501 mlxlogscore=999 cotscore=-2147483648 bulkscore=0
  phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0
  clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
@@ -68,262 +72,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as with other private fields, this moves the event interface reference
-to the opaque IIO device object, to be invisible to drivers.
+This change moves all iio_dev debugfs fields to the iio_dev_priv object.
+It's not the biggest advantage yet (to the whole thing of abstractization)
+but it's a start.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/iio/industrialio-core.c  |  5 ++-
- drivers/iio/industrialio-event.c | 68 +++++++++++++++++++-------------
- include/linux/iio/iio-opaque.h   |  2 +
- include/linux/iio/iio.h          |  3 --
- 4 files changed, 45 insertions(+), 33 deletions(-)
+ drivers/iio/industrialio-core.c | 40 ++++++++++++++++++++++-----------
+ include/linux/iio/iio-opaque.h  | 10 +++++++++
+ include/linux/iio/iio.h         | 13 +----------
+ 3 files changed, 38 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 051cb05a8da7..12550f59caa4 100644
+index 27005ba4d09c..05175cf80c98 100644
 --- a/drivers/iio/industrialio-core.c
 +++ b/drivers/iio/industrialio-core.c
-@@ -205,7 +205,8 @@ EXPORT_SYMBOL(iio_read_const_attr);
- int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id)
- {
- 	int ret;
--	const struct iio_event_interface *ev_int = indio_dev->event_interface;
+@@ -165,6 +165,13 @@ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
+ };
+ 
++struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
++{
 +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	const struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
- 
- 	ret = mutex_lock_interruptible(&indio_dev->mlock);
- 	if (ret)
-@@ -1436,7 +1437,7 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
- 			attrcount += ret;
- 		}
- 
--	if (indio_dev->event_interface)
-+	if (iio_dev_opaque->event_interface)
- 		clk = &dev_attr_current_timestamp_clock.attr;
- 
- 	if (indio_dev->name)
-diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-index 5b17c92d3b50..2ab4d4c44427 100644
---- a/drivers/iio/industrialio-event.c
-+++ b/drivers/iio/industrialio-event.c
-@@ -18,6 +18,7 @@
- #include <linux/uaccess.h>
- #include <linux/wait.h>
- #include <linux/iio/iio.h>
-+#include <linux/iio/iio-opaque.h>
- #include "iio_core.h"
- #include <linux/iio/sysfs.h>
- #include <linux/iio/events.h>
-@@ -62,7 +63,8 @@ bool iio_event_enabled(const struct iio_event_interface *ev_int)
-  **/
- int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp)
++	return iio_dev_opaque->debugfs_dentry;
++}
++EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
++
+ /**
+  * iio_find_channel_from_si() - get channel from its scan index
+  * @indio_dev:		device
+@@ -308,35 +315,37 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 			      size_t count, loff_t *ppos)
  {
--	struct iio_event_interface *ev_int = indio_dev->event_interface;
+ 	struct iio_dev *indio_dev = file->private_data;
 +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
- 	struct iio_event_data ev;
- 	int copied;
- 
-@@ -96,7 +98,8 @@ static __poll_t iio_event_poll(struct file *filep,
- 			     struct poll_table_struct *wait)
- {
- 	struct iio_dev *indio_dev = filep->private_data;
--	struct iio_event_interface *ev_int = indio_dev->event_interface;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
- 	__poll_t events = 0;
- 
- 	if (!indio_dev->info)
-@@ -116,7 +119,8 @@ static ssize_t iio_event_chrdev_read(struct file *filep,
- 				     loff_t *f_ps)
- {
- 	struct iio_dev *indio_dev = filep->private_data;
--	struct iio_event_interface *ev_int = indio_dev->event_interface;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
- 	unsigned int copied;
+ 	unsigned val = 0;
  	int ret;
  
-@@ -165,7 +169,8 @@ static ssize_t iio_event_chrdev_read(struct file *filep,
- static int iio_event_chrdev_release(struct inode *inode, struct file *filep)
- {
- 	struct iio_dev *indio_dev = filep->private_data;
--	struct iio_event_interface *ev_int = indio_dev->event_interface;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
+ 	if (*ppos > 0)
+ 		return simple_read_from_buffer(userbuf, count, ppos,
+-					       indio_dev->read_buf,
+-					       indio_dev->read_buf_len);
++					       iio_dev_opaque->read_buf,
++					       iio_dev_opaque->read_buf_len);
  
- 	clear_bit(IIO_BUSY_BIT_POS, &ev_int->flags);
- 
-@@ -184,7 +189,8 @@ static const struct file_operations iio_event_chrdev_fileops = {
- 
- int iio_event_getfd(struct iio_dev *indio_dev)
- {
--	struct iio_event_interface *ev_int = indio_dev->event_interface;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
- 	int fd;
- 
- 	if (ev_int == NULL)
-@@ -343,6 +349,7 @@ static int iio_device_add_event(struct iio_dev *indio_dev,
- 	enum iio_event_type type, enum iio_event_direction dir,
- 	enum iio_shared_by shared_by, const unsigned long *mask)
- {
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
- 	ssize_t (*show)(struct device *, struct device_attribute *, char *);
- 	ssize_t (*store)(struct device *, struct device_attribute *,
- 		const char *, size_t);
-@@ -376,7 +383,7 @@ static int iio_device_add_event(struct iio_dev *indio_dev,
- 
- 		ret = __iio_add_chan_devattr(postfix, chan, show, store,
- 			 (i << 16) | spec_index, shared_by, &indio_dev->dev,
--			&indio_dev->event_interface->dev_attr_list);
-+			&iio_dev_opaque->event_interface->dev_attr_list);
- 		kfree(postfix);
- 
- 		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
-@@ -469,6 +476,7 @@ static void iio_setup_ev_int(struct iio_event_interface *ev_int)
- static const char *iio_event_group_name = "events";
- int iio_device_register_eventset(struct iio_dev *indio_dev)
- {
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
- 	struct iio_dev_attr *p;
- 	int ret = 0, attrcount_orig = 0, attrcount, attrn;
- 	struct attribute **attr;
-@@ -477,14 +485,14 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
- 	      iio_check_for_dynamic_events(indio_dev)))
- 		return 0;
- 
--	indio_dev->event_interface =
-+	iio_dev_opaque->event_interface =
- 		kzalloc(sizeof(struct iio_event_interface), GFP_KERNEL);
--	if (indio_dev->event_interface == NULL)
-+	if (iio_dev_opaque->event_interface == NULL)
- 		return -ENOMEM;
- 
--	INIT_LIST_HEAD(&indio_dev->event_interface->dev_attr_list);
-+	INIT_LIST_HEAD(&iio_dev_opaque->event_interface->dev_attr_list);
- 
--	iio_setup_ev_int(indio_dev->event_interface);
-+	iio_setup_ev_int(iio_dev_opaque->event_interface);
- 	if (indio_dev->info->event_attrs != NULL) {
- 		attr = indio_dev->info->event_attrs->attrs;
- 		while (*attr++ != NULL)
-@@ -498,35 +506,35 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
- 		attrcount += ret;
+ 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+-						  indio_dev->cached_reg_addr,
++						  iio_dev_opaque->cached_reg_addr,
+ 						  0, &val);
+ 	if (ret) {
+ 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
+ 		return ret;
  	}
  
--	indio_dev->event_interface->group.name = iio_event_group_name;
--	indio_dev->event_interface->group.attrs = kcalloc(attrcount + 1,
--							  sizeof(indio_dev->event_interface->group.attrs[0]),
-+	iio_dev_opaque->event_interface->group.name = iio_event_group_name;
-+	iio_dev_opaque->event_interface->group.attrs = kcalloc(attrcount + 1,
-+							  sizeof(iio_dev_opaque->event_interface->group.attrs[0]),
- 							  GFP_KERNEL);
--	if (indio_dev->event_interface->group.attrs == NULL) {
-+	if (iio_dev_opaque->event_interface->group.attrs == NULL) {
- 		ret = -ENOMEM;
- 		goto error_free_setup_event_lines;
- 	}
- 	if (indio_dev->info->event_attrs)
--		memcpy(indio_dev->event_interface->group.attrs,
-+		memcpy(iio_dev_opaque->event_interface->group.attrs,
- 		       indio_dev->info->event_attrs->attrs,
--		       sizeof(indio_dev->event_interface->group.attrs[0])
-+		       sizeof(iio_dev_opaque->event_interface->group.attrs[0])
- 		       *attrcount_orig);
- 	attrn = attrcount_orig;
- 	/* Add all elements from the list. */
- 	list_for_each_entry(p,
--			    &indio_dev->event_interface->dev_attr_list,
-+			    &iio_dev_opaque->event_interface->dev_attr_list,
- 			    l)
--		indio_dev->event_interface->group.attrs[attrn++] =
-+		iio_dev_opaque->event_interface->group.attrs[attrn++] =
- 			&p->dev_attr.attr;
- 	indio_dev->groups[indio_dev->groupcounter++] =
--		&indio_dev->event_interface->group;
-+		&iio_dev_opaque->event_interface->group;
+-	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
+-					   sizeof(indio_dev->read_buf),
+-					   "0x%X\n", val);
++	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
++					      sizeof(iio_dev_opaque->read_buf),
++					      "0x%X\n", val);
  
- 	return 0;
- 
- error_free_setup_event_lines:
--	iio_free_chan_devattr_list(&indio_dev->event_interface->dev_attr_list);
--	kfree(indio_dev->event_interface);
--	indio_dev->event_interface = NULL;
-+	iio_free_chan_devattr_list(&iio_dev_opaque->event_interface->dev_attr_list);
-+	kfree(iio_dev_opaque->event_interface);
-+	iio_dev_opaque->event_interface = NULL;
- 	return ret;
+ 	return simple_read_from_buffer(userbuf, count, ppos,
+-				       indio_dev->read_buf,
+-				       indio_dev->read_buf_len);
++				       iio_dev_opaque->read_buf,
++				       iio_dev_opaque->read_buf_len);
  }
  
-@@ -539,16 +547,20 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
-  */
- void iio_device_wakeup_eventset(struct iio_dev *indio_dev)
+ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 		     const char __user *userbuf, size_t count, loff_t *ppos)
  {
--	if (indio_dev->event_interface == NULL)
+ 	struct iio_dev *indio_dev = file->private_data;
 +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+
-+	if (iio_dev_opaque->event_interface == NULL)
- 		return;
--	wake_up(&indio_dev->event_interface->wait);
-+	wake_up(&iio_dev_opaque->event_interface->wait);
+ 	unsigned reg, val;
+ 	char buf[80];
+ 	int ret;
+@@ -351,10 +360,10 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 
+ 	switch (ret) {
+ 	case 1:
+-		indio_dev->cached_reg_addr = reg;
++		iio_dev_opaque->cached_reg_addr = reg;
+ 		break;
+ 	case 2:
+-		indio_dev->cached_reg_addr = reg;
++		iio_dev_opaque->cached_reg_addr = reg;
+ 		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
+ 							  val, NULL);
+ 		if (ret) {
+@@ -378,23 +387,28 @@ static const struct file_operations iio_debugfs_reg_fops = {
+ 
+ static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
+ {
+-	debugfs_remove_recursive(indio_dev->debugfs_dentry);
++	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++	debugfs_remove_recursive(iio_dev_opaque->debugfs_dentry);
  }
  
- void iio_device_unregister_eventset(struct iio_dev *indio_dev)
+ static void iio_device_register_debugfs(struct iio_dev *indio_dev)
  {
--	if (indio_dev->event_interface == NULL)
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++	struct iio_dev_opaque *iio_dev_opaque;
 +
-+	if (iio_dev_opaque->event_interface == NULL)
+ 	if (indio_dev->info->debugfs_reg_access == NULL)
  		return;
--	iio_free_chan_devattr_list(&indio_dev->event_interface->dev_attr_list);
--	kfree(indio_dev->event_interface->group.attrs);
--	kfree(indio_dev->event_interface);
-+	iio_free_chan_devattr_list(&iio_dev_opaque->event_interface->dev_attr_list);
-+	kfree(iio_dev_opaque->event_interface->group.attrs);
-+	kfree(iio_dev_opaque->event_interface);
+ 
+ 	if (!iio_debugfs_dentry)
+ 		return;
+ 
+-	indio_dev->debugfs_dentry =
++	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++
++	iio_dev_opaque->debugfs_dentry =
+ 		debugfs_create_dir(dev_name(&indio_dev->dev),
+ 				   iio_debugfs_dentry);
+ 
+ 	debugfs_create_file("direct_reg_access", 0644,
+-			    indio_dev->debugfs_dentry, indio_dev,
++			    iio_dev_opaque->debugfs_dentry, indio_dev,
+ 			    &iio_debugfs_reg_fops);
  }
+ #else
 diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
-index af6c69a40169..f2e94196d31f 100644
+index 1375674f14cd..b3f234b4c1e9 100644
 --- a/include/linux/iio/iio-opaque.h
 +++ b/include/linux/iio/iio-opaque.h
-@@ -6,6 +6,7 @@
+@@ -6,9 +6,19 @@
  /**
   * struct iio_dev_opaque - industrial I/O device opaque information
   * @indio_dev:			public industrial I/O device information
-+ * @event_interface:		event chrdevs associated with interrupt lines
-  * @buffer_list:		list of all buffers currently attached
-  * @channel_attr_list:		keep track of automatically created channel
-  *				attributes
-@@ -17,6 +18,7 @@
++ * @debugfs_dentry:		device specific debugfs dentry
++ * @cached_reg_addr:		cached register address for debugfs reads
++ * @read_buf:			read buffer to be used for the initial reg read
++ * @read_buf_len:		data length in @read_buf
   */
  struct iio_dev_opaque {
  	struct iio_dev			indio_dev;
-+	struct iio_event_interface	*event_interface;
- 	struct list_head		buffer_list;
- 	struct list_head		channel_attr_list;
- 	struct attribute_group		chan_attr_group;
++#if defined(CONFIG_DEBUG_FS)
++	struct dentry			*debugfs_dentry;
++	unsigned			cached_reg_addr;
++	char				read_buf[20];
++	unsigned int			read_buf_len;
++#endif
+ };
+ 
+ #define to_iio_dev_opaque(indio_dev)		\
 diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 219847f6f5c6..e2df67a3b9ab 100644
+index 86112e35ae5f..bb0aae11a111 100644
 --- a/include/linux/iio/iio.h
 +++ b/include/linux/iio/iio.h
-@@ -488,7 +488,6 @@ struct iio_buffer_setup_ops {
-  * @currentmode:	[DRIVER] current operating mode
-  * @dev:		[DRIVER] device structure, should be assigned a parent
-  *			and owner
-- * @event_interface:	[INTERN] event chrdevs associated with interrupt lines
-  * @buffer:		[DRIVER] any buffer present
-  * @scan_bytes:		[INTERN] num bytes captured to be fed to buffer demux
-  * @mlock:		[INTERN] lock used to prevent simultaneous device state
-@@ -527,8 +526,6 @@ struct iio_dev {
- 	int				currentmode;
- 	struct device			dev;
+@@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
+  * @groups:		[INTERN] attribute groups
+  * @groupcounter:	[INTERN] index of next attribute group
+  * @flags:		[INTERN] file ops related flags including busy flag.
+- * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
+- * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
+  * @priv:		[DRIVER] reference to driver's private information
+  *			**MUST** be accessed **ONLY** via iio_priv() helper
+  */
+@@ -567,12 +565,6 @@ struct iio_dev {
+ 	int				groupcounter;
  
--	struct iio_event_interface	*event_interface;
--
- 	struct iio_buffer		*buffer;
- 	int				scan_bytes;
- 	struct mutex			mlock;
+ 	unsigned long			flags;
+-#if defined(CONFIG_DEBUG_FS)
+-	struct dentry			*debugfs_dentry;
+-	unsigned			cached_reg_addr;
+-	char				read_buf[20];
+-	unsigned int			read_buf_len;
+-#endif
+ 	void				*priv;
+ };
+ 
+@@ -727,10 +719,7 @@ static inline bool iio_buffer_enabled(struct iio_dev *indio_dev)
+  * @indio_dev:		IIO device structure for device
+  **/
+ #if defined(CONFIG_DEBUG_FS)
+-static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+-{
+-	return indio_dev->debugfs_dentry;
+-}
++struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
+ #else
+ static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+ {
 -- 
 2.17.1
 
