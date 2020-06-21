@@ -2,188 +2,94 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B32C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E09BC248D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:54:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BXwgouOz"
+	by mail.kernel.org (Postfix) with ESMTP id 3487D24888
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbgFUKyD (ORCPT
+        id S1729905AbgFUK5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 06:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56830 "EHLO
+        Sun, 21 Jun 2020 06:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729732AbgFUKyD (ORCPT
+        with ESMTP id S1729848AbgFUK5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:54:03 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4A4C061794;
-        Sun, 21 Jun 2020 03:54:02 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f310b00859d3e21c21ab34f.dip0.t-ipconnect.de [IPv6:2003:ec:2f31:b00:859d:3e21:c21a:b34f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F2951EC031B;
-        Sun, 21 Jun 2020 12:54:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592736840;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=vv+IfG9aH1AU0X0L2j56vDE+dQoFKlAmWLzo93fGcYM=;
-        b=BXwgouOzeqfF/5TDxkIQkEO0FeiiCQOWQAD1DX3yM7fPXmkrevufcCv6sYahBYZ1f2+jZV
-        HdjsUyKxt+iTUJdqQy6f+XaTMSaMtyVdl7dTKIjJUOc73IH+gNGYF2Wo+s1kiPG5nn+Wrn
-        e9UFyoh44vj+H2qozU/CSczd1Hjdn88=
-Date:   Sun, 21 Jun 2020 12:53:50 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200621105350.GA28206@zn.tnic>
-References: <20200621163323.14e8533f@canb.auug.org.au>
+        Sun, 21 Jun 2020 06:57:02 -0400
+X-Greylist: delayed 7891 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Jun 2020 03:57:02 PDT
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F29DC061794;
+        Sun, 21 Jun 2020 03:57:02 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 9D08BC01A; Sun, 21 Jun 2020 12:57:00 +0200 (CEST)
+Date:   Sun, 21 Jun 2020 12:56:45 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     lucho@ionkov.net, ericvh@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/9p: Validate current->sighand in client.c
+Message-ID: <20200621105645.GA21909@nautica>
+References: <20200618190807.GA20699@nautica>
+ <20200620201456.14304-1-alexander.kapshuk@gmail.com>
+ <20200621084512.GA720@nautica>
+ <CAJ1xhMWe6qN9RcpmTkJVRkCs+5F=_JtdwsYuFfM7ZckwEkubhA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200621163323.14e8533f@canb.auug.org.au>
+In-Reply-To: <CAJ1xhMWe6qN9RcpmTkJVRkCs+5F=_JtdwsYuFfM7ZckwEkubhA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ acme for an FYI.
+Alexander Kapshuk wrote on Sun, Jun 21, 2020:
+> Thanks for your feedback.
+> Shall I simply resend the v2 patch with the commit message reworded as
+> you suggested, or should I make it a v3 patch instead?
 
-On Sun, Jun 21, 2020 at 04:33:23PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the tip tree, today's linux-next build (perf) failed
-> like this:
-> 
-> In file included from trace/beauty/tracepoints/x86_msr.c:10:
-> perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
->   292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
->       |                                             ^~~~~~~~~~~
-> perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
-> 
-> Caused by commit
-> 
->   1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
-> 
-> I have used the tip tree from next-20200618 for tooday.
+Yes please resend the same commit reworded. v2 or v3 doesn't matter
+much, the [PATCH whatever] part of the mail isn't included in the commit
+message; I don't receive so much patches to be fussy about that :)
 
-Thanks, I saw that once but then got distracted to something of higher
-prio. :-\
+> One other thing I wanted to clarify is I got a message from kernel
+> test robot <lkp@intel.com>,
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/TMTLPYU6A522JH2VCN3PNZVAP6EE5MDF/,
+> saying that on parisc my patch resulted in __lock_task_sighand being
+> undefined during modpost'ing.
+> I've noticed similar messages about other people's patches on the
+> linux-kernel mailing list with the responses stating that the issue
+> was at the compilation site rather than with the patch itself.
+> As far as I understand, that is the case with my patch also. So no
+> further action on that is required of me, is it?
 
-I'll apply this after testing it a bit:
+Thanks, I hadn't noticed this mail -- unfortunately I don't have
+anything setup to test pa risc, but __lock_task_sighand is defined in
+kernel/signal.c which is unconditionally compiled so shouldn't have
+anything to do with arch-specific failures, so I will run into the same
+problem when I test this.
 
----
-From: Borislav Petkov <bp@suse.de>
-Date: Sun, 21 Jun 2020 12:41:53 +0200
-Subject: [PATCH] x86/msr: Move the F15h MSRs where they belong
+From just looking at the code, it looks like a real problem to me -
+__lock_task_sighand is never passed to EXPORT_SYMBOL so when building 9p
+as a module we cannot use the function. Only exported symbols can be
+called from code that can be built as modules.
 
-1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+That looks like an oversight to me more than something on purpose, but
+it does mean I cannot take the patch right now -- we need to first get
+the symbol exported before we can use it in 9p.
 
-moved the three F15h power MSRs to the architectural list but that was
-wrong as they belong in the family 0x15 list. That also caused:
 
-  In file included from trace/beauty/tracepoints/x86_msr.c:10:
-  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
-    292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
-        |                                             ^~~~~~~~~~~
-  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
+As things stand I'd rather have this patch wait one cycle for this than
+revert to manipulating rcu directly like you did first -- if you're up
+for it you can send a patch to get it exported first and I'll pick this
+patch up next cycle, or I can take care of that too if you don't want to
+bother.
 
-due to MSR_F15H_PTSC ending up being defined twice. Move them where they
-belong and drop the duplicate.
-
-While at it, update the msr-index.h copy to pick up the changes from
-
-  7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation")
-
-Fixes: 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/msr-index.h       | 5 ++---
- tools/arch/x86/include/asm/msr-index.h | 9 ++++++---
- 2 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index eb9537254920..63ed8fe35738 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -422,11 +422,8 @@
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
--#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
--#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
-@@ -469,6 +466,8 @@
- #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
- 
- /* Fam 15h MSRs */
-+#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-+#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_F15H_PERF_CTL		0xc0010200
- #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
- #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 7dfd45bb6cdb..63ed8fe35738 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -128,6 +128,10 @@
- #define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
- #define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
- 
-+/* SRBDS support */
-+#define MSR_IA32_MCU_OPT_CTRL		0x00000123
-+#define RNGDS_MITG_DIS			BIT(0)
-+
- #define MSR_IA32_SYSENTER_CS		0x00000174
- #define MSR_IA32_SYSENTER_ESP		0x00000175
- #define MSR_IA32_SYSENTER_EIP		0x00000176
-@@ -418,11 +422,8 @@
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
--#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
--#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
-@@ -465,6 +466,8 @@
- #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
- 
- /* Fam 15h MSRs */
-+#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-+#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_F15H_PERF_CTL		0xc0010200
- #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
- #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
+Letting you tell me which you prefer,
 -- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Dominique
