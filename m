@@ -2,69 +2,82 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6C3206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CCD247C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592706630;
-	bh=hLfUqQI5lELd+NHz2VwHyg7BiFEXisb95E4wFsQyJ7Y=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=NA326STJDbB43lYDyuGiCw7GgmsidBIDi7rOzSqWNF2iluPbj9hxSDAnmzpJoasfl
-	 AABJ0FfTTpnlq8ZJop4NR9vSWo/vajrSA9SaHIukpxUnvkZ7mOFB2Fdw3LyOSvZXXS
-	 BxLcywpXm2g7zOA73carOa91IguFeAkgSUA/5ywE=
+	s=default; t=1592708048;
+	bh=8kz0YS2YpXAP78yJ5e4pDrntY+2vR5l3xnCBVIzu5io=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WrLZJowFI4kh+9mXf+/fsPHeKdF/nfJVfe1NtMn9xtoGVMD2DLf9rqZUIqo6mYzsh
+	 avCyvoFzCsRnfeXsCj3eNLfF9gbdiPfN92jkojEeEwkB8U6osc8frs/MgnjVj2+OAf
+	 a9nlNiv8/NP88gvRvtRPmw0vvoe1kPi5Ff4H91qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgFUCa3 (ORCPT
+        id S1729160AbgFUCyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 22:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        Sat, 20 Jun 2020 22:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbgFUCaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 22:30:25 -0400
-Subject: Re: [GIT PULL] SCSI fixes for 5.8-rc1
+        id S1728992AbgFUCyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 22:54:01 -0400
+Received: from Mani-XPS-13-9360.localdomain (unknown [157.50.185.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC12247AF;
+        Sun, 21 Jun 2020 02:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592706625;
-        bh=hLfUqQI5lELd+NHz2VwHyg7BiFEXisb95E4wFsQyJ7Y=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=MdPLfWo6fkSil8dNIVqFy8n4/1EqOxDe24+cOVLYN3YxMfnqtyN8TC5evA2eDpRwW
-         hPy8ISoKsSqTgk69ISXz6KIRBlHDV/Ih99/OqZu3ANNzno5SPLpNmcJH1s5YVxH0cl
-         MbshkFvUE7YvNKuSBo2EYpMqk41A9TiowlLu4EWQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1592674936.3583.20.camel@HansenPartnership.com>
-References: <1592674936.3583.20.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1592674936.3583.20.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: b8f1d1e05817f5e5f7517911b55ea13d2c0438a0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 64677779e8962c20b580b471790fe42367750599
-Message-Id: <159270662559.3975.895454316141668110.pr-tracker-bot@kernel.org>
-Date:   Sun, 21 Jun 2020 02:30:25 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        s=default; t=1592708041;
+        bh=8kz0YS2YpXAP78yJ5e4pDrntY+2vR5l3xnCBVIzu5io=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MkmXiACrOD/CQ+R0OcgDaSmrMSBNtwmVcOliTbhfTRdv+8ukxaJxc5XKrB1BU1Uww
+         WGUFIcBENadA6UIj0NCww9g6Igu6mWztI8mqCnpp54vVrt6bvmSkTYgLAr4h2LMygJ
+         iisi/tz0tzEA7birQe0bw/wIqRpOWPmYwxTxEdhE=
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     ulf.hansson@linaro.org
+Cc:     afaerber@suse.de, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH] mmc: owl-mmc: Get rid of of_match_ptr() macro
+Date:   Sun, 21 Jun 2020 08:23:30 +0530
+Message-Id: <20200621025330.10561-1-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 20 Jun 2020 10:42:16 -0700:
+Remove the 'of_match_ptr()' macro to fix the warning when CONFIG_OF is
+not selected.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+drivers/mmc/host/owl-mmc.c:677:34: warning: unused variable 'owl_mmc_of_match'
+[-Wunused-const-variable]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/64677779e8962c20b580b471790fe42367750599
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
+ drivers/mmc/host/owl-mmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you!
-
+diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
+index 5e20c099fe03..df43f42855e2 100644
+--- a/drivers/mmc/host/owl-mmc.c
++++ b/drivers/mmc/host/owl-mmc.c
+@@ -689,7 +689,7 @@ MODULE_DEVICE_TABLE(of, owl_mmc_of_match);
+ static struct platform_driver owl_mmc_driver = {
+ 	.driver = {
+ 		.name	= "owl_mmc",
+-		.of_match_table = of_match_ptr(owl_mmc_of_match),
++		.of_match_table = owl_mmc_of_match,
+ 	},
+ 	.probe		= owl_mmc_probe,
+ 	.remove		= owl_mmc_remove,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+
