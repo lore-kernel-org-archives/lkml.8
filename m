@@ -2,141 +2,136 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154DF24804
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 19:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WL8ZpLFi"
+	by mail.kernel.org (Postfix) with ESMTP id E89F7206C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgFUT5x (ORCPT
+        id S1730615AbgFUUAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 15:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730288AbgFUT5w (ORCPT
+        Sun, 21 Jun 2020 16:00:24 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:56129 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730565AbgFUUAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 15:57:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0329AC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 12:57:51 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so6898240wrv.9
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 12:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xVtO0mf5+18xL2wyRUh4C8eKDbifEpFUpjq+V/g/lJQ=;
-        b=WL8ZpLFio6q8DFXdiT+zwbQD5AaPUNF0d+V8V4EXXgRu9kOUgdjhUqKXOLfdnVqM5v
-         6Z+Vguv3+SGBgKiQkGsxcYhWNzGBiPhm1iZlLsJv4ycKR4DMbATJ8OI/LNsZzn3RqMtX
-         AndVH1BJHsu9Ej6bUXi423R2qOOA639VAXzUAQ36ZOHAQihALUuqNR9SWl3A8omsU63w
-         t+8lEhoMcPsQWXlPWZ4LXtt+7vJOgTbYq6TRhDeSx1b2uX0Z7K6Phk8I4GftIme3wCHg
-         O/g+cnQNqYmAry/H0r9ZzR3kQx6d8XQ1SebUXBb3mE6UUVclOghiVXrAVQ+C/pKbwzhX
-         Z5QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xVtO0mf5+18xL2wyRUh4C8eKDbifEpFUpjq+V/g/lJQ=;
-        b=RVbxcrpy+mAMMa1TskfXwXPwyQ6EdS1IxxP8rxtwyVTQdnsWJCuSDU+Gk3lZw/B4Av
-         NBAhTdk6WxOKHCUluZMR9KEm4NMlXCbyML4Y0jdQPrvAE5DrL/ALf3kECU0T7PduMQea
-         rHxRh04tqD42hfhqmqNeX4yFoBzY7bTXPO0PoCmjEdewmfUr28Ph2jXzNhk4ULj5Iup1
-         tjq20gdMey4hGdH0kPETDFRNAC5ppfgFfW3A+fHEaBDAtJrh5vi7WGAXmsAdQndM1nkv
-         cKnerTL1iH5TbWuLoBy2/BUgmGkkcliAAbFZd59fFcEFAlBp4FrcFMBLzQC3euwnFEZT
-         1psA==
-X-Gm-Message-State: AOAM531USSSvQNcJMyRxcbh/sBhdepk6j5DxeNLaKcBRzwtsBhwP7ikJ
-        qG7rg5w01zsGrwjLpuQeUgHUTQRgcIBuciZzO5U=
-X-Google-Smtp-Source: ABdhPJwZyTYwNoOwTrFxeUfjkqvqeKiAhlF+F7UYGS9p4EeqwhWfVZaDY8nYXJLazazVAeLPyEFYjHUBXWeDJt+MHCg=
-X-Received: by 2002:adf:93e3:: with SMTP id 90mr15331654wrp.298.1592769469774;
- Sun, 21 Jun 2020 12:57:49 -0700 (PDT)
+        Sun, 21 Jun 2020 16:00:24 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.138.102])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 435715852A7F;
+        Sun, 21 Jun 2020 22:00:21 +0200 (CEST)
+Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 21 Jun
+ 2020 22:00:20 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <jic23@kernel.org>, <pmeerw@pmeerw.net>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH v6 0/4] Add support for SCD30 sensor
+Date:   Sun, 21 Jun 2020 21:56:57 +0200
+Message-ID: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200619132410.23859-1-david@redhat.com> <20200619132410.23859-3-david@redhat.com>
-In-Reply-To: <20200619132410.23859-3-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Sun, 21 Jun 2020 21:57:38 +0200
-Message-ID: <CAM9Jb+ijCjwBr_E1+3WkZkh7igMnJv7pJUewX43O63TLGsqiUw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] mm/page_alloc: drop nr_free_pagecache_pages()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: CAS1.emp2.local (172.16.1.1) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 13570753053933198359
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgudegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhephedtgefgkeduvdekheeggefghffhteekleetvdekvddtveeutdetueefueehieetnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> nr_free_pagecache_pages() isn't used outside page_alloc.c anymore - and
-> the name does not really help to understand what's going on. Let's inline
-> it instead and add a comment.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/swap.h |  1 -
->  mm/page_alloc.c      | 16 ++--------------
->  2 files changed, 2 insertions(+), 15 deletions(-)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 124261acd5d0a..9bde6c6b2c045 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -327,7 +327,6 @@ void workingset_update_node(struct xa_node *node);
->  /* linux/mm/page_alloc.c */
->  extern unsigned long totalreserve_pages;
->  extern unsigned long nr_free_buffer_pages(void);
-> -extern unsigned long nr_free_pagecache_pages(void);
->
->  /* Definition of global_zone_page_state not available yet */
->  #define nr_free_pages() global_zone_page_state(NR_FREE_PAGES)
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 7b0dde69748c1..c38903d1b3b4d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5177,19 +5177,6 @@ unsigned long nr_free_buffer_pages(void)
->  }
->  EXPORT_SYMBOL_GPL(nr_free_buffer_pages);
->
-> -/**
-> - * nr_free_pagecache_pages - count number of pages beyond high watermark
-> - *
-> - * nr_free_pagecache_pages() counts the number of pages which are beyond the
-> - * high watermark within all zones.
-> - *
-> - * Return: number of pages beyond high watermark within all zones.
-> - */
-> -unsigned long nr_free_pagecache_pages(void)
-> -{
-> -       return nr_free_zone_pages(gfp_zone(GFP_HIGHUSER_MOVABLE));
-> -}
-> -
->  static inline void show_node(struct zone *zone)
->  {
->         if (IS_ENABLED(CONFIG_NUMA))
-> @@ -5911,7 +5898,8 @@ void __ref build_all_zonelists(pg_data_t *pgdat)
->                 __build_all_zonelists(pgdat);
->                 /* cpuset refresh routine should be here */
->         }
-> -       vm_total_pages = nr_free_pagecache_pages();
-> +       /* Get the number of free pages beyond high watermark in all zones. */
-> +       vm_total_pages = nr_free_zone_pages(gfp_zone(GFP_HIGHUSER_MOVABLE));
->         /*
->          * Disable grouping by mobility if the number of pages in the
->          * system is too low to allow the mechanism to work. It would be
+Following series adds support for Sensirion SCD30 sensor module capable of
+measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+base on NDIR principle while temperature and relative humidity are measured by
+the on board SHT31. As for sensor communication, both I2C and serial interfaces
+are supported.
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+v6:
+* fix warnings produced by C=2 build option
+* fix 0-day warning 'Clarify calculation precedence for '&' and '?''
+
+v5:
+* set pressure calibration via output channel
+* use kstrtobool() to read value into _enabled attribute
+* drop explicit parent asignment as the default one is good enough
+  (seems 'iio: core: pass parent device as parameter during allocation'
+   series was accepted)
+
+v4:
+* improve formatting
+* improve error handling readability
+* fix message validity check on serial write
+
+v3:
+* simplify code by scaling temperature & humidity in _read_meas()
+* update realbits in scan types
+* s/adjecent/adjacent
+* drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
+  output channel
+* rework locking in _read_raw
+* fix endianess problem on BE machine
+* align timestamp properly before pushing to buffers
+* explain why interrupt gets disabled after registration
+* add trigger validation
+* drop SCALE for temperature and humidity channel as they are processed
+* register action which stops measuring after starting measurements
+* spit generic calibration attr into two doing specific things
+* add comment explaining why priv in struct scd30_state is for
+* rename node in binding example to co2-sensor
+
+v2:
+* move asm/byteorder.h towards the bottom of include list
+* make channel address names in enum more specific
+* add postfixes to defines and extra comments
+* drop unneeded i2c include from scd30 header
+* break generic command sending function into specialized options
+* expose automatic calibration and forced calibration via the same attr
+* use SAMP_FREQ to set frequency instead of meas_interval attr
+* use CALISCALE to set pressure compensation instead of pressure_comp attr
+* use CALIBBIAS to set temperature offset instead of temp_offset attr
+* fix order in MAINTAINERS
+* drop attribute allowing one to reset sensor
+* as we have dt probing drop board file based probing (i2c_device_id)
+* merge patches touching related files
+* use fwnode API to retrieve interrupt from dt
+* fix interrupt-parent spelling
+* change binding license
+* drop supply from required property
+
+Tomasz Duszynski (4):
+  iio: chemical: scd30: add core driver
+  iio: chemical: scd30: add I2C interface driver
+  iio: chemical: scd30: add serial interface driver
+  dt-bindings: iio: scd30: add device binding file
+
+ Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
+ .../iio/chemical/sensirion,scd30.yaml         |  68 ++
+ MAINTAINERS                                   |   9 +
+ drivers/iio/chemical/Kconfig                  |  33 +
+ drivers/iio/chemical/Makefile                 |   3 +
+ drivers/iio/chemical/scd30.h                  |  78 ++
+ drivers/iio/chemical/scd30_core.c             | 771 ++++++++++++++++++
+ drivers/iio/chemical/scd30_i2c.c              | 139 ++++
+ drivers/iio/chemical/scd30_serial.c           | 263 ++++++
+ 9 files changed, 1398 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+ create mode 100644 drivers/iio/chemical/scd30.h
+ create mode 100644 drivers/iio/chemical/scd30_core.c
+ create mode 100644 drivers/iio/chemical/scd30_i2c.c
+ create mode 100644 drivers/iio/chemical/scd30_serial.c
+
+--
+2.27.0
+
