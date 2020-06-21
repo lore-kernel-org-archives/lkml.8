@@ -1,388 +1,160 @@
-Return-Path: <SRS0=B91b=AB=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E052C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68752068F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jun 2020 23:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1FD2473D
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgFTXwR (ORCPT
+        id S1728621AbgFUACd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 19:52:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6379 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726932AbgFTXwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 19:52:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4B876983C5735A9EA92D;
-        Sun, 21 Jun 2020 07:52:14 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.201.125) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 21 Jun 2020 07:52:07 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <akpm@linux-foundation.org>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-crypto@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v2] mm/zswap: move to use crypto_acomp API for hardware acceleration
-Date:   Sun, 21 Jun 2020 11:50:33 +1200
-Message-ID: <20200620235033.8420-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Sat, 20 Jun 2020 20:02:33 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:44155 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgFUACc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 20:02:32 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A3856FF808;
+        Sun, 21 Jun 2020 00:02:20 +0000 (UTC)
+Date:   Sun, 21 Jun 2020 02:02:20 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix
+ embedded controller RTC
+Message-ID: <20200621000220.GB131826@piout.net>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+ <20200620224222.1312520-6-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.201.125]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200620224222.1312520-6-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-right now, all new ZIP drivers are using crypto_acomp APIs rather than
-legacy crypto_comp APIs. But zswap.c is still using the old APIs. That
-means zswap won't be able to use any new zip drivers in kernel.
+Hi,
 
-This patch moves to use cryto_acomp APIs to fix the problem. On the
-other hand, tradiontal compressors like lz4,lzo etc have been wrapped
-into acomp via scomp backend. So platforms without async compressors
-can fallback to use acomp via scomp backend.
+On 21/06/2020 00:42:18+0200, Jonathan Neuschäfer wrote:
+> The Netronix EC implements an RTC with the following functionality:
+> 
+> - Calendar-based time keeping with single-second resolution
+> - Automatic power-on with single-minute resolution
+> - Alarm at single-second resolution
+> 
+> This binding only supports timekeeping for now.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+>  .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
+>  .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> index 6562c41c5a9a9..f6a32f46f47bb 100644
+> --- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> @@ -34,6 +34,9 @@ properties:
+>    pwm:
+>      $ref: ../pwm/netronix,ntxec-pwm.yaml
+> 
+> +  rtc:
+> +    $ref: ../rtc/netronix,ntxec-rtc.yaml
+> +
 
-Cc: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Seth Jennings <sjenning@redhat.com>
-Cc: Dan Streetman <ddstreet@ieee.org>
-Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- -v2:
- rebase to 5.8-rc1;
- cleanup commit log;
- cleanup to improve the readability according to Sebastian's comment
+Shouldn't the node simply be documented here?
 
- mm/zswap.c | 153 ++++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 110 insertions(+), 43 deletions(-)
+Also, do you really need a compatible string to be able to proe the
+driver? What are the chances that you'll get a similar EC without an
+RTC?
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index fbb782924ccc..0d914ba6b4a0 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -24,8 +24,10 @@
- #include <linux/rbtree.h>
- #include <linux/swap.h>
- #include <linux/crypto.h>
-+#include <linux/scatterlist.h>
- #include <linux/mempool.h>
- #include <linux/zpool.h>
-+#include <crypto/acompress.h>
- 
- #include <linux/mm_types.h>
- #include <linux/page-flags.h>
-@@ -127,9 +129,17 @@ module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
- * data structures
- **********************************/
- 
-+struct crypto_acomp_ctx {
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+	struct crypto_wait wait;
-+	u8 *dstmem;
-+	struct mutex mutex;
-+};
-+
- struct zswap_pool {
- 	struct zpool *zpool;
--	struct crypto_comp * __percpu *tfm;
-+	struct crypto_acomp_ctx * __percpu *acomp_ctx;
- 	struct kref kref;
- 	struct list_head list;
- 	struct work_struct release_work;
-@@ -415,30 +425,60 @@ static int zswap_dstmem_dead(unsigned int cpu)
- static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 
--	if (WARN_ON(*per_cpu_ptr(pool->tfm, cpu)))
-+	if (WARN_ON(*per_cpu_ptr(pool->acomp_ctx, cpu)))
- 		return 0;
- 
--	tfm = crypto_alloc_comp(pool->tfm_name, 0, 0);
--	if (IS_ERR_OR_NULL(tfm)) {
--		pr_err("could not alloc crypto comp %s : %ld\n",
--		       pool->tfm_name, PTR_ERR(tfm));
-+	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
-+	if (IS_ERR_OR_NULL(acomp_ctx)) {
-+		pr_err("Could not initialize acomp_ctx\n");
-+		return -ENOMEM;
-+	}
-+	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
-+	if (IS_ERR_OR_NULL(acomp)) {
-+		pr_err("could not alloc crypto acomp %s : %ld\n",
-+				pool->tfm_name, PTR_ERR(acomp));
- 		return -ENOMEM;
- 	}
--	*per_cpu_ptr(pool->tfm, cpu) = tfm;
-+	acomp_ctx->acomp = acomp;
-+
-+	req = acomp_request_alloc(acomp_ctx->acomp);
-+	if (IS_ERR_OR_NULL(req)) {
-+		pr_err("could not alloc crypto acomp %s : %ld\n",
-+		       pool->tfm_name, PTR_ERR(acomp));
-+		return -ENOMEM;
-+	}
-+	acomp_ctx->req = req;
-+
-+	mutex_init(&acomp_ctx->mutex);
-+	crypto_init_wait(&acomp_ctx->wait);
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				   crypto_req_done, &acomp_ctx->wait);
-+
-+	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
-+	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
-+
- 	return 0;
- }
- 
- static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+
-+	acomp_ctx = *per_cpu_ptr(pool->acomp_ctx, cpu);
-+	if (!IS_ERR_OR_NULL(acomp_ctx)) {
-+		if (!IS_ERR_OR_NULL(acomp_ctx->req))
-+			acomp_request_free(acomp_ctx->req);
-+		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
-+			crypto_free_acomp(acomp_ctx->acomp);
-+		kfree(acomp_ctx);
-+	}
-+	*per_cpu_ptr(pool->acomp_ctx, cpu) = NULL;
- 
--	tfm = *per_cpu_ptr(pool->tfm, cpu);
--	if (!IS_ERR_OR_NULL(tfm))
--		crypto_free_comp(tfm);
--	*per_cpu_ptr(pool->tfm, cpu) = NULL;
- 	return 0;
- }
- 
-@@ -561,8 +601,9 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
- 
- 	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
--	pool->tfm = alloc_percpu(struct crypto_comp *);
--	if (!pool->tfm) {
-+
-+	pool->acomp_ctx = alloc_percpu(struct crypto_acomp_ctx *);
-+	if (!pool->acomp_ctx) {
- 		pr_err("percpu alloc failed\n");
- 		goto error;
- 	}
-@@ -585,7 +626,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	return pool;
- 
- error:
--	free_percpu(pool->tfm);
-+	free_percpu(pool->acomp_ctx);
- 	if (pool->zpool)
- 		zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
-@@ -596,14 +637,14 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
- {
- 	bool has_comp, has_zpool;
- 
--	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+	has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	if (!has_comp && strcmp(zswap_compressor,
- 				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
- 		pr_err("compressor %s not available, using default %s\n",
- 		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
- 		param_free_charp(&zswap_compressor);
- 		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
--		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+		has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	}
- 	if (!has_comp) {
- 		pr_err("default compressor %s not available\n",
-@@ -639,7 +680,7 @@ static void zswap_pool_destroy(struct zswap_pool *pool)
- 	zswap_pool_debug("destroying", pool);
- 
- 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
--	free_percpu(pool->tfm);
-+	free_percpu(pool->acomp_ctx);
- 	zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
- }
-@@ -723,7 +764,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		}
- 		type = s;
- 	} else if (!compressor) {
--		if (!crypto_has_comp(s, 0, 0)) {
-+		if (!crypto_has_acomp(s, 0, 0)) {
- 			pr_err("compressor %s not available\n", s);
- 			return -ENOENT;
- 		}
-@@ -774,7 +815,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		 * failed, maybe both compressor and zpool params were bad.
- 		 * Allow changing this param, so pool creation will succeed
- 		 * when the other param is changed. We already verified this
--		 * param is ok in the zpool_has_pool() or crypto_has_comp()
-+		 * param is ok in the zpool_has_pool() or crypto_has_acomp()
- 		 * checks above.
- 		 */
- 		ret = param_set_charp(s, kp);
-@@ -876,7 +917,9 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	pgoff_t offset;
- 	struct zswap_entry *entry;
- 	struct page *page;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -916,14 +959,21 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 
- 	case ZSWAP_SWAPCACHE_NEW: /* page is locked */
- 		/* decompress */
-+		acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+
- 		dlen = PAGE_SIZE;
- 		src = (u8 *)zhdr + sizeof(struct zswap_header);
--		dst = kmap_atomic(page);
--		tfm = *get_cpu_ptr(entry->pool->tfm);
--		ret = crypto_comp_decompress(tfm, src, entry->length,
--					     dst, &dlen);
--		put_cpu_ptr(entry->pool->tfm);
--		kunmap_atomic(dst);
-+		dst = kmap(page);
-+
-+		mutex_lock(&acomp_ctx->mutex);
-+		sg_init_one(&input, src, entry->length);
-+		sg_init_one(&output, dst, dlen);
-+		acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+		ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+		dlen = acomp_ctx->req->dlen;
-+		mutex_unlock(&acomp_ctx->mutex);
-+
-+		kunmap(page);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
- 
-@@ -1004,7 +1054,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry, *dupentry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	int ret;
- 	unsigned int hlen, dlen = PAGE_SIZE;
- 	unsigned long handle, value;
-@@ -1074,12 +1125,20 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	}
- 
- 	/* compress */
--	dst = get_cpu_var(zswap_dstmem);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	src = kmap_atomic(page);
--	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
--	kunmap_atomic(src);
--	put_cpu_ptr(entry->pool->tfm);
-+	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+
-+	mutex_lock(&acomp_ctx->mutex);
-+
-+	src = kmap(page);
-+	dst = acomp_ctx->dstmem;
-+	sg_init_one(&input, src, PAGE_SIZE);
-+	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-+	sg_init_one(&output, dst, PAGE_SIZE * 2);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
-+	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-+	dlen = acomp_ctx->req->dlen;
-+	kunmap(page);
-+
- 	if (ret) {
- 		ret = -EINVAL;
- 		goto put_dstmem;
-@@ -1103,7 +1162,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	memcpy(buf, &zhdr, hlen);
- 	memcpy(buf + hlen, dst, dlen);
- 	zpool_unmap_handle(entry->pool->zpool, handle);
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	/* populate entry */
- 	entry->offset = offset;
-@@ -1131,7 +1190,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	return 0;
- 
- put_dstmem:
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(&acomp_ctx->mutex);
- 	zswap_pool_put(entry->pool);
- freepage:
- 	zswap_entry_cache_free(entry);
-@@ -1148,7 +1207,8 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -1175,11 +1235,18 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- 	src = zpool_map_handle(entry->pool->zpool, entry->handle, ZPOOL_MM_RO);
- 	if (zpool_evictable(entry->pool->zpool))
- 		src += sizeof(struct zswap_header);
--	dst = kmap_atomic(page);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
--	put_cpu_ptr(entry->pool->tfm);
--	kunmap_atomic(dst);
-+	dst = kmap(page);
-+
-+	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+	mutex_lock(&acomp_ctx->mutex);
-+	sg_init_one(&input, src, entry->length);
-+	sg_init_one(&output, dst, dlen);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+	ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+	dlen = acomp_ctx->req->dlen;
-+	mutex_unlock(&acomp_ctx->mutex);
-+
-+	kunmap(page);
- 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 	BUG_ON(ret);
- 
+>  required:
+>    - compatible
+>    - reg
+> @@ -61,6 +64,10 @@ examples:
+>                              compatible = "netronix,ntxec-pwm";
+>                              #pwm-cells = <1>;
+>                      };
+> +
+> +                    rtc {
+> +                            compatible = "netronix,ntxec-rtc";
+> +                    };
+>              };
+>      };
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
+> new file mode 100644
+> index 0000000000000..4b301ef7319c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
+> @@ -0,0 +1,27 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/netronix,ntxec-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RTC functionality in Netronix embedded controller
+> +
+> +maintainers:
+> +  - Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> +
+> +description: |
+> +  See also Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> +
+> +  The Netronix EC contains an RTC, which can be used for time-keeping, alarm,
+> +  and automatic power-on. Note that not all of this functionality is currently
+> +  supported in this binding.
+> +
+> +allOf:
+> +  - $ref: "rtc.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: netronix,ntxec-rtc
+> +
+> +required:
+> +  - compatible
+> --
+> 2.27.0
+> 
+
 -- 
-2.27.0
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
