@@ -2,181 +2,155 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1108C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 11:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E91AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 11:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE7AF239ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 11:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T64gZLSl"
+	by mail.kernel.org (Postfix) with ESMTP id 1BFF8248C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 11:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgFULbI (ORCPT
+        id S1729977AbgFULmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 07:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbgFULbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 07:31:07 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C29C061794;
-        Sun, 21 Jun 2020 04:31:06 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y13so8015011lfe.9;
-        Sun, 21 Jun 2020 04:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=vLxHm548osrnC5LOa8tECZ+kGEmzio+NDVH5jDcBP8M=;
-        b=T64gZLSlCueGpECWcPSZejupxlC0oLQYrqx/dtYViWVXfA+VWJKzT8d16CWl+fILOu
-         yv3NcPpxcDGPYhQO7B4AmM0G5OlLIM5gF1JHI4sH1aBluasKb+tW1EMItsGlHp52YPJS
-         S1bpreD5EWZX9QgrNokFtV1vMlbEomdHe5Twlq3Ts/QaMSTc2LSp6FFFaufsYMbEVQ0M
-         dJ5cwPxYs7ujNCKlPJ0PJYqR73gDrYh/DUhU0Zvi3QKUQ8retKH81qaCNfxDMzKnObed
-         7AeZzW27vyoc7F/EnleIEVwkpTHBluPeRT7nfiEMW6wtOKXMWWB2B7PJvhoGFbFdZihL
-         gxEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=vLxHm548osrnC5LOa8tECZ+kGEmzio+NDVH5jDcBP8M=;
-        b=BgI5dz5HRTkt+cT+GWTxqnU9w9+9mjlPzB3og3icjndAgYHMB3W7s3ZLJYTS1gOzTF
-         UlNWvYjXninOxoGnBq7pELhVKG3XiPoG8Vd6EMtZN4C6fTVwJruREu4OciEzhoHHoVrm
-         jEK1oP20kMOMWu8kdvFdiHvamd6iDax8whTBA8lhho4Hc0DG3njLlf/SXAxdlMCB1j4I
-         eofOgxg7iTaN4ixc7IPhSCRH/WNsXo/PgZsMGMZgBYzl7SprroCMu5c1mu/IvOdyS07O
-         pTK846Iq960gstXZyS932gp86ry3SmUFS1jOcMOOT/5FPG085mxtwffqDtmLhu3rMPu5
-         ur1A==
-X-Gm-Message-State: AOAM530E3r4MdQguunWqYKptzy1VvACkRUJw5NOQxOz8BYryswvfDW5S
-        U2OsW+461caB473zn8/Z5MhEAX6hOMwm+w==
-X-Google-Smtp-Source: ABdhPJyKgXcJ6elxeXLD1CIcJ5uJf4/qeXSlsKHb6g9SH8l4lYpMWjtEaK/dJlMYArxzx83mgvQVLQ==
-X-Received: by 2002:a19:f208:: with SMTP id q8mr6044910lfh.172.1592739062232;
-        Sun, 21 Jun 2020 04:31:02 -0700 (PDT)
-Received: from localhost.localdomain (n2e4fgqko6hxp4lot-1.v6.elisa-mobile.fi. [2001:999:0:6ffe:75bb:c470:73e0:b3cd])
-        by smtp.gmail.com with ESMTPSA id m15sm2674400lfk.65.2020.06.21.04.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 04:31:01 -0700 (PDT)
-From:   Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-To:     mchehab@kernel.org
-Cc:     laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        stable@vger.kernel.org
-Subject: [PATCH] media: media-request: Fix crash if memory allocation fails
-Date:   Sun, 21 Jun 2020 14:30:40 +0300
-Message-Id: <20200621113040.3540-1-tuomas.tynkkynen@iki.fi>
-X-Mailer: git-send-email 2.17.1
+        Sun, 21 Jun 2020 07:42:38 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:60334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729869AbgFULmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 07:42:37 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 5D47F94BB76BF3AA2A05;
+        Sun, 21 Jun 2020 19:42:31 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
+ dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
+ Sun, 21 Jun 2020 19:42:24 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Vitaly Wool <vitaly.wool@konsulko.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        "Dan Streetman" <ddstreet@ieee.org>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>
+Subject: RE: [PATCH v2] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Topic: [PATCH v2] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Index: AQHWR13SeIBWlHX1UEepxDijJY/Xw6jiZfgAgACK3QA=
+Date:   Sun, 21 Jun 2020 11:42:24 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD2511765@DGGEMI525-MBS.china.huawei.com>
+References: <20200620235033.8420-1-song.bao.hua@hisilicon.com>
+ <CAM4kBBKKR01hFpB02YLPHBHsLiBHuEDfC96RvDug0P4_h6eQzg@mail.gmail.com>
+In-Reply-To: <CAM4kBBKKR01hFpB02YLPHBHsLiBHuEDfC96RvDug0P4_h6eQzg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.201.204]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot reports a NULL-ptr deref in the kref_put() call:
-
-BUG: KASAN: null-ptr-deref in media_request_put drivers/media/mc/mc-request.c:81 [inline]
- kref_put include/linux/kref.h:64 [inline]
- media_request_put drivers/media/mc/mc-request.c:81 [inline]
- media_request_close+0x4d/0x170 drivers/media/mc/mc-request.c:89
- __fput+0x2ed/0x750 fs/file_table.c:281
- task_work_run+0x147/0x1d0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:165 [inline]
- prepare_exit_to_usermode+0x48e/0x600 arch/x86/entry/common.c:196
-
-What led to this crash was an injected memory allocation failure in
-media_request_alloc():
-
-FAULT_INJECTION: forcing a failure.
-name failslab, interval 1, probability 0, space 0, times 0
- should_failslab+0x5/0x20
- kmem_cache_alloc_trace+0x57/0x300
- ? anon_inode_getfile+0xe5/0x170
- media_request_alloc+0x339/0x440
- media_device_request_alloc+0x94/0xc0
- media_device_ioctl+0x1fb/0x330
- ? do_vfs_ioctl+0x6ea/0x1a00
- ? media_ioctl+0x101/0x120
- ? __media_device_usb_init+0x430/0x430
- ? media_poll+0x110/0x110
- __se_sys_ioctl+0xf9/0x160
- do_syscall_64+0xf3/0x1b0
-
-When that allocation fails, filp->private_data is left uninitialized
-which media_request_close() does not expect and crashes.
-
-To avoid this, reorder media_request_alloc() such that
-allocating the struct file happens as the last step thus
-media_request_close() will no longer get called for a partially created
-media request.
-
-Reported-by: syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
----
- drivers/media/mc/mc-request.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
-index e3fca436c75b..c0782fd96c59 100644
---- a/drivers/media/mc/mc-request.c
-+++ b/drivers/media/mc/mc-request.c
-@@ -296,9 +296,18 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
- 	if (WARN_ON(!mdev->ops->req_alloc ^ !mdev->ops->req_free))
- 		return -ENOMEM;
- 
-+	if (mdev->ops->req_alloc)
-+		req = mdev->ops->req_alloc(mdev);
-+	else
-+		req = kzalloc(sizeof(*req), GFP_KERNEL);
-+	if (!req)
-+		return -ENOMEM;
-+
- 	fd = get_unused_fd_flags(O_CLOEXEC);
--	if (fd < 0)
--		return fd;
-+	if (fd < 0) {
-+		ret = fd;
-+		goto err_free_req;
-+	}
- 
- 	filp = anon_inode_getfile("request", &request_fops, NULL, O_CLOEXEC);
- 	if (IS_ERR(filp)) {
-@@ -306,15 +315,6 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
- 		goto err_put_fd;
- 	}
- 
--	if (mdev->ops->req_alloc)
--		req = mdev->ops->req_alloc(mdev);
--	else
--		req = kzalloc(sizeof(*req), GFP_KERNEL);
--	if (!req) {
--		ret = -ENOMEM;
--		goto err_fput;
--	}
--
- 	filp->private_data = req;
- 	req->mdev = mdev;
- 	req->state = MEDIA_REQUEST_STATE_IDLE;
-@@ -336,12 +336,15 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
- 
- 	return 0;
- 
--err_fput:
--	fput(filp);
--
- err_put_fd:
- 	put_unused_fd(fd);
- 
-+err_free_req:
-+	if (mdev->ops->req_free)
-+		mdev->ops->req_free(req);
-+	else
-+		kfree(req);
-+
- 	return ret;
- }
- 
--- 
-2.17.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVml0YWx5IFdvb2wgW21h
+aWx0bzp2aXRhbHkud29vbEBrb25zdWxrby5jb21dDQo+IFNlbnQ6IFN1bmRheSwgSnVuZSAyMSwg
+MjAyMCAxMToxNiBQTQ0KPiBUbzogU29uZyBCYW8gSHVhIChCYXJyeSBTb25nKSA8c29uZy5iYW8u
+aHVhQGhpc2lsaWNvbi5jb20+DQo+IENjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5k
+YXRpb24ub3JnPjsNCj4gaGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1OyBkYXZlbUBkYXZlbWxv
+ZnQubmV0Ow0KPiBsaW51eC1jcnlwdG9Admdlci5rZXJuZWwub3JnOyBMaW51eC1NTSA8bGludXgt
+bW1Aa3ZhY2sub3JnPjsgTEtNTA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IExp
+bnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPjsgTHVpcw0KPiBDbGF1ZGlvIFIgLiBHb25jYWx2
+ZXMgPGxnb25jYWx2QHJlZGhhdC5jb20+OyBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yDQo+IDxi
+aWdlYXN5QGxpbnV0cm9uaXguZGU+OyBNYWhpcGFsIENoYWxsYSA8bWFoaXBhbHJlZGR5MjAwNkBn
+bWFpbC5jb20+Ow0KPiBTZXRoIEplbm5pbmdzIDxzamVubmluZ0ByZWRoYXQuY29tPjsgRGFuIFN0
+cmVldG1hbiA8ZGRzdHJlZXRAaWVlZS5vcmc+Ow0KPiBXYW5nemhvdSAoQikgPHdhbmd6aG91MUBo
+aXNpbGljb24uY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBtbS96c3dhcDogbW92ZSB0
+byB1c2UgY3J5cHRvX2Fjb21wIEFQSSBmb3INCj4gaGFyZHdhcmUgYWNjZWxlcmF0aW9uDQo+IA0K
+PiBPbiBTdW4sIEp1biAyMSwgMjAyMCBhdCAxOjUyIEFNIEJhcnJ5IFNvbmcgPHNvbmcuYmFvLmh1
+YUBoaXNpbGljb24uY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IHJpZ2h0IG5vdywgYWxsIG5ldyBa
+SVAgZHJpdmVycyBhcmUgdXNpbmcgY3J5cHRvX2Fjb21wIEFQSXMgcmF0aGVyIHRoYW4NCj4gPiBs
+ZWdhY3kgY3J5cHRvX2NvbXAgQVBJcy4gQnV0IHpzd2FwLmMgaXMgc3RpbGwgdXNpbmcgdGhlIG9s
+ZCBBUElzLiBUaGF0DQo+ID4gbWVhbnMgenN3YXAgd29uJ3QgYmUgYWJsZSB0byB1c2UgYW55IG5l
+dyB6aXAgZHJpdmVycyBpbiBrZXJuZWwuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIG1vdmVzIHRvIHVz
+ZSBjcnl0b19hY29tcCBBUElzIHRvIGZpeCB0aGUgcHJvYmxlbS4gT24gdGhlDQo+ID4gb3RoZXIg
+aGFuZCwgdHJhZGlvbnRhbCBjb21wcmVzc29ycyBsaWtlIGx6NCxsem8gZXRjIGhhdmUgYmVlbiB3
+cmFwcGVkDQo+ID4gaW50byBhY29tcCB2aWEgc2NvbXAgYmFja2VuZC4gU28gcGxhdGZvcm1zIHdp
+dGhvdXQgYXN5bmMgY29tcHJlc3NvcnMNCj4gPiBjYW4gZmFsbGJhY2sgdG8gdXNlIGFjb21wIHZp
+YSBzY29tcCBiYWNrZW5kLg0KPiA+DQo+ID4gQ2M6IEx1aXMgQ2xhdWRpbyBSLiBHb25jYWx2ZXMg
+PGxnb25jYWx2QHJlZGhhdC5jb20+DQo+ID4gQ2M6IFNlYmFzdGlhbiBBbmRyemVqIFNpZXdpb3Ig
+PGJpZ2Vhc3lAbGludXRyb25peC5kZT4NCj4gPiBDYzogQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51
+eC1mb3VuZGF0aW9uLm9yZz4NCj4gPiBDYzogSGVyYmVydCBYdSA8aGVyYmVydEBnb25kb3IuYXBh
+bmEub3JnLmF1Pg0KPiA+IENjOiBEYXZpZCBTLiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+
+DQo+ID4gQ2M6IE1haGlwYWwgQ2hhbGxhIDxtYWhpcGFscmVkZHkyMDA2QGdtYWlsLmNvbT4NCj4g
+PiBDYzogU2V0aCBKZW5uaW5ncyA8c2plbm5pbmdAcmVkaGF0LmNvbT4NCj4gPiBDYzogRGFuIFN0
+cmVldG1hbiA8ZGRzdHJlZXRAaWVlZS5vcmc+DQo+ID4gQ2M6IFZpdGFseSBXb29sIDx2aXRhbHku
+d29vbEBrb25zdWxrby5jb20+DQo+ID4gQ2M6IFpob3UgV2FuZyA8d2FuZ3pob3UxQGhpc2lsaWNv
+bi5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmFycnkgU29uZyA8c29uZy5iYW8uaHVhQGhpc2ls
+aWNvbi5jb20+DQo+ID4gLS0tDQo+ID4gIC12MjoNCj4gPiAgcmViYXNlIHRvIDUuOC1yYzE7DQo+
+ID4gIGNsZWFudXAgY29tbWl0IGxvZzsNCj4gPiAgY2xlYW51cCB0byBpbXByb3ZlIHRoZSByZWFk
+YWJpbGl0eSBhY2NvcmRpbmcgdG8gU2ViYXN0aWFuJ3MgY29tbWVudA0KPiA+DQo+ID4gIG1tL3pz
+d2FwLmMgfCAxNTMNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0t
+LS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEwIGluc2VydGlvbnMoKyksIDQz
+IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL21tL3pzd2FwLmMgYi9tbS96c3dh
+cC5jDQo+ID4gaW5kZXggZmJiNzgyOTI0Y2NjLi4wZDkxNGJhNmI0YTAgMTAwNjQ0DQo+ID4gLS0t
+IGEvbW0venN3YXAuYw0KPiA+ICsrKyBiL21tL3pzd2FwLmMNCj4gPiBAQCAtMjQsOCArMjQsMTAg
+QEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3JidHJlZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgv
+c3dhcC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvY3J5cHRvLmg+DQo+ID4gKyNpbmNsdWRlIDxs
+aW51eC9zY2F0dGVybGlzdC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbWVtcG9vbC5oPg0KPiA+
+ICAjaW5jbHVkZSA8bGludXgvenBvb2wuaD4NCj4gPiArI2luY2x1ZGUgPGNyeXB0by9hY29tcHJl
+c3MuaD4NCj4gPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbW1fdHlwZXMuaD4NCj4gPiAgI2luY2x1
+ZGUgPGxpbnV4L3BhZ2UtZmxhZ3MuaD4NCj4gPiBAQCAtMTI3LDkgKzEyOSwxNyBAQA0KPiBtb2R1
+bGVfcGFyYW1fbmFtZWQoc2FtZV9maWxsZWRfcGFnZXNfZW5hYmxlZCwNCj4gPiB6c3dhcF9zYW1l
+X2ZpbGxlZF9wYWdlc19lbmFibGVkLA0KPiA+ICAqIGRhdGEgc3RydWN0dXJlcw0KPiA+ICAqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLw0KPiA+DQo+ID4gK3N0cnVjdCBjcnlwdG9f
+YWNvbXBfY3R4IHsNCj4gPiArICAgICAgIHN0cnVjdCBjcnlwdG9fYWNvbXAgKmFjb21wOw0KPiA+
+ICsgICAgICAgc3RydWN0IGFjb21wX3JlcSAqcmVxOw0KPiA+ICsgICAgICAgc3RydWN0IGNyeXB0
+b193YWl0IHdhaXQ7DQo+ID4gKyAgICAgICB1OCAqZHN0bWVtOw0KPiA+ICsgICAgICAgc3RydWN0
+IG11dGV4IG11dGV4Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgc3RydWN0IHpzd2FwX3Bvb2wgew0K
+PiA+ICAgICAgICAgc3RydWN0IHpwb29sICp6cG9vbDsNCj4gPiAtICAgICAgIHN0cnVjdCBjcnlw
+dG9fY29tcCAqIF9fcGVyY3B1ICp0Zm07DQo+ID4gKyAgICAgICBzdHJ1Y3QgY3J5cHRvX2Fjb21w
+X2N0eCAqIF9fcGVyY3B1ICphY29tcF9jdHg7DQo+ID4gICAgICAgICBzdHJ1Y3Qga3JlZiBrcmVm
+Ow0KPiA+ICAgICAgICAgc3RydWN0IGxpc3RfaGVhZCBsaXN0Ow0KPiA+ICAgICAgICAgc3RydWN0
+IHdvcmtfc3RydWN0IHJlbGVhc2Vfd29yazsgQEAgLTQxNSwzMCArNDI1LDYwIEBAIHN0YXRpYw0K
+PiA+IGludCB6c3dhcF9kc3RtZW1fZGVhZCh1bnNpZ25lZCBpbnQgY3B1KSAgc3RhdGljIGludA0K
+PiA+IHpzd2FwX2NwdV9jb21wX3ByZXBhcmUodW5zaWduZWQgaW50IGNwdSwgc3RydWN0IGhsaXN0
+X25vZGUgKm5vZGUpICB7DQo+ID4gICAgICAgICBzdHJ1Y3QgenN3YXBfcG9vbCAqcG9vbCA9IGhs
+aXN0X2VudHJ5KG5vZGUsIHN0cnVjdCB6c3dhcF9wb29sLA0KPiBub2RlKTsNCj4gPiAtICAgICAg
+IHN0cnVjdCBjcnlwdG9fY29tcCAqdGZtOw0KPiA+ICsgICAgICAgc3RydWN0IGNyeXB0b19hY29t
+cCAqYWNvbXA7DQo+ID4gKyAgICAgICBzdHJ1Y3QgYWNvbXBfcmVxICpyZXE7DQo+ID4gKyAgICAg
+ICBzdHJ1Y3QgY3J5cHRvX2Fjb21wX2N0eCAqYWNvbXBfY3R4Ow0KPiA+DQo+ID4gLSAgICAgICBp
+ZiAoV0FSTl9PTigqcGVyX2NwdV9wdHIocG9vbC0+dGZtLCBjcHUpKSkNCj4gPiArICAgICAgIGlm
+IChXQVJOX09OKCpwZXJfY3B1X3B0cihwb29sLT5hY29tcF9jdHgsIGNwdSkpKQ0KPiA+ICAgICAg
+ICAgICAgICAgICByZXR1cm4gMDsNCj4gPg0KPiA+IC0gICAgICAgdGZtID0gY3J5cHRvX2FsbG9j
+X2NvbXAocG9vbC0+dGZtX25hbWUsIDAsIDApOw0KPiA+IC0gICAgICAgaWYgKElTX0VSUl9PUl9O
+VUxMKHRmbSkpIHsNCj4gPiAtICAgICAgICAgICAgICAgcHJfZXJyKCJjb3VsZCBub3QgYWxsb2Mg
+Y3J5cHRvIGNvbXAgJXMgOiAlbGRcbiIsDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICBwb29s
+LT50Zm1fbmFtZSwgUFRSX0VSUih0Zm0pKTsNCj4gPiArICAgICAgIGFjb21wX2N0eCA9IGt6YWxs
+b2Moc2l6ZW9mKCphY29tcF9jdHgpLCBHRlBfS0VSTkVMKTsNCj4gPiArICAgICAgIGlmIChJU19F
+UlJfT1JfTlVMTChhY29tcF9jdHgpKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiQ291
+bGQgbm90IGluaXRpYWxpemUgYWNvbXBfY3R4XG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0
+dXJuIC1FTk9NRU07DQo+ID4gKyAgICAgICB9DQo+ID4gKyAgICAgICBhY29tcCA9IGNyeXB0b19h
+bGxvY19hY29tcChwb29sLT50Zm1fbmFtZSwgMCwgMCk7DQo+ID4gKyAgICAgICBpZiAoSVNfRVJS
+X09SX05VTEwoYWNvbXApKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiY291bGQgbm90
+IGFsbG9jIGNyeXB0byBhY29tcCAlcyA6ICVsZFxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHBvb2wtPnRmbV9uYW1lLCBQVFJfRVJSKGFjb21wKSk7DQo+ID4gICAgICAg
+ICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ICAgICAgICAgfQ0KPiANCj4gSSBiZXQgeW91
+IGFjdHVhbGx5IHdhbnQgdG8gZnJlZSBhY29tcF9jdHggaGVyZS4gT3ZlcmFsbCwgY291bGQgeW91
+IHBsZWFzZQ0KPiBwcm92aWRlIG1vcmUgY2FyZWZ1bCBlcnJvciBwYXRoIGltcGxlbWVudGF0aW9u
+IG9yIGV4cGxhaW4gd2h5IGl0IGlzbid0DQo+IG5lY2Vzc2FyeT8NCg0KT29wcy4gSSBjb3VsZCBo
+YXJkbHkgYmVsaWV2ZSBteSBleWVzLiBpdCBpcyBkZWZpbml0ZWx5IG5lY2Vzc2FyeSB0byBmcmVl
+IHRoZSBhbGxvY2F0ZWQgZGF0YSBzdHJ1Y3QgaGVyZSwNCndpbGwgc2VuZCBhbiBpbmNyZW1lbnRh
+bCBwYXRjaCB0byBmaXggdGhpcy4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQuDQoNCkJlc3QgUmVn
+YXJkcywNCkJhcnJ5DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+ICAgICBWaXRhbHkNCg0K
