@@ -2,146 +2,94 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56563C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F42D246E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62186252CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G4VXnbG9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jp/pG79P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgFUW0v (ORCPT
+        id S1730774AbgFUW2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 18:26:51 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45323 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726479AbgFUW0v (ORCPT
+        Sun, 21 Jun 2020 18:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730202AbgFUW2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 18:26:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592778408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9fL1R/P86+hC+bgW9wsTzQuqTu+6VC/+xAUVsewgB9I=;
-        b=G4VXnbG90dbyhigDc6L0AYyR36I6cbAjgRFV9qrL6qEPZQCYiRYnaVz9kaQ5naF2LdI3TQ
-        jQS8xnb3QJ04Ny3SBlmOSaVCTVNWK5aogZJsMtGjtsIEnx0zcnDEBWJcvJJPJv0kgGiyqi
-        SbcZ2MWNWNMbpWUvN8cHnY9PqNJ4eQs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-y7rNxRhZO6-0wxjb1FNJRg-1; Sun, 21 Jun 2020 18:26:44 -0400
-X-MC-Unique: y7rNxRhZO6-0wxjb1FNJRg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44BB58014D4;
-        Sun, 21 Jun 2020 22:26:43 +0000 (UTC)
-Received: from localhost (unknown [10.40.208.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 869E05C220;
-        Sun, 21 Jun 2020 22:26:40 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 00:26:37 +0200
-From:   Igor Mammedov <imammedo@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
-Message-ID: <20200622002637.33358827@redhat.com>
-In-Reply-To: <3e025538-297b-74e5-f1b1-2193b614978b@redhat.com>
-References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
-        <20200619143626.1b326566@redhat.com>
-        <3e025538-297b-74e5-f1b1-2193b614978b@redhat.com>
+        Sun, 21 Jun 2020 18:28:06 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9489EC061794;
+        Sun, 21 Jun 2020 15:28:04 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id a9so17137550ljn.6;
+        Sun, 21 Jun 2020 15:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ajumZEuWGqqfpvz5AIi0K5R6F27nfu1zPZ2heqoGEwU=;
+        b=Jp/pG79Pnk2/NRLy8xIPgPY3fJK5fxhfma2voYkdeSszDzSDocMuYBJ/A4KFtrkN1X
+         Miw++FXOgfk7NKwF0ZhhF7T8GWeiUlOzHlanZ/eruJ0ZIRZTBHrgOvwqhtFmlRzpQG6O
+         TiSDrbiPbfQ44M/bqqnVYox+pLZui0AJPMTLfxkIrUKFbYw6mUHP9uDfO8S5youbVe3Q
+         qbOxpEfnFC93wLtuYmL85SxLPREK7wEEf5aRwdwY3BfeGKuDW/lTu68hf0s5N7dD+dlW
+         ZcoVtn1Xbk+zoXUoaLQaBhdsfgSfwUIe4DYqmt/B+rrI2cLJt5MFAVVuVUt/04H8ZEQV
+         SknQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ajumZEuWGqqfpvz5AIi0K5R6F27nfu1zPZ2heqoGEwU=;
+        b=QdfKfYsxhqhOe3tvywZBihX0ZXMoqz/KQqWRVOIzr+tY1FD9A9sORhQ/C9HyXDH42w
+         rPHy6B/9qBkCmwBvQIZumDFOpivV8YRxhL9Ybt6I3+P29UriwWwAVHY0upioanrJ15YY
+         csUF1wgdB7DRTzMP4/jUVC19U79jfyk0d/7Fnw+jUvlgi49gEGUhlaHz62VB/++Bkj0i
+         69XM+4FnllCl6zcZ6zyGzZgB2aE6Pl/Nggfd/bfBbmTAWyhMItm+N1+1fwFvm6clEJae
+         TV0fLpy+THseZ5F+JjlM2m74MB8u1wGjU/WRQclF6l8PBLJOO9/X0fhWcMdSpjD/GnuV
+         zK2Q==
+X-Gm-Message-State: AOAM533GAL793HPfkn19Np2JBpdqwOj//n6cRzXjg70sqr1ysl4R8zGB
+        rqeU5QUPepBiMNmHY8/a5gE=
+X-Google-Smtp-Source: ABdhPJzfiAaD32dKdmMh4jARJjfOqTgw+ry8KlCcvWUtzi4c7FUARN+iWGm9seMlIWMWZ/W1ofixwg==
+X-Received: by 2002:a2e:910c:: with SMTP id m12mr7391997ljg.332.1592778483168;
+        Sun, 21 Jun 2020 15:28:03 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id 11sm2361295lju.118.2020.06.21.15.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 15:28:02 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] Improve descriptions of a few simple-panels
+Date:   Mon, 22 Jun 2020 01:27:40 +0300
+Message-Id: <20200621222742.25695-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jun 2020 16:10:43 +0200
-Paolo Bonzini <pbonzini@redhat.com> wrote:
+Hello,
 
-> On 19/06/20 14:36, Igor Mammedov wrote:
-> > qemu-kvm -m 2G -smp 4,maxcpus=8  -monitor stdio
-> > (qemu) device_add qemu64-x86_64-cpu,socket-id=4,core-id=0,thread-id=0
-> > 
-> > in guest fails with:
-> > 
-> >  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
-> > 
-> > which makes me suspect that  INIT/SIPI wasn't delivered
-> > 
-> > Is it a know issue?
-> >   
-> 
-> No, it isn't.  I'll revert.
-> 
-> Paolo
-> 
+This is a follow up to [1], which was already applied to drm-misc and then
+Laurent Pinchart spotted some problems. This series addresses those problems.
 
-Following fixes immediate issue:
+[1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200617222703.17080-8-digetx@gmail.com/
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 34a7e0533dad..6dc177da19da 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2567,6 +2567,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
-        }
-        memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
- 
-+       apic->vcpu->kvm->arch.apic_map_dirty = true;
-        kvm_recalculate_apic_map(vcpu->kvm);
-        kvm_apic_set_version(vcpu);
+Dmitry Osipenko (2):
+  drm/panel-simple: Correct EDT ET057090DHU connector type
+  drm/panel-simple: Add missing BUS descriptions for some panels
 
-Problem is that during kvm_arch_vcpu_create() new vcpu is not visible to
-kvm_recalculate_apic_map(), so whoever many times map update was called
-during it, it didn't affect apic map.
+ drivers/gpu/drm/panel/panel-simple.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-What broke hotplug is that kvm_vcpu_ioctl_set_lapic -> kvm_apic_set_state,
-which is called after new vcpu is visible, used to make an unconditional update
-which pulled in the new vcpu, but with this patch the map update is gone
-since state hasn't actuaaly changed, so we lost the one call of
-kvm_recalculate_apic_map() which did actually matter.
-
-It happens to work for vcpus present at boot just by luck
-(BSP updates SPIV after all vcpus has been created which triggers kvm_recalculate_apic_map())
-
-I'm not sending formal patch yet, since I have doubts wrt subj.
-
-following sequence looks like a race that can cause lost map update events:
-
-         cpu1                            cpu2
-                             
-                                apic_map_dirty = true     
-  ------------------------------------------------------------   
-                                kvm_recalculate_apic_map:
-                                     pass check
-                                         mutex_lock(&kvm->arch.apic_map_lock);
-                                         if (!kvm->arch.apic_map_dirty)
-                                     and in process of updating map
-  -------------------------------------------------------------
-    other calls to
-       apic_map_dirty = true         might be too late for affected cpu
-  -------------------------------------------------------------
-                                     apic_map_dirty = false
-  -------------------------------------------------------------
-    kvm_recalculate_apic_map:
-    bail out on
-      if (!kvm->arch.apic_map_dirty)
-
-it's safer to revert this patch for now like you have suggested earlier.
-
-If you prefer to keep it, I'll post above fixup as a patch.
+-- 
+2.26.0
 
