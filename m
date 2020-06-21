@@ -2,258 +2,131 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95255C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBCCE248BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739BB248E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 12:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PSKiObgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgFUMcH (ORCPT
+        id S1730038AbgFUMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 08:32:07 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7470 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730044AbgFUMcB (ORCPT
+        Sun, 21 Jun 2020 08:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730002AbgFUMn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 08:32:01 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05LCNA0F030148;
-        Sun, 21 Jun 2020 08:31:43 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31sfc5abfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 21 Jun 2020 08:31:43 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05LCVgCi040918
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sun, 21 Jun 2020 08:31:42 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 21 Jun 2020 08:31:41 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 21 Jun 2020 08:31:41 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 21 Jun 2020 08:31:41 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05LCVWVd007980;
-        Sun, 21 Jun 2020 08:31:38 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <knaack.h@gmx.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 4/7] iio: core: move debugfs data on the private iio dev info
-Date:   Sun, 21 Jun 2020 15:33:42 +0300
-Message-ID: <20200621123345.2469-5-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200621123345.2469-1-alexandru.ardelean@analog.com>
-References: <20200621123345.2469-1-alexandru.ardelean@analog.com>
+        Sun, 21 Jun 2020 08:43:27 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8856BC061794;
+        Sun, 21 Jun 2020 05:43:27 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qXJr41Hwz9sSJ;
+        Sun, 21 Jun 2020 22:43:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592743405;
+        bh=/Y/a9qNV3HIhNZm3vmufHp8jcmmMM6utoXB4S/oj4jI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PSKiObgVmbqG/CXgzmw4DOkurAwgaW6FKWp9eKydmLYF3JhoD12gc3d0nG4h3gx1a
+         zwDZUzuP+ZjatW+Lt0Ag82Awcbh2YaiI0lGY6dRO3qELyRoAGKV1gy3rm5r/JM5Wjg
+         yGs2FEKO35po0sl2d+A4p4alBbW/n/r3AKADVlomb7i9hagNfSURPjX5dodhPk0+Zd
+         ZNTTtO7ze6ynFH42MWTE78nCjD2YvM2rr3PG8X38kReeROww/dOO7ZXmkD9IkY4Xcf
+         DqCc6dYG96TANPumnpnbygaGJYTJRbY6nmc/MfC1yzFCxNdsAl2mrf6SDhP5xTqi6Z
+         UNrGgDLfElIiA==
+Date:   Sun, 21 Jun 2020 22:43:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the pidfd tree with the kspp tree
+Message-ID: <20200621224322.4e90f1a2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-21_05:2020-06-19,2020-06-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 cotscore=-2147483648 bulkscore=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006210101
+Content-Type: multipart/signed; boundary="Sig_/j=4p44Urs=Ny+=DV2bLQgMW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change moves all iio_dev debugfs fields to the iio_dev_priv object.
-It's not the biggest advantage yet (to the whole thing of abstractization)
-but it's a start.
+--Sig_/j=4p44Urs=Ny+=DV2bLQgMW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-core.c | 40 ++++++++++++++++++++++-----------
- include/linux/iio/iio-opaque.h  | 10 +++++++++
- include/linux/iio/iio.h         | 13 +----------
- 3 files changed, 38 insertions(+), 25 deletions(-)
+Hi all,
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 27005ba4d09c..05175cf80c98 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -165,6 +165,13 @@ static const char * const iio_chan_info_postfix[] = {
- 	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
- };
- 
-+struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
-+{
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	return iio_dev_opaque->debugfs_dentry;
-+}
-+EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
-+
- /**
-  * iio_find_channel_from_si() - get channel from its scan index
-  * @indio_dev:		device
-@@ -308,35 +315,37 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
- 			      size_t count, loff_t *ppos)
- {
- 	struct iio_dev *indio_dev = file->private_data;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
- 	unsigned val = 0;
- 	int ret;
- 
- 	if (*ppos > 0)
- 		return simple_read_from_buffer(userbuf, count, ppos,
--					       indio_dev->read_buf,
--					       indio_dev->read_buf_len);
-+					       iio_dev_opaque->read_buf,
-+					       iio_dev_opaque->read_buf_len);
- 
- 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
--						  indio_dev->cached_reg_addr,
-+						  iio_dev_opaque->cached_reg_addr,
- 						  0, &val);
- 	if (ret) {
- 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
- 		return ret;
- 	}
- 
--	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
--					   sizeof(indio_dev->read_buf),
--					   "0x%X\n", val);
-+	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
-+					      sizeof(iio_dev_opaque->read_buf),
-+					      "0x%X\n", val);
- 
- 	return simple_read_from_buffer(userbuf, count, ppos,
--				       indio_dev->read_buf,
--				       indio_dev->read_buf_len);
-+				       iio_dev_opaque->read_buf,
-+				       iio_dev_opaque->read_buf_len);
- }
- 
- static ssize_t iio_debugfs_write_reg(struct file *file,
- 		     const char __user *userbuf, size_t count, loff_t *ppos)
- {
- 	struct iio_dev *indio_dev = file->private_data;
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
- 	unsigned reg, val;
- 	char buf[80];
- 	int ret;
-@@ -351,10 +360,10 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
- 
- 	switch (ret) {
- 	case 1:
--		indio_dev->cached_reg_addr = reg;
-+		iio_dev_opaque->cached_reg_addr = reg;
- 		break;
- 	case 2:
--		indio_dev->cached_reg_addr = reg;
-+		iio_dev_opaque->cached_reg_addr = reg;
- 		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
- 							  val, NULL);
- 		if (ret) {
-@@ -378,23 +387,28 @@ static const struct file_operations iio_debugfs_reg_fops = {
- 
- static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
- {
--	debugfs_remove_recursive(indio_dev->debugfs_dentry);
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+	debugfs_remove_recursive(iio_dev_opaque->debugfs_dentry);
- }
- 
- static void iio_device_register_debugfs(struct iio_dev *indio_dev)
- {
-+	struct iio_dev_opaque *iio_dev_opaque;
-+
- 	if (indio_dev->info->debugfs_reg_access == NULL)
- 		return;
- 
- 	if (!iio_debugfs_dentry)
- 		return;
- 
--	indio_dev->debugfs_dentry =
-+	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+
-+	iio_dev_opaque->debugfs_dentry =
- 		debugfs_create_dir(dev_name(&indio_dev->dev),
- 				   iio_debugfs_dentry);
- 
- 	debugfs_create_file("direct_reg_access", 0644,
--			    indio_dev->debugfs_dentry, indio_dev,
-+			    iio_dev_opaque->debugfs_dentry, indio_dev,
- 			    &iio_debugfs_reg_fops);
- }
- #else
-diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
-index 1375674f14cd..b3f234b4c1e9 100644
---- a/include/linux/iio/iio-opaque.h
-+++ b/include/linux/iio/iio-opaque.h
-@@ -6,9 +6,19 @@
- /**
-  * struct iio_dev_opaque - industrial I/O device opaque information
-  * @indio_dev:			public industrial I/O device information
-+ * @debugfs_dentry:		device specific debugfs dentry
-+ * @cached_reg_addr:		cached register address for debugfs reads
-+ * @read_buf:			read buffer to be used for the initial reg read
-+ * @read_buf_len:		data length in @read_buf
-  */
- struct iio_dev_opaque {
- 	struct iio_dev			indio_dev;
-+#if defined(CONFIG_DEBUG_FS)
-+	struct dentry			*debugfs_dentry;
-+	unsigned			cached_reg_addr;
-+	char				read_buf[20];
-+	unsigned int			read_buf_len;
-+#endif
- };
- 
- #define to_iio_dev_opaque(indio_dev)		\
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 86112e35ae5f..bb0aae11a111 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
-  * @groups:		[INTERN] attribute groups
-  * @groupcounter:	[INTERN] index of next attribute group
-  * @flags:		[INTERN] file ops related flags including busy flag.
-- * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
-- * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
-  * @priv:		[DRIVER] reference to driver's private information
-  *			**MUST** be accessed **ONLY** via iio_priv() helper
-  */
-@@ -567,12 +565,6 @@ struct iio_dev {
- 	int				groupcounter;
- 
- 	unsigned long			flags;
--#if defined(CONFIG_DEBUG_FS)
--	struct dentry			*debugfs_dentry;
--	unsigned			cached_reg_addr;
--	char				read_buf[20];
--	unsigned int			read_buf_len;
--#endif
- 	void				*priv;
- };
- 
-@@ -727,10 +719,7 @@ static inline bool iio_buffer_enabled(struct iio_dev *indio_dev)
-  * @indio_dev:		IIO device structure for device
-  **/
- #if defined(CONFIG_DEBUG_FS)
--static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
--{
--	return indio_dev->debugfs_dentry;
--}
-+struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
- #else
- static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
- {
--- 
-2.17.1
+Today's linux-next merge of the pidfd tree got a conflict in:
 
+  fs/file.c
+
+between commit:
+
+  d3868eea5cbc ("fs: Move __scm_install_fd() to __fd_install_received()")
+
+from the kspp tree and commit:
+
+  60997c3d45d9 ("close_range: add CLOSE_RANGE_UNSHARE")
+
+from the pidfd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/file.c
+index 9568bcfd1f44,340bc9569f9d..000000000000
+--- a/fs/file.c
++++ b/fs/file.c
+@@@ -10,8 -10,8 +10,9 @@@
+  #include <linux/syscalls.h>
+  #include <linux/export.h>
+  #include <linux/fs.h>
++ #include <linux/kernel.h>
+  #include <linux/mm.h>
+ +#include <linux/net.h>
+  #include <linux/sched/signal.h>
+  #include <linux/slab.h>
+  #include <linux/file.h>
+@@@ -19,8 -19,7 +20,9 @@@
+  #include <linux/bitops.h>
+  #include <linux/spinlock.h>
+  #include <linux/rcupdate.h>
+ +#include <net/cls_cgroup.h>
+ +#include <net/netprio_cgroup.h>
++ #include <linux/close_range.h>
+ =20
+  unsigned int sysctl_nr_open __read_mostly =3D 1024*1024;
+  unsigned int sysctl_nr_open_min =3D BITS_PER_LONG;
+
+--Sig_/j=4p44Urs=Ny+=DV2bLQgMW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7vVeoACgkQAVBC80lX
+0GzfWwf/TMjzSKKpbNH081RLpqLwJbkLDUdY6NyezJvuElG5oJDiDo8i6SBtMVPv
+YEOjmuR3e87O0Ji5Dzpa/3xWwBztahh1mHAeEI/7tc5ZepIhp4ImWwdG27QAmv+e
+CSoHKtVOsFhWibg61DPf/UlVmDRHO3Sv7FFu0qDqR2xIbT9ZxvejroNOuJkHAvTX
+xA+HRUrkbZLUDSPyzQmCfOdWKjvxWmtnbYovy8Uw9MzwVTxlNzey3m4A5OLUhK52
+aQT1XqX5Pnsxo1Yr9MOjI2q6bq/+73ESzeiByH6uT74nyMom3kBzENjCfWs/Rn9r
+41ahIrCg4dEgO81gtPTaf50+Upx9KA==
+=shze
+-----END PGP SIGNATURE-----
+
+--Sig_/j=4p44Urs=Ny+=DV2bLQgMW--
