@@ -2,229 +2,68 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D11F23A7A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C8E24766
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 00:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgFUALT (ORCPT
+        id S1728707AbgFUAXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 20:11:19 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33317 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbgFUALS (ORCPT
+        Sat, 20 Jun 2020 20:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbgFUAXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 20:11:18 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id AE2151C0005;
-        Sun, 21 Jun 2020 00:11:07 +0000 (UTC)
-Date:   Sun, 21 Jun 2020 02:11:06 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 08/10] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20200621001106.GC131826@piout.net>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
- <20200620224222.1312520-7-j.neuschaefer@gmx.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200620224222.1312520-7-j.neuschaefer@gmx.net>
+        Sat, 20 Jun 2020 20:23:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7F9C061794;
+        Sat, 20 Jun 2020 17:23:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF250120ED4AD;
+        Sat, 20 Jun 2020 17:22:58 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 17:22:55 -0700 (PDT)
+Message-Id: <20200620.172255.1570205815461958163.davem@davemloft.net>
+To:     dsahern@gmail.com
+Cc:     andrea.mayer@uniroma2.it, dsahern@kernel.org, shrijeet@gmail.com,
+        kuba@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        sharpd@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        didutt@gmail.com, stephen@networkplumber.org,
+        stefano.salsano@uniroma2.it, paolo.lungaroni@cnit.it,
+        ahabdels@gmail.com
+Subject: Re: [net-next,v1,0/5] Strict mode for VRF
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <f13c47d2-6b08-8f73-05d2-755a40fba6a8@gmail.com>
+References: <20200619225447.1445-1-andrea.mayer@uniroma2.it>
+        <f13c47d2-6b08-8f73-05d2-755a40fba6a8@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 20 Jun 2020 17:22:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2020 00:42:19+0200, Jonathan Neuschäfer wrote:
-> With this driver, mainline Linux can keep its time and date in sync with
-> the vendor kernel.
+From: David Ahern <dsahern@gmail.com>
+Date: Sat, 20 Jun 2020 16:32:53 -0700
+
+> On 6/19/20 3:54 PM, Andrea Mayer wrote:
+>> This patch set adds the new "strict mode" functionality to the Virtual
+>> Routing and Forwarding infrastructure (VRF). Hereafter we discuss the
+>> requirements and the main features of the "strict mode" for VRF.
+>> 
 > 
-> Advanced functionality like alarm and automatic power-on is not yet
-> supported.
-> 
+> For the set:
+> Acked-by: David Ahern <dsahern@gmail.com>
 
-Please report the results of rtctest (from the kernel tree) and
-rtc-range
-(https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c)
-
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
->  drivers/rtc/Kconfig     |   4 ++
->  drivers/rtc/Makefile    |   1 +
->  drivers/rtc/rtc-ntxec.c | 115 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 120 insertions(+)
->  create mode 100644 drivers/rtc/rtc-ntxec.c
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index b54d87d45c89b..2310d08933f9c 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1300,6 +1300,10 @@ config RTC_DRV_CROS_EC
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-cros-ec.
-> 
-> +config RTC_DRV_NTXEC
-> +	tristate "Netronix embedded controller RTC driver"
-> +	depends on MFD_NTXEC
-> +
-
-This should get an help section.
-
-
->  comment "on-CPU RTC drivers"
-> 
->  config RTC_DRV_ASM9260
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 0721752c6ed4c..8653d04aefa99 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -111,6 +111,7 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+= rtc-mt7622.o
->  obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
->  obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
->  obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
-> +obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
->  obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
->  obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
->  obj-$(CONFIG_RTC_DRV_PALMAS)	+= rtc-palmas.o
-> diff --git a/drivers/rtc/rtc-ntxec.c b/drivers/rtc/rtc-ntxec.c
-> new file mode 100644
-> index 0000000000000..44d5a5eedb597
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-ntxec.c
-> @@ -0,0 +1,115 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright 2020 Jonathan Neuschäfer
-> +
-> +#include <linux/rtc.h>
-> +#include <linux/mfd/ntxec.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-
-Please sort the includes.
-
-> +
-> +struct ntxec_rtc {
-> +	struct device *dev;
-> +	struct ntxec *ec;
-> +};
-> +
-> +#define NTXEC_WRITE_YEAR	0x10
-> +#define NTXEC_WRITE_MONTH	0x11
-> +#define NTXEC_WRITE_DAY		0x12
-> +#define NTXEC_WRITE_HOUR	0x13
-> +#define NTXEC_WRITE_MINUTE	0x14
-> +#define NTXEC_WRITE_SECOND	0x15
-> +
-> +#define NTXEC_READ_YM		0x20
-> +#define NTXEC_READ_DH		0x21
-> +#define NTXEC_READ_MS		0x22
-> +
-> +
-> +static int ntxec_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct ntxec_rtc *rtc = dev_get_drvdata(dev);
-> +	int res;
-> +
-> +	res = ntxec_read16(rtc->ec, NTXEC_READ_YM);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_year = (res >> 8) + 100;
-> +	tm->tm_mon = (res & 0xff) - 1;
-> +
-> +	res = ntxec_read16(rtc->ec, NTXEC_READ_DH);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_mday = res >> 8;
-> +	tm->tm_hour = res & 0xff;
-> +
-> +	res = ntxec_read16(rtc->ec, NTXEC_READ_MS);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_min = res >> 8;
-> +	tm->tm_sec = res & 0xff;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct ntxec_rtc *rtc = dev_get_drvdata(dev);
-> +	int res = 0;
-> +
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_YEAR, tm->tm_year - 100);
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_MONTH, tm->tm_mon + 1);
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_DAY, tm->tm_mday);
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_HOUR, tm->tm_hour);
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_MINUTE, tm->tm_min);
-> +	res |= ntxec_write8(rtc->ec, NTXEC_WRITE_SECOND, tm->tm_sec);
-> +
-> +	return (res < 0)? -EIO : 0;
-> +}
-> +
-> +static const struct rtc_class_ops ntxec_rtc_ops = {
-> +	.read_time		= ntxec_read_time,
-> +	.set_time		= ntxec_set_time,
-> +};
-> +
-> +static int ntxec_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct rtc_device *rtcdev;
-> +	struct ntxec_rtc *rtc;
-> +
-> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	rtc->dev = &pdev->dev;
-> +	rtc->ec = dev_get_drvdata(pdev->dev.parent);
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	rtcdev = devm_rtc_device_register(&pdev->dev, "ntxec-rtc",
-> +					  &ntxec_rtc_ops, THIS_MODULE);
-
-Please use devm_rtc_allocate_device and rtc_register_device. Also, set
-the supported range (->range_min and ->range_max).
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Series applied to net-next, thanks.
