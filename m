@@ -2,144 +2,166 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F87CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01672C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AF62489D
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62F22489D
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="IRjtq/gY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AU9cdrxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgFUJ2T (ORCPT
+        id S1729643AbgFUJdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 05:28:19 -0400
-Received: from mout.web.de ([212.227.15.3]:44297 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729573AbgFUJ2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 05:28:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592731683;
-        bh=k+nctZszWHVXTeaUOOM+Rahgb3xT+byFYUzyhWax3Cw=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=IRjtq/gYBdYyfuU4dzz3mCe28n3PsSfu5gpxO4+sVFyO281SOJlHeehwFsSCH09+9
-         MYNtEY7BvHSl/cxgVTUL+iB0FL5jiV6jwHW4tYR/6sNx6NfUSrUL7skHByO3kSTE7H
-         GBHBPesLKkCCkSkfs0Gf9UV0Jp3XmbDrmsZ3wQZ0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.145.213]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLy84-1jo3Gp0Tm8-007kPu; Sun, 21
- Jun 2020 11:28:03 +0200
-To:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        linux-crypto@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH 1/3] crypto: ccree: fix resource leak on error path
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3a4ddd15-e8a9-33fb-007a-d50137c378a6@web.de>
-Date:   Sun, 21 Jun 2020 11:28:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 21 Jun 2020 05:33:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53006 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728012AbgFUJdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 05:33:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592732015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OBpir7iL+7XcZZbz4W1dd7vvt+8CbRIoSw21etJ1Zh8=;
+        b=AU9cdrxeEmetnFc2BsY5q9zeubkXzTGcKkmBGZlJEpqntbP9VUxUgiR68aDON8kMpDk4+C
+        +i6/lxxmlhIyoyH1Er6KDo5HMutlsWFGZv5oYIb4Auu8qX8dcpqa1gbi7yGO8vofSvjZYX
+        1Ge9RNKP1Q68gE256vs4KxIDGUshM4I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-KhM0XZwUPOe95Z8sJiTNNg-1; Sun, 21 Jun 2020 05:33:33 -0400
+X-MC-Unique: KhM0XZwUPOe95Z8sJiTNNg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E56880572C;
+        Sun, 21 Jun 2020 09:33:32 +0000 (UTC)
+Received: from starship (unknown [10.35.206.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 940D919C66;
+        Sun, 21 Jun 2020 09:33:31 +0000 (UTC)
+Message-ID: <520c57f9836d53e08cb72c88d8d6b22e38f8c926.camel@redhat.com>
+Subject: KVM/RCU related warning on latest mainline kernel
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Sun, 21 Jun 2020 12:33:30 +0300
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PWH2kdPCZGr0dW4y2otajdtaVleRJFwuONJz6E9A9XAm1HlWaA/
- O9k+IrMPeCCFulq/nPs5jdz0+mN6AIaXjc6u2KcQ3FbwVyiH9Khz8NrEbm8l85sZonp7CnT
- gstlo9YnSRDpfj5/ifoNsHlgNkFPYIiVBwy+0WTMWpPz5695RLFAN16rwh/yMbLnp1+k2gK
- syVzyeHrEPn/+bg61tboA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ufOXC5f9xU8=:I7FPBQZcQI5QAON2XgyAd4
- 3TX1JHZPSnQ7F7UWWCu+pTk81oz+LAdE9nI4IKqfyTjPY4RhPSLAraHhNnS7fmoyBiU8TwvZb
- u3Zt+STPHWCpamkONnymZh/2Peb7t+weXVYXoirTRc/7YMdEJ7bLx0Rt/AToXNOX+DRXneVAo
- PGNDlKMaZRoqPTSd+iHaiJ0mf1avzGbsF0nJhbyYmr8dsb6Ns7VNiFBJ2Ad2OXqpcgRTUvh88
- oB0cXMP6dr5GCRPF0y7Rw1DYbuXPC2lGcJuFwT3+ll+VscGZc2rdHVDpt0IV7KMf6Of5uO5vf
- atY+BMv0quOb+CHDWkw3yoixGfBo8uUl7yVOFfUEwdPkD8t2faA9kywG8d4JxmWtcM9zqYye4
- nhgfUEH47/ilscWp9ey0K6LQwKOBWxoE2hJw66pgWw9iqiFyifOqD6cwBDbHdUSdd9kAaAoMm
- XcAx7lhMV446JtQVDzEq3Ta1G6Je4sddh3QzAnvgxb1lz7/vHYy+KL8D+UYX6lh4dlMD2FWx2
- vN+FRfB1k6oN1KhqDY9C6JOe/+xDj7fr/0OWe8wY4h1iTeJSeSlDIExMj+Sn8wvPBMKl22+oG
- gWdJP/YKwsPLCmFKsSPO8iTX5pc+syJdPRAxZdb6eNn3CHezOG4utYAoScQ4737ur8FVHNdIw
- 2w1UsF/2uJaaef/qnAxV+efcz5Vt9hBGYjPBAP0c88dj9wPU84tFBYum30F4FIMucnlmV8r8g
- Wnid6uf4O10AeRnj0E4/c4W/K4f3ZviLYGf8Sm36RfJwUX1ZLKy66BpBoNFj/XQqctKF4E7fr
- Zpb+8qQHZmt+CbXzPziHMu66J7pargah1mznq0VaCBosO0tpdiP4Y1rVaYNuBYoHw+GA1yGEj
- wpHY4LpGUTjWXEMyuTCz67RnquW7cirN1SrD3c40uIz1ziy805ZCkRCkqIMMRYTkRc48At/Ue
- KQWA/qFVAPViZG6wkJnsdk1Hv8/X5TYv9hEtJswUr2z9NI89T3T5JbjlKRyN6ZY9LJBnNpCvq
- fQBv6SARVSaMuxjQaK1cg4e+mbFN3+sAmKUz7l/GE1iCf71QBScqjkGfI1Ykhloa8ytx4/SxS
- r3UHJ26zau3cxCqzgr9IlPx8HXYaajgk4kxnSl5bs48WoxBNCAkn25KL1lY3JnqfP22jZOYXd
- YKkduy5t5fLb3ZKLWC6mSr6nD/yrXrpLdsCBLBmvaCgn2RcLlsXjpz+fiComRcN/y2vtDbKTm
- mUim32+wdeddm4bJg
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fix a small resource leak on the error path of cipher processing.
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+I started to see this warning recently:
 
 
-=E2=80=A6
-> +++ b/drivers/crypto/ccree/cc_cipher.c
-=E2=80=A6
-> @@ -190,21 +198,19 @@  static int cc_cipher_init(struct crypto_tfm *tfm)
-=E2=80=A6
-> -	return rc;
-> +out_key:
-> +	kfree(ctx_p->user.key);
-> +out_shash:
-> +	crypto_free_shash(ctx_p->shash_tfm);
-=E2=80=A6
+[  474.827893] ------------[ cut here ]------------
+[  474.827894] WARNING: CPU: 28 PID: 3984 at kernel/rcu/tree.c:453 rcu_is_cpu_rrupt_from_idle+0x29/0x40
+[  474.827894] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio xfs rfcomm xt_MASQUERADE xt_conntrack ipt_REJECT iptable_mangle iptable_nat nf_nat ebtable_filter ebtables ip6table_filter
+ip6_tables tun bridge pmbus pmbus_core cmac ee1004 jc42 bnep sunrpc vfat fat dm_mirror dm_region_hash dm_log iwlmvm wmi_bmof mac80211 libarc4 uvcvideo iwlwifi videobuf2_vmalloc btusb videobuf2_memops
+kvm_amd snd_usb_audio videobuf2_v4l2 videobuf2_common snd_hda_codec_hdmi btrtl kvm btbcm btintel snd_usbmidi_lib snd_hda_intel videodev input_leds joydev snd_rawmidi snd_intel_dspcfg bluetooth mc
+snd_hda_codec cfg80211 snd_hwdep xpad ff_memless thunderbolt snd_seq snd_hda_core irqbypass ecdh_generic i2c_nvidia_gpu efi_pstore ecc pcspkr snd_seq_device rfkill snd_pcm bfq snd_timer i2c_piix4 snd
+zenpower rtc_cmos tpm_crb tpm_tis tpm_tis_core wmi tpm button binfmt_misc dm_crypt sd_mod uas usb_storage hid_generic usbhid hid ext4 mbcache jbd2 amdgpu gpu_sched ttm ahci drm_kms_helper syscopyarea
+libahci
+[  474.827913]  sysfillrect crc32_pclmul sysimgblt crc32c_intel fb_sys_fops igb ccp libata xhci_pci cec i2c_algo_bit rng_core nvme xhci_hcd nvme_core drm t10_pi nbd usbmon it87 hwmon_vid fuse i2c_dev
+i2c_core ipv6 autofs4 [last unloaded: nvidia]
+[  474.827918] CPU: 28 PID: 3984 Comm: CPU 0/KVM Tainted: P           O      5.8.0-rc1.stable #118
+[  474.827919] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
+[  474.827919] RIP: 0010:rcu_is_cpu_rrupt_from_idle+0x29/0x40
+[  474.827920] Code: 00 0f 1f 44 00 00 31 c0 65 48 8b 15 21 1e ea 7e 48 83 fa 01 7f 27 48 85 d2 75 11 65 48 8b 04 25 00 25 01 00 f6 40 24 02 75 02 <0f> 0b 65 48 8b 05 f5 1d ea 7e 48 85 c0 0f 94 c0 0f
+b6 c0 c3 0f 1f
+[  474.827920] RSP: 0018:ffffc900009d0e80 EFLAGS: 00010046
+[  474.827921] RAX: ffff889775e6d580 RBX: ffffc9000476fce8 RCX: 0000000000000001
+[  474.827921] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+[  474.827922] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000006e802f88c2
+[  474.827922] R10: 0000000000000000 R11: 0000000000000000 R12: 0000006e802f8b10
+[  474.827923] R13: ffff889fbe719280 R14: ffff889fbe719378 R15: ffff889fbe7197e0
+[  474.827923] FS:  0000000000000000(0008) GS:ffff889fbe700000(0008) knlGS:0000000000000000
+[  474.827924] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  474.827924] CR2: 0000000000000000 CR3: 000000176872a000 CR4: 0000000000340ea0
+[  474.827924] Call Trace:
+[  474.827924]  <IRQ>
+[  474.827925]  rcu_sched_clock_irq+0x49/0x500
+[  474.827925]  update_process_times+0x24/0x50
+[  474.827925]  tick_sched_handle.isra.0+0x1f/0x60
+[  474.827926]  tick_sched_timer+0x3b/0x80
+[  474.827926]  ? tick_sched_handle.isra.0+0x60/0x60
+[  474.827926]  __hrtimer_run_queues+0xf3/0x260
+[  474.827927]  hrtimer_interrupt+0x10e/0x240
+[  474.827927]  __sysvec_apic_timer_interrupt+0x51/0xe0
+[  474.827927]  asm_call_on_stack+0xf/0x20
+[  474.827928]  </IRQ>
+[  474.827928]  sysvec_apic_timer_interrupt+0x6c/0x80
+[  474.827928]  asm_sysvec_apic_timer_interrupt+0x12/0x20
+[  474.827929] RIP: 0010:kvm_arch_vcpu_ioctl_run+0xdca/0x1c80 [kvm]
+[  474.827930] Code: f0 41 c7 45 30 00 00 00 00 49 89 85 e8 19 00 00 4c 89 ef ff 15 cf 41 07 00 65 4c 89 2d 07 b6 b4 5d fb 49 83 85 c8 00 00 00 01 <fa> 65 48 c7 05 f1 b5 b4 5d 00 00 00 00 e9 cc 00 00
+00 e9 a5 00 00
+[  474.827930] RSP: 0018:ffffc9000476fd90 EFLAGS: 00000212
+[  474.827931] RAX: 00000004eca3dfff RBX: 0000000000000000 RCX: 000000007b29b4fe
+[  474.827931] RDX: 0000000100000000 RSI: fffffe40717a2b01 RDI: ffff889f9f460000
+[  474.827931] RBP: ffffc9000476fe60 R08: 0000000000000000 R09: 0000000000000000
+[  474.827932] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[  474.827932] R13: ffff889f9f460000 R14: 8000000000000000 R15: ffffc900047161d0
+[  474.827932]  kvm_vcpu_ioctl+0x211/0x5b0 [kvm]
+[  474.827933]  ? mprotect_fixup+0x1cf/0x2f0
+[  474.827933]  ksys_ioctl+0x84/0xc0
+[  474.827933]  __x64_sys_ioctl+0x16/0x20
+[  474.827934]  do_syscall_64+0x41/0xc0
+[  474.827934]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  474.827934] RIP: 0033:0x7f39ad07435b
+[  474.827934] Code: Bad RIP value.
+[  474.827935] RSP: 002b:00007f39a89c8728 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[  474.827936] RAX: ffffffffffffffda RBX: 0000561ae9351460 RCX: 00007f39ad07435b
+[  474.827936] RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000016
+[  474.827936] RBP: 00007f39a89c8820 R08: 0000561ae71e2d10 R09: 00000000000000ff
+[  474.827937] R10: 0000561ae6b3dc87 R11: 0000000000000246 R12: 00007ffc5436744e
+[  474.827937] R13: 00007ffc5436744f R14: 00007ffc54367510 R15: 00007f39a89c8a40
+[  474.827938] ---[ end trace d3c2fb0a7a2c2d8d ]---
 
-How do you think about to replace the prefix =E2=80=9Cout=E2=80=9D by =E2=
-=80=9Cfree=E2=80=9D in these labels?
 
-Regards,
-Markus
+kvm_arch_vcpu_ioctl_run+0xdca corresponds to native_irq_enable()
+that is done after vmexit to handle pending interrupts)
+
+   0x0000000000023b80 <+3504>:	mov    %r13,%rdi
+   0x0000000000023b83 <+3507>:	callq  *0x0(%rip)        # 0x23b89 <kvm_arch_vcpu_ioctl_run+3513>
+
+arch/x86/kvm/x86.h:
+341		__this_cpu_write(current_vcpu, vcpu);
+   0x0000000000023b89 <+3513>:	mov    %r13,%gs:0x0(%rip)        # 0x23b91 <kvm_arch_vcpu_ioctl_run+3521>
+
+./arch/x86/include/asm/irqflags.h:
+94		native_irq_enable();
+   0x0000000000023b91 <+3521>:	sti    
+
+arch/x86/kvm/x86.c:
+8561		++vcpu->stat.exits;
+   0x0000000000023b92 <+3522>:	addq   $0x1,0xc8(%r13)
+
+./arch/x86/include/asm/irqflags.h:
+89		native_irq_disable();
+   0x0000000000023b9a <+3530>:	cli
+
+
+I haven't yet studied RCU area to know if this warning is correct,
+but something to note is that VMX code handles pending interrupt by
+querying the VMCS for the interrupt vector and actually 
+simulating the interrupt by jumping to the interrupt vector,
+so maybe this is how this warning got missed in testing
+( I use AMD's SVM )
+
+I am using 'isolcpus=domain,managed_irq,28-31,60-63 nohz_full=28-31,60-63'
+Also worth noting is that I use -overcommit cpu_pm=on qemu command line for the guest to let
+it run all the time on the isolated cores.
+
+I can bisect/debug this futher if you think that this is worth it.
+
+Best regards,
+	Maxim Levitsky
+
