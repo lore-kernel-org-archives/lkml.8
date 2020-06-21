@@ -2,146 +2,267 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3562C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C1520707
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988E02485D
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bt/yIIKr"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="dbADO755"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgFUUZY (ORCPT
+        id S1730654AbgFUUdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 16:25:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42365 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730288AbgFUUZX (ORCPT
+        Sun, 21 Jun 2020 16:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730288AbgFUUdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 16:25:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592771121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5/416N7OwlJjOjmFHaXcfpzRSt86NuMHjindDKu4elw=;
-        b=bt/yIIKrRkjIH/w+D051eMUO2e54tKJOasQo27efcBVyoUquDDgeZYyeALOgO3rIxdXrZZ
-        mZGO84X1K1FkdDMyM85z4hVUt0R9WfyZa+mo1wTJek1fQiUiavgIjt6gBw+m0N2mhCW4bd
-        zwlTZrkmyYxcbj8YbFllAaPp+Pf9Hkw=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-X2LyB50bPhyjqClfCbKkhg-1; Sun, 21 Jun 2020 16:25:18 -0400
-X-MC-Unique: X2LyB50bPhyjqClfCbKkhg-1
-Received: by mail-il1-f199.google.com with SMTP id i7so10615479ilq.16
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 13:25:18 -0700 (PDT)
+        Sun, 21 Jun 2020 16:33:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976ACC061795
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 13:33:07 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so7171973pgk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 13:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D0LvEfnjJPlFAFfj6uN2NPV3CR5JS7m2fdpH7HdJDLw=;
+        b=dbADO755IcFuzorin86JTFnADEE/cVtilk341t2dirV7kiDu+kDJ4KbR+cEGCmuKoM
+         vn0ZcT9SUn8WvqfPzN10sJH/MDtYhvvkBpg0mTyfA3uBBxnZ8WFT5bUV8UYQkqDd8zJO
+         IZWFkcMQQkZTwriuLmr5redXCL17jdj4sFNL3SWw2a00W5qcJl/kwoaU81DuYz+2pWQw
+         A5m351axfM3+LWmz0PPnOUtgW5vHVtbw9nJg5c8sHQ1b8QlCh4sPMQMgmBpdb1V5rNCx
+         YsYsv5a4A+oNsdrActHikLcfDaQO2lfmyXHLeXVf3fepOUpq85eX0fdEleBu+tTEEZlj
+         PaKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5/416N7OwlJjOjmFHaXcfpzRSt86NuMHjindDKu4elw=;
-        b=hjTjRsp0oMfBfE1xyx8WcK0FSFB7MVwCy6h8CC3zmT0Z1IT7LiNcBBauNt2/RGnYRs
-         T1+oyQiX+xyEwdTsGPE9Lr3RL1knnKbchvKh839xbJ27BkD1Us/lVYW2EtxJ/090ab3e
-         e9tB2INmboHjiBm2jcxMm6W9AoS4ad7gbOtgTKCE1AKJWEOdzyNH06xW6sI58BAnqdMq
-         Qg1QUYvc8BGRTt++GBdSFUa/gudvSVYwQiGh+u4Qwhnv3b6UFRzwESY9chS7fda/vDVL
-         WDjAW148KNCEdz96KElOihaZOGHLxbiY0PLui3W4t8KM25u+5+uLQhh6maGIGsaHJxLk
-         4aRA==
-X-Gm-Message-State: AOAM530Hf9yL2Ivph4tXa04DA7JaB+5Gxvkly+VKBVmNJFfy/O8pQslu
-        Th6T38Gd6iW9d78VXJZxV2pOvkO58WoajcHICtub5wv8wsxOgmutIc8iUouMyYo//KE6Hzm2447
-        n/KU92FtiM/y9VsMnOpBWFNUhoOdB3zbkar0T6blN
-X-Received: by 2002:a05:6638:d96:: with SMTP id l22mr14997818jaj.120.1592771118168;
-        Sun, 21 Jun 2020 13:25:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxKXchW2IkCUudcu/hdCr7QHYigi+b86NqbkSX1mig6hhJzcchDc2IFpZUYJFqMRZrlB3nf0blwbHndk1Ho/BM=
-X-Received: by 2002:a05:6638:d96:: with SMTP id l22mr14997805jaj.120.1592771117909;
- Sun, 21 Jun 2020 13:25:17 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D0LvEfnjJPlFAFfj6uN2NPV3CR5JS7m2fdpH7HdJDLw=;
+        b=AcVJC6DKIo675jMO2xPVh/Bs8Cle5DXLE/nWV4n2OYq0JGJ1WVgVSMKVui+lGsGZp8
+         fxIZVs+hlgUeOTZwT2rNis7eOPnOyvKpjfKaHoKgIB8JCO2c4s1sqprMMSVApgs7uTjT
+         FxKf2XlxCOzBgLiH/LF1cy9fIobI3MkU8DLlBQXGVBnQ2UjnCSNpSkbaQJCVh8PiqEQC
+         x7zytFpmsFN7MC0ntUze+zh4yB3ObuAFXC3PMDIsQPo6xJIIO5WOFzlx0C4xZMw80BPq
+         iP0aa5q7mE59Qnb4SgEhSb3ajLuh4vhTUCpUvJtWbtQKyA6fx42Vv0QWW8GLGbkUQX5T
+         a1iQ==
+X-Gm-Message-State: AOAM5339hysjkzvjV6pAvoiCuZFtI8L9o3SvudNQAV1BtCst/wtC/tol
+        PCV0plHoX+Tyr/eib868wG+h4w==
+X-Google-Smtp-Source: ABdhPJyHTU3VBkCYyFvvHRm3RLYYjHHl0mXO18imv1R7bnLHl27ABQzrzWoKitlODY2TPavZ6EXp2A==
+X-Received: by 2002:a63:d652:: with SMTP id d18mr10583742pgj.164.1592771586834;
+        Sun, 21 Jun 2020 13:33:06 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id e143sm11853933pfh.42.2020.06.21.13.33.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 21 Jun 2020 13:33:05 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
+Date:   Mon, 22 Jun 2020 02:02:56 +0530
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Subject: Re: [PATCH v3 2/2] media: vimc: Add a control to display info on
+ test image
+Message-ID: <20200621203256.GA13040@kaaira-HP-Pavilion-Notebook>
+References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
+ <20200618190506.11892-3-kgupta@es.iitr.ac.in>
+ <d62583ab-7dd3-9a37-c94d-99fae0f29357@collabora.com>
 MIME-Version: 1.0
-References: <20200608210058.37352-1-jarod@redhat.com> <20200610185910.48668-1-jarod@redhat.com>
- <20200610185910.48668-4-jarod@redhat.com> <68f2ff6ee06bf4520485121b15c0d8c10cad60d2.camel@mellanox.com>
-In-Reply-To: <68f2ff6ee06bf4520485121b15c0d8c10cad60d2.camel@mellanox.com>
-From:   Jarod Wilson <jarod@redhat.com>
-Date:   Sun, 21 Jun 2020 16:25:07 -0400
-Message-ID: <CAKfmpSeM4zf_rY_oLJJcE=vqjS43qKE8C+vAQb2NohXe3Zxxew@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/4] mlx5: become aware of when running as a
- bonding slave
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vfalico@gmail.com" <vfalico@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "andy@greyhouse.net" <andy@greyhouse.net>,
-        "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
-        "j.vosburgh@gmail.com" <j.vosburgh@gmail.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d62583ab-7dd3-9a37-c94d-99fae0f29357@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 5:51 PM Saeed Mahameed <saeedm@mellanox.com> wrote:
->
-> On Wed, 2020-06-10 at 14:59 -0400, Jarod Wilson wrote:
-> > I've been unable to get my hands on suitable supported hardware to
-> > date,
-> > but I believe this ought to be all that is needed to enable the mlx5
-> > driver to also work with bonding active-backup crypto offload
-> > passthru.
-> >
-> > CC: Boris Pismenny <borisp@mellanox.com>
-> > CC: Saeed Mahameed <saeedm@mellanox.com>
-> > CC: Leon Romanovsky <leon@kernel.org>
-> > CC: Jay Vosburgh <j.vosburgh@gmail.com>
-> > CC: Veaceslav Falico <vfalico@gmail.com>
-> > CC: Andy Gospodarek <andy@greyhouse.net>
-> > CC: "David S. Miller" <davem@davemloft.net>
-> > CC: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> > CC: Jakub Kicinski <kuba@kernel.org>
-> > CC: Steffen Klassert <steffen.klassert@secunet.com>
-> > CC: Herbert Xu <herbert@gondor.apana.org.au>
-> > CC: netdev@vger.kernel.org
-> > Signed-off-by: Jarod Wilson <jarod@redhat.com>
+On Sat, Jun 20, 2020 at 12:05:28PM +0200, Dafna Hirschfeld wrote:
+> Hi, thanks for the patch
+> 
+> On 18.06.20 21:05, Kaaira Gupta wrote:
+> > Add a control in VIMC to display information such as the correct oder of
+> > colors for a given test pattern, brightness, hue, saturation, contrast
+> > and, width and height at sensor over test image; and display that
+> > information.
+> > 
+> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 > > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-> > b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-> > index 92eb3bad4acd..72ad6664bd73 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-> > @@ -210,6 +210,9 @@ static inline int
-> > mlx5e_xfrm_validate_state(struct xfrm_state *x)
-> >       struct net_device *netdev = x->xso.dev;
-> >       struct mlx5e_priv *priv;
-> >
-> > +     if (x->xso.slave_dev)
-> > +             netdev = x->xso.slave_dev;
+> >   drivers/media/test-drivers/vimc/Kconfig       |  2 +
+> >   drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+> >   drivers/media/test-drivers/vimc/vimc-sensor.c | 47 ++++++++++++++++++-
+> >   3 files changed, 49 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> > index 4068a67585f9..da4b2ad6e40c 100644
+> > --- a/drivers/media/test-drivers/vimc/Kconfig
+> > +++ b/drivers/media/test-drivers/vimc/Kconfig
+> > @@ -2,6 +2,8 @@
+> >   config VIDEO_VIMC
+> >   	tristate "Virtual Media Controller Driver (VIMC)"
+> >   	depends on VIDEO_DEV && VIDEO_V4L2
+> > +	select FONT_SUPPORT
+> > +	select FONT_8x16
+> >   	select MEDIA_CONTROLLER
+> >   	select VIDEO_V4L2_SUBDEV_API
+> >   	select VIDEOBUF2_VMALLOC
+> > diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> > index ae163dec2459..afda52253402 100644
+> > --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> > +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> > @@ -20,6 +20,7 @@
+> >   #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+> >   #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+> >   #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+> > +#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
+> >   #define VIMC_FRAME_MAX_WIDTH 4096
+> >   #define VIMC_FRAME_MAX_HEIGHT 2160
+> > diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> > index a2f09ac9a360..f5352b115aac 100644
+> > --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> > +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> > @@ -5,6 +5,7 @@
+> >    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+> >    */
+> > +#include <linux/font.h>
+> >   #include <linux/v4l2-mediabus.h>
+> >   #include <linux/vmalloc.h>
+> >   #include <media/v4l2-ctrls.h>
+> > @@ -19,6 +20,7 @@ struct vimc_sen_device {
+> >   	struct v4l2_subdev sd;
+> >   	struct tpg_data tpg;
+> >   	u8 *frame;
+> > +	bool show_info;
+> 
+> I see that vivid saves the 'v4l2_ctrl*' of the controls,
+> maybe you should also do that instead of saving a boolean,
+
+Hi, I don't understand..isn't boolean the control?
+
+> 
+> >   	/* The active format */
+> >   	struct v4l2_mbus_framefmt mbus_format;
+> >   	struct v4l2_ctrl_handler hdl;
+> > @@ -185,10 +187,29 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+> >   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+> >   				    const void *sink_frame)
+> >   {
+> > +	u8 *basep[TPG_MAX_PLANES][2];
+> > +	char *order;
+> > +	char str[100];
+> > +	int line = 1;
+> 
+> Those vars declarations can be inside the 'if (vsen->show_info)'
+
+I declared it outside because I felt all declarations should be
+together?
+
+> 
+> >   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+> >   						    ved);
+> > -
+> >   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> > +	if (vsen->show_info) {
+> > +		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> > +		order = tpg_g_color_order(&vsen->tpg);
+> > +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
+> > +		snprintf(str, sizeof(str), " brightness %3d, contrast %3d, saturation %3d, hue %d ",
+> > +			 vsen->tpg.brightness,
+> > +			 vsen->tpg.contrast,
+> > +			 vsen->tpg.saturation,
+> > +			 vsen->tpg.hue);
+> > +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
 > > +
->
-> Do we really need to repeat this per driver ?
-> why not just setup xso.real_dev, in xfrm layer once and for all before
-> calling device drivers ?
->
-> Device drivers will use xso.real_dev blindly.
->
-> Will be useful in the future when you add vlan support, etc..
+> > +		snprintf(str, sizeof(str), " sensor size: %dx%d",
+> > +			 vsen->mbus_format.width, vsen->mbus_format.height);
+> > +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> > +	}
+> > +
+> >   	return vsen->frame;
+> >   }
+> > @@ -200,6 +221,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+> >   	if (enable) {
+> >   		const struct vimc_pix_map *vpix;
+> >   		unsigned int frame_size;
+> > +		const struct font_desc *font = find_font("VGA8x16");
+> > +
+> > +		if (font == NULL) {
+> Using 'if (!font)' is the way to check null pointer, instead of compering to null. Running checkpatch.pl with '--strict'
+> will catch that.
 
-Apologies, I didn't catch your reply until just recently. Yeah, that
-sounds like a better approach, if I can work it out cleanly. We just
-init xso.real_dev to the same thing as xso.dev, then overwrite it in
-the upper layer drivers (bonding, vlan, etc), while device drivers
-just always use xso.real_dev, if I'm understanding your suggestion.
-I'll see what I can come up with.
+I didn't do that to be consistent with vivid's style of code. Plus I
+thought it makes it more clear to read. Should i change this?
 
+> > +			pr_err("vimc: could not find font\n");
+> 'dev_err' should be used instead of 'pr_err'.
 
--- 
-Jarod Wilson
-jarod@redhat.com
+yes sorry, i didn't now the difference.
 
+> 
+> Also, maybe checking the font here is a bit late, since the user already
+> wants to stream and expect the info to be shown.
+> Maybe it is better to check the font on 'vimc_sen_s_ctrl'.
+
+Like show the control only of font is available?
+
+I think showing the error is enough maybe?
+
+> 
+> Thanks,
+> Dafna
+> 
+> > +			vsen->show_info = 0;
+> > +		} else {
+> > +			tpg_set_font(font->data);
+> > +		}
+> >   		/* Calculate the frame size */
+> >   		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+> > @@ -269,6 +298,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+> >   	case V4L2_CID_SATURATION:
+> >   		tpg_s_saturation(&vsen->tpg, ctrl->val);
+> >   		break;
+> > +	case VIMC_CID_SHOW_INFO:
+> > +		vsen->show_info = ctrl->val;
+> > +		break;
+> >   	default:
+> >   		return -EINVAL;
+> >   	}
+> > @@ -307,6 +339,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+> >   	.qmenu = tpg_pattern_strings,
+> >   };
+> > +static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
+> > +	.ops = &vimc_sen_ctrl_ops,
+> > +	.id = VIMC_CID_SHOW_INFO,
+> > +	.name = "Show Information",
+> > +	.type = V4L2_CTRL_TYPE_BOOLEAN,
+> > +	.min = 0,
+> > +	.max = 1,
+> > +	.step = 1,
+> > +	.def = 1,
+> > +};
+> > +
+> >   static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+> >   					    const char *vcfg_name)
+> >   {
+> > @@ -323,6 +366,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+> >   	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+> >   	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+> > +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
+> >   	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> >   			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+> >   	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> > @@ -362,6 +406,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+> >   	/* Initialize the frame format */
+> >   	vsen->mbus_format = fmt_default;
+> > +	vsen->show_info = vimc_sen_ctrl_show_info.def;
+> >   	return &vsen->ved;
+> > 
