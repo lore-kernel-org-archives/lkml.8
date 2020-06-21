@@ -2,88 +2,187 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 18:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C077C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 18:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9757225227
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 18:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1976625225
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 18:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y77qRJBZ"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="amBJNbYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgFUShm (ORCPT
+        id S1730032AbgFUSwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 14:37:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:42278 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgFUShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 14:37:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592764661; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=1m9LqaPA7q87uBqQLzmBOLr4aMCHc+FIo6y028MdmMU=; b=Y77qRJBZZSvL8zsaXUx8HlRk6xbW7grkJup5l6d3GABlFxlU1z801hthI2THjKju+vNEYpOq
- Y32nj+ZOhar7cYQZ9LNghD5dcUPbiO8Td9hKAp3KsN6MNYjfBza5Gwd9veQ6Fyq6g3myCZQK
- yrmox+BMFNipJYECFi+FbIXZjNU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5eefa8ed0206ad41d1d3b702 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 21 Jun 2020 18:37:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A659FC4339C; Sun, 21 Jun 2020 18:37:32 +0000 (UTC)
-Received: from localhost (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E9DDC433CA;
-        Sun, 21 Jun 2020 18:37:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E9DDC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] rcu/tree: Force quiescent state on callback overload
-Date:   Mon, 22 Jun 2020 00:07:27 +0530
-Message-Id: <1592764647-2452-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Sun, 21 Jun 2020 14:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728822AbgFUSwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 14:52:12 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F30C061795
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 11:52:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l12so15684579ejn.10
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 11:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GttXTfH5NxnFcwZf4Fm2ECkiTB9eBi9aaT3Bqtm4swk=;
+        b=amBJNbYvy5lc+bE5pZ4KoeQASrwSom1ZY/4woHhtYjVoQNU/tqiUlC0lwOBGYvO+yc
+         ClQMV1qvtAPDCJoAy6V9Vg2ynUm1hSnQKORuiWzKtCvaBJv0YQu//AxO19sTc9wuh2/+
+         uDAmqOvz48L3zaT8Mffltyi95uAIEk8dfdV7T1ASByDevlDtRyz1LczMJm3C5OJCrBp8
+         yP/VxK0T5VRMOgY+ZtiNjQKZq/bSbtRMyohi60gfBahBSkHCpt0Nb4sfjR4QSGXDtlLL
+         9wEWaRnz49SOxiXAwsrhXusvf/AFvsaB5Dsd84kkW9vGudSt6Oojk8fDjHQfAqXeQPUU
+         OVDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GttXTfH5NxnFcwZf4Fm2ECkiTB9eBi9aaT3Bqtm4swk=;
+        b=Z8KEIZsp+dE8eyXM9V4PXTA9s5WVVQD8f7NbF4XY8PRZj/PMkrcTQMmG01IWL71KGc
+         fkwDn7Ypq9muchMY6IQuck5+blbvUFC0Mon5UoaglE+/B2+Edz7z46oJZTE0eYW1H7sZ
+         ngIT2Ym7YN3Xz/vZfVTI35SedxL5rgS5+r2ky0VtbB8bNfjivKL3+ZLuDzLlSgjlB94b
+         QXZgeHDRS75CTJkfvGc9xdIJphT5R1bNsX6Z8E50CuRzvkmYGtRvgEICBItnwfMj8dvW
+         cTRLmxFvVU8FMzAma6pnj1rCBMdZaeD1hzy++uHx+SN4U+KJ1KCOfzZSDeU6pSIzYa2C
+         i69Q==
+X-Gm-Message-State: AOAM532bc8odRpQvtAFELu5BIRXxyrxfvxey9ctGuIBD1PsRp8mPGTZG
+        83LPN3FcMg7OAfX73chF/LaGPg==
+X-Google-Smtp-Source: ABdhPJx5L5rd0FuHOCqFGxYdf2RvcYSxBqSJzmoHqwkSB0Cc+W1UTYVEfaQgDIg4Zesnv4y3MCz8eA==
+X-Received: by 2002:a17:906:b15:: with SMTP id u21mr7646345ejg.520.1592765529516;
+        Sun, 21 Jun 2020 11:52:09 -0700 (PDT)
+Received: from localhost (ip-5-186-127-235.cgn.fibianet.dk. [5.186.127.235])
+        by smtp.gmail.com with ESMTPSA id b26sm9328835eju.6.2020.06.21.11.52.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 11:52:08 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 20:52:07 +0200
+From:   "javier.gonz@samsung.com" <javier@javigon.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+Message-ID: <20200621185207.m7535hzpm4ubrk4i@MacBook-Pro.localdomain>
+References: <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
+ <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
+ <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618091113.eu2xdp6zmdooy5d2@mpHalley.local>
+ <20200619094149.uaorbger326s6yzz@mpHalley.local>
+ <31f1c27e-4a3d-a411-3d3b-f88a2d92ce7b@kernel.dk>
+ <24297973-82ad-a629-e5f5-38a5b12db83a@gmail.com>
+ <a68cb8f6-e17c-9ee3-b732-4be689ffebc3@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <a68cb8f6-e17c-9ee3-b732-4be689ffebc3@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On callback overload, we want to force quiescent state immediately,
-for the first and second fqs. Enforce the same, by including
-RCU_GP_FLAG_OVLD flag, in fqsstart check.
+On 19.06.2020 09:02, Jens Axboe wrote:
+>On 6/19/20 8:59 AM, Pavel Begunkov wrote:
+>> On 19/06/2020 17:15, Jens Axboe wrote:
+>>> On 6/19/20 3:41 AM, javier.gonz@samsung.com wrote:
+>>>> Jens,
+>>>>
+>>>> Would you have time to answer a question below in this thread?
+>>>>
+>>>> On 18.06.2020 11:11, javier.gonz@samsung.com wrote:
+>>>>> On 18.06.2020 08:47, Damien Le Moal wrote:
+>>>>>> On 2020/06/18 17:35, javier.gonz@samsung.com wrote:
+>>>>>>> On 18.06.2020 07:39, Damien Le Moal wrote:
+>>>>>>>> On 2020/06/18 2:27, Kanchan Joshi wrote:
+>>>>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>>>>>>
+>>>>>>>>> Introduce three new opcodes for zone-append -
+>>>>>>>>>
+>>>>>>>>>   IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE
+>>>>>>>>>   IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
+>>>>>>>>>   IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
+>>>>>>>>>
+>>>>>>>>> Repurpose cqe->flags to return zone-relative offset.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>>>>>>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>>>>>>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>>>>>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>>>>>>>>> ---
+>>>>>>>>> fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++++++--
+>>>>>>>>> include/uapi/linux/io_uring.h |  8 ++++-
+>>>>>>>>> 2 files changed, 77 insertions(+), 3 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>>>>>>> index 155f3d8..c14c873 100644
+>>>>>>>>> --- a/fs/io_uring.c
+>>>>>>>>> +++ b/fs/io_uring.c
+>>>>>>>>> @@ -649,6 +649,10 @@ struct io_kiocb {
+>>>>>>>>> 	unsigned long		fsize;
+>>>>>>>>> 	u64			user_data;
+>>>>>>>>> 	u32			result;
+>>>>>>>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>>>>>>>> +	/* zone-relative offset for append, in bytes */
+>>>>>>>>> +	u32			append_offset;
+>>>>>>>>
+>>>>>>>> this can overflow. u64 is needed.
+>>>>>>>
+>>>>>>> We chose to do it this way to start with because struct io_uring_cqe
+>>>>>>> only has space for u32 when we reuse the flags.
+>>>>>>>
+>>>>>>> We can of course create a new cqe structure, but that will come with
+>>>>>>> larger changes to io_uring for supporting append.
+>>>>>>>
+>>>>>>> Do you believe this is a better approach?
+>>>>>>
+>>>>>> The problem is that zone size are 32 bits in the kernel, as a number
+>>>>>> of sectors.  So any device that has a zone size smaller or equal to
+>>>>>> 2^31 512B sectors can be accepted. Using a zone relative offset in
+>>>>>> bytes for returning zone append result is OK-ish, but to match the
+>>>>>> kernel supported range of possible zone size, you need 31+9 bits...
+>>>>>> 32 does not cut it.
+>>>>>
+>>>>> Agree. Our initial assumption was that u32 would cover current zone size
+>>>>> requirements, but if this is a no-go, we will take the longer path.
+>>>>
+>>>> Converting to u64 will require a new version of io_uring_cqe, where we
+>>>> extend at least 32 bits. I believe this will need a whole new allocation
+>>>> and probably ioctl().
+>>>>
+>>>> Is this an acceptable change for you? We will of course add support for
+>>>> liburing when we agree on the right way to do this.
+>>>
+>>> If you need 64-bit of return value, then it's not going to work. Even
+>>> with the existing patches, reusing cqe->flags isn't going to fly, as
+>>> it would conflict with eg doing zone append writes with automatic
+>>> buffer selection.
+>>
+>> Buffer selection is for reads/recv kind of requests, but appends
+>> are writes. In theory they can co-exist using cqe->flags.
+>
+>Yeah good point, since it's just writes, doesn't matter. But the other
+>point still stands, it could potentially conflict with other flags, but
+>I guess only to the extent where both flags would need extra storage in
+>->flags. So not a huge concern imho.
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
- kernel/rcu/tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Very good point Pavel!
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d0988a1..6226bfb 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1865,7 +1865,7 @@ static void rcu_gp_fqs_loop(void)
- 			break;
- 		/* If time for quiescent-state forcing, do it. */
- 		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
--		    (gf & RCU_GP_FLAG_FQS)) {
-+		    (gf & (RCU_GP_FLAG_FQS | RCU_GP_FLAG_OVLD))) {
- 			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
- 					       TPS("fqsstart"));
- 			rcu_gp_fqs(first_gp_fqs);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+If co-existing with the current flags is an option, I'll explore this
+for the next version.
 
+Thanks Jens and Pavel for the time and ideas!
+
+Javier
