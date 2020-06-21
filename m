@@ -2,135 +2,186 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF41C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2502C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C799248B0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qSVkPh5f"
+	by mail.kernel.org (Postfix) with ESMTP id A1BE6248B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgFUKEL (ORCPT
+        id S1729773AbgFUKHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 06:04:11 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:49637 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729628AbgFUKEL (ORCPT
+        Sun, 21 Jun 2020 06:07:13 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:34845 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729687AbgFUKHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:04:11 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 74B39580593;
-        Sun, 21 Jun 2020 06:04:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 21 Jun 2020 06:04:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=enaKZ3
-        P0o6Ph93CXxGqso4eTkC9mjZncv8RRs2hdv58=; b=qSVkPh5f68sJYg9Kbd4/0O
-        1IXyxTdX4yBpIBWQvYcvzxKJPqI22Xi9CckdmoDKcTGC6KTOqJfOVi0VyE3/R6fv
-        7kq63p960rUJTwQpJpt7/RlHCk2OYMqVjDUmSVcnn0lBOOH9dO4fKcOssYx1BoLW
-        +egUCtkskJCxqDNlxxTbn4dNk1+/GJMJvreRPCXsKqhSAhCO7GuZwPxHdUANZubz
-        9hniGX5jUxkjX5caN3RsQ25Udponx1xJcZJhNyojShpkEZyhkLyAxx3GWfWIWTyH
-        K2324JzdzpUFWi8PwU23t6QbhQ9sI8qGc1N/DltoE1W0xKIfTGZSEISOufFDSYFA
-        ==
-X-ME-Sender: <xms:mDDvXsUoZ9oTsEWKrWWduMnaEWUScQuwOJixmaffYrXeJTCbUA_Qhg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
-    teenucfkphepuddtledrieejrdekrdduvdelnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:mDDvXgl2H2DT7daXmHEABvoj7vGB-nMTpeiLGuI8IWJszMT-JNcAIA>
-    <xmx:mDDvXgawHccHnB8ljj-Y4bC76cvIipUOQbYrtKnXCUhTBr2NUVF92Q>
-    <xmx:mDDvXrXCNDLj2USRLPsRsF-Ntsy9O0iOnFmL1CTQqm6MF9vJ1ac9Cg>
-    <xmx:mjDvXizA7mjpE3t009Hy4SDiVA-76ILEmev7ASOGVDoeB_b9qTcpjQ>
-Received: from localhost (bzq-109-67-8-129.red.bezeqint.net [109.67.8.129])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 330BC3280060;
-        Sun, 21 Jun 2020 06:04:08 -0400 (EDT)
-Date:   Sun, 21 Jun 2020 13:04:06 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Po Liu <Po.Liu@nxp.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, vinicius.gomes@intel.com,
-        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
-        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
-        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
-        saeedm@mellanox.com, leon@kernel.org, jiri@mellanox.com,
-        idosch@mellanox.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, kuba@kernel.org, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, john.hurley@netronome.com,
-        simon.horman@netronome.com, pieter.jansenvanvuuren@netronome.com,
-        pablo@netfilter.org, moshe@mellanox.com,
-        ivan.khoronzhuk@linaro.org, m-karicheri2@ti.com,
-        andre.guedes@linux.intel.com, jakub.kicinski@netronome.com
-Subject: Re: [RFC,net-next  8/9] net: qos: police action add index for tc
- flower offloading
-Message-ID: <20200621100406.GA481939@splinter>
-References: <20200306125608.11717-1-Po.Liu@nxp.com>
- <20200306125608.11717-9-Po.Liu@nxp.com>
+        Sun, 21 Jun 2020 06:07:13 -0400
+Received: by mail-io1-f71.google.com with SMTP id i204so7832936ioa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 03:07:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Mzm10RGjJNpKvxhGS4GfgH7+IDQ736GgimRVfF5QPkg=;
+        b=Z4R3tMm1zJHzS4oezlu/BoF4lmv52J3tsz6Gwg4bQ0Rof+73H93Kyvo7mHlHzkQ5XO
+         qThK7FePTC4lAVdGShFYs9SKQjv2jdh2OZqtOdNndR2lAKib48sYv7BYZcB/+36w/9V7
+         yb6JTNwk6VifXiswBgYkXw6G60SO14mHxAZ7YFBuYPV87L1PSa64f9on0pNuXTN4rs5w
+         PbF7qp3tbEOxBm/wWTW6w1gKFyONloICE9VbYgFZJaT3eRMWs5OF9r4BvNfvSGCfJmru
+         57EGFpR1Ndp4Z1ZENc0CxxiQuUmDL6ROUtMF4rGjMXHu7uzRQoQb0mRDqn1StxBo1Rlo
+         anIA==
+X-Gm-Message-State: AOAM530L08ZARM+m2pOzclR6nKj7wVasXqiEOJ9yN3aC2fHjQxhobvnj
+        BVGiqoupSVLz2I1oBe5Tbu6xqtIcGhtJ5fNmsSkEHb2OvKZg
+X-Google-Smtp-Source: ABdhPJwZv8cJwKrif3fd/MrdYQ8iTjiZ8EkVFX88TS7S24e46rMMWlVphVoI8B4IMCrijKdWohyDABfBLZvHxHlsPmsvK2k+AGGT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306125608.11717-9-Po.Liu@nxp.com>
+X-Received: by 2002:a92:5fcd:: with SMTP id i74mr11780919ill.169.1592734031570;
+ Sun, 21 Jun 2020 03:07:11 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 03:07:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002c6fbf05a8954afe@google.com>
+Subject: BUG: sleeping function called from invalid context in do_user_addr_fault
+From:   syzbot <syzbot+7748c5375dc20dfdb92f@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 08:56:06PM +0800, Po Liu wrote:
-> Hardware may own many entries for police flow. So that make one(or
->  multi) flow to be policed by one hardware entry. This patch add the
-> police action index provide to the driver side make it mapping the
-> driver hardware entry index.
-> 
-> Signed-off-by: Po Liu <Po.Liu@nxp.com>
+Hello,
 
-Hi,
+syzbot found the following crash on:
 
-I started looking into tc-police offload in mlxsw and remembered your
-patch. Are you planning to formally submit it? I'm asking because in
-mlxsw it is also possible to share the same policer between multiple
-filters.
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1772c3a9100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=7748c5375dc20dfdb92f
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Thanks
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> ---
->  include/net/flow_offload.h | 1 +
->  net/sched/cls_api.c        | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-> index 54df87328edc..3b78b15ed20b 100644
-> --- a/include/net/flow_offload.h
-> +++ b/include/net/flow_offload.h
-> @@ -201,6 +201,7 @@ struct flow_action_entry {
->  			bool			truncate;
->  		} sample;
->  		struct {				/* FLOW_ACTION_POLICE */
-> +			u32			index;
->  			s64			burst;
->  			u64			rate_bytes_ps;
->  			u32			mtu;
-> diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
-> index 363d3991793d..ce846a9dadc1 100644
-> --- a/net/sched/cls_api.c
-> +++ b/net/sched/cls_api.c
-> @@ -3584,6 +3584,7 @@ int tc_setup_flow_action(struct flow_action *flow_action,
->  			entry->police.rate_bytes_ps =
->  				tcf_police_rate_bytes_ps(act);
->  			entry->police.mtu = tcf_police_mtu(act);
-> +			entry->police.index = act->tcfa_index;
->  		} else if (is_tcf_ct(act)) {
->  			entry->id = FLOW_ACTION_CT;
->  			entry->ct.action = tcf_ct_action(act);
-> -- 
-> 2.17.1
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7748c5375dc20dfdb92f@syzkaller.appspotmail.com
+
+BUG: sleeping function called from invalid context at arch/x86/mm/fault.c:1259
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 10572, name: syz-executor.3
+2 locks held by syz-executor.3/10572:
+ #0: ffffffff892e89d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x5/0x30 include/linux/rcupdate.h:240
+ #1: ffff88809b127028 (&mm->mmap_sem#2){++++}-{3:3}, at: do_user_addr_fault+0x344/0xba0 arch/x86/mm/fault.c:1242
+Preemption disabled at:
+[<ffffffff8147bc44>] irq_enter+0x64/0x100 kernel/softirq.c:358
+CPU: 0 PID: 10572 Comm: syz-executor.3 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ ___might_sleep+0x3c0/0x570 kernel/sched/core.c:6877
+ do_user_addr_fault+0x377/0xba0 arch/x86/mm/fault.c:1259
+ page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
+RIP: 0010:__read_once_size include/linux/compiler.h:252 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0x3f/0x60 kernel/kcov.c:202
+Code: c2 00 01 ff 00 74 11 f7 c2 00 01 00 00 74 35 83 b9 04 14 00 00 00 74 2c 8b 91 e0 13 00 00 83 fa 02 75 21 48 8b 91 e8 13 00 00 <48> 8b 32 48 8d 7e 01 8b 89 e4 13 00 00 48 39 cf 73 08 48 89 44 f2
+RSP: 0018:ffffc90004b37938 EFLAGS: 00010246
+RAX: ffffffff81c35ba2 RBX: 0000000000000001 RCX: ffff88805962a380
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880ae8387d8
+RBP: 0000000000000000 R08: dffffc0000000000 R09: ffffed1015d070fc
+R10: ffffed1015d070fc R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffc90004b37d30 R14: ffffc900000ca3b0 R15: ffff8880a26f4170
+ rcu_read_lock include/linux/rcupdate.h:635 [inline]
+ __d_lookup+0xa2/0x6e0 fs/dcache.c:2386
+ lookup_fast+0x99/0x700 fs/namei.c:1488
+ walk_component+0x72/0x680 fs/namei.c:1842
+ link_path_walk+0x66d/0xba0 fs/namei.c:2165
+ path_openat+0x21d/0x38b0 fs/namei.c:3342
+ do_filp_open+0x191/0x3a0 fs/namei.c:3373
+ do_sys_openat2+0x463/0x770 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ __do_sys_openat fs/open.c:1209 [inline]
+ __se_sys_openat fs/open.c:1204 [inline]
+ __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca59
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fada1226c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00000000004f7e60 RCX: 000000000045ca59
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: ffffffffffffff9c
+RBP: 000000000078c180 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000007b2 R14: 00000000004ca90b R15: 00007fada12276d4
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD a1df9067 P4D a1df9067 PUD a0772067 PMD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10572 Comm: syz-executor.3 Tainted: G        W         5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__read_once_size include/linux/compiler.h:252 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0x3f/0x60 kernel/kcov.c:202
+Code: c2 00 01 ff 00 74 11 f7 c2 00 01 00 00 74 35 83 b9 04 14 00 00 00 74 2c 8b 91 e0 13 00 00 83 fa 02 75 21 48 8b 91 e8 13 00 00 <48> 8b 32 48 8d 7e 01 8b 89 e4 13 00 00 48 39 cf 73 08 48 89 44 f2
+RSP: 0018:ffffc90004b37938 EFLAGS: 00010246
+RAX: ffffffff81c35ba2 RBX: 0000000000000001 RCX: ffff88805962a380
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880ae8387d8
+RBP: 0000000000000000 R08: dffffc0000000000 R09: ffffed1015d070fc
+R10: ffffed1015d070fc R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffc90004b37d30 R14: ffffc900000ca3b0 R15: ffff8880a26f4170
+FS:  00007fada1227700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a7654000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ rcu_read_lock include/linux/rcupdate.h:635 [inline]
+ __d_lookup+0xa2/0x6e0 fs/dcache.c:2386
+ lookup_fast+0x99/0x700 fs/namei.c:1488
+ walk_component+0x72/0x680 fs/namei.c:1842
+ link_path_walk+0x66d/0xba0 fs/namei.c:2165
+ path_openat+0x21d/0x38b0 fs/namei.c:3342
+ do_filp_open+0x191/0x3a0 fs/namei.c:3373
+ do_sys_openat2+0x463/0x770 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ __do_sys_openat fs/open.c:1209 [inline]
+ __se_sys_openat fs/open.c:1204 [inline]
+ __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca59
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fada1226c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00000000004f7e60 RCX: 000000000045ca59
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: ffffffffffffff9c
+RBP: 000000000078c180 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000007b2 R14: 00000000004ca90b R15: 00007fada12276d4
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 4b5ea1725b962f43 ]---
+RIP: 0010:__read_once_size include/linux/compiler.h:252 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0x3f/0x60 kernel/kcov.c:202
+Code: c2 00 01 ff 00 74 11 f7 c2 00 01 00 00 74 35 83 b9 04 14 00 00 00 74 2c 8b 91 e0 13 00 00 83 fa 02 75 21 48 8b 91 e8 13 00 00 <48> 8b 32 48 8d 7e 01 8b 89 e4 13 00 00 48 39 cf 73 08 48 89 44 f2
+RSP: 0018:ffffc90004b37938 EFLAGS: 00010246
+RAX: ffffffff81c35ba2 RBX: 0000000000000001 RCX: ffff88805962a380
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880ae8387d8
+RBP: 0000000000000000 R08: dffffc0000000000 R09: ffffed1015d070fc
+R10: ffffed1015d070fc R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffc90004b37d30 R14: ffffc900000ca3b0 R15: ffff8880a26f4170
+FS:  00007fada1227700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a7654000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
