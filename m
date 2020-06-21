@@ -2,213 +2,138 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C766BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B26E22CF8
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B0D22CF8
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m7F031/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgFUNf1 (ORCPT
+        id S1730039AbgFUNfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:35:27 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:41156 "EHLO smtp.al2klimov.de"
+        Sun, 21 Jun 2020 09:35:44 -0400
+Received: from mout.web.de ([212.227.15.4]:37105 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729676AbgFUNf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:35:27 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id E8F2F45378;
-        Sun, 21 Jun 2020 13:35:22 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?UTF-8?q?Joakim=20L=C3=B6nnegren?= <joakimlonnegren@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/driver-api
-Date:   Sun, 21 Jun 2020 15:35:12 +0200
-Message-Id: <20200621133512.46311-1-grandmaster@al2klimov.de>
+        id S1729676AbgFUNfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 09:35:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592746528;
+        bh=32EHmNT2W6hWhT/oG2ZIm+o9q2WdVg5h20rHxrEe0H4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=m7F031/lxeRjJJdGlAymP1eaIF6Fkj2CRKkTIM/NtE5WFbTfUiruiniZj3Q4n/4iw
+         1YNDLwfNNGh0e4pV1Xx89rWP1R5OE6SqKRkd6ybiACETjaTavbKSpIFhw0Kj7UVMoC
+         gbmnEHrtZWLPNnvjgK1rDAeS0zd0E1wcsBCIeob0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.145.213]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LeLin-1j5xoI42O5-00qASH; Sun, 21
+ Jun 2020 15:35:28 +0200
+Subject: Re: [PATCH v2 1/3] crypto: ccree: fix resource leak on error path
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        linux-crypto@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ofir Drang <ofir.drang@arm.com>
+References: <20200621112000.31495-1-gilad@benyossef.com>
+ <20200621112000.31495-2-gilad@benyossef.com>
+ <2857f54e-e752-0555-f43a-a451f64f6302@web.de>
+ <CAOtvUMcVHfhiY=f0RutGWkQXPiWy_8e4QQ_ytgv5m=h+gg0bqA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ae426611-51b9-4a0c-b733-ca962f19bc3b@web.de>
+Date:   Sun, 21 Jun 2020 15:35:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+In-Reply-To: <CAOtvUMcVHfhiY=f0RutGWkQXPiWy_8e4QQ_ytgv5m=h+gg0bqA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:+rff4gUemAuTUKHU5RGyvcXuu0y/9AemWwMNHicvpSUXxpaR4eR
+ WAJC++WZo+vLnhDe/XEjKi3ccMoPTEns8RZ23Ygwak+89AXtXaDVJiW+O37u148FQBa+hdp
+ Sld30xUE2hvpQZ1kDx1OQSdZXj96OXLCJVEtUrXXYewipoD/mE22Hg6tkeqFMztfWlii7bN
+ 9W6PSUFIFC+6vtQ+V8p1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3+6F3uL7ers=:Ussc9A3lk4cr2qEl9Gb4H/
+ ZN7+sukuRS78POsHhkWMSbDMijLYWRi9n/c/dL/Yk/HlTSS4DUGJh5f+qvDqPAe5SDw1aGNB9
+ Mt4BaceXBP4xeHBaeH5xNe2IqaBstUmEOpZp4zHlz/eiNz38Vx1XclHE+LsCRgiRJiT50zYwH
+ IGQniT+JjjogIVItc/xeQNoxckXAvS17EWZQ0DwMGdPMJIIpZa9kn3T+EnSXD/gqR4lbUxOa3
+ /PdCTf8cuO7CM/zm/2kQE/AuTn2fG7qL0LkmMktsqYd5+O1WZpynq6AzEGLLHDYxTBgsAx6Ru
+ 4KYX/aVKL56LtnkiVEc7CWQVVGsHHnd5TWnWpBvBZ7N+GWWFXMnvqYLcNAJrL0rk/+v/4OpCL
+ 4XWkG8fuvGywx6DtZAzQB7db52JkWIcl5K6cojOt9LW+E82HNtzjJtxW3PhsC7JN21KwWnpAm
+ mfYkJPy10nhCKkRDXV35jBFmS/+g0iE4FeYH2bKuxqeDXPVXnC1QZCL/FWyv5bzQFtY9mCIhI
+ N9loGUA0cxVxW2rUZAEApk7Ajn7wdmzpk6j4nT3WQiJZ2NBcf+RlSCxsBPHI2VP6kY6fyWjxN
+ fmKCo7HlpgdJ6/CBwQ1kFT1viFMJiG23FeeNKbG0fRX3tvFUYZubAZa6OKX5MyfzCZVEmoLvJ
+ 213D4hfsRCM/n7f6pVcya+GF9xbEptzfQV5HD9kCNR5WPG3rWQnpGmmimovFkdiYj5kGreOw5
+ KEPkp7xG8ZBlvRzQxAE1o8kYOYKv64GOaRNSalyABreZxvtRGofDDLDkRVBXk7LaFF9nuUK64
+ ZcHtye6oT6kUzgz08D6V0CDI36EAXHy3LpPyjrcifUA+1Foevoy4pCSNuhQs7suERt/Tcfx2n
+ COJVOkVcQ+0jLBqKDOnzNOyz8TjMfeY7KpHiTInK7AvmHWArhZn5YQyQbbsRE10Wn4cFQv2ZH
+ X1TH4NLvAt5mtdTwc5AtXR3siU8oNKnotcRZ/+V0iIuGs8yr5w3GOBfmIe1dIANdL9n7E76+8
+ FIGZ78D3TFbsbg0nbHjQJ4vLoGHYS7vs2NixdfqRLphSOxG5TtjyyFwJQLq7Q+sxGUgcWydsl
+ euRbB7dt+hfueRuC6HdRY3daQBTn6pSaYMNxiIs+O3dLCqFQaHBPaI0l5vVJ39lF7sDVemh7A
+ pMYXcqwIyEKlMOC0nruFIbjlBu4p5a3k5i0/xr03s1FwG3M83Pd9Lxe36266bfxlZfiPtAHM1
+ XhdaYgXHsvo/1BpUj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+> Indeed and I did but for some reason I cannot fathom the cover letter
+> did not make it to the list.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+Now it seems that I have got a questionable impression because you chose
+to send only two messages from this patch series also to my email address directly.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- .../early-userspace/early_userspace_support.rst      |  4 ++--
- Documentation/driver-api/memory-devices/ti-gpmc.rst  |  2 +-
- Documentation/driver-api/mmc/mmc-tools.rst           |  2 +-
- Documentation/driver-api/nvdimm/nvdimm.rst           | 12 ++++++------
- Documentation/driver-api/nvdimm/security.rst         |  2 +-
- Documentation/driver-api/rapidio/rapidio.rst         |  4 ++--
- Documentation/driver-api/thermal/nouveau_thermal.rst |  2 +-
- Documentation/driver-api/usb/writing_usb_driver.rst  |  4 ++--
- 8 files changed, 16 insertions(+), 16 deletions(-)
+[PATCH 0/3] fixes and update to essiv support
+https://lkml.org/lkml/2020/6/21/67
 
-diff --git a/Documentation/driver-api/early-userspace/early_userspace_support.rst b/Documentation/driver-api/early-userspace/early_userspace_support.rst
-index 3deefb34046b..8a58c61932ff 100644
---- a/Documentation/driver-api/early-userspace/early_userspace_support.rst
-+++ b/Documentation/driver-api/early-userspace/early_userspace_support.rst
-@@ -92,7 +92,7 @@ You can obtain somewhat infrequent snapshots of klibc from
- https://www.kernel.org/pub/linux/libs/klibc/
- 
- For active users, you are better off using the klibc git
--repository, at http://git.kernel.org/?p=libs/klibc/klibc.git
-+repository, at https://git.kernel.org/?p=libs/klibc/klibc.git
- 
- The standalone klibc distribution currently provides three components,
- in addition to the klibc library:
-@@ -122,7 +122,7 @@ and a number of other utilities, so you can replace kinit and build
- custom initramfs images that meet your needs exactly.
- 
- For questions and help, you can sign up for the early userspace
--mailing list at http://www.zytor.com/mailman/listinfo/klibc
-+mailing list at https://www.zytor.com/mailman/listinfo/klibc
- 
- How does it work?
- =================
-diff --git a/Documentation/driver-api/memory-devices/ti-gpmc.rst b/Documentation/driver-api/memory-devices/ti-gpmc.rst
-index 33efcb81f080..b1bb86871ad7 100644
---- a/Documentation/driver-api/memory-devices/ti-gpmc.rst
-+++ b/Documentation/driver-api/memory-devices/ti-gpmc.rst
-@@ -14,7 +14,7 @@ memory devices like
-  * Pseudo-SRAM devices
- 
- GPMC is found on Texas Instruments SoC's (OMAP based)
--IP details: http://www.ti.com/lit/pdf/spruh73 section 7.1
-+IP details: https://www.ti.com/lit/pdf/spruh73 section 7.1
- 
- 
- GPMC generic timing calculation:
-diff --git a/Documentation/driver-api/mmc/mmc-tools.rst b/Documentation/driver-api/mmc/mmc-tools.rst
-index 54406093768b..a231e9644351 100644
---- a/Documentation/driver-api/mmc/mmc-tools.rst
-+++ b/Documentation/driver-api/mmc/mmc-tools.rst
-@@ -5,7 +5,7 @@ MMC tools introduction
- There is one MMC test tools called mmc-utils, which is maintained by Chris Ball,
- you can find it at the below public git repository:
- 
--	http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
-+	https://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
- 
- Functions
- =========
-diff --git a/Documentation/driver-api/nvdimm/nvdimm.rst b/Documentation/driver-api/nvdimm/nvdimm.rst
-index 79c0fd39f2af..e1bf4130cdfc 100644
---- a/Documentation/driver-api/nvdimm/nvdimm.rst
-+++ b/Documentation/driver-api/nvdimm/nvdimm.rst
-@@ -113,13 +113,13 @@ Supporting Documents
- --------------------
- 
- ACPI 6:
--	http://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
-+	https://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
- NVDIMM Namespace:
--	http://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
-+	https://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
- DSM Interface Example:
--	http://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
-+	https://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
- Driver Writer's Guide:
--	http://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
-+	https://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
- 
- Git Trees
- ---------
-@@ -778,7 +778,7 @@ Why the Term "namespace"?
- 
-     2. The term originated to describe the sub-devices that can be created
-        within a NVME controller (see the nvme specification:
--       http://www.nvmexpress.org/specifications/), and NFIT namespaces are
-+       https://www.nvmexpress.org/specifications/), and NFIT namespaces are
-        meant to parallel the capabilities and configurability of
-        NVME-namespaces.
- 
-@@ -786,7 +786,7 @@ Why the Term "namespace"?
- LIBNVDIMM/LIBNDCTL: Block Translation Table "btt"
- -------------------------------------------------
- 
--A BTT (design document: http://pmem.io/2014/09/23/btt.html) is a stacked
-+A BTT (design document: https://pmem.io/2014/09/23/btt.html) is a stacked
- block device driver that fronts either the whole block device or a
- partition of a block device emitted by either a PMEM or BLK NAMESPACE.
- 
-diff --git a/Documentation/driver-api/nvdimm/security.rst b/Documentation/driver-api/nvdimm/security.rst
-index ad9dea099b34..7aab71524116 100644
---- a/Documentation/driver-api/nvdimm/security.rst
-+++ b/Documentation/driver-api/nvdimm/security.rst
-@@ -138,6 +138,6 @@ another encrypted-key.
- This command is only available when the master security is enabled, indicated
- by the extended security status.
- 
--[1]: http://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
-+[1]: https://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
- 
- [2]: http://www.t13.org/documents/UploadedDocuments/docs2006/e05179r4-ACS-SecurityClarifications.pdf
-diff --git a/Documentation/driver-api/rapidio/rapidio.rst b/Documentation/driver-api/rapidio/rapidio.rst
-index fb8942d3ba85..74c552ad3eb8 100644
---- a/Documentation/driver-api/rapidio/rapidio.rst
-+++ b/Documentation/driver-api/rapidio/rapidio.rst
-@@ -356,7 +356,7 @@ NOTE:
-     http://www.rapidio.org/education/technology_comparisons/
- 
- [3] RapidIO support for Linux.
--    http://lwn.net/Articles/139118/
-+    https://lwn.net/Articles/139118/
- 
- [4] Matt Porter. RapidIO for Linux. Ottawa Linux Symposium, 2005
--    http://www.kernel.org/doc/ols/2005/ols2005v2-pages-43-56.pdf
-+    https://www.kernel.org/doc/ols/2005/ols2005v2-pages-43-56.pdf
-diff --git a/Documentation/driver-api/thermal/nouveau_thermal.rst b/Documentation/driver-api/thermal/nouveau_thermal.rst
-index 37255fd6735d..79ece266cf6d 100644
---- a/Documentation/driver-api/thermal/nouveau_thermal.rst
-+++ b/Documentation/driver-api/thermal/nouveau_thermal.rst
-@@ -93,4 +93,4 @@ Thermal management on Nouveau is new and may not work on all cards. If you have
- inquiries, please ping mupuf on IRC (#nouveau, freenode).
- 
- Bug reports should be filled on Freedesktop's bug tracker. Please follow
--http://nouveau.freedesktop.org/wiki/Bugs
-+https://nouveau.freedesktop.org/wiki/Bugs
-diff --git a/Documentation/driver-api/usb/writing_usb_driver.rst b/Documentation/driver-api/usb/writing_usb_driver.rst
-index 0b3d9ff221bb..2176297e5765 100644
---- a/Documentation/driver-api/usb/writing_usb_driver.rst
-+++ b/Documentation/driver-api/usb/writing_usb_driver.rst
-@@ -318,6 +318,6 @@ linux-usb Mailing List Archives:
- https://lore.kernel.org/linux-usb/
- 
- Programming Guide for Linux USB Device Drivers:
--http://lmu.web.psi.ch/docu/manuals/software_manuals/linux_sl/usb_linux_programming_guide.pdf
-+https://lmu.web.psi.ch/docu/manuals/software_manuals/linux_sl/usb_linux_programming_guide.pdf
- 
--USB Home Page: http://www.usb.org
-+USB Home Page: https://www.usb.org
--- 
-2.27.0
+Will any fine-tuning trigger further consequences?
 
+Regards,
+Markus
