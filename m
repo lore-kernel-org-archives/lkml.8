@@ -2,194 +2,160 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6632C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB33A22363
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08A0252F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XBQnAsgW";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gcU4Wu/u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNJtisAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbgFUXfq (ORCPT
+        id S1730914AbgFUXnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 19:35:46 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:3424 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726375AbgFUXfp (ORCPT
+        Sun, 21 Jun 2020 19:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726433AbgFUXnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 19:35:45 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05LNS4Ij024719;
-        Sun, 21 Jun 2020 16:34:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=jxf6sA6sbwyV/6aen3GMzk1NxqhwOkxnUnYdxjHvdDE=;
- b=XBQnAsgW7i7B3cGigqnCxGsg7NlKJBViY9NOGgmIgjOdrMNHPBthBLEERk6t058k8I0o
- lLt1ErTrJhu4k7k3WbNL5TBrsHXEeE+iSy01rduyVvJvEOApfXH9kaJ9ff1k42Zw0/id
- 1Lr/CEtURU+/UVL89mL3wCtVGrgwdvb7BLE= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 31se4nd5f2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sun, 21 Jun 2020 16:34:49 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 21 Jun 2020 16:34:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bx+KskucWgWutegV72dL1l6nxS+3BC+FgFaix4JyRQCD1sWJx3UD0bzEBOuTqeJIBzmyBNgiaYYn7IVs1Tlh0JSRMvm159LkVOnq3/4Y0oIGIiY2hNlTQ58SftSLI1SMNLkPG4d2bGwOa3QdjCTBEqEUYegKP0ok142vQ4TqqbA6xf28MR6keQ0PMnWWAxAU5GoV8dKB3REPCb7912OYWoSDjNc6bsTwuzNTBFs31x4iPwIldZTCuOWj15fR/OVodIAO8Wk00dppEu57VdP4r8QVqdas3KItYr3YTo8wnd+6aszJosNFbgwoOn9mwzxJoUVPZMMzkMII8FjNeRe81g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jxf6sA6sbwyV/6aen3GMzk1NxqhwOkxnUnYdxjHvdDE=;
- b=Bun0UL5jjdqzH0nK9/ABERF6D1BmCpWhJNvOM/4TrzJGJ20NLDWPpYoD1yGePbFHg9GhWr4etIZuBWaKDKYRnnTCSe0z6qA0NXKfVvkZuTSh/0vVuNFzIr36mmWtR6bip8ZeFJp9x0cWjg4S+IiewuN7ga/O0S5shFZD8sGkK6S52CY1tgtaRvIZ9pl2TX8quTGZFgW+phWHyQKD1PMaU/C2rUrfeBun8F5DsLBfYRBCBUXzcUCOr58og9h7AqphA+xvyQixjhOfjxpftXPpn2l6ZWEuNn0b4SJDBocAhThBo2GKiYe7ZPWWjn1Hp1V9pvUnZmQt9qcHbNitAj9oDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jxf6sA6sbwyV/6aen3GMzk1NxqhwOkxnUnYdxjHvdDE=;
- b=gcU4Wu/uOc9d7ySek8ofbC6xfMAlpArAA7heXatMPX9ANqhWIcsWuHvOcz1rCF5Yo9/rodV4pT8zqEbS4qNwBxxxKT44ncGgAYaqZKaIn3A25FBCe9piW7ob6Sclv68dGVhNEvFfFuXMk9Z1Q11H55U5gPOmPrS+8YoQOgpwrsE=
-Authentication-Results: lca.pw; dkim=none (message not signed)
- header.d=none;lca.pw; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2711.namprd15.prod.outlook.com (2603:10b6:a03:159::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Sun, 21 Jun
- 2020 23:34:32 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.027; Sun, 21 Jun 2020
- 23:34:32 +0000
-Date:   Sun, 21 Jun 2020 16:34:29 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Qian Cai <cai@lca.pw>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
-Subject: Re: [PATCH v6 00/19] The new cgroup slab memory controller
-Message-ID: <20200621233429.GA293939@carbon.DHCP.thefacebook.com>
-References: <20200608230654.828134-1-guro@fb.com>
- <20200621225752.GB2034@lca.pw>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621225752.GB2034@lca.pw>
-X-ClientProxiedBy: BY5PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::22) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Sun, 21 Jun 2020 19:43:25 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86A3C061794;
+        Sun, 21 Jun 2020 16:43:24 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id t74so8565112lff.2;
+        Sun, 21 Jun 2020 16:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UWYK99IQmZVG/8JvsyPASoCIo4JVfhtAHl2NOeIaFVA=;
+        b=hNJtisAxXCrlYdnljPea34aTiXxz+eLH5OKYmOJiJ37bBpeRfQC1Y681O1EqEID/l/
+         N/2sNuAIV267L+aQnHV+5GHQQCNum8Ka5xtQcN8pNtMA3L7mQuIbAl79Zl0J3TqJymXc
+         G8RUpgoBnKUnK/RXjRuvR7C2kvaEQ4utK9FF0GP4uW4hnijG8CTaBc2RmODxwbptoFnz
+         h72PrTY0EJ22eAr7e2x5LNmM1a+F1acS1CTC+piQ6R6aqULjm8PxuOMTgX7cIllJQPxV
+         GzrUY4RdiN3cYFswFc8tr+m7Xlse1ePh9engjffxIdDzBHxpseRGk1YvVFev5DDOO7W3
+         WsVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UWYK99IQmZVG/8JvsyPASoCIo4JVfhtAHl2NOeIaFVA=;
+        b=LdoSi1QPS+yCcM/+sops/MwaQUFFjKl2+hJlR4Nle29b/yhwqUdyxKw5c5ZnWMe1WR
+         gTXz90qjGzooU5M3vW6hpuoznmVw4MNw9AaALAI6kjFnrrS76qqOgMtdgj1xx2oFRSPR
+         JiYTQHmS31bogS7BqX8v7gwyoct48Hnr7hzrTPWlxn3AZq6eemY5ivwL+8TQWfbGIYwO
+         cwEWHkeE9wFA1SFWp72oGryMCMTNA+QqcSO0Y6Mu1OC8mlNHszaxj60aP9b9o4bwmyYk
+         TY5u1J/j+f1nhc9ThJyOezr7IA7CafMJEZJUPSBJ/dC2uHWgi/Uq+Wu+Loq+dft6JghY
+         fKuw==
+X-Gm-Message-State: AOAM5326TZqxkMWAvi2QXNFIjegB1e1eDmeu03fNnzM4xCG1VvDXru3O
+        2w/BBUxd09T8Bh4DwnN4eu48spOuaQOxB+ZYZj8=
+X-Google-Smtp-Source: ABdhPJzXbzdsFP5J5Y8SEid4elA20z5Q0GHBxwKnVKyjzktoMtKswb8D8Ihmo4q6bXPnt6E9kipfqLPfMiQFGhdnzz4=
+X-Received: by 2002:a19:22d6:: with SMTP id i205mr8200290lfi.50.1592783003103;
+ Sun, 21 Jun 2020 16:43:23 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:72f4) by BY5PR03CA0012.namprd03.prod.outlook.com (2603:10b6:a03:1e0::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Sun, 21 Jun 2020 23:34:31 +0000
-X-Originating-IP: [2620:10d:c090:400::5:72f4]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d10323d0-95f1-4935-081e-08d8163ba62f
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2711:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB27116E0DFC25052DE97DD272BE960@BYAPR15MB2711.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 04410E544A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HsaSnbPYJ11p75IpdTPiF1BgJ4OpfwA+qDtDmjMb5SUM9CpeHru9Q5TLiQgt26BQ8rKITOPcBfSJgLaliig74xGnLasfeCoo6CwWKVOYUNDPtRpneNelVOSbAuBlhvo4fWIBLUgdo0vc++QgWEV4zH/UzQRl3/3KcAWI7pg6/VfmVj4uMYvQtcaFdXPbbmHeMp4TwalZVW3nZSnt55gFD9C+0QOaXooI3hrzXBajz11SiHh9s+ZVqnfPzLkp9A3px2pJlU4asR60t6drFUSxnIKJg0gui7W8gOUPCOhGjSSG873JDNnTfKLbLEvpDbpeVUa4ApN12X8srnevMPwmkwUmFiLNy/QxK4k7Tj7zukvi5ncYfBzPqsgafh/x1TlE/2q5YudMjGh12uccFUFXrA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(396003)(366004)(346002)(7696005)(5660300002)(478600001)(1076003)(4326008)(316002)(55016002)(9686003)(7416002)(66946007)(186003)(16526019)(52116002)(54906003)(66476007)(66556008)(2906002)(83380400001)(6506007)(966005)(86362001)(33656002)(6916009)(8936002)(8676002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: SVSgqzlQPJOXJmsr/5yKFbf8+4s24MEQCL8qBu5WhnnBWzgJRYKMgbmhE3yo28Dq/ZENxjLByiPTsGRdeg24+Wg3AYiF4JK6U4igIo+UGAmaWN82DC7xaozmAs3YqNCCAftUimf2qXURRP9fuQN2ndWnz+IlaXy2DAsoNnz321enb3E91yLM4wXwhbQ+RHdsDhmOywbGka4BX4/5d6szFbvnNyEt3NxqDtI5RcZluyZzagFbZ6w9t1m0p3tNLk4R2XfOfUi4oetR8rnhf/lVrP1gFoXGnz+kuVAEpUbwqHLYRZ/9C7QVUJFe3jFtgKIFY7d+ZZt4ZoZmOAukwbysrI3M7PfloaazCrA2Nwbi1V4dHYCswVA6m5X//TCHehJFo7Czfb2eo/Uv8SBkTvo5Vm4+uRF1AKVWQRMkBDIPMWOP5PF7BtlareziG1krKdZCFwlZslWQ9AKCupGRSFHWmZF1HCq+8UsQig35Fsd1hEy/B5ECujst7magKvZQFI16EIv3gh5r0daU5YIDJ1XdxA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d10323d0-95f1-4935-081e-08d8163ba62f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2020 23:34:32.3165
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +M5Z1nazsFSTMKRihAJDi4kVU2uO2qAaSXgB3b/vYf3ZBmKIJK1ZaZdbBrupAkLU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2711
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-21_12:2020-06-19,2020-06-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- impostorscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- cotscore=-2147483648 adultscore=0 suspectscore=6 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006210187
-X-FB-Internal: deliver
+References: <20200621133630.46435-1-grandmaster@al2klimov.de>
+ <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com> <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
+In-Reply-To: <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 22 Jun 2020 01:43:12 +0200
+Message-ID: <CANiq72=Y+beqZ8Dmieo_GKbyaLN8Nf1n3bVntj_o90Cn-nADRQ@mail.gmail.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/process
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Fischetti <tony.fischetti@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Joe Perches <joe@perches.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 06:57:52PM -0400, Qian Cai wrote:
-> On Mon, Jun 08, 2020 at 04:06:35PM -0700, Roman Gushchin wrote:
-> > This is v6 of the slab cgroup controller rework.
-> > 
-> > The patchset moves the accounting from the page level to the object
-> > level. It allows to share slab pages between memory cgroups.
-> > This leads to a significant win in the slab utilization (up to 45%)
-> > and the corresponding drop in the total kernel memory footprint.
-> > The reduced number of unmovable slab pages should also have a positive
-> > effect on the memory fragmentation.
-> > 
-> > The patchset makes the slab accounting code simpler: there is no more
-> > need in the complicated dynamic creation and destruction of per-cgroup
-> > slab caches, all memory cgroups use a global set of shared slab caches.
-> > The lifetime of slab caches is not more connected to the lifetime
-> > of memory cgroups.
-> > 
-> > The more precise accounting does require more CPU, however in practice
-> > the difference seems to be negligible. We've been using the new slab
-> > controller in Facebook production for several months with different
-> > workloads and haven't seen any noticeable regressions. What we've seen
-> > were memory savings in order of 1 GB per host (it varied heavily depending
-> > on the actual workload, size of RAM, number of CPUs, memory pressure, etc).
-> > 
-> > The third version of the patchset added yet another step towards
-> > the simplification of the code: sharing of slab caches between
-> > accounted and non-accounted allocations. It comes with significant
-> > upsides (most noticeable, a complete elimination of dynamic slab caches
-> > creation) but not without some regression risks, so this change sits
-> > on top of the patchset and is not completely merged in. So in the unlikely
-> > event of a noticeable performance regression it can be reverted separately.
-> 
-> Reverting this series and its dependency [1], i.e.,
-> 
-> git revert --no-edit 05923a2ccacd..07666ee77fb4
-> 
-> on the top of next-20200621 fixed an issue where kmemleak could report
-> thousands of leaks like this below using this .config (if ever matters),
-> 
-> https://github.com/cailca/linux-mm/blob/master/x86.config
-> 
-> unreferenced object 0xffff888ff2bf6200 (size 512):
+Hi Alexander,
 
-Hi Qian!
+On Sun, Jun 21, 2020 at 4:30 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Which discussion? 93431e0607e5 ? IMAO the patches don't depend on each
+> other.
 
-My wild guess is that kmemleak is getting confused by modifying the lowest
-bit of page->mem_cgroup/obhj_cgroups pointer:
+The one we had the other day. It does not matter that the patches
+depend on each other. It is information for whoever sees this commit.
 
-struct page {
-	...
-	union {
-		struct mem_cgroup *mem_cgroup;
-		struct obj_cgroup **obj_cgroups;
-	};
-	...
-}
+> IMAO:
+>
+> * The script should not be neccessary once all of my changes[1] arrive
+> in torvalds/master. Instead reviewers should say like C'mon dude, what's
+> this new plain-HTTP link doing in your patch? We have 2020! Look at e.g.
+> 93431e0607e5 .
 
-We're using the lowest bit to distinguish between a "normal" mem_cgroup
-pointer and a vector of obj_cgroup pointers.
+In an ideal world, yes, but that won't happen unless enforced somehow.
 
-This pointer to obj_cgroup vector is saved only here, so if we're modifying
-the address, I guess it's what makes kmemleak think that there is a leak.
+Nevertheless, even in such a case, it would be best to have a script
+to check the entire tree from time to time.
 
-Or do you have a real leak?
+> * The program language agnostic algo description of mine should be
+> enough. If it's not enough, I shall improve the description.
 
-Thanks!
+Then you are asking the next person to re-do the work.
+
+> * Today I've added "If not .svg:". Imagine Torvalds merges the script,
+> closes the merge window *and then* someone runs it on a random subsystem
+> and discovers a missing condition. Do they have to patch the script,
+> wait for the patch to arrive in torvalds/master *and then* patch the
+> (other) subsystem, so they can refer to the now patched script? W/o a
+> such central "rule on how to HTTPSify links" they'd just describe
+> *their* algo. Or (even better) there wouldn't be much more insecure
+> links, so the algo could be omitted.
+
+I don't follow. They can patch the script if they want (or not), but
+even if they do patch it, they don't need to wait for the patch to land.
+
+> After all please show me one of the big bosses (Torvalds, K-H, ...)
+> who'd tolerate to have a...
+>
+> * written w/o focus on maintainability
+> * not documented at all
+> * *Golang* file
+>
+> ... in the kernel tree.
+
+It is a script, not part of the kernel building process. We already
+have Perl, Python, C++, Makefile, Coccinelle...
+
+But yes, it would be better to write it in a language that we already
+have rather than add another. In particular, there is no need for a
+compiled language for a script.
+
+> If I correctly understand, you kernel devs write code so that if even
+> the maintainer leaves the project, another one could just take over.
+>
+> How many kernel devs would read and understand (all of them I guess)
+> *and maintain that Go script* of mine?
+
+What is the problem reading and maintaining a Go script
+(notwithstanding the point above)?
+
+Cheers,
+Miguel
