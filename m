@@ -2,170 +2,95 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC999C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E802C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C2B2343B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6FB206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJkKcGn+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dgCmR4vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgFUOhC (ORCPT
+        id S1730208AbgFUOkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
+        Sun, 21 Jun 2020 10:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730186AbgFUOhB (ORCPT
+        with ESMTP id S1730153AbgFUOkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:37:01 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B1EC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 07:37:01 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so1690680ejb.11
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 07:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9/EhCjhGUaHKEZmLZB2/jWP0BJA/JoCVKoRNRHhGW8k=;
-        b=VJkKcGn+8xXDYqo1P2AvHoeILHB4XYGDpdIXSV2YiUnvECfKere6WIEpqozLuO7czh
-         2kyHkpZ+8qS9xuagwGQYuHuk6bR0izlB7eKTEMFOUPn+T49OzkgA268AJVjSMir+Y0tR
-         uvCbvuG7TyE8g68GPOHJZlGnOVwJTTxoGxnX4NkiZvl6AVU6QijIJkys5hNcCu9Owisv
-         wFq75EFSmUWhUZH+nq1zKF7bNS7BbAio2oCWTWhMahhZXVrVWCcv3qmF2k0g1JJflk7P
-         DF+yWzFppjwD7kBiaCOHJb43fzQs4O7HdpxhX0fJ3/YAglaba83Qhz5uCIiJIsgPocsn
-         FVqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9/EhCjhGUaHKEZmLZB2/jWP0BJA/JoCVKoRNRHhGW8k=;
-        b=AuIgtmOWgWpE7lSmk4ku1o7AYL7CLF970vPjVgeyeS3ezw+ts3lmWV8PN4FM9SwJLg
-         vDNoiTL9B4El5t3p4lGgGaj+oza83NVGZ136mR0SK51yqWed9ThsEYFvQRvS5nC2jOfr
-         y8do3JQLoVgYQ6fP3NTD+5yH3lIQl8ApJ51Njmc3ah6L9QyD4IyruK8cYsLbZFK0dmr6
-         zJd8tDvv3XETA/b8bAFGPfaNGeo9RTQPO3I6mumIOMwsiSvdVQVntlPGt9dQ4nxNNri/
-         1azNRsip5Ohw8bXGwQOzCxTJV5csuc8x1cP3oLeV4TjbfdEggKprWZEHuWPTAs+ErNaK
-         EFhA==
-X-Gm-Message-State: AOAM53266MLplqF1DcRVEiCXWn51gXdGfF6g76FTPoOoxARYO7MP9Bug
-        993UIc+aS7v1NYFKe+piAc3Tasp9
-X-Google-Smtp-Source: ABdhPJwj9c/EO+Zhw80kTn9UCHHA2oKXODD5UYSBLhH/iiBUz2PgQ3Wv6GEmTtPaI3aC2UCcMQW/3A==
-X-Received: by 2002:a17:906:1d5b:: with SMTP id o27mr11826764ejh.344.1592750220092;
-        Sun, 21 Jun 2020 07:37:00 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:5fe:4ba0:7ffd:29fd])
-        by smtp.gmail.com with ESMTPSA id p25sm9513864ejf.79.2020.06.21.07.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 07:36:59 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+        Sun, 21 Jun 2020 10:40:21 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 333DEC061794;
+        Sun, 21 Jun 2020 07:40:21 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qZvk1hJDz9sQt;
+        Mon, 22 Jun 2020 00:40:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592750418;
+        bh=NG41RznDHgXDWCh34wo4br6otrAWXjsHBtb4OgawV5w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dgCmR4vW/3/xbjU09y+ELY9T7EfkajfHxWYTsAEHwxm9QCM1ljKg+7QxvhSeL33a0
+         zhzzF9Hvfsh07t3vqlLTU5n2IzNF39/enWXpVozVfFclS6Qy9CCyKAGFjhL3COT+mA
+         NhR8H+l3zU6Bix45Xv3nyVgoZDP5MG3+5hkcOuecb5u1qj3wzeiXHx6KbcjitDk2o4
+         eSOADSaUJxh8J5vtlRO9uw7/K+qlITL5hBWWjBwPICQ4pZO3h8owhNOAtzx2xe5sOu
+         dG9RMrQ7jIOVz846+4YHQTPlUJSV170u2jOSIQtNPFbRoaLms13uHau41wgtujZWCv
+         LR41/9mjV+z6w==
+Date:   Mon, 22 Jun 2020 00:40:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: [PATCH] sparse: group the defines by functionality
-Date:   Sun, 21 Jun 2020 16:36:52 +0200
-Message-Id: <20200621143652.53798-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200622004017.5fc5267f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/18waSvELrvsqLvp=iuhZcAY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By popular demand, reorder the defines for sparse annotations
-and group them by functionality.
+--Sig_/18waSvELrvsqLvp=iuhZcAY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Link: lore.kernel.org/r/CAMuHMdWQsirja-h3wBcZezk+H2Q_HShhAks8Hc8ps5fTAp=ObQ@mail.gmail.com
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- include/linux/compiler_types.h | 44 +++++++++++++++++++---------------
- 1 file changed, 25 insertions(+), 19 deletions(-)
+Hi all,
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index e368384445b6..b67930216e45 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -5,48 +5,54 @@
- #ifndef __ASSEMBLY__
- 
- #ifdef __CHECKER__
-+/* address spaces */
- # define __kernel	__attribute__((address_space(0)))
- # define __user		__attribute__((noderef, address_space(__user)))
--# define __safe		__attribute__((safe))
--# define __force	__attribute__((force))
--# define __nocast	__attribute__((nocast))
- # define __iomem	__attribute__((noderef, address_space(__iomem)))
-+# define __percpu	__attribute__((noderef, address_space(__percpu)))
-+# define __rcu		__attribute__((noderef, address_space(__rcu)))
-+extern void __chk_user_ptr(const volatile void __user *);
-+extern void __chk_io_ptr(const volatile void __iomem *);
-+/* context/locking */
- # define __must_hold(x)	__attribute__((context(x,1,1)))
- # define __acquires(x)	__attribute__((context(x,0,1)))
- # define __releases(x)	__attribute__((context(x,1,0)))
- # define __acquire(x)	__context__(x,1)
- # define __release(x)	__context__(x,-1)
- # define __cond_lock(x,c)	((c) ? ({ __acquire(x); 1; }) : 0)
--# define __percpu	__attribute__((noderef, address_space(__percpu)))
--# define __rcu		__attribute__((noderef, address_space(__rcu)))
-+/* other */
-+# define __force	__attribute__((force))
-+# define __nocast	__attribute__((nocast))
-+# define __safe		__attribute__((safe))
- # define __private	__attribute__((noderef))
--extern void __chk_user_ptr(const volatile void __user *);
--extern void __chk_io_ptr(const volatile void __iomem *);
- # define ACCESS_PRIVATE(p, member) (*((typeof((p)->member) __force *) &(p)->member))
- #else /* __CHECKER__ */
-+/* address spaces */
-+# define __kernel
- # ifdef STRUCTLEAK_PLUGIN
--#  define __user __attribute__((user))
-+#  define __user	__attribute__((user))
- # else
- #  define __user
- # endif
--# define __kernel
--# define __safe
--# define __force
--# define __nocast
- # define __iomem
--# define __chk_user_ptr(x) (void)0
--# define __chk_io_ptr(x) (void)0
--# define __builtin_warning(x, y...) (1)
-+# define __percpu
-+# define __rcu
-+# define __chk_user_ptr(x)	(void)0
-+# define __chk_io_ptr(x)	(void)0
-+/* context/locking */
- # define __must_hold(x)
- # define __acquires(x)
- # define __releases(x)
--# define __acquire(x) (void)0
--# define __release(x) (void)0
-+# define __acquire(x)	(void)0
-+# define __release(x)	(void)0
- # define __cond_lock(x,c) (c)
--# define __percpu
--# define __rcu
-+/* other */
-+# define __force
-+# define __nocast
-+# define __safe
- # define __private
- # define ACCESS_PRIVATE(p, member) ((p)->member)
-+# define __builtin_warning(x, y...) (1)
- #endif /* __CHECKER__ */
- 
- /* Indirect macros required for expanded argument pasting, eg. __LINE__. */
--- 
-2.27.0
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
+WARNING: modpost: missing MODULE_LICENSE() in lib/test_bits.o
+
+Introduced by commit
+
+  37f7d07028d1 ("lib/test_bits.c: add tests of GENMASK")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/18waSvELrvsqLvp=iuhZcAY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7vcVEACgkQAVBC80lX
+0GwXvgf+IPHexF9lNlqL7FehQhs3pPNR43VzaMAV1v4OderWyEtV0fw9w1pq6CdC
+MYxa9HOHebF0nXAjGFCMTlUmxXL/8M7ouShsbQgN3j/aUE0GvDwx4Q4OIjUh4Nkv
+PO2o4Nd3CiJJElKOw0IBgCwxAgI07StVdwt4+faT+9/v8pO0mDWBlvXMjncR13pu
++6dwePQ4ERmtLfo+LcMJvNlgj8yBxvA4aA2AL04tAUoCguyUGxVdgHbFFCkCD6uN
+AUvv8z/ejyWaHXeytcSOr7PDcphYYqvBx0qw87KeZUNM7u/jOZkymR3mWc12coaA
+8n4RfceRRzCSrtCAN64MJpCTwZX2Sg==
+=YPe/
+-----END PGP SIGNATURE-----
+
+--Sig_/18waSvELrvsqLvp=iuhZcAY--
