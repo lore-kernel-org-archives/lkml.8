@@ -2,82 +2,96 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A806AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CCD247C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592708048;
-	bh=8kz0YS2YpXAP78yJ5e4pDrntY+2vR5l3xnCBVIzu5io=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WrLZJowFI4kh+9mXf+/fsPHeKdF/nfJVfe1NtMn9xtoGVMD2DLf9rqZUIqo6mYzsh
-	 avCyvoFzCsRnfeXsCj3eNLfF9gbdiPfN92jkojEeEwkB8U6osc8frs/MgnjVj2+OAf
-	 a9nlNiv8/NP88gvRvtRPmw0vvoe1kPi5Ff4H91qM=
+	by mail.kernel.org (Postfix) with ESMTP id 8DB2F247CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgFUCyC (ORCPT
+        id S1729186AbgFUCyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 22:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgFUCyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 22:54:01 -0400
-Received: from Mani-XPS-13-9360.localdomain (unknown [157.50.185.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BC12247AF;
-        Sun, 21 Jun 2020 02:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592708041;
-        bh=8kz0YS2YpXAP78yJ5e4pDrntY+2vR5l3xnCBVIzu5io=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MkmXiACrOD/CQ+R0OcgDaSmrMSBNtwmVcOliTbhfTRdv+8ukxaJxc5XKrB1BU1Uww
-         WGUFIcBENadA6UIj0NCww9g6Igu6mWztI8mqCnpp54vVrt6bvmSkTYgLAr4h2LMygJ
-         iisi/tz0tzEA7birQe0bw/wIqRpOWPmYwxTxEdhE=
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     ulf.hansson@linaro.org
-Cc:     afaerber@suse.de, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH] mmc: owl-mmc: Get rid of of_match_ptr() macro
-Date:   Sun, 21 Jun 2020 08:23:30 +0530
-Message-Id: <20200621025330.10561-1-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 20 Jun 2020 22:54:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42786 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgFUCyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 22:54:06 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e9so6472647pgo.9;
+        Sat, 20 Jun 2020 19:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vZs99AHt6WEZ6E64MLit3KWJilrv1/r3wkfNA6iBn1A=;
+        b=r4cHwv7yuzeN5hGw2x54IsFkLzBd9VNVdb0gbZ35gjShK6nham/9F1zgoIZeZRvfKZ
+         2bd5Zmx+Q15v/eN2bToYsyI6ETT3HrU+y8htwjs29hVbxFsZ29IgXBzqmuIPTN/Qr1Kw
+         YtImtBi/ioLbV90fQoET7wvHlJWdT1kTBD1VVciFXyY40RG/Zgopa5XeHV56OyhsWOXA
+         pZWFeKK2aNOtaVvFUVItQL/VVisE2cqG7stxr6Acsm1IYic2u/QP7OtBT6I+Fs1gddw/
+         AOkbNrfkFz1RWht7gff0HNGJhD1aiXQCK6h+Lt5IrsLLT7r2srPmitXqy262CPxMPPrj
+         Sjsw==
+X-Gm-Message-State: AOAM533GrDiG/wSlyqDNmv+wShZdKiOgOeWgiTQUBEcJpGX9f7i5MT7n
+        ToaH2URTZ7eQz7+ESTZTi5wgYn+a
+X-Google-Smtp-Source: ABdhPJzsWj9k+CoUGPncu7oHCofsByXi5jvetdXRFu31wlDMHlxvGtqIn4mOttBBJNpeio2EIYMSfg==
+X-Received: by 2002:a63:fc43:: with SMTP id r3mr8244210pgk.423.1592708045553;
+        Sat, 20 Jun 2020 19:54:05 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id d6sm9458373pjh.5.2020.06.20.19.54.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 19:54:04 -0700 (PDT)
+Subject: Re: [PATCH 01/10] tty/sysrq: emergency_thaw_all does not depend on
+ CONFIG_BLOCK
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200620071644.463185-1-hch@lst.de>
+ <20200620071644.463185-2-hch@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <12fa694d-1f41-2d24-f94d-0198c53dd7b5@acm.org>
+Date:   Sat, 20 Jun 2020 19:54:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200620071644.463185-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the 'of_match_ptr()' macro to fix the warning when CONFIG_OF is
-not selected.
+On 2020-06-20 00:16, Christoph Hellwig wrote:
+> We can also thaw non-block file systems.  Remove the CONFIG_BLOCK in
+> sysrq.c after making the prototype available unconditionally.
 
-drivers/mmc/host/owl-mmc.c:677:34: warning: unused variable 'owl_mmc_of_match'
-[-Wunused-const-variable]
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/mmc/host/owl-mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
-index 5e20c099fe03..df43f42855e2 100644
---- a/drivers/mmc/host/owl-mmc.c
-+++ b/drivers/mmc/host/owl-mmc.c
-@@ -689,7 +689,7 @@ MODULE_DEVICE_TABLE(of, owl_mmc_of_match);
- static struct platform_driver owl_mmc_driver = {
- 	.driver = {
- 		.name	= "owl_mmc",
--		.of_match_table = of_match_ptr(owl_mmc_of_match),
-+		.of_match_table = owl_mmc_of_match,
- 	},
- 	.probe		= owl_mmc_probe,
- 	.remove		= owl_mmc_remove,
--- 
-2.17.1
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
