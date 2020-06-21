@@ -2,104 +2,181 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F949C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825B1251C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FK+tJwE8"
+	by mail.kernel.org (Postfix) with ESMTP id 0E0D1247D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592750794;
+	bh=5B5GkUamO8FPaTtrpWmKCsIxZc5JI93iNoW6QhBZYcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JvkIllfwAhHMNQ64gtixPkZEIzJLrXczhgNhUPwH7mZ8sDThV3JT7oIoTtL6aqapN
+	 gvI472nY3fusXRzFcmjEd+ihDJyTB7vBnM3UCtk3yQRdSy0lnDqDjasd+jiFe6NmJA
+	 WBTLgfyxYhkGNs45zUcNTa+G3FzEF6/NczOZ36AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgFUOmL (ORCPT
+        id S1730229AbgFUOqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730147AbgFUOmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:42:11 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A56C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 07:42:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id e22so816336edq.8
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 07:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjWg6pIDDLSJ5juwGXRtHAbZGHWm8dpD2a7Zk0t+OR0=;
-        b=FK+tJwE8GAAQZ6dUVGOWlBZb5hjs1ZsLFkm7NOre+w/UCKopOFB2a3GNqgqq0xdCDA
-         jXP6eZmeCc7vhaqSqctSCscNTtMeLH4xOcBZsYvjExwzZJTBbi/7mHfMiH8fSlSrQkL0
-         OvS+kPwx5atmkhA50yMTU3TW2djVGSjtYeo1AJqk+hyYM6gMxQamgOAWpN7CzDb6nckd
-         T5evy9+o65h37H10U7gykbjdahOF/MfKHB8bdZQ9fzScZoP823yTnkzFxny93PYvFOSV
-         rH7GrnnlwlYxXEWeMEOa6iYdsCfrd8gLtbDyzArt10tGGmjqVZSBuQniLSkrbgBnxMU9
-         1zNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjWg6pIDDLSJ5juwGXRtHAbZGHWm8dpD2a7Zk0t+OR0=;
-        b=rF0iYqr9iq7HoR29eZeUN1hPtzZuK+2S/lxl5DjMd6SbD+yNsf78gnQZsuU6cil46X
-         9gtOtd082idFbZF7g/B6SE7tGCoU1OenjVJx0N8hy6WFniRcv+akbf+D/P/t6BZTxoCT
-         D3PiyjjOMaq1/0IL/KAsZMte7KbSdAXr6jHzxqeoEZTFf7MM8hQuzJacc8L5dKYsIQ2r
-         WgjcO9cyICfmkEpUDuVB9e2JiCUGIhUiCKoZ0WVhL03gd6QoipZQ497DWLN+UH5887By
-         dJ88tt5PhXf4fq50qUe9B6rtNpWdUIvvEm4dsTk6KOiCnxnVKBa2JdSnbXTm6fZr41+t
-         FyeQ==
-X-Gm-Message-State: AOAM530WrBEo5enl5gcGFXigoX1Y3btq0ayQdi9jlGJ8b4fEJYtO90kk
-        Ht3gj3PbECorZUnCqK0DAKVBgZEv
-X-Google-Smtp-Source: ABdhPJzE0+J2BzYlIBeoOYCAkJHEuU5hOMqA/G01NoVEwiWFqUeFcix+O5Px0Vzcapxr7UvrHVTqXA==
-X-Received: by 2002:a05:6402:642:: with SMTP id u2mr12668939edx.230.1592750529880;
-        Sun, 21 Jun 2020 07:42:09 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:5fe:4ba0:7ffd:29fd])
-        by smtp.gmail.com with ESMTPSA id j16sm10088172edp.35.2020.06.21.07.42.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 07:42:09 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] MAINTAINERS: update info for sparse
-Date:   Sun, 21 Jun 2020 16:42:04 +0200
-Message-Id: <20200621144204.53938-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 21 Jun 2020 10:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730154AbgFUOqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 10:46:32 -0400
+Received: from kernel.org (unknown [87.70.7.255])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2BE24740;
+        Sun, 21 Jun 2020 14:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592750791;
+        bh=5B5GkUamO8FPaTtrpWmKCsIxZc5JI93iNoW6QhBZYcM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UvUI50Sn5K/atcS/ZRQ0Blm6KUTN5bezVjq4FTYjIwbYibcWgvxlfYhyG8NyYKt3l
+         4yfdi77FJPCGjtddEKKHwzgnp7X01ncnY0JpBbP5EOgUxORx8mQ1pj/BRDtTiw11VY
+         p3C+gnTCSwMr+iNJcWPDEoPu/5YRTYG9e/t5XmoM=
+Date:   Sun, 21 Jun 2020 17:46:21 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 1/2] mm: drop vm_total_pages
+Message-ID: <20200621144621.GF6571@kernel.org>
+References: <20200619132410.23859-1-david@redhat.com>
+ <20200619132410.23859-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619132410.23859-2-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the info for sparse. More specifically:
-* change W entry to point to sparse.docs.kernel.org
-* add Q & B entry (patchwork & bugzilla)
+On Fri, Jun 19, 2020 at 03:24:09PM +0200, David Hildenbrand wrote:
+> The global variable "vm_total_pages" is a relict from older days. There
+> is only a single user that reads the variable - build_all_zonelists() -
+> and the first thing it does is updating it. Use a local variable in
+> build_all_zonelists() instead and drop the local variable.
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Nit:                                       ^ global
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 301330e02bca..c4c7029bc463 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16049,8 +16049,10 @@ SPARSE CHECKER
- M:	"Luc Van Oostenryck" <luc.vanoostenryck@gmail.com>
- L:	linux-sparse@vger.kernel.org
- S:	Maintained
--W:	https://sparse.wiki.kernel.org/
-+W:	https://sparse.docs.kernel.org/
- T:	git git://git.kernel.org/pub/scm/devel/sparse/sparse.git
-+Q:	https://patchwork.kernel.org/project/linux-sparse/list/
-+B:	https://bugzilla.kernel.org/enter_bug.cgi?component=Sparse&product=Tools
- F:	include/linux/compiler.h
- 
- SPEAR CLOCK FRAMEWORK SUPPORT
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Except the nit above
+
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+> ---
+>  include/linux/swap.h | 1 -
+>  mm/memory_hotplug.c  | 3 ---
+>  mm/page-writeback.c  | 6 ++----
+>  mm/page_alloc.c      | 2 ++
+>  mm/vmscan.c          | 5 -----
+>  5 files changed, 4 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 4c5974bb9ba94..124261acd5d0a 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -371,7 +371,6 @@ extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
+>  extern unsigned long shrink_all_memory(unsigned long nr_pages);
+>  extern int vm_swappiness;
+>  extern int remove_mapping(struct address_space *mapping, struct page *page);
+> -extern unsigned long vm_total_pages;
+>  
+>  extern unsigned long reclaim_pages(struct list_head *page_list);
+>  #ifdef CONFIG_NUMA
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 9b34e03e730a4..d682781cce48d 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -835,8 +835,6 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+>  	kswapd_run(nid);
+>  	kcompactd_run(nid);
+>  
+> -	vm_total_pages = nr_free_pagecache_pages();
+> -
+>  	writeback_set_ratelimit();
+>  
+>  	memory_notify(MEM_ONLINE, &arg);
+> @@ -1586,7 +1584,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  		kcompactd_stop(node);
+>  	}
+>  
+> -	vm_total_pages = nr_free_pagecache_pages();
+>  	writeback_set_ratelimit();
+>  
+>  	memory_notify(MEM_OFFLINE, &arg);
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 28b3e7a675657..4e4ddd67b71e5 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2076,13 +2076,11 @@ static int page_writeback_cpu_online(unsigned int cpu)
+>   * Called early on to tune the page writeback dirty limits.
+>   *
+>   * We used to scale dirty pages according to how total memory
+> - * related to pages that could be allocated for buffers (by
+> - * comparing nr_free_buffer_pages() to vm_total_pages.
+> + * related to pages that could be allocated for buffers.
+>   *
+>   * However, that was when we used "dirty_ratio" to scale with
+>   * all memory, and we don't do that any more. "dirty_ratio"
+> - * is now applied to total non-HIGHPAGE memory (by subtracting
+> - * totalhigh_pages from vm_total_pages), and as such we can't
+> + * is now applied to total non-HIGHPAGE memory, and as such we can't
+>   * get into the old insane situation any more where we had
+>   * large amounts of dirty pages compared to a small amount of
+>   * non-HIGHMEM memory.
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 0c435b2ed665c..7b0dde69748c1 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5903,6 +5903,8 @@ build_all_zonelists_init(void)
+>   */
+>  void __ref build_all_zonelists(pg_data_t *pgdat)
+>  {
+> +	unsigned long vm_total_pages;
+> +
+>  	if (system_state == SYSTEM_BOOTING) {
+>  		build_all_zonelists_init();
+>  	} else {
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b6d84326bdf2d..0010859747df2 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -170,11 +170,6 @@ struct scan_control {
+>   * From 0 .. 200.  Higher means more swappy.
+>   */
+>  int vm_swappiness = 60;
+> -/*
+> - * The total number of pages which are beyond the high watermark within all
+> - * zones.
+> - */
+> -unsigned long vm_total_pages;
+>  
+>  static void set_task_reclaim_state(struct task_struct *task,
+>  				   struct reclaim_state *rs)
+> -- 
+> 2.26.2
+> 
+> 
+
 -- 
-2.27.0
-
+Sincerely yours,
+Mike.
