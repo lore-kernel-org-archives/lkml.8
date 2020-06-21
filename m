@@ -2,119 +2,149 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF02BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C22C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B9722AAE
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592749563;
-	bh=W0GxbCl0T6tlIURC2FrWHy0pl7O2r2pLvdotzPz142k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=B3wbrMBnXsFXjmG2qLnF8vn8952XKpEjMflzJlzlXLabcKZnrgNccTyivBKbCQYsT
-	 bbWFgzszqkbW73MBmZBvUz0Va067NQdVjcU6hi9OhyO3vVRXe64SLplPARa/vZGtLi
-	 MD9+b8ExjkI72S2uQ1pSEieOUhdfVi+DVZYr4LrI=
+	by mail.kernel.org (Postfix) with ESMTP id 1FFC4207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgFUO0B (ORCPT
+        id S1730171AbgFUOaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbgFUO0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:26:01 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02ECD2083E;
-        Sun, 21 Jun 2020 14:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592749561;
-        bh=W0GxbCl0T6tlIURC2FrWHy0pl7O2r2pLvdotzPz142k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=niQc58EJh7aqd2Rg73A6I9LirIVVVZpJv5bB7kacWxGD6weZMCUkjN5OQImAXUaRu
-         7AFFXZEL9t9bAGVG+sLBSSfSq/YsixTIdoiK/R4Xookn0JIdT6QiaUkiPv61wSm7JY
-         SeOgaGnPdd6SsMA057+6q5cQ3sdo8GEkSXK0WF6Q=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=hot-poop.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jn0v1-0056g4-EX; Sun, 21 Jun 2020 15:25:59 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, stable@vger.kernel.org
-Subject: [PATCH] irqchip/gic: Atomically update affinity
-Date:   Sun, 21 Jun 2020 15:25:37 +0100
-Message-Id: <20200621142537.784191-1-maz@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Sun, 21 Jun 2020 10:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgFUOaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 10:30:35 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E49FC061794;
+        Sun, 21 Jun 2020 07:30:35 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id D77B2467E1;
+        Sun, 21 Jun 2020 14:30:27 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/process
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Fischetti <tony.fischetti@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Joe Perches <joe@perches.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200621133630.46435-1-grandmaster@al2klimov.de>
+ <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
+Date:   Sun, 21 Jun 2020 16:30:25 +0200
 MIME-Version: 1.0
+In-Reply-To: <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GIC driver uses a RMW sequence to update the affinity, and
-relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
-to update it atomically.
 
-But these sequences only expand into anything meaningful if
-the BL_SWITCHER option is selected, which almost never happens.
 
-It also turns out that using a RMW and locks is just as silly,
-as the GIC distributor supports byte accesses for the GICD_TARGETRn
-registers, which when used make the update atomic by definition.
+Am 21.06.20 um 15:46 schrieb Miguel Ojeda:
+> Hi Alexander,
+> 
+> On Sun, Jun 21, 2020 at 3:37 PM Alexander A. Klimov
+> <grandmaster@al2klimov.de> wrote:
+>>
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If both the HTTP and HTTPS versions
+>>            return 200 OK and serve the same content:
+>>              Replace HTTP with HTTPS.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>> ---
+> 
+> Looks fine, although it would be nice to have a link to the discussion
+Which discussion? 93431e0607e5 ? IMAO the patches don't depend on each 
+other.
 
-Drop the terminally broken code and replace it by a byte write.
+> (using a `Link: ` line to `lore.kernel.org`). Also having the script
+> in the kernel would be nice for future re-runs (e.g. you could add it
+> as a first patch in the series).
+IMAO:
 
-Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+* The script should not be neccessary once all of my changes[1] arrive 
+in torvalds/master. Instead reviewers should say like C'mon dude, what's 
+this new plain-HTTP link doing in your patch? We have 2020! Look at e.g. 
+93431e0607e5 .
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 00de05abd3c3..c17fabd6741e 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
- static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
- {
--	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
--	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
--	u32 val, mask, bit;
--	unsigned long flags;
-+	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
-+	unsigned int cpu;
- 
- 	if (!force)
- 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	gic_lock_irqsave(flags);
--	mask = 0xff << shift;
--	bit = gic_cpu_map[cpu] << shift;
--	val = readl_relaxed(reg) & ~mask;
--	writel_relaxed(val | bit, reg);
--	gic_unlock_irqrestore(flags);
--
-+	writeb_relaxed(gic_cpu_map[cpu], reg);
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
- 	return IRQ_SET_MASK_OK_DONE;
--- 
-2.26.2
+* The program language agnostic algo description of mine should be 
+enough. If it's not enough, I shall improve the description.
 
+* Today I've added "If not .svg:". Imagine Torvalds merges the script, 
+closes the merge window *and then* someone runs it on a random subsystem 
+and discovers a missing condition. Do they have to patch the script, 
+wait for the patch to arrive in torvalds/master *and then* patch the 
+(other) subsystem, so they can refer to the now patched script? W/o a 
+such central "rule on how to HTTPSify links" they'd just describe 
+*their* algo. Or (even better) there wouldn't be much more insecure 
+links, so the algo could be omitted.
+
+After all please show me one of the big bosses (Torvalds, K-H, ...) 
+who'd tolerate to have a...
+
+* written w/o focus on maintainability
+* not documented at all
+* *Golang* file
+
+... in the kernel tree.
+
+If I correctly understand, you kernel devs write code so that if even 
+the maintainer leaves the project, another one could just take over.
+
+How many kernel devs would read and understand (all of them I guess) 
+*and maintain that Go script* of mine?
+
+
+[1]
+➜  linux git:(master) git stash show --shortstat
+  1857 files changed, 2664 insertions(+), 2664 deletions(-)
+➜  linux git:(master)
+
+> 
+> Other than that:
+> 
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> 
+> Cheers,
+> Miguel
+> 
