@@ -2,105 +2,121 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D29C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5016C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F3C24897
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3042245F
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVBlgFQk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SU1pgQI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgFUK0r (ORCPT
+        id S1729828AbgFUKbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 06:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
+        Sun, 21 Jun 2020 06:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbgFUK0q (ORCPT
+        with ESMTP id S1729732AbgFUKbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:26:46 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C28C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 03:26:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id h22so6987172pjf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 03:26:45 -0700 (PDT)
+        Sun, 21 Jun 2020 06:31:00 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FC4C061794;
+        Sun, 21 Jun 2020 03:31:00 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id c16so1146958ioi.9;
+        Sun, 21 Jun 2020 03:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6tjEJqbjfc87lKS0nPB598OKO3b+lQp1eI3MWqxjWU4=;
-        b=fVBlgFQkiYCs+4k/cI2AOfK6D45S6gTbKHoTlG7X3WRXIhx3xzNGagAn4q8Xeqwjce
-         rhHBklL/12pS1wWmwHCdw7MnBXIPCvrUu8SbZbFDIoSLtdCUlJkdZY9NPiDfOpBmqfCD
-         YpzK8tcjQpuCm5BI6Yewwk23yz4mqcXa0Kbp5V2Vvx/W70FJWjhtNlH+V/6pkzGmWuo0
-         KfHy+NtgoJt0IyNMIUzrfaDrtIx407sMzqu+AyI9yQwfn+smicxr1z1YSOJWdooRkQu8
-         zOBB5zbfeBfBbFg0sDYhnG5etGbMDLT/rEeuAQmr7tCvQrzGnHtkJLrjXt8vtsT8M2Ck
-         adTQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LsMCxRhdCW91CmwifYJvdAgyVM3T+RUgnr+kb3EmnFs=;
+        b=SU1pgQI52ABIdOpJdSBMfxpi17aWi2VVmCyCts8803J66mBP10FI+0zBPbX/6OU63+
+         SxrTicKKv36NpESSKXTBZVRyMOyVbag3Hx72KXQhkXAW7XXKIQxOkbCsALJGUrR52cVv
+         A1HaEUHXGVUNZ2221m3ZwzwM/wTzVLBqO7mHVJ9ASXIBmIQM71hfXunqMzOoB8/QNZIV
+         cJDIJwikKyD8JPzIpjjpFPsqjG8U1GgmzdH+PJE16NrpmgGMLn5Nm7NGcCeUIYxcj/oS
+         9xvLFkCtbS2gq8BM7pxVT9oYe1Lj2sANQjBnCSpx4XcaQ8tzZoVCwpYHmKFO/YkiEHic
+         SOXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6tjEJqbjfc87lKS0nPB598OKO3b+lQp1eI3MWqxjWU4=;
-        b=OwWElru/zyG/3kteKvElkUQYZ/IfEgTNTC9Tz6G6VtUR2wIYTMgNbHnI4rKfi+oecB
-         hYP5uQRQo6SpZJRqnIIrWTxCgMl+hZIp6J2RaoFIPvf5auxtc6QZjsvJacVp1FC7kKug
-         j3BL53KsmvoO9hhHTzhfUR3+hd/Of9tb81oy22mW6Mh5q94lGpnaOEJl7evcy2dnWawX
-         bWMb57y3Vc2mItUvhpmhD9/YApTbLWSwLWCTKthWSDLLcmX/kugop0bi3ADp/SVz08Tc
-         x2n1w2KB2tR6duGWEGO2OQyVG91bP2oASqL8iB7kJtKJ4ZymA0AHcZ4x3+OVkoCVoSdV
-         MHFw==
-X-Gm-Message-State: AOAM531/ijRZniw7K5VCPoODW/+6wKdROYR6ys97WRV5Bw0hdV0fYax3
-        dgXtB2TTR+j8xZX1fDil0BI=
-X-Google-Smtp-Source: ABdhPJyoMHhmlfpGi/XJhqwTpOiV8ReMJLLRTvOLXUJylZElKdG7gp77rqfj9eCyXf4C98xwIu1AMA==
-X-Received: by 2002:a17:90b:706:: with SMTP id s6mr12932003pjz.11.1592735205556;
-        Sun, 21 Jun 2020 03:26:45 -0700 (PDT)
-Received: from debian.debian-2 ([154.223.71.34])
-        by smtp.gmail.com with ESMTPSA id gq8sm10060300pjb.14.2020.06.21.03.26.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 21 Jun 2020 03:26:44 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 18:26:39 +0800
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        peterz@infradead.org, luto@kernel.org,
-        alexandre.chartre@oracle.com, jannh@google.com,
-        dave.hansen@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, tsu.yubo@gmail.com
-Subject: [PATCH -next] arch/x86: Return value from notify_die should to be
- checked.
-Message-ID: <20200621102634.n43ozcsiravdi2ie@debian.debian-2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LsMCxRhdCW91CmwifYJvdAgyVM3T+RUgnr+kb3EmnFs=;
+        b=kgw2X9uRh2G+d4mVLFtsgmK+DR6co/w9b2SiR/ofIkD1Y2exaFb4zJR3e/y5iZHZdT
+         GdA42rXp1CD2COIpreL/XdkO6prCti4J4Rz/WEvlFcIr13Zyw5Xf4kCzt+rtssZKfP0C
+         0pkKY1tCdDHUTi1T+mMrorlm5/XI19EeJBdsaE8UD1RWNE0nynCd8hL9dTYvPmHfNzFd
+         0WoOKESKqPAvO+r9Br+1Kswx6T/l5JagvaBUoxOfbqgZaD5GqKNqpLVHOdtpsXFiPmnR
+         yYvQSmCxZ4ZXbKmgCLHYHM5RoNzmsw9MrcuB8axaN9eEJbJEnRqqMmqV0S+03g8YJuv3
+         wlcg==
+X-Gm-Message-State: AOAM532OGM45g7eD6LCfsT76JspUGjog940Nj366CFdpv/Jzo+orbDSR
+        dzE4/mrluPJRU8I3T5/OefI4FmdW2FGxjqnQlB4=
+X-Google-Smtp-Source: ABdhPJwACX5THWhrfzFfUizf/8poXPvY+ktvbys5e+P0F6hUT0iHojEazcInM0IIsXlZ409X9IGqEHsDbhC1fbtMLQ8=
+X-Received: by 2002:a05:6638:d05:: with SMTP id q5mr12005630jaj.2.1592735458655;
+ Sun, 21 Jun 2020 03:30:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20200618190807.GA20699@nautica> <20200620201456.14304-1-alexander.kapshuk@gmail.com>
+ <20200621084512.GA720@nautica>
+In-Reply-To: <20200621084512.GA720@nautica>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Sun, 21 Jun 2020 13:30:20 +0300
+Message-ID: <CAJ1xhMWe6qN9RcpmTkJVRkCs+5F=_JtdwsYuFfM7ZckwEkubhA@mail.gmail.com>
+Subject: Re: [PATCH] net/9p: Validate current->sighand in client.c
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     lucho@ionkov.net, ericvh@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is detected by Coverity scan: #CID: 1464472(CHECKED_RETURN)
+On Sun, Jun 21, 2020 at 11:45 AM Dominique Martinet
+<asmadeus@codewreck.org> wrote:
+>
+> Alexander Kapshuk wrote on Sat, Jun 20, 2020:
+> > Use (un)lock_task_sighand instead of spin_lock_irqsave and
+> > spin_unlock_irqrestore to ensure current->sighand is a valid pointer as
+> > suggested in the email referenced below.
+>
+> Thanks for v2! Patch itself looks good to me.
+>
+> I always add another `Link:` tag to the last version of the patch at the
+> time of applying, so the message might be a bit confusing.
+> Feel free to keep the link to the previous discussion but I'd rather
+> just repeat a bit more of what we discussed (e.g. fix rcu not being
+> dereferenced cleanly by using the task helpers as suggested) rather than
+> just link to the thread
+>
+> Sorry for nitpicking but I think commit messages are important and it's
+> better if they're understandable out of context, even if you give a link
+> for further details for curious readers, it helps being able to just
+> skim through git log.
+>
+>
+> Either way I'll include the patch in my test run today or tomorrow, had
+> promised it for a while...
+>
+> Cheers,
+> --
+> Dominique
 
-FIXES: c94082656dac7(x86: Use enum instead of literals for trap values)
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
----
- arch/x86/kernel/traps.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Dominique,
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index af75109485c2..bf014fb59017 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -401,7 +401,8 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+Thanks for your feedback.
+Shall I simply resend the v2 patch with the commit message reworded as
+you suggested, or should I make it a v3 patch instead?
 
- 	nmi_enter();
- 	instrumentation_begin();
--	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
-+	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV))
-+		return;
-
- 	tsk->thread.error_code = error_code;
- 	tsk->thread.trap_nr = X86_TRAP_DF;
---
-2.11.0
-
+One other thing I wanted to clarify is I got a message from kernel
+test robot <lkp@intel.com>,
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/TMTLPYU6A522JH2VCN3PNZVAP6EE5MDF/,
+saying that on parisc my patch resulted in __lock_task_sighand being
+undefined during modpost'ing.
+I've noticed similar messages about other people's patches on the
+linux-kernel mailing list with the responses stating that the issue
+was at the compilation site rather than with the patch itself.
+As far as I understand, that is the case with my patch also. So no
+further action on that is required of me, is it?
+Thanks.
