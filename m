@@ -2,135 +2,86 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88822C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D77214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:05:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ABDlELBd"
+	by mail.kernel.org (Postfix) with ESMTP id 3635C247A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 02:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgFUCFG (ORCPT
+        id S1729146AbgFUCIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jun 2020 22:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbgFUCFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jun 2020 22:05:05 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A2FC061794;
-        Sat, 20 Jun 2020 19:05:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qG8F0fbQz9sT6;
-        Sun, 21 Jun 2020 12:05:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592705102;
-        bh=A/sartbikUxvj3P/RaZdP+nRhKASCdemhO49p9d0ES4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ABDlELBdCIaT2o8FUdGkhZ8sGC9fqL98HZ2RKEog/fwmIFuMZqeul1qdmiaN2cr63
-         40XWUSqLFTFbBqTFFx66iYchTonncVFr684I9o9d83gTdd2iDbWagdGnLQznAnoJqC
-         eWNG2bA4B456jPp0lb3pqWzuLO8WwDD6wL1tH8EUHfq/RCB7w1RHTDuvES68SN9RPh
-         ZGqNTIO1icWi2M5DA7tGvr4ebYKKFhASVMhY9xGZcW9eIAbaoS/dPfeW3TTHSz8m75
-         E+NKXnRTX3ikHXGVD5OAB5fi9b4OhYOYaDeK1pqPottTtJOegKZa2Dr4OmlE51kFy2
-         DmKUWATqQLAng==
-Date:   Sun, 21 Jun 2020 12:05:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: linux-next: build failure in Linus' tree
-Message-ID: <20200621120500.1f215007@canb.auug.org.au>
+        Sat, 20 Jun 2020 22:08:14 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:39668 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729104AbgFUCIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jun 2020 22:08:14 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jmpOo-0000to-FQ; Sun, 21 Jun 2020 12:07:59 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sun, 21 Jun 2020 12:07:58 +1000
+Date:   Sun, 21 Jun 2020 12:07:58 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] crypto: scompress - call the completion callback for the
+ completed acomp_req
+Message-ID: <20200621020758.GA29905@gondor.apana.org.au>
+References: <20200620230756.6592-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/g0VC9dqJhgvMlL9+YAZHgIN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620230756.6592-1-song.bao.hua@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g0VC9dqJhgvMlL9+YAZHgIN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jun 21, 2020 at 11:07:56AM +1200, Barry Song wrote:
+> While using acomp_req, users may customize a completion callback, if the
+> backend of acomp is actually scomp, this callback will never be called.
+> This looks a bit messy to users. For one user, all scomp details should
+> be hidden by acomp APIs.
+> 
+> But it won't cause any real problem if users simply use crypto_req_done()
+> as the callback, and further use crypto_wait_req() to wait for request to
+> be done since crypto_wait_req() depends on the callback only if queuing
+> acomp_req returns -EINPROGRESS or -EBUSY.
+> 
+> This patch will make sure the customized completion callback is called
+> for the first case. And it won't break the second case in which users
+> use the common crypto_req_done() and crypto_wait_req() only.
+> 
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> ---
+>  crypto/scompress.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/crypto/scompress.c b/crypto/scompress.c
+> index 738f4f8f0f41..634b7ced9348 100644
+> --- a/crypto/scompress.c
+> +++ b/crypto/scompress.c
+> @@ -158,6 +158,10 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+>  	}
+>  out:
+>  	spin_unlock(&scratch->lock);
+> +
+> +	if (req->base.complete)
+> +		acomp_request_complete(req, ret);
+> +
+>  	return ret;
+>  }
 
-Hi all,
+Nack.  This is a deliberate optimisation to allow the sync code
+path to execute with no overhead.
 
-Building Linus' tree, today's linux-next build (x86_64 allmodcongig)
-failed like this:
-
-In file included from arch/x86/include/asm/atomic.h:5,
-                 from include/linux/atomic.h:7,
-                 from include/linux/llist.h:51,
-                 from include/linux/irq_work.h:5,
-                 from kernel/smp.c:10:
-kernel/smp.c: In function 'smp_init':
-include/linux/compiler.h:392:38: error: call to '__compiletime_assert_869' =
-declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_st=
-ruct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=3D offs=
-etof(struct __call_single_data, flags) - offsetof(struct __call_single_data=
-, llist)
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |                                      ^
-include/linux/compiler.h:373:4: note: in definition of macro '__compiletime=
-_assert'
-  373 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:392:2: note: in expansion of macro '_compiletime_a=
-ssert'
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
-ssert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
-SG'
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-kernel/smp.c:687:2: note: in expansion of macro 'BUILD_BUG_ON'
-  687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offse=
-tof(struct task_struct, wake_entry) !=3D
-      |  ^~~~~~~~~~~~
-
-Caused by me starting to build with various GCC_PLUGIN config options set.
-
-I have cherry-picked commit
-
-  bfb9fbe0f7e7 ("sched: Fix RANDSTRUCT build fail")
-
-from the tip tree until it is sent upstream to Linus.
-
---=20
 Cheers,
-Stephen Rothwell
-
---Sig_/g0VC9dqJhgvMlL9+YAZHgIN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7uwEwACgkQAVBC80lX
-0Gz4Ygf9EkQFVzXLZm9ozdtow2/JfiVbBTc+CQSVSlejAPHGllmL2/uX74KPdjem
-hklGZU4MClhFZodg2I7j8eZz8X6+nemSbmnPBXgTVZRgWDW7/UgHAbXNrEBMPk9L
-T/Zc190L9BFI6p6CylY4DyM/GuCIu9Fr0T+JYkgZpYwMYdo5yQzV3eVxyz2cl0G5
-Yl5hpIJ04sDF7JhrNVe4yjtxmL9u9eqLqINs1gc91n7ZWsXi5Z19XRR2Ifrh/dnZ
-8STgjpc0yO+cjyDWAidbhaNvF/c8ntFDBxracbxyDFQunU4wkOH1ONW+VHgiqGm7
-kig360KNdDtXjn5ymIwV6gRkGncD2w==
-=ZIB2
------END PGP SIGNATURE-----
-
---Sig_/g0VC9dqJhgvMlL9+YAZHgIN--
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
