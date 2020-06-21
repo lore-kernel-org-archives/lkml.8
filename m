@@ -2,138 +2,217 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C766BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B0D22CF8
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m7F031/l"
+	by mail.kernel.org (Postfix) with ESMTP id 1DDB923B97
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgFUNfo (ORCPT
+        id S1730108AbgFUNgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:35:44 -0400
-Received: from mout.web.de ([212.227.15.4]:37105 "EHLO mout.web.de"
+        Sun, 21 Jun 2020 09:36:10 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:41606 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729676AbgFUNfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:35:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592746528;
-        bh=32EHmNT2W6hWhT/oG2ZIm+o9q2WdVg5h20rHxrEe0H4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=m7F031/lxeRjJJdGlAymP1eaIF6Fkj2CRKkTIM/NtE5WFbTfUiruiniZj3Q4n/4iw
-         1YNDLwfNNGh0e4pV1Xx89rWP1R5OE6SqKRkd6ybiACETjaTavbKSpIFhw0Kj7UVMoC
-         gbmnEHrtZWLPNnvjgK1rDAeS0zd0E1wcsBCIeob0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.145.213]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LeLin-1j5xoI42O5-00qASH; Sun, 21
- Jun 2020 15:35:28 +0200
-Subject: Re: [PATCH v2 1/3] crypto: ccree: fix resource leak on error path
-To:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        linux-crypto@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ofir Drang <ofir.drang@arm.com>
-References: <20200621112000.31495-1-gilad@benyossef.com>
- <20200621112000.31495-2-gilad@benyossef.com>
- <2857f54e-e752-0555-f43a-a451f64f6302@web.de>
- <CAOtvUMcVHfhiY=f0RutGWkQXPiWy_8e4QQ_ytgv5m=h+gg0bqA@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ae426611-51b9-4a0c-b733-ca962f19bc3b@web.de>
-Date:   Sun, 21 Jun 2020 15:35:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1729676AbgFUNgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 09:36:09 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 62C72467E1;
+        Sun, 21 Jun 2020 13:36:03 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        David Sterba <dsterba@suse.com>, Rob Herring <robh@kernel.org>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/filesystems
+Date:   Sun, 21 Jun 2020 15:35:52 +0200
+Message-Id: <20200621133552.46371-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <CAOtvUMcVHfhiY=f0RutGWkQXPiWy_8e4QQ_ytgv5m=h+gg0bqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:+rff4gUemAuTUKHU5RGyvcXuu0y/9AemWwMNHicvpSUXxpaR4eR
- WAJC++WZo+vLnhDe/XEjKi3ccMoPTEns8RZ23Ygwak+89AXtXaDVJiW+O37u148FQBa+hdp
- Sld30xUE2hvpQZ1kDx1OQSdZXj96OXLCJVEtUrXXYewipoD/mE22Hg6tkeqFMztfWlii7bN
- 9W6PSUFIFC+6vtQ+V8p1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3+6F3uL7ers=:Ussc9A3lk4cr2qEl9Gb4H/
- ZN7+sukuRS78POsHhkWMSbDMijLYWRi9n/c/dL/Yk/HlTSS4DUGJh5f+qvDqPAe5SDw1aGNB9
- Mt4BaceXBP4xeHBaeH5xNe2IqaBstUmEOpZp4zHlz/eiNz38Vx1XclHE+LsCRgiRJiT50zYwH
- IGQniT+JjjogIVItc/xeQNoxckXAvS17EWZQ0DwMGdPMJIIpZa9kn3T+EnSXD/gqR4lbUxOa3
- /PdCTf8cuO7CM/zm/2kQE/AuTn2fG7qL0LkmMktsqYd5+O1WZpynq6AzEGLLHDYxTBgsAx6Ru
- 4KYX/aVKL56LtnkiVEc7CWQVVGsHHnd5TWnWpBvBZ7N+GWWFXMnvqYLcNAJrL0rk/+v/4OpCL
- 4XWkG8fuvGywx6DtZAzQB7db52JkWIcl5K6cojOt9LW+E82HNtzjJtxW3PhsC7JN21KwWnpAm
- mfYkJPy10nhCKkRDXV35jBFmS/+g0iE4FeYH2bKuxqeDXPVXnC1QZCL/FWyv5bzQFtY9mCIhI
- N9loGUA0cxVxW2rUZAEApk7Ajn7wdmzpk6j4nT3WQiJZ2NBcf+RlSCxsBPHI2VP6kY6fyWjxN
- fmKCo7HlpgdJ6/CBwQ1kFT1viFMJiG23FeeNKbG0fRX3tvFUYZubAZa6OKX5MyfzCZVEmoLvJ
- 213D4hfsRCM/n7f6pVcya+GF9xbEptzfQV5HD9kCNR5WPG3rWQnpGmmimovFkdiYj5kGreOw5
- KEPkp7xG8ZBlvRzQxAE1o8kYOYKv64GOaRNSalyABreZxvtRGofDDLDkRVBXk7LaFF9nuUK64
- ZcHtye6oT6kUzgz08D6V0CDI36EAXHy3LpPyjrcifUA+1Foevoy4pCSNuhQs7suERt/Tcfx2n
- COJVOkVcQ+0jLBqKDOnzNOyz8TjMfeY7KpHiTInK7AvmHWArhZn5YQyQbbsRE10Wn4cFQv2ZH
- X1TH4NLvAt5mtdTwc5AtXR3siU8oNKnotcRZ/+V0iIuGs8yr5w3GOBfmIe1dIANdL9n7E76+8
- FIGZ78D3TFbsbg0nbHjQJ4vLoGHYS7vs2NixdfqRLphSOxG5TtjyyFwJQLq7Q+sxGUgcWydsl
- euRbB7dt+hfueRuC6HdRY3daQBTn6pSaYMNxiIs+O3dLCqFQaHBPaI0l5vVJ39lF7sDVemh7A
- pMYXcqwIyEKlMOC0nruFIbjlBu4p5a3k5i0/xr03s1FwG3M83Pd9Lxe36266bfxlZfiPtAHM1
- XhdaYgXHsvo/1BpUj
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Indeed and I did but for some reason I cannot fathom the cover letter
-> did not make it to the list.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Now it seems that I have got a questionable impression because you chose
-to send only two messages from this patch series also to my email address directly.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-[PATCH 0/3] fixes and update to essiv support
-https://lkml.org/lkml/2020/6/21/67
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Documentation/filesystems/hfs.rst                    | 2 +-
+ Documentation/filesystems/hpfs.rst                   | 2 +-
+ Documentation/filesystems/nfs/rpc-server-gss.rst     | 6 +++---
+ Documentation/filesystems/path-lookup.rst            | 6 +++---
+ Documentation/filesystems/ramfs-rootfs-initramfs.rst | 8 ++++----
+ Documentation/filesystems/ubifs-authentication.rst   | 4 ++--
+ Documentation/filesystems/vfs.rst                    | 6 +++---
+ 7 files changed, 17 insertions(+), 17 deletions(-)
 
-Will any fine-tuning trigger further consequences?
+diff --git a/Documentation/filesystems/hfs.rst b/Documentation/filesystems/hfs.rst
+index ab17a005e9b1..776015c80e3f 100644
+--- a/Documentation/filesystems/hfs.rst
++++ b/Documentation/filesystems/hfs.rst
+@@ -76,7 +76,7 @@ Creating HFS filesystems
+ 
+ The hfsutils package from Robert Leslie contains a program called
+ hformat that can be used to create HFS filesystem. See
+-<http://www.mars.org/home/rob/proj/hfs/> for details.
++<https://www.mars.org/home/rob/proj/hfs/> for details.
+ 
+ 
+ Credits
+diff --git a/Documentation/filesystems/hpfs.rst b/Documentation/filesystems/hpfs.rst
+index 0db152278572..7e0dd2f4373e 100644
+--- a/Documentation/filesystems/hpfs.rst
++++ b/Documentation/filesystems/hpfs.rst
+@@ -7,7 +7,7 @@ Read/Write HPFS 2.09
+ 1998-2004, Mikulas Patocka
+ 
+ :email: mikulas@artax.karlin.mff.cuni.cz
+-:homepage: http://artax.karlin.mff.cuni.cz/~mikulas/vyplody/hpfs/index-e.cgi
++:homepage: https://artax.karlin.mff.cuni.cz/~mikulas/vyplody/hpfs/index-e.cgi
+ 
+ Credits
+ =======
+diff --git a/Documentation/filesystems/nfs/rpc-server-gss.rst b/Documentation/filesystems/nfs/rpc-server-gss.rst
+index 812754576845..abed4a2b1b82 100644
+--- a/Documentation/filesystems/nfs/rpc-server-gss.rst
++++ b/Documentation/filesystems/nfs/rpc-server-gss.rst
+@@ -10,12 +10,12 @@ purposes of authentication.)
+ 
+ RPCGSS is specified in a few IETF documents:
+ 
+- - RFC2203 v1: http://tools.ietf.org/rfc/rfc2203.txt
+- - RFC5403 v2: http://tools.ietf.org/rfc/rfc5403.txt
++ - RFC2203 v1: https://tools.ietf.org/rfc/rfc2203.txt
++ - RFC5403 v2: https://tools.ietf.org/rfc/rfc5403.txt
+ 
+ and there is a 3rd version  being proposed:
+ 
+- - http://tools.ietf.org/id/draft-williams-rpcsecgssv3.txt
++ - https://tools.ietf.org/id/draft-williams-rpcsecgssv3.txt
+    (At draft n. 02 at the time of writing)
+ 
+ Background
+diff --git a/Documentation/filesystems/path-lookup.rst b/Documentation/filesystems/path-lookup.rst
+index f46b05e9b96c..1c552b97eb35 100644
+--- a/Documentation/filesystems/path-lookup.rst
++++ b/Documentation/filesystems/path-lookup.rst
+@@ -69,7 +69,7 @@ pathname that is just slashes have a final component.  If it does
+ exist, it could be "``.``" or "``..``" which are handled quite differently
+ from other components.
+ 
+-.. _POSIX: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_12
++.. _POSIX: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_12
+ 
+ If a pathname ends with a slash, such as "``/tmp/foo/``" it might be
+ tempting to consider that to have an empty final component.  In many
+@@ -376,7 +376,7 @@ table, and the mount point hash table.
+ Bringing it together with ``struct nameidata``
+ ----------------------------------------------
+ 
+-.. _First edition Unix: http://minnie.tuhs.org/cgi-bin/utree.pl?file=V1/u2.s
++.. _First edition Unix: https://minnie.tuhs.org/cgi-bin/utree.pl?file=V1/u2.s
+ 
+ Throughout the process of walking a path, the current status is stored
+ in a ``struct nameidata``, "namei" being the traditional name - dating
+@@ -1265,7 +1265,7 @@ Symlinks are different it seems.  Both reading a symlink (with ``readlink()``)
+ and looking up a symlink on the way to some other destination can
+ update the atime on that symlink.
+ 
+-.. _clearest statement: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_08
++.. _clearest statement: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_08
+ 
+ It is not clear why this is the case; POSIX has little to say on the
+ subject.  The `clearest statement`_ is that, if a particular implementation
+diff --git a/Documentation/filesystems/ramfs-rootfs-initramfs.rst b/Documentation/filesystems/ramfs-rootfs-initramfs.rst
+index 3fddacc6bf14..4598b0d90b60 100644
+--- a/Documentation/filesystems/ramfs-rootfs-initramfs.rst
++++ b/Documentation/filesystems/ramfs-rootfs-initramfs.rst
+@@ -246,15 +246,15 @@ If you don't already understand what shared libraries, devices, and paths
+ you need to get a minimal root filesystem up and running, here are some
+ references:
+ 
+-- http://www.tldp.org/HOWTO/Bootdisk-HOWTO/
+-- http://www.tldp.org/HOWTO/From-PowerUp-To-Bash-Prompt-HOWTO.html
++- https://www.tldp.org/HOWTO/Bootdisk-HOWTO/
++- https://www.tldp.org/HOWTO/From-PowerUp-To-Bash-Prompt-HOWTO.html
+ - http://www.linuxfromscratch.org/lfs/view/stable/
+ 
+-The "klibc" package (http://www.kernel.org/pub/linux/libs/klibc) is
++The "klibc" package (https://www.kernel.org/pub/linux/libs/klibc) is
+ designed to be a tiny C library to statically link early userspace
+ code against, along with some related utilities.  It is BSD licensed.
+ 
+-I use uClibc (http://www.uclibc.org) and busybox (http://www.busybox.net)
++I use uClibc (https://www.uclibc.org) and busybox (https://www.busybox.net)
+ myself.  These are LGPL and GPL, respectively.  (A self-contained initramfs
+ package is planned for the busybox 1.3 release.)
+ 
+diff --git a/Documentation/filesystems/ubifs-authentication.rst b/Documentation/filesystems/ubifs-authentication.rst
+index 16efd729bf7c..1f39c8cea702 100644
+--- a/Documentation/filesystems/ubifs-authentication.rst
++++ b/Documentation/filesystems/ubifs-authentication.rst
+@@ -433,9 +433,9 @@ will then have to be provided beforehand in the normal way.
+ References
+ ==========
+ 
+-[CRYPTSETUP2]        http://www.saout.de/pipermail/dm-crypt/2017-November/005745.html
++[CRYPTSETUP2]        https://www.saout.de/pipermail/dm-crypt/2017-November/005745.html
+ 
+-[DMC-CBC-ATTACK]     http://www.jakoblell.com/blog/2013/12/22/practical-malleability-attack-against-cbc-encrypted-luks-partitions/
++[DMC-CBC-ATTACK]     https://www.jakoblell.com/blog/2013/12/22/practical-malleability-attack-against-cbc-encrypted-luks-partitions/
+ 
+ [DM-INTEGRITY]       https://www.kernel.org/doc/Documentation/device-mapper/dm-integrity.rst
+ 
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index ed17771c212b..16ca8792344b 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -1431,13 +1431,13 @@ Resources
+  version.)
+ 
+ Creating Linux virtual filesystems. 2002
+-    <http://lwn.net/Articles/13325/>
++    <https://lwn.net/Articles/13325/>
+ 
+ The Linux Virtual File-system Layer by Neil Brown. 1999
+     <http://www.cse.unsw.edu.au/~neilb/oss/linux-commentary/vfs.html>
+ 
+ A tour of the Linux VFS by Michael K. Johnson. 1996
+-    <http://www.tldp.org/LDP/khg/HyperNews/get/fs/vfstour.html>
++    <https://www.tldp.org/LDP/khg/HyperNews/get/fs/vfstour.html>
+ 
+ A small trail through the Linux kernel by Andries Brouwer. 2001
+-    <http://www.win.tue.nl/~aeb/linux/vfs/trail.html>
++    <https://www.win.tue.nl/~aeb/linux/vfs/trail.html>
+-- 
+2.27.0
 
-Regards,
-Markus
