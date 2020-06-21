@@ -6,55 +6,68 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2018BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EC022D02
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99550247F8
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgFUEaO (ORCPT
+        id S1729244AbgFUEcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 00:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54732 "EHLO
+        Sun, 21 Jun 2020 00:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgFUEaO (ORCPT
+        with ESMTP id S1725807AbgFUEcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 00:30:14 -0400
+        Sun, 21 Jun 2020 00:32:42 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E69C061794;
-        Sat, 20 Jun 2020 21:30:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FF3C061794;
+        Sat, 20 Jun 2020 21:32:41 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D1CD21274A803;
-        Sat, 20 Jun 2020 21:30:10 -0700 (PDT)
-Date:   Sat, 20 Jun 2020 21:30:03 -0700 (PDT)
-Message-Id: <20200620.213003.385510660746410459.davem@davemloft.net>
-To:     gaurav1086@gmail.com
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [net/sched] Remove redundant skb null check
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 446421274A81F;
+        Sat, 20 Jun 2020 21:32:41 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 21:32:40 -0700 (PDT)
+Message-Id: <20200620.213240.344394880607292689.davem@davemloft.net>
+To:     dhowells@redhat.com
+Cc:     netdev@vger.kernel.org,
+        syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] rxrpc: Fix notification call on completion of
+ discarded calls
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200619192414.22158-1-gaurav1086@gmail.com>
-References: <20200618014328.28668-1-gaurav1086@gmail.com>
-        <20200619192414.22158-1-gaurav1086@gmail.com>
+In-Reply-To: <159260629601.2218121.13958646181773576175.stgit@warthog.procyon.org.uk>
+References: <159260629601.2218121.13958646181773576175.stgit@warthog.procyon.org.uk>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 20 Jun 2020 21:30:11 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 20 Jun 2020 21:32:41 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
-Date: Fri, 19 Jun 2020 15:24:13 -0400
+From: David Howells <dhowells@redhat.com>
+Date: Fri, 19 Jun 2020 23:38:16 +0100
 
-> Remove the redundant null check for skb.
+> When preallocated service calls are being discarded, they're passed to
+> ->discard_new_call() to have the caller clean up any attached higher-layer
+> preallocated pieces before being marked completed.  However, the act of
+> marking them completed now invokes the call's notification function - which
+> causes a problem because that function might assume that the previously
+> freed pieces of memory are still there.
 > 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+> Fix this by setting a dummy notification function on the socket after
+> calling ->discard_new_call().
+> 
+> This results in the following kasan message when the kafs module is
+> removed.
+ ...
+> Reported-by: syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com
+> Fixes: 5ac0d62226a0 ("rxrpc: Fix missing notification")
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
-Applied to net-next.
+Applied, thanks David.
