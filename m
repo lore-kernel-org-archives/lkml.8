@@ -6,45 +6,44 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC00BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B98248FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB6324901
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgFUNX6 (ORCPT
+        id S1729577AbgFUNei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:23:58 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:38394 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbgFUNX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:23:57 -0400
+        Sun, 21 Jun 2020 09:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729676AbgFUNeh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 09:34:37 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2A1C061794;
+        Sun, 21 Jun 2020 06:34:37 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 80BC14676D;
-        Sun, 21 Jun 2020 13:23:46 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B073445378;
+        Sun, 21 Jun 2020 13:34:32 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     corbet@lwn.net, changbin.du@intel.com, masahiroy@kernel.org,
-        rostedt@goodmis.org, j.neuschaefer@gmx.net,
-        andy.shevchenko@gmail.com, mchehab+samsung@kernel.org,
-        logang@deltatee.com, abbotti@mev.co.uk, jacob.e.keller@intel.com,
-        colin.king@canonical.com, gregkh@linuxfoundation.org,
-        mgreer@animalcreek.com, tytso@mit.edu, jack@suse.cz,
-        ebiggers@google.com, tglx@linutronix.de, akpm@linux-foundation.org,
-        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        jgross@suse.com, mike.kravetz@oracle.com, cohuck@redhat.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, alex@alexanderweb.de,
-        dwlsalmeida@gmail.com, dsterba@suse.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/admin-guide
-Date:   Sun, 21 Jun 2020 15:20:49 +0200
-Message-Id: <20200621132049.45624-1-grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/arm
+Date:   Sun, 21 Jun 2020 15:34:21 +0200
+Message-Id: <20200621133421.46250-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
+X-Spamd-Bar: ++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,245 +65,290 @@ For each file:
 
 Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- Documentation/admin-guide/README.rst                        | 2 +-
- Documentation/admin-guide/dell_rbu.rst                      | 2 +-
- Documentation/admin-guide/devices.txt                       | 6 +++---
- Documentation/admin-guide/ext4.rst                          | 4 ++--
- Documentation/admin-guide/kernel-parameters.txt             | 2 +-
- Documentation/admin-guide/laptops/disk-shock-protection.rst | 2 +-
- Documentation/admin-guide/laptops/sonypi.rst                | 2 +-
- Documentation/admin-guide/laptops/thinkpad-acpi.rst         | 6 +++---
- Documentation/admin-guide/mm/ksm.rst                        | 2 +-
- Documentation/admin-guide/nfs/nfs-client.rst                | 4 ++--
- Documentation/admin-guide/nfs/nfs-rdma.rst                  | 2 +-
- Documentation/admin-guide/nfs/nfsroot.rst                   | 6 +++---
- Documentation/admin-guide/sysctl/fs.rst                     | 2 +-
- 13 files changed, 21 insertions(+), 21 deletions(-)
+ Documentation/arm/arm.rst                     |  8 ++---
+ Documentation/arm/keystone/overview.rst       |  4 +--
+ Documentation/arm/microchip.rst               | 30 +++++++++----------
+ Documentation/arm/sa1100/assabet.rst          |  4 +--
+ Documentation/arm/samsung-s3c24xx/h1940.rst   |  6 ++--
+ .../arm/samsung-s3c24xx/overview.rst          |  6 ++--
+ .../arm/samsung-s3c24xx/smdk2440.rst          |  2 +-
+ 7 files changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-index 5fb526900023..7186ed9b42fe 100644
---- a/Documentation/admin-guide/README.rst
-+++ b/Documentation/admin-guide/README.rst
-@@ -1,6 +1,6 @@
- .. _readme:
+diff --git a/Documentation/arm/arm.rst b/Documentation/arm/arm.rst
+index 2edc509df92a..4f8c4985191f 100644
+--- a/Documentation/arm/arm.rst
++++ b/Documentation/arm/arm.rst
+@@ -48,12 +48,12 @@ Bug reports etc
+ ---------------
  
--Linux kernel release 5.x <http://kernel.org/>
-+Linux kernel release 5.x <https://kernel.org/>
- =============================================
+   Please send patches to the patch system.  For more information, see
+-  http://www.arm.linux.org.uk/developer/patches/info.php Always include some
++  https://www.arm.linux.org.uk/developer/patches/info.php Always include some
+   explanation as to what the patch does and why it is needed.
  
- These are the release notes for Linux version 5.  Read them carefully,
-diff --git a/Documentation/admin-guide/dell_rbu.rst b/Documentation/admin-guide/dell_rbu.rst
-index 8d70e1fc9f9d..2196caf1b939 100644
---- a/Documentation/admin-guide/dell_rbu.rst
-+++ b/Documentation/admin-guide/dell_rbu.rst
-@@ -26,7 +26,7 @@ Please go to  http://support.dell.com register and you can find info on
- OpenManage and Dell Update packages (DUP).
+   Bug reports should be sent to linux-arm-kernel@lists.arm.linux.org.uk,
+   or submitted through the web form at
+-  http://www.arm.linux.org.uk/developer/
++  https://www.arm.linux.org.uk/developer/
  
- Libsmbios can also be used to update BIOS on Dell systems go to
--http://linux.dell.com/libsmbios/ for details.
-+https://linux.dell.com/libsmbios/ for details.
+   When sending bug reports, please ensure that they contain all relevant
+   information, eg. the kernel messages that were printed before/during
+@@ -169,7 +169,7 @@ ST506 hard drives
  
- Dell_RBU driver supports BIOS update using the monolithic image and packetized
- image methods. In case of monolithic the driver allocates a contiguous chunk
-diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-guide/devices.txt
-index 2a97aaec8b12..a622dfec92a4 100644
---- a/Documentation/admin-guide/devices.txt
-+++ b/Documentation/admin-guide/devices.txt
-@@ -1442,7 +1442,7 @@
- 		    ...
+   Previous registrations may be found online.
  
- 		The driver and documentation may be obtained from
--		http://www.winradio.com/
-+		https://www.winradio.com/
+-    <http://www.arm.linux.org.uk/developer/machines/>
++    <https://www.arm.linux.org.uk/developer/machines/>
  
-   82 block	I2O hard disk
- 		  0 = /dev/i2o/hdag	33rd I2O hard disk, whole disk
-@@ -1656,7 +1656,7 @@
- 		dynamically, so there is no fixed mapping from subdevice
- 		pathnames to minor numbers.
+ Kernel entry (head.S)
+ ---------------------
+@@ -204,7 +204,7 @@ Kernel entry (head.S)
+   compile-time code selection method.  You can register a new machine via the
+   web site at:
  
--		See http://www.comedi.org/ for information about the Comedi
-+		See https://www.comedi.org/ for information about the Comedi
- 		project.
+-    <http://www.arm.linux.org.uk/developer/machines/>
++    <https://www.arm.linux.org.uk/developer/machines/>
  
-   98 block	User-mode virtual block device
-@@ -1723,7 +1723,7 @@
- 		implementations a kernel presence for caching and easy
- 		mounting.  For more information about the project,
- 		write to <arla-drinkers@stacken.kth.se> or see
--		http://www.stacken.kth.se/project/arla/
-+		https://www.stacken.kth.se/project/arla/
+   Note: Please do not register a machine type for DT-only platforms.  If your
+   platform is DT-only, you do not need a registered machine type.
+diff --git a/Documentation/arm/keystone/overview.rst b/Documentation/arm/keystone/overview.rst
+index cd90298c493c..3e4b2f8f5e8b 100644
+--- a/Documentation/arm/keystone/overview.rst
++++ b/Documentation/arm/keystone/overview.rst
+@@ -16,7 +16,7 @@ K2HK SoC and EVM
+ a.k.a Keystone 2 Hawking/Kepler SoC
+ TCI6636K2H & TCI6636K2K: See documentation at
  
-  103 block	Audit device
- 		  0 = /dev/audit	Audit device
-diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
-index 9443fcef1876..bc3abfb33476 100644
---- a/Documentation/admin-guide/ext4.rst
-+++ b/Documentation/admin-guide/ext4.rst
-@@ -611,7 +611,7 @@ kernel source:	<file:fs/ext4/>
+-	http://www.ti.com/product/tci6638k2k
++	https://www.ti.com/product/tci6638k2k
+ 	http://www.ti.com/product/tci6638k2h
  
- programs:	http://e2fsprogs.sourceforge.net/
+ EVM:
+@@ -31,7 +31,7 @@ K2E  -  66AK2E05:
  
--useful links:	http://fedoraproject.org/wiki/ext3-devel
-+useful links:	https://fedoraproject.org/wiki/ext3-devel
- 		http://www.bullopensource.org/ext4/
- 		http://ext4.wiki.kernel.org/index.php/Main_Page
--		http://fedoraproject.org/wiki/Features/Ext4
-+		https://fedoraproject.org/wiki/Features/Ext4
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..b333ba5cb144 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2786,7 +2786,7 @@
- 			touchscreen support is not enabled in the mainstream
- 			kernel as of 2.6.30, a preliminary port can be found
- 			in the "bleeding edge" mini2440 support kernel at
--			http://repo.or.cz/w/linux-2.6/mini2440.git
-+			https://repo.or.cz/w/linux-2.6/mini2440.git
+ See documentation at
  
- 	mitigations=
- 			[X86,PPC,S390,ARM64] Control optional mitigations for
-diff --git a/Documentation/admin-guide/laptops/disk-shock-protection.rst b/Documentation/admin-guide/laptops/disk-shock-protection.rst
-index e97c5f78d8c3..22c7ec3e84cf 100644
---- a/Documentation/admin-guide/laptops/disk-shock-protection.rst
-+++ b/Documentation/admin-guide/laptops/disk-shock-protection.rst
-@@ -135,7 +135,7 @@ single project which, although still considered experimental, is fit
- for use. Please feel free to add projects that have been the victims
- of my ignorance.
+-	http://www.ti.com/product/66AK2E05/technicaldocuments
++	https://www.ti.com/product/66AK2E05/technicaldocuments
  
--- http://www.thinkwiki.org/wiki/HDAPS
-+- https://www.thinkwiki.org/wiki/HDAPS
+ EVM:
+    https://www.einfochips.com/index.php/partnerships/texas-instruments/k2e-evm.html
+diff --git a/Documentation/arm/microchip.rst b/Documentation/arm/microchip.rst
+index 9c013299fd3b..4786dd68d325 100644
+--- a/Documentation/arm/microchip.rst
++++ b/Documentation/arm/microchip.rst
+@@ -26,44 +26,44 @@ the Microchip website: http://www.microchip.com.
  
-   See this page for information about Linux support of the hard disk
-   active protection system as implemented in IBM/Lenovo Thinkpads.
-diff --git a/Documentation/admin-guide/laptops/sonypi.rst b/Documentation/admin-guide/laptops/sonypi.rst
-index c6eaaf48f7c1..190da1234314 100644
---- a/Documentation/admin-guide/laptops/sonypi.rst
-+++ b/Documentation/admin-guide/laptops/sonypi.rst
-@@ -151,7 +151,7 @@ Bugs:
- 	  different way to adjust the backlighting of the screen. There
- 	  is a userspace utility to adjust the brightness on those models,
- 	  which can be downloaded from
--	  http://www.acc.umu.se/~erikw/program/smartdimmer-0.1.tar.bz2
-+	  https://www.acc.umu.se/~erikw/program/smartdimmer-0.1.tar.bz2
+           * Datasheet
  
- 	- since all development was done by reverse engineering, there is
- 	  *absolutely no guarantee* that this driver will not crash your
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 822907dcc845..69b7ce905cba 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -904,7 +904,7 @@ temperatures:
- The mapping of thermal sensors to physical locations varies depending on
- system-board model (and thus, on ThinkPad model).
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-1768-32-bit-ARM920T-Embedded-Microprocessor-AT91RM9200_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-1768-32-bit-ARM920T-Embedded-Microprocessor-AT91RM9200_Datasheet.pdf
  
--http://thinkwiki.org/wiki/Thermal_Sensors is a public wiki page that
-+https://thinkwiki.org/wiki/Thermal_Sensors is a public wiki page that
- tries to track down these locations for various models.
+     * ARM 926 based SoCs
+       - at91sam9260
  
- Most (newer?) models seem to follow this pattern:
-@@ -925,7 +925,7 @@ For the R51 (source: Thomas Gruber):
- - 3:  Internal HDD
+           * Datasheet
  
- For the T43, T43/p (source: Shmidoax/Thinkwiki.org)
--http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
-+https://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6221-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9260_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6221-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9260_Datasheet.pdf
  
- - 2:  System board, left side (near PCMCIA slot), reported as HDAPS temp
- - 3:  PCMCIA slot
-@@ -935,7 +935,7 @@ http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
- - 11: Power regulator, underside of system board, below F2 key
+       - at91sam9xe
  
- The A31 has a very atypical layout for the thermal sensors
--(source: Milos Popovic, http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_A31)
-+(source: Milos Popovic, https://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_A31)
+           * Datasheet
  
- - 1:  CPU
- - 2:  Main Battery: main sensor
-diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-guide/mm/ksm.rst
-index 874eb0c77d34..e87bf0135edf 100644
---- a/Documentation/admin-guide/mm/ksm.rst
-+++ b/Documentation/admin-guide/mm/ksm.rst
-@@ -9,7 +9,7 @@ Overview
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6254-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9XE_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6254-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9XE_Datasheet.pdf
  
- KSM is a memory-saving de-duplication feature, enabled by CONFIG_KSM=y,
- added to the Linux kernel in 2.6.32.  See ``mm/ksm.c`` for its implementation,
--and http://lwn.net/Articles/306704/ and http://lwn.net/Articles/330589/
-+and http://lwn.net/Articles/306704/ and https://lwn.net/Articles/330589/
+       - at91sam9261
  
- KSM was originally developed for use with KVM (where it was known as
- Kernel Shared Memory), to fit more virtual machines into physical memory,
-diff --git a/Documentation/admin-guide/nfs/nfs-client.rst b/Documentation/admin-guide/nfs/nfs-client.rst
-index c4b777c7584b..6adb6457bc69 100644
---- a/Documentation/admin-guide/nfs/nfs-client.rst
-+++ b/Documentation/admin-guide/nfs/nfs-client.rst
-@@ -65,8 +65,8 @@ migrated onto another server by means of the special "fs_locations"
- attribute. See `RFC3530 Section 6: Filesystem Migration and Replication`_ and
- `Implementation Guide for Referrals in NFSv4`_.
+           * Datasheet
  
--.. _RFC3530 Section 6\: Filesystem Migration and Replication: http://tools.ietf.org/html/rfc3530#section-6
--.. _Implementation Guide for Referrals in NFSv4: http://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
-+.. _RFC3530 Section 6\: Filesystem Migration and Replication: https://tools.ietf.org/html/rfc3530#section-6
-+.. _Implementation Guide for Referrals in NFSv4: https://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6062-ARM926EJ-S-Microprocessor-SAM9261_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6062-ARM926EJ-S-Microprocessor-SAM9261_Datasheet.pdf
  
- The fs_locations information can take the form of either an ip address and
- a path, or a DNS hostname and a path. The latter requires the NFS client to
-diff --git a/Documentation/admin-guide/nfs/nfs-rdma.rst b/Documentation/admin-guide/nfs/nfs-rdma.rst
-index ef0f3678b1fb..f137485f8bde 100644
---- a/Documentation/admin-guide/nfs/nfs-rdma.rst
-+++ b/Documentation/admin-guide/nfs/nfs-rdma.rst
-@@ -65,7 +65,7 @@ use with NFS/RDMA.
-   If the version is less than 1.1.2 or the command does not exist,
-   you should install the latest version of nfs-utils.
+       - at91sam9263
  
--  Download the latest package from: http://www.kernel.org/pub/linux/utils/nfs
-+  Download the latest package from: https://www.kernel.org/pub/linux/utils/nfs
+           * Datasheet
  
-   Uncompress the package and follow the installation instructions.
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6249-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9263_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6249-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9263_Datasheet.pdf
  
-diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
-index c6772075c80c..135218f33394 100644
---- a/Documentation/admin-guide/nfs/nfsroot.rst
-+++ b/Documentation/admin-guide/nfs/nfsroot.rst
-@@ -264,7 +264,7 @@ They depend on various facilities being available:
-      	access to the floppy drive device, /dev/fd0
+       - at91sam9rl
  
-      	For more information on syslinux, including how to create bootdisks
--     	for prebuilt kernels, see http://syslinux.zytor.com/
-+     	for prebuilt kernels, see https://syslinux.zytor.com/
+           * Datasheet
  
- 	.. note::
- 		Previously it was possible to write a kernel directly to
-@@ -292,7 +292,7 @@ They depend on various facilities being available:
- 	  cdrecord dev=ATAPI:1,0,0 arch/x86/boot/image.iso
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/doc6289.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/doc6289.pdf
  
-      	For more information on isolinux, including how to create bootdisks
--     	for prebuilt kernels, see http://syslinux.zytor.com/
-+     	for prebuilt kernels, see https://syslinux.zytor.com/
+       - at91sam9g20
  
- - Using LILO
+           * Datasheet
  
-@@ -346,7 +346,7 @@ They depend on various facilities being available:
- 	see Documentation/admin-guide/serial-console.rst for more information.
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/DS60001516A.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/DS60001516A.pdf
  
- 	For more information on isolinux, including how to create bootdisks
--	for prebuilt kernels, see http://syslinux.zytor.com/
-+	for prebuilt kernels, see https://syslinux.zytor.com/
+       - at91sam9g45 family
+         - at91sam9g45
+@@ -73,7 +73,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6437-32-bit-ARM926-Embedded-Microprocessor-SAM9M11_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6437-32-bit-ARM926-Embedded-Microprocessor-SAM9M11_Datasheet.pdf
+ 
+       - at91sam9x5 family (aka "The 5 series")
+         - at91sam9g15
+@@ -84,19 +84,19 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet (can be considered as covering the whole family)
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11055-32-bit-ARM926EJ-S-Microcontroller-SAM9X35_Datasheet.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11055-32-bit-ARM926EJ-S-Microcontroller-SAM9X35_Datasheet.pdf
+ 
+       - at91sam9n12
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/DS60001517A.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/DS60001517A.pdf
+ 
+       - sam9x60
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/SAM9X60-Data-Sheet-DS60001579A.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/SAM9X60-Data-Sheet-DS60001579A.pdf
+ 
+     * ARM Cortex-A5 based SoCs
+       - sama5d3 family
+@@ -109,7 +109,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11121-32-bit-Cortex-A5-Microcontroller-SAMA5D3_Datasheet_B.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11121-32-bit-Cortex-A5-Microcontroller-SAMA5D3_Datasheet_B.pdf
+ 
+     * ARM Cortex-A5 + NEON based SoCs
+       - sama5d4 family
+@@ -121,7 +121,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/60001525A.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/60001525A.pdf
+ 
+       - sama5d2 family
+ 
+@@ -135,7 +135,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/DS60001476B.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/DS60001476B.pdf
+ 
+     * ARM Cortex-M7 MCUs
+       - sams70 family
+@@ -173,7 +173,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/SAM-E70-S70-V70-V71-Family-Data-Sheet-DS60001527D.pdf
++          https://ww1.microchip.com/downloads/en/DeviceDoc/SAM-E70-S70-V70-V71-Family-Data-Sheet-DS60001527D.pdf
  
  
+ Linux kernel information
+diff --git a/Documentation/arm/sa1100/assabet.rst b/Documentation/arm/sa1100/assabet.rst
+index a761e128fb08..0bc5a1b4a754 100644
+--- a/Documentation/arm/sa1100/assabet.rst
++++ b/Documentation/arm/sa1100/assabet.rst
+@@ -6,7 +6,7 @@ Please see:
+ http://developer.intel.com
  
-diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
-index 2a45119e3331..f48277a0a850 100644
---- a/Documentation/admin-guide/sysctl/fs.rst
-+++ b/Documentation/admin-guide/sysctl/fs.rst
-@@ -261,7 +261,7 @@ directories like /tmp. The common method of exploitation of this flaw
- is to cross privilege boundaries when following a given symlink (i.e. a
- root process follows a symlink belonging to another user). For a likely
- incomplete list of hundreds of examples across the years, please see:
--http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=/tmp
-+https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=/tmp
+ Also some notes from John G Dorsey <jd5q@andrew.cmu.edu>:
+-http://www.cs.cmu.edu/~wearable/software/assabet.html
++https://www.cs.cmu.edu/~wearable/software/assabet.html
  
- When set to "0", symlink following behavior is unrestricted.
+ 
+ Building the kernel
+@@ -32,7 +32,7 @@ BLOB (http://www.lartmaker.nl/lartware/blob/)
+    patches were merged into BLOB to add support for Assabet.
+ 
+ Compaq's Bootldr + John Dorsey's patch for Assabet support
+-(http://www.handhelds.org/Compaq/bootldr.html)
++(https://www.handhelds.org/Compaq/bootldr.html)
+ (http://www.wearablegroup.org/software/bootldr/)
+ 
+    Bootldr is the bootloader developed by Compaq for the iPAQ Pocket PC.
+diff --git a/Documentation/arm/samsung-s3c24xx/h1940.rst b/Documentation/arm/samsung-s3c24xx/h1940.rst
+index 62a562c178e3..94fa58bda793 100644
+--- a/Documentation/arm/samsung-s3c24xx/h1940.rst
++++ b/Documentation/arm/samsung-s3c24xx/h1940.rst
+@@ -2,7 +2,7 @@
+ HP IPAQ H1940
+ =============
+ 
+-http://www.handhelds.org/projects/h1940.html
++https://www.handhelds.org/projects/h1940.html
+ 
+ Introduction
+ ------------
+@@ -18,11 +18,11 @@ Support
+ 
+   handhelds.org project page:
+ 
+-    http://www.handhelds.org/projects/h1940.html
++    https://www.handhelds.org/projects/h1940.html
+ 
+   handhelds.org wiki page:
+ 
+-    http://handhelds.org/moin/moin.cgi/HpIpaqH1940
++    https://handhelds.org/moin/moin.cgi/HpIpaqH1940
+ 
+   Herbert Pötzl pages:
+ 
+diff --git a/Documentation/arm/samsung-s3c24xx/overview.rst b/Documentation/arm/samsung-s3c24xx/overview.rst
+index e9a1dc7276b5..b4a7db77f33b 100644
+--- a/Documentation/arm/samsung-s3c24xx/overview.rst
++++ b/Documentation/arm/samsung-s3c24xx/overview.rst
+@@ -114,7 +114,7 @@ Machines
+   Acer N30
+ 
+     A S3C2410 based PDA from Acer.  There is a Wiki page at
+-    http://handhelds.org/moin/moin.cgi/AcerN30Documentation .
++    https://handhelds.org/moin/moin.cgi/AcerN30Documentation .
+ 
+   AML M5900
+ 
+@@ -140,7 +140,7 @@ Adding New Machines
+   Read the kernel patch submission policies as well as the
+   Documentation/arm directory before submitting patches. The
+   ARM kernel series is managed by Russell King, and has a patch system
+-  located at http://www.arm.linux.org.uk/developer/patches/
++  located at https://www.arm.linux.org.uk/developer/patches/
+   as well as mailing lists that can be found from the same site.
+ 
+   As a courtesy, please notify <ben-linux@fluff.org> of any new
+@@ -148,7 +148,7 @@ Adding New Machines
+ 
+   Any large scale modifications, or new drivers should be discussed
+   on the ARM kernel mailing list (linux-arm-kernel) before being
+-  attempted. See http://www.arm.linux.org.uk/mailinglists/ for the
++  attempted. See https://www.arm.linux.org.uk/mailinglists/ for the
+   mailing list information.
+ 
+ 
+diff --git a/Documentation/arm/samsung-s3c24xx/smdk2440.rst b/Documentation/arm/samsung-s3c24xx/smdk2440.rst
+index 524fd0b4afaf..76996b803f7c 100644
+--- a/Documentation/arm/samsung-s3c24xx/smdk2440.rst
++++ b/Documentation/arm/samsung-s3c24xx/smdk2440.rst
+@@ -26,7 +26,7 @@ Support
+   includes linux based USB download tools.
+ 
+   Some of the h1940 patches that can be found from the H1940 project
+-  site at http://www.handhelds.org/projects/h1940.html can also be
++  site at https://www.handhelds.org/projects/h1940.html can also be
+   applied to this board.
+ 
  
 -- 
 2.27.0
