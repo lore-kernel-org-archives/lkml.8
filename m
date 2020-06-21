@@ -2,189 +2,136 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE40C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAC022516
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C75207F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajr+lcAh"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Q+6/+Ny6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgFUNLf (ORCPT
+        id S1730119AbgFUNPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730016AbgFUNLe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:11:34 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E53C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:11:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ne5so6692078pjb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IkUGdQWMXK+kOz7YHBuqdTcLCfEzkHSPew/c4ZoAYIk=;
-        b=ajr+lcAhyDq9MPdPbrMwTbTTH+zjhMpGwfMVO0yR/5wICP92yFw/c7bp6W62Q/gUG3
-         b9c+GVPgsaiVuALC44jEwUPxCXYfK8di21S1Q5BrAEhPWhgBAcMa1GyRX+WgiDiMJhYO
-         rieZ7eX4lxQP1QvSSHbW9SiTpWpUB1W/XmZBuUAKSnIXpM0E3oqxRlm+q5r1hJBvXAxj
-         ewTgQ27yQdDVmzCGmebwYFMZNPzye98bwxU2C/FDdq6CexZoYhUeeUap8nmj+cqqNAtC
-         uSdxRCoz1u5zXlMOle7mswb6H2gwfN0VR30WZGN+v0XXEeUf+/9v9NU/YXuAtpIf9Jtm
-         SXKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IkUGdQWMXK+kOz7YHBuqdTcLCfEzkHSPew/c4ZoAYIk=;
-        b=oD3w93P4f9pWsXGf06Rcybg6jr0pxm685ZIApmP90u5jcIGLIVYCPHr0jYwBoFTXfy
-         +BiHDKJft03ggLfl7UX5+jdRv+sdhyCpG+1cLuBWDzAPq8Aaovg6QgOarWAfstyckNMo
-         yIsZBEB3mKoOQTruMQ0necaQfn693nerHJIJKyl8k3NmwFaDtJywqKF7mk4L/ckI6Zkr
-         rI/+nQDethiuPCypUBkriKkQhyepa317zznpA6mLfo5DLDj8sXugVcMBWF6ugXhqXSkp
-         I+htvjluXnMiQx6vzr6OmgyCh0zWaJgvslHxKkR1PvUI2hu6AhFoHNwRqVRsj7eJQiA+
-         ywSw==
-X-Gm-Message-State: AOAM531ZBgIf2hwUei4L5X9JSoiEwu3bJQdWeMAOC9FQZNmdHK6wzXaH
-        Ymybicv34j+2GJZSpw60FzSgIwfR
-X-Google-Smtp-Source: ABdhPJwv5b2lA1PMqNRi4I9Xn3bUtVBg/2c3rD2g6rNXwVK2NgkB0j7u7V6FMvpYHKOTSDReArKqUA==
-X-Received: by 2002:a17:90a:247:: with SMTP id t7mr13142876pje.33.1592745092569;
-        Sun, 21 Jun 2020 06:11:32 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m9sm8554036pgq.61.2020.06.21.06.11.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jun 2020 06:11:31 -0700 (PDT)
-Subject: Re: [PATCH v2] dma-pool: Fix too large DMA pools on medium systems
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200608132217.29945-1-geert@linux-m68k.org>
- <20200620200936.GA106151@roeck-us.net>
- <CAMuHMdX3mBDm9iHk+jhbGfmo+dbix=3tp5z2ewyddWxM1tdqGQ@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <c0889f5c-34ae-2314-6530-a9240e0901f2@roeck-us.net>
-Date:   Sun, 21 Jun 2020 06:11:30 -0700
+        Sun, 21 Jun 2020 09:15:42 -0400
+Received: from mout.web.de ([212.227.15.14]:59859 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730071AbgFUNPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 09:15:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592745328;
+        bh=kNDqV4Y9iwk4ngQtcCZhjKxwK0e3ASAnQOTNbokvWxQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Q+6/+Ny6ZDNhNNPgf2vFDkPjfLDo+5bgIUEGoAYtTFueHi2vI9LuNfUOJG4hRVJUd
+         4ivLvFVUluq9fNZ8DRgCH1/m+T5/uERQZu/9mTty1PkTb1toxjM9r9NAnRpOaJjtG8
+         Bnaiz5T8pagQy1vimZmpTlM+2PB9y/4ntT2pCWKc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.145.213]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M1aE3-1jjxoh31jv-0038HX; Sun, 21
+ Jun 2020 15:15:28 +0200
+Subject: Re: [PATCH v2 2/3] crypto: ccree: adapt ccree essiv support to kcapi
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Libo Wang <libo.wang@arm.com>, Ofir Drang <ofir.drang@arm.com>
+References: <20200621112000.31495-1-gilad@benyossef.com>
+ <20200621112000.31495-3-gilad@benyossef.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <53ec2baa-eada-0fa4-2c91-082ab4a21901@web.de>
+Date:   Sun, 21 Jun 2020 15:15:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdX3mBDm9iHk+jhbGfmo+dbix=3tp5z2ewyddWxM1tdqGQ@mail.gmail.com>
+In-Reply-To: <20200621112000.31495-3-gilad@benyossef.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uuR1KvMfvfSyH1HhtsetqM565HoIkSTeUhdS0WdiuNe1xk4l8pe
+ X1lp3B7wrpf6SFS3eEInpxfW5BAq1hOQjciut/3m9X8dnu7rDJivyfYPvVQxg94rN4sfCb+
+ imqdiXiOEWGe/JtKTGTuPjJe8hLTb2liYiMYpT1SY19omRKiQNl9LKzGRa9EdpPX0Q2YUUC
+ mhyfvMRVADCFlSVNvScgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RFOvZ8fLRTY=:kC7WzlDTyP39ml6reA9Zxv
+ VtuNkIu5bH/tZbFsDx+gkpu8PwwiDHag3IC6kXkZK1UgBV6BNN0BL4eX3ftv9AYJsK4RqYsML
+ VFBNIW2ZIu3QVJtIPGyfPE8kHlk7pp5MzZ88kLrX51oH6vwqpy3ip384fpONIzZPBKEOe7STL
+ khcKiYG2mZr6h5ejEByQRlPVTV+NcenYoLE0gAy5+RKa2W1BvWvr1u7TEyH3ePuhaBpQ9QaXv
+ ZaGTd4gdsaPrxdMg2ZZXtGCNaXbGU0WjvIQD0CtuvwWcKr1mrnYdxGKmGBzwVw+xAFEpXQtBO
+ W+ddKGslhh+I7lrYch3irPivOkmfcBowoVZck3kb2R/QEJTZAtAEtd5w+KoTLK5z1m93wtqWg
+ gjMfF4z42E3b7rjP/zwn0wScojyAIKrxzCL9sT3BxAeQyi08Oxc4i5phVpWImy/pYt7oDksZW
+ va1jioWTga9K8zZgtqwVQoK2QHHkMhjE5FoOrzexUkqsF8rSBAtsDXBBcLsIpOuMikxG6CU7u
+ FCvMo7RPs18JPANbEtKUiY37wLiDItc54R0Zyw4kC3DlCTy6eVqWHh+musdad4jF8t+axZYpH
+ tMRJBZDoqpqIfcXpZddCcye5IASgkLyaBr3vd7i0+NZCajs8uD+Xy7pZOm6VfVau0sk+wieyZ
+ IwdCzLadYNnKqk8SKLe4raztji0m7MgXD+ez12HiUVqNaCP7K/cGIhRt/kg4L35b6DWQWMlij
+ b2XQx6CE+IKkCkvRIFnCtndEd4Ea8qx8YL4UyWGZPwNOs5okUPLdpnbRyP++sVsLGZ4MEnchb
+ eKZNlB9f7y8I2FNRk731S1Fp9h2KByn24a0mRd/dEyb7jYmoAkMt6Ytchs5y3jna7ROyu8ggi
+ fPucRwFopuZkcVThXIIOuNEU6jgZSkZqvubBvJigFEGwa7kjfFmil4I6bgFV7rEsDZQkPDbYw
+ 36DbN6K3P7q6oALr/6oxwjwSy8v8WW17cEHVigfd27fxkZ6FClz5YSi+TuNSnsqLafBmHmDd4
+ aF2CAgopvHZ5zkAT8K65hBk7KgsOscI/aMRd2ZOdfSoPg0hu56Vx+4kYLaW1IUyVOPt3ImlU2
+ CeYhiP8MuqQ3ubrJEBiiRDGUehFSga27N+6M0x2WCzk01rHTWSm674esWZl/LhdnoKO2X2MWB
+ r60E81xpwpgLsMUb1+PwgtLBv+B1uxwYSs4NfxUL41A4LSUMuXdU0LlpAYX/tdOriuPBqpKZ/
+ scJ9uOo9m6URm41pk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/21/20 1:35 AM, Geert Uytterhoeven wrote:
-> Hi Günter,
-> 
-> On Sat, Jun 20, 2020 at 10:09 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Mon, Jun 08, 2020 at 03:22:17PM +0200, Geert Uytterhoeven wrote:
->>> On systems with at least 32 MiB, but less than 32 GiB of RAM, the DMA
->>> memory pools are much larger than intended (e.g. 2 MiB instead of 128
->>> KiB on a 256 MiB system).
->>>
->>> Fix this by correcting the calculation of the number of GiBs of RAM in
->>> the system.  Invert the order of the min/max operations, to keep on
->>> calculating in pages until the last step, which aids readability.
->>>
->>> Fixes: 1d659236fb43c4d2 ("dma-pool: scale the default DMA coherent pool size with memory capacity")
->>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>> Acked-by: David Rientjes <rientjes@google.com>
->>
->> This patch results in a boot failure in some of my powerpc boot tests,
->> specifically those testing boots from mptsas1068 devices. Error message:
->>
->> mptsas 0000:00:02.0: enabling device (0000 -> 0002)
->> mptbase: ioc0: Initiating bringup
->> ioc0: LSISAS1068 A0: Capabilities={Initiator}
->> mptbase: ioc0: ERROR - Unable to allocate Reply, Request, Chain Buffers!
->> mptbase: ioc0: ERROR - didn't initialize properly! (-3)
->> mptsas: probe of 0000:00:02.0 failed with error -3
->>
->> Configuration is bamboo:44x/bamboo_defconfig plus various added drivers.
->> Qemu command line is
->>
->> qemu-system-ppc -kernel vmlinux -M bamboo \
->>      -m 256 -no-reboot -snapshot -device mptsas1068,id=scsi \
->>      -device scsi-hd,bus=scsi.0,drive=d0,wwn=0x5000c50015ea71ac -drive \
->>      file=rootfs.ext2,format=raw,if=none,id=d0 \
->>      --append "panic=-1 slub_debug=FZPUA root=/dev/sda  mem=256M console=ttyS0" \
->>      -monitor none -nographic
->>
->> canyonlands_defconfig with sam460ex machine and otherwise similar command line
->> fails as well.
->>
->> Reverting this patch fixes the problem.
-> 
-> This looks like the minimum value of 128 KiB is not sufficient, and the
-> bug is in the intention of 1d659236fb43c4d2 ("dma-pool: scale the
-> default DMA coherent pool size with memory capacity")?
-> Before, there was a single pool of (fixed) 256 KiB size, now there are
-> up to three coherent pools (DMA, DMA32, and kernel), albeit of smaller
-> size (128 KiB each).
-> 
-> Can you print the requested size in drivers/message/fusion/mptbase.c:
-> PrimeIocFifos()?
+> Brings the ccree essiv interface =E2=80=A6
 
-172928 bytes
+Wording adjustments:
+Bring the =E2=80=A6
 
-> Does replacing all SZ_128K by SZ_256K in my patch help?
 
-Yes, it does.
+> also use a fallback if requested a smaller key size.
 
-Guenter
+=E2=80=A6 fallback if a smaller key size was requested.
+
+Regards,
+Markus
