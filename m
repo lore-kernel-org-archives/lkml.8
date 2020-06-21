@@ -2,104 +2,132 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE02C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD62490E
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E099248E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iHxsXjva"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRrmT/kI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgFUNs4 (ORCPT
+        id S1730087AbgFUNxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:48:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:49559 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbgFUNs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:48:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qYmP5wf9z9sSJ;
-        Sun, 21 Jun 2020 23:48:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592747334;
-        bh=Mib6ItJPMHTK83INMb8+UV7/5h18enMN1HYjADfnHaI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iHxsXjval0IIEKmOvQB/w9eLozT/EfPH5y6kGqa/sQbk3paLfDW65c9zU7y0/EME+
-         DrL5aVhZIuNwPdYgKCLGWCrp94PgKRKAatDs9uP6JYJstLij3AViDEHhMYryP1IeNb
-         ejsCwJXfZ5fUkWYROBFUEP3e27iFlRE50k8Ng+cEu834N6FTPZ+g5UbI9sjBbgoEth
-         FNNdwGYT+w27NlG3o4/xHaLD41B1NC4zsoLUGvzCASM+2ULx8yXAZ8F12YdBoAkQSy
-         lmQQNW+rYiw3rN8jswZD0QHtr9DXvV1lbmVwqp8VyAE2I1indKmCPCkr0KKLBTNVXV
-         aw6cfHNVPQbpw==
-Date:   Sun, 21 Jun 2020 23:48:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kees Cook <keescook@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sargun Dhillon <sargun@sargun.me>
-Subject: linux-next: build failure after merge of the kspp tree
-Message-ID: <20200621234851.64cf82c7@canb.auug.org.au>
+        Sun, 21 Jun 2020 09:53:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729862AbgFUNxV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 09:53:21 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB86CC061794;
+        Sun, 21 Jun 2020 06:53:20 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i3so16415361ljg.3;
+        Sun, 21 Jun 2020 06:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Rj9ZnFm4R5tkYfd96VY13f/6M27NvR0zKjQa2qTEj6s=;
+        b=PRrmT/kIqR6/3oQkRNh6tonCdS34cPBT1mCriBx6e1dxP8fVmryxBVXmqCCANsUvX3
+         f/IMAe7F5mRvjyqZEIZp5v6er26qBOZpOEn3V5ZroZSHYT/di5EfgPTlpcdq+wc2TFuQ
+         AyzfvhvCFz/EANRJU3XHqKuWjpf/z4dF8U5hq+IMmObDIQaaR4Pv7OkRWjr8PnTdv3pK
+         oQtaJxqxqCvOavyr/QRs3e7Y4gQBcP4oRr3QXHp7UU+ImQEr3rTty3Z5o8A9db8nz+qF
+         lfkl+1f9X6h0kmjAfKPM+qasH5s30UlfupkaM8UDc6X6Zn1IHFRAn8fCqt8nFowB8KeS
+         1+Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Rj9ZnFm4R5tkYfd96VY13f/6M27NvR0zKjQa2qTEj6s=;
+        b=O52bh37yFsoQQNvwaI8+ocYjKkfjQf5kQKdfVMuuq6csEWPWWsnk5cb8suUm4oKAe5
+         +k/znm6jQoQay+kgTjIvL4l4UefanBl72Gq71guaw5Eq+sb13wDf8qrUU6Nq3hCBicdN
+         QqmdYW+tsJ25pS9QClWTYfjY8XkXR/eq3ZGQCeF3iDqGpejVcAbjE8Fik1zL6HFagFFc
+         cwgf7fgzq+m/ci1ZOG5hSCKDtvgRWe0Oim+RDvVBRSTs28/iTYFtyUcgiS0GvB5t8CZH
+         drMtrKwEmziJWa6YPwqSsq2Z+5XWhN3hWmOInWJH3lAXYtQywjkhpIvkdBuRz+vnjH68
+         MNUQ==
+X-Gm-Message-State: AOAM531f9mpKZ3p7IKPe8U3FOSqCnBBCVgeY1PbYc0aMVQsaiMfFazCH
+        qyS+AuUyCQL8RR1XPWO45hsWeqGHHfVoCw==
+X-Google-Smtp-Source: ABdhPJzq9OQuDuEoVWt9yw0RiH+IDcaqJVjQOSfQrPd2eiRIMaJqCUxeJT9Kb+QO1lx+H+Lnoqi4fw==
+X-Received: by 2002:a2e:85d8:: with SMTP id h24mr6089524ljj.274.1592747599268;
+        Sun, 21 Jun 2020 06:53:19 -0700 (PDT)
+Received: from pc-sasha.localdomain ([146.120.244.6])
+        by smtp.gmail.com with ESMTPSA id 132sm2745516lfl.37.2020.06.21.06.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 06:53:18 -0700 (PDT)
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+To:     asmadeus@codewreck.org
+Cc:     lucho@ionkov.net, ericvh@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexander.kapshuk@gmail.com
+Subject: [PATCH] net/9p: Validate current->sighand in client.c
+Date:   Sun, 21 Jun 2020 16:53:12 +0300
+Message-Id: <20200621135312.78201-1-alexander.kapshuk@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200621084512.GA720@nautica>
+References: <20200621084512.GA720@nautica>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yZCEJbQ/l9nTnvmw6tYsHo8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yZCEJbQ/l9nTnvmw6tYsHo8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Fix rcu not being dereferenced cleanly by using the task
+helpers (un)lock_task_sighand instead of spin_lock_irqsave and
+spin_unlock_irqrestore to ensure current->sighand is a valid pointer as
+suggested in the email referenced below.
 
-Hi all,
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Link: https://lore.kernel.org/lkml/20200618190807.GA20699@nautica/
+---
+ net/9p/client.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-After merging the kspp tree, today's linux-next build (x86_64 allnoconfig)
-failed like this:
+diff --git a/net/9p/client.c b/net/9p/client.c
+index fc1f3635e5dd..15f16f2baa8f 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -787,9 +787,14 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
+ 	}
+ recalc_sigpending:
+ 	if (sigpending) {
+-		spin_lock_irqsave(&current->sighand->siglock, flags);
++		if (!lock_task_sighand(current, &flags)) {
++			pr_warn("%s (%d): current->sighand==NULL in recalc_sigpending\n",
++				__func__, task_pid_nr(current));
++			err = -ESRCH;
++			goto reterr;
++		}
+ 		recalc_sigpending();
+-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
++		unlock_task_sighand(current, &flags);
+ 	}
+ 	if (err < 0)
+ 		goto reterr;
+@@ -869,9 +874,14 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
+ 	}
+ recalc_sigpending:
+ 	if (sigpending) {
+-		spin_lock_irqsave(&current->sighand->siglock, flags);
++		if (!lock_task_sighand(current, &flags)) {
++			pr_warn("%s (%d): current->sighand==NULL in recalc_sigpending\n",
++				__func__, task_pid_nr(current));
++			err = -ESRCH;
++			goto reterr;
++		}
+ 		recalc_sigpending();
+-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
++		unlock_task_sighand(current, &flags);
+ 	}
+ 	if (err < 0)
+ 		goto reterr;
+--
+2.27.0
 
-x86_64-linux-gnu-ld: fs/file.o: in function `__fd_install_received':
-file.c:(.text+0x1010): undefined reference to `sock_from_file'
-x86_64-linux-gnu-ld: file.c:(.text+0x104a): undefined reference to `sock_fr=
-om_file'
-
-Caused by commit
-
-  d3868eea5cbc ("fs: Move __scm_install_fd() to __fd_install_received()")
-
-I reverted these commits for today (from the breaking commit to the end
-of the branch):
-
-b29bb87cbb0a selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
-af35c3c6a9a5 seccomp: Introduce addfd ioctl to seccomp user notifier
-50ca89d3a4fb fs: Expand __fd_install_received() to accept fd
-f533d1758f02 pidfd: Replace open-coded partial fd_install_received()
-4ab6bcc3ad3b fs: Add fd_install_received() wrapper for __fd_install_receive=
-d()
-d3868eea5cbc fs: Move __scm_install_fd() to __fd_install_received()
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yZCEJbQ/l9nTnvmw6tYsHo8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7vZUMACgkQAVBC80lX
-0GzTiAgAi9z+e6FFcNzXpk2NTeqOa2oZ8ZuxujlzqAYbu23+J9ofzbsEX+L8EaFh
-xP5j8euVLbcxfVHxTak/Co29zK40O+C+6ANWGTDrF9Yuqj0XyjRQ0akMrZebed1+
-Kfyt8c7Fp8lFC3WJPDamgtzbzaBsILLM397OF6Ku0P1Kx5E8Mi8NO/Fb6e+wAznb
-GOVJRvg2aFclsVEFGkLnLU2S+kDeqvpdrpX3a9//+/RqzV9k4kpLG12OD1jgRABs
-iOgZarh6izCjVsMjc9nra9KSAWyXSZd5EhpN1qHGFpFlMcefMPNqmF7LTyiEQ71w
-f/PpOhJKUMTWtCxGr/lU0j+fJfMnEQ==
-=ibj0
------END PGP SIGNATURE-----
-
---Sig_/yZCEJbQ/l9nTnvmw6tYsHo8--
