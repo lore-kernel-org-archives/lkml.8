@@ -2,109 +2,193 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4544FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0D1247E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AD1247D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bpLMLL2x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCZL4mVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgFUEEY (ORCPT
+        id S1725877AbgFUEI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 00:04:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34063 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFUEEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 00:04:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qJny0ynCz9sSf;
-        Sun, 21 Jun 2020 14:04:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592712262;
-        bh=0y9lqcZxScz6v4FrAxC6Cq/NFnvqITQh9WW4FNVlxn4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bpLMLL2xXSZHpNvr7yF4n1uauLbIUMleOopQhhRG4c3Yu2xbx8T+zkERVMTpbNuvy
-         fm7TEkdF85gquZB+43wKiq6fMwofLr9FMc/CPvUNKqlJaCtMa8HBsRBCXKsbVMV6ES
-         nouWyppw7Xlxx4PwIbawcH3HJcQdSv6cS7Iq8Z5vt5dp32i2SwgwKuJJBF9+6nwEYw
-         enwcgkG6XhMWUz7yKgoRivjUWYce3oMdrjDCxYw5b1WRmMA+o0HzjKuJArJ0ogzEuG
-         Cj/Jc5xeZSe6q8s9ZHoU3Njx8HXgIyc0YtB6ptYWGu14DbwAtjBZguJlKZFpE+vCvk
-         sabujgnLsIOnA==
-Date:   Sun, 21 Jun 2020 14:04:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failures after merge of the hid tree
-Message-ID: <20200621140421.7f4552df@canb.auug.org.au>
+        Sun, 21 Jun 2020 00:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFUEI6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 00:08:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F52AC061794;
+        Sat, 20 Jun 2020 21:08:58 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i27so15662355ljb.12;
+        Sat, 20 Jun 2020 21:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A6IUbkBnWOtZ2ZLtMr58WIx6sB7xLbmM+dOtzNdDwOg=;
+        b=nCZL4mVbwD+nhFJxTc8ZL5YV6RtGHwwWwzR7HHkyVAUcsh5kepXNKoOM8AG08z6Gbo
+         MYTSUhFED1lpqk3P+GQuSc+Gu6zZ7H6/WF50l3u8GP/Es0f8hhQHGdlqsdsZYeBRYGnJ
+         BiNwLAGDTKDx4ZzX/yAVL7QFl/IdaXQRwVf3KAtlXvSTtgKqTx8Pzuy7o2O84Y/c3v8p
+         9DbG0Y3b2QASvG88mvNVezZ3YXhFNSMDd/RizPVbEvMrV8zqkiOlE07NURKuXNG5vkNA
+         Xl42G9y5+aoiOSTVqtAaYKrjNcps2be0ZXvN0RjAgeWtio/9ZIELKZPacaITPHUD+Ngz
+         XmUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A6IUbkBnWOtZ2ZLtMr58WIx6sB7xLbmM+dOtzNdDwOg=;
+        b=e2CK5A0mFFF1uykjqvgLETAUOHjdl7nV9Ll7oWGJ2sHs0hUY21P1qZlLva62H38W66
+         vT+XfqiorRzkJOXiD5Gvdd4592mhu4NDhYvS6cZ2AQAAYiUDhgS7KvbsyrVvOBIH2OS0
+         /IxTNWHvlMeG9ulGkCaUxUSaPRoU2KtT1guZMrYi6vb8IKbXN3u4pJJ8jyJ7j6YOpHTX
+         f0h9J3E+DA1hvdk2ZVtiBLQoE5PjXP72I9IqhNcfBgze1Wb0ocAmI6+8m+3Z/9mDrQcq
+         3sG6T/RnnBqcJAy3cWkOS1s/TTihhHnR30kuMBfFwesBgh7WnooIRvpMlqrjFQ2A2OCZ
+         kHgw==
+X-Gm-Message-State: AOAM531/h6e/kYr8X/3fuozd6vb09gUt8XJEBs8FYR/4btVAJcvMX41p
+        R+0+aQanvaNuo4FjitlfeRGw/mAzbyA=
+X-Google-Smtp-Source: ABdhPJzuICxb9jyS9nMxhY9JIkZDwCNjqCfpSj1M0/9uKtVWc5JrHNYw5be9QSWYVNJduCsBU8WzXg==
+X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr5522210ljm.452.1592712536564;
+        Sat, 20 Jun 2020 21:08:56 -0700 (PDT)
+Received: from localhost.localdomain ([178.150.133.249])
+        by smtp.gmail.com with ESMTPSA id n25sm1928930lfe.39.2020.06.20.21.08.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 21:08:55 -0700 (PDT)
+From:   Egor Chelak <egor.chelak@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Egor Chelak <egor.chelak@gmail.com>
+Subject: [PATCH] isofs: fix High Sierra dirent flag accesses
+Date:   Sun, 21 Jun 2020 07:08:17 +0300
+Message-Id: <20200621040817.3388-1-egor.chelak@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BzAOoJymflJFIspQvfqam+H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BzAOoJymflJFIspQvfqam+H
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The flags byte of the dirent was accessed as de->flags[0] in a couple of
+places, and not as de->flags[-sbi->s_high_sierra], which is how it's
+accessed elsewhere. This caused a bug, where some files on an HSF disc
+could be inaccessible.
 
-Hi all,
+For context, here is the difference between HSF dirents and ISO dirents:
+Offset  | High Sierra | ISO-9660       | struct iso_directory_record
+Byte 24 | Flags       | mtime timezone | de->date[6] (de->flags[-1])
+Byte 25 | Reserved    | Flags          | de->flags[0]
 
-After merging the hid tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+In a particular HSF disc image that I have, the reserved byte is
+arbitrary. Some regular files ended up having the directory bit (0x02)
+set in the reserved byte. isofs_normalize_block_and_offset would
+interpret that byte as the flags byte, and try to normalize the dirent
+as if it was pointing to a directory. Then, when the file is looked up,
+its inode gets filled with garbage data (file contents interpreted as
+directory entry), making it unreadable.
 
-drivers/hid/intel-ish-hid/ipc/ipc.c:12:10: fatal error: client.h: No such f=
-ile or directory
-   12 | #include "client.h"
-      |          ^~~~~~~~~~
-drivers/hid/intel-ish-hid/ipc/pci-ish.c:22:10: fatal error: ishtp-dev.h: No=
- such file or directory
-   22 | #include "ishtp-dev.h"
-      |          ^~~~~~~~~~~~~
+Signed-off-by: Egor Chelak <egor.chelak@gmail.com>
+---
+ fs/isofs/dir.c    | 6 ++++--
+ fs/isofs/export.c | 6 +++++-
+ fs/isofs/isofs.h  | 5 +++--
+ fs/isofs/namei.c  | 3 ++-
+ 4 files changed, 14 insertions(+), 6 deletions(-)
 
-I don't know what caused it, but commit
+diff --git a/fs/isofs/dir.c b/fs/isofs/dir.c
+index f0fe641893a5..5171dbbcda81 100644
+--- a/fs/isofs/dir.c
++++ b/fs/isofs/dir.c
+@@ -50,6 +50,7 @@ int isofs_name_translate(struct iso_directory_record *de, char *new, struct inod
+ int get_acorn_filename(struct iso_directory_record *de,
+ 			    char *retname, struct inode *inode)
+ {
++	struct isofs_sb_info *sbi = ISOFS_SB(inode->i_sb);
+ 	int std;
+ 	unsigned char *chr;
+ 	int retnamlen = isofs_name_translate(de, retname, inode);
+@@ -66,7 +67,7 @@ int get_acorn_filename(struct iso_directory_record *de,
+ 		return retnamlen;
+ 	if ((*retname == '_') && ((chr[19] & 1) == 1))
+ 		*retname = '!';
+-	if (((de->flags[0] & 2) == 0) && (chr[13] == 0xff)
++	if (((de->flags[-sbi->s_high_sierra] & 2) == 0) && (chr[13] == 0xff)
+ 		&& ((chr[12] & 0xf0) == 0xf0)) {
+ 		retname[retnamlen] = ',';
+ 		sprintf(retname+retnamlen+1, "%3.3x",
+@@ -158,7 +159,8 @@ static int do_isofs_readdir(struct inode *inode, struct file *file,
+ 		if (first_de) {
+ 			isofs_normalize_block_and_offset(de,
+ 							&block_saved,
+-							&offset_saved);
++							&offset_saved,
++							sbi->s_high_sierra);
+ 			inode_number = isofs_get_ino(block_saved,
+ 							offset_saved, bufbits);
+ 		}
+diff --git a/fs/isofs/export.c b/fs/isofs/export.c
+index 35768a63fb1d..8a8aa442ab82 100644
+--- a/fs/isofs/export.c
++++ b/fs/isofs/export.c
+@@ -50,6 +50,7 @@ static struct dentry *isofs_export_get_parent(struct dentry *child)
+ 	struct iso_directory_record *de = NULL;
+ 	struct buffer_head * bh = NULL;
+ 	struct dentry *rv = NULL;
++	struct isofs_sb_info *sbi = ISOFS_SB(child_inode->i_sb);
+ 
+ 	/* "child" must always be a directory. */
+ 	if (!S_ISDIR(child_inode->i_mode)) {
+@@ -97,7 +98,10 @@ static struct dentry *isofs_export_get_parent(struct dentry *child)
+ 	}
+ 
+ 	/* Normalize */
+-	isofs_normalize_block_and_offset(de, &parent_block, &parent_offset);
++	isofs_normalize_block_and_offset(de,
++					 &parent_block,
++					 &parent_offset,
++					 sbi->s_high_sierra);
+ 
+ 	rv = d_obtain_alias(isofs_iget(child_inode->i_sb, parent_block,
+ 				     parent_offset));
+diff --git a/fs/isofs/isofs.h b/fs/isofs/isofs.h
+index 055ec6c586f7..5c3b8f065a9a 100644
+--- a/fs/isofs/isofs.h
++++ b/fs/isofs/isofs.h
+@@ -186,10 +186,11 @@ static inline unsigned long isofs_get_ino(unsigned long block,
+ static inline void
+ isofs_normalize_block_and_offset(struct iso_directory_record* de,
+ 				 unsigned long *block,
+-				 unsigned long *offset)
++				 unsigned long *offset,
++				 int high_sierra)
+ {
+ 	/* Only directories are normalized. */
+-	if (de->flags[0] & 2) {
++	if (de->flags[-high_sierra] & 2) {
+ 		*offset = 0;
+ 		*block = (unsigned long)isonum_733(de->extent)
+ 			+ (unsigned long)isonum_711(de->ext_attr_length);
+diff --git a/fs/isofs/namei.c b/fs/isofs/namei.c
+index cac468f04820..d732964755f4 100644
+--- a/fs/isofs/namei.c
++++ b/fs/isofs/namei.c
+@@ -138,7 +138,8 @@ isofs_find_entry(struct inode *dir, struct dentry *dentry,
+ 		if (match) {
+ 			isofs_normalize_block_and_offset(de,
+ 							 &block_saved,
+-							 &offset_saved);
++							 &offset_saved,
++							 sbi->s_high_sierra);
+ 			*block_rv = block_saved;
+ 			*offset_rv = offset_saved;
+ 			brelse(bh);
+-- 
+2.27.0
 
-  470376737e88 ("HID: allow building hid.ko as an external module")
-
-did not fix it.  BTW, I build with "make O=3D...".
-
-I have used the hid tree from next-20200618 for today.
-
-BTW, the hid tree really needs cleaning up, it contains merge commits dating
-back to April 2018 :-(
-
-$ git rev-list --count origin/master..hid/for-next
-301
-$ git rev-list --no-merges --count origin/master..hid/for-next
-12
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/BzAOoJymflJFIspQvfqam+H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7u3EUACgkQAVBC80lX
-0GzZpAgAoaKisReGtr78dW8JHDYwVt+w00ysYLl7yuQGSkH+4qtGsUqxpNAEaSq9
-jrVGg1I07+zzhnKlDuS2tQ0kG+TKjDgMYgYZEQEaCfQUso2EzIS6KaSc1VJiMKnn
-nRxYsqfFDYDKACDeH9PqrN+hyP47ODNZ/GDw5dvI9dX9Hcf0WkSiF/JTZETVw4Qi
-7MTNGneToYrbLXDcRJOfmFhcUwDA2RXQ1NifxtLvPPD4k1zVxbT/v3Fx+cZo5cGz
-MC27QOAOeeejPl84txuBqP19GOgEfvU+8EIt4DzL44O0DfcqhilJwjoGmpzwS/Os
-I03c/aJbbkxHx/Tn4O9+Rg6cudHz0g==
-=heXW
------END PGP SIGNATURE-----
-
---Sig_/BzAOoJymflJFIspQvfqam+H--
