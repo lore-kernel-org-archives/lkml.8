@@ -2,203 +2,86 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0EA2252B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537A123E1E
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UmqmDfcG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnGaiWeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgFUVyt (ORCPT
+        id S1730582AbgFUWBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 17:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        Sun, 21 Jun 2020 18:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFUVys (ORCPT
+        with ESMTP id S1726385AbgFUWBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 17:54:48 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF0CC061795
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 14:54:47 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y20so13936868wmi.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 14:54:47 -0700 (PDT)
+        Sun, 21 Jun 2020 18:01:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DDAC061794;
+        Sun, 21 Jun 2020 15:01:13 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id x18so17097987lji.1;
+        Sun, 21 Jun 2020 15:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ClfrnpZFSOZxRBbJuLVUEpU0s3ZL/yim5HOOV5Ogv1E=;
-        b=UmqmDfcGFPh0Va7QuZnr3DCpZHHCoGEUeNMvxE49O43zZI4ukzRSqoeZrNg1fNozX5
-         KdlJ8y9VbJysFjkWTnhLtGwdSVlO36dC1xFYD6+RdImYoj+1Qxt0KAq93hxwXLzWrWCJ
-         L1WmyTunnn1F2IwLdNdDFJ1EuD1aioWwa3N84=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BY1JrAt2tQbJNgdurRfbYXwlMSOpveBFjJswmVovkYM=;
+        b=SnGaiWeL7SKbZpHV6rJCmO+/QHLg6hOnB1zyX1ucOqooNjUYM1CBc58K2MiGaGsUmH
+         0igjr8P2PZvMlevROuRac/vWFeThABujZSu0sJGYqyGVzzsyIUH2B438bx47IUHD0EZa
+         RPxoDBKSZMGZzQomw/k7ZZ6329WD4E35hQkYnwWA4axr12G6NeZV9HO71E9J2+LfaXau
+         DiBWgHOrPW3Agy+kk7/CuMML0yDpk9HNaEynlluyneZAFganF7XhMfbiPRf2HgUvjzvM
+         8PutUsGp1GpVfBvInSOdKZHbJ7bsKzGIpczZe6nAijnO0iZ3CFefkosGlyx+stoE6zEJ
+         KlgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ClfrnpZFSOZxRBbJuLVUEpU0s3ZL/yim5HOOV5Ogv1E=;
-        b=N9ZNBWQg6mbKAuwwJFDCS9wr6fNN9VeTXMHjtFSDywBVjSwAJsULS4rKeJ0mR5E56L
-         s4bnIDkYJsHfeRn7zpuDezk/fhHr3h/jyzX7hOtyU0NJeNOsgg1rfBICtJNtFk0omGzd
-         w3L0tJ1rFwKsdQ4MkbZrcdpQsqMABEqfimA8ryHyK+DFTvY8vr1PXb9N8vyVOssCEFKm
-         3WJnPNOW01yTylASKnzt74M3jIEsJaEJjBOoymmEMEs+41LER8YoGUQSgFTHsZzbKzXE
-         Io/MHoVix8tz3CwmfkkrosiwJ6ywn/mYX5I6rdHCP9PbPePV/wfYyhaLZi1iKG0tTD+T
-         wWOw==
-X-Gm-Message-State: AOAM533iWucqjdzONXDMElI9kPtq7HZz+cToCHwaxQKS6lwq54b3Zb13
-        WS7GQ58cnx46DG5l9B0itCy+8QkE4PsQcU0u0aeyTw==
-X-Google-Smtp-Source: ABdhPJx9PQCSL0hsDiPG5OLhGhAFSoLfDmdFvNeu2eJ81EqiNlwPW/s0PIQ4FYdlYi0pOf+1JNyIXSNgD/EzZgE36TA=
-X-Received: by 2002:a7b:cd96:: with SMTP id y22mr15443921wmj.56.1592776486432;
- Sun, 21 Jun 2020 14:54:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BY1JrAt2tQbJNgdurRfbYXwlMSOpveBFjJswmVovkYM=;
+        b=PcYiJ/ODcfzhfVY6SUjmsnLIqxeJOKr6kbNCwsSC2Q85hfwMF2Tou+U7yd9anIqB2p
+         3Xk/tcZxbUZhlbjWwUXehkvOS+W2F+qBaj5yz+sQezTAK+ybrYBu2EtKR66PYnv44y6Y
+         zeFIf/IcCeg7KaRH3DG7GYxNy/eARg0FiieHtu2qVsb8QpsDfUv9nGpUu33UhNawG5Jd
+         h6vBLP+7/Ue+3LtyjHqqBABAsqW95iVufjuVf/7okIezqhHow1JcdhRqaYVuyQdj5Q+K
+         Ap0Mc6qxkbTpSpg/Xq0jWnsBavlMdrQalipPo+trekhaTafo4P4iJ/Q2jLYbvosIO0rE
+         Yy2A==
+X-Gm-Message-State: AOAM533UQQIMn4POfg9EGaHOxoiGtN0tLG1QjZEm/QN52w8abHommUXh
+        52pfzRahwcBYGbfq0BCcsWA=
+X-Google-Smtp-Source: ABdhPJw0hW3UsZaI1P4SQ6FurGayZ4X6GM2ZGiuyotBqWudUY+sHdfBN+QehmYoQnWLN1ooNmbLJaA==
+X-Received: by 2002:a2e:9115:: with SMTP id m21mr6829178ljg.350.1592776871994;
+        Sun, 21 Jun 2020 15:01:11 -0700 (PDT)
+Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.googlemail.com with ESMTPSA id q11sm2355729ljj.10.2020.06.21.15.01.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 15:01:11 -0700 (PDT)
+From:   LuK1337 <priv.luk@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        LuK1337 <priv.luk@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: Add support for Sony Xperia XA2/Plus/Ultra (Nile platform)
+Date:   Mon, 22 Jun 2020 00:00:50 +0200
+Message-Id: <20200621220050.649572-1-priv.luk@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200621213806.551879-8-konradybcio@gmail.com>
+References: <20200621213806.551879-8-konradybcio@gmail.com>
 MIME-Version: 1.0
-References: <20200520125616.193765-1-kpsingh@chromium.org> <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
- <CACYkzJ5e_JOLS-gmNug6e4RJkSsv7sjMUfMWyfMCsQLSoxS8RQ@mail.gmail.com> <CAFqZXNuqNP4OMQGNunyUyyKBc_0-e_P+ogha08V6UsTNCATfLA@mail.gmail.com>
-In-Reply-To: <CAFqZXNuqNP4OMQGNunyUyyKBc_0-e_P+ogha08V6UsTNCATfLA@mail.gmail.com>
-From:   KP Singh <kpsingh@chromium.org>
-Date:   Sun, 21 Jun 2020 23:54:35 +0200
-Message-ID: <CACYkzJ4RidV2p7OxyVoMLnFM=CLuX1MNVyOk82XEHr1QhQFYvA@mail.gmail.com>
-Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 4:17 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> On Fri, Jun 19, 2020 at 3:13 PM KP Singh <kpsingh@chromium.org> wrote:
-> > Hi,
-> >
-> > On Fri, Jun 19, 2020 at 2:49 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > >
-> > > On Wed, May 20, 2020 at 2:56 PM KP Singh <kpsingh@chromium.org> wrote:
-> > > > From: KP Singh <kpsingh@google.com>
-> > > >
-> > > > secid_to_secctx is not stackable, and since the BPF LSM registers this
-> > > > hook by default, the call_int_hook logic is not suitable which
-> > > > "bails-on-fail" and casues issues when other LSMs register this hook and
-> > > > eventually breaks Audit.
-> > > >
-> > > > In order to fix this, directly iterate over the security hooks instead
-> > > > of using call_int_hook as suggested in:
-> > > >
-> > > > https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
-> > > >
-> > > > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-> > > > Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
-> > > > Reported-by: Alexei Starovoitov <ast@kernel.org>
-> > > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > [...]
-> > >
-> > > Sorry for being late to the party, but doesn't this (and the
-> > > associated default return value patch) just paper over a bigger
-> > > problem? What if I have only the BPF LSM enabled and I attach a BPF
-> > > program to this hook that just returns 0? Doesn't that allow anything
-> > > privileged enough to do this to force the kernel to try and send
-> > > memory from uninitialized pointers to userspace and/or copy such
-> > > memory around and/or free uninitialized pointers?
-> > >
-> > > Why on earth does the BPF LSM directly expose *all* of the hooks, even
-> > > those that are not being used for any security decisions (and are
-> > > "useful" in this context only for borking the kernel...)? Feel free to
-> > > prove me wrong, but this lazy approach of "let's just take all the
-> > > hooks as they are and stick BPF programs to them" doesn't seem like a
-> >
-> > The plan was definitely to not hook everywhere but only call the hooks
-> > that do have a BPF program registered. This was one of the versions
-> > we proposed in the initial patches where the call to the BPF LSM was
-> > guarded by a static key with it being enabled only when there's a
-> > BPF program attached to the hook.
-> >
-> > https://lore.kernel.org/bpf/20200220175250.10795-5-kpsingh@chromium.org/
-> >
-> > However, this special-cased BPF in the LSM framework, and, was met
-> > with opposition. Our plan is to still achieve this, but we want to do this
-> > with DEFINE_STATIC_CALL patches:
-> >
-> > https://lore.kernel.org/lkml/cover.1547073843.git.jpoimboe@redhat.com
-> >
-> > Using these, only can we enable the call into the hook based on whether
-> > a program is attached, we can also eliminate the indirect call overhead which
-> > currently affects the "slow" way which was decided in the discussion:
-> >
-> > https://lore.kernel.org/bpf/202002241136.C4F9F7DFF@keescook/
->
-> Perhaps you are misunderstanding me... I don't have a problem with BPF
-> LSM registering callbacks for all the hooks. My point is about what
-> you can trigger once you attach programs to certain hooks. All the
-> above seem to be just optimizations/implementation details that do not
-> affect the problem I'm pointing to.
->
-
-The immediate concern was to fix the issue caused by the default
-callback (bpf_lsm_secid_to_secctx) which affected even the users
-who were not deliberately attaching a BPF program to the hook.
-
-We can probably restrict attachment of BPF programs to be fexit trampolines
-instead of fmod_ret by using some of the work that is being done for
-BTF ID whitelists for the d_path helper. (fexit trampolines cannot
-change the return
-value of the default callback).
-
-https://lore.kernel.org/bpf/20200616100512.2168860-9-jolsa@kernel.org/
-
-With some of the optimization work which should remove this
-default callback, we can also prevent the non-deliberate errors (the ones
-that occur even when a BPF program is not attached to the LSM hook).
-IMHO, these are more important to fix.
-
-- KP
-
-> >
-> > > good choice... IMHO you should either limit the set of hooks that can
-> > > be attached to only those that aren't used to return back values via
-> >
-> > I am not sure if limiting the hooks is required here once we have
-> > the ability to call into BPF only when a program is attached. If the
-> > the user provides a BPF program, deliberately returns 0 (or any
-> > other value) then it is working as intended. Even if we limit this in the
-> > bpf LSM, deliberate privileged users can still achieve this with
-> > other means.
->
-> The point is that for this particular hook (secid_to_secctx) and a
-> couple others, the consequences of having control over the return
-> value are more serious than with other hooks. For most hooks, the
-> implementation usually just returns 0 (OK), -EACCESS (access denied)
-> or -E... (error) and the caller either continues as normal or handles
-> the error. But here if you return 0, you signal that you have
-> initialized the pointer and size to valid values. So suddenly the BPF
-> prog doesn't just control allow/deny decisions, but can now easily
-> trigger kernel panic. And when you look at the semantics of the hook,
-> you will realize that it doesn't really make sense to implement it via
-> BPF, since it can never populate the output values and the only
-> meaningful implementation would be to just return -EOPNOTSUPP.
->
-> Maybe I have it all wrong, but isn't the whole point of BPF programs
-> to provide a tight sandbox where you can only implement pure input ->
-> output functions + read/modify some internal state? Is it really
-> "working as intended" if you can crash the kernel by attaching a
-> simple BPF program to a certain hook? I mean yes, you can make the
-> system pretty much unusable already using the classic hooks by simply
-> returning -EACCESS for everything, but IMO that's quite different from
-> causing the kernel to do an invalid memory access.
->
-> --
-> Ondrej Mosnacek
-> Software Engineer, Platform Security - SELinux kernel
-> Red Hat, Inc.
->
+Tested-by: Łukasz Patron <priv.luk@gmail.com>
