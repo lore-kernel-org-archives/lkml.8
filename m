@@ -2,176 +2,298 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8450C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F944C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E19252DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74EC252DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="b4skdB/p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPN4Z6Jf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbgFUWsa (ORCPT
+        id S1730802AbgFUWtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 18:48:30 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:35472 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgFUWs3 (ORCPT
+        Sun, 21 Jun 2020 18:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgFUWtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 18:48:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1592779706; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=W8v5qpEkJnRIN852lPSeQgbjFbf4oDUDEtLcrMPd8PQ=;
-        b=b4skdB/p7ZiolCg9gZot7J0Xka7x7c38c11eDflnfrbYx66cDRdA9IVMTlxZTI09oU0AwX
-        Y9Hc2FHkDvmkgJqh0H8oEFxSAJd5vrDCM3gasrF+DE+rbD08IKkGd5X3Q/0Rrdnpjhtoiu
-        7Qk8YHdCWGjqHLfjXLRQyZjHCOIP/TY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [RESEND PATCH] usb: common: usb-conn-gpio: Register optional charger
-Date:   Mon, 22 Jun 2020 00:48:07 +0200
-Message-Id: <20200621224807.882184-1-paul@crapouillou.net>
+        Sun, 21 Jun 2020 18:49:14 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C44C061794;
+        Sun, 21 Jun 2020 15:49:14 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so10339766qkc.6;
+        Sun, 21 Jun 2020 15:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LCeD6pPgVH9FP8OnJumzQJNZgxWhcXTVHXpm3TnvleM=;
+        b=oPN4Z6Jf/qWLFnlDmw9GmiJN+mqGYRIX5a5qlLhF3rWiGE2/2YrcLe6X3fP+Id9+/D
+         FVi/oIsvh+YJxPMJDhL30R3Wv+ovhKfC3OTurLbGKU++5SrUzQm8dDvJIZePKiA5L/sX
+         g//E6o0cBx7u2lpo+ccn8pMKYzLH0NevrZGkiKF3aTX2p9KEgLjiyQZlYwTvPtSDKDZJ
+         /bmlmEXznHadwQhG2LwqKkfZPX+HD6SYmqjpu3WKyIkmenk65cKsnPkmBmevrsoMoYdH
+         g6wzp8ScUuugAVu6wI87y5Ck2xz9Xqmztcgr+yykiYuL1f+efyFXUH4mwi6KP3Af5rMj
+         G6EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LCeD6pPgVH9FP8OnJumzQJNZgxWhcXTVHXpm3TnvleM=;
+        b=szI+OMJTR8Te7rZJcPAnz8FlTT14yaaubvBkW2qkY7X51YIERU3tw7az1b2/+ubXxh
+         iHMDisVH/FLfr6SwuM7t4Rl9Lubld+4hIq1O0A3lz5yhPbPGMtME1PSRi7qDV4R4NCGL
+         VxDQqUBDx6BbSNH2nwEX8gZWH/iq3jGjtUEcemWY/U51HQU7unKQn48nO2qPB33v6YB6
+         5yMtZ+n54ZG+GHqqj8vLUU3f550RMtqjW0SAq3FWw2v0iBYK8a4ZJapkeDEnh4Bwjw8r
+         2EXWdlNuhCF0jEJVNKfsBA0zUHFRvmbfmvWiJrO9zRY8JWFiqbAXGKcfA05GYtIuacwe
+         xsCg==
+X-Gm-Message-State: AOAM5331SmG1DA2poonAcSLvUuIQCjmwVrGfPP/4XR0n+2sGF8ZfvQMH
+        dMY+XPTNIe6OuFG7JK2N0rM=
+X-Google-Smtp-Source: ABdhPJwmjqu1wM+qwIb0PM1SSR9HEfSXEqzMaYPpTgjwuUTLHhQXB6DjjQ4Br8rytnd9tJLS7/Ejiw==
+X-Received: by 2002:a37:9684:: with SMTP id y126mr13385790qkd.348.1592779753578;
+        Sun, 21 Jun 2020 15:49:13 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id w13sm12228726qkb.91.2020.06.21.15.49.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 Jun 2020 15:49:13 -0700 (PDT)
+Subject: Re: RFC: KTAP documentation - expected messages
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+Message-ID: <5c0c1ad7-c3c6-39b9-0907-330241d40464@gmail.com>
+Date:   Sun, 21 Jun 2020 17:49:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register a power supply charger, if the Kconfig option
-USB_CONN_GPIO_CHARGER is set, whose online state depends on whether
-the USB role is set to device or not.
+On 2020-06-21 17:45, Frank Rowand wrote:
+> Tim Bird started a thread [1] proposing that he document the selftest result
+> format used by Linux kernel tests.  
+> 
+> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
+> 
+> The issue of messages generated by the kernel being tested (that are not
+> messages directly created by the tests, but are instead triggered as a
+> side effect of the test) came up.  In this thread, I will call these
+> messages "expected messages".  Instead of sidetracking that thread with
+> a proposal to handle expected messages, I am starting this new thread.
+> 
+> I implemented an API for expected messages that are triggered by tests
+> in the Devicetree unittest code, with the expectation that the specific
+> details may change when the Devicetree unittest code adapts the KUnit
+> API.  It seems appropriate to incorporate the concept of expected
+> messages in Tim's documentation instead of waiting to address the
+> subject when the Devicetree unittest code adapts the KUnit API, since
+> Tim's document may become the kernel selftest standard.
+> 
+> Instead of creating a very long email containing multiple objects,
+> I will reply to this email with a separate reply for each of:
+> 
+>   The "expected messages" API implemention and use can be from
+>   drivers/of/unittest.c in the mainline kernel.
+> 
+>   of_unittest_expect - A proof of concept perl program to filter console
+>                        output containing expected messages output
+> 
+>                        of_unittest_expect is also available by cloning
+>                        https://github.com/frowand/dt_tools.git
+> 
+>   An example raw console output with timestamps and expect messages.
+> 
+>   An example of console output processed by filter program
+>   of_unittest_expect to be more human readable.  The expected
+>   messages are not removed, but are flagged.
+> 
+>   An example of console output processed by filter program
+>   of_unittest_expect to be more human readable.  The expected
+>   messages are removed instead of being flagged.
+> 
 
-This is useful when the USB role is the only way to know if the device
-is charging from USB. The API is the standard power supply charger API,
-you get a /sys/class/power_supply/xxx/online node which tells you the
-state of the charger.
+reply 1/5
 
-The sole purpose of this is to give userspace applications a way to
-know whether or not the charger is plugged.
+expected messages API:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/common/Kconfig         | 11 +++++++
- drivers/usb/common/usb-conn-gpio.c | 47 ++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+  - execute EXPECT_BEGIN(), reporting the expected message, before the
+    point when the message will occur
 
-diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-index d611477aae41..5405ae96c68f 100644
---- a/drivers/usb/common/Kconfig
-+++ b/drivers/usb/common/Kconfig
-@@ -49,3 +49,14 @@ config USB_CONN_GPIO
- 
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called usb-conn-gpio.ko
-+
-+if USB_CONN_GPIO
-+
-+config USB_CONN_GPIO_CHARGER
-+	bool "USB charger support"
-+	select POWER_SUPPLY
-+	help
-+	  Register a charger with the power supply subsystem. This will allow
-+	  userspace to know whether or not the device is charging from USB.
-+
-+endif
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-index ed204cbb63ea..129d48db280b 100644
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
- #include <linux/regulator/consumer.h>
- #include <linux/usb/role.h>
- 
-@@ -38,6 +39,9 @@ struct usb_conn_info {
- 	struct gpio_desc *vbus_gpiod;
- 	int id_irq;
- 	int vbus_irq;
-+
-+	struct power_supply_desc desc;
-+	struct power_supply *charger;
- };
- 
- /**
-@@ -98,6 +102,8 @@ static void usb_conn_detect_cable(struct work_struct *work)
- 		ret = regulator_enable(info->vbus);
- 		if (ret)
- 			dev_err(info->dev, "enable vbus regulator failed\n");
-+	} else if (IS_ENABLED(CONFIG_USB_CONN_GPIO_CHARGER)) {
-+		power_supply_changed(info->charger);
- 	}
- 
- 	info->last_role = role;
-@@ -121,10 +127,35 @@ static irqreturn_t usb_conn_isr(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static enum power_supply_property usb_charger_properties[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int usb_charger_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct usb_conn_info *info = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = info->last_role == USB_ROLE_DEVICE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int usb_conn_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct power_supply_desc *desc;
- 	struct usb_conn_info *info;
-+	struct power_supply_config cfg = {
-+		.of_node = dev->of_node,
-+	};
- 	int ret = 0;
- 
- 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-@@ -203,6 +234,22 @@ static int usb_conn_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (IS_ENABLED(CONFIG_USB_CONN_GPIO_CHARGER)) {
-+		desc = &info->desc;
-+		desc->name = "usb-charger";
-+		desc->properties = usb_charger_properties;
-+		desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-+		desc->get_property = usb_charger_get_property;
-+		desc->type = POWER_SUPPLY_TYPE_USB;
-+		cfg.drv_data = info;
-+
-+		info->charger = devm_power_supply_register(dev, desc, &cfg);
-+		if (IS_ERR(info->charger)) {
-+			dev_err(dev, "Unable to register charger\n");
-+			return PTR_ERR(info->charger);
-+		}
-+	}
-+
- 	platform_set_drvdata(pdev, info);
- 
- 	/* Perform initial detection */
--- 
-2.27.0
+  - execute EXPECT_END(), reporting the same expected message, after the
+    point when the message will occur
 
+  - EXPECT_BEGIN() may occur multiple times, before the corresponding
+    EXPECT_END()s, when a single test action may result in multiple
+    expected messages
+
+  - When multiple EXPECT_BEGIN()s are nested, the corresponding (matching)
+    EXPECT_END()s occur in the inverse order of the EXPECT_BEGIN()s.
+
+  - When the expected message contain a non-constant value, a place holder
+    can be placed in the message.  Current place holders are:
+
+     - <<int>>  an integer
+     - <<hex>>  a hexadecimal number
+
+     Suggested additional place holder(s) are:
+
+       - <<alpha>>  contiguous non white space characters 
+
+       I have avoided allowing regular expessions, because test frameworks
+       may implement their own filtering instead of relying on a generic
+       console output filter program.  There are multiple definitions for
+       regular expressions in different languages, thus it could be
+       difficult to set rules for a subset of regular expression usable
+       by all languages.
+
+A preliminary version of an expected messages framework has been
+implemented in the mainline drivers/of/unittest.c.  The implementation
+is trivial, as seen below.
+
+Note that the define of "pr_fmt()" pre-dates the implementation
+of the EXPECT_BEGIN() and EXPECT_END() macros.
+---------------------------------------------------------------
+
+#define pr_fmt(fmt) "### dt-test ### " fmt
+
+
+/*
+ * Expected message may have a message level other than KERN_INFO.
+ * Print the expected message only if the current loglevel will allow
+ * the actual message to print.
+ *
+ * Do not use EXPECT_BEGIN() or EXPECT_END() for messages generated by
+ * pr_debug().
+ */
+#define EXPECT_BEGIN(level, fmt, ...) \
+        printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
+
+#define EXPECT_END(level, fmt, ...) \
+        printk(level pr_fmt("EXPECT / : ") fmt, ##__VA_ARGS__)
+
+
+
+Example 1 of the API use, single message:
+-----------------------------------------
+
+        EXPECT_BEGIN(KERN_INFO,
+                     "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
+
+        rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
+                                        "#phandle-cells", 0, &args);
+
+        EXPECT_END(KERN_INFO,
+                   "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
+
+
+Example 2 of the API use, two messages,
+"<<int>>" placeholder matches any integer:
+------------------------------------------
+
+        /*
+         * messages are the result of the probes, after the
+         * driver is registered
+         */
+
+        EXPECT_BEGIN(KERN_INFO,
+                     "GPIO line <<int>> (line-B-input) hogged as input\n");
+
+        EXPECT_BEGIN(KERN_INFO,
+                     "GPIO line <<int>> (line-A-input) hogged as input\n");
+
+        ret = platform_driver_register(&unittest_gpio_driver);
+        if (unittest(ret == 0, "could not register unittest gpio driver\n"))
+                return;
+
+        EXPECT_END(KERN_INFO,
+                   "GPIO line <<int>> (line-A-input) hogged as input\n");
+        EXPECT_END(KERN_INFO,
+                   "GPIO line <<int>> (line-B-input) hogged as input\n");
+
+Subtle flow of control issue: the two EXPECT_END() are not executed if
+platform_driver_register() fails.  The two expected messages will not
+be printed, but the filter tool (of_unittest_expect) will not report this
+as an error because of_unittest_expect does not search for the messages
+until the EXPEND_END() output is encountered.
+
+One could argue that this is correct behavior because unittest() will print
+the error that platform_driver_register() failed.  The "expected" messages
+are not expected if the register fails.
+
+One could equally well argue that the two EXPECT_END() should execute
+before unittest() checks the value of ret, so the missing messages will
+be reported as an error by of_unittest_expect.
+
+But that is a discussion that should occur in the context of whether
+drivers/of/unittest.c has a coding error, not in the context of how
+to implement the expected messages framework.
+
+
+goals:
+
+  - The console output should be human readable and easy to parse.
+    Have "\" in the expect begin and a matching "/" in the expect end
+    is intended to make it easier to visualize pairs.
+
+  - The console output should be machine parsable.
+
+
+Design alternate choices:
+
+  - Expect message nesting:
+     1) Nested expect messages place the "\" in the same column.
+     2) For each nested expect message, indent the "\" by one more column
+        for each level of nesting.
+
+    Chose 1.  This keeps the EXPECT_BEGIN() and EXPECT_END() macros very
+    simple, at the expense of the output being less human readable in the
+    raw log.
+
+    The raw log is already not very readable, and I would expect the normal
+    use case would be using a filter program, such as of_unittest_expect,
+    to handle the readability issue.
+
+
+Issues:
+
+  - The EXPECT_BEGIN() and EXPECT_END() macros use printk() for output.
+    printk() prefixes the output with the value of the pr_fmt() macro.
+    This means the filter program must be able to deal with different
+    pr_fmt() strings being incorporated in the expect messages that
+    are in different source files.  The unittest.c pr_fmt() value is
+    currently hard coded in the of_unittest_expect filter program.
+
+  - The output of the of_unittest_expect filter program prepends several
+    columns of data at the beginning of the resulting filtered data.  The
+    TAP format does not expect these extra columns.
+
+    The prepended data is very important for making the report easily
+    read by humans.
+
+    1) It will be trivial to add an of_unittest_expect "--tap-out" option
+       to not add the prepended data, so that normal TAP programs can use
+       the output from of_unittest_expect.
+
+    2) The "--tap-out" option could also create a TAP "test line" reporting
+       an "ok" for expected message detected and "not ok" if an expected
+       message is not detected.
+
+       This would also require modifying the "test plan" line to change
+       the number of tests.
