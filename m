@@ -2,138 +2,93 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 07:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 07:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBC622282
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 07:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FJ/k2J9Q"
+	by mail.kernel.org (Postfix) with ESMTP id BCC4624873
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 07:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgFUHgJ (ORCPT
+        id S1729461AbgFUHgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 03:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgFUHgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 03:36:08 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5F7C061795
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 00:36:08 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so6104961pls.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 00:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4G7rfXIuXtIqafGfH0y8x3Zdpo0l2VCJjWiyyWzqbR0=;
-        b=FJ/k2J9QaZ9ZMtOAKL+9EWJv9i1+nd2l0oO00FwgN0N8J4/qppUWk0LMbaYdcVzHTU
-         lSTOE7lzJ9bjIh98iYbmcKyR6T2WWXuwSiwQCVDEyX+ByS3wRtiZ8XxCEjmykPp1uRFl
-         Q1cjXUuVnq95i3M/55s/LxSOWrh/1r9+mG6FHbeFJH0JHBUKGaxV4fdbhtQImCzV2hPC
-         bDHEBGpsn6YTJJFdl89GRhR/0bjWdqYrqqnYZqU4PlakMYRo2H+CsWNrLWVU1I6IAafj
-         oM+CLwgk9yGrJjIveD4eRxqTtPwnrIwrYOR06RSeh0sb4Lf2EqsZRcLHMrOO2zxxzHrt
-         tIcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4G7rfXIuXtIqafGfH0y8x3Zdpo0l2VCJjWiyyWzqbR0=;
-        b=Xm4ojVNhfsFAPKbkcQlGzRbQmxBbRdyh5/99zEFx1JvAl+ms4YR/fu+2UcmSk/fZXp
-         beqEC1ZLZbV8dwGwwKfKG9jFDhtO2MY6chxNVTdfDdBwbcRczUmrCoY/z823Euy8NCgf
-         vsd/RdSCqkuejvyC/Tgz5UH6ru3FPD+p/jZG5IFNv3cSj58gN7n534xKu8fG7q+BQqaV
-         /UgOiEajIpeUCPL2zihn+mf7hrovI5m8xoSqF5gPYYvhdOOF4nA+0M85uvlTUErX3zEC
-         TCbyVB6VcGGiynAxoaj5cmk55qGIhbDUyAdoQwo+yLkNAEtsacpdwq1vuWC2fEyzZnS1
-         k6Yw==
-X-Gm-Message-State: AOAM532cPqnhfpkKDkVjuocIYxbTX2nUc980Vx3tdneye+GYLcCwph8x
-        b14HrQWGL94YdZQiEwHTiJjXID65UCQ=
-X-Google-Smtp-Source: ABdhPJzDDEUMHD1pZ6etyMkMjEO533cH9YhgXfHiA12gTCuscJtDeAnJww8MPQIwpSxkosB3znkelQ==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr11962467pjq.73.1592724968142;
-        Sun, 21 Jun 2020 00:36:08 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j13sm10297079pje.25.2020.06.21.00.36.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 00:36:07 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 00:33:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-Message-ID: <20200621073320.GI128451@builder.lan>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
- <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
+        Sun, 21 Jun 2020 03:36:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16490 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729423AbgFUHgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 03:36:49 -0400
+IronPort-SDR: yFj3POxjNiRWxPhujv4kIjMG9YW0ngA9ySjp5EsFcf25O3o67KM/rnML6wCtK+XMj3F6TpqwNX
+ DGoQDD+si5gg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="204986745"
+X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
+   d="scan'208";a="204986745"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 00:36:48 -0700
+IronPort-SDR: EWcJttH9zBV9fz+andEDlkAPwbjTsMiyjxbEBLq+u9gHmTABVxHEjYZs1X3J7bOS6zubNgyUMn
+ WnxGskZQcKrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
+   d="scan'208";a="478102511"
+Received: from shbuild999.sh.intel.com ([10.239.146.107])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2020 00:36:45 -0700
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Feng Tang <feng.tang@intel.com>
+Subject: [PATCH v5 1/3] proc/meminfo: avoid open coded reading of vm_committed_as
+Date:   Sun, 21 Jun 2020 15:36:38 +0800
+Message-Id: <1592725000-73486-2-git-send-email-feng.tang@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592725000-73486-1-git-send-email-feng.tang@intel.com>
+References: <1592725000-73486-1-git-send-email-feng.tang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 16 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
+Use the existing vm_memory_committed() instead, which is also
+convenient for future change.
 
-> Hi Bjorn,
-> 
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Tim Chen <tim.c.chen@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+---
+ fs/proc/meminfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Sai,
+diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
+index 38ea95f..f262bff 100644
+--- a/fs/proc/meminfo.c
++++ b/fs/proc/meminfo.c
+@@ -41,7 +41,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 
+ 	si_meminfo(&i);
+ 	si_swapinfo(&i);
+-	committed = percpu_counter_read_positive(&vm_committed_as);
++	committed = vm_memory_committed();
+ 
+ 	cached = global_node_page_state(NR_FILE_PAGES) -
+ 			total_swapcache_pages() - i.bufferram;
+-- 
+2.7.4
 
-> On 2020-02-12 03:54, Sai Prakash Ranjan wrote:
-> > This series converts QCOM watchdog timer bindings to YAML. Also
-> > it adds the missing SoC-specific compatible for QCS404, SC7180,
-> > SDM845 and SM8150 SoCs.
-> > 
-> > v1:
-> > https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
-> > v2:
-> > https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
-> > 
-> > Changes since v2:
-> >  * Add missing compatibles to enum.
-> > 
-> > Changes since v1:
-> >  As per Rob's suggestion:
-> >   * Replaced oneOf+const with enum.
-> >   * Removed timeout-sec and included watchdog.yaml.
-> >   * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
-> > 
-> > Sai Prakash Ranjan (2):
-> >   dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
-> >   dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
-> >     SM8150
-> > 
-> >  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
-> >  .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
-> >  2 files changed, 48 insertions(+), 28 deletions(-)
-> >  delete mode 100644
-> > Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> 
-> 
-> Gentle ping!
-> 
-
-This should better go through the watchdog tree, so I believe Guenter
-would be the one to pick this up.
-
-Regards,
-Bjorn
-
-> Thanks,
-> Sai
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
