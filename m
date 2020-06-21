@@ -2,99 +2,145 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D237C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3207B22BF5
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592783186;
-	bh=MVR0P4Maf2NQU4Sq1jPI51OShsob/nufybi+jUBB13w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hvQq0PmhKzzA68R8iXwZ8Nb84PLe9p/+0TiSrpn9ki9DbMgptNJOrtdfQCidFwNcy
-	 BmoWYgUx4U2Yaej/ehKp9IEeGGQmnn93qUQrWcDNg0dh9h4qzzVDyRDNsY1VLzj151
-	 dwL9ozR9nWzk4sQDi76md5WfASmFSvxvHLx11Jlc=
+	by mail.kernel.org (Postfix) with ESMTP id F419325302
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 23:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYBsk3/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbgFUXqX (ORCPT
+        id S1730952AbgFUXsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 19:46:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726433AbgFUXqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 19:46:23 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95660214D8;
-        Sun, 21 Jun 2020 23:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592783182;
-        bh=MVR0P4Maf2NQU4Sq1jPI51OShsob/nufybi+jUBB13w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ftI1MpqQhEDFp02DgvKdYPmHMwhIRztrO2wfWj6QU1c45qDYsCl3N0zBwd2rs5ovg
-         +gw54xpoo52xBO5DVsDd6juHCqfCNjUbXjjokux9ULT/UMlgaltfHVhlC9rBrVTgb8
-         0I4H0gliAo7f55jAhAMQCtBBFNM8rnYLQaycr4Qo=
-Date:   Sun, 21 Jun 2020 19:46:21 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.7 229/388] usb/ohci-platform: Fix a warning
- when hibernating
-Message-ID: <20200621234621.GC1931@sasha-vm>
-References: <20200618010805.600873-1-sashal@kernel.org>
- <20200618010805.600873-229-sashal@kernel.org>
- <20200618095600.umb4gyegy2hszlep@e107158-lin.cambridge.arm.com>
+        Sun, 21 Jun 2020 19:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgFUXsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 19:48:52 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747BBC061794;
+        Sun, 21 Jun 2020 16:48:50 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y11so17256375ljm.9;
+        Sun, 21 Jun 2020 16:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qaq0ziqhM6vKmk7QeOoWqHQ67riZN5t6NkqmIBKUOe4=;
+        b=tYBsk3/YqSVg/GrD1/BRa1uJEctAz/q/aHja7fR0zhkpmSEmOFaOCoRo9T5wPWF5Up
+         5YFx1OACwJnLcLtcZUaeA4l/E0pB8dFY5yh9iSAJeVroL+6etwpGD7O+1K0lJdtfh+eS
+         5t3w8S0aAFa0fSC6RVmzOqu6F/9sAd1plDiz6vHbr2L8QbYpxnYr/ryL1PlY2uApMLPx
+         ZbHMTaIlk1l0/xBDLGDi5gPptaAwbfjv7mTDzs1NDGr8FrFvwfawA5CrbbmZKW4bq2gt
+         BVAtHkc0modgDPwxIaFz8hWxdOIGVEUDTOrQHorYbcoMBjiy2j9S9HdS2TdNLB2FtwFg
+         vMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qaq0ziqhM6vKmk7QeOoWqHQ67riZN5t6NkqmIBKUOe4=;
+        b=Ded6PLvm983tAn+cAGsarcwWOunlUrvnimWH48/DCSG6biqlMbncHdXl0u2hjjsLJK
+         g3R2/dTdGgtj2Yyxyw3jkHpdXBLOn49ZFzzWvd7c2RqLKbHYRQjmr5kjklhOaIV6fr+E
+         dap2PYAcFiLr0xSnwxSkNqpXXMPizIKe/oUsoCuVRCiXt/bcs1OfFK0K66oRmIuOhRi+
+         OzZya2cmm/FFrJEBIhP65L8+AUo9Vm2Uzhwc+powR3sZoBfAMJ3pASzimSMmzIOOQjN9
+         c4zRmNYCTmvH51eLcgeXFUjWxTgE7zoy0dHDH4s9/lOLEivQUXG9zv+cJq6+26WuqwU+
+         O08g==
+X-Gm-Message-State: AOAM531HEJf4i9Os6SyXrcA0HiKgfXjAHIcLV3bqs9D2xKvAU7VOhqhU
+        iP/ANa3g8OJP9gfk3Mgnu7KU396wTJ2crzZ23Wg=
+X-Google-Smtp-Source: ABdhPJyC+MegsWHN2gcMUSUABJleCJhX0IDQCy5a804hBDAUgkv5+Pl2dvhGu8J+Hmg+6ozLOvxKFdkZcQ/5UZxIgkk=
+X-Received: by 2002:a2e:8345:: with SMTP id l5mr6964024ljh.154.1592783328849;
+ Sun, 21 Jun 2020 16:48:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200618095600.umb4gyegy2hszlep@e107158-lin.cambridge.arm.com>
+References: <20200621213806.551879-1-konradybcio@gmail.com> <20200621213806.551879-4-konradybcio@gmail.com>
+In-Reply-To: <20200621213806.551879-4-konradybcio@gmail.com>
+From:   Alexey Minnekhanov <alexey.min@gmail.com>
+Date:   Mon, 22 Jun 2020 02:49:04 +0300
+Message-ID: <CANi4RBR=jYva1-c4fJgNUgRF6g1pNbKR8JmEg_kBfv+QOdLW2g@mail.gmail.com>
+Subject: Re: [PATCH 3/8] soc: qcom: socinfo: Add socinfo entry for SDM630
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:56:01AM +0100, Qais Yousef wrote:
->Hi Sasha/Alan
->
->On 06/17/20 21:05, Sasha Levin wrote:
->
->[...]
->
->> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
->> index 7addfc2cbadc..4a8456f12a73 100644
->> --- a/drivers/usb/host/ohci-platform.c
->> +++ b/drivers/usb/host/ohci-platform.c
->> @@ -299,6 +299,11 @@ static int ohci_platform_resume(struct device *dev)
->>  	}
->>
->>  	ohci_resume(hcd, false);
->> +
->> +	pm_runtime_disable(dev);
->> +	pm_runtime_set_active(dev);
->> +	pm_runtime_enable(dev);
->> +
->
->I am not sure what's the protocol here, but the series was fixing similar
->problems to this driver but I didn't myself directly observe a warning because
->of that.
->
->https://lore.kernel.org/lkml/20200518154931.6144-2-qais.yousef@arm.com/
->https://lore.kernel.org/lkml/20200518154931.6144-3-qais.yousef@arm.com/
->
->So just pointing it out in case they're worth backporting to stable too.
+Hi,
+I also wanted to send this, but in this form:
 
-I'll grab them too, thanks!
+[PATCH] soc: qcom: socinfo: Add soc information for SDM630/636/660
 
--- 
-Thanks,
-Sasha
+Add socinfo support for SDM630/636/660.
+
+---
+ drivers/soc/qcom/socinfo.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+index 5983c6ffb078..398a3c77954e 100644
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -202,8 +202,14 @@ static const struct soc_id soc_id[] =3D {
+  { 310, "MSM8996AU" },
+  { 311, "APQ8096AU" },
+  { 312, "APQ8096SG" },
++ { 317, "SDM660" },
++ { 318, "SDM630" },
+  { 321, "SDM845" },
++ { 324, "SDA660" },
++ { 327, "SDA630" },
+  { 341, "SDA845" },
++ { 345, "SDM636" },
++ { 346, "SDA636" },
+ };
+
+I think it would be great to have all IDs of compatible SoCs at once.
+
+I've tested it on my sdm660 by adding some printks in probe:
+[ 1.609040] socinfo: family =3D Snapdragon
+[ 1.609043] socinfo: machine =3D SDM660
+[ 1.619712] socinfo: soc_id =3D 317
+[ 1.630347] socinfo: revision =3D 1.0
+
+=D0=BF=D0=BD, 22 =D0=B8=D1=8E=D0=BD. 2020 =D0=B3. =D0=B2 00:40, Konrad Dybc=
+io <konradybcio@gmail.com>:
+>
+> This patch adds missing soc ID for SDM630.
+>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  drivers/soc/qcom/socinfo.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> index 5983c6ffb078..705f142ee588 100644
+> --- a/drivers/soc/qcom/socinfo.c
+> +++ b/drivers/soc/qcom/socinfo.c
+> @@ -202,6 +202,7 @@ static const struct soc_id soc_id[] =3D {
+>         { 310, "MSM8996AU" },
+>         { 311, "APQ8096AU" },
+>         { 312, "APQ8096SG" },
+> +       { 318, "SDM630" },
+>         { 321, "SDM845" },
+>         { 341, "SDA845" },
+>  };
+> --
+> 2.27.0
+>
