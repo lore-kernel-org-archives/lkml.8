@@ -2,139 +2,188 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 702F92489A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09BC248D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="PEdBpw45"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BXwgouOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgFUKv6 (ORCPT
+        id S1729902AbgFUKyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 06:51:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34467 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729732AbgFUKv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:51:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sun, 21 Jun 2020 06:54:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbgFUKyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 06:54:03 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4A4C061794;
+        Sun, 21 Jun 2020 03:54:02 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f310b00859d3e21c21ab34f.dip0.t-ipconnect.de [IPv6:2003:ec:2f31:b00:859d:3e21:c21a:b34f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qTrB4HYvz9sTK;
-        Sun, 21 Jun 2020 20:51:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592736715;
-        bh=fBwqQ7Cqe/T0CopqEcfuuX1XD11MecrWlMhDhwcFOZE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PEdBpw45WpgimY8nmwqCNcY8RuwGnl3OhLq1Stf8U3a9NZVG4I5HhgJ3xvgG9qUk7
-         ShmgBwWbJ9H4B0GjHGGJBGs1xzcTJjuQhmppnnAvigagHJu/tVhEnFjXkKHEV+n1jz
-         TlOglA+vUAEd0to2ORNuhgL2HzsMVmUDIWFp5H8f0bpiEip0nCyiC5mF0la4z+m/4T
-         ekFNCGi3tx86NQQkAUcCJFEthuZGzAaD276J9ISQSA+uy8pDR2bfjnNzbyWsXqUXNV
-         84o9fnKk2NSBbuQA5Nc7pmfhN1aMC47Jb5aWd7EwDmSBo2eudmxiuG//TveqGuKwhZ
-         +AnnG1vOpLZYA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aneesh.kumar@linux.ibm.com, arnd@arndb.de,
-        christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
-        peterz@infradead.org, rppt@linux.ibm.com, will@kernel.org
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-3 tag
-Date:   Sun, 21 Jun 2020 20:52:25 +1000
-Message-ID: <87366od72u.fsf@mpe.ellerman.id.au>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F2951EC031B;
+        Sun, 21 Jun 2020 12:54:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592736840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=vv+IfG9aH1AU0X0L2j56vDE+dQoFKlAmWLzo93fGcYM=;
+        b=BXwgouOzeqfF/5TDxkIQkEO0FeiiCQOWQAD1DX3yM7fPXmkrevufcCv6sYahBYZ1f2+jZV
+        HdjsUyKxt+iTUJdqQy6f+XaTMSaMtyVdl7dTKIjJUOc73IH+gNGYF2Wo+s1kiPG5nn+Wrn
+        e9UFyoh44vj+H2qozU/CSczd1Hjdn88=
+Date:   Sun, 21 Jun 2020 12:53:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200621105350.GA28206@zn.tnic>
+References: <20200621163323.14e8533f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200621163323.14e8533f@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
++ acme for an FYI.
 
-Hi Linus,
+On Sun, Jun 21, 2020 at 04:33:23PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the tip tree, today's linux-next build (perf) failed
+> like this:
+> 
+> In file included from trace/beauty/tracepoints/x86_msr.c:10:
+> perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
+>   292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
+>       |                                             ^~~~~~~~~~~
+> perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
+> 
+> Caused by commit
+> 
+>   1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+> 
+> I have used the tip tree from next-20200618 for tooday.
 
-Please pull some more powerpc fixes for 5.8.
+Thanks, I saw that once but then got distracted to something of higher
+prio. :-\
 
-These have all been in linux-next since Thursday, but I rebased last night to
-drop a commit, so the time stamps on the last few commits reflect that.
+I'll apply this after testing it a bit:
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Sun, 21 Jun 2020 12:41:53 +0200
+Subject: [PATCH] x86/msr: Move the F15h MSRs where they belong
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
 
-are available in the git repository at:
+moved the three F15h power MSRs to the architectural list but that was
+wrong as they belong in the family 0x15 list. That also caused:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-3
+  In file included from trace/beauty/tracepoints/x86_msr.c:10:
+  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
+    292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
+        |                                             ^~~~~~~~~~~
+  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
 
-for you to fetch changes up to c0e1c8c22bebecef40097c80c1c74492ff96d081:
+due to MSR_F15H_PTSC ending up being defined twice. Move them where they
+belong and drop the duplicate.
 
-  powerpc/8xx: Provide ptep_get() with 16k pages (2020-06-20 22:14:54 +1000)
+While at it, update the msr-index.h copy to pick up the changes from
 
-- ------------------------------------------------------------------
-powerpc fixes for 5.8 #3
+  7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation")
 
-One fix for the interrupt rework we did last release which broke KVM-PR.
+Fixes: 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/msr-index.h       | 5 ++---
+ tools/arch/x86/include/asm/msr-index.h | 9 ++++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Three commits fixing some fallout from the READ_ONCE() changes interacting badly
-with our 8xx 16K pages support, which uses a pte_t that is a structure of 4
-actual PTEs.
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index eb9537254920..63ed8fe35738 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -422,11 +422,8 @@
+ #define MSR_AMD_PERF_CTL		0xc0010062
+ #define MSR_AMD_PERF_STATUS		0xc0010063
+ #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+-#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+-#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+ #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+-#define MSR_F15H_PTSC			0xc0010280
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+@@ -469,6 +466,8 @@
+ #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
+ 
+ /* Fam 15h MSRs */
++#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
++#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+ #define MSR_F15H_PERF_CTL		0xc0010200
+ #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
+ #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 7dfd45bb6cdb..63ed8fe35738 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -128,6 +128,10 @@
+ #define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
+ #define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
+ 
++/* SRBDS support */
++#define MSR_IA32_MCU_OPT_CTRL		0x00000123
++#define RNGDS_MITG_DIS			BIT(0)
++
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
+@@ -418,11 +422,8 @@
+ #define MSR_AMD_PERF_CTL		0xc0010062
+ #define MSR_AMD_PERF_STATUS		0xc0010063
+ #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+-#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+-#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+ #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+-#define MSR_F15H_PTSC			0xc0010280
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+@@ -465,6 +466,8 @@
+ #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
+ 
+ /* Fam 15h MSRs */
++#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
++#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+ #define MSR_F15H_PERF_CTL		0xc0010200
+ #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
+ #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
+-- 
+2.21.0
 
-A cleanup of the 8xx pte_update() to use the newly added pmd_off().
+-- 
+Regards/Gruss,
+    Boris.
 
-A fix for a crash when handling an oops if CONFIG_DEBUG_VIRTUAL is enabled.
-
-A minor fix for the SPU syscall generation.
-
-Thanks to:
-  Aneesh Kumar K.V, Christian Zigotzky, Christophe Leroy, Mike Rapoport,
-  Nicholas Piggin.
-
-- ------------------------------------------------------------------
-Aneesh Kumar K.V (1):
-      powerpc: Fix kernel crash in show_instructions() w/DEBUG_VIRTUAL
-
-Christophe Leroy (3):
-      mm/gup: Use huge_ptep_get() in gup_hugepte()
-      mm: Allow arches to provide ptep_get()
-      powerpc/8xx: Provide ptep_get() with 16k pages
-
-Michael Ellerman (1):
-      powerpc/syscalls: Use the number when building SPU syscall table
-
-Mike Rapoport (1):
-      powerpc/8xx: use pmd_off() to access a PMD entry in pte_update()
-
-Nicholas Piggin (1):
-      powerpc/64s: Fix KVM interrupt using wrong save area
-
-
- arch/powerpc/include/asm/nohash/32/pgtable.h | 18 +++++++++++++-----
- arch/powerpc/kernel/exceptions-64s.S         |  4 ++--
- arch/powerpc/kernel/process.c                | 20 +++++++++++---------
- arch/powerpc/platforms/cell/spu_callbacks.c  |  2 +-
- include/asm-generic/hugetlb.h                |  2 +-
- include/linux/pgtable.h                      |  7 +++++++
- mm/gup.c                                     |  4 ++--
- 7 files changed, 37 insertions(+), 20 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl7vO44ACgkQUevqPMjh
-pYClWQ/+IcdzjtYWNnTmPpgMXZQBd/kcWDycn84oEZSOQM8We1X9EPzO93nSRvMx
-0R8X2nX6wS08xeYV3u8slX2na0GlcS1z3PleT23KseLEV8IHfdkhs46nsHilIT5n
-WsYsf1oHDYCDFKwnK1/qr2wMJ6YJ4uiHAaxttcbRajRGY4oKRFhd8pDDkXX1cO3F
-6vnvdy2l9cVgcvBqIgBxmIzjVe2B2kwfNXAyEaQLUzspO+TlhRHqRVjO9XR54607
-4lDOu6dK0EG3Y0LuJNNsr6xIl4aykBrOgXOPkeygbz165Uv55+02NhNRzmYkWLIC
-cntSJRMeZDhMeFwKWx73Vy3c+ot7rGrnC8P2SDB3DKzS3ng512uv7DeY4yHyjd80
-ZcbUzINrb9dUrgzMQBV6CxSd00ecEout/v+qVBhP1KvCiODmPNP3gNm+qSyizFlg
-oODH7QKcylD/V/8q+HSu3ddrPQyKuyKV9q46UdhMfw4KmV/SxOGcNSFyXZ6xQYdX
-fbQCJ+iYHcJATj9RglBrnyRIyiw9gaVYOfNnh2VuyknutEGvPwlJGs+noWQ/jGdk
-nf1B4lh6sIYn8bq8cjB36LD8m4zT4KiVyS/ot2v613i00/xr5PVmEyNhkwQc7uBD
-gbA2K2g27D3RhsRYy49appAx+fWfSH5HjwCz7k/omzUCFdauR2k=
-=4LHz
------END PGP SIGNATURE-----
+https://people.kernel.org/tglx/notes-about-netiquette
