@@ -2,69 +2,124 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64BC220707
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592779528;
-	bh=v9sThbH5EcvCkWHw/jIBC0C8a06oazJihP2nFqUEG3w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lmhbROKCMwisuxo/pE/mDjOCA+kF5ZdJJTzkpbiEh5FieOULWpxwyMuaKo4Q8E9G5
-	 TbTYpZ/7KSdk5H7Sy2cZ/cdBCfuHA7GVoK4Yli9e/+oopHipXa2uCbJm5EukiqDqiU
-	 +BjjW8G1wK08njPIhhjsjhY5rO2PbFW19grfXlZQ=
+	by mail.kernel.org (Postfix) with ESMTP id 87F3722248
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:45:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOoL/FdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgFUWpZ (ORCPT
+        id S1726535AbgFUWps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 18:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgFUWpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 18:45:25 -0400
-Subject: Re: [GIT PULL] SELinux fixes for v5.8 (#1)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592779524;
-        bh=v9sThbH5EcvCkWHw/jIBC0C8a06oazJihP2nFqUEG3w=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YhXcHL9tCfhs3fdUusZp6vT2xgjvAffeCIZH0M35D/8bPxubrXvynSXH7ev0JtpWk
-         wqJO8ZcXUGH4FvOLvwvOsRrpcZJjGOqzeZMVrIqOH3A9RnpI1WGWwXyiBAINMWkPGK
-         NswVirKOMhndSTZyl/WxqTr9vXe0AsrwS1V62TY0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhQbP754KV8RsaBgnxmuy8gWeL-YccRqQOc8R7DrvtZBvA@mail.gmail.com>
-References: <CAHC9VhQbP754KV8RsaBgnxmuy8gWeL-YccRqQOc8R7DrvtZBvA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhQbP754KV8RsaBgnxmuy8gWeL-YccRqQOc8R7DrvtZBvA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
- tags/selinux-pr-20200621
-X-PR-Tracked-Commit-Id: 8231b0b9c322c894594fb42eb0eb9f93544a6acc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 817d914d17651c188f28a284261ff6091d80ad2c
-Message-Id: <159277952464.24881.15037005159620440574.pr-tracker-bot@kernel.org>
-Date:   Sun, 21 Jun 2020 22:45:24 +0000
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Sun, 21 Jun 2020 18:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgFUWpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 18:45:47 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBA2C061794;
+        Sun, 21 Jun 2020 15:45:46 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l17so13957187qki.9;
+        Sun, 21 Jun 2020 15:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=3I6qYF+rnBnkOJGlzBHotShl0MA4LrBISg2tIo433jE=;
+        b=UOoL/FdHx/7J1P9Sje5Dnv3JyYolJfSQwmd2rWTUg/XWghJBG++sukBfLoxuxVp0JD
+         ygRVSNU3bcWbKvYlWc7XgL+m6swLHmSlrWCbSjs1rPlg/DjfHkmRsQy0jMSvs/iOyyDo
+         48SXzIUhGToxftcnXgwbI4SQz53zm1kCtUtP551ZLuMqbUDx6IOaL11k1P6BayclJEuZ
+         WGn/Kcaa2FOxoqxjYfkFk7KZ3RjIL6IZSx8yjHT8lKeYiUCU3r/BxxM/E8F8lLqO8u3k
+         /yhQnreZ2B4ggXUF49OcRNZXggBRURLdjtfFo/wHUEAHWNUov7PlamBkr6t7yI2q7cbA
+         e5Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=3I6qYF+rnBnkOJGlzBHotShl0MA4LrBISg2tIo433jE=;
+        b=Gmi0FQf4aVuMZeL8ACnjWXbgRbGKa8ocClAoZH6+j2OA7VswwY74HLd76IUgDlsCR/
+         cQSEK7pcbgdOELomgksATLSnRYTFK+8XCrqLNwT9SDJ+dBFWADfc+XXui0tBMDEk2qaO
+         Cxyw8/j0+nF2Mh5gdTwY+Zsv8tr9B/3Q+M80foSBD5ZBd98lLr0y1YEUXEr3oVLF67ji
+         oaTpyT9+F7vwEZnQd2aLJJtH1WULgiTvMK5OpeRW0nEunFTi9xxTcGdybZE5vAKukVNd
+         Ms0OY6c3uuzYr82lI75oXlT+NswOe37o8HCzycGHAzLM6jXn9xLPROLMcnPD1+NBA8Ug
+         RJ1w==
+X-Gm-Message-State: AOAM532osxzo8InPoa3vwYGC2HaUd9gqiEJyyAL0YYAKK7ERmbM+am4r
+        ijnloiBZGKp6+1XpiFKSLKk=
+X-Google-Smtp-Source: ABdhPJwzzcHolrY41026rPOZrohLb1e3e+kkD3FkVxgMEe05Aiiare9fT2AvsCC0DQXbqdDkp85DxQ==
+X-Received: by 2002:a37:6503:: with SMTP id z3mr12650524qkb.439.1592779546162;
+        Sun, 21 Jun 2020 15:45:46 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id w45sm6252365qtj.51.2020.06.21.15.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 Jun 2020 15:45:45 -0700 (PDT)
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Subject: RFC: KTAP documentation - expected messages
+Message-ID: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+Date:   Sun, 21 Jun 2020 17:45:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 21 Jun 2020 16:54:16 -0400:
+Tim Bird started a thread [1] proposing that he document the selftest result
+format used by Linux kernel tests.  
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20200621
+[1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/817d914d17651c188f28a284261ff6091d80ad2c
+The issue of messages generated by the kernel being tested (that are not
+messages directly created by the tests, but are instead triggered as a
+side effect of the test) came up.  In this thread, I will call these
+messages "expected messages".  Instead of sidetracking that thread with
+a proposal to handle expected messages, I am starting this new thread.
 
-Thank you!
+I implemented an API for expected messages that are triggered by tests
+in the Devicetree unittest code, with the expectation that the specific
+details may change when the Devicetree unittest code adapts the KUnit
+API.  It seems appropriate to incorporate the concept of expected
+messages in Tim's documentation instead of waiting to address the
+subject when the Devicetree unittest code adapts the KUnit API, since
+Tim's document may become the kernel selftest standard.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Instead of creating a very long email containing multiple objects,
+I will reply to this email with a separate reply for each of:
+
+  The "expected messages" API implemention and use can be from
+  drivers/of/unittest.c in the mainline kernel.
+
+  of_unittest_expect - A proof of concept perl program to filter console
+                       output containing expected messages output
+
+                       of_unittest_expect is also available by cloning
+                       https://github.com/frowand/dt_tools.git
+
+  An example raw console output with timestamps and expect messages.
+
+  An example of console output processed by filter program
+  of_unittest_expect to be more human readable.  The expected
+  messages are not removed, but are flagged.
+
+  An example of console output processed by filter program
+  of_unittest_expect to be more human readable.  The expected
+  messages are removed instead of being flagged.
