@@ -2,149 +2,99 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C22C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F80C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFC4207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13ED2080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ipdZLn9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbgFUOaf (ORCPT
+        id S1730214AbgFUOew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgFUOaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:30:35 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E49FC061794;
-        Sun, 21 Jun 2020 07:30:35 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D77B2467E1;
-        Sun, 21 Jun 2020 14:30:27 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/process
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Tony Fischetti <tony.fischetti@gmail.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Joe Perches <joe@perches.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200621133630.46435-1-grandmaster@al2klimov.de>
- <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
-Date:   Sun, 21 Jun 2020 16:30:25 +0200
+        Sun, 21 Jun 2020 10:34:52 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49985 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730154AbgFUOew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 10:34:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qZnP5dYwz9sQt;
+        Mon, 22 Jun 2020 00:34:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592750090;
+        bh=D/TARDs/stjyGH0I8Noq6NhmTgRmKSi7h6hDe14Mn6A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ipdZLn9C5ncMcK4sKxa8j6+B44B7q7Vo5QYzmh2aWqeQf2WH2XP6hKPBmEXm+H61m
+         gk0CkNw/eZTro1U4YEKOLS5vZYksNz3PSL1j8FYH4j4T/Qvd3fDDDsZboRe6qmhjwf
+         g2LxB4nrZ87pEw/dw2uOBJWG2MqZpNLyOVp1uFwQrSw1n82gKeJySKrWSG2H7WE2+p
+         BPKe6Oj1BmevfwAB9hdEU005fmdL2e6Ijb4UIaLLrBn88SM6vVlrwppeJTgB/JPFuf
+         nlN8rVeBllpmHNlxB7CJG1/5W0enkROQzOAmg513IiqArmMN0JywJ+NtgKmOnpvTKP
+         0xelbMDiNApHg==
+Date:   Mon, 22 Jun 2020 00:34:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200622003449.1f3a90a4@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: multipart/signed; boundary="Sig_/82IXfTWlXkBkD0RSdhPRokn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/82IXfTWlXkBkD0RSdhPRokn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the akpm-current tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
 
-Am 21.06.20 um 15:46 schrieb Miguel Ojeda:
-> Hi Alexander,
-> 
-> On Sun, Jun 21, 2020 at 3:37 PM Alexander A. Klimov
-> <grandmaster@al2klimov.de> wrote:
->>
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
-> 
-> Looks fine, although it would be nice to have a link to the discussion
-Which discussion? 93431e0607e5 ? IMAO the patches don't depend on each 
-other.
+Caused by commit
 
-> (using a `Link: ` line to `lore.kernel.org`). Also having the script
-> in the kernel would be nice for future re-runs (e.g. you could add it
-> as a first patch in the series).
-IMAO:
+  a1e988dda7bb ("drivers/tty/serial/sh-sci.c: suppress uninitialized var wa=
+rning")
 
-* The script should not be neccessary once all of my changes[1] arrive 
-in torvalds/master. Instead reviewers should say like C'mon dude, what's 
-this new plain-HTTP link doing in your patch? We have 2020! Look at e.g. 
-93431e0607e5 .
+interacting with commit
 
-* The program language agnostic algo description of mine should be 
-enough. If it's not enough, I shall improve the description.
+  2d0e6f87039d ("compiler: Remove uninitialized_var() macro")
 
-* Today I've added "If not .svg:". Imagine Torvalds merges the script, 
-closes the merge window *and then* someone runs it on a random subsystem 
-and discovers a missing condition. Do they have to patch the script, 
-wait for the patch to arrive in torvalds/master *and then* patch the 
-(other) subsystem, so they can refer to the now patched script? W/o a 
-such central "rule on how to HTTPSify links" they'd just describe 
-*their* algo. Or (even better) there wouldn't be much more insecure 
-links, so the algo could be omitted.
+from the kspp tree.
 
-After all please show me one of the big bosses (Torvalds, K-H, ...) 
-who'd tolerate to have a...
+I have just reverted that commit for today.
 
-* written w/o focus on maintainability
-* not documented at all
-* *Golang* file
+BTW, I don't see the warning that this patch is trying to fix ... (gcc 9)
+--=20
+Cheers,
+Stephen Rothwell
 
-... in the kernel tree.
+--Sig_/82IXfTWlXkBkD0RSdhPRokn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-If I correctly understand, you kernel devs write code so that if even 
-the maintainer leaves the project, another one could just take over.
+-----BEGIN PGP SIGNATURE-----
 
-How many kernel devs would read and understand (all of them I guess) 
-*and maintain that Go script* of mine?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7vcAkACgkQAVBC80lX
+0GwzpAgAnofRnafWxV+MUwFTUEVYhdM4o4rKOKtaYPMrufmewY4qH1BEL9pYEx4q
++xLxOF3pVY0K4kWSuUoNjUsZ9Jj8eXPDGgzHVnTO2js6JChTQ5OLGw0mFlDsNILz
+ho6UMdF3MwNpM0LsdUnhT6ilkn4a07ECK/UH9+pCPIWsFOkACFe27kWswphtdWpJ
+1YYDmc7rcMmWDyUEa5tvVD1MejWfpB19zuLIaTjKUTGwTQiD7gquvixNT0I26pMW
+jvZrRFXbvz5+QJL2ITtv6Py336tvPSJUUc07JhauhBm7Ceu5MvOu4edd3Wog5wFg
+O0HIr6p6aZ0zV+6CulYKUodNUYMnsQ==
+=6YT4
+-----END PGP SIGNATURE-----
 
-
-[1]
-➜  linux git:(master) git stash show --shortstat
-  1857 files changed, 2664 insertions(+), 2664 deletions(-)
-➜  linux git:(master)
-
-> 
-> Other than that:
-> 
-> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> 
-> Cheers,
-> Miguel
-> 
+--Sig_/82IXfTWlXkBkD0RSdhPRokn--
