@@ -2,244 +2,203 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D87C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2772468E
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0EA2252B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 21:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLEpILXW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UmqmDfcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgFUVv0 (ORCPT
+        id S1726477AbgFUVyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 17:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44480 "EHLO
+        Sun, 21 Jun 2020 17:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFUVvZ (ORCPT
+        with ESMTP id S1726279AbgFUVys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 17:51:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D4BC061794;
-        Sun, 21 Jun 2020 14:51:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l12so15995868ejn.10;
-        Sun, 21 Jun 2020 14:51:24 -0700 (PDT)
+        Sun, 21 Jun 2020 17:54:48 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF0CC061795
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 14:54:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y20so13936868wmi.2
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 14:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=C6Tq/liioq2UyKzEaWtu9VTGJjccozN1RCpnhQeCWcc=;
-        b=SLEpILXWxAjObaeL0ryGxor/nIrSX9AF7pdnzRkTTOd/UDyj9BiXWpnCxQ0UwpU0hA
-         Y6DghwWiyUhBWfx7CabHQ/EM5NNjtw/9vCvFkz1zF1ReiAvzEhELMJaIBUbKnRTzZthI
-         gf5corGIhmG03zvb6/uEd3l9gwgV0Wi07Y1x2OL42tHBaISUljtsiec5spZR+bTqf3Qn
-         24sPYvFYfBwdGU/AkXDJmUmfNQfo/57jZtcWTSoh1ONf/mFR7DrYIpD9PI9ME7Yj9wyb
-         0WF6cWy1mbC/PC8JsyINfvkeAuTZIYmbBL+JJYYzuU4xcyeGBsmgy23y4Jquo6/Fg960
-         c9UQ==
+         :cc;
+        bh=ClfrnpZFSOZxRBbJuLVUEpU0s3ZL/yim5HOOV5Ogv1E=;
+        b=UmqmDfcGFPh0Va7QuZnr3DCpZHHCoGEUeNMvxE49O43zZI4ukzRSqoeZrNg1fNozX5
+         KdlJ8y9VbJysFjkWTnhLtGwdSVlO36dC1xFYD6+RdImYoj+1Qxt0KAq93hxwXLzWrWCJ
+         L1WmyTunnn1F2IwLdNdDFJ1EuD1aioWwa3N84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C6Tq/liioq2UyKzEaWtu9VTGJjccozN1RCpnhQeCWcc=;
-        b=O0wjoHu0eiTECAMtwAeL5V+m35msidJS/E8MI2CufB9+Y24fONSoLHrrLykriS5E7S
-         wxb4x6UU/KRE1+ZNTCemybpKa7B8rSVWcEh5+aL2JcRyiLvi2VCVWBK/Tci+czcOpNVq
-         pTZ8pSFgOdcddWhtAR41cRsLQE1itW6UDDusWXX7UVbujXKZdMqnTLslO4cdr8z7gZLF
-         P1xWT9yhjZe5DJL/+vLQJ4io2QFuUSdObS0YL5FWD+qNCLrBr8pI4kaf1K31mhEjjvOc
-         YzyAoGx9dHOh19YsaiugoUBp8/SFPwTL0/WpC5PSP9mciS1Rw5r29lVfvuPyYic7QJUe
-         Y0uw==
-X-Gm-Message-State: AOAM530XDUI0gMMPqdSemaXUZTj+gARruzfhk+Cgu1XCJnTVCTRq8tdl
-        4b7oa+mJNH3asubzEkeyUXkWe04m7amPpYD9SRs=
-X-Google-Smtp-Source: ABdhPJzz157p4nNXnRl9LV6GUwfM5g4DaNTYskNEv6jpTLmePiwLbFMvAgdAbb5yGz8w3iE7k58JLLdv6XcuJ5jPBL0=
-X-Received: by 2002:a17:906:4cd0:: with SMTP id q16mr5105594ejt.418.1592776283512;
- Sun, 21 Jun 2020 14:51:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ClfrnpZFSOZxRBbJuLVUEpU0s3ZL/yim5HOOV5Ogv1E=;
+        b=N9ZNBWQg6mbKAuwwJFDCS9wr6fNN9VeTXMHjtFSDywBVjSwAJsULS4rKeJ0mR5E56L
+         s4bnIDkYJsHfeRn7zpuDezk/fhHr3h/jyzX7hOtyU0NJeNOsgg1rfBICtJNtFk0omGzd
+         w3L0tJ1rFwKsdQ4MkbZrcdpQsqMABEqfimA8ryHyK+DFTvY8vr1PXb9N8vyVOssCEFKm
+         3WJnPNOW01yTylASKnzt74M3jIEsJaEJjBOoymmEMEs+41LER8YoGUQSgFTHsZzbKzXE
+         Io/MHoVix8tz3CwmfkkrosiwJ6ywn/mYX5I6rdHCP9PbPePV/wfYyhaLZi1iKG0tTD+T
+         wWOw==
+X-Gm-Message-State: AOAM533iWucqjdzONXDMElI9kPtq7HZz+cToCHwaxQKS6lwq54b3Zb13
+        WS7GQ58cnx46DG5l9B0itCy+8QkE4PsQcU0u0aeyTw==
+X-Google-Smtp-Source: ABdhPJx9PQCSL0hsDiPG5OLhGhAFSoLfDmdFvNeu2eJ81EqiNlwPW/s0PIQ4FYdlYi0pOf+1JNyIXSNgD/EzZgE36TA=
+X-Received: by 2002:a7b:cd96:: with SMTP id y22mr15443921wmj.56.1592776486432;
+ Sun, 21 Jun 2020 14:54:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200621213806.551879-1-konradybcio@gmail.com> <20200621213806.551879-9-konradybcio@gmail.com>
-In-Reply-To: <20200621213806.551879-9-konradybcio@gmail.com>
-From:   Martin Botka <martin.botka1@gmail.com>
-Date:   Sun, 21 Jun 2020 23:51:12 +0200
-Message-ID: <CADQ2G_G8iFE_9oNRBFum_je8FGgZCEe-Hj1SMr06x+xoBanAnA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10
- Plus (Ganges platform)
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20200520125616.193765-1-kpsingh@chromium.org> <CAFqZXNsu8Vs86SKpdnej_=xnQqg=Hh132JqNe1Ybt-bHJB4NeQ@mail.gmail.com>
+ <CACYkzJ5e_JOLS-gmNug6e4RJkSsv7sjMUfMWyfMCsQLSoxS8RQ@mail.gmail.com> <CAFqZXNuqNP4OMQGNunyUyyKBc_0-e_P+ogha08V6UsTNCATfLA@mail.gmail.com>
+In-Reply-To: <CAFqZXNuqNP4OMQGNunyUyyKBc_0-e_P+ogha08V6UsTNCATfLA@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Sun, 21 Jun 2020 23:54:35 +0200
+Message-ID: <CACYkzJ4RidV2p7OxyVoMLnFM=CLuX1MNVyOk82XEHr1QhQFYvA@mail.gmail.com>
+Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested-by: Martin Botka <martin.botka.1@gmail.com>
+On Fri, Jun 19, 2020 at 4:17 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> On Fri, Jun 19, 2020 at 3:13 PM KP Singh <kpsingh@chromium.org> wrote:
+> > Hi,
+> >
+> > On Fri, Jun 19, 2020 at 2:49 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > >
+> > > On Wed, May 20, 2020 at 2:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> > > > From: KP Singh <kpsingh@google.com>
+> > > >
+> > > > secid_to_secctx is not stackable, and since the BPF LSM registers this
+> > > > hook by default, the call_int_hook logic is not suitable which
+> > > > "bails-on-fail" and casues issues when other LSMs register this hook and
+> > > > eventually breaks Audit.
+> > > >
+> > > > In order to fix this, directly iterate over the security hooks instead
+> > > > of using call_int_hook as suggested in:
+> > > >
+> > > > https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
+> > > >
+> > > > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> > > > Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
+> > > > Reported-by: Alexei Starovoitov <ast@kernel.org>
+> > > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > [...]
+> > >
+> > > Sorry for being late to the party, but doesn't this (and the
+> > > associated default return value patch) just paper over a bigger
+> > > problem? What if I have only the BPF LSM enabled and I attach a BPF
+> > > program to this hook that just returns 0? Doesn't that allow anything
+> > > privileged enough to do this to force the kernel to try and send
+> > > memory from uninitialized pointers to userspace and/or copy such
+> > > memory around and/or free uninitialized pointers?
+> > >
+> > > Why on earth does the BPF LSM directly expose *all* of the hooks, even
+> > > those that are not being used for any security decisions (and are
+> > > "useful" in this context only for borking the kernel...)? Feel free to
+> > > prove me wrong, but this lazy approach of "let's just take all the
+> > > hooks as they are and stick BPF programs to them" doesn't seem like a
+> >
+> > The plan was definitely to not hook everywhere but only call the hooks
+> > that do have a BPF program registered. This was one of the versions
+> > we proposed in the initial patches where the call to the BPF LSM was
+> > guarded by a static key with it being enabled only when there's a
+> > BPF program attached to the hook.
+> >
+> > https://lore.kernel.org/bpf/20200220175250.10795-5-kpsingh@chromium.org/
+> >
+> > However, this special-cased BPF in the LSM framework, and, was met
+> > with opposition. Our plan is to still achieve this, but we want to do this
+> > with DEFINE_STATIC_CALL patches:
+> >
+> > https://lore.kernel.org/lkml/cover.1547073843.git.jpoimboe@redhat.com
+> >
+> > Using these, only can we enable the call into the hook based on whether
+> > a program is attached, we can also eliminate the indirect call overhead which
+> > currently affects the "slow" way which was decided in the discussion:
+> >
+> > https://lore.kernel.org/bpf/202002241136.C4F9F7DFF@keescook/
+>
+> Perhaps you are misunderstanding me... I don't have a problem with BPF
+> LSM registering callbacks for all the hooks. My point is about what
+> you can trigger once you attach programs to certain hooks. All the
+> above seem to be just optimizations/implementation details that do not
+> affect the problem I'm pointing to.
+>
 
+The immediate concern was to fix the issue caused by the default
+callback (bpf_lsm_secid_to_secctx) which affected even the users
+who were not deliberately attaching a BPF program to the hook.
 
-ne 21. 6. 2020 o 23:38 Konrad Dybcio <konradybcio@gmail.com> nap=C3=ADsal(a=
-):
+We can probably restrict attachment of BPF programs to be fexit trampolines
+instead of fmod_ret by using some of the work that is being done for
+BTF ID whitelists for the d_path helper. (fexit trampolines cannot
+change the return
+value of the default callback).
+
+https://lore.kernel.org/bpf/20200616100512.2168860-9-jolsa@kernel.org/
+
+With some of the optimization work which should remove this
+default callback, we can also prevent the non-deliberate errors (the ones
+that occur even when a BPF program is not attached to the LSM hook).
+IMHO, these are more important to fix.
+
+- KP
+
+> >
+> > > good choice... IMHO you should either limit the set of hooks that can
+> > > be attached to only those that aren't used to return back values via
+> >
+> > I am not sure if limiting the hooks is required here once we have
+> > the ability to call into BPF only when a program is attached. If the
+> > the user provides a BPF program, deliberately returns 0 (or any
+> > other value) then it is working as intended. Even if we limit this in the
+> > bpf LSM, deliberate privileged users can still achieve this with
+> > other means.
 >
-> From: Martin Botka <martin.botka1@gmail.com>
+> The point is that for this particular hook (secid_to_secctx) and a
+> couple others, the consequences of having control over the return
+> value are more serious than with other hooks. For most hooks, the
+> implementation usually just returns 0 (OK), -EACCESS (access denied)
+> or -E... (error) and the caller either continues as normal or handles
+> the error. But here if you return 0, you signal that you have
+> initialized the pointer and size to valid values. So suddenly the BPF
+> prog doesn't just control allow/deny decisions, but can now easily
+> trigger kernel panic. And when you look at the semantics of the hook,
+> you will realize that it doesn't really make sense to implement it via
+> BPF, since it can never populate the output values and the only
+> meaningful implementation would be to just return -EOPNOTSUPP.
 >
-> Add device tree support for the Sony Xperia 10 and 10
-> Plus smartphones. They are all based on the Sony Ganges
-> platform (sdm630/636) and share a lot of common code.
-> The differences are really minor, so a Ganges-common DTSI
-> has been created to reduce clutter.
+> Maybe I have it all wrong, but isn't the whole point of BPF programs
+> to provide a tight sandbox where you can only implement pure input ->
+> output functions + read/modify some internal state? Is it really
+> "working as intended" if you can crash the kernel by attaching a
+> simple BPF program to a certain hook? I mean yes, you can make the
+> system pretty much unusable already using the classic hooks by simply
+> returning -EACCESS for everything, but IMO that's quite different from
+> causing the kernel to do an invalid memory access.
 >
-> 10 - Kirin
-> 10 Plus - Mermaid
->
-> This platform is based on SoMC Nile, but there are some
-> major differences when it comes to pin configuration and
-> panel setup (among others).
->
-> The boards currently support:
-> * Screen console
-> * SDHCI
-> * I2C
-> * pstore log dump
-> * GPIO keys
-> * PSCI idle states
->
-> Signed-off-by: Martin Botka <martin.botka1@gmail.com>
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |  2 +
->  .../qcom/sdm630-sony-xperia-ganges-kirin.dts  | 13 +++++++
->  .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   | 39 +++++++++++++++++++
->  .../sdm636-sony-xperia-ganges-mermaid.dts     | 19 +++++++++
->  4 files changed, 73 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-ki=
-rin.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dt=
-si
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-me=
-rmaid.dts
->
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom=
-/Makefile
-> index 1cad7cb07574..c98bafe03a96 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -16,9 +16,11 @@ dtb-$(CONFIG_ARCH_QCOM)      +=3D msm8998-hp-envy-x2.d=
-tb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D msm8998-lenovo-miix-630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D msm8998-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sc7180-idp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm630-sony-xperia-ganges-kirin.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm630-sony-xperia-nile-discovery.dt=
-b
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm630-sony-xperia-nile-pioneer.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm630-sony-xperia-nile-voyager.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm636-sony-xperia-ganges-mermaid.dt=
-b
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm660-xiaomi-lavender.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm845-cheza-r1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        +=3D sdm845-cheza-r2.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts=
- b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
-> new file mode 100644
-> index 000000000000..5326e019db20
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-ganges.dtsi"
-> +
-> +/ {
-> +    model =3D "SoMC Kirin-RoW";
-> +    compatible =3D "sony,kirin-row", "qcom,sdm630", "qcom,sdm630-mtp";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi b/ar=
-ch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
-> new file mode 100644
-> index 000000000000..6c4c30e4cd9d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/* Ganges is very similar to Nile, but
-> +there are some differences that will need
-> +to be addresed when more peripherals are
-> +enabled upstream. Hence the separate DTSI. */
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +    chosen {
-> +        framebuffer@9d400000 {
-> +            reg =3D <0 0x9d400000 0 (2520 * 1080 * 4)>;
-> +            height =3D <2520>;
-> +        };
-> +    };
-> +
-> +    soc {
-> +
-> +        i2c@c175000 {
-> +            status =3D "okay";
-> +
-> +            /* Novatek touchscreen */
-> +        };
-> +
-> +        /* Yes, this is intentional.
-> +        Ganges devices only use gpio-keys for
-> +        Volume Down, but currently there's an
-> +        issue with it that has to be resolved.
-> +        Until then, let's not make the kernel panic
-> +        */
-> +        /delete-node/ gpio-keys;
-> +    };
-> +
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.d=
-ts b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
-> new file mode 100644
-> index 000000000000..97dce64d0185
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/* Mermaid uses sdm636, but it's different ever so slightly
-> +that we can ignore it for the time being. Sony also commonizes
-> +the Ganges platform as a whole in downstream kernels. */
-> +#include "sdm630-sony-xperia-ganges.dtsi"
-> +
-> +/ {
-> +    model =3D "SoMC Mermaid-RoW";
-> +    compatible =3D "sony,mermaid-row", "qcom,sdm636", "qcom,sdm636-mtp";
-> +
-> +    qcom,msm-id =3D <345 0>;
-> +    qcom,pmic-id =3D <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00=
- 0x00 0x1001b 0x102001a 0x00 0x00>;
-> +};
 > --
-> 2.27.0
+> Ondrej Mosnacek
+> Software Engineer, Platform Security - SELinux kernel
+> Red Hat, Inc.
 >
