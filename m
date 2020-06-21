@@ -2,103 +2,78 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7002EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C12123D22
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367AA248B8
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXBPYJyH"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WhFX2fQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgFUKLr (ORCPT
+        id S1729879AbgFUKMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 06:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729787AbgFUKLd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:11:33 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C20C061797;
-        Sun, 21 Jun 2020 03:11:32 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a1so878624ejg.12;
-        Sun, 21 Jun 2020 03:11:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=9kHXcDCGApwkqj7YR7sl1xVeCbFuJErIvk3ogUF1w5k=;
-        b=VXBPYJyH7d+CMYKRnbArMtUk4ZOwzU3W+00ax4AKY4qFqsBt34N0Xi8NqjlqB54VS9
-         z9J0y92Dqa/iWvgu613l6vpI6eLsuAD6mB2xmVfz/LXokfYbVwjf5dY++3jHdGZlvv4B
-         GvrmmiKXRh7ARUAJ33C/5qNdLsunn6iO9GSPgo21Z6+jueVFWVrnKjUd4cILVji0lyZl
-         1DGruBdgCADQX/nNiXS27ijdXs6TBnHOn2Cj9D/ShZX0w9JCHglwDkOg+/o80/1QzVDg
-         1GawoiQ7ocpTFfxfGbKxn54n2Ej5kGnTmH12MmLFnT+PERZWDN9HUuzMuNCGk3gocXzD
-         /uqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9kHXcDCGApwkqj7YR7sl1xVeCbFuJErIvk3ogUF1w5k=;
-        b=YAtxuRYCubZUb15SpzgjBiBopVbh5M8qFJY0Kbyf3paqOtRhIq8Jp8NO5ZWNcy48Op
-         1lR+mooIpb58kKuicCrurQ5Sq86lSEDc/7IFIT/fVDf+FLlBEZ6+mxFPztE/hW4cHYFQ
-         ZbW7udR1LvG21Els4Hz77/cLGu9mxlweyBwcmE48B5NbHluWPfoMLNl7L0JcscdVED3Y
-         SrJTSroUAdoaSLRygR7M3Eoo8IKsInHDW94x+YwGVNH3NHAhcF/tdrr3FhJ4rTJS/2BD
-         vcVQjQOjfzrZEYEcn4gqNEi8OBZRdKoiItZHuUuam/CHM4PoL6hchGz9bOLvkX9mPl5j
-         1a2A==
-X-Gm-Message-State: AOAM532nSVhsjuwwQ0Zf0iQ0b6nTetY6vzpETXRwdyca71Ylswlfroii
-        l6S0KuezSzj9AQ2/P1bg/ls=
-X-Google-Smtp-Source: ABdhPJy56eVRXVUpB3NMDGcjsHjLeGs8lKV4gIcnGC4Nv4bsJzy6gBSebeVrXdceF/sSKSGYlAhsRA==
-X-Received: by 2002:a17:906:9243:: with SMTP id c3mr11123675ejx.400.1592734291428;
-        Sun, 21 Jun 2020 03:11:31 -0700 (PDT)
-Received: from localhost.localdomain ([82.209.196.123])
-        by smtp.gmail.com with ESMTPSA id y26sm9717201edv.91.2020.06.21.03.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 03:11:31 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] io_uring: set @poll->file after @poll init
-Date:   Sun, 21 Jun 2020 13:09:52 +0300
-Message-Id: <663d6d6c6f3d1c8ddde158f7c171d3a2034c5453.1592733956.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1592733956.git.asml.silence@gmail.com>
-References: <cover.1592733956.git.asml.silence@gmail.com>
+        Sun, 21 Jun 2020 06:12:50 -0400
+Received: from ozlabs.org ([203.11.71.1]:48309 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729732AbgFUKMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 06:12:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qSz26L3Vz9sSf;
+        Sun, 21 Jun 2020 20:12:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592734367;
+        bh=73EbSfvdEUAjZq8zN7sj/qvkEAt7r5fJFhwHZNeTzu0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=WhFX2fQgf6uDTODIOOxw/m/EruopCUcZCSs/OEXJ0WOd0qMcPw6MiLC7IpFFjXlAc
+         8A2ldVoheZHjDS97QRZaJ4ww7+ZLkwQIBzpj5/JKyDp+khBOoh1illuoGXyLazZhYZ
+         0+rWo8qRleqFLcNsCgLK+glSwrwtCsGj06469NEkONPvfKuALmKUeqQ0gKPGZbBAPc
+         B1y3xPef5+MWWbkDRx4RkljHxsZdEquDiS+K2X+QWZFEpEhlZyDyMueAGNCPVnaE+1
+         BYLXJSeZ08/wzor7UBVa746JWY3FieFXDuHagS02YEdPkF0RxLhzlImphatw2h95sr
+         MPBHNE2kSr2PA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        linuxppc-dev@ozlabs.org
+Cc:     linux-arch@ozlabs.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 1/2] powerpc/syscalls: Use the number when building SPU syscall table
+In-Reply-To: <159248379723.3471720.7761730589256580141.b4-ty@ellerman.id.au>
+References: <20200616135617.2937252-1-mpe@ellerman.id.au> <159248379723.3471720.7761730589256580141.b4-ty@ellerman.id.au>
+Date:   Sun, 21 Jun 2020 20:13:17 +1000
+Message-ID: <875zbkd8w2.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a good practice to modify fields of a struct after but not before
-it was initialised. Even though io_init_poll_iocb() doesn't touch
-poll->file, call it first.
+Michael Ellerman <patch-notifications@ellerman.id.au> writes:
+> On Tue, 16 Jun 2020 23:56:16 +1000, Michael Ellerman wrote:
+>> Currently the macro that inserts entries into the SPU syscall table
+>> doesn't actually use the "nr" (syscall number) parameter.
+>> 
+>> This does work, but it relies on the exact right number of syscall
+>> entries being emitted in order for the syscal numbers to line up with
+>> the array entries. If for example we had two entries with the same
+>> syscall number we wouldn't get an error, it would just cause all
+>> subsequent syscalls to be off by one in the spu_syscall_table.
+>> 
+>> [...]
+>
+> Applied to powerpc/fixes.
+>
+> [1/2] powerpc/syscalls: Use the number when building SPU syscall table
+>       https://git.kernel.org/powerpc/c/1497eea68624f6076bf3eaf66baec3771ea04045
+> [2/2] powerpc/syscalls: Split SPU-ness out of ABI
+>       https://git.kernel.org/powerpc/c/35e32a6cb5f694fda54a5f391917e4ceefa0fece
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch 2 dropped.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 84b39109bc30..676911260f60 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4585,8 +4585,8 @@ static __poll_t __io_arm_poll_handler(struct io_kiocb *req,
- 	struct io_ring_ctx *ctx = req->ctx;
- 	bool cancel = false;
- 
--	poll->file = req->file;
- 	io_init_poll_iocb(poll, mask, wake_func);
-+	poll->file = req->file;
- 	poll->wait.private = req;
- 
- 	ipt->pt._key = mask;
--- 
-2.24.0
-
+cheers
