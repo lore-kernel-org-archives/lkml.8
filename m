@@ -2,102 +2,86 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF679C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B882FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A885724724
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B9824888
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="jRmT+Bm6"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j9cRDC/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgFUNVk (ORCPT
+        id S1729772AbgFUNWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbgFUNVj (ORCPT
+        Sun, 21 Jun 2020 09:22:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17141 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728750AbgFUNWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:21:39 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3903CC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:21:39 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id l10so8157202vsr.10
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E6o3KOH9fz6ZsRBmU1LPAQDNXS/xDDfvfrV73KA+oRA=;
-        b=jRmT+Bm6DQXuifVEDSs1F7To8oavw5ZUUdm2kxI+tAj4WsSyvWjSdtVyf/cLzCjedX
-         sFVHqTcfGRVkVGvfs8I+Xok8NqlDo7PBHwz4Lc+vxRFzwHhstOHkKmVlWFJ+APLMJuUT
-         rcx8OK1lXV9LkAnUTlFrNCpjpOPhCUW2pWZGb0ghFKOVtSJmOdvL4CEwy9dfJWLFRQQ/
-         1lPkY88OEEw5XOirViRIHahIwVNVJNe1foaBZ3lpVDXuMIaOSmjdO1HdErNDg1HzzP/9
-         s49qJhapYt3yKhc3W0dQWcUjFUY4nf6atqK056e+gaJXt12IhPP6X/pZN/9jbRkr1AMW
-         cH+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E6o3KOH9fz6ZsRBmU1LPAQDNXS/xDDfvfrV73KA+oRA=;
-        b=DHA1QpmpE8A/Dj9cthYrLEJIPmjfSbzpqdDqHGCGRKqg8VA6zWzR/aEf4CPXtfnHEq
-         e1vgLACNNU2GHb67c5d/Nj5QJiElSRWHdabPO5MAa1JSmE50qhmh7mFUvWUNpgFbWcUe
-         DqIzex+XfX/Fd7qBaQCUYed8f7DpEOxgVNvBqmeqh9EAwTEcPPBB6S9F3uCXJmXFVIi+
-         eAg0lHpk83fMo6MHVX78cT+/RWw5/91xLxMeQH3GlIq9tvWHLTyGdQqvskvwowkMdfAD
-         4zFriNJgF9dStWzCV3v3OmRQwJBGr9Cu79U4k7ubJ4PKdeACy7fNqx62PixvKVqIKQ+C
-         hu8g==
-X-Gm-Message-State: AOAM532mgW9RT6W/ErOQ4Br+3JtXgyHzd9hzdMLSbCe6bTJptDSHyouC
-        7aJj9hhqAQmafJKc0tO1hdG2UUNId3W5p/uqXCMPFw==
-X-Google-Smtp-Source: ABdhPJzrsAG4vPo4wEgDonzktm6XiQlMwZ3RuajfIUwl9MX5ydA5heJlA/u//rHt2xSwIM0PpK7LUzvWXQnymY0EpOU=
-X-Received: by 2002:a67:328a:: with SMTP id y132mr12839041vsy.11.1592745697668;
- Sun, 21 Jun 2020 06:21:37 -0700 (PDT)
+        Sun, 21 Jun 2020 09:22:18 -0400
+X-UUID: dcb1ca5039c643d4aeffc63b493bd0b3-20200621
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=61D9E6WpDFFFD6POeDxGR3kU0mQz9/Xa8UTwEuKmcCI=;
+        b=j9cRDC/4pZI0t6qtjJWv06LkcnFpwYy+FnvFjsfQg4Yw7DRAY0j4n1TOYkhYyb8zHzrfUgDmL6y70GJmtlFOV+5k46Ww1qZuUVV6qAJrKPgZj1l40xGJPpijRxdYXjC8ViVBKGHvkDbnpTtnbI5on7hwJoNXBu7wpzRYBUkS2GI=;
+X-UUID: dcb1ca5039c643d4aeffc63b493bd0b3-20200621
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1258806545; Sun, 21 Jun 2020 21:22:14 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 21 Jun 2020 21:22:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 21 Jun 2020 21:22:05 +0800
+From:   Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        HS Liao <hs.liao@mediatek.com>
+Subject: [PATCH v7 0/4] support gce on mt6779 platform
+Date:   Sun, 21 Jun 2020 21:22:07 +0800
+Message-ID: <1592745731-14614-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <20200621112000.31495-1-gilad@benyossef.com> <20200621112000.31495-2-gilad@benyossef.com>
- <2857f54e-e752-0555-f43a-a451f64f6302@web.de>
-In-Reply-To: <2857f54e-e752-0555-f43a-a451f64f6302@web.de>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 21 Jun 2020 16:21:26 +0300
-Message-ID: <CAOtvUMcVHfhiY=f0RutGWkQXPiWy_8e4QQ_ytgv5m=h+gg0bqA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] crypto: ccree: fix resource leak on error path
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ofir Drang <ofir.drang@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 4:07 PM Markus Elfring <Markus.Elfring@web.de> wrot=
-e:
->
-> > Fix a small resource leak on the error path of cipher processing.
->
-> I find it more appropriate to resend this patch series with a cover lette=
-r
-> together with all update steps.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?id=3D64677779e8962c20b580b47179=
-0fe42367750599#n785
->
-Indeed and I did but for some reason I cannot fathom the cover letter
-did not make it to the list.
+VGhpcyBwYXRjaCBzdXBwb3J0IGdjZSBvbiBtdDY3NzkgcGxhdGZvcm0uDQoNCkNoYW5nZSBzaW5j
+ZSB2NjoNCi0gU2VwYXJhdGUgYWxsIGhlbHBlciBmdW5jdGlvbiB0byBhbm90aGVyIHBhdGNoc2V0
+Lg0KDQpDaGFuZ2Ugc2luY2UgdjU6DQotIHNwZWFyYXRlIGFkZHJlc3Mgc2hpZnQgY29kZSBpbiBj
+bGllbnQgaGVscGVyIGFuZCBtYWlsYm94IGNvbnRyb2xsZXINCi0gc2VwYXJhdGUgd3JpdGVfcy93
+cml0ZV9zX21hc2sgYW5kIHdyaXRlX3NfdmFsdWUvd3JpdGVfc19tYXNrX3ZhbHVlIHNvIHRoYXQN
+CiAgY2xpZW50IGNhbiBkZWNpZGUgdXNlIG1hc2sgb3Igbm90DQotIGZpeCB0eXBvIGluIGhlYWRl
+cg0KDQpDaGFuZ2Ugc2luY2UgdjQ6DQotIGRvIG5vdCBjbGVhciBkaXNwIGV2ZW50IGFnYWluIGlu
+IGRybSBkcml2ZXINCi0gc3ltYm9saXplIHZhbHVlIDEgdG8ganVtcCByZWxhdGl2ZQ0KDQpbLi4u
+IHNuaXAgLi4uXQ0KDQoNCkRlbm5pcyBZQyBIc2llaCAoNCk6DQogIGR0LWJpbmRpbmc6IGdjZTog
+YWRkIGdjZSBoZWFkZXIgZmlsZSBmb3IgbXQ2Nzc5DQogIG1haWxib3g6IGNtZHE6IHZhcmlhYmxp
+emUgYWRkcmVzcyBzaGlmdCBpbiBwbGF0Zm9ybQ0KICBtYWlsYm94OiBjbWRxOiBzdXBwb3J0IG10
+Njc3OSBnY2UgcGxhdGZvcm0gZGVmaW5pdGlvbg0KICBtYWlsYm94OiBtZWRpYXRlazogY21kcTog
+Y2xlYXIgdGFzayBpbiBjaGFubmVsIGJlZm9yZSBzaHV0ZG93bg0KDQogLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWFpbGJveC9tdGstZ2NlLnR4dCAgIHwgICA4ICstDQogZHJpdmVycy9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guYyAgICAgICAgICAgIHwgMTAxICsrKysrKy0tDQogaW5jbHVkZS9k
+dC1iaW5kaW5ncy9nY2UvbXQ2Nzc5LWdjZS5oICAgICAgICAgIHwgMjIyICsrKysrKysrKysrKysr
+KysrKw0KIGluY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggICAgICB8ICAg
+MiArDQogNCBmaWxlcyBjaGFuZ2VkLCAzMTUgaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0p
+DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvZ2NlL210Njc3OS1nY2Uu
+aA0KDQotLSANCjIuMTguMA==
 
-I will try to resend it now.
-
-Gilad
-
-
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
