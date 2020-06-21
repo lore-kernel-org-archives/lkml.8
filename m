@@ -2,75 +2,148 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC8D524804
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F3624808
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHHamA0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgFUF1k (ORCPT
+        id S1729265AbgFUFmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 01:27:40 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:58734 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726015AbgFUF1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 01:27:40 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Sun, 21 Jun 2020 13:27:24
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.65]
-Date:   Sun, 21 Jun 2020 13:27:24 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Jon Hunter" <jonathanh@nvidia.com>
-Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM
- imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
-References: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
- <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
- <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
- <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Sun, 21 Jun 2020 01:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgFUFmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 01:42:17 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C74C061794;
+        Sat, 20 Jun 2020 22:42:16 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id m26so7791317lfo.13;
+        Sat, 20 Jun 2020 22:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zRKag/4LPSl5Xnsnl9sXPhKHWLjT9dMGxtuILiA1ji8=;
+        b=bHHamA0pKBbnulIdEuqz8qHkzFIHj+PifiHFGg0049fXDXHj+Mj7WI9ztirmz+HNT0
+         krHTPTUKsEl8qhfKMdkhyGG+xMnPfTsVRHCUbXSp+UJjelTH4UHAq8PqsrMh24fZvD5w
+         8D4Knh+ueUYb1qynIGy2MRJcrhIPOk2g+dVoyTY5YEHSvEShyB7qmgdLuHxNYKcRhD92
+         0Y0TDPkuzMIbkAuYBrH5birnoCPSZSegQYMeG4UZjr6Fzb7nKl3WN1hW5z+VfHAbnfUW
+         JxgZbMlvBGpuHO+QJbdGq9nLeRpNymW4BBeE1HfWygGlVUoolsRovAkMaFAx+ly7755L
+         tgdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zRKag/4LPSl5Xnsnl9sXPhKHWLjT9dMGxtuILiA1ji8=;
+        b=oYD+RZoR+SwZJ9XdXVWsbG/eOvUlSOSO4vgf/Rr3mwDGMngBGj8XL7vC3HhBEGbL2B
+         fqipsm+9GWCzYtIxAxgBz5rhCpXbh5b8++Xf+MEYE4vMFZJKaCJHoRR0+8Bz243JG0Zb
+         Tlg8LcuIPCk5DJG1dtGso9dJQ3DX0Kt/Apk8RhFpK1GmRpRYTYeLvZNwPtXc2crkvr3p
+         e0gGHWkrWWQyy9ihL5lcbnwc9Zyqk0+RiYxPZ6C4XR/yOB71esS2Exl1XjxENLTXXdS0
+         OmBmv/piJ49zWd4IsWOUXYmLWYqbf7Z+dSgNiwwUi/IPP+Szl4EAYOsAyidhD8CHZiF9
+         aU/g==
+X-Gm-Message-State: AOAM532csROqvKLytXM0mNrqn/c1VdTRtPHmjY/wLiqN2yKv8WQvnjR6
+        tHfqBYPMislBzlOnbmOy4UY=
+X-Google-Smtp-Source: ABdhPJwjMyYu4fZwYzbnhbK/7YJm2rB4RHQwOSH447wnhCnvAuhaqa23B80WJJZ1xEBy/LtZzBRrbw==
+X-Received: by 2002:ac2:447a:: with SMTP id y26mr6147470lfl.146.1592718135329;
+        Sat, 20 Jun 2020 22:42:15 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
+        by smtp.gmail.com with ESMTPSA id i22sm1990323ljb.50.2020.06.20.22.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 22:42:14 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     andy.shevchenko@gmail.com, arnd@arndb.de, emil.l.velikov@gmail.com,
+        geert@linux-m68k.org, keescook@chromium.org,
+        linus.walleij@linaro.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@intel.com,
+        rikard.falkeborn@gmail.com, syednwaris@gmail.com,
+        vilhelm.gray@gmail.com, yamada.masahiro@socionext.com
+Subject: [PATCH v4 1/2] linux/bits.h: fix unsigned less than zero warnings
+Date:   Sun, 21 Jun 2020 07:42:09 +0200
+Message-Id: <20200621054210.14804-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200620213632.60c2c6b99ec9cf9392fa128d@linux-foundation.org>
+References: <20200620213632.60c2c6b99ec9cf9392fa128d@linux-foundation.org>
 MIME-Version: 1.0
-Message-ID: <711c004d.1832d.172d55876c5.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgDX3uK87+5evJH9AA--.17515W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgADsG
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
-        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cgo+ID4+Cj4gPj4gV2h5IG5vaWRsZT8KPiA+Pgo+ID4gCj4gPiBfbm9pZGxlIGlzIGVub3VnaCBm
-b3IgZml4aW5nIHRoaXMgYnVnLiBfc3luYyBtYXkgc3VzcGVuZAo+ID4gdGhlIGRldmljZSBiZXlv
-bmQgZXhwZWN0YXRpb24uCj4gCj4gSW4gdGhhdCBjYXNlLCB0aGVuIHRoZSBvdGhlciBpbnN0YW5j
-ZSB5b3UgYXJlIGZpeGluZyB3aXRoIHRoaXMgcGF0Y2ggaXMKPiBub3QgY29ycmVjdC4KPiAKCkZp
-bmUuIEkgd2lsbCBmaXggdGhpcyBzb29uLgoKUmVnYXJkcywKRGluZ2hhbwo=
+When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
+an unsigned unknown high bit, some gcc versions warn due to the
+comparisons of the high and low bit in GENMASK_INPUT_CHECK.
+
+To silence the warnings, only perform the check if both inputs are
+known. This does not trigger any warnings, from the Wtype-limits help:
+
+	Warn if a comparison is always true or always false due to the
+	limited range of the data type, but do not warn for constant
+	expressions.
+
+As an example of the warning, kindly reported by the kbuild test robot:
+
+from drivers/mfd/atmel-smc.c:11:
+drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
+include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+|                            ^
+include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
+16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+|                                                              ^
+include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+|   ^~~~~~~~~~~~~~~~~~~
+>> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
+49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+|                         ^~~~~~~
+
+Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
+Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+v3-v4
+Added Emils Reviewed-by.
+
+v2-v3
+Added Andys Reviewed-by.
+
+v1->v2
+Change to require both high and low bit to be constant expressions
+instead of introducing somewhat arbitrary casts
+
+ include/linux/bits.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 4671fbf28842..35ca3f5d11a0 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -23,7 +23,8 @@
+ #include <linux/build_bug.h>
+ #define GENMASK_INPUT_CHECK(h, l) \
+ 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+-		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++		__builtin_constant_p(l) && __builtin_constant_p(h), \
++		(l) > (h), 0)))
+ #else
+ /*
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+-- 
+2.27.0
+
