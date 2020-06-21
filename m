@@ -2,168 +2,156 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 06:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A67C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 06:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAD0206C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 06:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D787B24828
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 06:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3xEZg8L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bEXtwFpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgFUGAO (ORCPT
+        id S1729329AbgFUGDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 02:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40220 "EHLO
+        Sun, 21 Jun 2020 02:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbgFUGAN (ORCPT
+        with ESMTP id S1729282AbgFUGDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 02:00:13 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63F0C061794;
-        Sat, 20 Jun 2020 23:00:13 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t8so13075958ilm.7;
-        Sat, 20 Jun 2020 23:00:13 -0700 (PDT)
+        Sun, 21 Jun 2020 02:03:44 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745EDC061795
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 23:03:44 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y18so6052480plr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jun 2020 23:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oACwMnGxV711lDft/mL2GTQM/QCIsRYS4HyU3R9wY9g=;
-        b=K3xEZg8Lev6ya/17Z0awjRX9rPVz2RmlS6dL2qaRTO7hFzQXVktwBSbyTKrVFq5RfR
-         bUWWVxMw8aJ1q1x6+uPcvluW3KpNa8A5M01b3cBsR52H/UNl7lCv1jbF18ECWoKV0BOv
-         uj8EEAfXC4rpmtaeYbB4dULplLZHB+hXA2tMmKOvkxO/2ICgSAgSbqJSAfeY8ohdkKLN
-         +bw4D3EPMF1z3LjpXHr0Sl1R99MZIWtFwRXDSqcGJBlNDbm4/s8sLz2BGlfaYkZKu2Rq
-         rJk8n0QOGX9oUw0nBbgStb7G/sWlHav1RKGCibvGto/c3AGTNO341AEJAYyHSmMhyr0u
-         YDLg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E37Y5fbYX2B/AUZ69TRQLOn9ZrdWJ1PDTbytHbYw12I=;
+        b=bEXtwFplRNji+ZAlc70WTzC2kmlYpyz9O7mWigm5rajr5DgliPr3sad6SDrRGM7Kxf
+         AwS4rnsGWi0suv+nLr/dTLjpe/5BBQWQ78Y/MLvC6fIzRiiGWDyDvxlIwAkT6yhVwCVd
+         L5Nqmm9rZgD4hg6kOnjyoD90IV4D0fRF8b6QhEkYL4UND9cEbgOAMAO0KGNbHg/xJxzE
+         G4QbwMr2XpUzZ00E4P0OlQSphxTK+8k6P8gtvtTANIoMPfCSKI8Lv2oSt70mXr3kVJnX
+         mRNNXqZ5KQsa4qUoQjbNJsw5b0Ou9b7vS1uP2/0cXZscaYixyou2r2uvCkhkOuP7Lkp+
+         jjhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oACwMnGxV711lDft/mL2GTQM/QCIsRYS4HyU3R9wY9g=;
-        b=nL/xdDTyiSbWdXNxcXK28CHbqx5tj2WB3erVZcIexZaC06PjxOEU4/g6EnU9OLwNog
-         8K5O8dqkrkgZDrtudJrT5MJJfvu6CYeZxGRJsEiCd9hGL+hTbSKgRM4eAaZ3RfKM8Zjr
-         uAWNztp1MINLD0yqwGbL9MK4VKZq5sMgpWygl7ioqPFfQi4chTYPIPXa1xsWz5UFt56s
-         3e2JD115+4Z/7asRduw8AhvOwvcu6B9AceSP2Fpjtgek0aMFo3HV6xnA3pAyARTNOIWG
-         eNyLW3pJ5MbcMwQ4+QF+WIAK/pHDXnt68RVZmBu/skxPRrXl8V+7zckofxcs4uGFG5pX
-         dASw==
-X-Gm-Message-State: AOAM53379pDfOATs9SO4GH5W/ghVoB2LFPoCC0c02Z21kDvekrDuA+a4
-        FGN9ooU/Xz/tdnnNa05v6m9nCjrP2DwbJpMhx+zFXVvO
-X-Google-Smtp-Source: ABdhPJxqCRebQRDCScb+zwuWhADWhU3C7P0rpGnfUjMYacyzMd5l68nGUffrQS8wi00YLBrpOVoYPtwfZrYuSjuR52E=
-X-Received: by 2002:a92:5856:: with SMTP id m83mr11411406ilb.72.1592719212802;
- Sat, 20 Jun 2020 23:00:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E37Y5fbYX2B/AUZ69TRQLOn9ZrdWJ1PDTbytHbYw12I=;
+        b=KMdBXeFodU9dyG5stDaS8T8p9mi5djmjb77zdlmJPEqBbAMa8A7smr/qiqwYbd3I5x
+         uGt1DloB4OBOUZOLmzMF7bKYrN6FmXrE+Z4Fa4wE7/D2nnseR4vEiD+Zl+HiIOlIH1EF
+         ioJ066ck8jv9LsL1+s2dya4dAQOuGrLWRgUV262xJ/rHzmN9OZJT8XR893yYHfwpdadL
+         TjW272Wf0+L6T/6DQ4haS7qtVcP3RNk2sM3Sn9dsk/1/VEsnsX1lM1IfWjtXmZy6Hg8w
+         tr9x+Vx/uFJi1n6xi9rRxyPADITu9vNK48v5LYiAPHybJChbgsio86l0e2Rp09KqE3FW
+         2kUQ==
+X-Gm-Message-State: AOAM532Vn8v8/t0Ymtp2207yYeBmHkVpVv/1NlSIZKptCMMjX6wQnqI6
+        B2uYz/DR62QqvLCpbkgTs9Y/9A==
+X-Google-Smtp-Source: ABdhPJxHRHspjuIwXRf0s9ZHcLtbwGIglVcsxqFPwAZTEDfrkST5fk9GgmGyQ7so94acwcjrzTu6RA==
+X-Received: by 2002:a17:90a:6ace:: with SMTP id b14mr12034953pjm.13.1592719423730;
+        Sat, 20 Jun 2020 23:03:43 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 77sm10459560pfx.172.2020.06.20.23.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 23:03:42 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 23:00:55 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [RFC][PATCH 4/5] pinctrl: qcom: Allow pinctrl-msm code to be
+ loadable as a module
+Message-ID: <20200621060055.GA2421@builder.lan>
+References: <20200616061338.109499-1-john.stultz@linaro.org>
+ <20200616061338.109499-5-john.stultz@linaro.org>
 MIME-Version: 1.0
-References: <20200619155036.GZ8681@bombadil.infradead.org> <CAOQ4uxjy6JTAQqvK9pc+xNDfzGQ3ACefTrySXtKb_OcAYQrdzw@mail.gmail.com>
- <20200620191521.GG8681@bombadil.infradead.org>
-In-Reply-To: <20200620191521.GG8681@bombadil.infradead.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 21 Jun 2020 09:00:01 +0300
-Message-ID: <CAOQ4uxgSc7hK1=GuUajzG1Z+ks6gzFFX+EtuBMULOk0s85zi3A@mail.gmail.com>
-Subject: Re: [RFC] Bypass filesystems for reading cached pages
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616061338.109499-5-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[CC: Dave Chinner, Jan Kara, xfs]
+On Mon 15 Jun 23:13 PDT 2020, John Stultz wrote:
 
-On Sat, Jun 20, 2020 at 10:15 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sat, Jun 20, 2020 at 09:19:37AM +0300, Amir Goldstein wrote:
-> > On Fri, Jun 19, 2020 at 6:52 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > > This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
-> > > The advantage of this patch is that we can avoid taking any filesystem
-> > > lock, as long as the pages being accessed are in the cache (and we don't
-> > > need to readahead any pages into the cache).  We also avoid an indirect
-> > > function call in these cases.
-> >
-> > XFS is taking i_rwsem lock in read_iter() for a surprising reason:
-> > https://lore.kernel.org/linux-xfs/CAOQ4uxjpqDQP2AKA8Hrt4jDC65cTo4QdYDOKFE-C3cLxBBa6pQ@mail.gmail.com/
-> > In that post I claim that ocfs2 and cifs also do some work in read_iter().
-> > I didn't go back to check what, but it sounds like cache coherence among
-> > nodes.
->
-> That's out of date.  Here's POSIX-2017:
->
-> https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html
->
->   "I/O is intended to be atomic to ordinary files and pipes and
->   FIFOs. Atomic means that all the bytes from a single operation that
->   started out together end up together, without interleaving from other
->   I/O operations. It is a known attribute of terminals that this is not
->   honored, and terminals are explicitly (and implicitly permanently)
->   excepted, making the behavior unspecified. The behavior for other
->   device types is also left unspecified, but the wording is intended to
->   imply that future standards might choose to specify atomicity (or not)."
->
-> That _doesn't_ say "a read cannot observe a write in progress".  It says
-> "Two writes cannot interleave".  Indeed, further down in that section, it says:
->
->   "Earlier versions of this standard allowed two very different behaviors
->   with regard to the handling of interrupts. In order to minimize the
->   resulting confusion, it was decided that POSIX.1-2017 should support
->   only one of these behaviors. Historical practice on AT&T-derived systems
->   was to have read() and write() return -1 and set errno to [EINTR] when
->   interrupted after some, but not all, of the data requested had been
->   transferred. However, the US Department of Commerce FIPS 151-1 and FIPS
->   151-2 require the historical BSD behavior, in which read() and write()
->   return the number of bytes actually transferred before the interrupt. If
->   -1 is returned when any data is transferred, it is difficult to recover
->   from the error on a seekable device and impossible on a non-seekable
->   device. Most new implementations support this behavior. The behavior
->   required by POSIX.1-2017 is to return the number of bytes transferred."
->
-> That explicitly allows for a write to be interrupted by a signal and
-> later resumed, allowing a read to observe a half-complete write.
->
+> Tweaks to allow pinctrl-msm code to be loadable as a module.
+> This is needed in order to support having the qcom-scm driver,
+> which pinctrl-msm calls into, configured as a module.
+> 
 
-Tell that to Dave Chinner (cc). I too, find it surprising that XFS developers
-choose to "not regress" a behavior that is XFS specific and there is no
-proof or even clues of any application that could rely on such behavior.
-While the price that is being paid by all real world applications that do
-mixed random rw workload is very much real and very much significant.
+This means that we need a "depends on QCOM_SCM || QCOM_SCM=n" on all
+entries in the Kconfig that selects PINCTRL_MSM, or switch PINCTRL_MSM
+to be user selectable and make all the others depend on it.
 
-The original discussion on the original post quickly steered towards the
-behavior change of rwsem [1], which you Matthew also participated in.
-The reason for taking the rwsem lock in the first place was never seriously
-challenged.
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/Kconfig       | 2 +-
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 3 +++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index ff1ee159dca2..5a7e1bc621e6 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -2,7 +2,7 @@
+>  if (ARCH_QCOM || COMPILE_TEST)
+>  
+>  config PINCTRL_MSM
+> -	bool
+> +	tristate
+>  	select PINMUX
+>  	select PINCONF
+>  	select GENERIC_PINCONF
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 83b7d64bc4c1..54a226f682e9 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -1355,3 +1355,6 @@ int msm_pinctrl_remove(struct platform_device *pdev)
+>  }
+>  EXPORT_SYMBOL(msm_pinctrl_remove);
+>  
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. pinctrl-msm driver");
 
-I posted a followup patch that fixes the performance issue without breaking
-the "atomic rw" behavior [2] by calling generic_file_read_iter() once without
-i_rwsem to pre-populate the page cache.
-Dave had some technical concerns about this patch, regarding racing
-with truncate_pagecache_range(), which later led to a fix by Jan Kara to
-solve a readahead(2) vs. hole punch race [3].
+It's the "Qualcomm Technologies, Inc. TLMM driver"
 
-At the time, Jan Kara wrote [3]:
-"...other filesystems need similar protections but e.g. in case of ext4 it isn't
-so simple without seriously regressing mixed rw workload performance so
-I'm pushing just xfs fix at this moment which is simple."
+> +MODULE_LICENSE("GPL v2");
+> +
 
-And w.r.t solving the race without taking i_rwsem:
-"...So I have an idea how it could be solved: Change calling convention for
-->readpage() so that it gets called without page locked and take
-i_mmap_sem there (and in ->readpages()) to protect from the race..."
+Please don't retain my empty line at the end of this file :)
 
-My question to both Jan and Matthew is - does the new aops ->readahead()
-API make things any better in that regard?
-Will it make it easier for us to address the readahead vs. hole punch race
-without having to take i_rwsem before readahead()?
+Regards,
+Bjorn
 
-Thanks,
-Amir.
-
-[1] https://lore.kernel.org/linux-xfs/20190325154731.GT1183@magnolia/
-[2] https://lore.kernel.org/linux-xfs/20190404165737.30889-1-amir73il@gmail.com/
-[3] https://lore.kernel.org/linux-xfs/20200120165830.GB28285@quack2.suse.cz/
+> -- 
+> 2.17.1
+> 
