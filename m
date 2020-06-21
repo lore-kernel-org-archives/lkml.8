@@ -2,103 +2,97 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D32C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 726DD24873
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592729849;
-	bh=aNokLRmz+McR+JnvgxLD0kUt51Spv/CfHrKAYcpobt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=odVlamKVOJbUHFwP5AkGzIsuJQabPWFxc7aOhz5Y9DKCx8uf6kleRYts4hiGlXYoZ
-	 PInA8dedyF3O/mmpPHc8YCLLnabnnt9LiA7ekVKYfTrqxVuUEBBWbkNFFIXo28ZHyt
-	 MNiLRTaBpJ7gI0X6JrbPNoUCA40AhHKB6dEQN8Y8=
+	by mail.kernel.org (Postfix) with ESMTP id 2A42624873
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 08:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l4HUFNhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgFUI5E (ORCPT
+        id S1729595AbgFUI6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 04:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbgFUI5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 04:57:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90D9F24873;
-        Sun, 21 Jun 2020 08:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592729824;
-        bh=aNokLRmz+McR+JnvgxLD0kUt51Spv/CfHrKAYcpobt8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sL36EOLJPpclspiw1an0FN767mLQWip7XGOgNOws60isiEjuBTdYI1zxVatrnsnhT
-         NWdG64raeVKSkEcPuAYLVENTbUl1WoldCUdu/e6VcFh/DwID7TIADItORexhXo5utk
-         SXDLl0r1U9J2hVw07KwWew1hb5siAJahlbx0SxpU=
-Date:   Sun, 21 Jun 2020 10:56:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver core: Use scnprintf() instead of snprintf() in
- device show functions
-Message-ID: <20200621085656.GA95977@kroah.com>
-References: <20200620150529.18678-1-efremov@linux.com>
+        Sun, 21 Jun 2020 04:58:01 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:42979 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727119AbgFUI6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 04:58:01 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D01DC580558;
+        Sun, 21 Jun 2020 04:57:59 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sun, 21 Jun 2020 04:57:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3K9ian
+        o7tc8WbAJhJfY4t6jSmakbtH+Y8CHBQa0fNnw=; b=l4HUFNhb1v2HRiDTe23lB5
+        0XOyRciYS4gcBXy7LcMABmWTuWyJEbcAEGYWul8+/dyW4K28jxPE1klJ8dIfjXEm
+        5TaJ26ZtR73LbnveBHA2jNvQdNS1vo9qAfqnt0RNDQ3FWcTHAc+H5phcjtW55V21
+        oJ/ViCwKvaIqQEbEHYV8r4frGkiL7+MD0SGXpzEsXpMWCmshEOfLAVwDFH0XM/3c
+        wVjJTebZJ6QsTWsMVlDAjGqGTerwa1VhYxJBaYH4o1i7/m5GRD5aHyGPVbu2tT8f
+        B4GOaY7HhsKeForq9SRzvSu3heR+42fEwbAqu/0qDe7BzjEoErXGgGcOesnluIag
+        ==
+X-ME-Sender: <xms:FiHvXpdClLbNOsA4PBqFU3IGPcq2nfyr12QnW5irm8qOlnIh8DHgiA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
+    teenucfkphepuddtledrieejrdekrdduvdelnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:FiHvXnMgHo6MV0wyqDBEFGdQoMa8lg3UFwPitmnH5YMb9cqX0ZKGSQ>
+    <xmx:FiHvXih7Xy8khsJHGldw_5_e7IKSkM47IkUPxazEFUZ5TmciPCnJVA>
+    <xmx:FiHvXi_MEHJVMKVKvOJlRR5paFj3J9sTKlKZUeQIN-iyZXQePxjkvA>
+    <xmx:FyHvXmnN64E_HoygGKo3FVQhdWw6undwN8IXkhfGXus18Pv9R6GRqA>
+Received: from localhost (bzq-109-67-8-129.red.bezeqint.net [109.67.8.129])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EC1F73066CFF;
+        Sun, 21 Jun 2020 04:57:57 -0400 (EDT)
+Date:   Sun, 21 Jun 2020 11:57:55 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next 1/6] net: marvell: prestera: Add driver for Prestera
+ family ASIC devices
+Message-ID: <20200621085755.GA477536@splinter>
+References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
+ <20200528151245.7592-2-vadym.kochan@plvision.eu>
+ <20200530154801.GB1624759@splinter>
+ <20200601105013.GB25323@plvision.eu>
+ <20200603092358.GA1841966@splinter>
+ <20200620125639.GA6911@plvision.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200620150529.18678-1-efremov@linux.com>
+In-Reply-To: <20200620125639.GA6911@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 06:05:29PM +0300, Denis Efremov wrote:
-> >From Documentation/filesystems/sysfs.txt:
-> - show() must not use snprintf() when formatting the value to be
->   returned to user space. If you can guarantee that an overflow
->   will never happen you can use sprintf() otherwise you must use
->   scnprintf().
-> 
-> The reason is that snprintf() returns the length the resulting string
-> would be, assuming the data will fit into the destination array.
-> scnprintf() returns the length of the string actually created in buf.
-> 
-> device_show_{ulong,int,bool}() functions are reference implementation
-> and should respect the kernel documentation.
+On Sat, Jun 20, 2020 at 03:56:39PM +0300, Vadym Kochan wrote:
+> But it will look same as prestera_destroy_ports(), do you think
+> this is not a problem to have a same logic doubled ?
 
-Ok, but you are not following that documentation below, why not?
-
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
-> 
-> Actually, I don't know why snprintf() is used here initially. It looks
-> safe to use sprintf().
-> 
->  drivers/base/core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 67d39a90b45c..2815deb511fc 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1472,7 +1472,7 @@ ssize_t device_show_ulong(struct device *dev,
->  			  char *buf)
->  {
->  	struct dev_ext_attribute *ea = to_ext_attr(attr);
-> -	return snprintf(buf, PAGE_SIZE, "%lx\n", *(unsigned long *)(ea->var));
-> +	return scnprintf(buf, PAGE_SIZE, "%lx\n", *(unsigned long *)(ea->var));
-
-As the documentation states, these should just be sprintf(), if you
-really want to change these.
-
-As-is, these are also ok, there is no need to change.
-
-thanks,
-
-greg k-h
+No, error paths of init() usually share logic with fini(). The benefits
+of being consistent, always having init() followed by fini() and making
+sure they are symmetric, out-weigh the benefit of saving a few lines of
+code.
