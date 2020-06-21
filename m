@@ -2,94 +2,171 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B429CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AD42076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888032076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=icurse.nl header.i=@icurse.nl header.b="GVvAhg9P"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="jbmmzG5p";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eMAb+jtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgFUEzd (ORCPT
+        id S1729269AbgFUEzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 00:55:33 -0400
-Received: from mail.ruun.network ([176.9.184.6]:33241 "EHLO mail.ruun.network"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgFUEzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 00:55:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=icurse.nl;
-         s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:
-        Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date
-        :Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-        References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
-        List-Owner:List-Archive; bh=pzICcxAhbjceCAGYyGxyUjDndEifum3vNyJxaV2tvZ8=; b=G
-        VvAhg9PE6jLJRnKlAUSzjspsg97m/ubY7jZDpqjJKIi3N/YRFPYepNlJ6ihanw6AJdMkQ4BAOg/7o
-        twpRfZJTPg0SC8QxVBfxJk2Y3o4nzil8mR3j4R/pzDTvL8uWRhonX5Okql68uFSY0if7t7rauNK99
-        l5gwORxGQ8gQTMN/3USEw+17/6m3/+CKbtCple7xAdR6jinBvH1fCFS3AcLGYTePSqoPEH1G2OToy
-        BIrSH/gjqdKLI6Z2uqZgI1ObeqReZZPf7rTKBEAzGxuS50kjQFTKToGxspudyZ5QjmmMN2QPyFX7h
-        1f/mn0W+ts9DPbFzWSa4akXAYByHK3F1A==;
-Received: from cpe-98-14-166-248.nyc.res.rr.com ([98.14.166.248] helo=localhost.localdomain)
-        by birchibald.ruun.network with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93.0.4)
-        (envelope-from <jeffrey@icurse.nl>)
-        id 1jms0r-0002ng-Pa; Sun, 21 Jun 2020 06:55:26 +0200
-From:   Jeffrey Lin <jeffrey@icurse.nl>
-To:     Jean Delvare <jdelvare@suse.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeffrey Lin <jeffrey@icurse.nl>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH v2] hwmon: (dell-smm) Add Latitude 5480 to fan control whitelist
-Date:   Sun, 21 Jun 2020 00:52:48 -0400
-Message-Id: <20200621045246.929649-1-jeffrey@icurse.nl>
-X-Mailer: git-send-email 2.27.0
+        Sun, 21 Jun 2020 00:55:45 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:44837 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbgFUEzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 00:55:44 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id E3ED55C00D9;
+        Sun, 21 Jun 2020 00:55:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 21 Jun 2020 00:55:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        f+V9My7t/LV5Z1d5BR8PtxKFjib8M82ampdGENj43xs=; b=jbmmzG5p80Saoabi
+        K3WnNtkDePNaiYrrpVhfTl522U7K1gt8nJ4Mfe3HRuusCQm5YwoOj84iuzptt+R8
+        QS9aGToJwxnUrAoYa1U/LJBbb6dX0TWCK6pvQ2NMYYvDfeMzhuo5jhCN9ZnVUfRX
+        oIUfY28YH/ANehBFvPzcJQP1g8pgnWr6D/M12OwczwjyqgBUPmWT8wQ8YHaDWgQ8
+        Z3OPRVirGKvdMhNgPtr0yLznqSJvHplfMWF0SgMWR/wgfZuWwEJfl2cXEjmAbkS9
+        tQfTwn/E4b0k4kB3+xBQuDB0Ln1itiBCzPFnXi28zW0FR3WsZM50jv6QhK6sUMJi
+        0yzu9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=f+V9My7t/LV5Z1d5BR8PtxKFjib8M82ampdGENj43
+        xs=; b=eMAb+jtW5tMrk2tCc6qgBU8MBeO4LpnSCyLWwf9n/BQjSmtoV+DRIWFsM
+        BCygPTW4+XGCgFvJ+V2CnOpbeROigIjQI4+gRaGlgbROJe0akYvd2vUsomgKuyGz
+        7xTY98IaTSSLH19ntblIafoKcHCc++6vr8dkqcMwA9vMz1l1ND9VD1nULDPSjiYI
+        QiMFjD2MzbRZVUFuIHiwfyQoiYTS9SLvE69kSXHhCdgaa/MRc154yOHBMY8pLAKg
+        YFo08HAUe/YDJ1IW6CDyYfHM3VYb53puSSuxXxgrL7T83DIlnIYgKcYaVJyGGN99
+        P/nMMSlZ0yLsXLJE5r1GmUa04+Ssg==
+X-ME-Sender: <xms:S-juXu_4mcnUs8U8t5Ll8Yt_2sptLmf2hkrISK2BixOyYUTWHoD0Rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejledgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepheekrdejrdduleegrdekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:S-juXuvTfzIWNDDp6BGf1vqPn4D6zDo7EqCHYkRIyM6qUiENz0qyUQ>
+    <xmx:S-juXkC11nbHTRnab62GYXQf_L4Ef3dp4_7aEIT0xBfDl9esTGb2CQ>
+    <xmx:S-juXmcYJlyvoDo08j59L6OfsNQ7hGxYhOaDZhI-gtdvCHVWc5rYRg>
+    <xmx:TOjuXu3MPW_LjjcDfWoug0r4HVQ_TpI78HcytGFvLplsWfbTuhRR9w>
+Received: from mickey.themaw.net (58-7-194-87.dyn.iinet.net.au [58.7.194.87])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6513F30614FA;
+        Sun, 21 Jun 2020 00:55:36 -0400 (EDT)
+Message-ID: <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+From:   Ian Kent <raven@themaw.net>
+To:     Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sun, 21 Jun 2020 12:55:33 +0800
+In-Reply-To: <20200619222356.GA13061@mtj.duckdns.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+         <20200619153833.GA5749@mtj.thefacebook.com>
+         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+         <20200619222356.GA13061@mtj.duckdns.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: jeffrey@icurse.nl
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows manual PWM control without the BIOS fighting back on Dell
-Latitude 5480.
+On Fri, 2020-06-19 at 18:23 -0400, Tejun Heo wrote:
+> On Fri, Jun 19, 2020 at 01:41:39PM -0700, Rick Lindsley wrote:
+> > On 6/19/20 8:38 AM, Tejun Heo wrote:
+> > 
+> > > I don't have strong objections to the series but the rationales
+> > > don't seem
+> > > particularly strong. It's solving a suspected problem but only
+> > > half way. It
+> > > isn't clear whether this can be the long term solution for the
+> > > problem
+> > > machine and whether it will benefit anyone else in a meaningful
+> > > way either.
+> > 
+> > I don't understand your statement about solving the problem
+> > halfway. Could
+> > you elaborate?
+> 
+> Spending 5 minutes during boot creating sysfs objects doesn't seem
+> like a
+> particularly good solution and I don't know whether anyone else would
+> experience similar issues. Again, not necessarily against improving
+> the
+> scalability of kernfs code but the use case seems a bit out there.
+> 
+> > > I think Greg already asked this but how are the 100,000+ memory
+> > > objects
+> > > used? Is that justified in the first place?
+> > 
+> > They are used for hotplugging and partitioning memory. The size of
+> > the
+> > segments (and thus the number of them) is dictated by the
+> > underlying
+> > hardware.
+> 
+> This sounds so bad. There gotta be a better interface for that,
+> right?
 
-Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>
-Acked-by: Pali Rohár <pali@kernel.org>
----
+I'm still struggling a bit to grasp what your getting at but ...
 
-The last email should have been labeled v2, apologies for the noise.
+Maybe your talking about the underlying notifications system where
+a notification is sent for every event.
 
-Changes in v2:
-- Added Pali's Acked-by
+There's nothing new about that problem and it's becoming increasingly
+clear that existing kernel notification sub-systems don't scale well.
 
- drivers/hwmon/dell-smm-hwmon.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Mount handling is a current example which is one of the areas David
+Howells is trying to improve and that's taken years now to get as
+far as it has.
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-index 16be012a95ed..ec448f5f2dc3 100644
---- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1187,6 +1187,14 @@ static struct dmi_system_id i8k_whitelist_fan_control[] __initdata = {
- 		},
- 		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
- 	},
-+	{
-+		.ident = "Dell Latitude 5480",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5480"),
-+		},
-+		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-+	},
- 	{
- 		.ident = "Dell Latitude E6440",
- 		.matches = {
--- 
-2.27.0
+It seems to me that any improvements in the area here would have a
+different solution, perhaps something along the lines of multiple
+notification merging, increased context carried in notifications,
+or the like. Something like the notification merging to reduce
+notification volume might eventually be useful for David's
+notifications sub-system too (and, I think the design of that
+sub-system could probably accommodate that sort of change away
+from the problematic anonymous notification sub-systems we have
+now).
+
+But it's taken a long time to get that far with that project and
+the case here would have a far more significant impact on a fairly
+large number of sub-systems, both kernel and user space, so all I
+can hope for with this discussion is to raise awareness of the need
+so that it's recognised and thought about approaches to improving
+it can happen.
+
+So, while the questions you ask are valid and your concerns real,
+it's unrealistic to think there's a simple solution that can be
+implemented in short order. Problem awareness is all that can be done
+now so that fundamental and probably wide spread improvements might
+be able to be implemented over time.
+
+But if I misunderstand your thinking on this please elaborate further.
+
+Ian
 
