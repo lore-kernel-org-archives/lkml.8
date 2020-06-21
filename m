@@ -2,76 +2,79 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65191C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81349C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E31E20739
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5883B23899
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgFUFpb (ORCPT
+        id S1729311AbgFUFqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 01:45:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30503 "EHLO mga17.intel.com"
+        Sun, 21 Jun 2020 01:46:11 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19738 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbgFUFpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 01:45:31 -0400
-IronPort-SDR: BnHchPwPs/leXbeousWc+sH6GyNLD+aV2BzpJH/g663A28M0E3Ng96bse3aX9tzbT1lWjvK9gX
- 4PbipRh3gbOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="123761495"
+        id S1725928AbgFUFqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 01:46:10 -0400
+IronPort-SDR: ZZQbfp+WyUzePUAHO42Nu0BfHScLGAEL4CxXSDjhPSAY2HMrTzCxmUR+3KpTYMzGW3ektREiX0
+ C08sjWal+4Gg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="130874925"
 X-IronPort-AV: E=Sophos;i="5.75,261,1589266800"; 
-   d="scan'208";a="123761495"
+   d="scan'208";a="130874925"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 22:45:30 -0700
-IronPort-SDR: xk8vDmhHZDBi2CeiHx+c6rr43gU38WVq5ZMgK2SUtGOCz5/UPcNeBAj9ivTSaZSBJaGoq7CYA0
- +1ZGLjNb6BwA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2020 22:46:02 -0700
+IronPort-SDR: Vv5nd3jZRH5I9mnzAEWxGWD4kCylLX5U1joAMMfZjDlnSNKSQinF5s8cNR1ZrTBuK57O5JXQ/k
+ h170drO995UA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,261,1589266800"; 
-   d="scan'208";a="309817160"
+   d="scan'208";a="422292546"
 Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga008.jf.intel.com with ESMTP; 20 Jun 2020 22:45:28 -0700
-Date:   Sun, 21 Jun 2020 13:45:10 +0800
+  by orsmga004.jf.intel.com with ESMTP; 20 Jun 2020 22:46:00 -0700
+Date:   Sun, 21 Jun 2020 13:45:42 +0800
 From:   Philip Li <philip.li@intel.com>
 To:     kernel test robot <lkp@intel.com>
-Cc:     Jonathan Bakker <xc-racer2@live.ca>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
 Subject: Re: [kbuild-all] ERROR: modpost: "__mulsi3" undefined!
-Message-ID: <20200621054510.GB8800@intel.com>
-References: <202006210903.rP7H6ri6%lkp@intel.com>
+Message-ID: <20200621054542.GC8800@intel.com>
+References: <202006210825.AhNPD7rQ%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202006210903.rP7H6ri6%lkp@intel.com>
+In-Reply-To: <202006210825.AhNPD7rQ%lkp@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 09:32:06AM +0800, kernel test robot wrote:
-> Hi Jonathan,
-Sorry Jonathan, kindly ignore this report, which is a false positive.
-We will fix our side problem.
+On Sun, Jun 21, 2020 at 08:58:31AM +0800, kernel test robot wrote:
+> Hi Subbaraman,
+Sorry, kindly ignore this false positve report. We will look into
+it to resolve our logic issue.
 
 > 
 > First bad commit (maybe != root cause):
 > 
 > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   8b6ddd10d678bebec32381f71b6b420bafc43ad0
-> commit: 0383024f811aa469df258039807810fc3793a105 power: supply: max17040: Correct voltage reading
-> date:   6 weeks ago
-> config: openrisc-randconfig-r003-20200620 (attached as .config)
+> head:   4333a9b0b67bb4e8bcd91bdd80da80b0ec151162
+> commit: 62a1d3f623ac0338912fdfbdda9bdac4cadcbc75 backlight: qcom-wled: Add support for WLED5 peripheral that is present on PM8150L PMICs
+> date:   7 weeks ago
+> config: openrisc-randconfig-r036-20200619 (attached as .config)
 > compiler: or1k-linux-gcc (GCC) 9.3.0
 > reproduce (this is a W=1 build):
 >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
 >         chmod +x ~/bin/make.cross
->         git checkout 0383024f811aa469df258039807810fc3793a105
+>         git checkout 62a1d3f623ac0338912fdfbdda9bdac4cadcbc75
 >         # save the attached .config to linux build tree
 >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=openrisc 
 > 
@@ -80,207 +83,125 @@ We will fix our side problem.
 > 
 > All errors (new ones prefixed by >>, old ones prefixed by <<):
 > 
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/si1133.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/tsl2563.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/max44009.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/max44000.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/lv0104cs.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/ltr501.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/isl29018.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/cm32181.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/bh1750.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/light/apds9300.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/imu/adis_lib.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/imu/adis16460.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/imu/adis16400.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/imu/inv_mpu6050/inv-mpu6050.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/humidity/hts221.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/frequency/adf4350.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/frequency/ad9523.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/gyro/adxrs450.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/mcp4922.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/mcp4725.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/ltc1660.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/dpot-dac.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/ad5761.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/ad5592r-base.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/dac/ad5360.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/common/st_sensors/st_sensors.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/common/ms_sensors/ms_sensors_i2c.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/common/hid-sensors/hid-sensor-trigger.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/common/hid-sensors/hid-sensor-iio-common.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/chemical/sps30.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/chemical/bme680_core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/buffer/kfifo_buf.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/amplifiers/hmc425a.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/amplifiers/ad8366.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/afe/iio-rescale.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/xilinx-xadc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/vf610_adc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ti_am335x_adc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ti-ads8688.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ti-ads1015.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ti-adc084s021.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/qcom-spmi-vadc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/qcom-vadc-common.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/qcom-spmi-iadc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/max1118.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ina2xx-adc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/hx711.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/da9150-gpadc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ad799x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ad7923.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ad7292.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ad7192.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/adc/ad_sigma_delta.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/accel/sca3000.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/accel/mma9551.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/accel/mma9551_core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/accel/bma400_core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/iio/accel/adxl372.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/i2c-hid/i2c-hid.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-sensor-custom.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-sensor-hub.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-tmff.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-steam.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-picolcd.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-prodikeys.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-multitouch.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-magicmouse.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-logitech-hidpp.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid-lg-g15.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hid/hid.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/pps/pps_core.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/ipack/devices/ipoctal.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/devfreq/governor_simpleondemand.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-dac124s085.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-wm8350.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/platform/goldfish/goldfish_pipe.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-tlc591xx.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-tca6507.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-pwm.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-pca9532.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-max77650.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-lp8501.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/leds/leds-lp5562.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/leds/leds-lp5521.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-lp3952.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-lm3697.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-lm3692x.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-lm3533.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-is31fl32xx.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-is31fl319x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-gpio.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/leds/leds-da9052.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/leds-an30259a.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/leds/trigger/ledtrig-activity.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/mmc/core/mmc_test.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/mmc/core/mmc_core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/mmc/host/mmc_spi.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/mmc/host/mtk-sd.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/mmc/host/sdhci.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/bd70528-charger.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/axp288_fuel_gauge.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/smb347-charger.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/rt9455_charger.ko] undefined!
-> >> ERROR: modpost: "__mulsi3" [drivers/power/supply/max17040_battery.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/da9150-charger.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/da9030_battery.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/lego_ev3_battery.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/ltc2941-battery-gauge.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/ds2780_battery.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/ds2760_battery.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/power/supply/wm8350_power.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/cec/cec.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/thermal/thermal_mmio.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/platform/cadence/cdns-csi2tx.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/mn88443x.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/m88rs2000.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/mxl5xx.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/stv0910.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/drxk.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/cxd2841er.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/mb86a20s.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/drx39xyj/drx39xyj.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/ts2020.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/m88ds3103.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/stv090x.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/stb6000.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/si2168.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/af9013.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/atbm8830.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/lgs8gxx.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/tda665x.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/dib0090.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/dib0070.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/tda8261.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/tda10086.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/lgdt3305.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/s5h1420.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/stv0297.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/tda10021.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/zl10039.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/ves1x93.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/mt312.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/dib9000.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/cx24110.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/dvb-frontends/stb6100.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/tuners/m88rs6000t.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/mxl301rf.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/r820t.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/it913x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/fc0013.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/tuners/fc0012.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/tuners/e4000.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/tuners/max2165.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/tuners/mt2131.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/mt2060.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/tuners/msi001.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/tuners/tea5761.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/i2c/st-mipid02.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/imx274.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/i2c/imx214.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/i2c/mt9m001.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/tc358743.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/s5k5baf.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/s5k6aa.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/sr030pc30.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/mt9m032.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/ov7670.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/media/i2c/tvp7002.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/i2c/tvp514x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/i2c/tda1997x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/i2c/tvaudio.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/media/i2c/m5mols/m5mols.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-wm8350.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-s5m.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-rv3028.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-rc5t619.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-pcf8523.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/rtc/rtc-m41t93.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/mousedev.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/input-leds.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/misc/max8997_haptic.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/misc/ad714x.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/colibri-vf50-ts.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/wacom_w8001.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/tsc2007.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/tsc200x-core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/pixcir_i2c_ts.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/goodix.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/cyttsp4_core.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/touchscreen/ad7879.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/joystick/walkera0701.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/joystick/sidewinder.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/joystick/iforce/iforce.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/joystick/gf2k.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/joystick/analog.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/mouse/psmouse.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/keyboard/mpr121_touchkey.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/input/keyboard/lm8323.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/ths7303.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/bt819.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/adv7842.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/adv7604.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/adv748x/adv748x.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/saa6752hs.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/et8ek8/et8ek8.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/media/i2c/msp3400.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/i3c/master/i3c-master-cdns.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/i3c/i3c.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/input/gameport/lightning.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/hsi/clients/hsi_char.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/spi/spi-sc18is602.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/auxdisplay/panel.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/auxdisplay/charlcd.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/slimbus/slim-qcom-ctrl.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/mfd/iqs62x.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/misc/echo/echo.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/misc/altera-stapl/altera-stapl.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/misc/isl29003.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/misc/enclosure.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/misc/apds990x.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/misc/bh1770glc.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/misc/lis3lv02d/lis3lv02d.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/etnaviv/etnaviv.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/vkms/vkms.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/misc/ics932s401.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/vgem/vgem.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/scheduler/gpu-sched.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/drm_mipi_dbi.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/drm.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/drm_kms_helper.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/tiny/st7586.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/tiny/repaper.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/ti-tfp410.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/ti-sn65dsi86.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/tc358768.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/sii902x.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/cdns-dsi.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/bridge/synopsys/dw-hdmi.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/panel/panel-samsung-s6e8aa0.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/panel/panel-rocktech-jh057n00900.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/panel/panel-ilitek-ili9322.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/panel/panel-arm-versatile.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/i2c/tda998x.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/gpu/drm/i2c/ch7006.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/gpu/drm/rcar-du/rcar_lvds.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/char/tpm/tpm.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/char/hw_random/rng-core.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/char/ppdev.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/char/lp.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/char/virtio_console.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/tty/goldfish.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/tty/serial/fsl_lpuart.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/tty/serial/xilinx_uartps.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/tty/serial/altera_jtaguart.ko] undefined!
 > ERROR: modpost: "__mulsi3" [drivers/tty/serial/altera_uart.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/reset/reset-ti-syscon.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/wm8994-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/wm8350-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/vctrl-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/tps65132-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/qcom_spmi-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/mt6323-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/mpq7920.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/max77693-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/max8997-regulator.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/max1586.ko] undefined!
-> ERROR: modpost: "__mulsi3" [drivers/regulator/ltc3589.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/tty/serial/8250/8250_men_mcb.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/dma/idma64.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/video/fbdev/vfb.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/video/fbdev/ocfb.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/video/fbdev/goldfishfb.ko] undefined!
+> >> ERROR: modpost: "__mulsi3" [drivers/video/backlight/qcom-wled.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/video/backlight/adp8860_bl.ko] undefined!
+> ERROR: modpost: "__mulsi3" [drivers/gpio/gpio-menz127.ko] undefined!
+> ERROR: modpost: "__mulsi3" [crypto/tcrypt.ko] undefined!
+> ERROR: modpost: "__mulsi3" [crypto/blowfish_common.ko] undefined!
+> ERROR: modpost: "__mulsi3" [crypto/cts.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/fuse/virtiofs.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/fuse/cuse.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/fuse/fuse.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/jffs2/jffs2.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/cifs/cifs.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/nls/nls_euc-jp.ko] undefined!
+> ERROR: modpost: "__mulsi3" [fs/nfs/nfsv4.ko] undefined!
+> ERROR: modpost: "__mulsi3" [mm/zsmalloc.ko] undefined!
+> ERROR: modpost: "__mulsi3" [mm/zbud.ko] undefined!
+> ERROR: modpost: "__mulsi3" [kernel/torture.ko] undefined!
+> ERROR: modpost: "__mulsi3" [kernel/rcu/rcuperf.ko] undefined!
+> ERROR: modpost: "__mulsi3" [kernel/locking/test-ww_mutex.ko] undefined!
+> ERROR: modpost: "__mulsi3" [kernel/locking/locktorture.ko] undefined!
 > 
 > ---
 > 0-DAY CI Kernel Test Service, Intel Corporation
