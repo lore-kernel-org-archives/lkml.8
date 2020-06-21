@@ -2,171 +2,75 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B429CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888032076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 04:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="jbmmzG5p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eMAb+jtW"
+	by mail.kernel.org (Postfix) with ESMTP id DC8D524804
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 05:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgFUEzp (ORCPT
+        id S1729275AbgFUF1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 00:55:45 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:44837 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725807AbgFUEzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 00:55:44 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id E3ED55C00D9;
-        Sun, 21 Jun 2020 00:55:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 21 Jun 2020 00:55:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        f+V9My7t/LV5Z1d5BR8PtxKFjib8M82ampdGENj43xs=; b=jbmmzG5p80Saoabi
-        K3WnNtkDePNaiYrrpVhfTl522U7K1gt8nJ4Mfe3HRuusCQm5YwoOj84iuzptt+R8
-        QS9aGToJwxnUrAoYa1U/LJBbb6dX0TWCK6pvQ2NMYYvDfeMzhuo5jhCN9ZnVUfRX
-        oIUfY28YH/ANehBFvPzcJQP1g8pgnWr6D/M12OwczwjyqgBUPmWT8wQ8YHaDWgQ8
-        Z3OPRVirGKvdMhNgPtr0yLznqSJvHplfMWF0SgMWR/wgfZuWwEJfl2cXEjmAbkS9
-        tQfTwn/E4b0k4kB3+xBQuDB0Ln1itiBCzPFnXi28zW0FR3WsZM50jv6QhK6sUMJi
-        0yzu9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=f+V9My7t/LV5Z1d5BR8PtxKFjib8M82ampdGENj43
-        xs=; b=eMAb+jtW5tMrk2tCc6qgBU8MBeO4LpnSCyLWwf9n/BQjSmtoV+DRIWFsM
-        BCygPTW4+XGCgFvJ+V2CnOpbeROigIjQI4+gRaGlgbROJe0akYvd2vUsomgKuyGz
-        7xTY98IaTSSLH19ntblIafoKcHCc++6vr8dkqcMwA9vMz1l1ND9VD1nULDPSjiYI
-        QiMFjD2MzbRZVUFuIHiwfyQoiYTS9SLvE69kSXHhCdgaa/MRc154yOHBMY8pLAKg
-        YFo08HAUe/YDJ1IW6CDyYfHM3VYb53puSSuxXxgrL7T83DIlnIYgKcYaVJyGGN99
-        P/nMMSlZ0yLsXLJE5r1GmUa04+Ssg==
-X-ME-Sender: <xms:S-juXu_4mcnUs8U8t5Ll8Yt_2sptLmf2hkrISK2BixOyYUTWHoD0Rw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejledgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
-    phepheekrdejrdduleegrdekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:S-juXuvTfzIWNDDp6BGf1vqPn4D6zDo7EqCHYkRIyM6qUiENz0qyUQ>
-    <xmx:S-juXkC11nbHTRnab62GYXQf_L4Ef3dp4_7aEIT0xBfDl9esTGb2CQ>
-    <xmx:S-juXmcYJlyvoDo08j59L6OfsNQ7hGxYhOaDZhI-gtdvCHVWc5rYRg>
-    <xmx:TOjuXu3MPW_LjjcDfWoug0r4HVQ_TpI78HcytGFvLplsWfbTuhRR9w>
-Received: from mickey.themaw.net (58-7-194-87.dyn.iinet.net.au [58.7.194.87])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6513F30614FA;
-        Sun, 21 Jun 2020 00:55:36 -0400 (EDT)
-Message-ID: <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-From:   Ian Kent <raven@themaw.net>
-To:     Tejun Heo <tj@kernel.org>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sun, 21 Jun 2020 12:55:33 +0800
-In-Reply-To: <20200619222356.GA13061@mtj.duckdns.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
-         <20200619153833.GA5749@mtj.thefacebook.com>
-         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
-         <20200619222356.GA13061@mtj.duckdns.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Sun, 21 Jun 2020 01:27:40 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:58734 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726015AbgFUF1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 01:27:40 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Sun, 21 Jun 2020 13:27:24
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Sun, 21 Jun 2020 13:27:24 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM
+ imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
+References: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
+ <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
+ <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
+ <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <711c004d.1832d.172d55876c5.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgDX3uK87+5evJH9AA--.17515W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgADsG
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-19 at 18:23 -0400, Tejun Heo wrote:
-> On Fri, Jun 19, 2020 at 01:41:39PM -0700, Rick Lindsley wrote:
-> > On 6/19/20 8:38 AM, Tejun Heo wrote:
-> > 
-> > > I don't have strong objections to the series but the rationales
-> > > don't seem
-> > > particularly strong. It's solving a suspected problem but only
-> > > half way. It
-> > > isn't clear whether this can be the long term solution for the
-> > > problem
-> > > machine and whether it will benefit anyone else in a meaningful
-> > > way either.
-> > 
-> > I don't understand your statement about solving the problem
-> > halfway. Could
-> > you elaborate?
-> 
-> Spending 5 minutes during boot creating sysfs objects doesn't seem
-> like a
-> particularly good solution and I don't know whether anyone else would
-> experience similar issues. Again, not necessarily against improving
-> the
-> scalability of kernfs code but the use case seems a bit out there.
-> 
-> > > I think Greg already asked this but how are the 100,000+ memory
-> > > objects
-> > > used? Is that justified in the first place?
-> > 
-> > They are used for hotplugging and partitioning memory. The size of
-> > the
-> > segments (and thus the number of them) is dictated by the
-> > underlying
-> > hardware.
-> 
-> This sounds so bad. There gotta be a better interface for that,
-> right?
-
-I'm still struggling a bit to grasp what your getting at but ...
-
-Maybe your talking about the underlying notifications system where
-a notification is sent for every event.
-
-There's nothing new about that problem and it's becoming increasingly
-clear that existing kernel notification sub-systems don't scale well.
-
-Mount handling is a current example which is one of the areas David
-Howells is trying to improve and that's taken years now to get as
-far as it has.
-
-It seems to me that any improvements in the area here would have a
-different solution, perhaps something along the lines of multiple
-notification merging, increased context carried in notifications,
-or the like. Something like the notification merging to reduce
-notification volume might eventually be useful for David's
-notifications sub-system too (and, I think the design of that
-sub-system could probably accommodate that sort of change away
-from the problematic anonymous notification sub-systems we have
-now).
-
-But it's taken a long time to get that far with that project and
-the case here would have a far more significant impact on a fairly
-large number of sub-systems, both kernel and user space, so all I
-can hope for with this discussion is to raise awareness of the need
-so that it's recognised and thought about approaches to improving
-it can happen.
-
-So, while the questions you ask are valid and your concerns real,
-it's unrealistic to think there's a simple solution that can be
-implemented in short order. Problem awareness is all that can be done
-now so that fundamental and probably wide spread improvements might
-be able to be implemented over time.
-
-But if I misunderstand your thinking on this please elaborate further.
-
-Ian
-
+Cgo+ID4+Cj4gPj4gV2h5IG5vaWRsZT8KPiA+Pgo+ID4gCj4gPiBfbm9pZGxlIGlzIGVub3VnaCBm
+b3IgZml4aW5nIHRoaXMgYnVnLiBfc3luYyBtYXkgc3VzcGVuZAo+ID4gdGhlIGRldmljZSBiZXlv
+bmQgZXhwZWN0YXRpb24uCj4gCj4gSW4gdGhhdCBjYXNlLCB0aGVuIHRoZSBvdGhlciBpbnN0YW5j
+ZSB5b3UgYXJlIGZpeGluZyB3aXRoIHRoaXMgcGF0Y2ggaXMKPiBub3QgY29ycmVjdC4KPiAKCkZp
+bmUuIEkgd2lsbCBmaXggdGhpcyBzb29uLgoKUmVnYXJkcywKRGluZ2hhbwo=
