@@ -2,161 +2,135 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93314C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF41C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BD9248B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 09:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C799248B0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 10:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="d69fPDed"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qSVkPh5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgFUJ5K (ORCPT
+        id S1729771AbgFUKEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 05:57:10 -0400
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:28464 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbgFUJ5J (ORCPT
+        Sun, 21 Jun 2020 06:04:11 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:49637 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729628AbgFUKEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 05:57:09 -0400
-Date:   Sun, 21 Jun 2020 09:56:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1592733425; bh=g0HP1Oqtt2tWvdPrfD8uRVaU3hxTt+LfGRRANNn2PNI=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=d69fPDedzbp0jZ8s3UAQUwPPwJOjzsWrIAEwc1TBZrR8d4myYLZwz/aVYqXYh0eUD
-         6bt4H2iWD95vUrGusiPO7Zbw84WwLvGVSLWh8/i1iOFT/QJgk0vlc2PuBQWkFpDdNN
-         KOweMuTWeUkKyBzKw3R+KvkCEMQb0mhwL9b+tFiTld5lDpIfqHbWeY2CJCNoSC277h
-         pWTmKjQ0r6fVhtLbZOF9hpgRXghyIozzT4LQuCdKXJ5QlBEjCwaNI9caf1Zjtwxoeu
-         Pq4MT52KSy/XHMx/FlTmu1KUKMDgPjgdz4tpQVKcUPkkmS9sMQ0GytGQcagvlHZVT7
-         4MB2wk6zBYKfA==
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>,
-        Alexander Lobakin <alobakin@pm.me>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: [PATCH v2 net 3/3] net: ethtool: sync netdev_features_strings order with enum netdev_features
-Message-ID: <jP-0hVQHflXY-Z617fzg4VjzmOQsz9bhRiFF5f_O2EugGy_LdUoHQrQl6AoT1RE8VH8vLs8lBDUQWVQSVIuohxIZHIYE3wP0_32SRuZQEJw=@pm.me>
-In-Reply-To: <HPTrw9hrtm3e5151oH8oQfbr0HWTlzQ1n68bZn1hfd6yag38Tem57b4eTH-bhlaJgBxyhZb9U-qFFOafJoQqxcY-VX5fh5ZktTrnWhYeNB0=@pm.me>
-References: <HPTrw9hrtm3e5151oH8oQfbr0HWTlzQ1n68bZn1hfd6yag38Tem57b4eTH-bhlaJgBxyhZb9U-qFFOafJoQqxcY-VX5fh5ZktTrnWhYeNB0=@pm.me>
+        Sun, 21 Jun 2020 06:04:11 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 74B39580593;
+        Sun, 21 Jun 2020 06:04:10 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sun, 21 Jun 2020 06:04:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=enaKZ3
+        P0o6Ph93CXxGqso4eTkC9mjZncv8RRs2hdv58=; b=qSVkPh5f68sJYg9Kbd4/0O
+        1IXyxTdX4yBpIBWQvYcvzxKJPqI22Xi9CckdmoDKcTGC6KTOqJfOVi0VyE3/R6fv
+        7kq63p960rUJTwQpJpt7/RlHCk2OYMqVjDUmSVcnn0lBOOH9dO4fKcOssYx1BoLW
+        +egUCtkskJCxqDNlxxTbn4dNk1+/GJMJvreRPCXsKqhSAhCO7GuZwPxHdUANZubz
+        9hniGX5jUxkjX5caN3RsQ25Udponx1xJcZJhNyojShpkEZyhkLyAxx3GWfWIWTyH
+        K2324JzdzpUFWi8PwU23t6QbhQ9sI8qGc1N/DltoE1W0xKIfTGZSEISOufFDSYFA
+        ==
+X-ME-Sender: <xms:mDDvXsUoZ9oTsEWKrWWduMnaEWUScQuwOJixmaffYrXeJTCbUA_Qhg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
+    teenucfkphepuddtledrieejrdekrdduvdelnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:mDDvXgl2H2DT7daXmHEABvoj7vGB-nMTpeiLGuI8IWJszMT-JNcAIA>
+    <xmx:mDDvXgawHccHnB8ljj-Y4bC76cvIipUOQbYrtKnXCUhTBr2NUVF92Q>
+    <xmx:mDDvXrXCNDLj2USRLPsRsF-Ntsy9O0iOnFmL1CTQqm6MF9vJ1ac9Cg>
+    <xmx:mjDvXizA7mjpE3t009Hy4SDiVA-76ILEmev7ASOGVDoeB_b9qTcpjQ>
+Received: from localhost (bzq-109-67-8-129.red.bezeqint.net [109.67.8.129])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 330BC3280060;
+        Sun, 21 Jun 2020 06:04:08 -0400 (EDT)
+Date:   Sun, 21 Jun 2020 13:04:06 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Po Liu <Po.Liu@nxp.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vinicius.gomes@intel.com,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
+        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
+        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
+        saeedm@mellanox.com, leon@kernel.org, jiri@mellanox.com,
+        idosch@mellanox.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, kuba@kernel.org, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, john.hurley@netronome.com,
+        simon.horman@netronome.com, pieter.jansenvanvuuren@netronome.com,
+        pablo@netfilter.org, moshe@mellanox.com,
+        ivan.khoronzhuk@linaro.org, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com, jakub.kicinski@netronome.com
+Subject: Re: [RFC,net-next  8/9] net: qos: police action add index for tc
+ flower offloading
+Message-ID: <20200621100406.GA481939@splinter>
+References: <20200306125608.11717-1-Po.Liu@nxp.com>
+ <20200306125608.11717-9-Po.Liu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306125608.11717-9-Po.Liu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ordering of netdev_features_strings[] makes no sense when it comes
-to user interaction, as list of features in `ethtool -k` input is sorted
-according to the corresponding bit's position.
-Instead, it *does* make sense when it comes to adding new netdev_features
-or modifying existing ones. We have at least 2 occasions of forgetting to
-add the strings for newly introduced features, and one of them existed
-since 3.1x times till now.
+On Fri, Mar 06, 2020 at 08:56:06PM +0800, Po Liu wrote:
+> Hardware may own many entries for police flow. So that make one(or
+>  multi) flow to be policed by one hardware entry. This patch add the
+> police action index provide to the driver side make it mapping the
+> driver hardware entry index.
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
 
-Let's keep this stringtable sorted according to bit's position in enum
-netdev_features, as this simplifies both reading and modification of the
-source code and can help not to miss or forget anything.
+Hi,
 
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
----
- net/ethtool/common.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+I started looking into tc-police offload in mlxsw and remembered your
+patch. Are you planning to formally submit it? I'm asking because in
+mlxsw it is also possible to share the same policer between multiple
+filters.
 
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index c8e3fce6e48d..24f35d47832d 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -8,25 +8,25 @@
- const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] =
-=3D {
- =09[NETIF_F_SG_BIT]=09=09=09=3D "tx-scatter-gather",
- =09[NETIF_F_IP_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv4",
-+
-+=09/* __UNUSED_NETIF_F_1 - deprecated */
-+
- =09[NETIF_F_HW_CSUM_BIT]=09=09=09=3D "tx-checksum-ip-generic",
- =09[NETIF_F_IPV6_CSUM_BIT]=09=09=09=3D "tx-checksum-ipv6",
- =09[NETIF_F_HIGHDMA_BIT]=09=09=09=3D "highdma",
- =09[NETIF_F_FRAGLIST_BIT]=09=09=09=3D "tx-scatter-gather-fraglist",
- =09[NETIF_F_HW_VLAN_CTAG_TX_BIT]=09=09=3D "tx-vlan-hw-insert",
--
- =09[NETIF_F_HW_VLAN_CTAG_RX_BIT]=09=09=3D "rx-vlan-hw-parse",
- =09[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]=09=3D "rx-vlan-filter",
--=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
--=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
--=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
- =09[NETIF_F_VLAN_CHALLENGED_BIT]=09=09=3D "vlan-challenged",
- =09[NETIF_F_GSO_BIT]=09=09=09=3D "tx-generic-segmentation",
- =09[NETIF_F_LLTX_BIT]=09=09=09=3D "tx-lockless",
- =09[NETIF_F_NETNS_LOCAL_BIT]=09=09=3D "netns-local",
- =09[NETIF_F_GRO_BIT]=09=09=09=3D "rx-gro",
--=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
- =09[NETIF_F_LRO_BIT]=09=09=09=3D "rx-lro",
-=20
-+=09/* NETIF_F_GSO_SHIFT =3D NETIF_F_TSO_BIT */
-+
- =09[NETIF_F_TSO_BIT]=09=09=09=3D "tx-tcp-segmentation",
- =09[NETIF_F_GSO_ROBUST_BIT]=09=09=3D "tx-gso-robust",
- =09[NETIF_F_TSO_ECN_BIT]=09=09=09=3D "tx-tcp-ecn-segmentation",
-@@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT]=
-[ETH_GSTRING_LEN] =3D {
- =09[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]=09=3D "tx-tunnel-remcsum-segmentation"=
-,
- =09[NETIF_F_GSO_SCTP_BIT]=09=09=09=3D "tx-sctp-segmentation",
- =09[NETIF_F_GSO_ESP_BIT]=09=09=09=3D "tx-esp-segmentation",
-+
-+=09/* NETIF_F_GSO_UDP_BIT - deprecated */
-+
- =09[NETIF_F_GSO_UDP_L4_BIT]=09=09=3D "tx-udp-segmentation",
- =09[NETIF_F_GSO_FRAGLIST_BIT]=09=09=3D "tx-gso-list",
-=20
-+=09/* NETIF_F_GSO_LAST =3D NETIF_F_GSO_FRAGLIST_BIT */
-+
- =09[NETIF_F_FCOE_CRC_BIT]=09=09=09=3D "tx-checksum-fcoe-crc",
- =09[NETIF_F_SCTP_CRC_BIT]=09=09=09=3D "tx-checksum-sctp",
- =09[NETIF_F_FCOE_MTU_BIT]=09=09=09=3D "fcoe-mtu",
-@@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
-][ETH_GSTRING_LEN] =3D {
- =09[NETIF_F_LOOPBACK_BIT]=09=09=09=3D "loopback",
- =09[NETIF_F_RXFCS_BIT]=09=09=09=3D "rx-fcs",
- =09[NETIF_F_RXALL_BIT]=09=09=09=3D "rx-all",
-+=09[NETIF_F_HW_VLAN_STAG_TX_BIT]=09=09=3D "tx-vlan-stag-hw-insert",
-+=09[NETIF_F_HW_VLAN_STAG_RX_BIT]=09=09=3D "rx-vlan-stag-hw-parse",
-+=09[NETIF_F_HW_VLAN_STAG_FILTER_BIT]=09=3D "rx-vlan-stag-filter",
- =09[NETIF_F_HW_L2FW_DOFFLOAD_BIT]=09=09=3D "l2-fwd-offload",
-+
- =09[NETIF_F_HW_TC_BIT]=09=09=09=3D "hw-tc-offload",
- =09[NETIF_F_HW_ESP_BIT]=09=09=09=3D "esp-hw-offload",
- =09[NETIF_F_HW_ESP_TX_CSUM_BIT]=09=09=3D "esp-tx-csum-hw-offload",
- =09[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]=09=3D "rx-udp_tunnel-port-offload",
--=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
- =09[NETIF_F_HW_TLS_TX_BIT]=09=09=09=3D "tls-hw-tx-offload",
- =09[NETIF_F_HW_TLS_RX_BIT]=09=09=09=3D "tls-hw-rx-offload",
-+
-+=09[NETIF_F_GRO_HW_BIT]=09=09=09=3D "rx-gro-hw",
-+=09[NETIF_F_HW_TLS_RECORD_BIT]=09=09=3D "tls-hw-record",
- =09[NETIF_F_GRO_FRAGLIST_BIT]=09=09=3D "rx-gro-list",
-+
- =09[NETIF_F_HW_MACSEC_BIT]=09=09=09=3D "macsec-hw-offload",
-+
-+=09/* NETDEV_FEATURE_COUNT */
- };
-=20
- const char
---=20
-2.27.0
+Thanks
 
-
+> ---
+>  include/net/flow_offload.h | 1 +
+>  net/sched/cls_api.c        | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
+> index 54df87328edc..3b78b15ed20b 100644
+> --- a/include/net/flow_offload.h
+> +++ b/include/net/flow_offload.h
+> @@ -201,6 +201,7 @@ struct flow_action_entry {
+>  			bool			truncate;
+>  		} sample;
+>  		struct {				/* FLOW_ACTION_POLICE */
+> +			u32			index;
+>  			s64			burst;
+>  			u64			rate_bytes_ps;
+>  			u32			mtu;
+> diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+> index 363d3991793d..ce846a9dadc1 100644
+> --- a/net/sched/cls_api.c
+> +++ b/net/sched/cls_api.c
+> @@ -3584,6 +3584,7 @@ int tc_setup_flow_action(struct flow_action *flow_action,
+>  			entry->police.rate_bytes_ps =
+>  				tcf_police_rate_bytes_ps(act);
+>  			entry->police.mtu = tcf_police_mtu(act);
+> +			entry->police.index = act->tcfa_index;
+>  		} else if (is_tcf_ct(act)) {
+>  			entry->id = FLOW_ACTION_CT;
+>  			entry->ct.action = tcf_ct_action(act);
+> -- 
+> 2.17.1
+> 
