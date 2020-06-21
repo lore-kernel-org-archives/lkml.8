@@ -2,65 +2,60 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5988AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF02BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7E920767
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B9722AAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592749236;
-	bh=1JJUUYXnXHvputWDk56tJc3YEIIePEn96bUELiZMnH8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzViaU9YVTlT3RzdYMFr5YTj69d/L4ixw/rmOrFeU7NYX108MDi4j3F23eGFiSOSD
-	 HbMFgrZddV0ncLYXVeRpuBiLs8vYrNtKqC921ZVgt2ZKCrM7wnrhu3F3CDaklVS+Ol
-	 mFABAWC9VHtiqyxkQ6jBmaUzNt71faZOzDL3A7I0=
+	s=default; t=1592749563;
+	bh=W0GxbCl0T6tlIURC2FrWHy0pl7O2r2pLvdotzPz142k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B3wbrMBnXsFXjmG2qLnF8vn8952XKpEjMflzJlzlXLabcKZnrgNccTyivBKbCQYsT
+	 bbWFgzszqkbW73MBmZBvUz0Va067NQdVjcU6hi9OhyO3vVRXe64SLplPARa/vZGtLi
+	 MD9+b8ExjkI72S2uQ1pSEieOUhdfVi+DVZYr4LrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgFUOUf (ORCPT
+        id S1730168AbgFUO0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        Sun, 21 Jun 2020 10:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbgFUOUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:20:34 -0400
+        id S1730120AbgFUO0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 10:26:01 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2831B20708;
-        Sun, 21 Jun 2020 14:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02ECD2083E;
+        Sun, 21 Jun 2020 14:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592749234;
-        bh=1JJUUYXnXHvputWDk56tJc3YEIIePEn96bUELiZMnH8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCgWRlMVCXkFbI1LfKZ7Wdr/f9DPq9hHxgA8kdzxDcbp5aFzcAgyhjh6PzkHWmgKM
-         POPjfjjB3vuNV6OPPtcCq2xlBpu8SrLbdfwekISZQ3VJrszJfd8lhP1j+/ak1VjEAd
-         zyD/+5vyy54XjTwF/0UiPeOQekIUtDEt8xMVESBc=
+        s=default; t=1592749561;
+        bh=W0GxbCl0T6tlIURC2FrWHy0pl7O2r2pLvdotzPz142k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=niQc58EJh7aqd2Rg73A6I9LirIVVVZpJv5bB7kacWxGD6weZMCUkjN5OQImAXUaRu
+         7AFFXZEL9t9bAGVG+sLBSSfSq/YsixTIdoiK/R4Xookn0JIdT6QiaUkiPv61wSm7JY
+         SeOgaGnPdd6SsMA057+6q5cQ3sdo8GEkSXK0WF6Q=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=hot-poop.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jn0pk-0056cj-8r; Sun, 21 Jun 2020 15:20:32 +0100
+        id 1jn0v1-0056g4-EX; Sun, 21 Jun 2020 15:25:59 +0100
 From:   Marc Zyngier <maz@kernel.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Anup Patel <Anup.Patel@wdc.com>
-Cc:     jason@lakedaemon.net, tglx@linutronix.de,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-riscv@lists.infradead.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
-Subject: Re: [PATCH] irqchip: riscv-intc: Fix a typo in a pr_warn()
-Date:   Sun, 21 Jun 2020 15:20:25 +0100
-Message-Id: <159274906987.783748.5482676001777469001.b4-ty@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>, stable@vger.kernel.org
+Subject: [PATCH] irqchip/gic: Atomically update affinity
+Date:   Sun, 21 Jun 2020 15:25:37 +0100
+Message-Id: <20200621142537.784191-1-maz@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200611175302.253540-1-palmer@dabbelt.com>
-References: <20200611175302.253540-1-palmer@dabbelt.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: palmer@dabbelt.com, Anup.Patel@wdc.com, jason@lakedaemon.net, tglx@linutronix.de, palmerdabbelt@google.com, linux-riscv@lists.infradead.org, kernel-team@android.com, linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, aou@eecs.berkeley.edu
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, stable@vger.kernel.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,17 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 10:53:02 -0700, Palmer Dabbelt wrote:
-> Anup originally re-spun his patch set to include this fix, but it was a bit too
-> late for my PR so I've split it out.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-Applied to irq/irqchip-next, thanks!
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
 
-[1/1] irqchip/riscv-intc: Fix a typo in a pr_warn()
-      commit: 559fe74ba6b0c8283e923a64f19fc0398fb64d04
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
 
-Cheers,
+Drop the terminally broken code and replace it by a byte write.
 
-	M.
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 00de05abd3c3..c17fabd6741e 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
+ 
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
+-
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
 -- 
-Without deviation from the norm, progress is not possible.
+2.26.2
+
