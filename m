@@ -2,113 +2,84 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F54C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E33C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEB025286
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36C02076E
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 20:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a5FmRKW2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkLGPmO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgFUUnE (ORCPT
+        id S1730705AbgFUUpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 16:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
+        Sun, 21 Jun 2020 16:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbgFUUnE (ORCPT
+        with ESMTP id S1729166AbgFUUpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 16:43:04 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF96C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 13:43:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so6612850pls.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 13:43:03 -0700 (PDT)
+        Sun, 21 Jun 2020 16:45:16 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3406C061794;
+        Sun, 21 Jun 2020 13:45:16 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f18so13886088qkh.1;
+        Sun, 21 Jun 2020 13:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=PvZljGHNreo2tyXJVvsTBccc3LskiWVWOyP0n6ravmE=;
-        b=a5FmRKW2nzxF4C5QCSMWyxbMtHd06V1ej3ANmTPXZdyDxWXpV+nqYGzuaoZ3QjNE0G
-         6zKlRnuKU/8T42WFDfCTuILMSh+2dHrjnCuXcdl8GPjzXndyCX6ZVxGMUldRaE3jwY1H
-         uYjnXMhUQNToXjfQsELyHV7MYban3XTH0ewBWy9ww8hvCnibv7CZfH7xB9c7tQSoFp5J
-         jSF7RRc6oH8ytBy+5Tsw6Hy4X+82zx32FF79dfb7oo59/vfB7DA6AaqtnSg328QtBHHD
-         v0M5R+GMYYj0DKfqjzGlzRNklq94g2ypEiXzajJ1dAvqKRhkLaFRMSltmuCZort0Hx0Y
-         h6yA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=69sqAb6PtzlOsETgOwIYJYItUN2UtrTOjmN+peBeU4Y=;
+        b=FkLGPmO6WWMaOWhz7QB1DTT1SNCpG15DKCCzcR+MAGi4ZgbjTxdPI55Hq36CFGSQzW
+         8oSyqiUbotqFVhiaq1QWQIGYVUA299Z3siJYQmHGXo+mRcvSZd5YC2AW8RBrPyM0AASx
+         /uAL10MwAvhBDrLVhPHHGbThOvw96h2CibArNvwmXI2aypOB8IV2M9sDXFsZi26R+d18
+         FD5Q26rPDiXzdTB/nnLafLn+YHDEJCFe31+aiZXVFjMFSz0fzibZW1C//7/6MmJKbb9/
+         FJQGp0lKvu5UnBVVNIviyBUoQLCIta/f+KQPMr1Q4+PW53i9xmFld8c1l3Oqf/kEJ1Qy
+         nQVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=PvZljGHNreo2tyXJVvsTBccc3LskiWVWOyP0n6ravmE=;
-        b=JVAjGFIkOcIzGF77swK7v7jjirdvOxbCUvY9KZh7JfHHcvcqetqlyI4TI7zg8TbrD7
-         /gsxDdO1x5oBCz70XjyPYdWLgaShvpcMPVBy92ID64TpvzE5TqEbbrV/TosCaI+OHM+u
-         9HiEm885tqZ4dBGmLBZGWB9JRYG9HI/buoP3e/03WdBQBeGYLqYpIrS/ca0je9PEcZo6
-         KTbYdBHnmIIzt8AalAcyAiLqH9WeDeiTLW7VjB32TVWovJcMPWviwVMURi5xLmM9vBH/
-         cyhIbs+VHEGwNCn7mJJb4uPS/KcH9d0xXMWvq9S6B0kwPjIEHjVilIY21Vyw1Xug5eth
-         PwtA==
-X-Gm-Message-State: AOAM53094xFNUUak1SvKwyrLmaHcG9Eg8gLatOhMte/1GOW9TUPuBc0U
-        VIz8VE3KCwxgnNLVPzbO9P3kTA==
-X-Google-Smtp-Source: ABdhPJyCL0CNvvbYHinbrYnOBjYsY6VcZ2Orf4uq60Hlk3Wki6onOsZa9dNQ8m1/zeVbJhVgC0z6fw==
-X-Received: by 2002:a17:902:a511:: with SMTP id s17mr16615698plq.37.1592772183174;
-        Sun, 21 Jun 2020 13:43:03 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id f6sm12610020pfe.174.2020.06.21.13.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 13:43:02 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 13:43:02 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>, Guenter Roeck <linux@roeck-us.net>
-cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [patch] dma-pool: warn when coherent pool is depleted
-Message-ID: <alpine.DEB.2.22.394.2006211335530.195301@chino.kir.corp.google.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=69sqAb6PtzlOsETgOwIYJYItUN2UtrTOjmN+peBeU4Y=;
+        b=qyipkjao6eg1tnZiMT1k2usIShQ/h41p7jmpPc3bzAj+HBUmirRJrn2jlO1hYRNCbT
+         ooSR2ZjZkQbWT52zPcrNmlsPLbVk1oO1nkkKn24yWasfzNXo4kWqhaPZ0kIiNI4fr0rX
+         gRQci0ZF5VKEABAOqsqRTo8Vg0b0nLCxNJO34XGQAUEtf3Xzsffhk7/MB2RYx4xuTUKe
+         +Bas5m3Z1l2i5pOjVx8Cd0NJaZ42ispMHRcluGGSyzLAtK7GFfWiLqa3enMYguNkDF/j
+         YKe8cXCYzJMOMUT1RI63WmE7TtBk4z9EQT9gQkNa11tSpYCKpuRbgpZt1d6+epwt20pl
+         46wA==
+X-Gm-Message-State: AOAM533en4G3oyyMa9grP7NPB9JBexhQu0liDpUEiFAxAHzy+XBDuTss
+        FN3UCZ77VTBtFHDwMkq+1je00CduyA9dXcnIKxhJyQ==
+X-Google-Smtp-Source: ABdhPJzEY1SgrXXhiYAmpZU8YmTa1NSk+ahX+IyukV0zAijACbGafncE+jVsQuZG2+qUUklMuyf8ZgFokFB4w9d3Nwg=
+X-Received: by 2002:a37:9147:: with SMTP id t68mr608599qkd.34.1592772315942;
+ Sun, 21 Jun 2020 13:45:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <5614531.lOV4Wx5bFT@harkonnen> <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl> <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+In-Reply-To: <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sun, 21 Jun 2020 22:45:04 +0200
+Message-ID: <CAFLxGvyaqOsrtD5_Re8_T6BXEaV64vFO2e_2eafrHEr7id_ubg@mail.gmail.com>
+Subject: Re: DMA Engine: Transfer From Userspace
+To:     Federico Vaga <federico.vaga@cern.ch>
+Cc:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a DMA coherent pool is depleted, allocation failures may or may not
-get reported in the kernel log depending on the allocator.
+On Sun, Jun 21, 2020 at 10:37 PM Federico Vaga <federico.vaga@cern.ch> wrote:
+> >Federico, what use case do you have in mind?
+>
+> Userspace drivers
 
-The admin does have a workaround, however, by using coherent_pool= on the
-kernel command line.
+Is using vfio an option?
 
-Provide some guidance on the failure and a recommended minimum size for
-the pools (double the size).
-
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- kernel/dma/pool.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -239,12 +239,16 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
- 	}
- 
- 	val = gen_pool_alloc(pool, size);
--	if (val) {
-+	if (likely(val)) {
- 		phys_addr_t phys = gen_pool_virt_to_phys(pool, val);
- 
- 		*ret_page = pfn_to_page(__phys_to_pfn(phys));
- 		ptr = (void *)val;
- 		memset(ptr, 0, size);
-+	} else {
-+		WARN_ONCE(1, "DMA coherent pool depleted, increase size "
-+			     "(recommended min coherent_pool=%zuK)\n",
-+			  gen_pool_size(pool) >> 9);
- 	}
- 	if (gen_pool_avail(pool) < atomic_pool_size)
- 		schedule_work(&atomic_pool_work);
+-- 
+Thanks,
+//richard
