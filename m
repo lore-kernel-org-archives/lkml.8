@@ -2,84 +2,83 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D82C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5988AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D9C2493A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CA5UQuj9"
+	by mail.kernel.org (Postfix) with ESMTP id 2C7E920767
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 14:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592749236;
+	bh=1JJUUYXnXHvputWDk56tJc3YEIIePEn96bUELiZMnH8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jzViaU9YVTlT3RzdYMFr5YTj69d/L4ixw/rmOrFeU7NYX108MDi4j3F23eGFiSOSD
+	 HbMFgrZddV0ncLYXVeRpuBiLs8vYrNtKqC921ZVgt2ZKCrM7wnrhu3F3CDaklVS+Ol
+	 mFABAWC9VHtiqyxkQ6jBmaUzNt71faZOzDL3A7I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgFUOSm (ORCPT
+        id S1730326AbgFUOUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:18:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24615 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730022AbgFUOSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:18:42 -0400
-X-UUID: ff84bf6c0a3841e8b96080752feccf61-20200621
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=zjy0Ak+D9DAftvBlSEpPOHJuYg7xQmlYSXBwWHYwZjg=;
-        b=CA5UQuj9UiEpddIfXW2/VVXtjYPd1pnsljjIEfB262YAIpzj0ETAzO0dc36NCTnOKbQQToIC2Xrc4A8NS9pPWZxY8saY7aAouYFJxHyvEdKpLKXSrjUaIvrmPMUBXhoYL1DrEuWrByjdbdj9iLX1EPQABvPUrDTRYKSnhS1n0Oo=;
-X-UUID: ff84bf6c0a3841e8b96080752feccf61-20200621
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 460192093; Sun, 21 Jun 2020 22:18:40 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 21 Jun 2020 22:18:29 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 21 Jun 2020 22:18:30 +0800
-From:   Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>,
-        Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Subject: [PATCH v1 01/11] soc: mediatek: cmdq: add address shift in jump
-Date:   Sun, 21 Jun 2020 22:18:25 +0800
-Message-ID: <1592749115-24158-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1592749115-24158-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1592749115-24158-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+        Sun, 21 Jun 2020 10:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729649AbgFUOUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 10:20:34 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2831B20708;
+        Sun, 21 Jun 2020 14:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592749234;
+        bh=1JJUUYXnXHvputWDk56tJc3YEIIePEn96bUELiZMnH8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hCgWRlMVCXkFbI1LfKZ7Wdr/f9DPq9hHxgA8kdzxDcbp5aFzcAgyhjh6PzkHWmgKM
+         POPjfjjB3vuNV6OPPtcCq2xlBpu8SrLbdfwekISZQ3VJrszJfd8lhP1j+/ak1VjEAd
+         zyD/+5vyy54XjTwF/0UiPeOQekIUtDEt8xMVESBc=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=hot-poop.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jn0pk-0056cj-8r; Sun, 21 Jun 2020 15:20:32 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Anup Patel <Anup.Patel@wdc.com>
+Cc:     jason@lakedaemon.net, tglx@linutronix.de,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-riscv@lists.infradead.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
+Subject: Re: [PATCH] irqchip: riscv-intc: Fix a typo in a pr_warn()
+Date:   Sun, 21 Jun 2020 15:20:25 +0100
+Message-Id: <159274906987.783748.5482676001777469001.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200611175302.253540-1-palmer@dabbelt.com>
+References: <20200611175302.253540-1-palmer@dabbelt.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C6CBDA1DC8780D7EC90386ECCFF347699D5936E76A8A9EA4679A4E99F5EA44512000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: palmer@dabbelt.com, Anup.Patel@wdc.com, jason@lakedaemon.net, tglx@linutronix.de, palmerdabbelt@google.com, linux-riscv@lists.infradead.org, kernel-team@android.com, linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, aou@eecs.berkeley.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGFkZHJlc3Mgc2hpZnQgd2hlbiBjb21wb3NlIGp1bXAgaW5zdHJ1Y3Rpb24NCnRvIGNvbXBh
-dGlibGUgd2l0aCAzNWJpdCBmb3JtYXQuDQoNClNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2ll
-aCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1jbWRxLWhlbHBlci5jIHwgICAgMyArKy0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
-bHBlci5jDQppbmRleCBjNjcwODE3NTk3MjguLjk4ZjIzYmEzYmE0NyAxMDA2NDQNCi0tLSBhL2Ry
-aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQorKysgYi9kcml2ZXJzL3NvYy9t
-ZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KQEAgLTI5MSw3ICsyOTEsOCBAQCBzdGF0aWMgaW50
-IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KIA0KIAkvKiBKVU1QIHRv
-IGVuZCAqLw0KIAlpbnN0Lm9wID0gQ01EUV9DT0RFX0pVTVA7DQotCWluc3QudmFsdWUgPSBDTURR
-X0pVTVBfUEFTUzsNCisJaW5zdC52YWx1ZSA9IENNRFFfSlVNUF9QQVNTID4+DQorCQljbWRxX21i
-b3hfc2hpZnQoKChzdHJ1Y3QgY21kcV9jbGllbnQgKilwa3QtPmNsKS0+Y2hhbik7DQogCWVyciA9
-IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQogDQogCXJldHVybiBlcnI7DQot
-LSANCjEuNy45LjUNCg==
+On Thu, 11 Jun 2020 10:53:02 -0700, Palmer Dabbelt wrote:
+> Anup originally re-spun his patch set to include this fix, but it was a bit too
+> late for my PR so I've split it out.
 
+Applied to irq/irqchip-next, thanks!
+
+[1/1] irqchip/riscv-intc: Fix a typo in a pr_warn()
+      commit: 559fe74ba6b0c8283e923a64f19fc0398fb64d04
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
