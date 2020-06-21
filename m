@@ -2,109 +2,125 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46044C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63790C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC112490C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E96C23371
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 13:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alh45zcr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odvbi0Lp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgFUNhQ (ORCPT
+        id S1730018AbgFUNqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
+        Sun, 21 Jun 2020 09:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729658AbgFUNhP (ORCPT
+        with ESMTP id S1729774AbgFUNqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 09:37:15 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CD0C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:37:14 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n24so16334928lji.10
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 06:37:14 -0700 (PDT)
+        Sun, 21 Jun 2020 09:46:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9A4C061794;
+        Sun, 21 Jun 2020 06:46:48 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g2so8134445lfb.0;
+        Sun, 21 Jun 2020 06:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7tkH8QeToW+8a6ShjGaQW1Fds8XY8tcuZxETlCNYIRM=;
-        b=alh45zcraetkOFPQltefTOxLaVWUXT5ZyQoB3Jn4Oi76e0qR5hKeSD1ylRN0pmmDeu
-         0+F5JJ7s797Oyv++n9YuHyS2liRyDXFh0H35h4cpkN5meAyToWMvlTT/Ow6A98sU76O1
-         pXxW/xdOnlzIE9Td4bogP1viY8jCyJSSE9ldljU8/SvOJFDxrosrKiuu42zM6uUKnoZE
-         bSTZ3kkiNhSZxNlRUdN1wg6mmXvw1QnisZlgO2r3IFGxB+gxXMqyhWVYt9j2U/Umk360
-         cwffW+iz3nbcK/6qKsTbABx6DE/TlTYYN2IkGXZ8bG67Z/GSqbNnMYaiNHktv8D7YIwX
-         s9dw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3j0kIvck3iasI2UkkkK/3yKkwAOt22SqCzg0IxsgEdw=;
+        b=odvbi0LprxKmTzQyoHfve/7/GxlRSei7Ep8rCs1MN3Lx2hfcePZQvUbz3fZ6XdyO+o
+         kcFbgGF7/56KJpLo2xuOqx7DwypsetwDn2m+oFSDc/n2utklQvl8KC3NEi383Fwz8VKH
+         Bhqy7lEijUzpw7iKBojnF+itt/i79EhzE8TA6+m2wNiGJU8wj4cJu1P+Y4nN3En2jNtu
+         903NEfhl9aVZLKx6PfEFNtFjyN1Td5tqzKqgKIK6m8l+UtDJCdGV52cOkSRhYsgsRVbV
+         eZs79hJdYoMvIkjVOu7ozEx6r1kCfJkZA4vfVFR2yFftTdImkWLrYOJcVuI3SIIxxEqQ
+         19uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7tkH8QeToW+8a6ShjGaQW1Fds8XY8tcuZxETlCNYIRM=;
-        b=DI4VTgbKMndkp6gU89z8X9VCZVAqYQ0iKTGsKDfVRqwc4xaxs9/+2cjHaz97j3wH9P
-         evIzLF5KAUXZ9sDqi0IGXZ4mc7bVS1zz39x1cnW6m/4w+1N8SSzKuvnC4zaxJTI2hkgt
-         eHpViWlXTVMq3qS47O2DsJXBQsF63OROYKOPtzZ9jXt6gOFWPOTJ8/dRI6gLBGmLVFwH
-         6CKzQMMsx0S9pztQxixNGC0hhsktJ4jv2YzOJqY9+MOXuev2p7wQaqvnqDRc2nSOR1CL
-         vR4/zFi3OHoCDb1TZfi8EIU7fPsPjTea2LdsxkILydMBADEAkt/VKiY07Ar4Tf7Y4556
-         N+cA==
-X-Gm-Message-State: AOAM531/nk9RTS+N2NGo/dut2MB9UpZNLSVWSa1+fmiCrbyx0lfZofWH
-        SN7fwqx0UJlzhS/nPdtqDucPEN5BOlRdUA==
-X-Google-Smtp-Source: ABdhPJy5VtDEZFw+Pys9lrwg38HnAV34E9veIAbH6PiAKpfbncN/X0QcESAhCX4lfoIce4yihvmcog==
-X-Received: by 2002:a2e:92cf:: with SMTP id k15mr6465154ljh.333.1592746632626;
-        Sun, 21 Jun 2020 06:37:12 -0700 (PDT)
-Received: from pc-sasha.localdomain ([146.120.244.6])
-        by smtp.gmail.com with ESMTPSA id w20sm2165077ljo.68.2020.06.21.06.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 06:37:12 -0700 (PDT)
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     christian.brauner@ubuntu.com, oleg@redhat.com,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        liuzhiqiang26@huawei.com, joel@joelfernandes.org,
-        paulmck@linux.vnet.ibm.com, asmadeus@codewreck.org,
-        alexander.kapshuk@gmail.com, kernel test robot <lkp@intel.com>
-Subject: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
-Date:   Sun, 21 Jun 2020 16:37:04 +0300
-Message-Id: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3j0kIvck3iasI2UkkkK/3yKkwAOt22SqCzg0IxsgEdw=;
+        b=NfTJwztrn/ltzFHeYGjBzObLQhF9IhkWm0fOdBVPE0+ZtF1pLlyCg2+olH2RU4GAZn
+         PU02YKvSy0jp5Du3vLZnDdNODv5pIPa9VLBinOt/RJEz4Fe3WMhEU/erMEYXLM1Jpw3a
+         g+SH9dYZ/h7KoIM89lsxD1skceSuilNpRJLiIdZbEfsUgKjj3t+EAWLlfl++gLZKHCma
+         gi2Qu9UOTggf9ddfs55OpEx2P/JQkLfYf4MkLzC5BlyTJeS2x1AnHl2K6MsPM7ylEpss
+         up4YpA6PBeCJMsxysH4XNVgbJYes9pzRSMOoB+9oWdgMqNofDT8GoyWnHsUFy8WhLlI7
+         NiGw==
+X-Gm-Message-State: AOAM533A555wkM2CoIzFzjE2grqiJN+YnvF7FwL4xk/iE1Z3+aUOWSSp
+        wiBulCAe5lLt8HOF1NI5mPm8NNexXU0p8sHnMOo=
+X-Google-Smtp-Source: ABdhPJwp+FL3qhHAfY0+CwxMSBao7NG+R4wzaIEcUUg2F1qlSdduvWUH/yGeYxAKLBwKZ/8ZfkFfzezDdG2ev/GVmsk=
+X-Received: by 2002:a05:6512:31c5:: with SMTP id j5mr7312609lfe.26.1592747207435;
+ Sun, 21 Jun 2020 06:46:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200621133630.46435-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200621133630.46435-1-grandmaster@al2klimov.de>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 21 Jun 2020 15:46:36 +0200
+Message-ID: <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/process
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Fischetti <tony.fischetti@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Joe Perches <joe@perches.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export symbol __lock_task_sighand, so it is accessible from code compiled
-as modules.
-This fixes the following modpost error:
-ERROR: modpost: "__lock_task_sighand" [net/9p/9pnet.ko] undefined!
+Hi Alexander,
 
-Where __lock_task_sighand is called via lock_task_sighand in net/9p/client.c
-See https://lore.kernel.org/lkml/20200620201456.14304-1-alexander.kapshuk@gmail.com/.
+On Sun, Jun 21, 2020 at 3:37 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
 
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/TMTLPYU6A522JH2VCN3PNZVAP6EE5MDF/
----
- kernel/signal.c | 1 +
- 1 file changed, 1 insertion(+)
+Looks fine, although it would be nice to have a link to the discussion
+(using a `Link: ` line to `lore.kernel.org`). Also having the script
+in the kernel would be nice for future re-runs (e.g. you could add it
+as a first patch in the series).
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 5ca48cc5da76..2612b9098cbd 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1396,6 +1396,7 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
+Other than that:
 
- 	return sighand;
- }
-+EXPORT_SYMBOL(__lock_task_sighand);
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
- /*
-  * send signal info to all the members of a group
---
-2.27.0
-
+Cheers,
+Miguel
