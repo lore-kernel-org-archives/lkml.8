@@ -2,256 +2,165 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E74C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 16:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 16:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB8F251C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 16:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592757892;
-	bh=J1EVzWQeu1qIX3NeNJnPQNRrxOsl4sDjRx/e8sWGlF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OQ7Ah8AedsLs7Nc+qGPd72Pgh8r72Mqj8Dqit4TSEwTWeNDgF44akfdOP/xYsZj73
-	 AJmX5tqZmC/5a7tgFhZlI4d3sxOLVl/HyxCzMfC6f0aPtBk7lYs26Yjqgkbb1hUrdv
-	 JGHhR9wWSNWMuvhr50UoJmXks2G2zNh8KAhCnk78=
+	by mail.kernel.org (Postfix) with ESMTP id CDE6D21532
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 16:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WC/NqBMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbgFUQih (ORCPT
+        id S1730448AbgFUQuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 12:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730411AbgFUQig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 12:38:36 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6616324863;
-        Sun, 21 Jun 2020 16:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592757515;
-        bh=J1EVzWQeu1qIX3NeNJnPQNRrxOsl4sDjRx/e8sWGlF0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w6Y7WtzvB+HWO/wsVn/bbxET77TaGLdfOWE9mze2SeZnxEu+t4QyQGPNkzynZJoAD
-         b9b6KvEx/Ver5cwBQqf8G6VRyZqGFIR1oyDCFDwER/8XBb91kmSY1ZGpQiiSEq+Z65
-         6HSrK+AzJEMFfnLxZiqbsGMDnSrfj4fr1eDkpOTA=
-Date:   Sun, 21 Jun 2020 09:38:34 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
-Message-ID: <20200621163834.GA36924@google.com>
-References: <20200618063625.110273-1-yuchao0@huawei.com>
- <20200618235932.GA227771@google.com>
- <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
- <20200619054922.GC227771@google.com>
- <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
- <20200619224755.GA60059@google.com>
- <3f49539a-7be1-be90-d13a-2f66a8483458@huawei.com>
+        Sun, 21 Jun 2020 12:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730411AbgFUQuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 12:50:17 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F420C061794;
+        Sun, 21 Jun 2020 09:50:17 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n24so15499036ejd.0;
+        Sun, 21 Jun 2020 09:50:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8/oeYmT0gf/BQf5rhsOaYvoPP5ayrLP9PM0KP+IAgfg=;
+        b=WC/NqBMGWLqBQRZbzUo1d4ajwpofeyOODarATg8fVi1KkjU+anC7Pom0DeZCqPelxu
+         XrRcKDvuIBUgVs3cUzYJOC83XgFBC6pKZU8C34sw0ONUdCf4N/dnOWPj+oqhEuznsnKV
+         oZFMQCqtevhZdAGtoZVIBpcM1s77qdqWW5yxbGI7Bes0hQCUV5mUlIDKESpVEJ2u7QLF
+         mGeRJYH1uJNJIq0/VOje77BpxGIZU+rTJ40DdB6jFYppD/f4VRxhIceQHkGwFB83P/OI
+         TA2jMQDCisNagqz/E/xuwDfOlPtEHywOhE2n7JGq8Ttq2YqVjmiCafXBQEP609cC6L1q
+         espA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8/oeYmT0gf/BQf5rhsOaYvoPP5ayrLP9PM0KP+IAgfg=;
+        b=rlRnCOnFHfe8d1RJ/A5Fxw+3pxmpjT4lBwe+eQMnRzvOGAd8sla/cDTl/6aX3ZdQp0
+         FPT/PGKb72ax6GnNrkN9dmHIST/YqeonJzbmECFi1z9Yx+YjdDepMo8FZCd+g3m6A6ID
+         ocNQ6jXzGyu5ys+jPPWakoUqVnuShSnjKk78rHhKW8h664MDWhYzd6mLp/HCBkF0ebPf
+         dgHIEWHFbdaOX44i0dBLkJm6Z0g/sI8CFSZ0K9XY1paBU6FjIBFVlFiY8Sh6n3hcBQB+
+         d+vKZe6CN16yHphVegNsncv1UQKbWgvrP3i0knaKShvMeSYB9TxeAvEg9k7XQb2Otncs
+         nV4g==
+X-Gm-Message-State: AOAM532NuKj75uB0zJ2PpD7eQZxLzUlRCYw+dq7rFp4v7UVmK1ACGhv7
+        dM81Tb6KuMxhsYGvLtI9ic2oI40lFD6vkQDEJiw=
+X-Google-Smtp-Source: ABdhPJxSdA2O9bfRHd4FEkpgAkg0zBjCVSJMWG2BUWgw83KJC+QN/PKfGTm3H9P6BtV5cQTTx+7xynA2gzaW3NiUvAM=
+X-Received: by 2002:a17:906:856:: with SMTP id f22mr3072421ejd.245.1592758215478;
+ Sun, 21 Jun 2020 09:50:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f49539a-7be1-be90-d13a-2f66a8483458@huawei.com>
+References: <cover.1586374414.git.asutoshd@codeaurora.org> <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
+ <CAF6AEGvgmfYoybv4XMVVH85fGMr-eDfpzxdzkFWCx-2N5PEw2w@mail.gmail.com>
+ <SN6PR04MB46402FD7981F9FCA2111AB37FC960@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <20200621075539.GK128451@builder.lan>
+In-Reply-To: <20200621075539.GK128451@builder.lan>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 21 Jun 2020 09:50:43 -0700
+Message-ID: <CAF6AEGuG3XAqN_sedxk9GRm_9yK+a4OH56CZPmbHx+SW-FNVPQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] scsi: ufs: add write booster feature support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Avri Altman <Avri.Altman@wdc.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/20, Chao Yu wrote:
-> On 2020/6/20 6:47, Jaegeuk Kim wrote:
-> > On 06/19, Chao Yu wrote:
-> >> On 2020/6/19 13:49, Jaegeuk Kim wrote:
-> >>> On 06/19, Chao Yu wrote:
-> >>>> Hi Jaegeuk,
-> >>>>
-> >>>> On 2020/6/19 7:59, Jaegeuk Kim wrote:
-> >>>>> Hi Chao,
-> >>>>>
-> >>>>> On 06/18, Chao Yu wrote:
-> >>>>>> to make page content stable for special device like raid.
-> >>>>>
-> >>>>> Could you elaborate the problem a bit?
-> >>>>
-> >>>> Some devices like raid5 wants page content to be stable, because
-> >>>> it will calculate parity info based page content, if page is not
-> >>>> stable, parity info could be corrupted, result in data inconsistency
-> >>>> in stripe.
-> >>>
-> >>> I don't get the point, since those pages are brand new pages which were not
-> >>> modified before. If it's on writeback, we should not modify them regardless
-> >>> of whatever raid configuration. For example, f2fs_new_node_page() waits for
-> >>> writeback. Am I missing something?
-> >>
-> >> I think we should use f2fs_bug_on(, PageWriteback()) rather than
-> >> f2fs_wait_on_page_writeback() for brand new page which is allocated just now.
-> >> For other paths, we can keep rule that waiting for writeback before updating.
-> >>
-> >> How do you think?
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>> ---
-> >>>>>>  fs/f2fs/dir.c          |  2 ++
-> >>>>>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
-> >>>>>>  fs/f2fs/f2fs.h         |  2 +-
-> >>>>>>  fs/f2fs/file.c         |  1 +
-> >>>>>>  fs/f2fs/inline.c       |  2 ++
-> >>>>>>  fs/f2fs/inode.c        |  3 +--
-> >>>>>>  6 files changed, 16 insertions(+), 12 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >>>>>> index d35976785e8c..91e86747a604 100644
-> >>>>>> --- a/fs/f2fs/dir.c
-> >>>>>> +++ b/fs/f2fs/dir.c
-> >>>>>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
-> >>>>>>  	if (IS_ERR(dentry_page))
-> >>>>>>  		return PTR_ERR(dentry_page);
-> >>>>>>  
-> >>>>>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
-> >>>>>> +
-> >>>>>>  	dentry_blk = page_address(dentry_page);
-> >>>>>>  
-> >>>>>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
-> >>>>>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-> >>>>>> index e60078460ad1..686c68b98610 100644
-> >>>>>> --- a/fs/f2fs/extent_cache.c
-> >>>>>> +++ b/fs/f2fs/extent_cache.c
-> >>>>>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
-> >>>>>>  }
-> >>>>>>  
-> >>>>>>  /* return true, if inode page is changed */
-> >>>>>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>>>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>>>  {
-> >>>>>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> >>>>>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
-> >>>>>>  	struct extent_tree *et;
-> >>>>>>  	struct extent_node *en;
-> >>>>>>  	struct extent_info ei;
-> >>>>>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>>>  	if (!f2fs_may_extent_tree(inode)) {
-> >>>>>>  		/* drop largest extent */
-> >>>>>>  		if (i_ext && i_ext->len) {
-> >>>>>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> >>>>>>  			i_ext->len = 0;
-> >>>>>> -			return true;
-> >>>>>> +			set_page_dirty(ipage);
-> >>>>>> +			return;
-> >>>>>>  		}
-> >>>>>> -		return false;
-> >>>>>> +		return;
-> >>>>>>  	}
-> >>>>>>  
-> >>>>>>  	et = __grab_extent_tree(inode);
-> >>>>>>  
-> >>>>>>  	if (!i_ext || !i_ext->len)
-> >>>>>> -		return false;
-> >>>>>> +		return;
-> >>>>>>  
-> >>>>>>  	get_extent_info(&ei, i_ext);
-> >>>>>>  
-> >>>>>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>>>  	}
-> >>>>>>  out:
-> >>>>>>  	write_unlock(&et->lock);
-> >>>>>> -	return false;
-> >>>>>>  }
-> >>>>>>  
-> >>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>>>  {
-> >>>>>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
-> >>>>>> +	__f2fs_init_extent_tree(inode, ipage);
-> >>>>>>  
-> >>>>>>  	if (!F2FS_I(inode)->extent_tree)
-> >>>>>>  		set_inode_flag(inode, FI_NO_EXTENT);
-> >>>>>> -
-> >>>>>> -	return ret;
-> >>>>>>  }
-> >>>>>>  
-> >>>>>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
-> >>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>> index b35a50f4953c..326c12fa0da5 100644
-> >>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
-> >>>>>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
-> >>>>>>  						struct rb_root_cached *root);
-> >>>>>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
-> >>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
-> >>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
-> >>>>>>  void f2fs_drop_extent_tree(struct inode *inode);
-> >>>>>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
-> >>>>>>  void f2fs_destroy_extent_tree(struct inode *inode);
-> >>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>>>>> index 3268f8dd59bb..1862073b96d2 100644
-> >>>>>> --- a/fs/f2fs/file.c
-> >>>>>> +++ b/fs/f2fs/file.c
-> >>>>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
-> >>>>>>  				f2fs_put_page(psrc, 1);
-> >>>>>>  				return PTR_ERR(pdst);
-> >>>>>>  			}
-> >>>>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
-> > 
-> > Do you mean pdst can be under writeback?
-> 
-> Use f2fs_bug_on(, dirty || writeback) here?
-> 
-> > 
-> >>>>>>  			f2fs_copy_page(psrc, pdst);
-> >>>>>>  			set_page_dirty(pdst);
-> >>>>>>  			f2fs_put_page(pdst, 1);
-> >>>>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-> >>>>>> index dbade310dc79..4bcbc486c9e2 100644
-> >>>>>> --- a/fs/f2fs/inline.c
-> >>>>>> +++ b/fs/f2fs/inline.c
-> >>>>>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
-> >>>>>>  	struct f2fs_dentry_ptr d;
-> >>>>>>  	void *inline_dentry;
-> >>>>>>  
-> >>>>>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> 
-> f2fs_bug_on(, writeback)?
+On Sun, Jun 21, 2020 at 12:58 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sun 21 Jun 00:40 PDT 2020, Avri Altman wrote:
+>
+> >
+> > >
+> > > On Wed, Apr 8, 2020 at 3:00 PM Asutosh Das <asutoshd@codeaurora.org>
+> > > wrote:
+> > > >
+> > > > The write performance of TLC NAND is considerably
+> > > > lower than SLC NAND. Using SLC NAND as a WriteBooster
+> > > > Buffer enables the write request to be processed with
+> > > > lower latency and improves the overall write performance.
+> > > >
+> > > > Adds support for shared-buffer mode WriteBooster.
+> > > >
+> > > > WriteBooster enable: SW enables it when clocks are
+> > > > scaled up, thus it's enabled only in high load conditions.
+> > > >
+> > > > WriteBooster disable: SW will disable the feature,
+> > > > when clocks are scaled down. Thus writes would go as normal
+> > > > writes.
+> > >
+> > > btw, in v5.8-rc1 (plus handful of remaining patches for lenovo c630
+> > > laptop (sdm850)), I'm seeing a lot of:
+> > >
+> > >   ufshcd-qcom 1d84000.ufshc: ufshcd_query_flag: Sending flag query for
+> > > idn 14 failed, err = 253
+> > >   ufshcd-qcom 1d84000.ufshc: ufshcd_query_flag: Sending flag query for
+> > > idn 14 failed, err = 253
+> > >   ufshcd-qcom 1d84000.ufshc: ufshcd_query_flag_retry: query attribute,
+> > > opcode 6, idn 14, failed with error 253 after 3 retires
+> > >   ufshcd-qcom 1d84000.ufshc: ufshcd_wb_ctrl write booster enable failed 253
+> > >
+> > > and at least subjectively, compiling mesa seems slower, which seems
+> > > like it might be related?
+> > This looks like a device issue to be taken with the flash vendor:
+>
+> There's no way for a end-user to file a bug report with the flash vendor
+> on a device bought from an OEM and even if they would accept the bug
+> report they wouldn't re-provision the flash in an shipped device.
+>
+> So you will have to work around this in the driver.
 
-So, which case do you suspect unstable page for raid?
+oh, ugg.. well I think these msgs from dmesg identify the part if we
+end up needing to use a denylist:
 
-> 
-> Thanks,
-> 
-> >>>>>> +
-> >>>>>>  	inline_dentry = inline_data_addr(inode, ipage);
-> >>>>>>  
-> >>>>>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
-> >>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> >>>>>> index 44582a4db513..7c156eb26dd7 100644
-> >>>>>> --- a/fs/f2fs/inode.c
-> >>>>>> +++ b/fs/f2fs/inode.c
-> >>>>>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
-> >>>>>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
-> >>>>>>  	fi->i_dir_level = ri->i_dir_level;
-> >>>>>>  
-> >>>>>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
-> >>>>>> -		set_page_dirty(node_page);
-> >>>>>> +	f2fs_init_extent_tree(inode, node_page);
-> >>>>>>  
-> >>>>>>  	get_inline_info(inode, ri);
-> >>>>>>  
-> >>>>>> -- 
-> >>>>>> 2.18.0.rc1
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+scsi 0:0:0:49488: Well-known LUN    SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+scsi 0:0:0:49476: Well-known LUN    SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+scsi 0:0:0:49456: Well-known LUN    SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+scsi 0:0:0:0: Direct-Access     SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+scsi 0:0:0:1: Direct-Access     SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+sd 0:0:0:0: [sda] 29765632 4096-byte logical blocks: (122 GB/114 GiB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Mode Sense: 00 32 00 10
+sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports
+DPO and FUA
+sd 0:0:0:0: [sda] Optimal transfer size 786432 bytes
+scsi 0:0:0:2: Direct-Access     SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+scsi 0:0:0:3: Direct-Access     SKhynix  H28S8Q302CMR     A102 PQ: 0 ANSI: 6
+
+
+(otoh I guess the driver could just notice that writeboost keeps
+failing and stop trying to use it)
+
+BR,
+-R
+
+
+> Regards,
+> Bjorn
+>
+> > The device reports that it supports wd, but returns inalid idn for flag 0xe...
+> >
+> > Thanks,
+> > Avri
