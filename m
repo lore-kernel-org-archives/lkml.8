@@ -2,95 +2,87 @@ Return-Path: <SRS0=0j3N=AC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A91C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEADC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F6125286
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A57E25286
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jun 2020 22:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvVFmv++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFUWEf (ORCPT
+        id S1730740AbgFUWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 18:04:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45666 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgFUWEe (ORCPT
+        Sun, 21 Jun 2020 18:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgFUWEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 18:04:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 935251C0C0A; Mon, 22 Jun 2020 00:04:32 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 00:04:32 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     corbet@lwn.net, changbin.du@intel.com, masahiroy@kernel.org,
-        rostedt@goodmis.org, j.neuschaefer@gmx.net,
-        andy.shevchenko@gmail.com, mchehab+samsung@kernel.org,
-        logang@deltatee.com, abbotti@mev.co.uk, jacob.e.keller@intel.com,
-        colin.king@canonical.com, gregkh@linuxfoundation.org,
-        mgreer@animalcreek.com, tytso@mit.edu, jack@suse.cz,
-        ebiggers@google.com, tglx@linutronix.de, akpm@linux-foundation.org,
-        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        jgross@suse.com, mike.kravetz@oracle.com, cohuck@redhat.com,
-        jacek.anaszewski@gmail.com, alex@alexanderweb.de,
-        dwlsalmeida@gmail.com, dsterba@suse.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/admin-guide
-Message-ID: <20200621220432.GA916@amd>
-References: <20200621132049.45624-1-grandmaster@al2klimov.de>
+        Sun, 21 Jun 2020 18:04:39 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 862A3C061794;
+        Sun, 21 Jun 2020 15:04:39 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so16032293ejc.8;
+        Sun, 21 Jun 2020 15:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Spk5YRbn2jPgWgpNhJ4Afpe8xXwIv2Baa1lVhBfdK3g=;
+        b=NvVFmv++xc3M+rpsEWwV/zKk3ijoKtAhN9D0YPRD/f0m7ZBVvK643GM4fPA+aXsh00
+         2rVBSn3FS+/73KTiGUgDRMc5nIqHCN0RR2dvoE57baVI6cKng9rOe8+Ng6NM7nHD+MfK
+         kCsZIjFkbItc8Kyu2mJ0u1wv16/uLuhtXXHJFKS/LfZlEf12pCKGkD6UFYLAy2uZyRGP
+         Q6tUMApFZXCuWxD2C9uHmTHqZ5zchxstYl3ikdj1wVBk4l27WBGs1meTeT5Zf85pkxI9
+         itYNHiLfsxToJ9j590dfKzHQY3PiLHFULRg0auuQgX3FXuHCjH/FWY5UBQpmtoXr3p2L
+         TZ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Spk5YRbn2jPgWgpNhJ4Afpe8xXwIv2Baa1lVhBfdK3g=;
+        b=BqKHGbPKiwZ0zXqqYtT2LIYvFhATzY1pDuRXWzgs4CQs5Ki8c+ettpZnJMDfsh/B+q
+         yrpQAvgOL4j9x4hwiDYgt2IcLuFPjybljubDfq2o3asjx8l3ce6xrNIcJMbXDST7dNxf
+         TGSDWLK77UH9N8TKEFVa5sjAv0tyFBLVMBOynZDYArIoM0evfxu5rjJPtsdcvGjT+7sL
+         EIA9/rQcKG6MRb0Xu2W+ANJzzo2bB6xLYfRcK8kmGWvolN/QBl83Ye41wHLbtvC7xSe7
+         oivSDF1z+HMC8HzlAgJ5uwl2oTLUKDq5Kb8+KskyIaJPlTxN8Oa3sbWj4w+TS4knFSoj
+         /R6Q==
+X-Gm-Message-State: AOAM530YizlYbpUVX4QK+VaF3trVOyQpCBSEn+gdUP/Nl+XpD8dj8uOM
+        ik/UwPNpCXtyGbQ463GC2MLg19RPrU5aZkGdP0M=
+X-Google-Smtp-Source: ABdhPJx+kTnECDHLiva+J35qqI7A50Jg5aty3u8bm4ZQJ1sj4hT06Q1D0+I8HzqDeV5LlOZqe+akncr8u/fSVdF2l6E=
+X-Received: by 2002:a17:906:4cd0:: with SMTP id q16mr5134240ejt.418.1592777078219;
+ Sun, 21 Jun 2020 15:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
-In-Reply-To: <20200621132049.45624-1-grandmaster@al2klimov.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-9-konradybcio@gmail.com> <CADQ2G_G8iFE_9oNRBFum_je8FGgZCEe-Hj1SMr06x+xoBanAnA@mail.gmail.com>
+In-Reply-To: <CADQ2G_G8iFE_9oNRBFum_je8FGgZCEe-Hj1SMr06x+xoBanAnA@mail.gmail.com>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Mon, 22 Jun 2020 00:04:26 +0200
+Message-ID: <CADQ2G_HN5XC76g7N1Co1fVxd=mg6zA+j8Wcyb+_1rzs2uWz=eQ@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10
+ Plus (Ganges platform)
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sorry made a typo in mail.
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-
-> +++ b/Documentation/admin-guide/README.rst
-> @@ -1,6 +1,6 @@
->  .. _readme:
-> =20
-> -Linux kernel release 5.x <http://kernel.org/>
-> +Linux kernel release 5.x <https://kernel.org/>
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-
-You need to add one "=3D" here, IIRC.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7v2W8ACgkQMOfwapXb+vI5cgCdGFRLd9+refQsglCD5LdtNPVx
-/CgAnRZd9VJjSbmBH3rNbU7YAeh+0vCw
-=18By
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+Tested-by: Martin Botka <martin.botka1@gmail.com>
