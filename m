@@ -2,131 +2,143 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09924C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F39C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81962076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386F62073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUTzkLV+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fz7Kv1Cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbgFVV4G (ORCPT
+        id S1730893AbgFVV5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730754AbgFVV4A (ORCPT
+        Mon, 22 Jun 2020 17:57:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33477 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730576AbgFVV5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:56:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C408C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:56:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id q22so6012265pgk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9I9qRX8KvmDS5ccLsxT82Nx/5Ew2oRyD2Q8ZPUqRkVE=;
-        b=pUTzkLV+Bpsm5HSKAiolSNJuaihX6Em9e97ehc3BS8iR4BaeGB8xasQ+Ya08SRHq2d
-         jbS2DEGcJQg915VLa0EsVflEhCkr6ql3wr342zETJHOxQOUZAwFxDOFfy5p4ip1e7Tix
-         mcmrgVc3gAJXIruaXQg4ijc3QDvo2Wikz2LUV7wvtxx/iuL9Vg0CBg6Eem3YsB0Il/CL
-         RO8Jt1Qe/K8oVRG1iqEtrBX4xa5ScVpsMN/A9ltJD+6PxIW+SchMh97Im7oUTiGYglQD
-         XmGDtrlOlyICF8ctF4Z1WOvc4mM21z0mM46KupKLkikt13cl7pw6qMBGXeD1GcoovYV4
-         Cxgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9I9qRX8KvmDS5ccLsxT82Nx/5Ew2oRyD2Q8ZPUqRkVE=;
-        b=hvEaa0yqLrZ3tpzNugz1t9vOJo4WpHIQUwr6omj4p2XlySTWr0zGi31REgFc32NUgb
-         VFKp8rUlS6zwIvC3p2BLIwq7lwI7ux4oro6pFK86u77EYqah+Hnyw1wsIqJw0imYdXrj
-         7HZucQ55zlpHiS54hyJA1QTyXZZTDCYr9Qmv1+HVYRp/jucNXmZKcMXdx30ti5z1bbJn
-         lV7bXgQPUWkMr9uxnQwYP4B58LkhifbX/ypo4MgzWLh8Zvwuk6ysNy0LhyATrZntAqJe
-         qsCmJJJmk7aSGoqOX6mxt6EmZSc426gchpMPgJ7bk+4eUuAUfaxB4o7lx+FhIC/ZwC1e
-         7Lag==
-X-Gm-Message-State: AOAM530Nzha755nxYP9giqdLQCxcW0lyQSV0L0fwVLGJCzbktDzOQRBo
-        U84cAN6o8IyQMO2jUvoP50XOBgXcQjBJKnrM8bI=
-X-Google-Smtp-Source: ABdhPJyENKWaqni5rW0iP7a2vaRIDH+NgbkoI5l146V+j98mq66lup8xPwbhQ0oHcRZKEfd9/fhic1Jb34HHnQkVpMs=
-X-Received: by 2002:a62:1c46:: with SMTP id c67mr21552264pfc.170.1592862959879;
- Mon, 22 Jun 2020 14:55:59 -0700 (PDT)
+        Mon, 22 Jun 2020 17:57:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592863026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uMbPsqGUvOKb001hQipRcEAVs1+07nW6ycVZC/UvqlI=;
+        b=fz7Kv1CjoiaPMNbJ+KExNNKkk22EEd2lGZQnOCWW6cOIleTZ4VQqEVgpDyZymzh9DJEi5u
+        QhlORtsdICb5sT1hGgAsJAYcaz3nnaG8ezCt5oaCZSOH9uzwmH+Q6orhopzXcoSigpWu+f
+        NRYGHtX444jNdDO8g9Jb5aoxSuPMpbg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-zgop9R65Nc-KYu6Pt_FCgw-1; Mon, 22 Jun 2020 17:57:02 -0400
+X-MC-Unique: zgop9R65Nc-KYu6Pt_FCgw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 557691883608;
+        Mon, 22 Jun 2020 21:57:00 +0000 (UTC)
+Received: from mail (ovpn-112-10.rdu2.redhat.com [10.10.112.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B76D410013D2;
+        Mon, 22 Jun 2020 21:56:59 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 17:56:58 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Roman Gushchin <guro@fb.com>,
+        Yang Shi <shy828301@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: kernel BUG at mm/huge_memory.c:2613!
+Message-ID: <20200622215658.GC12414@redhat.com>
+References: <20200619001938.GA135965@carbon.dhcp.thefacebook.com>
+ <CAHbLzkrDcn-GQOrAM=m7+2g5_J6obsz4K50Oqb-1RD5p1iWTPQ@mail.gmail.com>
+ <20200619011449.GC135965@carbon.dhcp.thefacebook.com>
+ <20200619024026.GB21081@redhat.com>
+ <20200622124646.GI3701@8bytes.org>
+ <e31308f7-4e3c-b6bc-7201-3861b062d257@arm.com>
 MIME-Version: 1.0
-References: <202006230441.zXXGmJJO%lkp@intel.com> <CAHp75Vc-+NCA=1CX+0GQfUNK-Mn1Y6-aj8TdCvm+pNBKF-Ax1g@mail.gmail.com>
-In-Reply-To: <CAHp75Vc-+NCA=1CX+0GQfUNK-Mn1Y6-aj8TdCvm+pNBKF-Ax1g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 23 Jun 2020 00:55:43 +0300
-Message-ID: <CAHp75VeE=BrT5haBt8EL+ARGKah6D48XznTPf8RGseyXi=jRcw@mail.gmail.com>
-Subject: Re: arch/arm64/kernel/acpi.c:99:30: sparse: sparse: incorrect type in
- return expression (different address spaces)
-To:     kernel test robot <lkp@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e31308f7-4e3c-b6bc-7201-3861b062d257@arm.com>
+User-Agent: Mutt/1.14.2 (2020-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 12:42 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Jun 22, 2020 at 11:53 PM kernel test robot <lkp@intel.com> wrote:
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   dd0d718152e4c65b173070d48ea9dfc06894c3e5
-> > commit: 670d0a4b10704667765f7d18f7592993d02783aa sparse: use identifiers to define address spaces
-> > date:   4 days ago
-> > config: arm64-randconfig-s031-20200622 (attached as .config)
-> > compiler: aarch64-linux-gcc (GCC) 9.3.0
-> > reproduce:
-> >         # apt-get install sparse
-> >         # sparse version: v0.6.2-rc1-18-g27caae40-dirty
-> >         git checkout 670d0a4b10704667765f7d18f7592993d02783aa
-> >         # save the attached .config to linux build tree
-> >         make W=1 C=1 ARCH=arm64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> >
-> > sparse warnings: (new ones prefixed by >>)
-> >
-> > >> arch/arm64/kernel/acpi.c:99:30: sparse: sparse: incorrect type in return expression (different address spaces) @@     expected void [noderef] __iomem * @@     got void * @@
-> > >> arch/arm64/kernel/acpi.c:99:30: sparse:     expected void [noderef] __iomem *
-> >    arch/arm64/kernel/acpi.c:99:30: sparse:     got void *
-> > >> arch/arm64/kernel/acpi.c:107:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *addr @@     got void [noderef] __iomem *map @@
-> >    arch/arm64/kernel/acpi.c:107:24: sparse:     expected void *addr
-> > >> arch/arm64/kernel/acpi.c:107:24: sparse:     got void [noderef] __iomem *map
->
-> ...
->
-> > 6c9a58e84e59a2 Andy Shevchenko 2017-07-18   94  void __init __iomem *__acpi_map_table(unsigned long phys, unsigned long size)
-> > 6c9a58e84e59a2 Andy Shevchenko 2017-07-18  102  void __init __acpi_unmap_table(void __iomem *map, unsigned long size)
->
-> Seems like a new sparse fixed some sparse issues and reveals that the
-> above was a mistake and should be reverted.
+Hello,
 
-Either this patch
-f7750a79568788473c5e8092ee58a52248f34329 x86, mpparse, x86/acpi,
-x86/PCI, x86/dmi, SFI: Use memremap() for RAM mappings
-shouldn't change to memremap(), or
+On Mon, Jun 22, 2020 at 04:30:41PM +0100, Robin Murphy wrote:
+> On 2020-06-22 13:46, Joerg Roedel wrote:
+> > + Robin
+> > 
+> > Robin, any idea on this?
+> 
+> After a bit of archaeology, this dates back to the original review:
+> 
+> https://lore.kernel.org/linux-arm-kernel/54C285D4.3070802@arm.com/
+> https://lore.kernel.org/linux-arm-kernel/54DA2666.9030003@arm.com/
+> 
+> In summary: originally this inherited from other arch code that did 
+> simply strip __GFP_COMP; that was deemed questionable because of the 
+> nonsensical comment about CONFIG_HUGETLBFS that was stuck to it; the 
+> current code is like it is because in 5 and a half years nobody said 
+> that it's wrong :)
+> 
+> If there actually *are* good reasons for stripping __GFP_COMP, then I've 
+> certainly no objection to doing so.
 
-void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
-acpi_size size);
-void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size);
+The main question is if there's any good reasons for not forbidding
+__GFP_COMP to be specified in the callers. The reason given in the
+comment isn't convincing.
 
-Should be cleaned so they either not working with __iomem, or in
-special cases force address space for above mentioned functions.
+I don't see how a caller that gets a pointer can care about how the
+page structure looks like and in turn why it's asking for __GFP_COMP.
 
--- 
-With Best Regards,
-Andy Shevchenko
+As far as I can tell there are two orthogonal issues in play here:
+
+1) The comment about __GFP_COMP facilitating the sound driver to do
+   partial mapping doesn't make much sense. It's probably best to
+   WARN_ON immediately in dma_alloc_coherent if __GFP_COMP is
+   specified, not only down the call stack in the
+   __iommu_dma_alloc_pages() path.
+
+   Note: the CMA paths would already ignore __GFP_COMP if it's
+   specified so that __GFP_COMP request can already be ignored. It
+   sounds preferable to warn the caller it's asking something it can't
+   get, than to silently ignore __GFP_COMP.
+
+   On a side note: hugetlbfs/THP pages can only be allocated with
+   __GFP_COMP because for example put_page() must work on all tail
+   pages (you can't call compound_head() unless the tail page is part
+   of a compound page). But for private driver pages mapped by
+   remap_pfn_range, any full or partial mapping is done manually and
+   nobody can call GUP on VM_PFNMAP|VM_IO anyway (there's not even the
+   requirement of a page struct backing those mappings in fact).
+
+2) __iommu_dma_alloc_pages cannot use __GFP_COMP if it intends to
+   return an array of small pages, which is the only thing that the
+   current sg_alloc_table_from_pages() supports in input. split_page
+   will work as expected to generate small pages from non-compound
+   order>0 pages, incidentally it's implement on mm/page_alloc.c, not
+   in huge_memory.c.
+
+   split_huge_page as opposed is not intended to be used on newly
+   allocated compound page. Maybe we should renamed it to
+   split_trans_huge_page to make it more explicit, since it won't even
+   work on hugetlbfs (compound) pages.
+
+Thanks,
+Andrea
+
