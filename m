@@ -2,158 +2,127 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9661C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CB920732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD23A20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSHOIfFO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zEKi7+e7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgFVMt0 (ORCPT
+        id S1728321AbgFVMte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgFVMtZ (ORCPT
+        Mon, 22 Jun 2020 08:49:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53912 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728263AbgFVMtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:49:25 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBAFC061794;
-        Mon, 22 Jun 2020 05:49:25 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x16so5609001wmj.1;
-        Mon, 22 Jun 2020 05:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KyLbHowE6Jr6ya5fF0rsMffz94nF0gU2x2NdsZwz5xg=;
-        b=jSHOIfFO6zvVaNFqx8sLYnIxMZys6BSWItV9cExOZn7uRFt1usy6TniPiGY3Wpku4M
-         cPiLnANrE5H89S/ajTkWTOtWY4oyKeG3L8sjRkvXMsyFtl9VLH1nfImE5cA84jiV6L30
-         pm+xidmd+f6Ye1FRRv5Wlnr2y8j0KgljbWFlz3RQSNtMgwUeQ5mRc8UPu1WoFjza4n3m
-         HNqkgQTlQ+9saGhaxYriNMDRTyjnOYpTho3Im5/Kyn9ArKh2/+LA7LaicydPqzEPjpRe
-         rJTBS5xXRnrelHTMU/S8XtPt8AkGEgnEjgKA3jhqrfNGUaOBMSkaWLlctQHEzs+7J6/y
-         UZcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KyLbHowE6Jr6ya5fF0rsMffz94nF0gU2x2NdsZwz5xg=;
-        b=MBILhs+qHkVHWAq6M2t4B8Y+fzNpLP0B23phOX1Ep29vnqlygd47k/W3O/sMrHOEr1
-         61C71EfiMKzpt2sHLbh9Nttigp3eMQdIProsKlfYPXR/5BQDcweUSom8yZ3lFLmNZA4z
-         sceZ6noVQWWpNn54fEjywjo+PzXqmp92EkT23/Js+SKg+5U4UwUZ438wOMgSEMOq5OyV
-         GBD8X+q8TSoFloJizNCD0PZmtwz0prqK3AJOcUJ14lzOMIHsNvONwmgnuS9VtPXsd0yG
-         6VkYU/55PMGFvQ/AeKBzjQVPM64sFjKjEyM/d3WBaR3fMg4B7h1jxylsh6wjZnX9Bkug
-         YM1w==
-X-Gm-Message-State: AOAM532XL8c0sqof4ueqtjjqnIKSrD1Ug5UrnjPkNJ7Yy7Xkm5jP+8gt
-        NuX0rtkAuGT4tRCmbBk79tSsiUmyEe8=
-X-Google-Smtp-Source: ABdhPJznXuUJEHfwe0EtG5zR7hb9qeM0wSlf8Zkg2rS6OhrasTx0vYRyo2FQTbcA9V7VXwBVsfXdMA==
-X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr11963492wmm.156.1592830164484;
-        Mon, 22 Jun 2020 05:49:24 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id a22sm9152512wmj.9.2020.06.22.05.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 05:49:23 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:49:22 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/15] vfio: expose virtual Shared Virtual Addressing
- to VMs
-Message-ID: <20200622124922.GB15683@stefanha-x1.localdomain>
-References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
- <20200615100214.GC1491454@stefanha-x1.localdomain>
- <MWHPR11MB16451F1E4748DF97D6A1DDD48C9D0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200616154928.GF1491454@stefanha-x1.localdomain>
- <20200616160916.GC11838@xz-x1>
+        Mon, 22 Jun 2020 08:49:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MCcaSv012117;
+        Mon, 22 Jun 2020 12:47:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=86Y9KphH0K41n9/RrH5MoRxMmMMB41/XxF9s9qLpmAE=;
+ b=zEKi7+e7YVW8K5QSUnie7ncKrgSB8wUbjyIbGGOv6PE/450jxXzMxjTyYdHH/xtW6ABX
+ kUnAv5X3Gf4eRTPX2Jyp06dlfxiFz/TyailpiTcJBr24C6sdxpLAp45puWjwzZkiD63t
+ ULrZ+PaK7s+Og5Sa2ZTIuizRIXryNbJjOSLxkvRJ0T2wYrF8tCB+LTDLFJHpqyJvKqU9
+ WOTMlrLbQV9gYY3hRRWGv+ihQWYXbvCajQJVJ8M7l5UiuuuDlecdrbVKqO9j1OhTMEzM
+ CvIvCFVzw5AKYbJMXHKpI5nRTBQB6fZScGKkYf9BmFgH/PzDTvk6IPV3EYY5D9OEZIZY QA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31sebbet5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 12:47:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MCdYCI178668;
+        Mon, 22 Jun 2020 12:45:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31sv1kpfgs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 12:45:57 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05MCjrFW001796;
+        Mon, 22 Jun 2020 12:45:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jun 2020 12:45:52 +0000
+Date:   Mon, 22 Jun 2020 15:45:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Shiju Jose <shiju.jose@huawei.com>,
+        James Morse <james.morse@arm.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        helgaas@kernel.org, bp@alien8.de, lenb@kernel.org,
+        tony.luck@intel.com, zhangliguang@linux.alibaba.com,
+        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
+        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
+Subject: Re: [PATCH v11 0/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200622124543.GV4282@kadam>
+References: <20200622120527.690-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616160916.GC11838@xz-x1>
+In-Reply-To: <20200622120527.690-1-shiju.jose@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006220095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 01:05:25PM +0100, Shiju Jose wrote:
+> CPER records describing a firmware-first error are identified by GUID.
+> The ghes driver currently logs, but ignores any unknown CPER records.
+> This prevents describing errors that can't be represented by a standard
+> entry, that would otherwise allow a driver to recover from an error.
+> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+> version 2.8).
+> 
+> patch set
+> 1. add a notifier chain for these non-standard/vendor-records
+>    in the ghes driver.
+> 
+> 2. add a driver to handle HiSilicon hip PCIe controller's errors.
+>    
+> Changes:
+> 
+> V11:
+> 1. Following modifications made by James Morse in the APEI patch
+>    for the vendor error record.
+>    - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+>    
+>    Note: Kept the Signed-off-by: James Morse as he is given
+>    because I am not sure the right format.
 
---wq9mPyueHGvFACwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Wait, what?  He doesn't seem to have given any S-o-b in the public
+thread.
 
-On Tue, Jun 16, 2020 at 12:09:16PM -0400, Peter Xu wrote:
-> On Tue, Jun 16, 2020 at 04:49:28PM +0100, Stefan Hajnoczi wrote:
-> > Isolation between applications is preserved but there is no isolation
-> > between the device and the application itself. The application needs to
-> > trust the device.
-> >=20
-> > Examples:
-> >=20
-> > 1. The device can snoop secret data from readable pages in the
-> >    application's virtual memory space.
-> >=20
-> > 2. The device can gain arbitrary execution on the CPU by overwriting
-> >    control flow addresses (e.g. function pointers, stack return
-> >    addresses) in writable pages.
->=20
-> To me, SVA seems to be that "middle layer" of secure where it's not as sa=
-fe as
-> VFIO_IOMMU_MAP_DMA which has buffer level granularity of control (but of =
-course
-> we pay overhead on buffer setups and on-the-fly translations), however it=
-'s far
-> better than DMA with no IOMMU which can ruin the whole host/guest, because
-> after all we do a lot of isolations as process based.
->=20
-> IMHO it's the same as when we see a VM (or the QEMU process) as a whole a=
-long
-> with the guest code.  In some cases we don't care if the guest did some b=
-ad
-> things to mess up with its own QEMU process.  It is still ideal if we can=
- even
-> stop the guest from doing so, but when it's not easy to do it the ideal w=
-ay, we
-> just lower the requirement to not spread the influence to the host and ot=
-her
-> VMs.
+Signed-off-by means that you handled a patch.  Presumably you are the
+maintainer and hopefully you looked at the patch before applying it.
+Signed-off-by is like signing a legal document to say that you didn't
+add any Top Secrety SCO UNIXWare source code.  Reviewed-by means you
+reviewed it and approve.  Acked-by means you approve the patch which
+sort of means you are the maintainer or you care about it for some
+reason, for example, maybe there was a debate and you like the chosen
+approach.
 
-Makes sense.
-
-Stefan
-
---wq9mPyueHGvFACwf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7wqNIACgkQnKSrs4Gr
-c8hI8gf/caTxzWohWdHk0/Kop0H0CHDO065rgRJxZWIoB6f9resPUp7w3XbfOSzJ
-cSXRukN+jPVq04Wh30cOpxJKT1OvdWTr6qgEa2u8mKZPCM3tftAN6j15gum7wcm+
-LQhpJaHes/xES7VI3MbqoOtxVzxQ+kS5ve7fDxWSxVbE8fi10WGll5lx4eH+AOqC
-nWbqRXKCb67Ya4aPiW+HZrs4zxcDe0CjIPqYLsGIRhC03VbMetbzygcxa6jMvibS
-zye/aP0RQysbVYVgWlVvuGXvBwvJEDWE2d6AsRrVsXuLI2Vgstarzf0ttUxQuVRk
-gY8hL0ENtePg6Iub4OC/idFoMffoZw==
-=EiVH
------END PGP SIGNATURE-----
-
---wq9mPyueHGvFACwf--
+regards,
+dan carpenter
