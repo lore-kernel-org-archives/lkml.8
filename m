@@ -2,134 +2,125 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFC8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B290C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3A820708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA003206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tuM30VCU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EosOHdcN";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SYwnbOUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgFVJdn (ORCPT
+        id S1727088AbgFVJdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:33:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35617 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgFVJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:33:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592818421; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=vrHaCLVrBpW0c9FNy6REcSMG1UjdnzZ5O3XMh6dAXk8=;
- b=tuM30VCUdo8nXEv7zd5KHPGJtsVB9sImh0xMSrQh1Cp0UK2rMyakKGeFAaHMoswRFo2ravtU
- d3ORAohP1+QFYXx1SRuOcrckQe5j447W/8My9u5p5H9L1vVWMtnYDhgsxDilSOlIHSdQ3H2Q
- l28837UqDxDbadiR6fgszRS1gPo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ef07aed567385e8e785d7a6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:33:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8968BC433C8; Mon, 22 Jun 2020 09:33:32 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.71.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98211C433C8;
-        Mon, 22 Jun 2020 09:33:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98211C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH] soc: qcom: rpmh: Use __fill_rpmh_msg API during
- rpmh_write()
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org
-References: <1592486051-22256-1-git-send-email-mkshah@codeaurora.org>
- <159255500790.62212.11790974984337702896@swboyd.mtv.corp.google.com>
-Message-ID: <31fe6700-b7ea-6d57-0e83-75bcfb118c08@codeaurora.org>
-Date:   Mon, 22 Jun 2020 15:03:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 05:33:47 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:40050 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbgFVJdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592818424; x=1624354424;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=EosOHdcNhIQZPsarzUipZwyuwMKIsqtaOVO4Tqf620zYrHGTI+fVgCPh
+   JnBo7+al1asD+DA+H+jpjF5l5z0ECNVLe5G4Jwqw/8+5NRfL340P0RG/0
+   sfmIq0F45GoPPXXANXM3LAv7Q4KIear+MVu0aZ6mrqBEVWdO8TCRUTh+O
+   lqp0cX+TfvW2lP9r5PNilddO3J+c9fuadzQYf/LLM722v6UdQMnUhdPix
+   jxNBl0yCN7zJhhNilNbyqPBQnycp1ZLy9dZuh/FGKmYL5yGFgRBZ7jvT+
+   5R1btHUBxLwT39C9fZFUyMtgPwypoNTnbwz3rgUNlRC7rMwe0k/LqN8Bt
+   Q==;
+IronPort-SDR: td87eiWz1CCwjjWem5LNZqPOS6aBGd1pcfpPpm8JNGqEGiRHqCbyFoCgVWhjF2rKXy5JnQf8fZ
+ YMWbji+7DdvkLQp1By0q0zV1bgndyQSHGvHRkPyOtMutlk+5D/FJBmec6kEymsN/1tmLLvar+j
+ obkLOK/keTrM4A5Yi9jZvesjmB2D44Nvs3fNjK11JhwYUAkHIlELlFCx5J9MZxBaUUxpHPd6y/
+ lTSLCWiW8esaX7hIE5L5cU6873wEmAj+zUfejcPorsgCW3ecWx876ROAwQwCyyVeZCGP9ZpFyk
+ d7k=
+X-IronPort-AV: E=Sophos;i="5.75,266,1589212800"; 
+   d="scan'208";a="249799322"
+Received: from mail-bn8nam11lp2173.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.173])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2020 17:33:43 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hnVW0v0ZBkcE4gudd808xkoKznqCdaVaX0mJK8y6B9EJuIOdW3XIDNczxhCXFGoXa0vqZjUSSzbAweuFQyjjFymaeWw5V1t/Vfirw3xFH+HwCDU13CLqkRC8zgU7SCz89uZaaIDYuaT3yM4bdKiaa13ZFc5wEZEMySPbe1ilcQ6/2oOWMbtp6ofq1wb19j8MvDbw3UUpnFH+lmePvHkx6U1qxH+ARVok7paOWcP5FAWcb+Ec//BPq5VT+ccbyfQE5x9YtrYj61h6TRIJdsAa0CNTAWtpbtc7w5iIR6dM0SXHDd0SmxnvCl1MITjiE+J4aS4plfbQSLeGwEdWHxcCDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=J+7+U8OMYqIw1rLC3McO6nhp+LN8iu1LuF1m9/EvfbJ3Hjdf1EUz1IYiGVbP82IOQ0+JnH1DKNuXGBMdcDHduj+S0ODB9roIUUMX+qe98l5Gqqd3bu1Zgvo1SD6LyDh2yTLYXoQ7duHiewDp4yG/Sp2QxmALszHNiIYtRmaA+p7nSJCggQHjR71CKT71LRe4n/9NFL37lgqZRLtijqQQbm+3iq3+ZSHxp6R2ERd6Y072A4holzqXG+Aul96G1j9tzgEZmkQlim5CzKKb9/CSK1pTYqI2+7sv0LTsVU0yrljvI7SKJQBbBUOjTEAE1DSULPrsrkQjkDZvZ1zLBpOZeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=SYwnbOUYIE4qyCXGe6IEUQ/3181uomx49BK5BnuuxfFm61bACZzO1MvmJS29Nx8BWNz7FqjdiTYqN7Y5+mPDxcom1hh7UvzO+LjOiMGC4UVKJgQmXzPa0KdxEKL+xB3mX+m13S70kBCPS28sIFHJJ3sg5ewuNutxp8wwkTyl5Xw=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB5325.namprd04.prod.outlook.com
+ (2603:10b6:805:fb::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.25; Mon, 22 Jun
+ 2020 09:33:41 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 09:33:41 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 07/10] block: move block-related definitions out of fs.h
+Thread-Topic: [PATCH 07/10] block: move block-related definitions out of fs.h
+Thread-Index: AQHWRtLg+Bzh3rXpJEW1DgooscmfuA==
+Date:   Mon, 22 Jun 2020 09:33:41 +0000
+Message-ID: <SN4PR0401MB359891149C00C30AD3DAC7D59B970@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200620071644.463185-1-hch@lst.de>
+ <20200620071644.463185-8-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1597:de01:e494:6330:3987:7eb6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 486f92b4-ae5b-44d5-08bd-08d8168f59a0
+x-ms-traffictypediagnostic: SN6PR04MB5325:
+x-microsoft-antispam-prvs: <SN6PR04MB532554B2B248A70677E66DDA9B970@SN6PR04MB5325.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BYjVq/4zvsD2WrbTLssvDjjB6WvwzjgBXpHp/HUCuur/NCuQV2Qd7sRKQS8cknV9XIifOtXWLPQd8nQU9ehUgRAGsqTXKCrQhAFRKtMq3VKPl8NuO7AHfZ9tH6+n+I03mV3moxsXELNwR8y0Q6OtjVpqpo0CIdm3jYuNX/cUNzgJFuUIj+UaSSQk38fsxkQV19Hg9DevOOXRTotIJk0tEMS9BVbn0yUbCdhLbswNULOGTOPXozc8Axqg/8JK5NUr2pOnDw0eCo7TUeQQ4N0JaJTvi30pgOX8R2dLuzXonDee+s0aSXieri+t6emDMOMFYzlTXsJA0jPg2h9qPHXrxA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(396003)(346002)(136003)(39860400002)(91956017)(76116006)(66946007)(33656002)(55016002)(52536014)(4270600006)(9686003)(186003)(2906002)(8676002)(8936002)(4326008)(7696005)(54906003)(110136005)(316002)(558084003)(71200400001)(6506007)(5660300002)(64756008)(66446008)(66476007)(66556008)(86362001)(478600001)(19618925003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: UmqoOm8Lo+617HIelYNVX4UGD9wf+Yb9Bh29QCgV45jsexvYu+WzXc8p8uCYs47ZVEkV73qCqc3M8E+3ykBiY8dNwv13hkmttSs0bOXsE6diU4f4dhcqs9qasF63GtXLuUa3NLX7/0NlJTwIuxkFtHjiPfCzRCHituC6bsPeOHmsrRm9jabpL4RU6XGjjG2xdOtvV/KO9jUtUhUpdyb+6AxHBhREDNYxTIW88KoTYlvTPlzRgiPlTD+GP+pp+7QwOkl4moFajD2nTTjAUG7wWx9VqKPe/rJQjhTKDzrgr2J0NHuT+rBWQAJaFyot6imNCGz+dc7UyAX8gIJ591disZIFJZgXBG/ieWz7U3UgbCqNDS0QY4KJKqnUJm6K76KcO269r8x8EWmtiS4U+kbqAKZikry22RCRTU4TG828KV0anngvAqr/fk9E1c+yYr0NvLNKtf1bJLOr5K51Em/dO+45HmmkkHKqs6x3InFZKx6xMUWkseZoWXVwBTgvmq1U+FENf1xTB4YIn0cMZl7mK1BzuA/Z+VhQSuYqe/UqjMMs+MIe/aTMitwVRYJbcpD9
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <159255500790.62212.11790974984337702896@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 486f92b4-ae5b-44d5-08bd-08d8168f59a0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 09:33:41.1916
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8LuK4huvsq66S5GsLpS+8Br3ctYLr1e8IcMawVjBoRQvZIYwbthpixSdPSn8T1aRQG+dLjCiNfgo7oCFb968qn7rfAdD4X1gSww0PA00UU4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5325
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/19/2020 1:53 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-06-18 06:14:11)
->> Use __fill_rpmh_msg API during rpmh_write(). This allows to
->> remove duplication of code in error checking, copying commands
->> and setting message state.
->>
->> Signed-off-by: Maulik Shah<mkshah@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 12 +++---------
->>   1 file changed, 3 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index f2b5b46c..a0a0b97 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -181,8 +181,6 @@ static int __rpmh_write(const struct device *dev, enum rpmh_state state,
->>          struct cache_req *req;
->>          int i;
->>   
->> -       rpm_msg->msg.state = state;
->> -
->>          /* Cache the request in our store and link the payload */
->>          for (i = 0; i < rpm_msg->msg.num_cmds; i++) {
->>                  req = cache_rpm_request(ctrlr, state, &rpm_msg->msg.cmds[i]);
->> @@ -190,8 +188,6 @@ static int __rpmh_write(const struct device *dev, enum rpmh_state state,
->>                          return PTR_ERR(req);
->>          }
->>   
->> -       rpm_msg->msg.state = state;
->> -
->>          if (state == RPMH_ACTIVE_ONLY_STATE) {
->>                  WARN_ON(irqs_disabled());
->>                  ret = rpmh_rsc_send_data(ctrlr_to_drv(ctrlr), &rpm_msg->msg);
-> Were these two hunks just nonsense assignments to rpm_msg->msg.state?
-
-yes, using  __fill_rpmh_msg() and DEFINE_RPMH_MSG_ONSTACK takes care of 
-setting this.
-
-Thanks,
-Maulik
-
->
->> @@ -268,11 +264,9 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
->>          DEFINE_RPMH_MSG_ONSTACK(dev, state, &compl, rpm_msg);
->>          int ret;
->>   
->> -       if (!cmd || !n || n > MAX_RPMH_PAYLOAD)
->> -               return -EINVAL;
->> -
->> -       memcpy(rpm_msg.cmd, cmd, n * sizeof(*cmd));
->> -       rpm_msg.msg.num_cmds = n;
->> +       ret = __fill_rpmh_msg(&rpm_msg, state, cmd, n);
->> +       if (ret)
->> +               return ret;
-> This part makes sense and is discussed in the commit text.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
