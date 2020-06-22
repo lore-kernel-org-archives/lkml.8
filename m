@@ -2,119 +2,146 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA20C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D826A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09212071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxbhIJef"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="ZN/h8BfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgFVOhN (ORCPT
+        id S1729049AbgFVOjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:37:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30914 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729421AbgFVOhM (ORCPT
+        Mon, 22 Jun 2020 10:39:41 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:60122 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728293AbgFVOjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:37:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592836631;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rhaA+I0JFMBynaEViVLcWDggNAbJpIVf0sPk39R0QYE=;
-        b=CxbhIJefeK3bdc/WWmnlvyaf6C0IoQgUcZghuuGvriXly0fWvDUNcPeUHHOKJKxtD7wb3L
-        Rv4ZZq7luH4TPs0dBDHrsQKKl445CidVt8NCz0CCqh+GpCB70anyVr2EldKSaqZlqR6kkw
-        sIrPw12Ifx0RRpEw1vR+bdd6u1bXPJY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-490-iB9V-ThKMAuTj8PJhdwxHw-1; Mon, 22 Jun 2020 10:37:09 -0400
-X-MC-Unique: iB9V-ThKMAuTj8PJhdwxHw-1
-Received: by mail-wm1-f72.google.com with SMTP id a18so6872035wmm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rhaA+I0JFMBynaEViVLcWDggNAbJpIVf0sPk39R0QYE=;
-        b=jtRMJ3AVj1FVbAmPmU6a1uKkoNEWP4SqinkkG2yP4H01jZd2ggcFo3mzffnrnbZrog
-         QTyzp/XiYe7I7tURaAFuBLtjdHTMzEDAUNi+GjX8u1+pT9oiiU6+5eFPfWaGa0haUMb3
-         udbqtas99388Gqk8Lw/a/eysgIFGDQp//5fFA+eplpYVNZiB+gJpfXc4XSwgyQ0B+Wd6
-         +Rd2Zo4avnpCZNWy9rkO8EPdHyFD4wLGJTbtS06+NOx+M9UUGaapDcj6antGnAjG0fCz
-         T5Kcy2BqDu1hm9OneK6WQQWYpcwPs6Tqa1SWWtgDoEMb/FLl2wwzVIWP7cBNVVORdg/J
-         HUkw==
-X-Gm-Message-State: AOAM533wQ4O2i0kSWRQPLN21C1wnxPL7u+eFlaB1LqTPIxGOM8TEPo/T
-        nMADX1bd/Ip18cLeWys28rTpcEevaEmcEjL/XROBfh74cv/iHKSrO9NEruk8n0wpP6C91jzMJeQ
-        7wXrsHT4B9rY/opVNEkwy/7QG
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr19095316wmo.139.1592836627931;
-        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJztqu1oKbzSSjrl7L3+QyPP72A21fy7XJuosE7miCXFYthUAfyXzD1V8PIxlT2RSA76DOqswg==
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr19095292wmo.139.1592836627759;
-        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
-        by smtp.gmail.com with ESMTPSA id w7sm12908477wmc.32.2020.06.22.07.37.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
-Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
-To:     Igor Mammedov <imammedo@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
- <20200619143626.1b326566@redhat.com>
- <3e025538-297b-74e5-f1b1-2193b614978b@redhat.com>
- <20200622002637.33358827@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cc8b429e-74dd-70f1-8f1c-8893a5485e76@redhat.com>
-Date:   Mon, 22 Jun 2020 16:37:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200622002637.33358827@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Jun 2020 10:39:40 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MEWIkN017799;
+        Mon, 22 Jun 2020 10:39:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=Zmo24u4p/1crh0ITR00I5bmHid3/aReF1yBHjLYrIC0=;
+ b=ZN/h8BfLejs+wYCWuDXYGbYLQgMT4o2yI/K8a3VxavFeoDjWxGnjymLelo0zpe4iy3gk
+ NRjN13+D5vFCk1qpaAutme682B7P7fnm92mPKfDAdr6bYkCKJQ0Ebd6XFGUNyIpZmL6E
+ 0GDQtQsHrXv0iYTzXPOznVtGccu0MsqFPTNgMM9DSrrxz8VQF8RNsUiC6zk3QpdNLwsC
+ rql24wm7XNBwDEEhvxybgnr/2TFBfXb8YP2zLFgBLNm8LH03zN+ehhh032462E0hmOTq
+ bSPkfzv9s60tPZnP7j37+BSLKSZoVNFv0E8t01BlJEoStu3rSt/hZxC5uQwRiSdsK5zc ug== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 31sdkwvxrp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 10:39:40 -0400
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MEYW5k147525;
+        Mon, 22 Jun 2020 10:39:39 -0400
+Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
+        by mx0a-00154901.pphosted.com with ESMTP id 31sd3e9kmb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 10:39:39 -0400
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="561518633"
+From:   <Mario.Limonciello@dell.com>
+To:     <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
+        <mika.westerberg@linux.intel.com>, <YehezkelShB@gmail.com>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/2] Allow breaking up Thunderbolt/USB4 updates
+Thread-Topic: [PATCH 0/2] Allow breaking up Thunderbolt/USB4 updates
+Thread-Index: AQHWSKG0WEYrvhtkREWS32dBR5sml6jktGsQ
+Date:   Mon, 22 Jun 2020 14:39:36 +0000
+Message-ID: <40e7c39346244df283859ffa90e26a0d@AUSX13MPC105.AMER.DELL.COM>
+References: <20200622143035.25327-1-mario.limonciello@dell.com>
+In-Reply-To: <20200622143035.25327-1-mario.limonciello@dell.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-22T14:39:30.6035426Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f8f769ef-5cb1-4710-9355-eee5b8f64610;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_08:2020-06-22,2020-06-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ cotscore=-2147483648 malwarescore=0 phishscore=0 suspectscore=0
+ impostorscore=0 clxscore=1011 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220111
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006220111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/06/20 00:26, Igor Mammedov wrote:
-> 
-> following sequence looks like a race that can cause lost map update events:
-> 
->          cpu1                            cpu2
->                              
->                                 apic_map_dirty = true     
->   ------------------------------------------------------------   
->                                 kvm_recalculate_apic_map:
->                                      pass check
->                                          mutex_lock(&kvm->arch.apic_map_lock);
->                                          if (!kvm->arch.apic_map_dirty)
->                                      and in process of updating map
->   -------------------------------------------------------------
->     other calls to
->        apic_map_dirty = true         might be too late for affected cpu
->   -------------------------------------------------------------
->                                      apic_map_dirty = false
->   -------------------------------------------------------------
->     kvm_recalculate_apic_map:
->     bail out on
->       if (!kvm->arch.apic_map_dirty)
+> -----Original Message-----
+> From: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Sent: Monday, June 22, 2020 9:31 AM
+> To: Andreas Noever; Michael Jamet; Mika Westerberg; Yehezkel Bernat
+> Cc: linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello,
+> Mario
+> Subject: [PATCH 0/2] Allow breaking up Thunderbolt/USB4 updates
+>=20
+> Currently updates to Thunderbolt and USB4 controllers are fully atomic
+> actions. When writing into the non-active NVM nothing gets flushed to
+> the hardware until authenticate is sent.
+>=20
+> There has been some desire to improve the perceived performance of these
+> updates, particularly for userland that may perform the update upon
+> a performance sensitive time like logging out.
+>=20
+> So allow userland to flush the image to hardware at runtime, and then
+> allow authenticating the image at another time.
+>=20
+> For the Dell WD19TB some specific hardware capability exists that allows
+> extending this to automatically complete the update when unplugged.
+> Export that functionality to userspace as well.
+>=20
+> This patch series is done relative thunderbolt.git/next.
+>=20
+> Mario Limonciello (2):
+>   thunderbolt: Add support for separating the flush to SPI and
+>     authenticate
+>   thunderbolt: Add support for authenticate on disconnect
+>=20
+>  .../ABI/testing/sysfs-bus-thunderbolt         | 24 +++++-
+>  drivers/thunderbolt/Makefile                  |  1 +
+>  drivers/thunderbolt/eeprom.c                  |  2 +
+>  drivers/thunderbolt/lc.c                      | 14 ++++
+>  drivers/thunderbolt/quirks.c                  | 38 +++++++++
+>  drivers/thunderbolt/switch.c                  | 81 +++++++++++++++----
+>  drivers/thunderbolt/tb-quirks.h               | 16 ++++
+>  drivers/thunderbolt/tb.h                      |  4 +
+>  drivers/thunderbolt/tb_regs.h                 |  1 +
+>  9 files changed, 162 insertions(+), 19 deletions(-)
+>  create mode 100644 drivers/thunderbolt/quirks.c
+>  create mode 100644 drivers/thunderbolt/tb-quirks.h
+>=20
+> --
+> 2.25.1
 
-I will post a fix for that.  Thanks for the analysis!
-
-Paolo
+Just to connect the dots, here is the matching userspace changes for this
+change: https://github.com/fwupd/fwupd/pull/2204
 
