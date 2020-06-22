@@ -2,159 +2,67 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A589C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC5220767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592866438;
-	bh=aniZpcUjMLL1QVC8MdE4cj/DV6qxXRy9tU6pZJwm1U8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=CsexlHa97kPZSTs7KKRrioEo43YL5QHjHDjCs2VfmFf34o9hG10IQguNclKivEfAD
-	 x60LGYDe7GO6IGgFXniE5Df4FJu/OhGTMeVqjtyiJzmh7XYRLxwp29v8XIi1XCfh2W
-	 AlKC1D0YPJyTOgxr3PEVgmB+SG1xmdjITyjjmRuo=
+	by mail.kernel.org (Postfix) with ESMTP id 347E820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgFVWx5 (ORCPT
+        id S1731260AbgFVWyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbgFVWx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:53:56 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED3720738;
-        Mon, 22 Jun 2020 22:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592866436;
-        bh=aniZpcUjMLL1QVC8MdE4cj/DV6qxXRy9tU6pZJwm1U8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=dre2VRTHReSnQKn+Uw94A0GlJc3bXOZKkXpB7UtE/cAT7AOE83lUuFXpbq7V0msNV
-         D0sprullDl5w6gObAHJc2wQqFc4ckZ/ybV5u36AzOQY/gakBd5bPHw8F8cRFztfi0/
-         7Q/jggMpzehAw6GyNhMtwDrjT0Qe9n+8rMyVdr44=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5778A352306A; Mon, 22 Jun 2020 15:53:56 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 15:53:56 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/tree: Force quiescent state on callback overload
-Message-ID: <20200622225356.GT9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <1592764647-2452-1-git-send-email-neeraju@codeaurora.org>
- <20200621195052.GF9247@paulmck-ThinkPad-P72>
- <94686c2e-b589-2598-e658-42f13cec1216@codeaurora.org>
- <20200622031325.GG9247@paulmck-ThinkPad-P72>
- <b72302b1-f49a-84fb-6bb9-75dd5f16bd2c@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b72302b1-f49a-84fb-6bb9-75dd5f16bd2c@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 22 Jun 2020 18:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbgFVWyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:54:52 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AA6C061573;
+        Mon, 22 Jun 2020 15:54:52 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A9FA41296CF90;
+        Mon, 22 Jun 2020 15:54:51 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 15:54:50 -0700 (PDT)
+Message-Id: <20200622.155450.499971025775558599.davem@davemloft.net>
+To:     noodles@earth.li
+Cc:     linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
+        olteanv@gmail.com, vivien.didelot@gmail.com, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 0/3] net: dsa: qca8k: Improve SGMII
+ interface handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1592648711.git.noodles@earth.li>
+References: <cover.1591816172.git.noodles@earth.li>
+        <cover.1592648711.git.noodles@earth.li>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 22 Jun 2020 15:54:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 09:16:24AM +0530, Neeraj Upadhyay wrote:
-> Hi Paul,
+From: Jonathan McDowell <noodles@earth.li>
+Date: Sat, 20 Jun 2020 11:30:03 +0100
+
+> This 3 patch series migrates the qca8k switch driver over to PHYLINK,
+> and then adds the SGMII clean-ups (i.e. the missing initialisation) on
+> top of that as a second patch. The final patch is a simple spelling fix
+> in a comment.
 > 
-> On 6/22/2020 8:43 AM, Paul E. McKenney wrote:
-> > On Mon, Jun 22, 2020 at 01:30:31AM +0530, Neeraj Upadhyay wrote:
-> > > Hi Paul,
-> > > 
-> > > On 6/22/2020 1:20 AM, Paul E. McKenney wrote:
-> > > > On Mon, Jun 22, 2020 at 12:07:27AM +0530, Neeraj Upadhyay wrote:
-> > > > > On callback overload, we want to force quiescent state immediately,
-> > > > > for the first and second fqs. Enforce the same, by including
-> > > > > RCU_GP_FLAG_OVLD flag, in fqsstart check.
-> > > > > 
-> > > > > Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> > > > 
-> > > > Good catch!
-> > > > 
-> > > > But what did you do to verify that this change does the right thing?
-> > > > 
-> > > > 						Thanx, Paul
-> > > > 
-> > > 
-> > > I haven't done a runtime verification of this code path; I posted this,
-> > > based on review of this code.
-> > 
-> > My concern is that under overload, the FQS scans would happen continuously
-> > rather than accelerating only the first such scan in a given grace period.
-> > This would of course result in a CPU-bound grace-period kthread, which
-> > users might not be all that happy with.
-> > 
-> > Or am I missing something subtle that prevents this?
-> 
-> Looks like under overload, only the first and second scans are accelerated?
-> 
->     gf = 0;
->     if (first_gp_fqs) {
->          first_gp_fqs = false;
->           gf = rcu_state.cbovld ? RCU_GP_FLAG_OVLD : 0;
->     }
+> As before, tested with a device where the CPU connection is RGMII (i.e.
+> the common current use case) + one where the CPU connection is SGMII. I
+> don't have any devices where the SGMII interface is brought out to
+> something other than the CPU.
+ ...
 
-Very good, it does sound like you understand this, and it matches my
-analysis and passes light testing, so I queued this one.  I did improve
-the commit log, please check below.  The added detail is helpful to people
-(including ourselves, by the way) who might need to look at this commit
-some time in the future.
-
-If you have an x86 system lying around, running rcutorture is quite
-straightforward.  Non-x86 systems can also run rcutorture, if nothing
-else by using modprobe and rmmod as described here:
-
-https://paulmck.livejournal.com/57769.html
-
-The scripting described in the latter part of this document has worked
-on ARMv8 and PowerPC, and might still work for all I know.
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 9482524d7dd0aea5d32a6efa2979223eea07c029
-Author: Neeraj Upadhyay <neeraju@codeaurora.org>
-Date:   Mon Jun 22 00:07:27 2020 +0530
-
-    rcu/tree: Force quiescent state on callback overload
-    
-    On callback overload, it is necessary to quickly detect idle CPUs,
-    and rcu_gp_fqs_check_wake() checks for this condition.  Unfortunately,
-    the code following the call to this function does not repeat this check,
-    which means that in reality no actual quiescent-state forcing, instead
-    only a couple of quick and pointless wakeups at the beginning of the
-    grace period.
-    
-    This commit therefore adds a check for the RCU_GP_FLAG_OVLD flag in
-    the post-wakeup "if" statement in rcu_gp_fqs_loop().
-    
-    Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d0988a1..6226bfb 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1865,7 +1865,7 @@ static void rcu_gp_fqs_loop(void)
- 			break;
- 		/* If time for quiescent-state forcing, do it. */
- 		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
--		    (gf & RCU_GP_FLAG_FQS)) {
-+		    (gf & (RCU_GP_FLAG_FQS | RCU_GP_FLAG_OVLD))) {
- 			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
- 					       TPS("fqsstart"));
- 			rcu_gp_fqs(first_gp_fqs);
+Series applied, thanks.
