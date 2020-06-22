@@ -2,153 +2,91 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8892C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5270C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC4A206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46DC20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEGUuJhL"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GJaZfJ6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFVIk0 (ORCPT
+        id S1726687AbgFVImC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgFVIkZ (ORCPT
+        Mon, 22 Jun 2020 04:42:02 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:4189 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgFVImB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:40:25 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00B6C061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:40:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id x18so18287688lji.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:40:24 -0700 (PDT)
+        Mon, 22 Jun 2020 04:42:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hFeVIaukde5cEJYosI/nKt2dPH3w8UvOLbWUnlXHsBU=;
-        b=iEGUuJhLh3+NwbCNxjkkRe9EVuTa6QWYy1pemvrk9YZZt2QLagctJEfbVbcJm3GNqL
-         XdU1vFbZpQJ9MY0yMrL+JM4jrBltzKfZAMow7TO4U8iz6WgaI8qShnkMrXigDZZFvxFD
-         RBeIyRDTs+ycv/eO6kZtT1jPgvH7GJzZTAARh2+PpD0kHr0BSQrlEMwIN/jE38mW6Pmo
-         YWEGWjwW5DsbhEW7jBaTCQuGWx+25ofFPoeJ2n7vJPcWvNpCNABDJHi4v2Mken1RB6r6
-         C9kML6zezbYAd/Hnqn1IPXNudHg0e+N4TYUl/2iU8PsJJWpYOTULbYAMymthaJOFfY7R
-         idaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hFeVIaukde5cEJYosI/nKt2dPH3w8UvOLbWUnlXHsBU=;
-        b=nsrSdAlW/a6kO+li1a2fj30MN/ZARPH5X+jNL2wm1pFuazG3AXo/0Ziidggm+os/hs
-         91kgRq/XTTTNOFCeuFW/WD/7CGzsQ0ky0CfrJuLkb9O5AC7uQh1sP+T7BELRW6jlVDfq
-         zA7WipDuZpjI075mm5cE5EvMdteRb4GIkAKfHCiEF5M27xajkNHew94FWwJxAY7fbhX/
-         1UrZhA5Ov6LbvdQw+qBf7W1RFQO0idH2fv74+OK0x+D6BX7EDEhZDtosyj9gwz4yLF7X
-         zF7Rz/HJVbGQ4rhpSl1hNoxB5R5xWJs5T5STQFI9App8H5lfIphlwMaqhjcA675nrMEH
-         c+WA==
-X-Gm-Message-State: AOAM532WwKflVOHYByW6PFvpB1BchNSdtTuRdm0hrigj+npgiOQM9O4I
-        8R02dtSHfhN124NHgwyxeSfePQfgS6P6ha1U1af+Ow==
-X-Google-Smtp-Source: ABdhPJwBhI+o3WaB0VdNYziKJq6W2qVP2mYiDJ3QR8uHR3AWB7nuaFJazUewFMpxfNUCL74ZyOyKvTbpGiVkpD6bBkQ=
-X-Received: by 2002:a2e:9786:: with SMTP id y6mr7668442lji.398.1592815222900;
- Mon, 22 Jun 2020 01:40:22 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592815321; x=1624351321;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=bDBhDASndCFdLhA1woS5qYKbtV6npIX+L7kI/58fy6M=;
+  b=GJaZfJ6eFMfiy/JGe0vV5ML/4XnwRrxJ5zQcDngUmDvAc4sYxFizeyww
+   5GVI5a3skPDPjtM60gSQd1p+SelMmmiHWgmDGTyZruf6jrSYYfqGQhJz2
+   c+slx/E0g46KjhmW+rMsrNXywOuUmCnYHvhQbY70LeBskVX8/7XV3tfbr
+   8=;
+IronPort-SDR: W6PmXrHLovpVsVBXXkGR3b82z73kUkl1FEX62PXTMAccOjvEwZkTeKRMG69aWqwsnqAMBt/97u
+ 3BkkV1qxmNJw==
+X-IronPort-AV: E=Sophos;i="5.75,266,1589241600"; 
+   d="scan'208";a="37563011"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 22 Jun 2020 08:41:51 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id CE3B0A1CC4;
+        Mon, 22 Jun 2020 08:41:48 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 22 Jun 2020 08:41:48 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.34) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 22 Jun 2020 08:41:15 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <david@redhat.com>, <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v16 00/14] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 22 Jun 2020 10:40:54 +0200
+Message-ID: <20200622084054.23445-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200615161927.12637-1-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-References: <cover.1591684754.git.amit.kucheria@linaro.org>
- <bf5ca7777fbb6f5e2d374a9a72d1e17d485bd8ea.1591684754.git.amit.kucheria@linaro.org>
- <20200621071841.GF128451@builder.lan>
-In-Reply-To: <20200621071841.GF128451@builder.lan>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 22 Jun 2020 14:10:11 +0530
-Message-ID: <CAP245DWL0zRuV1LXq-FqMPX3BUFqLWwMFZpGrtr+Tg7SccQctw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm8250: Add thermal zones and
- throttling support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D34UWA001.ant.amazon.com (10.43.160.173) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 12:51 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 08 Jun 23:44 PDT 2020, Amit Kucheria wrote:
->
-> > sm8250 has 24 thermal sensors split across two tsens controllers. Add
-> > the thermal zones to expose them and wireup the cpus to throttle on
-> > crossing passive temperature thresholds.
-> >
-> > Update the comment in the drivers to list the SoCs it supports.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sm8250.dtsi | 766 +++++++++++++++++++++++++++
-> >  drivers/thermal/qcom/tsens-v2.c      |   2 +-
-> >  2 files changed, 767 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> > index deaa8415c7b72..5cd18cd8a675b 100644
-> > --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> > @@ -8,6 +8,7 @@
-> >  #include <dt-bindings/clock/qcom,rpmh.h>
-> >  #include <dt-bindings/power/qcom-rpmpd.h>
-> >  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >       interrupt-parent = <&intc>;
-> > @@ -86,6 +87,7 @@ CPU0: cpu@0 {
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> >                       qcom,freq-domain = <&cpufreq_hw 0>;
-> > +                     #cooling-cells = <2>;
->
-> This doesn't apply to linux-next.
->
-> The problem seems to be that, as pointed out when I submitted that
-> patch, the previously anonymous "cpufreq hardware" is now replaced by
-> the "EPSS" hardware block.
+Last week, this patchset received 5 'Reviewed-by' tags, but no further comments
+for changes.  I updated the documentation, but the change is only small.  For
+the reason, I'm only asking more reviews rather than posting the whole series
+again.  Any comment is welcome.
 
-I'll take a look.
 
-> So we need a new driver (or update the existing one) to support this new
-> hardware block.
->
-> Presumably though, without this there's not much cooling anyways - which
-> is sad, as your patch looks good.
->
-> >                       L2_0: l2-cache {
-> >                             compatible = "cache";
-> >                             next-level-cache = <&L3_0>;
-> [..]
-> > diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-> > index b293ed32174b5..58cac8f2a358c 100644
-> > --- a/drivers/thermal/qcom/tsens-v2.c
-> > +++ b/drivers/thermal/qcom/tsens-v2.c
-> > @@ -26,7 +26,7 @@
-> >  #define TM_TRDY_OFF                  0x00e4
-> >  #define TM_WDOG_LOG_OFF              0x013c
-> >
-> > -/* v2.x: 8996, 8998, sdm845 */
-> > +/* v2.x: 8996, 8998, sc7180, sdm845, sm8150, sm8250 */
->
-> Even though it's trivial, can you please send this through the tsens
-> tree instead, so we don't end up having unnecessary merge conflicts.
->
-
-Will do. Thanks for the review.
+Thanks,
+SeongJae Park
