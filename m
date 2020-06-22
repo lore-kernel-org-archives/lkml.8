@@ -2,112 +2,185 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2608520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CF82073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rUqHnhOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgFVV1w (ORCPT
+        id S1730609AbgFVV3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:27:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730430AbgFVV1v (ORCPT
+        Mon, 22 Jun 2020 17:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730568AbgFVV3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:27:51 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ML3LJE051171;
-        Mon, 22 Jun 2020 17:27:42 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tytdrh1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 17:27:42 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05ML3OqY051672;
-        Mon, 22 Jun 2020 17:27:41 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tytdrh04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 17:27:41 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MLG4GP018854;
-        Mon, 22 Jun 2020 21:27:40 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma05wdc.us.ibm.com with ESMTP id 31sa38jkd0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 21:27:40 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MLRdxr49742266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 21:27:39 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88FA96A04F;
-        Mon, 22 Jun 2020 21:27:39 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBA316A047;
-        Mon, 22 Jun 2020 21:27:38 +0000 (GMT)
-Received: from [9.211.67.55] (unknown [9.211.67.55])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 21:27:38 +0000 (GMT)
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>, Ian Kent <raven@themaw.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
- <20200622174845.GB13061@mtj.duckdns.org> <20200622180306.GA1917323@kroah.com>
-From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Message-ID: <f9106e08-069d-1e58-96b1-6c63d2c62c16@linux.vnet.ibm.com>
-Date:   Mon, 22 Jun 2020 14:27:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 17:29:09 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8A7C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:29:07 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k15so3473923lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=umdWjH1ky+XmZZj0sm8b6f6B8XCVb8FTSoaNh4N336Y=;
+        b=rUqHnhObUca52Ets+8Fc+3aHjatnCWxqYD8OVOF3UfR6z5eh4yI3+b/i1CmYPXZhnu
+         ZjQ/0AZYcCZCZ+8mFv7NUCaX+H94Uvz0A8WPwCrw2oF1QuzMhigtABomWAZN4vMMn/WB
+         iM2slPaQvce+bUMlBGEyIPf1qUUI7+hNeH755x1Lub1WxaWcLdJmrjY+zNoqxFMVbRTY
+         5TZMO7fLQ2Z69Xg1Nm0PWDLhxZOLhyFEEd062QJ7+Wvk7JSYQP/eDu5x7TfzSHlFOXHZ
+         eY1+w+K4cp3Uz7xoQzXPEocD+Dxl3OsZHr0DV3s7K21R+lP+7b+2wFucveD8wYDZGKF4
+         oGKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=umdWjH1ky+XmZZj0sm8b6f6B8XCVb8FTSoaNh4N336Y=;
+        b=rz7G40j64+b0GgLDToXRvx85HIYCncZV+Xj3wwE8Ktv2YoRrx5pDUaSip3zH44s9hO
+         LL8Fq1qW8RvZ/KfiDt5KuPrgB8Yt92yyi1cQH+JBDPVsoTpCWeViYxAd/8CTeCO0D+8+
+         74R1bs1qNa4hYzxvaePMPF5hphmjpF+K8D5IdRzbvjy/M60t42tcuf8qMmOkYbIlBekO
+         2jcXO8+PndNWffQW/fKG+qhPpZcFtlGimpe7v/ld08CNg126vNNNlAGBL+KMdZCCpQt4
+         vC4TBLU3OU1kuwfED+POC8Za5iNqHsSI2uzrMqvtmJU1UZ8GGPaAMKwWVkC6CXKfMuBd
+         9hSQ==
+X-Gm-Message-State: AOAM533RtgXcuWzln4djBcsYYglWbOHsNLTqCuxdfkVcfRJqryDxliTx
+        wvOvyqcyC7Y9kxpus6JJaBtQAmHRmJRSdQrooYAAgQ==
+X-Google-Smtp-Source: ABdhPJy3nOR0wjchd+j1NHjop2IkMr3XrhTqYeEOyjbug3rDK3yReNMgtsM1uZTpzmtzwrYjZlH3mwndQC12cbTUYdA=
+X-Received: by 2002:a19:4301:: with SMTP id q1mr10843586lfa.96.1592861345936;
+ Mon, 22 Jun 2020 14:29:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200622180306.GA1917323@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_12:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 malwarescore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220137
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-18-guro@fb.com>
+ <CALvZod5NCCpt2rkyXXr69OnVXb9ew7875vAV=iWZdqJhXcKEWQ@mail.gmail.com>
+ <20200622203739.GD301338@carbon.dhcp.thefacebook.com> <CALvZod5powO1Zph0+iO+=gtNb7=MQqfHwYkdb-+PkaVCGhuf=g@mail.gmail.com>
+ <20200622211356.GF301338@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200622211356.GF301338@carbon.dhcp.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 14:28:54 -0700
+Message-ID: <CALvZod4aEgbP-CPd3=dC3922SGiYBdEMCm_tsGt5xZUx1ekTDQ@mail.gmail.com>
+Subject: Re: [PATCH v6 17/19] mm: memcg/slab: use a single set of kmem_caches
+ for all allocations
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 2:15 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Mon, Jun 22, 2020 at 02:04:29PM -0700, Shakeel Butt wrote:
+> > On Mon, Jun 22, 2020 at 1:37 PM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > On Mon, Jun 22, 2020 at 12:21:28PM -0700, Shakeel Butt wrote:
+> > > > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+> > > > >
+> > > > > Instead of having two sets of kmem_caches: one for system-wide and
+> > > > > non-accounted allocations and the second one shared by all accounted
+> > > > > allocations, we can use just one.
+> > > > >
+> > > > > The idea is simple: space for obj_cgroup metadata can be allocated
+> > > > > on demand and filled only for accounted allocations.
+> > > > >
+> > > > > It allows to remove a bunch of code which is required to handle
+> > > > > kmem_cache clones for accounted allocations. There is no more need
+> > > > > to create them, accumulate statistics, propagate attributes, etc.
+> > > > > It's a quite significant simplification.
+> > > > >
+> > > > > Also, because the total number of slab_caches is reduced almost twice
+> > > > > (not all kmem_caches have a memcg clone), some additional memory
+> > > > > savings are expected. On my devvm it additionally saves about 3.5%
+> > > > > of slab memory.
+> > > > >
+> > > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > > > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> > > > > ---
+> > > > [snip]
+> > > > >  static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+> > > > >                                               struct obj_cgroup *objcg,
+> > > > > -                                             size_t size, void **p)
+> > > > > +                                             gfp_t flags, size_t size,
+> > > > > +                                             void **p)
+> > > > >  {
+> > > > >         struct page *page;
+> > > > >         unsigned long off;
+> > > > >         size_t i;
+> > > > >
+> > > > > +       if (!objcg)
+> > > > > +               return;
+> > > > > +
+> > > > > +       flags &= ~__GFP_ACCOUNT;
+> > > > >         for (i = 0; i < size; i++) {
+> > > > >                 if (likely(p[i])) {
+> > > > >                         page = virt_to_head_page(p[i]);
+> > > > > +
+> > > > > +                       if (!page_has_obj_cgroups(page) &&
+> > > >
+> > > > The page is already linked into the kmem_cache, don't you need
+> > > > synchronization for memcg_alloc_page_obj_cgroups().
+> > >
+> > > Hm, yes, in theory we need it. I guess the reason behind why I've never seen any issues
+> > > here is the SLUB percpu partial list.
+> > >
+> > > So in theory we need something like:
+> > >
+> > > diff --git a/mm/slab.h b/mm/slab.h
+> > > index 0a31600a0f5c..44bf57815816 100644
+> > > --- a/mm/slab.h
+> > > +++ b/mm/slab.h
+> > > @@ -237,7 +237,10 @@ static inline int memcg_alloc_page_obj_cgroups(struct page *page,
+> > >         if (!vec)
+> > >                 return -ENOMEM;
+> > >
+> > > -       page->obj_cgroups = (struct obj_cgroup **) ((unsigned long)vec | 0x1UL);
+> > > +       if (cmpxchg(&page->obj_cgroups, 0,
+> > > +                   (struct obj_cgroup **) ((unsigned long)vec | 0x1UL)))
+> > > +               kfree(vec);
+> > > +
+> > >         return 0;
+> > >  }
+> > >
+> > >
+> > > But I wonder if we might put it under #ifdef CONFIG_SLAB?
+> > > Or any other ideas how to make it less expensive?
+> > >
+> > > > What's the reason to remove this from charge_slab_page()?
+> > >
+> > > Because at charge_slab_page() we don't know if we'll ever need
+> > > page->obj_cgroups. Some caches might have only few or even zero
+> > > accounted objects.
+> > >
+> >
+> > If slab_pre_alloc_hook() returns a non-NULL objcg then we definitely
+> > need page->obj_cgroups.  The charge_slab_page() happens between
+> > slab_pre_alloc_hook() & slab_post_alloc_hook(), so, we should be able
+> > to tell if page->obj_cgroups is needed.
+>
+> Yes, but the opposite is not always true: we can reuse the existing page
+> without allocated page->obj_cgroups. In this case charge_slab_page() is
+> not involved at all.
+>
 
-On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
+Hmm yeah, you are right. I missed that.
 
-> It should be obvious that representing each consecutive memory range with a
-> separate directory entry is far from an optimal way of representing
-> something like this. It's outright silly.
+>
+> Or do you mean that we can minimize the amount of required synchronization
+> by allocating some obj_cgroups vectors from charge_slab_page()?
 
-On 6/22/20 11:03 AM, Greg Kroah-Hartman wrote:
-
-> I agree.  And again, Ian, you are just "kicking the problem down the
-> road" if we accept these patches.  Please fix this up properly so that
-> this interface is correctly fixed to not do looney things like this.
-
-Given that we cannot change the underlying machine representation of this hardware, what do you (all, not just you Greg) consider to be "properly"?
-
-Rick
-
+One optimization would be to always pre-allocate page->obj_cgroups for
+kmem_caches with SLAB_ACCOUNT.
