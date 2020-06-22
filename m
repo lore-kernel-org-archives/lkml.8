@@ -2,139 +2,120 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE77C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5195C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1121D20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="FPuGjfk1"
+	by mail.kernel.org (Postfix) with ESMTP id B09BC20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgFVQHs (ORCPT
+        id S1729597AbgFVQIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:07:48 -0400
-Received: from mout.web.de ([212.227.15.14]:41081 "EHLO mout.web.de"
+        Mon, 22 Jun 2020 12:08:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:49234 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgFVQHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:07:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592842025;
-        bh=euiTs9Vlme+/DBX3W6t9oQp+oD5eiCyynyHj9yaGmUc=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=FPuGjfk1nmdT1AozUfprjwsqHojo8YqKpaEbckNH1v+EJpRtqX9p0M7a/MX0ORO1J
-         xjFzBkiHYvxbilLvcuO7Kcl5X+Lx5HWKiodMid3GnThu4SdDksS34oAzigO3YSWZ/G
-         fRp3hpTrwP9EXifGIXS9drteNbdyCpn0OfQVmEGo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.69.81]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MVtmK-1jKlEX1pyi-00X4kv; Mon, 22
- Jun 2020 18:07:05 +0200
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_mqs: Fix unchecked return value for
- clk_prepare_enable
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3eab889e-75b6-6287-a668-a2eaa509834c@web.de>
-Date:   Mon, 22 Jun 2020 18:07:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1726328AbgFVQIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:08:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF4DA31B;
+        Mon, 22 Jun 2020 09:08:03 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CA053F71E;
+        Mon, 22 Jun 2020 09:07:55 -0700 (PDT)
+Subject: Re: [PATCH v2] dma-pool: Fix too large DMA pools on medium systems
+To:     David Rientjes <rientjes@google.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200608132217.29945-1-geert@linux-m68k.org>
+ <20200620200936.GA106151@roeck-us.net>
+ <CAMuHMdX3mBDm9iHk+jhbGfmo+dbix=3tp5z2ewyddWxM1tdqGQ@mail.gmail.com>
+ <c0889f5c-34ae-2314-6530-a9240e0901f2@roeck-us.net>
+ <alpine.DEB.2.22.394.2006211308500.195301@chino.kir.corp.google.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1287bffd-3363-0764-0309-32222b2b8c9a@arm.com>
+Date:   Mon, 22 Jun 2020 17:07:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <alpine.DEB.2.22.394.2006211308500.195301@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
-X-Provags-ID: V03:K1:mdhL/0f5+V25v2dpHQoNdD4QBj3iePUzzgiygJmbHDdjOrwPGcI
- kHTnyh9jUR+losoXxnS0TgyX5vM/TPwlq3Y3yhRHyo+IhPmnp5BpcgBfiB8KTjx/8bBWSGq
- UM2ptugSwHEsLOxknu6YaslnfyID0Ep1k+r58vqjXZQqiO0j/8MacCFjpdccu6ueRiwwkEi
- k1BS5uQGMGcQg5HIruhMw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iCN0J44QwF4=:QKf8Vt6Nzuj4jfABJLLAuy
- ZXFXgVdDs687hmyUEIVzFKdqIefl3ah5lIHYrhAMQy+tKCTjiztRBSco1wLgy7aiBKwkzCkwI
- NSh723weY9q9uphmL8yuXIIyMLpK0w2havy1PCA5CSxsUed8/9n0dG1TXOVGYhO2jCj0ZY4R8
- q6LJ1MDb6EBWFOGpIbenY3R2lGs4J8zxzIoP7vmaDRCF8FmTQUN9F1lXXIJWtbhMChECsa42O
- S6WYIFMWQoeec9aF7xHLvNABP2DW/8yTjWnAiJY6f/NYpIs3zC/QQqB8klmkX17zI1HvWQyI/
- keDFLuShMEtCGf70oKBCvMlC9CKA2cSXeix5sD9yC5YOBIJMpqmlohHv6l1TuQY0xqAfLz120
- q0QgPgTW5u9fyMTCN4Nx6Os9otb3qnRRF9Br8mAQgnVX1POMpYfm5WY1pjjzuuZFX55e9oCjf
- 3JIP4NhxMGu/waTg8Ywdu24C4kHdcCOTcsyZKcLqXvOQZiXz5fBee+HO0OMXycGIgQ+FPD5oh
- gL/9mgJys9eli3WVOgvqDc5d2ng0S62Y3DLvvlC+9sKlEHdwPr9jKmm2fbbMupuLBVrfQXOqk
- KPAjnOf2fa+gWWYKwD1RiRiD9TH/Wqlc39cJ7FZPpFhVhE8Pxv8NUTYNp73iaybsf+wn66syy
- FPx1ngZ3itf899NkYviotpQh5nNY5UZHHves1v9S0v9PG8qlBq/ftBHSMRA/zP/LGLeOg6nNH
- awH+RfAIq8qKxSzj+FQXEiBBcGt00lPpRA+n+JHMxM+Z3mCXMrCl+GGqymBwVaISAhwv+saqs
- s/wHI+TnyyckJY7R5iUzYQZLisgrqaqTonzTS2VRvY4vOq2ZOtgGB75si3OEDRSNkada8PAQ6
- 0RHomGUJUUtMM3WGeKuoAnwTWW3RYYH0D/NN2RQRHw85g++dPRTI4btmxDv/zPQQ7dQVPfZeQ
- /PFddQ5FzwFK/M9wN2qaokTUe8faeY0huAjyPqeakiYB4Js2ZPOY9sFxcnCjTiwWcQZjBcY54
- 05r/xK5oYYa6zPGmpvrlwGDDr3yV9rLQPVBRk6zF38/mXuzlUp4FXwomvvDBbYFJuhlMsIMW3
- jXrcIpgSlRzzmvIgkdxltKy9CWgtyx6UV2b9vwNHcWYOtOG4uE+Kj114TCpjIDylrBh3UYqF1
- F4JIGt4XJmDQZ2pc/HjFaRvRQ6UckROGNjP10Ffh7zO36S1RsHALD6jYYTge08wx+IUYjluJB
- PJIsqZk9PiJx5y4Xg
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fix unchecked return value for clk_prepare_enable.
->
-> And because clk_prepare_enable and clk_disable_unprepare should
-> check input clock parameter is NULL or not, then we don't need
-> to check it before calling the function.
+On 2020-06-21 21:20, David Rientjes wrote:
+> On Sun, 21 Jun 2020, Guenter Roeck wrote:
+> 
+>>>> This patch results in a boot failure in some of my powerpc boot tests,
+>>>> specifically those testing boots from mptsas1068 devices. Error message:
+>>>>
+>>>> mptsas 0000:00:02.0: enabling device (0000 -> 0002)
+>>>> mptbase: ioc0: Initiating bringup
+>>>> ioc0: LSISAS1068 A0: Capabilities={Initiator}
+>>>> mptbase: ioc0: ERROR - Unable to allocate Reply, Request, Chain Buffers!
+>>>> mptbase: ioc0: ERROR - didn't initialize properly! (-3)
+>>>> mptsas: probe of 0000:00:02.0 failed with error -3
+>>>>
+>>>> Configuration is bamboo:44x/bamboo_defconfig plus various added drivers.
+>>>> Qemu command line is
+>>>>
+>>>> qemu-system-ppc -kernel vmlinux -M bamboo \
+>>>>       -m 256 -no-reboot -snapshot -device mptsas1068,id=scsi \
+>>>>       -device scsi-hd,bus=scsi.0,drive=d0,wwn=0x5000c50015ea71ac -drive \
+>>>>       file=rootfs.ext2,format=raw,if=none,id=d0 \
+>>>>       --append "panic=-1 slub_debug=FZPUA root=/dev/sda  mem=256M console=ttyS0" \
+>>>>       -monitor none -nographic
+>>>>
+>>>> canyonlands_defconfig with sam460ex machine and otherwise similar command line
+>>>> fails as well.
+>>>>
+>>>> Reverting this patch fixes the problem.
+>>>
+>>> This looks like the minimum value of 128 KiB is not sufficient, and the
+>>> bug is in the intention of 1d659236fb43c4d2 ("dma-pool: scale the
+>>> default DMA coherent pool size with memory capacity")?
+>>> Before, there was a single pool of (fixed) 256 KiB size, now there are
+>>> up to three coherent pools (DMA, DMA32, and kernel), albeit of smaller
+>>> size (128 KiB each).
+>>>
+>>> Can you print the requested size in drivers/message/fusion/mptbase.c:
+>>> PrimeIocFifos()?
+>>
+>> 172928 bytes
+>>
+>>> Does replacing all SZ_128K by SZ_256K in my patch help?
+>>
+>> Yes, it does.
+>>
+> 
+> The new coherent pools should auto expand when they are close to being
+> depleted but there's no guarantee that it can be done fast enough.
 
-I propose to split the adjustment of two function implementations
-into separate update steps for a small patch series.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=625d3449788f85569096780592549d0340e9c0c7#n138
+More to the point, it's never going to help if the pool is empty and one 
+allocation is simply larger than the entire thing ;)
 
-I suggest to improve the change descriptions accordingly.
+Another angle, though, is to question why this driver is making such a 
+large allocation with GFP_ATOMIC in the first place. At a glance it 
+looks like there's no reason at all other than that it's still using the 
+legacy pci_alloc_consistent() API, since every path to that appears to 
+have CAN_SLEEP passed as its flag - modernising that would arguably be 
+an even better long-term win.
 
-Regards,
-Markus
+Robin.
+
+> Switching the min size to be the previous min size (256KB) seems like the
+> best option and it matches what
+> Documentation/admin-guide/kernel-parameters.txt still stays.
+> 
+> I'll also send a patch to point in the right direction when this happens.
+> 
