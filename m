@@ -2,69 +2,85 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C147DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E9220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1F920716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgFVPul (ORCPT
+        id S1729414AbgFVPvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:50:41 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65356 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgFVPul (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:50:41 -0400
-Received: from 89-64-85-91.dynamic.chello.pl (89.64.85.91) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id ef2a4d4d13a8983b; Mon, 22 Jun 2020 17:50:38 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, guohanjun@huawei.com
-Subject: Re: [PATCH 0/2] ACPI: sysfs: add missing newlines when printing acpi module parameters
-Date:   Mon, 22 Jun 2020 17:50:37 +0200
-Message-ID: <1963218.YzJNvkzdAc@kreacher>
-In-Reply-To: <1592298849-41530-1-git-send-email-wangxiongfeng2@huawei.com>
-References: <1592298849-41530-1-git-send-email-wangxiongfeng2@huawei.com>
+        Mon, 22 Jun 2020 11:51:20 -0400
+Received: from elvis.franken.de ([193.175.24.41]:33897 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729147AbgFVPvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:51:16 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jnOj4-0002AG-02; Mon, 22 Jun 2020 17:51:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 3E785C06F0; Mon, 22 Jun 2020 17:48:55 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 17:48:55 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     maobibo <maobibo@loongson.cn>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Do not flush tlb when setting pmd entry
+Message-ID: <20200622154855.GC17294@alpha.franken.de>
+References: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
+ <20200615101443.GA10075@alpha.franken.de>
+ <4bef403d-baba-ddf8-c25c-3d6968897a53@loongson.cn>
+ <20200617111403.GC9940@alpha.franken.de>
+ <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 16, 2020 11:14:07 AM CEST Xiongfeng Wang wrote:
-> When I cat module parameters in '/sys/module/acpi/parameters/',
-> I found several parameters need a newline.
-> 
-> [root@hulk-202 ~]# cd /sys/module/acpi/parameters/
-> [root@hulk-202 parameters]# cat acpica_version
-> 20180810[root@hulk-202 parameters]# cat ec_event_clearing
-> query[root@hulk-202 parameters]# 
-> [root@localhost parameters]# cat trace_method_name
-> (null)[root@localhost parameters]# cat trace_state
-> disable[root@localhost parameters]#
-> 
-> Xiongfeng Wang (2):
->   ACPI: EC: add a newline when printing module parameter
->     'ec_event_clearing'
->   ACPI: sysfs: add missing newlines when printing module parameters
-> 
->  drivers/acpi/ec.c    |  8 ++++----
->  drivers/acpi/sysfs.c | 12 ++++++------
->  2 files changed, 10 insertions(+), 10 deletions(-)
+On Sat, Jun 20, 2020 at 11:47:35AM +0800, maobibo wrote:
 > 
 > 
+> On 06/17/2020 07:14 PM, Thomas Bogendoerfer wrote:
+> > On Tue, Jun 16, 2020 at 06:34:21PM +0800, maobibo wrote:
+> >>
+> >>
+> >> On 06/15/2020 06:14 PM, Thomas Bogendoerfer wrote:
+> >>> On Wed, Jun 03, 2020 at 05:42:13PM +0800, Bibo Mao wrote:
+> >>>> Function set_pmd_at is to set pmd entry, if tlb entry need to
+> >>>> be flushed, there exists pmdp_huge_clear_flush alike function
+> >>>> before set_pmd_at is called. So it is not necessary to call
+> >>>> flush_tlb_all in this function.
+> >>>
+> >>> have you checked all set_pmd_at() calls ? I found a few case where
+> >>> it's not clear to me, if tlb flushing is done... If you think this
+> >>> is still the right thing to do, please change arch/mips/mm/pgtable-32.c
+> >>> as well.
+> >> well, I will double check this and do more testing about thp and hugepage.
+> > 
+> > I was more concerned about
+> > 
+> > fs/dax.c
+> > fs/proc/task_mmu.c
+> > mm/rmap.c
+> 
+> I think that flush_tlb_all should not be called in function set_pmd_at
+> on mips platform. However update_mmu_cache_pmd() should be called __after__
+> set_pmd_at() function to update tlb entry at some places, it is another issue.
+> Here is my analysis in the three files where set_pmd_at is called.
+> [..]
 
-Both patches applied as 5.9 material, thanks!
+thank you for confirming that we are good with removing flush_tlb_all().
 
+Thomas.
 
-
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
