@@ -2,137 +2,131 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18052C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E153D253AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dPCYMgxw"
+	by mail.kernel.org (Postfix) with ESMTP id 5F41025405
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592803991;
+	bh=LlY20qnm761fwobPyLQcFs7yCjutoOfn/Lec+Ma6ywc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OdKKPzdCDdnmeAtKemkFnZPmXvywnVlfz6M7KCCRNmnVQ9OT0IvhnkMMWMAEdijjD
+	 lqZ0JwfnYDQnAR+34i9BARiHr8h8tu99Or/Q+8kGQGr/U4n4ThA/0daX05psQsvZCB
+	 /12EcV/FgCPR2KNpMREgCpyRtcRyj7pvp/phxIXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbgFVFcl (ORCPT
+        id S1731202AbgFVFdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 01:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgFVFck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 01:32:40 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BFCC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 22:32:40 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y18so7101440plr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 22:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FOs8/vOcSTNojAnkjIJLl6Zwh7pEFROh/lHqucoCGw4=;
-        b=dPCYMgxwutm6jIq2Wj18eM2TXJW8xWvR97Y37deovDDlPXTd+KGT1+Ju9/iINFjIht
-         NCUTlZdh+IITFYHEEyBkDxE4y2z67kqprIsFDboISSXR+1vtlhazfUh8hCWCDTSOUdaT
-         StTuEMbg+XmgJ+ClOhdbG3/p4rJCeIwGLQDdw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FOs8/vOcSTNojAnkjIJLl6Zwh7pEFROh/lHqucoCGw4=;
-        b=SHMx9RROI7kV/XefciQFytr0wmg+Dh06gHmpHSOP71CdtZpWvRax0vBIi4O5R5780u
-         42PCgFbch8zKDycaAJsAK0vnhz3m1dFn/93sIPwMYUrcpiKcecuB/1hqZjNkRq/7gkcd
-         YWI51klpkt/nz9I3+widQmxmHYqEAc35CxBWuHoIw0SOzguum2XIZecBagiqgNX+t7+I
-         SSy/6OmJswfPCUG4h7OLnXNnkL9/McdETBVn+CyOyxgEVGnbLAmAVhiCmUxKxGEkPJ0c
-         /8/2vDozdTXXPvJQQ0BD9Fziiim/Aj6Aaprac6klnhRG7wVzeBYdgXTck3klu2IMXPBf
-         PcXA==
-X-Gm-Message-State: AOAM531mWrJSo+s53z0oI+uloqim+jJNf1CUHFg918BkJ1lvvrThzFx3
-        0DVg/NsywszwPh7kyhM105f8pg==
-X-Google-Smtp-Source: ABdhPJyZmlvjgo1vg45lGnOaXcMAlL6/gigFUFN6X5r+Q50PTwVNyET7M9/6fIkpx0Z3VHooFu3v5w==
-X-Received: by 2002:a17:90a:1a17:: with SMTP id 23mr16362040pjk.231.1592803959593;
-        Sun, 21 Jun 2020 22:32:39 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id b1sm12240078pjc.33.2020.06.21.22.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 22:32:39 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yongqiang.niu@mediatek.com, tfiga@chromium.org
-Subject: [PATCH] drm/mediatek: check plane visibility in atomic_update
-Date:   Mon, 22 Jun 2020 13:32:34 +0800
-Message-Id: <20200622053234.122120-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+        Mon, 22 Jun 2020 01:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgFVFdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 01:33:09 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C14F25403;
+        Mon, 22 Jun 2020 05:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592803989;
+        bh=LlY20qnm761fwobPyLQcFs7yCjutoOfn/Lec+Ma6ywc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DkOk2StEX2MqAuyXo6cvvRGNmU5lOPgoP82DRRuUq6wSIvWp1z8LtKcyIX+LapHd1
+         2uwlOsmtOfegoQgFFwBoggbbnRzNWcg9O5d+KAFASEzNJEh9HrQqFd7X8fTtxEUqAv
+         REqcSnDWPidAtAT1DF1Afzfa8bzyleR2zhLiBoyU=
+Date:   Mon, 22 Jun 2020 11:03:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ALSA: compress: document the compress audio state
+ machine
+Message-ID: <20200622053304.GD2324254@vkoul-mobl>
+References: <20200619045449.3966868-1-vkoul@kernel.org>
+ <20200619045449.3966868-2-vkoul@kernel.org>
+ <8e322574-14bc-aaaa-5fdb-751cb8b97fff@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e322574-14bc-aaaa-5fdb-751cb8b97fff@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable the plane if it's not visible. Otherwise mtk_ovl_layer_config()
-would proceed with invalid plane and we may see vblank timeout.
+HI Pierre,
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/gpu/drm/mediatek/mtk_drm_plane.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+On 19-06-20, 09:22, Pierre-Louis Bossart wrote:
+> 
+> > +
+> > +                                        +----------+
+> > +                                        |          |
+> > +                                        |   OPEN   |
+> > +                                        |          |
+> > +                                        +----------+
+> > +                                             |
+> > +                                             |
+> > +                                             | compr_set_params()
+> > +                                             |
+> > +                                             V
+> > +                                        +----------+
+> > +                compr_drain_notify()    |          |
+> > +              +------------------------>|   SETUP  |
+> > +              |                         |          |
+> > +              |                         +----------+
+> > +              |                              |
+> > +              |                              |
+> > +              |                              | compr_write()
+> > +              |                              |
+> > +              |                              V
+> > +              |                         +----------+
+> > +              |                         |          |
+> > +              |                         |  PREPARE |
+> > +              |                         |          |
+> > +              |                         +----------+
+> > +              |                              |
+> > +              |                              |
+> > +              |                              | compr_start()
+> > +              |                              |
+> > +              |                              V
+> > +        +----------+                    +----------+     compr_pause()      +----------+
+> > +        |          |                    |          |----------------------->|          |
+> > +        |  DRAIN   |<-------------------|  RUNNING |                        |  PAUSE   |
+> > +        |          |                    |          |<-----------------------|          |
+> > +        +----------+                    +----------+     compr_resume()     +----------+
+> > +              |                              |
+> > +              |                              |
+> > +              |                              | compr_free()
+> > +              |                              |
+> > +              |                              V
+> > +              |                         +----------+
+> > +              |     compr_free()        |          |
+> > +              +------------------------>|          |
+> > +                                        |   STOP   |
+> > +                                        |          |
+> > +                                        +----------+
+> 
+> 
+> The STOP state doesn't seem quite right to me, sorry.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index c2bd683a87c8..74dc71c7f3b6 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -164,6 +164,16 @@ static int mtk_plane_atomic_check(struct drm_plane *plane,
- 						   true, true);
- }
- 
-+static void mtk_plane_atomic_disable(struct drm_plane *plane,
-+				     struct drm_plane_state *old_state)
-+{
-+	struct mtk_plane_state *state = to_mtk_plane_state(plane->state);
-+
-+	state->pending.enable = false;
-+	wmb(); /* Make sure the above parameter is set before update */
-+	state->pending.dirty = true;
-+}
-+
- static void mtk_plane_atomic_update(struct drm_plane *plane,
- 				    struct drm_plane_state *old_state)
- {
-@@ -178,6 +188,9 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
- 	if (!crtc || WARN_ON(!fb))
- 		return;
- 
-+	if (!plane->state->visible)
-+		return mtk_plane_atomic_disable(plane, old_state);
-+
- 	gem = fb->obj[0];
- 	mtk_gem = to_mtk_gem_obj(gem);
- 	addr = mtk_gem->dma_addr;
-@@ -200,16 +213,6 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
- 	state->pending.dirty = true;
- }
- 
--static void mtk_plane_atomic_disable(struct drm_plane *plane,
--				     struct drm_plane_state *old_state)
--{
--	struct mtk_plane_state *state = to_mtk_plane_state(plane->state);
--
--	state->pending.enable = false;
--	wmb(); /* Make sure the above parameter is set before update */
--	state->pending.dirty = true;
--}
--
- static const struct drm_plane_helper_funcs mtk_plane_helper_funcs = {
- 	.prepare_fb = drm_gem_fb_prepare_fb,
- 	.atomic_check = mtk_plane_atomic_check,
+We should call it free, Will update
+
+> the direction of the DRAIN-STOP comp_free() arrow seems wrong? Of if it is
+> correct, then something's missing to exit the STOP state so that the stream
+> can be opened again.
+
+Once stream is freed, it can't be opened again.
+
+But we have trigger stop which is not comprehended here, I will add
+compr_stop() above which would transition to SETUP state. And a stopped
+stream can be freed up as well, so one more transition from SETUP to
+FREE.
+
+Thanks for reviewing
 -- 
-2.27.0.111.gc72c7da667-goog
-
+~Vinod
